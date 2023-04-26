@@ -211,7 +211,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
-      ManuscriptsPage.getControlButton().should('not.exist')
+      ManuscriptsPage.selectOptionWithText('Control').should('not.exist')
       ManuscriptsPage.getOptionWithText('View').should('be.visible')
       ManuscriptsPage.getOptionWithText('Delete').should('be.visible')
       ManuscriptsPage.getOptionWithText('Publish').should('not.exist')

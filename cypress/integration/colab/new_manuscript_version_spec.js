@@ -4,6 +4,7 @@ import { ControlPage } from '../../page-object/control-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
+import { ReviewPage } from '../../page-object/review-page'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
@@ -17,7 +18,7 @@ describe('checking manuscript version', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
-      ManuscriptsPage.clickControlButton()
+      ManuscriptsPage.selectOptionWithText('Control')
       /* Assign Editor */
       ControlPage.getAssignSeniorEditorDropdown()
         .click({ force: true })
@@ -25,6 +26,7 @@ describe('checking manuscript version', () => {
 
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControlPanelDecision()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')
@@ -32,7 +34,7 @@ describe('checking manuscript version', () => {
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
       ControlPage.getDecisionFileInput().attachFile(decisionFileName)
-      ControlPage.clickRevise()
+      ReviewPage.clickRevise()
       /* Submit the decision */
       ControlPage.clickSubmitDecisionButton()
       /* Check appears in front of button */
@@ -72,6 +74,7 @@ describe('checking manuscript version', () => {
 
       /* Login as editor and check the new version submission form */
       cy.login(name.role.seniorEditor, dashboard)
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControlPanelDecision()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')

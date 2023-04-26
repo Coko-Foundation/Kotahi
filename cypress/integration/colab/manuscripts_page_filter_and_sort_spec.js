@@ -12,7 +12,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 describe('manuscripts page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
+    cy.task('restore', 'commons/colab_bootstrap')
     cy.task('seedForms')
 
     // login as admin
@@ -50,18 +50,18 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
       ManuscriptsPage.clickArticleLabel(-1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
       cy.url().should('contain', 'readyToEvaluate')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickArticleLabel(2)
-      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
       cy.url().should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Evaluated')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickArticleLabel(1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
       cy.url().should('contain', 'readyToEvaluate')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
@@ -93,17 +93,20 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
       ManuscriptsPage.clickStatus(-1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.getTableRowsCount().should('eq', 4)
       ManuscriptsPage.getStatus(0).should('contain', 'Unsubmitted')
       cy.url().should('contain', 'new')
       ManuscriptsPage.clickArticleLabel(-1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 2)
-      cy.url().should('contain', 'status=new&submission.labels=readyToEvaluate')
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      cy.url().should(
+        'contain',
+        'status=new&pagenum=1&submission.labels=readyToEvaluate',
+      )
     })
   })
   context('select button from Label column', () => {
     beforeEach(() => {
-      cy.task('restore', 'initial_state_other')
+      cy.task('restore', 'commons/colab_bootstrap')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -130,7 +133,8 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 0)
       ManuscriptsPage.clickSelect()
-      ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
+      cy.reload()
+      ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 1)
     })

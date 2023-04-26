@@ -22,7 +22,7 @@ describe('review page tests', () => {
     DashboardPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     Menu.clickManuscriptsAndAssertPageLoad()
-    ManuscriptsPage.clickControl()
+    ManuscriptsPage.selectOptionWithText('Control')
     cy.fixture('role_names').then(name => {
       ControlPage.inviteReviewer(name.role.reviewers[0])
       ControlPage.inviteReviewer(name.role.reviewers[1])
@@ -32,9 +32,12 @@ describe('review page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[0], dashboard)
     })
+    DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    ReviewPage.getAllPageSections().should('have.length', 3)
+    ReviewPage.getAllPageSections().should('have.length', 2)
     ReviewPage.getAllSectionHeaders()
       .eq(-1)
       .scrollIntoView()
@@ -44,13 +47,17 @@ describe('review page tests', () => {
     ReviewPage.getDecisionRecommendation().should('be.visible')
   })
   it('saved decision should be visible for the reviewer', () => {
+    ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('the article is ok')
     ReviewPage.clickRevise()
     ControlPage.clickSubmit()
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[0], dashboard)
     })
+    DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     ReviewPage.getDecisionText().should('contain', 'the article is ok')
   })
@@ -58,7 +65,10 @@ describe('review page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
+    DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('great submission!')
@@ -70,9 +80,10 @@ describe('review page tests', () => {
       cy.login(name.role.admin, manuscripts)
     })
     cy.awaitDisappearSpinner()
-    ManuscriptsPage.clickControl()
+    ManuscriptsPage.selectOptionWithText('Control')
+    ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('great paper!')
-    ControlPage.clickAccept()
+    ReviewPage.clickAccept()
     ControlPage.clickSubmit()
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
@@ -90,7 +101,10 @@ describe('review page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
+    DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('paper should be revised')
@@ -102,7 +116,8 @@ describe('review page tests', () => {
       cy.login(name.role.admin, manuscripts)
     })
     cy.awaitDisappearSpinner()
-    ManuscriptsPage.clickControl()
+    ManuscriptsPage.selectOptionWithText('Control')
+    ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('please revise')
     ReviewPage.clickRevise()
     ControlPage.clickSubmit()
@@ -122,7 +137,10 @@ describe('review page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
+    DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('not good enough')
@@ -134,7 +152,8 @@ describe('review page tests', () => {
       cy.login(name.role.admin, manuscripts)
     })
     cy.awaitDisappearSpinner()
-    ManuscriptsPage.clickControl()
+    ManuscriptsPage.selectOptionWithText('Control')
+    ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('it does not fit our standards')
     ControlPage.clickReject()
     ControlPage.clickSubmit()

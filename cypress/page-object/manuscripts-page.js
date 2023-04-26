@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 import { evaluate } from '../support/routes'
-import { ControlPage } from './control-page'
+// import { ControlPage } from './control-page'
 
 /**
  * Page component representing the fourth option in the left side menu,
@@ -13,7 +13,7 @@ const BUTTON = 'button'
 const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
-const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
+// const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
 const CREATED_CARET = 'Carets__Caret'
 const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
@@ -23,9 +23,9 @@ const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_ID = '[name="submission.articleId"]'
 const ARTICLE_LABEL = '[name="submission.labels"]'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
-const TABLE_ROW = 'style__ManuscriptsRow-cydfzx-10 NtEio'
+const TABLE_ROW = '[class*=style__ManuscriptsRow]'
 const TABLE_CELL = 'Table__Cell'
-const LABEL = 'DefaultField__CellItem-sc-1xavmaj-0 cwCwGd'
+const LABEL = '[name="submission.labels"]'
 const BULKBUTTON = 'style__BulkActionModalButton'
 
 const ARTICLE_CHECKBOX =
@@ -40,7 +40,7 @@ const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
 const CONFIRMATION_MESSAGE = '[class*=BulkActionModalContainer] > p'
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
-const CONTROL = '[href*=decision]'
+// const CONTROL = '[href*=decision]'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -100,30 +100,30 @@ export const ManuscriptsPage = {
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
-  getControlButton() {
-    return cy.get(CONTROL_BUTTON).first()
-  },
-  clickControlButton() {
-    this.getControlButton().click()
-  },
-  getControl() {
-    return cy.get(CONTROL)
-  },
-  clickControl() {
-    this.getControl().click()
-  },
-  clickControlAndVerifyPageLoaded() {
-    this.getControl().click()
-    cy.awaitDisappearSpinner()
-    cy.url({ timeout: 10000 }).should('contain', 'decision')
-    ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
-  },
-  clickControlNthAndVerifyPageLoaded(nth) {
-    this.getControl().eq(nth).click()
-    cy.awaitDisappearSpinner()
-    cy.url({ timeout: 10000 }).should('contain', 'decision')
-    ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
-  },
+  // getControlButton() {
+  //   return cy.get(CONTROL_BUTTON).first()
+  // },
+  // clickControlButton() {
+  //   this.getControlButton().click()
+  // },
+  // getControl() {
+  //   return cy.get(CONTROL)
+  // },
+  // clickControl() {
+  //   this.getControl().click()
+  // },
+  // clickControlAndVerifyPageLoaded() {
+  //   this.getControl().click()
+  //   cy.awaitDisappearSpinner()
+  //   cy.url({ timeout: 10000 }).should('contain', 'decision')
+  //   ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
+  // },
+  // clickControlNthAndVerifyPageLoaded(nth) {
+  //   this.getControl().eq(nth).click()
+  //   cy.awaitDisappearSpinner()
+  //   cy.url({ timeout: 10000 }).should('contain', 'decision')
+  //   ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
+  // },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
   },
@@ -182,19 +182,19 @@ export const ManuscriptsPage = {
     this.getArticleTopicWithText(text).click()
   },
   getTableRow() {
-    return cy.getByContainsClass(TABLE_ROW)
+    return cy.get(TABLE_ROW)
   },
   getNthTableRow(nth) {
     return this.getTableRow().eq(nth)
   },
   getTableRowsCount() {
-    return cy.getByContainsClass(TABLE_ROW).its('length')
+    return cy.get(TABLE_ROW).its('length')
   },
   getTableJournal() {
     return cy.getByContainsClass(TABLE_CELL).eq(1)
   },
   getLabelRow(nth) {
-    return cy.getByContainsClass(LABEL).eq(nth)
+    return cy.get(LABEL).eq(nth)
   },
   getTableHeader() {
     return cy.get(TABLE_HEADER, { timeout: 15000 })
