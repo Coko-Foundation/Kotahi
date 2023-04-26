@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import DecisionReview from './DecisionReview'
 import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
+import InvitationResults from './InvitationResults'
 
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =
@@ -48,6 +49,7 @@ const DecisionReviews = ({
       <SectionHeader>
         <Title>Completed Reviews</Title>
       </SectionHeader>
+      <InvitationResults invitations={invitations} />
       {reviewsToShow.length > 0 ? (
         reviewsToShow
           .sort((reviewOne, reviewTwo) => {

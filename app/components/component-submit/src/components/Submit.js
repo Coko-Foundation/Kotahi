@@ -168,6 +168,7 @@ const Submit = ({
             />
           )}
           {index === 0 &&
+            version.status !== 'revising' &&
             (allowAuthorsSubmitNewVersion || version.status === 'revise') && (
               <CreateANewVersion
                 allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
