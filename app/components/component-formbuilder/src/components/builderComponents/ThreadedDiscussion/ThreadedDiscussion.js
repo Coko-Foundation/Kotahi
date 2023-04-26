@@ -17,7 +17,13 @@ const getExistingOrInitialComments = (
   selectedManuscriptVersionId,
 ) => {
   const result = comments
-    .filter(c => c.pendingVersion || c.commentVersions.length)
+    .filter(c => {
+      if (c.pendingVersion) {
+        return manuscriptLatestVersionId === selectedManuscriptVersionId
+      }
+
+      return c.commentVersions.length > 0
+    })
     .map(c => {
       if (c.pendingVersion) {
         // This comment is currently being edited!
@@ -108,6 +114,9 @@ const ThreadedDiscussion = ({
     commsToPublish || [],
   )
 
+  const isLatestVersionOfManuscript =
+    selectedManuscriptVersionId === manuscriptLatestVersionId
+
   useEffect(() => {
     setComments(
       getExistingOrInitialComments(
@@ -180,7 +189,7 @@ const ThreadedDiscussion = ({
             }
           }
 
-          if (!comment.existingComment)
+          if (isLatestVersionOfManuscript && !comment.existingComment)
             return (
               <div key={comment.id}>
                 <SimpleWaxEditorWrapper key={comment.id}>
@@ -202,8 +211,8 @@ const ThreadedDiscussion = ({
             <ThreadedComment
               comment={comment}
               currentUser={currentUser}
+              isLatestVersionOfManuscript={isLatestVersionOfManuscript}
               key={comment.id}
-              manuscriptLatestVersionId={manuscriptLatestVersionId}
               onCancel={handleCancelEditingComment}
               onChange={handleUpdateComment}
               onSubmit={() =>

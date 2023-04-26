@@ -32,7 +32,7 @@ const ThreadedComment = ({
   shouldPublish,
   setShouldPublish,
   selectedManuscriptVersionId,
-  manuscriptLatestVersionId,
+  isLatestVersionOfManuscript,
 }) => {
   const {
     comment: value,
@@ -51,9 +51,6 @@ const ThreadedComment = ({
 
   const commentBelongsToDifferentManuscriptVersion =
     selectedManuscriptVersionId !== comment.manuscriptVersionId
-
-  const isLatestVersionOfManuscript =
-    selectedManuscriptVersionId === manuscriptLatestVersionId
 
   const canEditComment =
     userCanEditAnyComment ||
@@ -135,19 +132,19 @@ const ThreadedComment = ({
             </Collapse>
           </ActionWrapper>
         </CommentWrapper>
-        {hasValue(submittedValue) ? (
-          <SimpleWaxEditorWrapper collapse={collapse}>
-            <SimpleWaxEditor
-              {...simpleWaxEditorProps}
-              key={counter}
-              readonly
-              value={submittedValue}
-            />
-            <CollapseOverlay collapse={collapse} />
-          </SimpleWaxEditorWrapper>
-        ) : (
-          'Comment is deleted'
-        )}
+        <SimpleWaxEditorWrapper collapse={collapse}>
+          <SimpleWaxEditor
+            {...simpleWaxEditorProps}
+            key={counter}
+            readonly
+            value={
+              hasValue(submittedValue)
+                ? submittedValue
+                : 'Comment is either deleted or is unsubmitted'
+            }
+          />
+          <CollapseOverlay collapse={collapse} />
+        </SimpleWaxEditorWrapper>
         <Modal isOpen={openModal}>
           <ModalContainer>
             <SimpleWaxEditor
