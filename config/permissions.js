@@ -57,13 +57,21 @@ const getManuscriptOfFile = async (file, ctx) => {
 
 const getLatestVersionOfManuscriptOfFile = async (file, ctx) => {
   const manuscript = await getManuscriptOfFile(file, ctx)
+
   if (!manuscript) return null
+
   const firstVersionId = manuscript.parentId || manuscript.id
 
+  const latestVersion = await getLatestVersionOfManuscript(ctx, firstVersionId)
+
+  return latestVersion
+}
+
+const getLatestVersionOfManuscript = async (ctx, manuscriptVersionId) => {
   const latestVersion = await ctx.connectors.Manuscript.model
     .query()
-    .where({ parentId: firstVersionId })
-    .orWhere({ id: firstVersionId })
+    .where({ parentId: manuscriptVersionId })
+    .orWhere({ id: manuscriptVersionId })
     .orderBy('created', 'desc')
     .limit(1)
 
@@ -150,9 +158,16 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       .query()
       .findById(args.channelId)
 
-    const manuscript = await ctx.connectors.Manuscript.model
-      .query()
-      .findById(channel.manuscriptId)
+    /**
+     * Chat channels are always associated with the parent manuscript
+     * but we allow different teams to work on different versions.
+     * Therefore, authorization is based on the latest version of the manuscript.
+     *  */
+
+    const manuscript = await getLatestVersionOfManuscript(
+      ctx,
+      channel.manuscriptId,
+    )
 
     const isAuthor = await userIsMemberOfTeamWithRoleQuery(
       user,
