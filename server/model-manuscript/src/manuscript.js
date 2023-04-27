@@ -136,6 +136,12 @@ class Manuscript extends BaseModel {
     return author.user
   }
 
+  async getManuscriptChannels() {
+    const id = this.parentId || this.id
+    const channels = await Manuscript.relatedQuery('channels').for(id)
+    return channels || []
+  }
+
   async getManuscriptEditor() {
     if (!this.id) {
       return null
@@ -198,12 +204,6 @@ class Manuscript extends BaseModel {
     // eslint-disable-next-line
     newVersion.reviews = clonedDecisions
     newVersion.files = files
-    // Copy channels as well
-    const channels = await this.$relatedQuery('channels')
-    // eslint-disable-next-line
-    channels.forEach(c => delete c.id)
-
-    newVersion.channels = channels
 
     const activeConfig = await Config.query().first()
 

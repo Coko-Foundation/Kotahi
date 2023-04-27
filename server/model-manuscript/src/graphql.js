@@ -1214,7 +1214,7 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
-          '[invitations.[user], teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
+          '[invitations.[user], teams, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
         )
 
       const user = ctx.user
@@ -1240,6 +1240,13 @@ const resolvers = {
       }
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
+
+      /**
+       * Returns an array of all the chat channels.
+       * We are only using parent manuscripts channels so in case this is a child manuscript
+       * it will fetch the parent manuscript channels only
+       * **/
+      manuscript.channels = await manuscript.getManuscriptChannels()
 
       if (
         user &&
