@@ -3,13 +3,14 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
+import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { FormsPage } from '../../page-object/forms-page'
 
 describe('Submission with errors test', () => {
   describe('Form builder', () => {
     it('views a form field', () => {
       // task to restore the database as per the  dumps/commons/bootstrap.sql
-      cy.task('restore', 'commons/colab_bootstrap')
+      cy.task('restore', 'commons/bootstrap')
       cy.task('seedForms')
 
       // login as admin
@@ -43,38 +44,27 @@ describe('Submission with errors test', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.author, dashboard)
+
+        Menu.clickDashboard()
+        // Click on new submission
+        ManuscriptsPage.clickSubmit()
+
+        // Upload manuscript
+        cy.get('input[type=file]').selectFile('cypress/fixtures/test-pdf.pdf', {
+          force: true,
+        })
+        cy.get('[data-testid="meta.title"]').clear()
+        cy.get('[data-testid="meta.title"]').should('have.length', 1)
+        SubmissionFormPage.clickSubmitResearch()
       })
-
-      Menu.clickDashboard()
-      // Click on new submission
-      DashboardPage.clickSubmissionButton()
-
-      // Upload manuscript
-      cy.get('input[type=file]').attachFile('test-pdf.pdf')
-      cy.get('[data-testid="meta.title"]').clear()
-      cy.get('[data-testid="meta.title"]').should('have.length', 1)
-      SubmissionFormPage.clickSubmitResearch()
 
       // Change the title so that we can look for it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInTitle(data.newTitle)
-        SubmissionFormPage.fillInDoiColab(data.doi)
-        SubmissionFormPage.fillInAbstractColab(data.abstract)
-        SubmissionFormPage.fillInFirstAuthor(data.creator)
-        SubmissionFormPage.fillInDatePublished(data.date)
-        SubmissionFormPage.fillInLink(data.link)
-        SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
-        SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
-        SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
-        SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
-        SubmissionFormPage.fillInKeywords(data.keywords)
-        SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(4000)
         // Contains new title
         DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
       })

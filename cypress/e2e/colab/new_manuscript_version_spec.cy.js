@@ -8,6 +8,7 @@ import { ReviewPage } from '../../page-object/review-page'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
+const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
 describe('checking manuscript version', () => {
   it('editor checks for new manuscript version', () => {
@@ -33,7 +34,9 @@ describe('checking manuscript version', () => {
       /* Fill the decision form */
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().attachFile(decisionFileName)
+      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+        force: true,
+      })
       ReviewPage.clickRevise()
       /* Submit the decision */
       ControlPage.clickSubmitDecisionButton()

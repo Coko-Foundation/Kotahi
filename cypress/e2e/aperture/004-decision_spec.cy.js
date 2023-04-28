@@ -7,6 +7,7 @@ import { dashboard } from '../../support/routes'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
+const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
 describe('Completing a review', () => {
   it('accept and do a review', () => {
@@ -32,7 +33,9 @@ describe('Completing a review', () => {
       // Fill the decision form
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().attachFile(decisionFileName)
+      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+        force: true,
+      })
       ControlPage.clickRevise()
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists() // Check appears in front of button
@@ -60,7 +63,9 @@ describe('Completing a review', () => {
       DashboardPage.clickControlPanelDecision()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
-      ControlPage.getDecisionFileInput().attachFile(decisionFileName)
+      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+        force: true,
+      })
       ControlPage.clickAccept()
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists()

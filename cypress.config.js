@@ -1,0 +1,78 @@
+const { defineConfig } = require('cypress')
+const { execSync } = require('child_process')
+const { readFileSync } = require('fs')
+const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, './.env') })
+
+const seed = require('./scripts/clearAndSeed')
+
+const seedForms = require('./scripts/seedForms')
+
+const dumpFile = name => path.join(__dirname, 'cypress', 'dumps', `${name}.sql`)
+
+module.exports = defineConfig({
+  defaultCommandTimeout: 20000,
+  viewportWidth: 1200,
+  e2e: {
+    setupNodeEvents(on, config) {
+      on('task', {
+        // 'db:seed': () => seed(),
+        dump: name => {
+          if (process.env.NEWDUMPS) {
+            return execSync(
+              `pg_dump --column-inserts -d simplej > ${dumpFile(name)}`,
+            )
+          }
+
+          return true
+        },
+        restore: async name => {
+          // eslint-disable-next-line no-console
+          console.log(name, 'name')
+          return seed(readFileSync(dumpFile(name), 'utf-8'), { clear: true })
+        },
+        seed: async name => {
+          // eslint-disable-next-line no-console
+          console.log(name, 'name')
+          // Restore without clear
+          return seed(readFileSync(dumpFile(name), 'utf-8'), { clear: false })
+        },
+        createToken: async username => {
+          // eslint-disable-next-line global-require
+          const { User } = require('@pubsweet/models')
+
+          // eslint-disable-next-line global-require
+          const { createJWT } = require('@coko/server')
+
+          const user = await User.query().where({ username }).first()
+
+          if (!user) {
+            const users = await User.query().select('username')
+            throw new Error(
+              `Could not find ${username} among users [${users
+                .map(u => `'${u.username}'`)
+                .join(', ')}]`,
+            )
+          }
+
+          const jwt = createJWT(user)
+
+          return jwt
+        },
+        seedForms: async () => {
+          // eslint-disable-next-line no-console
+          console.log('Seeding forms...')
+          await seedForms()
+          return null
+        },
+        log(message) {
+          // eslint-disable-next-line no-console
+          console.log(message)
+          return null
+        },
+      })
+      // important: return the changed config
+    },
+    baseUrl: 'http://localhost:4000',
+  },
+})

@@ -20,7 +20,10 @@ describe('Upload manuscript test', () => {
     })
 
     DashboardPage.clickSubmissionButton() // Click on new submission
-    DashboardPage.getSubmissionFileUploadInput().attachFile('test-docx.docx') // Upload manuscript
+    DashboardPage.getSubmissionFileUploadInput().selectFile(
+      'cypress/fixtures/test-docx.docx',
+      { force: true },
+    ) // Upload manuscript
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(10000)
     // complete the submission form
