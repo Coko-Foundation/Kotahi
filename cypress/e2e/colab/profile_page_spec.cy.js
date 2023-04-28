@@ -13,7 +13,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 describe('profile page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
+    cy.task('restore', 'commons/colab_bootstrap')
     cy.task('seedForms')
 
     // login and attempt to access the dashboard page

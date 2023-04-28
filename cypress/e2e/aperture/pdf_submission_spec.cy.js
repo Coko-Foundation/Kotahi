@@ -15,7 +15,10 @@ describe('Upload manuscript test', () => {
     })
 
     DashboardPage.clickSubmissionButton() // Click on new submission
-    DashboardPage.getSubmissionFileUploadInput().attachFile('test-pdf.pdf') // Upload manuscript
+    DashboardPage.getSubmissionFileUploadInput().selectFile(
+      'cypress/fixtures/test-pdf.pdf',
+      { force: true },
+    ) // Upload manuscript
 
     cy.fixture('submission_form_data').then(data => {
       // Fill Submission Form
