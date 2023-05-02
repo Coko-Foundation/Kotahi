@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useContext } from 'react'
+import React, { useMemo, useContext } from 'react'
 import ManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import {
@@ -38,13 +38,10 @@ const ReviewerTable = ({
     return defs
   }, [data])
 
-  const [mainActionLink, setActionLink] = useState(null)
-
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
   const currentUser = data && data.currentUser
-  const setMainActionLink = link => setActionLink(link)
 
   const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
   const sortName = extractSortData(uriQueryParams).name
@@ -54,12 +51,22 @@ const ReviewerTable = ({
   const limit = config?.manuscript?.paginationCount || 10
   const { totalCount } = data.manuscriptsUserHasCurrentRoleIn
 
+  const getMainActionLink = manuscript => {
+    const reviewerStatus = manuscript.teams
+      ?.find(team => team.role === 'reviewer')
+      ?.members?.find(member => member.user.id === currentUser.id)?.status
+
+    return reviewerStatus === 'invited' || reviewerStatus === 'rejected'
+      ? `${urlFrag}/versions/${manuscript.id}/reviewPreview`
+      : `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/review`
+  }
+
   const specialComponentValues = {
     urlFrag,
     currentUser,
     reviewerRespond,
     updateReviewerStatus,
-    setMainActionLink,
+    getMainActionLink,
   }
 
   const displayProps = {
@@ -85,7 +92,7 @@ const ReviewerTable = ({
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}
         columnsProps={columnsProps}
-        getLink={_ => mainActionLink}
+        getMainActionLink={getMainActionLink}
         manuscripts={data?.manuscriptsUserHasCurrentRoleIn.manuscripts}
         sortDirection={sortDirection}
         sortName={sortName}

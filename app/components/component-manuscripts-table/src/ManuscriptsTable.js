@@ -15,7 +15,7 @@ const ManuscriptsTable = ({
   columnsProps,
   sortDirection,
   sortName,
-  getLink,
+  getMainActionLink,
 }) => {
   const setFilter = (name, value) =>
     applyQueryParams({
@@ -52,11 +52,17 @@ const ManuscriptsTable = ({
             ...(manuscript.manuscriptVersions?.[0] || manuscript),
           }
 
+          if (typeof latestVersion.submission === 'string')
+            latestVersion.submission = JSON.parse(latestVersion.submission)
+
+          const mainActionLink =
+            getMainActionLink && getMainActionLink(latestVersion)
+
           return (
             <ManuscriptRow
               columnDefinitions={columnsProps}
-              getLink={getLink}
               key={latestVersion.id}
+              mainActionLink={mainActionLink}
               manuscript={latestVersion}
               setFilter={setFilter}
             />

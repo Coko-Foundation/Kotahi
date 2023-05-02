@@ -32,7 +32,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
     setReadyToEvaluateLabel,
     archiveManuscript,
     reviewerRespond,
-    setMainActionLink,
+    getMainActionLink,
     currentUser,
     updateReviewerStatus,
   } = specialComponentValues
@@ -144,7 +144,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
         reviewerRespond,
         currentUser,
         updateReviewerStatus,
-        setMainActionLink,
+        getMainActionLink,
       },
     },
     overdueTooltip: {

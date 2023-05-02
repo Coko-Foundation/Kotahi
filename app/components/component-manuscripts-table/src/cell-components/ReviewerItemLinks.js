@@ -20,7 +20,7 @@ const ReviewerItemLinks = ({
   reviewerRespond,
   currentUser,
   updateReviewerStatus,
-  setMainActionLink,
+  getMainActionLink,
 }) => {
   const team =
     (manuscript.teams || []).find(team_ => team_.role === 'reviewer') || {}
@@ -33,14 +33,7 @@ const ReviewerItemLinks = ({
 
   const history = useHistory()
 
-  const mainActionLink =
-    status === 'invited' || status === 'rejected'
-      ? `${urlFrag}/versions/${manuscript.id}/reviewPreview`
-      : `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/review`
-
-  // The timeout is a hack to avoid "Cannot update component while rendering a different component" error
-  // TODO Having a subcomponent determine the state of its parent is poor design. This state should be determined higher up and passed down.
-  setTimeout(() => setMainActionLink(mainActionLink), 10)
+  const mainActionLink = getMainActionLink && getMainActionLink(manuscript)
 
   const reviewLinkText = {
     completed: 'Completed',

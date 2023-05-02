@@ -17,6 +17,8 @@ const SharedReviewerGroupReviews = ({
     ?.find(t => t.role === 'reviewer')
     ?.members?.filter(m => m.isShared)
 
+  if (!membersInSharedGroup) return null
+
   const currentUserIsInSharedGroup = membersInSharedGroup.some(
     m => m.user.id === reviewerId,
   )
