@@ -2,9 +2,9 @@ import React from 'react'
 import Alert from './Alert'
 
 const PublishingResponse = ({ response }) => {
-  if (!response) return null
+  if (!response?.steps) return null
 
-  return response.map(step => {
+  return response.steps.map(step => {
     if (step.succeeded) {
       return (
         <Alert key={step.stepLabel} type="success">

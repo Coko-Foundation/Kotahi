@@ -215,12 +215,12 @@ const doiExists = async checkDOI => {
     await axios.get(`https://api.crossref.org/works/${checkDOI}/agency`)
     return true
   } catch (err) {
-    if (err.response.status === 404) {
+    if (err && err.response && err.response.status === 404) {
       // HTTP 404 "Not found" response. The DOI is not known by Crossref
       // console.log(`DOI '${checkDOI}' is available.`)
       return false
     }
-    // Unexpected HTTP response (5xx)
+    // Unexpected response (e.g. HTTP 5xx)
     // Assume that the DOI exists, otherwise server errors at crossref will prevent form submission in Kotahi
 
     return true

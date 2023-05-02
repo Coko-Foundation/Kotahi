@@ -58,9 +58,9 @@ const Actions = ({
       {['elife', 'ncrc'].includes(config.instanceName) &&
         manuscript.status === articleStatuses.evaluated && (
           <Action
-            onActionCompleted={resultSteps => {
-              if (resultSteps.some(step => !step.succeeded)) {
-                setPublishingResponse(resultSteps)
+            onActionCompleted={result => {
+              if (result.steps.some(step => !step.succeeded)) {
+                setPublishingResponse(result)
                 setPublishErrorsModalIsOpen(true)
                 return 'failure'
               }
