@@ -181,15 +181,15 @@ const SubmitPage = ({ match, history }) => {
 
     await updateManuscript(manuscriptId, manuscriptChangedFields)
 
-    const resultSteps = (
+    const result = (
       await publishManuscript({
         variables: {
           id: manuscriptId,
         },
       })
-    )?.data?.publishManuscript?.steps
+    )?.data?.publishManuscript
 
-    if (resultSteps.some(step => !step.succeeded)) return resultSteps
+    if (result?.steps?.some(step => !step.succeeded)) return result
 
     if (['aperture', 'colab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)

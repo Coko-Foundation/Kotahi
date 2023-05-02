@@ -161,7 +161,6 @@ const Manuscripts = ({ history, ...props }) => {
       ]
     } else {
       result = (await publishManuscript(manuscript.id)).data.publishManuscript
-        .steps
     }
 
     return result

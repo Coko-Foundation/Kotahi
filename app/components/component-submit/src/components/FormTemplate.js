@@ -292,7 +292,7 @@ const FormTemplate = ({
         }
 
         const [submitSucceeded, setSubmitSucceeded] = useState(false)
-        const [isPublishing, setIsPublishing] = useState(false)
+        const [buttonIsPending, setButtonIsPending] = useState(false)
         const [publishingResponse, setPublishingResponse] = useState([])
 
         const [
@@ -309,16 +309,7 @@ const FormTemplate = ({
                   .replace(/ /g, '-')
                   .replace(/[^\w-]+/g, '')}-action-btn`}
                 onClick={async () => {
-                  // TODO shouldn't this come after error checking and submission?
-                  if (republish) {
-                    setIsPublishing(true)
-                    const response = (await republish(manuscriptId)) || []
-                    setIsPublishing(false)
-                    setPublishingResponse(response)
-                    if (response.some(step => !step.succeeded))
-                      setPublishErrorsModalIsOpen(true)
-                    return
-                  }
+                  setButtonIsPending(true)
 
                   const hasErrors =
                     Object.keys(await validateForm()).length !== 0
@@ -336,13 +327,25 @@ const FormTemplate = ({
                   } else {
                     toggleConfirming()
                   }
+
+                  if (!hasErrors && republish) {
+                    const response = (await republish(manuscriptId)) || {
+                      steps: [],
+                    }
+
+                    setPublishingResponse(response)
+                    if (response.steps.some(step => !step.succeeded))
+                      setPublishErrorsModalIsOpen(true)
+                  }
+
+                  setButtonIsPending(false)
                 }}
                 primary
                 status={
                   /* eslint-disable no-nested-ternary */
-                  isSubmitting || isPublishing
+                  buttonIsPending || isSubmitting
                     ? 'pending'
-                    : publishingResponse.some(step => !step.succeeded)
+                    : publishingResponse?.steps?.some(step => !step.succeeded)
                     ? 'failure'
                     : Object.keys(errors).length && submitCount
                     ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
