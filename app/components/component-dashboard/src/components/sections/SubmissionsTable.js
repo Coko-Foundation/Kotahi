@@ -74,7 +74,7 @@ const SubmissionsTable = ({
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}
         columnsProps={columnsProps}
-        getLink={manuscript =>
+        getMainActionLink={manuscript =>
           `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/submit`
         }
         manuscripts={data.manuscriptsUserHasCurrentRoleIn.manuscripts}

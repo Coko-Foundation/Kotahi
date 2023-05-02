@@ -31,7 +31,7 @@ const Review = ({
   threadedDiscussionProps,
 }) => (
   <Container>
-    {!review.isHiddenReviewerName && showUserInfo && (
+    {review && !review?.isHiddenReviewerName && showUserInfo && (
       <div>
         <Heading>
           <strong>{review.user.username}</strong>
@@ -40,7 +40,7 @@ const Review = ({
       </div>
     )}
 
-    {review.isHiddenReviewerName && showUserInfo && (
+    {review?.isHiddenReviewerName && showUserInfo && (
       <div>
         <Heading>
           <strong style={{ color: '#545454' }}>Anonymous Reviewer</strong>
@@ -50,7 +50,7 @@ const Review = ({
 
     <ReadonlyFormTemplate
       form={reviewForm}
-      formData={ensureJsonIsParsed(review.jsonData) ?? {}}
+      formData={ensureJsonIsParsed(review?.jsonData) ?? {}}
       hideSpecialInstructions
       showEditorOnlyFields={showEditorOnlyFields || user.admin}
       threadedDiscussionProps={threadedDiscussionProps}

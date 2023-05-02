@@ -15,11 +15,11 @@ const ManuscriptRow = ({
   manuscript,
   columnDefinitions,
   setFilter,
-  getLink,
+  mainActionLink,
 }) => {
   const history = useHistory()
 
-  const columnContent = columnDefinitions.map(column => {
+  const rowCells = columnDefinitions.map(column => {
     const values = getFieldValueAndDisplayValue(column, manuscript)
     const Renderer = column.component
     return (
@@ -45,8 +45,8 @@ const ManuscriptRow = ({
   )
 
   // Whole Row is clickable
-  if (getLink) {
-    const onRowClick = () => history.push(getLink(manuscript))
+  if (mainActionLink) {
+    const onRowClick = () => history.push(mainActionLink)
 
     return (
       <>
@@ -56,7 +56,7 @@ const ManuscriptRow = ({
           role="button"
           tabIndex={0}
         >
-          {columnContent}
+          {rowCells}
         </ClickableManuscriptsRow>
         {manuscript.searchSnippet && searchSnippet}
       </>
@@ -65,7 +65,7 @@ const ManuscriptRow = ({
 
   return (
     <>
-      <ManuscriptsRow>{columnContent}</ManuscriptsRow>
+      <ManuscriptsRow>{rowCells}</ManuscriptsRow>
       {manuscript.searchSnippet && (
         <SnippetRow
           dangerouslySetInnerHTML={{
