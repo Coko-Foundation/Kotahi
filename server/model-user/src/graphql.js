@@ -65,6 +65,8 @@ const resolvers = {
         lastOnline: new Date(Date.now()),
       })
 
+      if (!user) return null
+
       // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
       return user
