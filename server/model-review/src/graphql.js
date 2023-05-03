@@ -95,6 +95,12 @@ const resolvers = {
       return member.save()
     },
   },
+  Review: {
+    async user(parent, { id }, ctx) {
+      // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
+      return parent.user || models.User.query().findById(parent.userId)
+    },
+  },
 }
 
 const typeDefs = `

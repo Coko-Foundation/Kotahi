@@ -160,7 +160,7 @@ const getFileWithUrl = async file => {
   return file
 }
 
-/* replace source html with regenerated file URLs of provided size */
+/** Replace file URLs in source html with regenerated URLs to files of specified size */
 const replaceImageSrc = async (source, files, size) => {
   const $ = cheerio.load(source)
   const fileIds = []
@@ -196,6 +196,10 @@ const replaceImageSrc = async (source, files, size) => {
   return $.html()
 }
 
+/** Replace file URLs in source html with regenerated URLs to files of specified size,
+ * plus attributes data-low-def, data-standard-def and data-hi-def with URIs of other
+ * sized files.
+ */
 const replaceImageSrcResponsive = async (source, files) => {
   const $ = cheerio.load(source)
   const fileIds = []

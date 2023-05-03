@@ -136,6 +136,11 @@ const resolvers = {
       return result
     },
   },
+  Invitation: {
+    async user(parent) {
+      return parent.user || models.User.query().findById(parent.userId)
+    },
+  },
 }
 
 const typeDefs = `

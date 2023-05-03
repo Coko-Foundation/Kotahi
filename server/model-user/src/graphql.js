@@ -224,7 +224,12 @@ const resolvers = {
     },
   },
   User: {
-    isOnline: user => user.isOnline(),
+    async isOnline(parent) {
+      const currentDateTime = new Date()
+      return (
+        parent.lastOnline && currentDateTime - parent.lastOnline < 5 * 60 * 1000
+      )
+    },
     async defaultIdentity(parent, args, ctx) {
       const identity = await models.Identity.query()
         .where({ userId: parent.id, isDefault: true })

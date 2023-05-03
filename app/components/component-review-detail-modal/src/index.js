@@ -126,7 +126,7 @@ const ReviewDetailsModal = (
       )}`}
       title={`${reviewerName}'s Review Report`}
     >
-      <UserCombo style={{ 'margin-bottom': '1em' }}>
+      <UserCombo style={{ marginBottom: '1em' }}>
         <UserAvatar
           isClickable
           showHoverProfile
