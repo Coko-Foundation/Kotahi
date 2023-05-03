@@ -21,6 +21,8 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     handlingEditor: false,
     seniorEditor: false,
     managingEditor: false,
+    anyEditor: false,
+    editorOrAdmin: false,
   }
 
   const teams = await Team.query()

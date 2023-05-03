@@ -57,30 +57,6 @@ const stripConfidentialDataFromReviews = (
     })
 }
 
-const fixMissingValuesInFilesInSingleMsVersion = ms => {
-  const result = { ...ms }
-
-  if (ms.files)
-    result.files = ms.files.map(f => ({
-      ...f,
-      tags: f.tags || [],
-      storedObjects: f.storedObjects || [],
-    }))
-
-  return result
-}
-
-/** Returns a new manuscript object in which null/undefined files, file tags and file storedObjects are replaced with []. */
-const fixMissingValuesInFiles = ms => {
-  const result = fixMissingValuesInFilesInSingleMsVersion(ms)
-  if (result.manuscriptVersions)
-    result.manuscriptVersions = result.manuscriptVersions.map(v =>
-      fixMissingValuesInFilesInSingleMsVersion(v),
-    )
-
-  return result
-}
-
 /** Get evaluations as
  * [
  *  [submission.review1, submission.review1date],
@@ -531,7 +507,6 @@ const applyTemplatesToArtifacts = (
 module.exports = {
   buildQueryForManuscriptSearchFilterAndOrder,
   stripConfidentialDataFromReviews,
-  fixMissingValuesInFiles,
   hasEvaluations,
   applyTemplatesToArtifacts,
   getFieldsMapForTemplating,

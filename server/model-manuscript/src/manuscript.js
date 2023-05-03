@@ -3,6 +3,7 @@ const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
 const Config = require('../../config/src/config')
+const { getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
 
 const {
   populateTemplatedTasksForManuscript,
@@ -21,7 +22,7 @@ class Manuscript extends BaseModel {
 
   static get modifiers() {
     return {
-      orderByCreated(builder) {
+      orderByCreatedDesc(builder) {
         builder.orderBy('created', 'desc')
       },
       orderBy(query, sort) {
@@ -107,7 +108,7 @@ class Manuscript extends BaseModel {
 
     const manuscriptVersions = sortBy(
       manuscriptVersionsArray,
-      manuscript => new Date(manuscript.created),
+      manuscript => -manuscript.created,
     )
 
     return manuscriptVersions
@@ -134,12 +135,6 @@ class Manuscript extends BaseModel {
     const authorTeam = manuscriptWithAuthors.teams[0]
     const author = authorTeam.members[0] // picking the author that has latest created date
     return author.user
-  }
-
-  async getManuscriptChannels() {
-    const id = this.parentId || this.id
-    const channels = await Manuscript.relatedQuery('channels').for(id)
-    return channels || []
   }
 
   async getManuscriptEditor() {
@@ -187,15 +182,22 @@ class Manuscript extends BaseModel {
       isDecision: true,
     })
 
-    const clonedDecisions = decisions.map(review => {
-      const clonedDecision = cloneDeep(review)
+    const decisionForm = await getDecisionForm()
+
+    const threadedDiscussionFieldNames = decisionForm
+      ? decisionForm.structure.children
+          .filter(field => field.component === 'ThreadedDiscussion')
+          .map(field => field.name)
+      : []
+
+    const clonedDecisions = decisions.map(decision => {
+      const clonedDecision = cloneDeep(decision)
       delete clonedDecision.id
-      clonedDecision.jsonData = {
-        ...clonedDecision.jsonData,
-        comment: '',
-        verdict: '',
-        files: '',
-      }
+      clonedDecision.jsonData = {}
+
+      Object.entries(decision.jsonData)
+        .filter(e => threadedDiscussionFieldNames.includes(e.key))
+        .forEach(e => (clonedDecision.jsonData[e.key] = e.value))
       return clonedDecision
     })
 

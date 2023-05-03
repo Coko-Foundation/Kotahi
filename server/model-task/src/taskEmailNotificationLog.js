@@ -23,14 +23,11 @@ class TaskEmailNotificationLog extends BaseModel {
   static get schema() {
     return {
       properties: {
-        id: { type: 'string', format: 'uuid' },
         taskId: { type: 'string', format: 'uuid' },
         senderEmail: { type: 'string' },
         recipientEmail: { type: 'string' },
         emailTemplateKey: { type: 'string' },
         content: { type: 'string' },
-        updated: { type: 'string', format: 'date-time' },
-        created: { type: 'string', format: 'date-time' },
       },
     }
   }

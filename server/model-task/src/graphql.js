@@ -1,4 +1,5 @@
 const moment = require('moment-timezone')
+const models = require('@pubsweet/models')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
@@ -183,6 +184,35 @@ const resolvers = {
       return (
         (await TaskAlert.query().where({ userId: ctx.user }).limit(1)).length >
         0
+      )
+    },
+  },
+  Task: {
+    assignee: async parent => {
+      return (
+        parent.assignee || models.User.query().findById(parent.assigneeUserId)
+      )
+    },
+    emailNotifications: async parent => {
+      return (
+        parent.emailNotifications ||
+        Task.relatedQuery('emailNotifications')
+          .for(parent.id)
+          .orderBy('created')
+      )
+    },
+    notificationLogs: async parent => {
+      return (
+        parent.notificationLogs ||
+        Task.relatedQuery('notificationLogs').for(parent.id).orderBy('created')
+      )
+    },
+  },
+  TaskEmailNotification: {
+    recipientUser: async parent => {
+      return (
+        parent.recipientUser ||
+        models.User.query().findById(parent.recipientUserId)
       )
     },
   },

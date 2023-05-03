@@ -7,7 +7,7 @@ export default {
         totalCount
         manuscripts {
           id
-          reviews {
+          reviews(forceRemovalOfConfidentialData: true) {
             id
             open
             canBePublishedPublicly

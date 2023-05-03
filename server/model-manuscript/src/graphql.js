@@ -32,7 +32,6 @@ const {
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const {
-  fixMissingValuesInFiles,
   hasEvaluations,
   stripConfidentialDataFromReviews,
   buildQueryForManuscriptSearchFilterAndOrder,
@@ -40,8 +39,6 @@ const {
 } = require('./manuscriptUtils')
 
 const { applyTemplate, generateCss } = require('../../pdfexport/applyTemplate')
-const publicationMetadata = require('../../pdfexport/pdfTemplates/publicationMetadata')
-const articleMetadata = require('../../pdfexport/pdfTemplates/articleMetadata')
 
 const {
   getFilesWithUrl,
@@ -57,11 +54,11 @@ const {
 } = require('../../publishing/hypothesis')
 
 const sendEmailNotification = require('../../email-notifications')
-
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { tryPublishDocMaps } = require('../../publishing/docmaps')
+const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 const {
   populateTemplatedTasksForManuscript,
@@ -75,26 +72,17 @@ const {
 const {
   getReviewForm,
   getDecisionForm,
+  getSubmissionForm,
 } = require('../../model-review/src/reviewCommsUtils')
 
 const {
   getThreadedDiscussionsForManuscript,
 } = require('../../model-threaded-discussion/src/threadedDiscussionCommsUtils')
 
-const { getUsersById } = require('../../model-user/src/userCommsUtils')
-const { getActiveForms } = require('../../model-form/src/formCommsUtils')
-
-const repackageForGraphql = async ms => {
-  const result = { ...fixMissingValuesInFiles(ms) }
-  await regenerateAllFileUris(result)
-
-  if (result.reviews && typeof result.reviews !== 'string')
-    result.reviews = result.reviews.map(review => ({
-      ...review,
-      jsonData: JSON.stringify(review.jsonData),
-    }))
-  return result
-}
+const {
+  getUsersById,
+  getUserRolesInManuscript,
+} = require('../../model-user/src/userCommsUtils')
 
 /** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
 const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
@@ -106,89 +94,7 @@ const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
         .abstract}, is illegal!`,
     )
 
-  const updatedMs = await models.Manuscript.query().updateAndFetchById(
-    ms.id,
-    ms,
-  )
-
-  return repackageForGraphql(updatedMs)
-}
-
-/* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop */
-const regenerateAllFileUris = async manuscript => {
-  const reviewForm = await getReviewForm()
-  const decisionForm = await getDecisionForm()
-  const allFiles = []
-
-  if (manuscript.files) {
-    manuscript.files = await getFilesWithUrl(manuscript.files)
-    allFiles.push(...manuscript.files)
-  }
-
-  if (manuscript.reviews) {
-    for (const review of manuscript.reviews)
-      await convertFilesToFullObjects(
-        review,
-        review.isDecision ? decisionForm : reviewForm,
-        async ids => File.query().findByIds(ids),
-        getFilesWithUrl,
-      )
-  }
-
-  if (manuscript.manuscriptVersions) {
-    for (const v of manuscript.manuscriptVersions) {
-      if (v.files) {
-        v.files = await getFilesWithUrl(v.files)
-        allFiles.push(...v.files)
-      }
-
-      if (v.reviews) {
-        for (const review of v.reviews)
-          await convertFilesToFullObjects(
-            review,
-            review.isDecision ? decisionForm : reviewForm,
-            async ids => File.query().findByIds(ids),
-            getFilesWithUrl,
-          )
-      }
-    }
-  }
-
-  // Currently we're not recreating files in the manuscript when we create a new version,
-  // so some files found in the HTML source may actually be owned by a previous version.
-  // We therefore need to have ALL files available when doing replacements.
-  // TODO Fix this by recreating all files upon creating a new version, and fix old manuscripts via migration.
-  if (allFiles.length && typeof manuscript.meta.source === 'string') {
-    manuscript.meta.source = await replaceImageSrcResponsive(
-      manuscript.meta.source,
-      allFiles,
-    )
-  }
-
-  if (manuscript.manuscriptVersions) {
-    for (const v of manuscript.manuscriptVersions) {
-      if (allFiles.length && typeof v.meta.source === 'string') {
-        v.meta.source = await replaceImageSrcResponsive(v.meta.source, allFiles)
-      }
-    }
-  }
-}
-/* eslint-enable no-param-reassign, no-restricted-syntax, no-await-in-loop */
-
-const isEditorOfManuscript = async (userId, manuscriptWithTeams) => {
-  const { teams } = manuscriptWithTeams
-
-  const editorTeamIds = teams
-    .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
-    .map(t => t.id)
-
-  const result = await TeamMember.query()
-    .select('id')
-    .where({ userId })
-    .whereIn('teamId', editorTeamIds)
-    .limit(1)
-
-  return !!result.length
+  return models.Manuscript.query().updateAndFetchById(ms.id, ms)
 }
 
 const getCss = async () => {
@@ -200,11 +106,15 @@ const getCss = async () => {
  * all files attached to reviews, and stringify JSON data in preparation for serving to client.
  * Note: 'reviews' include the decision object.
  */
-const getRelatedReviews = async manuscript => {
+const getRelatedReviews = async (
+  manuscript,
+  ctx,
+  forceRemovalOfConfidentialData,
+) => {
   const reviewForm = await getReviewForm()
   const decisionForm = await getDecisionForm()
 
-  const reviews =
+  let reviews =
     manuscript.reviews ||
     (await (
       await models.Manuscript.query().findById(manuscript.id)
@@ -222,6 +132,20 @@ const getRelatedReviews = async manuscript => {
     )
   }
 
+  const userRoles = await getUserRolesInManuscript(ctx.user, manuscript.id)
+
+  if (
+    forceRemovalOfConfidentialData ||
+    (!userRoles.admin && !userRoles.anyEditor)
+  ) {
+    reviews = stripConfidentialDataFromReviews(
+      reviews,
+      reviewForm,
+      decisionForm,
+      ctx.user,
+    )
+  }
+
   return reviews.map(review => ({
     ...review,
     jsonData: JSON.stringify(review.jsonData),
@@ -231,14 +155,15 @@ const getRelatedReviews = async manuscript => {
 /** Get published artifacts from the manuscript if present, or from DB.
  * Expand the templated contents of artifacts in preparation for serving to client.
  */
-const getRelatedPublishedArtifacts = async manuscript => {
+const getRelatedPublishedArtifacts = async (manuscript, ctx) => {
   const templatedArtifacts =
     manuscript.publishedArtifacts ||
     (await (
       await models.Manuscript.query().findById(manuscript.id)
     ).$relatedQuery('publishedArtifacts'))
 
-  const reviews = manuscript.reviews || (await getRelatedReviews(manuscript))
+  const reviews =
+    manuscript.reviews || (await getRelatedReviews(manuscript, ctx))
 
   const threadedDiscussions =
     manuscript.threadedDiscussions ||
@@ -262,50 +187,37 @@ const getRelatedPublishedArtifacts = async manuscript => {
   )
 }
 
-const ManuscriptResolvers = ({ isVersion }) => {
-  const resolvers = {
-    submission(parent) {
-      return JSON.stringify(parent.submission)
-    },
-    async reviews(parent, _, ctx) {
-      return getRelatedReviews(parent)
-    },
-    async teams(parent, _, ctx) {
-      return parent.teams
-        ? parent.teams
-        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
-            'teams',
-          )
-    },
-    async files(parent, _, ctx) {
-      return parent.files
-        ? parent.files
-        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
-            'files',
-          )
-    },
-    async publishedArtifacts(parent, _, ctx) {
-      return getRelatedPublishedArtifacts(parent)
-    },
+const manuscriptAndPublishedManuscriptSharedResolvers = {
+  /** We want submission info to come out as a stringified JSON, so that we don't have to
+   * change our queries if the submission form changes. We still want to store it as JSONB
+   * so that we can easily search through the information within. */
+  submission(parent) {
+    return JSON.stringify(parent.submission)
+  },
+  async files(parent, _, ctx) {
+    const files = (
+      parent.files ||
+      (await (
+        await models.Manuscript.query().findById(parent.id)
+      ).$relatedQuery('files'))
+    ).map(f => ({
+      ...f,
+      tags: f.tags || [],
+      storedObjects: f.storedObjects || [],
+    }))
 
-    meta(parent) {
-      return { ...parent.meta, manuscriptId: parent.id }
-    },
-  }
-
-  if (!isVersion) {
-    resolvers.manuscriptVersions = async (parent, _, ctx) => {
-      if (!parent.manuscriptVersions || !parent.manuscriptVersions.length) {
-        return models.Manuscript.relatedQuery('manuscriptVersions')
-          .for(parent.id)
-          .orderBy('created', 'desc')
-      }
-
-      return parent.manuscriptVersions
+    return getFilesWithUrl(files)
+  },
+  async publishedArtifacts(parent, _, ctx) {
+    return getRelatedPublishedArtifacts(parent, ctx)
+  },
+  async meta(parent) {
+    return {
+      ...(parent.meta || {}),
+      manuscriptId: parent.id,
+      manuscriptFiles: parent.files, // For use by sub-resolvers only. Not part of return value.
     }
-  }
-
-  return resolvers
+  },
 }
 
 /** Modifies the supplied manuscript by replacing all inlined base64 images
@@ -544,8 +456,6 @@ const resolvers = {
 
       // newly uploaded files get tasks populated
       await populateTemplatedTasksForManuscript(manuscript.id)
-
-      updatedManuscript.manuscriptVersions = []
 
       return updatedManuscript
     },
@@ -786,9 +696,7 @@ const resolvers = {
 
     async createNewVersion(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query().findById(id)
-
-      const newVersion = await manuscript.createNewVersion()
-      return repackageForGraphql(newVersion)
+      return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
       if (config['notification-email'].automated === 'true') {
@@ -1057,7 +965,7 @@ const resolvers = {
         manuscript,
       )
 
-      return repackageForGraphql(updated)
+      return updated
     },
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query()
@@ -1194,7 +1102,7 @@ const resolvers = {
         update,
       )
 
-      return { manuscript: await repackageForGraphql(updatedManuscript), steps }
+      return { manuscript: updatedManuscript, steps }
     },
   },
   Subscription: {
@@ -1208,64 +1116,7 @@ const resolvers = {
   },
   Query: {
     async manuscript(_, { id }, ctx) {
-      // eslint-disable-next-line global-require
-      const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
-
-      const manuscript = await ManuscriptModel.query()
-        .findById(id)
-        .withGraphFetched(
-          '[invitations.[user], teams, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
-        )
-
-      const user = ctx.user
-        ? await models.User.query().findById(ctx.user)
-        : null
-
-      if (!manuscript) return null
-
-      if (!manuscript.meta) {
-        manuscript.meta = {}
-      }
-
-      // manuscript.files = await getFilesWithUrl(manuscript.files)
-      // const forms = await models.Form.query()
-      // await regenerateFileUrisInReviews(manuscript, forms)
-
-      if (typeof manuscript.meta.source === 'string') {
-        manuscript.meta.source = await replaceImageSrc(
-          manuscript.meta.source,
-          manuscript.files,
-          'medium',
-        )
-      }
-
-      manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
-
-      /**
-       * Returns an array of all the chat channels.
-       * We are only using parent manuscripts channels so in case this is a child manuscript
-       * it will fetch the parent manuscript channels only
-       * **/
-      manuscript.channels = await manuscript.getManuscriptChannels()
-
-      if (
-        user &&
-        !user.admin &&
-        manuscript.reviews &&
-        manuscript.reviews.length &&
-        !(await isEditorOfManuscript(ctx.user, manuscript))
-      ) {
-        const reviewForm = await getReviewForm()
-        const decisionForm = await getDecisionForm()
-        manuscript.reviews = stripConfidentialDataFromReviews(
-          manuscript.reviews,
-          reviewForm,
-          decisionForm,
-          ctx.user,
-        )
-      }
-
-      return repackageForGraphql(manuscript)
+      return models.Manuscript.query().findById(id)
     },
     async manuscriptsUserHasCurrentRoleIn(
       _,
@@ -1283,6 +1134,7 @@ const resolvers = {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
 
       // Get IDs of the top-level manuscripts
+      // TODO move this query to the model
       const topLevelManuscripts = await models.Manuscript.query()
         .distinct(
           raw(
@@ -1297,7 +1149,7 @@ const resolvers = {
       // Get those top-level manuscripts with all versions, all with teams and members
       const allManuscriptsWithInfo = await models.Manuscript.query()
         .withGraphFetched(
-          '[teams.[members], tasks, invitations, manuscriptVersions(orderByCreated).[teams.[members], tasks, invitations]]',
+          '[teams.members, tasks, invitations, manuscriptVersions(orderByCreatedDesc).[teams.members, tasks, invitations]]',
         )
         .whereIn(
           'id',
@@ -1336,6 +1188,7 @@ const resolvers = {
       })
 
       // Apply filters to the manuscripts, limiting results to those the user has a role in
+      // TODO This should move into the model, as all raw DB interactions should be controlled there
       const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
         sort,
         offset,
@@ -1362,62 +1215,23 @@ const resolvers = {
       return { totalCount, manuscripts: result }
     },
     async manuscripts(_, { where }, ctx) {
-      const manuscripts = models.Manuscript.query()
-        .withGraphFetched(
-          '[teams, reviews, manuscriptVersions(orderByCreated)]',
-        )
-        .where({ parentId: null, isHidden: null })
+      return models.Manuscript.query()
+        .where({ parentId: null })
+        .whereNot({ isHidden: true })
         .orderBy('created', 'desc')
-
-      return Promise.all(manuscripts.map(async m => repackageForGraphql(m)))
     },
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
-      const query = models.Manuscript.query()
-        .whereNotNull('published')
-        .withGraphFetched('[reviews, files, submitter]')
-
+      const query = models.Manuscript.query().whereNotNull('published')
       const totalCount = await query.resultSize()
 
       if (sort) {
         const [sortName, sortDirection] = sort.split('_')
-
         query.orderBy(ref(sortName), sortDirection)
-        // }
-        // // e.g. 'created_DESC' into 'created' and 'DESC' arguments
-        // query.orderBy(...sort.split('_'))
       }
 
-      if (limit) {
-        query.limit(limit)
-      }
-
-      if (offset) {
-        query.offset(offset)
-      }
-
-      let manuscripts = await query
-      const reviewForm = await getReviewForm()
-      const decisionForm = await getDecisionForm()
-
-      manuscripts = manuscripts.map(async m => {
-        const manuscript = m
-
-        if (typeof manuscript.meta.source === 'string') {
-          manuscript.meta.source = await replaceImageSrc(
-            manuscript.meta.source,
-            manuscript.files,
-            'medium',
-          )
-        }
-
-        manuscript.reviews = await stripConfidentialDataFromReviews(
-          manuscript.reviews,
-          reviewForm,
-          decisionForm,
-        )
-
-        return repackageForGraphql(manuscript)
-      })
+      if (limit) query.limit(limit)
+      if (offset) query.offset(offset)
+      const manuscripts = await query
 
       return {
         totalCount,
@@ -1429,8 +1243,9 @@ const resolvers = {
       { sort, offset, limit, filters, timezoneOffsetMinutes },
       ctx,
     ) {
-      const submissionForm = await Form.findOneByField('purpose', 'submit')
+      const submissionForm = await getSubmissionForm()
 
+      // TODO Move this to the model, as only the model should interact with DB directly
       const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
         sort,
         offset,
@@ -1447,12 +1262,7 @@ const resolvers = {
         totalCount = parseInt(rawQResult.rows[0].full_count, 10)
 
       const ids = rawQResult.rows.map(row => row.id)
-
-      const manuscripts = await models.Manuscript.query()
-        .findByIds(ids)
-        .withGraphFetched(
-          '[submitter, teams.members.user.defaultIdentity, manuscriptVersions(orderByCreated).[submitter, teams.members.user.defaultIdentity]]',
-        )
+      const manuscripts = await models.Manuscript.query().findByIds(ids)
 
       const result = rawQResult.rows.map(row => ({
         ...manuscripts.find(m => m.id === row.id),
@@ -1467,73 +1277,14 @@ const resolvers = {
       const query = models.Manuscript.query()
         .whereNotNull('published')
         .orderBy('published')
-        .withGraphFetched('[files]')
 
       if (startDate) query.where('published', '>=', new Date(startDate))
       if (limit) query.limit(limit)
 
-      const manuscripts = await query
-
-      return manuscripts.map(async m => {
-        const manuscript = m
-        manuscript.files = await getFilesWithUrl(manuscript.files)
-
-        if (typeof manuscript.meta.source === 'string') {
-          manuscript.meta.source = await replaceImageSrcResponsive(
-            manuscript.meta.source,
-            manuscript.files,
-          )
-        }
-
-        const printReadyPdf = manuscript.files.find(file =>
-          file.tags.includes('printReadyPdf'),
-        )
-
-        return {
-          id: manuscript.id,
-          shortId: manuscript.shortId,
-          files: manuscript.files,
-          status: manuscript.status,
-          meta: manuscript.meta,
-          submission: JSON.stringify(manuscript.submission),
-          publishedDate: manuscript.published,
-          printReadyPdfUrl: printReadyPdf
-            ? printReadyPdf.storedObjects[0].url
-            : null,
-          styledHtml: applyTemplate(m, true),
-          css: getCss(),
-          publicationMetadata,
-          articleMetadata: articleMetadata(m),
-        }
-      })
+      return query
     },
     async publishedManuscript(_, { id }, ctx) {
-      const m = await models.Manuscript.query()
-        .findById(id)
-        .whereNotNull('published')
-        .withGraphFetched('[files]')
-
-      if (!m) return null
-
-      m.files = await getFilesWithUrl(m.files)
-
-      if (typeof m.meta.source === 'string') {
-        m.meta.source = await replaceImageSrc(m.meta.source, m.files, 'medium')
-      }
-
-      return {
-        id: m.id,
-        shortId: m.shortId,
-        files: m.files,
-        status: m.status,
-        meta: m.meta,
-        submission: JSON.stringify(m.submission),
-        publishedDate: m.published,
-        styledHtml: applyTemplate(m, true),
-        css: getCss(),
-        publicationMetadata,
-        articleMetadata: articleMetadata(m),
-      }
+      return models.Manuscript.query().findById(id).whereNotNull('published')
     },
     async unreviewedPreprints(_, { token }, ctx) {
       const activeConfig = await Config.query().first() // To be replaced with group based active config in future
@@ -1640,13 +1391,111 @@ const resolvers = {
       return { isDOIValid: await doiIsAvailable(doi) }
     },
   },
-  // We want submission info to come out as a stringified JSON, so that we don't have to
-  // change our queries if the submission form changes. We still want to store it as JSONB
-  // so that we can easily search through the information within.
-  Manuscript: ManuscriptResolvers({ isVersion: false }),
+  Manuscript: {
+    ...manuscriptAndPublishedManuscriptSharedResolvers,
+    async channels(parent) {
+      return (
+        parent.channels ||
+        models.Manuscript.relatedQuery('channels').for(
+          parent.parentId || parent.id, // chat channels belong to the first-version manuscript
+        )
+      )
+    },
+    async reviews(parent, { forceRemovalOfConfidentialData }, ctx) {
+      return getRelatedReviews(parent, ctx, forceRemovalOfConfidentialData)
+    },
+    async teams(parent, _, ctx) {
+      return (
+        parent.teams || models.Manuscript.relatedQuery('teams').for(parent.id)
+      )
+    },
+    async invitations(parent) {
+      return (
+        parent.invitations ||
+        models.Manuscript.relatedQuery('invitations').for(parent.id)
+      )
+    },
+    async tasks(parent) {
+      return (
+        parent.tasks ||
+        models.Manuscript.relatedQuery('tasks')
+          .for(parent.id)
+          .orderBy('sequenceIndex')
+      )
+    },
+    async manuscriptVersions(parent) {
+      const manuscript = await models.Manuscript.query().findById(parent.id)
+      return manuscript.getManuscriptVersions()
+    },
+    async submitter(parent) {
+      return (
+        parent.submitter ||
+        models.Manuscript.relatedQuery('submitter').for(parent.id).first()
+      )
+    },
+  },
   PublishedManuscript: {
-    async publishedArtifacts(parent, _, ctx) {
-      return getRelatedPublishedArtifacts(parent)
+    ...manuscriptAndPublishedManuscriptSharedResolvers,
+    async printReadyPdfUrl(parent) {
+      // TODO reduce shared code with files resolver
+      const files = (
+        parent.files ||
+        (await (
+          await models.Manuscript.query().findById(parent.id)
+        ).$relatedQuery('files'))
+      ).map(f => ({
+        ...f,
+        tags: f.tags || [],
+        storedObjects: f.storedObjects || [],
+      }))
+
+      const printReadyPdf = files.find(f => f.tags.includes('printReadyPdf'))
+      return printReadyPdf ? printReadyPdf.storedObjects[0].url : null
+    },
+    async styledHtml(parent) {
+      // TODO reduce shared code with files resolver
+      let files = (
+        parent.files ||
+        (await (
+          await models.Manuscript.query().findById(parent.id)
+        ).$relatedQuery('files'))
+      ).map(f => ({
+        ...f,
+        tags: f.tags || [],
+        storedObjects: f.storedObjects || [],
+      }))
+
+      files = await getFilesWithUrl(files)
+
+      const source =
+        typeof parent.meta.source === 'string'
+          ? await replaceImageSrcResponsive(parent.meta.source, files, 'medium')
+          : null
+
+      return applyTemplate(
+        { ...parent, files, meta: { ...parent.meta, ...source } },
+        true,
+      )
+    },
+    async css(parent) {
+      return getCss()
+    },
+    async publishedDate(parent) {
+      return parent.published
+    },
+  },
+  ManuscriptMeta: {
+    async source(parent, _, ctx, info) {
+      if (typeof parent.source !== 'string') return null
+
+      const files =
+        parent.manuscriptFiles ||
+        (await (
+          await models.Manuscript.query().findById(parent.manuscriptId)
+        ).$relatedQuery('files'))
+
+      // TODO Any reason not to use replaceImageSrcResponsive here?
+      return replaceImageSrc(parent.source, files, 'medium')
     },
   },
 }
@@ -1721,7 +1570,7 @@ const typeDefs = `
     shortId: Int!
     files: [File]
     teams: [Team]
-    reviews: [Review]
+    reviews(forceRemovalOfConfidentialData: Boolean): [Review]
     status: String
     decision: String
     authors: [Author]
