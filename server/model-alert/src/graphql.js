@@ -10,13 +10,17 @@ const resolvers = {
     },
   },
   Mutation: {
-    createAlert: async (_, { messageId, userId }, context) => {
+    createAlert: async (
+      _,
+      { input: { title, userId, messageId } },
+      context,
+    ) => {
       const alert = await new Alert({
-        title: 'hello',
-        userId: 'hardcode',
-        messageId: 'hardcode',
-        triggerTime: 'hardcode',
-        isSent: true,
+        title,
+        userId,
+        messageId,
+        triggerTime: new Date(),
+        isSent: false,
       }).save()
 
       return alert
@@ -36,13 +40,19 @@ const typeDefs = `
     updated: DateTime
   }
 
+  input AlertInput {
+    title: String!
+    userId: ID!
+    messageId: ID
+  }
+
   extend type Query {
     alert(id: ID): Alert
     alerts: [Alert]
   }
 
   extend type Mutation {
-    createAlert(messageId: ID, userId: ID): Alert
+    createAlert(input: AlertInput): Alert
   }
 `
 
