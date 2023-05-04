@@ -1,0 +1,9 @@
+CREATE TABLE alerts (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  message_id UUID REFERENCES messages(id) ON DELETE CASCADE,
+  trigger_time TIMESTAMP WITH TIME ZONE,
+  is_sent BOOLEAN DEFAULT FALSE,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE
+);

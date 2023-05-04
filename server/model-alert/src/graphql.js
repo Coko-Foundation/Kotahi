@@ -32,6 +32,8 @@ const typeDefs = `
     message: Message
     triggerTime: DateTime
     isSent: Boolean!
+    created: DateTime!
+    updated: DateTime
   }
 
   extend type Query {
