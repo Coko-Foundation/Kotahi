@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-import { debounce } from 'lodash'
 import chatWaxEditorConfig from './ChatWaxEditorConfig'
 import chatWaxEditorLayout from './ChatWaxEditorLayout'
 
@@ -14,25 +13,21 @@ const ChatWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
+  onEnterPress,
+  editorRef,
   ...rest
 }) => {
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
-  useEffect(() => debounceChange.flush, [])
-
   return (
     <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
-        config={chatWaxEditorConfig()}
+        config={chatWaxEditorConfig({ onEnterPress })}
+        debug={false}
         layout={chatWaxEditorLayout(readonly)}
-        onBlur={val => {
-          debounceChange.flush() // Probably redundant now that we have debounceChange.flush() during component cleanup (the useEffect code above)
-          onBlur && onBlur(val)
-        }}
-        onChange={debounceChange}
         placeholder={placeholder}
         readonly={readonly}
+        ref={editorRef}
         value={value}
         {...rest}
       />

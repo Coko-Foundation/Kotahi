@@ -48,6 +48,7 @@ const SuperChatInput = props => {
   const [photoSizeError, setPhotoSizeError] = React.useState('')
   const [inputRef, setInputRef] = React.useState(null)
   const { scrollToBottom } = useAppScroller()
+  const editorRef = React.useRef()
 
   // On mount, set the text state to the cached value if one exists
   // $FlowFixMe
@@ -104,8 +105,8 @@ const SuperChatInput = props => {
     }
   }
 
-  const onChange = textValue => {
-    changeText(textValue)
+  const onEnterPress = source => {
+    submit()
   }
 
   const sendMessage = ({ file, body }) =>
@@ -180,11 +181,13 @@ const SuperChatInput = props => {
         })
     }
 
-    if (text.length === 0) return
+    const msg = editorRef.current.getContent()
+
+    if (msg.length === 0) return
 
     // workaround react-mentions bug by replacing @[username] with @username
     // @see withspectrum/spectrum#4587
-    sendMessage({ body: text.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
+    sendMessage({ body: msg.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
     // .then(() => {
     //   // If we're viewing a thread and the user sends a message as a non-member, we need to refetch the thread data
     //   if (
@@ -200,7 +203,6 @@ const SuperChatInput = props => {
     // })
 
     // Clear the chat input now that we're sending a message for sure
-    onChange('')
     setMessageSentCount(messageSentCount + 1)
     removeQuotedMessage()
     inputRef && inputRef.focus()
@@ -298,19 +300,21 @@ const SuperChatInput = props => {
               )}
               <ChatWaxEditor
                 autoFocus={false}
+                editorRef={editorRef}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
                 inputRef={node => {
                   if (props.onRef) props.onRef(node)
                   setInputRef(node)
                 }}
                 key={messageSentCount}
+                // onChange={onChange}
                 networkDisabled={networkDisabled}
-                onChange={onChange}
+                onEnterPress={onEnterPress}
                 onKeyDown={handleKeyPress}
                 placeholder="Your message here..."
-                searchUsersCallBack={searchUsers}
-                staticSuggestions={props.participants} // props.participants is currently undefined
-                value={text}
+                searchUsersCallBack={searchUsers} // props.participants is currently undefined
+                staticSuggestions={props.participants}
+                value=""
               />
             </InputWrapper>
             <SendButton
