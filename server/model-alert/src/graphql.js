@@ -6,12 +6,7 @@ const resolvers = {
       return Alert.find(id)
     },
     alerts: async (_, __, context) => {
-      return [
-        {
-          title: 'hello',
-        },
-      ]
-      // return Alert.all()
+      return Alert.all()
     },
   },
   Mutation: {
