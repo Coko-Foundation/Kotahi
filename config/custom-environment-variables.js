@@ -99,6 +99,13 @@ module.exports = {
     host: 'SERVICE_ANYSTYLE_HOST',
     port: 'SERVICE_ANYSTYLE_PORT',
   },
+  xsweet: {
+    clientId: 'SERVICE_XSWEET_CLIENT_ID',
+    clientSecret: 'SERVICE_XSWEET_SECRET',
+    protocol: 'SERVICE_XSWEET_PROTOCOL',
+    host: 'SERVICE_XSWEET_HOST',
+    port: 'SERVICE_XSWEET_PORT',
+  },
   manuscripts: {
     teamTimezone: 'TEAM_TIMEZONE',
     autoImportHourUtc: 'AUTO_IMPORT_HOUR_UTC',

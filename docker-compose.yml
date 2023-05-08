@@ -38,6 +38,7 @@ services:
       dockerfile: ./Dockerfile-development
     depends_on:
       - db
+      - xsweet
     entrypoint:
       [
         'node_modules/.bin/wait-for-it',
@@ -135,6 +136,11 @@ services:
       - REVIEW_SHARED=${REVIEW_SHARED:-false}
       - REVIEW_HIDE=${REVIEW_HIDE:-false}
       - DISPLAY_SHORTID_AS_IDENTIFIER=${DISPLAY_SHORTID_AS_IDENTIFIER:-false}
+      - SERVICE_XSWEET_CLIENT_ID=59a3392b-0c4f-4318-bbe2-f86eff6d3de4
+      - SERVICE_XSWEET_SECRET=asldkjLKJLaslkdf897kjhKUJH
+      - SERVICE_XSWEET_PROTOCOL=${SERVICE_XSWEET_PROTOCOL:-http}
+      - SERVICE_XSWEET_HOST=${SERVICE_XSWEET_HOST:-xsweet}
+      - SERVICE_XSWEET_PORT=${SERVICE_XSWEET_PORT:-3004}
 
     volumes:
       - ./config:/home/node/app/config
@@ -179,27 +185,40 @@ services:
     volumes:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
-  job-xsweet:
-    image: pubsweet/job-xsweet:1.5.4
+  xsweet:
     depends_on:
-      - server
-    command:
-      [
-        'bash',
-        './scripts/wait-for-it.sh',
-        'server:3000',
-        --,
-        'node',
-        'src/xsweet.js',
-      ]
+      - db-xsweet
+    image: cokoapps/xsweet:2.1.2
+    ports:
+      - ${SERVICE_XSWEET_PORT:-3004}:${SERVICE_XSWEET_PORT:-3004}
     environment:
-      - POSTGRES_HOST=db
+      - PUBSWEET_SECRET=xsweet_dev_secret
+      - POSTGRES_USER=xsweet_user_dev
+      - POSTGRES_PASSWORD=xsweet_user_password
+      - POSTGRES_HOST=db-xsweet
+      - POSTGRES_DB=xsweet_dev
       - POSTGRES_PORT=5432
-      - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
-      - POSTGRES_USER=${POSTGRES_USER:-dev}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - SERVER_PORT=${SERVICE_XSWEET_PORT:-3004}
+      - NODE_ENV=development
+    entrypoint:
+      [
+        'sh',
+        'scripts/wait-for-it',
+        'db-xsweet:5432',
+        '--',
+        'sh',
+        'scripts/setupDevServer.sh',
+      ]
+    command: ['node', 'server/startServer.js']
+
+  db-xsweet:
+    image: postgres:14.4-alpine
+    environment:
+      - POSTGRES_USER=xsweet_user_dev
+      - POSTGRES_DB=xsweet_dev
+      - POSTGRES_PASSWORD=xsweet_user_password
     volumes:
-      - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
+      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   db:
     image: postgres:10-alpine
