@@ -1,3 +1,4 @@
+const sendEmailNotification = require('../../email-notifications')
 const ChannelMember = require('../../model-channel/src/channel_member')
 const Message = require('../../model-message/src/message')
 const Alert = require('./alert')
@@ -48,6 +49,16 @@ const sendAlertForMessage = async ({
   }).save()
 
   // send email notification
+  const data = {
+    receiverName: 'User Name',
+    manuscriptPageUrl: 'https://google.com',
+  }
+
+  await sendEmailNotification(
+    'vaibhav@coloredcow.com',
+    'alertUnreadMessageTemplate',
+    data,
+  )
 
   await Alert.query().updateAndFetchById(alert.id, {
     isSent: true,
