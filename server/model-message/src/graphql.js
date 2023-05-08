@@ -14,7 +14,7 @@ const resolvers = {
     message: async (_, { messageId }) => {
       Message.find(messageId)
     },
-    messages: async (_, { channelId, first = 20, before }) => {
+    messages: async (_, { channelId, first = 20, before }, context) => {
       let messagesQuery = Message.query()
         .where({ channelId })
         .withGraphJoined('user')
@@ -32,6 +32,9 @@ const resolvers = {
 
       const messages = (await messagesQuery).reverse()
       const total = await messagesQuery.resultSize()
+
+      const userId = context.user
+      await updateChannelLastViewed({ channelId, userId })
 
       return {
         edges: messages,
