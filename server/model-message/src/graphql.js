@@ -7,6 +7,8 @@ const MESSAGE_CREATED = 'MESSAGE_CREATED'
 
 const Message = require('./message')
 
+const { updateChannelLastViewed } = require('../../model-channel/src/utils')
+
 const resolvers = {
   Query: {
     message: async (_, { messageId }) => {
@@ -56,6 +58,8 @@ const resolvers = {
         .withGraphJoined('user')
 
       pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
+
+      await updateChannelLastViewed({ channelId, userId })
 
       return message
     },
