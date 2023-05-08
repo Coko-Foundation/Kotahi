@@ -38,6 +38,10 @@ class ChannelMember extends BaseModel {
           type: ['string', 'object', 'null'],
           format: 'date-time',
         },
+        lastAlertTriggeredTime: {
+          type: ['string', 'object', 'null'],
+          format: 'date-time',
+        },
       },
     }
   }

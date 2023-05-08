@@ -24,6 +24,7 @@ const {
 } = require('./model-task/src/taskCommsUtils')
 
 const Config = require('./config/src/config')
+const { sendAlerts } = require('./model-alert/src/utils')
 
 const runSchedule = async () => {
   const activeConfig = await Config.query().first()
@@ -83,6 +84,25 @@ const runSchedule = async () => {
 
       try {
         await sendAutomatedTaskEmailNotifications()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  )
+
+  schedule.scheduleJob(
+    {
+      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
+      rule: `* * * * *`,
+    },
+    async () => {
+      // eslint-disable-next-line no-console
+      console.info(
+        `Running scheduler to send alerts ${new Date().toISOString()}`,
+      )
+
+      try {
+        await sendAlerts()
       } catch (error) {
         console.error(error)
       }
