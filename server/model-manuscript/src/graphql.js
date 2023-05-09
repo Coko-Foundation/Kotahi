@@ -655,7 +655,7 @@ const resolvers = {
 
         let instance
 
-        if (config['notification-email'].use_colab) {
+        if (config['notification-email'].use_colab === 'true') {
           instance = 'colab'
         } else {
           instance = 'generic'
