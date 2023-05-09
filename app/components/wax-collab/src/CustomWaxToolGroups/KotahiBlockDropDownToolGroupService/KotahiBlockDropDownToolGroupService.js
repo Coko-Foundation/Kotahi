@@ -1,5 +1,4 @@
-// import Service from '../../Service' // TODO: figure this out
-import { Service } from 'wax-prosemirror-services'
+import { Service } from 'wax-prosemirror-core'
 import KotahiBlockDropDown from './KotahiBlockDropDown'
 
 class KotahiBlockDropDownToolGroupService extends Service {

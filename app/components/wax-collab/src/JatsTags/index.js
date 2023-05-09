@@ -1,7 +1,4 @@
-import { Service } from 'wax-prosemirror-services'
-// import { DocumentHelpers } from 'wax-prosemirror-utilities'
-// import { useContext } from 'react'
-// import { WaxContext } from 'wax-prosemirror-core'
+import { Service } from 'wax-prosemirror-core'
 import Appendix from './Appendix'
 import FrontMatter from './FrontMatter'
 import Abstract from './Abstract'

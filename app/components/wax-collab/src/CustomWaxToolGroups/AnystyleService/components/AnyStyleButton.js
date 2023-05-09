@@ -1,8 +1,10 @@
 /* eslint react/prop-types: 0 */
 import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
-import { WaxContext /*, DocumentHelpers */ } from 'wax-prosemirror-core'
-import { MenuButton } from 'wax-prosemirror-components'
+import {
+  WaxContext,
+  MenuButton /*, DocumentHelpers */,
+} from 'wax-prosemirror-core'
 import { TextSelection } from 'prosemirror-state'
 
 const AnyStyleDiv = styled(MenuButton)`

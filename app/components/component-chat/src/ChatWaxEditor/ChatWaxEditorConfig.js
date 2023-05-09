@@ -1,5 +1,5 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
-import { DefaultSchema } from 'wax-prosemirror-utilities'
+import { DefaultSchema } from 'wax-prosemirror-core'
 import {
   AnnotationToolGroupService,
   BottomInfoService,

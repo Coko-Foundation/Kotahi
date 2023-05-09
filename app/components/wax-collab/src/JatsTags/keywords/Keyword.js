@@ -1,7 +1,6 @@
 import { decorate, injectable } from 'inversify'
 import { toggleMark } from 'prosemirror-commands'
-import { Commands } from 'wax-prosemirror-utilities'
-import { Tools } from 'wax-prosemirror-services'
+import { Commands, Tools } from 'wax-prosemirror-core'
 
 class Keyword extends Tools {
   title = 'Change to keyword'

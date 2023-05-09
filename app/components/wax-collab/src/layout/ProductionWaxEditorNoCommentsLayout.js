@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useCallback, useState } from 'react'
-import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
-import { DocumentHelpers } from 'wax-prosemirror-utilities'
+import {
+  WaxContext,
+  ComponentPlugin,
+  DocumentHelpers,
+} from 'wax-prosemirror-core'
 import {
   NotesAreaContainer,
   NotesHeading,
