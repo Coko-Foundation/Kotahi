@@ -1,5 +1,5 @@
 import { toggleMark } from 'prosemirror-commands'
-import { Commands, DocumentHelpers } from 'wax-prosemirror-utilities'
+import { Commands, DocumentHelpers } from 'wax-prosemirror-core'
 
 // Sources:
 // This function:

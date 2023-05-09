@@ -3,7 +3,7 @@ import React, { useMemo } from 'react'
 import { decorate, injectable, inject } from 'inversify'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { ToolGroup } from 'wax-prosemirror-services'
+import { ToolGroup } from 'wax-prosemirror-core'
 import { VerticalTabs, BlockLevelTools } from './VerticalTabs'
 
 // nb this was forked from /wax-prosemirror-services/src/WaxToolGroups/DisplayTextToolGroupService/DisplayText.js

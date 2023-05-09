@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { icons } from 'wax-prosemirror-components'
+import { icons } from 'wax-prosemirror-core'
 import { th } from '@pubsweet/ui-toolkit'
 
 // Source: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-components/src/helpers/Icon.js

@@ -1,4 +1,4 @@
-import { Service } from 'wax-prosemirror-services'
+import { Service } from 'wax-prosemirror-core'
 import AnyStyle from './AnyStyle'
 
 class AnyStyleToolGroupService extends Service {
