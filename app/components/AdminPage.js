@@ -225,7 +225,7 @@ const AdminPage = () => {
     ? window.localStorage.getItem('invitationId')
     : ''
 
-  let dashboardRedirectUrl = currentUser.recentTab
+  let dashboardRedirectUrl = currentUser?.recentTab
     ? `${urlFrag}/dashboard/${currentUser.recentTab}`
     : dashboardSubmissionsLink
 
