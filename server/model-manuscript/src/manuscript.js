@@ -2,7 +2,6 @@ const { BaseModel } = require('@coko/server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
-const Config = require('../../config/src/config')
 const { getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
 
 const {
@@ -161,6 +160,9 @@ class Manuscript extends BaseModel {
   }
 
   async createNewVersion() {
+    // eslint-disable-next-line global-require
+    const Config = require('../../config/src/config')
+
     // Copy authors and editors to the new version
     const teams = await this.$relatedQuery('teams')
       .whereIn('role', ['author', 'editor', 'seniorEditor', 'handlingEditor'])

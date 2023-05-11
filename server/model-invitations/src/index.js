@@ -1,10 +1,13 @@
-const model = require('./invitations')
+const Invitation = require('./invitations')
+const BlacklistEmail = require('./blacklist_email')
 const graphql = require('./graphql')
 const resolvers = require('./graphql')
 
 module.exports = {
-  model,
-  modelName: 'Invitation',
   resolvers,
   ...graphql,
+  models: [
+    { modelName: 'Invitation', model: Invitation },
+    { modelName: 'BlacklistEmail', model: BlacklistEmail },
+  ],
 }

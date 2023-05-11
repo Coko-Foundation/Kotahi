@@ -1,9 +1,6 @@
 const models = require('@pubsweet/models')
 const config = require('config')
-const Team = require('../../model-team/src/team')
 const sendEmailNotification = require('../../email-notifications')
-
-const Invitation = require('../../model-invitations/src/invitations')
 
 const getUsersById = async userIds => models.User.query().findByIds(userIds)
 
@@ -25,7 +22,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     editorOrAdmin: false,
   }
 
-  const teams = await Team.query()
+  const teams = await models.Team.query()
     .select('role')
     .where({ objectId: manuscriptId })
     .withGraphFetched('members')
@@ -191,7 +188,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
         ? 'AUTHOR'
         : 'REVIEWER'
 
-    const newInvitation = await new Invitation({
+    const newInvitation = await new models.Invitation({
       manuscriptId,
       toEmail,
       purpose,

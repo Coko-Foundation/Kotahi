@@ -1,7 +1,4 @@
 const models = require('@pubsweet/models')
-const BlacklistEmail = require('./blacklist_email')
-const Team = require('../../model-team/src/team')
-const TeamMember = require('../../model-team/src/team_member')
 
 const {
   isLatestVersionOfManuscript,
@@ -38,7 +35,7 @@ const resolvers = {
       return invitations
     },
     async getBlacklistInformation(_, { email }, ctx) {
-      const blacklistData = await BlacklistEmail.query().where({
+      const blacklistData = await models.BlacklistEmail.query().where({
         email,
       })
 
@@ -79,7 +76,7 @@ const resolvers = {
       return result
     },
     async addEmailToBlacklist(_, { email }, ctx) {
-      const result = await new BlacklistEmail({ email }).save()
+      const result = await new models.BlacklistEmail({ email }).save()
 
       return result
     },
@@ -100,7 +97,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!authorExists) {
-          await new TeamMember({
+          await new models.TeamMember({
             teamId: existingTeam.id,
             userId,
           }).save()
@@ -110,7 +107,7 @@ const resolvers = {
       }
 
       // Create a new team of authors if it doesn't exist
-      const newTeam = await new Team({
+      const newTeam = await new models.Team({
         objectId: manuscriptId,
         objectType: 'manuscript',
         members: [{ userId }],

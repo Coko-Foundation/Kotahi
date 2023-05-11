@@ -1,7 +1,5 @@
 const fetchedObjects = '[members.[user, alias]]'
 const models = require('@pubsweet/models')
-const Team = require('./team')
-const TeamMember = require('./team_member')
 
 const {
   updateAlertsUponTeamUpdate,
@@ -10,17 +8,17 @@ const {
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return Team.query().findById(id).withGraphFetched(fetchedObjects)
+      return models.Team.query().findById(id).withGraphFetched(fetchedObjects)
     },
     teams(_, { where }, ctx) {
-      return Team.query()
+      return models.Team.query()
         .where(where || {})
         .withGraphFetched(fetchedObjects)
     },
   },
   Mutation: {
     async deleteTeam(_, { id }, ctx) {
-      return Team.query().deleteById(id)
+      return models.Team.query().deleteById(id)
     },
     async createTeam(_, { input }, ctx) {
       // TODO Only the relate option appears to be used by insertGraphAndFetch, according to Objection docs?
@@ -31,17 +29,17 @@ const resolvers = {
         eager: '[members.[user.teams, alias]]',
       }
 
-      return Team.query().insertGraphAndFetch(input, options)
+      return models.Team.query().insertGraphAndFetch(input, options)
     },
     async updateTeam(_, { id, input }, ctx) {
-      const existing = await Team.query().select('role').findById(id)
+      const existing = await models.Team.query().select('role').findById(id)
 
       if (
         existing &&
         ['editor', 'handlingEditor', 'seniorEditor'].includes(existing.role)
       ) {
         const existingMemberIds = (
-          await TeamMember.query().select('userId').where({ teamId: id })
+          await models.TeamMember.query().select('userId').where({ teamId: id })
         ).map(m => m.userId)
 
         const newMemberIds = input.members.map(m => m.user.id)
@@ -54,11 +52,14 @@ const resolvers = {
           userId => !newMemberIds.includes(userId),
         )
 
-        const { objectId } = await Team.query().select('objectId').findById(id)
+        const { objectId } = await models.Team.query()
+          .select('objectId')
+          .findById(id)
+
         await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
       }
 
-      return Team.query().upsertGraphAndFetch(
+      return models.Team.query().upsertGraphAndFetch(
         { id, ...input },
         {
           relate: ['members.user'],
@@ -68,7 +69,7 @@ const resolvers = {
       )
     },
     async updateTeamMember(_, { id, input }, ctx) {
-      return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
+      return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
   User: {
@@ -76,7 +77,7 @@ const resolvers = {
   },
   Team: {
     async members(team, { where }, ctx) {
-      const t = await Team.query().findById(team.id)
+      const t = await models.Team.query().findById(team.id)
       return t.$relatedQuery('members')
     },
     object(team, vars, ctx) {
@@ -86,11 +87,11 @@ const resolvers = {
   },
   TeamMember: {
     async user(teamMember, vars, ctx) {
-      const member = await TeamMember.query().findById(teamMember.id)
+      const member = await models.TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('user') : null
     },
     async alias(teamMember, vars, ctx) {
-      const member = await TeamMember.query().findById(teamMember.id)
+      const member = await models.TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('alias') : null
     },
   },
