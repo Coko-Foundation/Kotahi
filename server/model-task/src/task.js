@@ -1,5 +1,4 @@
 const { BaseModel } = require('@coko/server')
-const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 class Task extends BaseModel {
   static get tableName() {
@@ -19,6 +18,8 @@ class Task extends BaseModel {
     const { User } = require('@pubsweet/models')
     /* eslint-disable-next-line global-require */
     const TaskEmailNotification = require('./taskEmailNotification')
+    /* eslint-disable-next-line global-require */
+    const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
     /* eslint-disable-next-line global-require */
     const Manuscript = require('../../model-manuscript/src/manuscript')
 

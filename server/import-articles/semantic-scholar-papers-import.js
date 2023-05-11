@@ -2,9 +2,6 @@
 const axios = require('axios')
 const { map } = require('lodash')
 const models = require('@pubsweet/models')
-const Config = require('../config/src/config')
-const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
-const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 
 const {
   getLastImportDate,
@@ -15,21 +12,23 @@ const {
 const SAVE_CHUNK_SIZE = 50
 
 const getData = async ctx => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
-  const [checkIfSourceExists] = await ArticleImportSources.query().where({
-    server: 'semantic-scholar',
-  })
+  const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
+    {
+      server: 'semantic-scholar',
+    },
+  )
 
   if (!checkIfSourceExists) {
-    await ArticleImportSources.query().insert({
+    await models.ArticleImportSources.query().insert({
       server: 'semantic-scholar',
     })
   }
 
   const [
     semanticScholarImportSourceId,
-  ] = await ArticleImportSources.query().where({
+  ] = await models.ArticleImportSources.query().where({
     server: 'semantic-scholar',
   })
 
@@ -210,13 +209,13 @@ const getData = async ctx => {
       }
 
       if (lastImportDate > 0) {
-        await ArticleImportHistory.query()
+        await models.ArticleImportHistory.query()
           .update({
             date: new Date().toISOString(),
           })
           .where({ sourceId })
       } else {
-        await ArticleImportHistory.query().insert({
+        await models.ArticleImportHistory.query().insert({
           date: new Date().toISOString(),
           sourceId,
         })

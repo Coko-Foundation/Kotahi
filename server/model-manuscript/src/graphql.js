@@ -13,13 +13,7 @@ const {
   manuscriptHasOverdueTasksForUser,
 } = require('./manuscriptCommsUtils')
 
-const Team = require('../../model-team/src/team')
-const TeamMember = require('../../model-team/src/team_member')
-const Config = require('../../config/src/config')
-
 const { getPubsub } = pubsubManager
-const Form = require('../../model-form/src/form')
-const Message = require('../../model-message/src/message')
 
 const {
   publishToCrossref,
@@ -267,7 +261,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   // ms = manuscript
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
 
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   const ms = await models.Manuscript.query()
     .findById(id)
@@ -310,7 +304,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = async manuscriptId => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   const publishingWebhookUrl = activeConfig.formData.publishing.webhook.url
 
@@ -334,9 +328,12 @@ const tryPublishingWebhook = async manuscriptId => {
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
-      const submissionForm = await Form.findOneByField('purpose', 'submit')
+      const submissionForm = await models.Form.findOneByField(
+        'purpose',
+        'submit',
+      )
 
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
       const { meta, files } = vars.input
 
@@ -515,7 +512,7 @@ const resolvers = {
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
       const manuscript = await models.Manuscript.find(id)
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
       toDeleteList.push(manuscript.id)
 
@@ -570,7 +567,7 @@ const resolvers = {
           `Invalid action (reviewerResponse): Must be either "accepted" or "rejected"`,
         )
 
-      const team = await Team.query()
+      const team = await models.Team.query()
         .findById(teamId)
         .withGraphFetched('members')
 
@@ -581,7 +578,7 @@ const resolvers = {
           team.members[i].status = action
       }
 
-      await new Team(team).saveGraph()
+      await new models.Team(team).saveGraph()
 
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
@@ -677,7 +674,7 @@ const resolvers = {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
 
           // Send Notification in Editorial Discussion Panel
-          Message.createMessage({
+          models.Message.createMessage({
             content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
             channelId: editorialChannel.id,
             userId: manuscript.submitterId,
@@ -738,7 +735,7 @@ const resolvers = {
             channel => channel.topic === 'Editorial discussion',
           ).id
 
-          Message.createMessage({
+          models.Message.createMessage({
             content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
             channelId,
             userId: manuscript.submitterId,
@@ -759,7 +756,7 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
-      const activeConfig = await Config.query().first()
+      const activeConfig = await models.Config.query().first()
 
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
@@ -840,7 +837,7 @@ const resolvers = {
               channel => channel.topic === 'Editorial discussion',
             ).id
 
-            Message.createMessage({
+            models.Message.createMessage({
               content: body,
               channelId,
               userId: manuscript.submitterId,
@@ -880,7 +877,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!reviewerExists) {
-          await new TeamMember({
+          await new models.TeamMember({
             teamId: existingTeam.id,
             status,
             userId,
@@ -893,7 +890,7 @@ const resolvers = {
 
       // Create a new team of reviewers if it doesn't exist
 
-      const newTeam = await new Team({
+      const newTeam = await new models.Team({
         objectId: manuscriptId,
         objectType: 'manuscript',
         members: [{ status, userId }],
@@ -911,7 +908,7 @@ const resolvers = {
         .where('role', 'reviewer')
         .first()
 
-      await TeamMember.query()
+      await models.TeamMember.query()
         .where({
           userId,
           teamId: reviewerTeam.id,
@@ -972,7 +969,7 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[reviews, publishedArtifacts]')
 
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
@@ -1131,7 +1128,10 @@ const resolvers = {
       },
       ctx,
     ) {
-      const submissionForm = await Form.findOneByField('purpose', 'submit')
+      const submissionForm = await models.Form.findOneByField(
+        'purpose',
+        'submit',
+      )
 
       // Get IDs of the top-level manuscripts
       // TODO move this query to the model
@@ -1287,7 +1287,7 @@ const resolvers = {
       return models.Manuscript.query().findById(id).whereNotNull('published')
     },
     async unreviewedPreprints(_, { token }, ctx) {
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
       if (activeConfig.formData.user.kotahiApiTokens) {
         validateApiToken(token, activeConfig.formData.user.kotahiApiTokens)
@@ -1316,7 +1316,7 @@ const resolvers = {
       }))
     },
     async doisToRegister(_, { id }, ctx) {
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
       if (!activeConfig.formData.publishing.crossref.login) {
         return null

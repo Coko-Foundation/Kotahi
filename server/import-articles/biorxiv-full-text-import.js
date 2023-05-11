@@ -2,7 +2,6 @@
 const axios = require('axios')
 
 const models = require('@pubsweet/models')
-const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const { dateToIso8601 } = require('../utils/dateUtils')
 
 const {
@@ -158,13 +157,13 @@ const getData = async ctx => {
     }
 
     if (lastImportDate > 0) {
-      await ArticleImportHistory.query()
+      await models.ArticleImportHistory.query()
         .update({
           date: new Date().toISOString(),
         })
         .where({ sourceId })
     } else {
-      await ArticleImportHistory.query().insert({
+      await models.ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId,
       })
