@@ -2,7 +2,6 @@
 import { css } from 'styled-components'
 import { darken, grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'
-import theme from '../../../../theme'
 
 // This should only include styles specific to the editor */
 /* Styles that are purely presentational for text should be in textStyles.css */
@@ -12,13 +11,23 @@ const EditorStyles = css`
   ${props => props.theme.textStyles}
 
   .ProseMirror {
-    background: ${theme.colors.neutral.gray99};
+    background: unset;
     counter-reset: footnote;
     font-family: ${props => props.theme.fontReading};
     white-space: pre-wrap;
 
     &:focus {
       outline: none;
+    }
+
+    & p:first-child,
+    & h1:first-child,
+    & h2:first-child,
+    & h3:first-child,
+    & h4:first-child,
+    & h5:first-child,
+    & h6:first-child {
+      margin-top: 0;
     }
   }
 
