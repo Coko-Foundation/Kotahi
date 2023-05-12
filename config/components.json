@@ -6,7 +6,6 @@
   "./server/model-manuscript/src/",
   "./server/model-invitations/src/",
   "./server/model-file/src/",
-  "./server/component-xpub-review-backend/src/",
   "./server/model-review/src/",
   "./server/model-form/src/",
   "@pubsweet/job-xsweet",

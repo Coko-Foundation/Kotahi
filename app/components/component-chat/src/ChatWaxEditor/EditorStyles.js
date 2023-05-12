@@ -194,7 +194,7 @@ export const SimpleMenu = styled.div`
   width: calc(100% + 50px);
   z-index: 1;
 
-  // TODO: this no longer works!
+  /* TODO: this no longer works! */
   button[title='Special Characters'] + div {
     bottom: 34px;
     left: -372px;
@@ -269,7 +269,7 @@ export const SimpleInfoContainer = styled.div`
   }
 `
 
-// this is for ProductionWaxEditor //
+/* this is for ProductionWaxEditor */
 
 export const ProductionEditorDiv = styled.div`
   display: flex;

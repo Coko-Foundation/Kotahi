@@ -5,13 +5,21 @@ const sendEmailNotification = require('../../email-notifications')
 const getUsersById = async userIds => models.User.query().findByIds(userIds)
 
 /** Returns an object of boolean values corresponding to roles the user could hold:
- * admin, author, reviewer, editor, handlingEditor, seniorEditor, managingEditor.
+ * groupManager, admin, author, reviewer, editor, handlingEditor, seniorEditor, managingEditor.
  * Each is true if the user holds that role.
- * Also, "anyEditor" indicates if the user holds any editorial role for the manuscript,
- * and "editorOrAdmin" indicates if the user is anyEditor or admin. */
+ * Note, an 'invited' or 'rejected' reviewer does NOT have reviewer role.
+ * Also, "anyEditor" indicates if the user holds any editorial role for the manuscript. */
 const getUserRolesInManuscript = async (userId, manuscriptId) => {
+  const groupId = null // TODO set groupId when we have multitenancy
+
+  const { groupRoles, globalRoles } = await getGroupAndGlobalRoles(
+    userId,
+    groupId,
+  )
+
   const result = {
-    admin: !!(await models.User.query().findById(userId)).admin,
+    admin: globalRoles.includes('admin'),
+    groupManager: groupRoles.includes('groupManager'),
     author: false,
     reviewer: false,
     editor: false,
@@ -24,8 +32,9 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
 
   const teams = await models.Team.query()
     .select('role')
-    .where({ objectId: manuscriptId })
-    .withGraphFetched('members')
+    .withGraphJoined('members')
+    .where({ objectId: manuscriptId, userId })
+    .whereNotIn('status', ['invited', 'rejected']) // Reviewers with status 'invited' or 'rejected' are not actually reviewers
 
   teams.forEach(t => {
     result[t.role] = true
@@ -36,8 +45,6 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     result.handlingEditor ||
     result.seniorEditor ||
     result.managingEditor
-
-  result.editorOrAdmin = result.anyEditor || result.admin
 
   return result
 }
@@ -69,10 +76,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const urlFrag = config.journal.metadata.toplevel_urlfragment
   const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
   let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
-  let isAdmin = false
-  let isEditor = false
-  let isReviewer = false
-  let isAuthor = false
+  let roles = {}
 
   if (selectedEmail) {
     // If the email of a pre-existing user is selected
@@ -81,44 +85,16 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       .where({ email: selectedEmail })
       .withGraphFetched('[defaultIdentity]')
 
-    /* eslint-disable-next-line */
     receiverName =
       userReceiver.username || userReceiver.defaultIdentity.name || ''
-
-    const userCurrentRoles = await userReceiver.currentRoles(manuscript)
-
-    const manuscriptRoles = userCurrentRoles.find(
-      data => data.id === manuscript.id,
-    )
-
-    const editorRoles = ['editor', 'handlingEditor', 'seniorEditor']
-
-    const reviewerRoles = [
-      'accepted:reviewer',
-      'inProgress:reviewer',
-      'completed:reviewer',
-      'reviewer',
-    ]
-
-    const authorRoles = ['author']
-
-    isAdmin = userReceiver.admin
-    isEditor =
-      manuscriptRoles &&
-      manuscriptRoles.roles.some(role => editorRoles.includes(role))
-    isReviewer =
-      manuscriptRoles &&
-      manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
-    isAuthor =
-      manuscriptRoles &&
-      manuscriptRoles.roles.some(role => authorRoles.includes(role))
+    roles = await getUserRolesInManuscript(userReceiver.id, manuscript.id)
   }
 
-  if (isAdmin || isEditor) {
+  if (roles.groupManager || roles.anyEditor) {
     manuscriptPageUrl += '/decision?tab=tasks'
-  } else if (isReviewer) {
+  } else if (roles.reviewer) {
     manuscriptPageUrl += '/review'
-  } else if (isAuthor) {
+  } else if (roles.author) {
     manuscriptPageUrl += '/submit'
   } else {
     manuscriptPageUrl = `${baseUrl}/dashboard`
@@ -242,8 +218,44 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   }
 }
 
+const getGroupAndGlobalRoles = async (userId, groupId) => {
+  if (!userId) return { groupRoles: [], globalRoles: [] }
+
+  const groupAndGlobalTeams = await models.Team.query()
+    .select('role', 'objectId')
+    .withGraphJoined('members')
+    .where({ userId })
+    .where(function subcondition() {
+      this.whereRaw('global').orWhere({ objectId: groupId })
+    })
+
+  const groupRoles = []
+  const globalRoles = []
+  groupAndGlobalTeams.forEach(team => {
+    // TODO remove the first condition once groups have IDs
+    if (team.role === 'admin') globalRoles.push(team.role)
+    else if (team.objectId === groupId) groupRoles.push(team.role)
+    else globalRoles.push(team.role)
+  })
+
+  return { groupRoles, globalRoles }
+}
+
+const isAdminOrGroupManager = async userId => {
+  const groupId = null // TODO set groupId once we have multitenancy
+
+  const { groupRoles, globalRoles } = await getGroupAndGlobalRoles(
+    userId,
+    groupId,
+  )
+
+  return groupRoles.includes('groupManager') || globalRoles.includes('admin')
+}
+
 module.exports = {
   getUsersById,
   getUserRolesInManuscript,
   sendEmailWithPreparedData,
+  getGroupAndGlobalRoles,
+  isAdminOrGroupManager,
 }

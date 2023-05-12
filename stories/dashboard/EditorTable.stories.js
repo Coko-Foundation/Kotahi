@@ -130,18 +130,13 @@ const currentUser = {
   __typename: 'User',
   id: '46d6cc04-6310-4021-be5a-5dcf4e24868c',
   username: 'Kotahi Dev',
-  admin: true,
+  groupRoles: ['groupManager'],
+  globalRoles: [],
 }
 
 const props = {
-  query: {
-    data: {
-      manuscriptsUserHasCurrentRoleIn: { manuscripts: editorLatestVersions },
-      currentUser,
-    },
-    loading: false,
-    error: null,
-  },
+  currentUser,
+  manuscriptsUserHasCurrentRoleIn: { manuscripts: editorLatestVersions },
   urlFrag,
 }
 
@@ -149,13 +144,7 @@ Base.args = props
 
 Empty.args = {
   ...Base.args,
-  query: {
-    ...Base.args.query,
-    data: {
-      ...Base.args.query.data,
-      manuscriptsUserHasCurrentRoleIn: { manuscripts: [] },
-    },
-  },
+  manuscriptsUserHasCurrentRoleIn: { manuscripts: [] },
   figmaEmbedLink:
     'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1385%253A11',
 }

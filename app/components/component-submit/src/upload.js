@@ -3,7 +3,6 @@ import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 // import { map } from 'lodash'
 import * as cheerio from 'cheerio'
-import currentRolesVar from '../../../shared/currentRolesVar'
 
 const fragmentFields = `
   id
@@ -407,11 +406,6 @@ const createManuscriptPromise = (
     mutation: createManuscriptMutation,
     variables: { input: manuscript },
     update: (cache, { data: { createManuscript } }) => {
-      const currentRoles = currentRolesVar()
-      currentRolesVar([
-        ...currentRoles,
-        { id: createManuscript.id, roles: ['author'] },
-      ])
       cache.modify({
         fields: {
           manuscripts(existingManuscriptRefs = []) {

@@ -1,19 +1,46 @@
 const { logger, fileStorage } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { parseISO, addSeconds } = require('date-fns')
+const { chunk } = require('lodash')
 const models = require('@pubsweet/models')
 
-const { sendEmailWithPreparedData } = require('./userCommsUtils')
+const {
+  sendEmailWithPreparedData,
+  getGroupAndGlobalRoles,
+} = require('./userCommsUtils')
+
+const addGlobalAndGroupRolesToUserObject = async user => {
+  if (!user) return
+  const groupId = null // TODO When multitenancy is in place, get the current groupId
+  Object.assign(user, await getGroupAndGlobalRoles(user.id, groupId))
+}
+
+const setUserMembershipInTeam = async (userId, team, shouldBeMember) => {
+  if (!team) return // We won't create a new team: this is only intended for existing teams
+  const teamId = team.id
+
+  if (shouldBeMember) {
+    await models.TeamMember.query()
+      .insert({ userId, teamId })
+      .whereNotExists(models.TeamMember.query().where({ userId, teamId }))
+  } else {
+    await models.TeamMember.query().delete().where({ userId, teamId })
+  }
+}
 
 const resolvers = {
   Query: {
-    user(_, { id, username }, ctx) {
+    async user(_, { id, username }, ctx) {
       if (id) {
-        return models.User.query().findById(id)
+        const user = await models.User.query().findById(id)
+        await addGlobalAndGroupRolesToUserObject(user)
+        return user
       }
 
       if (username) {
-        return models.User.query().where({ username }).first()
+        const user = await models.User.query().findOne({ username })
+        await addGlobalAndGroupRolesToUserObject(user)
+        return user
       }
 
       return null
@@ -21,13 +48,8 @@ const resolvers = {
     async users(_, vars, ctx) {
       return models.User.query()
     },
-    async paginatedUsers(_, { sort, offset, limit, filter }, ctx) {
+    async paginatedUsers(_, { sort, offset, limit }, ctx) {
       const query = models.User.query()
-
-      if (filter && filter.admin) {
-        query.where({ admin: true })
-      }
-
       const totalCount = await query.resultSize()
 
       if (sort) {
@@ -52,6 +74,15 @@ const resolvers = {
       }
 
       const users = await query
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const someUsers of chunk(users, 10)) {
+        // eslint-disable-next-line no-await-in-loop
+        await Promise.all(
+          someUsers.map(async user => addGlobalAndGroupRolesToUserObject(user)),
+        )
+      }
+
       return {
         totalCount,
         users,
@@ -66,9 +97,7 @@ const resolvers = {
       })
 
       if (!user) return null
-
-      // eslint-disable-next-line no-underscore-dangle
-      user._currentRoles = await user.currentRoles()
+      await addGlobalAndGroupRolesToUserObject(user)
       return user
     },
     searchUsers(_, { teamId, query }, ctx) {
@@ -116,13 +145,20 @@ const resolvers = {
       }
     },
     async deleteUser(_, { id }, ctx) {
-      const user = await models.User.query().findById(id)
-      await models.Manuscript.query()
-        .update({ submitterId: null })
-        .where({ submitterId: id })
-
-      await models.User.query().where({ id }).delete()
-      return user
+      return models.User.transaction(async trx => {
+        const user = await models.User.query(trx).findById(id)
+        await models.Manuscript.query(trx)
+          .update({ submitterId: null })
+          .where({ submitterId: id })
+        await models.Invitation.query(trx).where({ userId: id }).delete()
+        await models.Invitation.query(trx)
+          .update({ senderId: null })
+          .where({ senderId: id })
+        await models.User.query(trx).where({ id }).delete()
+        // eslint-disable-next-line no-console
+        console.info(`User ${id} (${user.username}) deleted.`)
+        return user
+      })
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
@@ -132,9 +168,33 @@ const resolvers = {
         delete input.password
       }
 
-      return models.User.query().updateAndFetchById(id, JSON.parse(input))
+      const updatedUser = JSON.parse(input)
+      delete updatedUser.globalRoles
+      delete updatedUser.groupRoles
+      return models.User.query().updateAndFetchById(id, updatedUser)
     },
+    async setGlobalRole(_, { userId, role, shouldEnable }, ctx) {
+      const team = await models.Team.query().findOne({ role, global: true })
+      await setUserMembershipInTeam(userId, team, shouldEnable)
+      const user = await models.User.find(userId)
+      await addGlobalAndGroupRolesToUserObject(user)
+      delete user.updated
+      return user
+    },
+    async setGroupRole(_, { userId, role, shouldEnable }, ctx) {
+      const groupId = null // TODO revise this once we actually have groups
 
+      const team = await models.Team.query().findOne({
+        role,
+        objectId: groupId,
+      })
+
+      await setUserMembershipInTeam(userId, team, shouldEnable)
+      const user = await models.User.find(userId)
+      await addGlobalAndGroupRolesToUserObject(user)
+      delete user.updated
+      return user
+    },
     // Authentication
     async loginUser(_, { input }, ctx) {
       /* eslint-disable-next-line global-require */
@@ -159,16 +219,16 @@ const resolvers = {
         token: createJWT(user),
       }
     },
-    async updateCurrentUsername(_, { username }, ctx) {
-      const user = await models.User.find(ctx.user)
+    async updateUsername(_, { id, username }, ctx) {
+      const user = await models.User.find(id)
       user.username = username
       await user.save()
       return user
     },
-    async updateCurrentEmail(_, { email }, ctx) {
-      const ctxUser = await models.User.find(ctx.user)
+    async updateEmail(_, { id, email }, ctx) {
+      const user = await models.User.find(id)
 
-      if (ctxUser.email === email) {
+      if (user.email === email) {
         return { success: true }
       }
 
@@ -179,18 +239,18 @@ const resolvers = {
         return { success: false, error: 'Email is invalid' }
       }
 
-      const userWithSuchEmail = await models.User.query().where({ email })
+      const userWithSuchEmail = await models.User.query().findOne({ email })
 
-      if (userWithSuchEmail[0]) {
+      if (userWithSuchEmail) {
         return { success: false, error: 'Email is already taken' }
       }
 
       try {
-        const user = await models.User.query().updateAndFetchById(ctx.user, {
+        const updatedUser = await models.User.query().updateAndFetchById(id, {
           email,
         })
 
-        return { success: true, user }
+        return { success: true, user: updatedUser }
       } catch (e) {
         return { success: false, error: 'Something went wrong', user: null }
       }
@@ -285,7 +345,7 @@ const typeDefs = `
   extend type Query {
     user(id: ID, username: String): User
     users: [User]
-    paginatedUsers(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
+    paginatedUsers(sort: UsersSort, offset: Int, limit: Int): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
   }
 
@@ -308,20 +368,18 @@ const typeDefs = `
     createUser(input: UserInput): User
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
-    updateCurrentUsername(username: String): User
+    updateUsername(id: ID!, username: String!): User
     sendEmail(input: String!): SendEmailPayload!
-    updateCurrentEmail(email: String): UpdateEmailResponse
+    updateEmail(id: ID!, email: String!): UpdateEmailResponse
     updateRecentTab(tab: String): User
+    setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
+    setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
   }
 
   type UpdateEmailResponse {
     success: Boolean
     error: String
     user: User
-  }
-
-  input UsersFilter {
-    admin: Boolean
   }
 
   enum UsersSort {
@@ -343,7 +401,8 @@ const typeDefs = `
     updated: DateTime
     username: String
     email: String
-    admin: Boolean
+    groupRoles: [String]
+    globalRoles: [String]
     identities: [Identity]
     defaultIdentity: Identity
     file: File
@@ -352,8 +411,6 @@ const typeDefs = `
     lastOnline: DateTime
     isOnline: Boolean
     recentTab: String
-    _currentRoles: [CurrentRole]
-    _currentGlobalRoles: [String]
   }
 
   type CurrentRole {
@@ -375,7 +432,8 @@ const typeDefs = `
     email: String!
     password: String
     rev: String
-    admin: Boolean
+    globalRoles: [String!]
+    groupRoles: [String!]
   }
 
   # Authentication

@@ -10,10 +10,10 @@ import {
 import mutations from '../graphql/mutations'
 import queries from '../graphql/queries'
 import SubmissionsTable from './sections/SubmissionsTable'
+import { CommsErrorBanner, Spinner } from '../../../shared'
 
 const DashboardSubmissionsPage = ({ history }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
   const wantedRoles = ['author']
 
   const applyQueryParams = useQueryParams()
@@ -26,7 +26,7 @@ const DashboardSubmissionsPage = ({ history }) => {
 
   const limit = config?.manuscript?.paginationCount || 10
 
-  const query = useQuery(queries.dashboard, {
+  const { loading, error, data } = useQuery(queries.dashboard, {
     variables: {
       wantedRoles,
       sort: sortName
@@ -50,13 +50,15 @@ const DashboardSubmissionsPage = ({ history }) => {
     })
   }, [])
 
-  return config?.dashboard?.showSections &&
-    config?.dashboard?.showSections.includes('submission') ? (
+  if (loading) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
+
+  return config?.dashboard?.showSections?.includes('submission') ? (
     <SubmissionsTable
       applyQueryParams={applyQueryParams}
-      query={query}
+      manuscriptsUserHasCurrentRoleIn={data.manuscriptsUserHasCurrentRoleIn}
+      submissionForm={data.formForPurposeAndCategory}
       uriQueryParams={uriQueryParams}
-      urlFrag={urlFrag}
     />
   ) : null
 }

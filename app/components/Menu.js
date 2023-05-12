@@ -29,6 +29,11 @@ const NonLink = styled.div``
 
 const Section = styled.div``
 
+const RolesLabel = styled.div`
+  font-size: ${th('fontSizeBaseSmall')};
+  font-weight: normal;
+`
+
 const AlertIndicator = styled.div`
   background: ${th('colorError')};
   border-radius: 50%;
@@ -227,6 +232,22 @@ const Menu = ({
   )
 }
 
+const unCamelCase = string =>
+  Array.from(string).reduce((acc, cur) => {
+    if (cur < 'A' || cur > 'Z') return acc + cur
+    return `${acc} ${cur.toLowerCase()}`
+  }, '')
+
+const FormattedGlobalAndGroupRoles = ({ user }) => {
+  const unCamelCasedRoles = user.globalRoles
+    .concat(user.groupRoles)
+    .map(role => unCamelCase(role))
+
+  if (!unCamelCasedRoles.length) return null
+
+  return <RolesLabel>({unCamelCasedRoles.join(', ')})</RolesLabel>
+}
+
 const UserComponent = ({ user, loginLink, profileLink }) => (
   <Section>
     {user && (
@@ -236,7 +257,7 @@ const UserComponent = ({ user, loginLink, profileLink }) => (
           <UserName>{user.username}</UserName>
           <span>{user.isOnline ? '' : 'Offline'}</span>
           {/* ({user.username}) */}
-          {user.admin ? ' (admin)' : ''}
+          <FormattedGlobalAndGroupRoles user={user} />
         </UserInfo>
       </UserItem>
     )}

@@ -8,6 +8,22 @@ const CALLBACK_URL = '/auth/orcid/callback'
 
 const orcidBackURL = config['pubsweet-client'].baseUrl
 
+const addUserToAdminAndGroupManagerTeams = async userId => {
+  // eslint-disable-next-line global-require
+  const { Team, TeamMember } = require('@pubsweet/models')
+
+  const groupId = null // TODO get groupId when we have multitenancy
+
+  const groupManagerTeam = await Team.query().findOne({
+    role: 'groupManager',
+    objectId: groupId,
+  })
+
+  const adminTeam = await Team.query().findOne({ role: 'admin', global: true })
+  await TeamMember.query().insert({ userId, teamId: adminTeam.id })
+  await TeamMember.query().insert({ userId, teamId: groupManagerTeam.id })
+}
+
 module.exports = app => {
   // eslint-disable-next-line global-require
   const { User } = require('@pubsweet/models')
@@ -69,19 +85,16 @@ module.exports = app => {
               },
             }).saveGraph()
 
+            if (usersCountString === '0' || activeConfig.formData.user.isAdmin)
+              await addUserToAdminAndGroupManagerTeams(user.id)
+
             // Do another request to the ORCID API for aff/name
             const userDetails = await fetchUserDetails(user)
-
             user.defaultIdentity.name = `${userDetails.firstName || ''} ${
               userDetails.lastName || ''
             }`
             user.defaultIdentity.aff = userDetails.institution || ''
-
             user.email = userDetails.email || null
-
-            user.admin =
-              usersCountString === '0' || activeConfig.formData.user.isAdmin
-
             user.saveGraph()
             firstLogin = true
           }
@@ -108,19 +121,32 @@ module.exports = app => {
     async (req, res) => {
       const jwt = createJWT(req.user)
       const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      // eslint-disable-next-line global-require
+      const { Team } = require('@pubsweet/models')
+      const groupId = null // TODO set groupId once we have multitenancy
 
-      let redirectionURL
+      const groupManagerTeam = await Team.query()
+        .withGraphJoined('members')
+        .select('role')
+        .findOne({
+          userId: req.user.id,
+          objectId: groupId,
+          role: 'groupManager',
+        })
 
-      // redirectionURL prefix `/kotahi` to be replaced with value from group based active config in the future
+      const isGroupManager = !!groupManagerTeam
+      let redirectionUrl
+
+      // TODO redirectionURL prefix `/kotahi` to be replaced with value from group based active config in the future
       if (req.user.firstLogin) {
-        redirectionURL = '/kotahi/profile'
-      } else if (req.user.admin) {
-        redirectionURL = `/kotahi${activeConfig.formData.dashboard.loginRedirectUrl}`
+        redirectionUrl = '/kotahi/profile'
+      } else if (isGroupManager) {
+        redirectionUrl = `/kotahi${activeConfig.formData.dashboard.loginRedirectUrl}`
       } else {
-        redirectionURL = '/kotahi/dashboard'
+        redirectionUrl = '/kotahi/dashboard'
       }
 
-      res.redirect(`/login?token=${jwt}&redirectUrl=${redirectionURL}`)
+      res.redirect(`/login?token=${jwt}&redirectUrl=${redirectionUrl}`)
     },
   )
 }

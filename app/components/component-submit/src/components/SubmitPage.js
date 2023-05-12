@@ -75,7 +75,7 @@ const deleteFileMutation = gql`
 
 let debouncers = {}
 
-const SubmitPage = ({ match, history }) => {
+const SubmitPage = ({ currentUser, match, history }) => {
   const config = useContext(ConfigContext)
   const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -126,7 +126,6 @@ const SubmitPage = ({ match, history }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const currentUser = data?.currentUser
   const manuscript = data?.manuscript
   const submissionForm = data?.submissionForm?.structure
   const decisionForm = data?.decisionForm?.structure
@@ -253,7 +252,11 @@ const SubmitPage = ({ match, history }) => {
       parent={manuscript}
       republish={republish}
       reviewForm={reviewForm}
-      setShouldPublishField={currentUser.admin ? setShouldPublishField : null}
+      setShouldPublishField={
+        currentUser.groupRoles.includes('groupManager')
+          ? setShouldPublishField
+          : null
+      }
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}

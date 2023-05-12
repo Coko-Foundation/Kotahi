@@ -668,15 +668,11 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 
 
 --
--- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahidev
---
-
-
-
---
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, object_id, object_type) VALUES
+  ('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL);
 
 
 --
@@ -690,6 +686,16 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', true, NULL, 'Test Account', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false, NULL);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, 'sherrykotahitestemailaccount@test.com', 'Sherry Crofoot', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true, NULL);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2020-07-21 16:30:45.719+02', '2021-03-10 12:41:10.044+01', true, 'sineadkotahitestemailaccount@test.com', 'Sinead Sullivan', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false, NULL);
+
+
+--
+-- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahidev
+--
+
+
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id, is_shared) VALUES
+  ('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL, NULL),
+  ('4d12dc5b-38fe-64f3-db14-b56a4dc1545f', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
 
 --
 -- Data for Name: configs; Type: TABLE DATA; Schema: public; Owner: kotahidev

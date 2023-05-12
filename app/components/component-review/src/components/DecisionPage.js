@@ -78,7 +78,7 @@ const deleteFileMutation = gql`
 
 let debouncers = {}
 
-const DecisionPage = ({ match }) => {
+const DecisionPage = ({ currentUser, match }) => {
   // start of code from submit page to handle possible form changes
   const client = useApolloClient()
   const config = useContext(ConfigContext)
@@ -305,7 +305,6 @@ const DecisionPage = ({ match }) => {
     submissionForm,
     decisionForm: decisionFormOuter,
     reviewForm: reviewFormOuter,
-    currentUser,
     users,
     threadedDiscussions,
     doisToRegister,

@@ -26,7 +26,7 @@ describe('users page tests', () => {
 
   context('visibility check', () => {
     it('button to switch user roles should be visible', () => {
-      UsersPage.getMakeAdminReviewerButton()
+      UsersPage.getRemoveGroupManagerRoleButton()
         .its('length')
         .then(length => {
           // eslint-disable-next-line jest/valid-expect
@@ -34,7 +34,7 @@ describe('users page tests', () => {
 
           // eslint-disable-next-line no-plusplus
           for (let i = 0; i < 7; i++) {
-            UsersPage.getMakeAdminReviewerButton()
+            UsersPage.getRemoveGroupManagerRoleButton()
               .eq(i)
               .scrollIntoView()
               .should('be.visible')
@@ -44,12 +44,12 @@ describe('users page tests', () => {
   })
 
   context('functionality check', () => {
-    it('reviewer can be set to admin', () => {
+    it('normal user can be set to group manager', () => {
       cy.fixture('role_names').then(name => {
         UsersPage.getNthUserRow(0).should('contain', name.role.seniorEditor)
-        UsersPage.getMakeAdminReviewerButton()
+        UsersPage.getAddGroupManagerRoleButton()
           .eq(0)
-          .should('contain', 'Admin')
+          .should('contain', 'Make Group Manager')
           .click()
         UsersPage.getAdminStatusByRow(0).should('contain', 'yes')
         cy.login(name.role.seniorEditor, dashboard)
@@ -68,12 +68,12 @@ describe('users page tests', () => {
         UsersPage.getTitle().should('be.visible')
       })
     })
-    it('admin can be set to reviewer', () => {
+    it('group manager can be reverted to normal user', () => {
       cy.fixture('role_names').then(name => {
         UsersPage.getNthUserRow(1).should('contain', name.role.tester)
-        UsersPage.getMakeAdminReviewerButton()
+        UsersPage.getRemoveGroupManagerRoleButton()
           .eq(1)
-          .should('contain', 'Reviewer')
+          .should('contain', 'Remove Group Manager role')
           .click()
         UsersPage.getAdminStatusByRow(1).should('not.contain', 'yes')
         cy.login(name.role.tester, dashboard)

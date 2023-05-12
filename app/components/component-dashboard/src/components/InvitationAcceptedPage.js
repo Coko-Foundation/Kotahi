@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
+import gql from 'graphql-tag'
 
 import { Spinner } from '@pubsweet/ui/dist/atoms'
 import {
@@ -11,7 +12,14 @@ import {
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/invitation'
 import mutations from '../graphql/mutations'
-import useCurrentUser from '../../../../hooks/useCurrentUser'
+
+const GET_CURRENT_USER = gql`
+  query currentUser {
+    currentUser {
+      id
+    }
+  }
+`
 
 const InvitationAcceptedPage = () => {
   const invitationId = window.localStorage.getItem('invitationId')
@@ -22,8 +30,8 @@ const InvitationAcceptedPage = () => {
     variables: { id: invitationId },
   })
 
-  // TODO just query currentUser here, and get rid of useCurrentUser.
-  const invitedUser = useCurrentUser()
+  const { data: invitedUserData } = useQuery(GET_CURRENT_USER)
+  const invitedUserId = invitedUserData?.currentUser?.id
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
@@ -40,7 +48,7 @@ const InvitationAcceptedPage = () => {
         variables: {
           id: invitationId,
           status: 'ACCEPTED',
-          userId: invitedUser ? invitedUser.id : null,
+          userId: invitedUserId,
           responseDate: currentDate,
         },
       })
@@ -51,7 +59,7 @@ const InvitationAcceptedPage = () => {
     onCompleted: teamFields => {
       addReviewerResponse({
         variables: {
-          currentUserId: invitedUser ? invitedUser.id : null,
+          currentUserId: invitedUserId,
           action: 'accepted',
           teamId: teamFields?.addReviewer?.id,
         },
@@ -67,7 +75,7 @@ const InvitationAcceptedPage = () => {
           variables: {
             id: invitationId,
             status: 'ACCEPTED',
-            userId: invitedUser ? invitedUser.id : null,
+            userId: invitedUserId,
             responseDate: currentDate,
           },
         })
@@ -78,9 +86,8 @@ const InvitationAcceptedPage = () => {
   let manuscriptId
 
   useEffect(() => {
-    if (data && invitedUser) {
+    if (data && invitedUserId) {
       manuscriptId = data.invitationManuscriptId.manuscriptId
-      const invitedUserId = invitedUser ? invitedUser.id : null
 
       if (data.invitationManuscriptId.invitedPersonType === 'AUTHOR') {
         // TODO For better security we should require the invitation ID to be sent in this mutation
@@ -100,7 +107,7 @@ const InvitationAcceptedPage = () => {
         })
       }
     }
-  }, [data, invitedUser])
+  }, [data, invitedUserId])
 
   return <Spinner />
 }

@@ -17,7 +17,7 @@ describe('Completing a review', () => {
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      /* Admin Assigns Editor to Manuscript */
+      /* Group Manager assigns Editor to manuscript */
       cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
@@ -25,7 +25,7 @@ describe('Completing a review', () => {
         .click({ force: true })
         .type(`${name.role.seniorEditor}{enter}`) // Assign Editor
 
-      /* Ediot Submits a decision */
+      /* Editor submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControlPanelDecision()

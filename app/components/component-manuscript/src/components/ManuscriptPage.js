@@ -28,19 +28,13 @@ const fragmentFields = `
 
 const query = gql`
   query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
-
     manuscript(id: $id) {
       ${fragmentFields}
     }
   }
 `
 
-const ManuscriptPage = ({ match, ...props }) => {
+const ManuscriptPage = ({ currentUser, match, ...props }) => {
   const { data, loading, error } = useQuery(query, {
     variables: {
       id: match.params.version,
@@ -49,7 +43,7 @@ const ManuscriptPage = ({ match, ...props }) => {
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript, currentUser } = data
+  const { manuscript } = data
 
   return (
     <Manuscript

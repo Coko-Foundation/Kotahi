@@ -1,40 +1,5 @@
 import gql from 'graphql-tag'
 
-export const GET_CURRENT_USER = gql`
-  query currentUser {
-    currentUser {
-      id
-      profilePicture
-      username
-      admin
-      email
-      defaultIdentity {
-        identifier
-        email
-        type
-        aff
-        id
-      }
-      isOnline
-      _currentRoles {
-        id
-        roles
-      }
-      teams {
-        id
-        objectId
-        objectType
-        members {
-          status
-          user {
-            id
-          }
-        }
-      }
-    }
-  }
-`
-
 export const GET_USER = gql`
   query user($id: ID, $username: String) {
     user(id: $id, username: $username) {

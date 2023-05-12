@@ -15,7 +15,7 @@ describe('Report Spec', () => {
       cy.login(name.role.admin, dashboard)
     })
 
-    /* Admin can access the Reports */
+    /* Group Manager can access the Reports */
     Menu.getReportsButton().should('be.visible')
     Menu.clickReports()
 

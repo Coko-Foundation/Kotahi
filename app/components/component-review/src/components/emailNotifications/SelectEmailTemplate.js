@@ -291,7 +291,10 @@ switch (
       },
     ]
 
-    if(!process.env.USE_COLAB_EMAIL || process.env.USE_COLAB_EMAIL.toLowerCase() == 'false') {
+    if (
+      !process.env.USE_COLAB_EMAIL ||
+      process.env.USE_COLAB_EMAIL.toLowerCase() !== 'true'
+    ) {
       emailTemplateOptions = [
         {
           label: 'Kotahi task notification',

@@ -94,14 +94,41 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   return !!rows
 }
 
-const userIsAdmin = rule({ cache: 'contextual' })(
-  async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
-    const user = await ctx.connectors.User.model.query().findById(ctx.user)
-    if (user && user.admin) return true
-    return false
-  },
-)
+const userIsGroupManagerOrAdminQuery = async ctx => {
+  if (!ctx.user) return false
+
+  const adminTeam = await ctx.connectors.Team.model
+    .query()
+    .findOne({ role: 'admin', global: true })
+
+  if (adminTeam) {
+    const isAdmin = await ctx.connectors.TeamMember.model
+      .query()
+      .findOne({ userId: ctx.user, teamId: adminTeam.id })
+
+    if (isAdmin) return true
+  }
+
+  const groupId = null // TODO Get groupId from ctx once we have multitenancy
+
+  const groupManagerTeam = await ctx.connectors.Team.model
+    .query()
+    .findOne({ role: 'groupManager', objectId: groupId })
+
+  if (groupManagerTeam) {
+    const isGroupManager = await ctx.connectors.TeamMember.model
+      .query()
+      .findOne({ userId: ctx.user, teamId: groupManagerTeam.id })
+
+    if (isGroupManager) return true
+  }
+
+  return false
+}
+
+const userIsAdmin = rule({
+  cache: 'contextual',
+})(async (parent, args, ctx, info) => userIsGroupManagerOrAdminQuery(ctx))
 
 const isPublicFileFromPublishedManuscript = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
@@ -151,8 +178,10 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
+
+    if (await userIsGroupManagerOrAdminQuery(ctx)) return true
+
     const user = await ctx.connectors.User.model.query().findById(ctx.user)
-    if (user && user.admin) return true
 
     const channel = await ctx.connectors.Channel.model
       .query()
@@ -411,6 +440,13 @@ const manuscriptIsPublished = rule({
   return !!manuscript.published
 })
 
+const userIsCurrentUser = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    if (!ctx.user || !args.id) return false
+    return ctx.user === args.id
+  },
+)
+
 const permissions = {
   Query: {
     authorsActivity: or(userIsEditor, userIsAdmin),
@@ -505,10 +541,12 @@ const permissions = {
     removeTaskAlertsForCurrentUser: isAuthenticated,
     reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
     sendEmail: or(userIsEditor, userIsAdmin),
+    setGlobalRole: userIsAdmin,
+    setGroupRole: userIsAdmin,
     setShouldPublishField: or(userIsEditor, userIsAdmin),
     submitManuscript: or(userIsAuthor, userIsEditor, userIsAdmin),
-    updateCurrentEmail: isAuthenticated,
-    updateCurrentUsername: isAuthenticated,
+    updateEmail: or(userIsCurrentUser, userIsAdmin),
+    updateUsername: or(userIsCurrentUser, userIsAdmin),
     updateFile: isAuthenticated,
     updateForm: userIsAdmin,
     updateFormElement: userIsAdmin,
