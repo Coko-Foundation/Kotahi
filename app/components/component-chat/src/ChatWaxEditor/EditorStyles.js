@@ -194,7 +194,6 @@ export const SimpleMenu = styled.div`
   width: calc(100% + 50px);
   z-index: 1;
 
-  /* TODO: this no longer works! */
   button[title='Special Characters'] + div {
     bottom: 34px;
     left: -372px;
@@ -251,8 +250,11 @@ export const SimpleEditorDiv = styled.div`
 
 export const ReadOnlySimpleEditorDiv = styled.div`
   grid-area: editor;
-  overflow: auto;
   position: relative;
+
+  & > div {
+    height: unset; /* overrides the height: 100% set by Wax, which can be insufficient for content */
+  }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${EditorElements}
@@ -269,7 +271,7 @@ export const SimpleInfoContainer = styled.div`
   }
 `
 
-/* this is for ProductionWaxEditor */
+// this is for ProductionWaxEditor //
 
 export const ProductionEditorDiv = styled.div`
   display: flex;
