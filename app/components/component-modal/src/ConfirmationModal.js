@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
-import { th, grid, darken } from '@pubsweet/ui-toolkit'
-import { Button } from '@pubsweet/ui'
+import { th, grid } from '@pubsweet/ui-toolkit'
+import { ActionButton, LooseRowCentered } from '../../shared'
 
 const styles = {
   overlay: {
@@ -23,19 +23,9 @@ const styles = {
 
 const ModalContainer = styled.div`
   background-color: ${th('colorBackground')};
+  border-radius: ${th('borderRadius')};
   padding: ${grid(2.5)} ${grid(3)};
   z-index: 10000;
-`
-
-const CancelButton = styled(Button)`
-  background-color: ${th('colorFurniture')};
-  margin-left: 1em;
-  padding: ${grid(1)};
-  text-decoration: none;
-
-  &:hover {
-    background-color: ${darken('colorFurniture', 0.1)};
-  }
 `
 
 const MessageString = styled.p`
@@ -59,22 +49,25 @@ export const ConfirmationModal = ({
   isOpen,
   message,
   confirmationAction,
+  confirmationButtonText,
   closeModal,
 }) => {
   return (
     <Modal isOpen={isOpen}>
       <ModalContainer>
         <MessageString>{message}</MessageString>
-        <Button
-          onClick={e => {
-            confirmationAction()
-            closeModal()
-          }}
-          primary
-        >
-          Archive
-        </Button>
-        <CancelButton onClick={closeModal}>Cancel</CancelButton>
+        <LooseRowCentered>
+          <ActionButton
+            onClick={e => {
+              confirmationAction()
+              closeModal()
+            }}
+            primary
+          >
+            {confirmationButtonText || 'OK'}
+          </ActionButton>
+          <ActionButton onClick={closeModal}>Cancel</ActionButton>
+        </LooseRowCentered>
       </ModalContainer>
     </Modal>
   )

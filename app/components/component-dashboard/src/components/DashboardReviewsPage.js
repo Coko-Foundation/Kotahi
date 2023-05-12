@@ -12,10 +12,10 @@ import {
 import mutations from '../graphql/mutations'
 import queries from '../graphql/queries'
 import ReviewerTable from './sections/ReviewerTable'
+import { CommsErrorBanner, Spinner } from '../../../shared'
 
-const DashboardReviewsPage = ({ history }) => {
+const DashboardReviewsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
 
   const wantedRoles = [
     'reviewer',
@@ -35,7 +35,7 @@ const DashboardReviewsPage = ({ history }) => {
 
   const limit = config?.manuscript?.paginationCount || 10
 
-  const query = useQuery(queries.dashboard, {
+  const { loading, error, data } = useQuery(queries.dashboard, {
     variables: {
       reviewerStatus: uriQueryParams.get(URI_REVIEWER_STATUS_PARAM),
       wantedRoles,
@@ -62,15 +62,18 @@ const DashboardReviewsPage = ({ history }) => {
     })
   }, [])
 
-  return config?.dashboard?.showSections &&
-    config?.dashboard?.showSections.includes('review') ? (
+  if (loading) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
+
+  return config?.dashboard?.showSections?.includes('review') ? (
     <ReviewerTable
       applyQueryParams={applyQueryParams}
-      query={query}
+      currentUser={currentUser}
+      manuscriptsUserHasCurrentRoleIn={data.manuscriptsUserHasCurrentRoleIn}
       reviewerRespond={reviewerRespond}
+      submissionForm={data.formForPurposeAndCategory}
       updateReviewerStatus={updateReviewerStatus}
       uriQueryParams={uriQueryParams}
-      urlFrag={urlFrag}
     />
   ) : null
 }

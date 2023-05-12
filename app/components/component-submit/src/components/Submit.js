@@ -72,7 +72,8 @@ const Submit = ({
     const userCanEditManuscriptAndFormData =
       index === 0 &&
       (['new', 'revising'].includes(version.status) ||
-        (currentUser.admin && version.status !== 'rejected'))
+        (currentUser.groupRoles.includes('groupManager') &&
+          version.status !== 'rejected'))
 
     const editorSection = {
       content: (
@@ -250,7 +251,7 @@ Submit.propTypes = {
   reviewForm: formPropTypes.isRequired,
   createNewVersion: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({
-    admin: PropTypes.bool,
+    groupRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }),
   parent: PropTypes.shape({
     channels: PropTypes.arrayOf(
@@ -269,7 +270,7 @@ Submit.propTypes = {
   updateManuscript: PropTypes.func.isRequired,
 }
 Submit.defaultProps = {
-  currentUser: { admin: false },
+  currentUser: { groupRoles: [] },
   parent: undefined,
 }
 

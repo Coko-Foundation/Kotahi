@@ -21,10 +21,4 @@ module.exports = {
     from: 'simplej@example.com',
     path: `${__dirname}/test-mailer`,
   },
-  dbManager: {
-    username: 'admin',
-    password: '12345678',
-    email: 'admin@admin.com',
-    admin: true,
-  },
 }

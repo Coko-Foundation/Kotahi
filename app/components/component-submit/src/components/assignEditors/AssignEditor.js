@@ -9,7 +9,7 @@ import {
 import { ConfigContext } from '../../../../config/src'
 
 const editorOption = user => ({
-  label: user.defaultIdentity?.name || user.email || user.username,
+  label: user.username || user.email || user.defaultIdentity?.name,
   value: user.id,
 })
 
@@ -19,7 +19,6 @@ const query = gql`
       id
       username
       email
-      admin
       defaultIdentity {
         id
         name

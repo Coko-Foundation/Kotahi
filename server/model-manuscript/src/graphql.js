@@ -1581,7 +1581,6 @@ const typeDefs = `
     submittedDate: DateTime
     published: DateTime
     publishedArtifacts: [PublishedArtifact!]!
-    currentRoles: [String]
     formFieldsToPublish: [FormFieldsToPublish!]!
     searchRank: Float
     searchSnippet: String

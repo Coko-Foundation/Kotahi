@@ -80,7 +80,7 @@ const ReviewHeading = ({
     return team.role.toLowerCase().includes('editor')
   })
 
-  const isCurrentUserEditor = editorTeam.length
+  const currentUserIsEditor = editorTeam.length
     ? !!editorTeam
         .map(team => team.members)
         .flat()
@@ -132,7 +132,8 @@ const ReviewHeading = ({
             </UserInfo>
           </UserCombo>
         }
-        {(isCurrentUserEditor || currentUser.admin) &&
+        {(currentUserIsEditor ||
+          currentUser.groupRoles.includes('groupManager')) &&
           canBePublishedPublicly &&
           config.instanceName === 'colab' && (
             <>
@@ -141,25 +142,27 @@ const ReviewHeading = ({
             </>
           )}
       </Name>
-      {canHideReviews && (isCurrentUserEditor || currentUser.admin) && (
-        <>
-          <StyledCheckbox
-            checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
-            label="Hide review"
-            onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
-          />
-          <StyledCheckbox
-            checked={isHiddenReviewerName || isHiddenReviewerName == null}
-            label="Hide reviewer name"
-            onChange={() =>
-              toggleIsHiddenReviewerNameFromPublishedAndAuthor(
-                id,
-                !isHiddenReviewerName,
-              )
-            }
-          />
-        </>
-      )}
+      {canHideReviews &&
+        (currentUserIsEditor ||
+          currentUser.groupRoles.includes('groupManager')) && (
+          <>
+            <StyledCheckbox
+              checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
+              label="Hide review"
+              onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
+            />
+            <StyledCheckbox
+              checked={isHiddenReviewerName || isHiddenReviewerName == null}
+              label="Hide reviewer name"
+              onChange={() =>
+                toggleIsHiddenReviewerNameFromPublishedAndAuthor(
+                  id,
+                  !isHiddenReviewerName,
+                )
+              }
+            />
+          </>
+        )}
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>

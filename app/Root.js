@@ -9,8 +9,6 @@ import { getMainDefinition } from '@apollo/client/utilities'
 import { setContext } from '@apollo/client/link/context'
 import { InMemoryCache } from '@apollo/client/cache'
 import { createUploadLink } from 'apollo-upload-client'
-
-import currentRolesVar from './shared/currentRolesVar'
 import Pages from './Pages'
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
@@ -96,14 +94,6 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
         },
         Manuscript: {
           fields: {
-            _currentRoles: {
-              read(existing, { cache, args, readField }) {
-                const currentRoles = currentRolesVar()
-                const currentId = readField('id')
-                const r = currentRoles.find(ro => ro.id === currentId)
-                return (r && r.roles) || []
-              },
-            },
             formFieldsToPublish: {
               merge(existing, incoming) {
                 return incoming

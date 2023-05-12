@@ -38,22 +38,20 @@ const ReadonlyFormTemplate = ({
             element.hideFromReviewers !== 'true'
           )
         })
-        .map(element => {
-          return (
-            <SectionRowGrid key={element.id}>
-              <Heading>{element.shortDescription || element.title}</Heading>
-              <Cell>
-                <ReadonlyFieldData
-                  allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
-                  fieldName={element.name}
-                  form={form}
-                  formData={formData}
-                  threadedDiscussionProps={threadedDiscussionProps}
-                />
-              </Cell>
-            </SectionRowGrid>
-          )
-        })}
+        .map(element => (
+          <SectionRowGrid key={element.id}>
+            <Heading>{element.shortDescription || element.title}</Heading>
+            <Cell>
+              <ReadonlyFieldData
+                allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+                fieldName={element.name}
+                form={form}
+                formData={formData}
+                threadedDiscussionProps={threadedDiscussionProps}
+              />
+            </Cell>
+          </SectionRowGrid>
+        ))}
     </SectionContent>
   )
 }

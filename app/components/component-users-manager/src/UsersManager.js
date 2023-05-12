@@ -1,6 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 // import { Heading } from '@pubsweet/ui'
 
 import User from './User'
@@ -25,23 +25,14 @@ import {
 } from '../../../shared/urlParamUtils'
 
 const GET_USERS = gql`
-  query Users(
-    $sort: UsersSort
-    $filter: UsersFilter
-    $offset: Int
-    $limit: Int
-  ) {
-    paginatedUsers(
-      sort: $sort
-      filter: $filter
-      offset: $offset
-      limit: $limit
-    ) {
+  query Users($sort: UsersSort, $offset: Int, $limit: Int) {
+    paginatedUsers(sort: $sort, offset: $offset, limit: $limit) {
       totalCount
       users {
         id
         username
-        admin
+        globalRoles
+        groupRoles
         email
         profilePicture
         defaultIdentity {
@@ -52,6 +43,24 @@ const GET_USERS = gql`
         isOnline
         lastOnline
       }
+    }
+  }
+`
+
+const DELETE_USER = gql`
+  mutation($id: ID) {
+    deleteUser(id: $id) {
+      id
+    }
+  }
+`
+
+const SET_GROUP_ROLE = gql`
+  mutation($userId: ID!, $role: String!, $shouldEnable: Boolean!) {
+    setGroupRole(userId: $userId, role: $role, shouldEnable: $shouldEnable) {
+      id
+      groupRoles
+      globalRoles
     }
   }
 `
@@ -105,7 +114,7 @@ const UsersManager = ({ history, currentUser }) => {
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
-  const { loading, error, data } = useQuery(GET_USERS, {
+  const { loading, error, data, refetch } = useQuery(GET_USERS, {
     variables: {
       sort,
       offset: (page - 1) * limit,
@@ -113,6 +122,9 @@ const UsersManager = ({ history, currentUser }) => {
     },
     fetchPolicy: 'cache-and-network',
   })
+
+  const [deleteUser] = useMutation(DELETE_USER, { onCompleted: refetch })
+  const [setGroupRole] = useMutation(SET_GROUP_ROLE)
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -135,8 +147,11 @@ const UsersManager = ({ history, currentUser }) => {
               <SortHeader defaultSortDirection="DESC" thisSortName="lastOnline">
                 Last Online
               </SortHeader>
-              <SortHeader defaultSortDirection="ASC" thisSortName="admin">
-                Admin
+              <SortHeader
+                defaultSortDirection="ASC"
+                thisSortName="groupManager"
+              >
+                Group manager
               </SortHeader>
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th />
@@ -144,7 +159,13 @@ const UsersManager = ({ history, currentUser }) => {
           </Header>
           <tbody>
             {users.map(user => (
-              <User currentUser={currentUser} key={user.id} user={user} />
+              <User
+                currentUser={currentUser}
+                deleteUser={deleteUser}
+                key={user.id}
+                setGroupRole={setGroupRole}
+                user={user}
+              />
             ))}
           </tbody>
         </Table>

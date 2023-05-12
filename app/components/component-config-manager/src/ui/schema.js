@@ -475,7 +475,7 @@ const schema = {
                 loginRedirectUrl: {
                   type: 'string',
                   description:
-                    'Admin users are directed to the Manuscripts page after login',
+                    'Landing page for Group Manager users upon login',
                   default: '/admin/manuscripts',
                   oneOf: [
                     {
@@ -801,7 +801,7 @@ const schema = {
               properties: {
                 showInMenu: {
                   type: 'boolean',
-                  title: 'Admin can access Reports',
+                  title: 'Group Manager and admin can access Reports',
                   default: true,
                 },
               },
@@ -812,7 +812,7 @@ const schema = {
               properties: {
                 isAdmin: {
                   type: 'boolean',
-                  title: 'All users are assigned an Admin role',
+                  title: 'All users are assigned Group Manager and Admin roles',
                   default: false,
                 },
                 kotahiApiTokens: {
@@ -861,7 +861,7 @@ const schema = {
                 loginRedirectUrl: {
                   type: 'string',
                   description:
-                    'Admin users are directed to the Manuscripts page after login',
+                    'Landing page for Group Manager users upon login',
                   default: '/dashboard',
                   oneOf: [
                     {
@@ -1188,7 +1188,7 @@ const schema = {
               properties: {
                 showInMenu: {
                   type: 'boolean',
-                  title: 'Admin can access Reports',
+                  title: 'Group Manager and admin can access Reports',
                   default: true,
                 },
               },
@@ -1199,7 +1199,7 @@ const schema = {
               properties: {
                 isAdmin: {
                   type: 'boolean',
-                  title: 'All users are assigned an Admin role',
+                  title: 'All users are assigned Group Manager and Admin roles',
                   default: false,
                 },
                 kotahiApiTokens: {
@@ -1248,7 +1248,7 @@ const schema = {
                 loginRedirectUrl: {
                   type: 'string',
                   description:
-                    'Admin users are directed to the Manuscripts page after login',
+                    'Landing page for Group Manager users upon login',
                   default: '/dashboard',
                   oneOf: [
                     {
@@ -1571,7 +1571,7 @@ const schema = {
               properties: {
                 showInMenu: {
                   type: 'boolean',
-                  title: 'Admin can access Reports',
+                  title: 'Group Manager and admin can access Reports',
                   default: true,
                 },
               },
@@ -1582,7 +1582,7 @@ const schema = {
               properties: {
                 isAdmin: {
                   type: 'boolean',
-                  title: 'All users are assigned an Admin role',
+                  title: 'All users are assigned Group Manager and Admin roles',
                   default: false,
                 },
                 kotahiApiTokens: {
@@ -1631,7 +1631,7 @@ const schema = {
                 loginRedirectUrl: {
                   type: 'string',
                   description:
-                    'Admin users are directed to the Manuscripts page after login',
+                    'Landing page for Group Manager users upon login',
                   default: '/dashboard',
                   oneOf: [
                     {
@@ -1955,7 +1955,7 @@ const schema = {
               properties: {
                 showInMenu: {
                   type: 'boolean',
-                  title: 'Admin can access Reports',
+                  title: 'Group Manager and admin can access Reports',
                   default: true,
                 },
               },
@@ -1966,7 +1966,7 @@ const schema = {
               properties: {
                 isAdmin: {
                   type: 'boolean',
-                  title: 'All users are assigned an Admin role',
+                  title: 'All users are assigned Group Manager and Admin roles',
                   default: false,
                 },
                 kotahiApiTokens: {

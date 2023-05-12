@@ -121,7 +121,8 @@ const authorProps = {
       id: '20ca2a8d-d78e-4260-baed-86369992353f',
       profilePicture: null,
       username: 'Kotahi Dev',
-      admin: true,
+      groupRoles: ['groupManager'],
+      globalRoles: [],
       email: 'shanthitestemail@maiiinator.com',
       defaultIdentity: {
         __typename: 'Identity',
@@ -132,13 +133,6 @@ const authorProps = {
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
       isOnline: null,
-      _currentRoles: [
-        {
-          __typename: 'CurrentRole',
-          id: '297574d0-686c-4b1e-9cbc-3f3d8d86f8e2',
-          roles: ['author'],
-        },
-      ],
       teams: [
         {
           __typename: 'Team',
@@ -204,7 +198,8 @@ const adminEditorProps = {
       id: '20ca2a8d-d78e-4260-baed-86369992353f',
       profilePicture: null,
       username: 'Kotahi Dev',
-      admin: true,
+      groupRoles: ['groupManager'],
+      globalRoles: [],
       email: 'shanthitestemail@maiiinator.com',
       defaultIdentity: {
         __typename: 'Identity',
@@ -215,13 +210,6 @@ const adminEditorProps = {
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
       isOnline: null,
-      _currentRoles: [
-        {
-          __typename: 'CurrentRole',
-          id: '297574d0-686c-4b1e-9cbc-3f3d8d86f8e2',
-          roles: ['admin'],
-        },
-      ],
       teams: [
         {
           __typename: 'Team',
@@ -272,7 +260,8 @@ const emptyAuthorProps = {
       id: '20ca2a8d-d78e-4260-baed-86369992353f',
       profilePicture: null,
       username: 'Kotahi Dev',
-      admin: true,
+      groupRoles: ['groupManager'],
+      globalRoles: [],
       email: 'shanthitestemail@maiiinator.com',
       defaultIdentity: {
         __typename: 'Identity',
@@ -283,13 +272,6 @@ const emptyAuthorProps = {
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
       isOnline: null,
-      _currentRoles: [
-        {
-          __typename: 'CurrentRole',
-          id: '297574d0-686c-4b1e-9cbc-3f3d8d86f8e2',
-          roles: ['author'],
-        },
-      ],
       teams: [
         {
           __typename: 'Team',
@@ -340,7 +322,8 @@ const emptyAdminEditorProps = {
       id: '20ca2a8d-d78e-4260-baed-86369992353f',
       profilePicture: null,
       username: 'Kotahi Dev',
-      admin: true,
+      groupRoles: ['groupManager'],
+      globalRoles: [],
       email: 'shanthitestemail@maiiinator.com',
       defaultIdentity: {
         __typename: 'Identity',
@@ -351,13 +334,6 @@ const emptyAdminEditorProps = {
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
       isOnline: null,
-      _currentRoles: [
-        {
-          __typename: 'CurrentRole',
-          id: '297574d0-686c-4b1e-9cbc-3f3d8d86f8e2',
-          roles: ['admin'],
-        },
-      ],
       teams: [
         {
           __typename: 'Team',

@@ -25,50 +25,16 @@ import { BigProfileImage } from './ProfileImage'
 import ChangeEmail from './ChangeEmail'
 import EnterEmail from './EnterEmail'
 
-const GET_CURRENT_USER = gql`
-  query currentUser {
-    currentUser {
-      id
-      profilePicture
-      username
-      email
-      admin
-      defaultIdentity {
-        identifier
-        email
-        type
-        aff
-        id
-      }
-      isOnline
-    }
-  }
-`
-
-const GET_OTHER_USER = gql`
+const GET_USER = gql`
   query user($id: ID, $username: String) {
-    currentUser {
-      id
-      profilePicture
-      username
-      email
-      admin
-      defaultIdentity {
-        identifier
-        email
-        type
-        aff
-        id
-      }
-      isOnline
-    }
     user(id: $id, username: $username) {
       id
       username
       profilePicture
       isOnline
       email
-      admin
+      globalRoles
+      groupRoles
       defaultIdentity {
         identifier
         email
@@ -80,9 +46,9 @@ const GET_OTHER_USER = gql`
   }
 `
 
-const UPDATE_CURRENT_EMAIL = gql`
-  mutation updateCurrentEmail($email: String) {
-    updateCurrentEmail(email: $email) {
+const UPDATE_EMAIL = gql`
+  mutation updateEmail($id: ID!, $email: String!) {
+    updateEmail(id: $id, email: $email) {
       success
       error
       user {
@@ -93,9 +59,9 @@ const UPDATE_CURRENT_EMAIL = gql`
   }
 `
 
-const UPDATE_CURRENT_USERNAME = gql`
-  mutation updateCurrentUsername($username: String) {
-    updateCurrentUsername(username: $username) {
+const UPDATE_USERNAME = gql`
+  mutation updateUsername($id: ID!, $username: String!) {
+    updateUsername(id: $id, username: $username) {
       id
       username
     }
@@ -147,19 +113,17 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   )
 }
 
-const Profile = ({ match }) => {
+const Profile = ({ currentUser, match }) => {
   const { id } = match.params
 
-  const { loading, error, data, client, refetch } = useQuery(
-    id ? GET_OTHER_USER : GET_CURRENT_USER,
-    id
-      ? { variables: { id }, fetchPolicy: 'network-only' }
-      : { fetchPolicy: 'network-only' },
-  )
+  const { loading, error, data, client, refetch } = useQuery(GET_USER, {
+    variables: { id: id || currentUser.id },
+    fetchPolicy: 'network-only',
+  })
 
   // Mutations and Queries
-  const [updateUserEmail] = useMutation(UPDATE_CURRENT_EMAIL)
-  const [updateCurrentUsername] = useMutation(UPDATE_CURRENT_USERNAME)
+  const [updateUserEmail] = useMutation(UPDATE_EMAIL)
+  const [updateUsername] = useMutation(UPDATE_USERNAME)
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -174,20 +138,31 @@ const Profile = ({ match }) => {
   // This is a bridge between the fetch results and the Apollo cache/state
   const updateProfilePicture = () => refetch()
 
-  const user = data.user ?? data.currentUser
-  const isCurrentUsersOwnProfile = user.id === data.currentUser.id
-  const canEditProfile = isCurrentUsersOwnProfile || data.currentUser.admin
+  const { user } = data
+  const isCurrentUsersOwnProfile = user.id === currentUser.id
+
+  const canEditProfile =
+    isCurrentUsersOwnProfile ||
+    currentUser.groupRoles.includes('groupManager') ||
+    currentUser.globalRoles.includes('admin')
+
   return (
     <ProfileContainer>
       <Modal isOpen={canEditProfile && !user.email}>
-        <EnterEmail updateUserEmail={updateUserEmail} />
+        <EnterEmail updateUserEmail={updateUserEmail} user={user} />
       </Modal>
       <div>
         <HeadingWithAction>
-          <Heading>Your profile</Heading>
-          <Button onClick={() => logoutUser()} primary>
-            Logout
-          </Button>
+          <Heading>
+            {isCurrentUsersOwnProfile
+              ? 'Your profile'
+              : `Profile: ${user.username}`}
+          </Heading>
+          {isCurrentUsersOwnProfile && (
+            <Button onClick={() => logoutUser()} primary>
+              Logout
+            </Button>
+          )}
         </HeadingWithAction>
 
         <SectionContent>
@@ -196,7 +171,7 @@ const Profile = ({ match }) => {
           </SectionHeader>
           <SectionRow key="profilepicture">
             <div>
-              {canEditProfile ? (
+              {canEditProfile && isCurrentUsersOwnProfile ? (
                 <ProfileDropzone
                   profilePicture={user.profilePicture}
                   updateProfilePicture={updateProfilePicture}
@@ -219,10 +194,7 @@ const Profile = ({ match }) => {
             <label htmlFor="2">Username</label>
             <div>
               {canEditProfile ? (
-                <ChangeUsername
-                  updateCurrentUsername={updateCurrentUsername}
-                  user={user}
-                />
+                <ChangeUsername updateUsername={updateUsername} user={user} />
               ) : (
                 <div>{user.username}</div>
               )}

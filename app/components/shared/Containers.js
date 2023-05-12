@@ -19,6 +19,10 @@ export const LooseRowSpaced = styled(LooseRow)`
   justify-content: space-between;
 `
 
+export const LooseRowCentered = styled(LooseRow)`
+  justify-content: center;
+`
+
 export const LooseRowSpacedAlignTop = styled(LooseRowAlignTop)`
   justify-content: space-between;
 `

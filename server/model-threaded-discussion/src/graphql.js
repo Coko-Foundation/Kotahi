@@ -46,9 +46,10 @@ const stripHiddenAndAddUserInfo = async (
 
   return {
     ...stripPendingVersionsExceptByUser(discussionWithUsers, userId),
-    userCanAddComment: userRoles.author || userRoles.editorOrAdmin, // Current use case prohibits reviewers from commenting
-    userCanEditOwnComment: userRoles.editorOrAdmin,
-    userCanEditAnyComment: userRoles.editorOrAdmin,
+    userCanAddComment:
+      userRoles.author || userRoles.anyEditor || userRoles.groupManager, // Current use case prohibits reviewers from commenting
+    userCanEditOwnComment: userRoles.anyEditor || userRoles.groupManager,
+    userCanEditAnyComment: userRoles.anyEditor || userRoles.groupManager,
   }
 }
 
