@@ -22,6 +22,8 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     editorOrAdmin: false,
   }
 
+  if (!userId || !manuscriptId) return result
+
   const teams = await models.Team.query()
     .select('role')
     .where({ objectId: manuscriptId })
