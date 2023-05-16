@@ -78,6 +78,10 @@ const {
   getUserRolesInManuscript,
 } = require('../../model-user/src/userCommsUtils')
 
+const {
+  addUserToManuscriptChatChannel,
+} = require('../../model-channel/src/utils')
+
 /** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
 const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
   if (oldMetaAbstract && ms.meta && !ms.meta.abstract)
@@ -454,6 +458,11 @@ const resolvers = {
       // newly uploaded files get tasks populated
       await populateTemplatedTasksForManuscript(manuscript.id)
 
+      // add user to author discussion channel
+      await addUserToManuscriptChatChannel({
+        manuscriptId: updatedManuscript.id,
+        userId: ctx.user,
+      })
       return updatedManuscript
     },
 

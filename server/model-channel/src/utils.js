@@ -1,3 +1,4 @@
+const Channel = require('./channel')
 const ChannelMember = require('./channel_member')
 
 const updateChannelLastViewed = async ({ channelId, userId }) => {
@@ -6,19 +7,33 @@ const updateChannelLastViewed = async ({ channelId, userId }) => {
     userId,
   })
 
-  if (!channelMember) {
-    await new ChannelMember({
-      channelId,
-      userId,
-      lastViewed: new Date(),
-    }).save()
-  } else {
+  if (channelMember) {
     await ChannelMember.query().updateAndFetchById(channelMember.id, {
       lastViewed: new Date(),
     })
   }
 }
 
+const addUserToManuscriptChatChannel = async ({
+  manuscriptId,
+  userId,
+  type = 'all',
+}) => {
+  const channel = await Channel.query()
+    .where({
+      manuscriptId,
+      type,
+    })
+    .first()
+
+  await new ChannelMember({
+    channelId: channel.id,
+    userId,
+    lastViewed: new Date(),
+  }).save()
+}
+
 module.exports = {
   updateChannelLastViewed,
+  addUserToManuscriptChatChannel,
 }
