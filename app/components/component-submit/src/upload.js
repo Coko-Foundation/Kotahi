@@ -3,7 +3,6 @@ import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 // import { map } from 'lodash'
 import * as cheerio from 'cheerio'
-import currentRolesVar from '../../../shared/currentRolesVar'
 
 const fragmentFields = `
   id
@@ -17,6 +16,15 @@ const stripTags = file => {
   // eslint-disable-next-line no-useless-escape
   const reg = /<container id="main">([\s\S]*?)<\/container>/
   return file.match(reg)[1]
+}
+
+const cleanOutWmfs = file => {
+  const wmfRegex = /"data:image\/wmf;base64,[0-9a-zA-Z/+=]*"/g
+
+  return file.replaceAll(
+    wmfRegex,
+    '"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAABYlAAAWJQFJUiTwAAAADElEQVQImWP4//8/AAX+Av5Y8msOAAAAAElFTkSuQmCC" data-original-name="broken-image.png"',
+  )
 }
 
 const checkForEmptyBlocks = file => {
@@ -318,18 +326,37 @@ const uploadPromise = (files, client) => {
   })
 }
 
-const DocxToHTMLPromise = (file, data, config) => {
-  const body = new FormData()
-  body.append('docx', file)
+const getHtmlFromDocxQuery = gql`
+  query($url: String!) {
+    docxToHtml(url: $url) {
+      html
+      error
+    }
+  }
+`
 
-  const url = `${config.baseUrl}/convertDocxToHTML`
+const DocxToHTMLPromise = (file, data, client) => {
+  const theUrl = data.uploadFile.storedObjects[0].url
 
-  return request(url, { method: 'POST', body }).then(response =>
-    Promise.resolve({
-      fileURL: data.uploadFile.storedObjects[0].url,
-      response,
-    }),
-  )
+  return client
+    .query({
+      query: getHtmlFromDocxQuery,
+      variables: {
+        url: theUrl,
+      },
+      fetchPolicy: 'network-only',
+    })
+    .then(result => {
+      if (result?.data?.docxToHtml?.html && !result?.data?.docxToHtml?.error) {
+        return {
+          response: `<container id="main">${result.data.docxToHtml.html}</container>`,
+          fileURL: theUrl,
+        }
+      }
+
+      console.error('Server-side error: ', result.data.docxToHtml.error)
+      return file
+    })
 }
 
 const createManuscriptPromise = (
@@ -379,11 +406,6 @@ const createManuscriptPromise = (
     mutation: createManuscriptMutation,
     variables: { input: manuscript },
     update: (cache, { data: { createManuscript } }) => {
-      const currentRoles = currentRolesVar()
-      currentRolesVar([
-        ...currentRoles,
-        { id: createManuscript.id, roles: ['author'] },
-      ])
       cache.modify({
         fields: {
           manuscripts(existingManuscriptRefs = []) {
@@ -453,14 +475,16 @@ export default ({
 
       if (skipXSweet(file)) {
         uploadResponse = {
-          fileURL: data.uploadFile.url,
+          fileURL: data.uploadFile.url, // I think this should be data.uploadFile[0].url if this is actually used?
           response: true,
         }
       } else {
-        uploadResponse = await DocxToHTMLPromise(file, data, config)
-        uploadResponse.response = cleanMath(
-          stripTags(
-            stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
+        uploadResponse = await DocxToHTMLPromise(file, data, client)
+        uploadResponse.response = cleanOutWmfs(
+          cleanMath(
+            stripTags(
+              stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
+            ),
           ),
         )
         images = base64Images(uploadResponse.response)

@@ -1,8 +1,7 @@
 import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
-import { LeftMenuTitle } from 'wax-prosemirror-components'
-import { ToolGroup } from 'wax-prosemirror-services'
+import { ToolGroup, LeftMenuTitle } from 'wax-prosemirror-core'
 
 class AppendixGroup extends ToolGroup {
   tools = []

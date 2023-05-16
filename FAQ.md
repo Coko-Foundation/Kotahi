@@ -162,16 +162,16 @@ DOI_PREFIX=12.34567
 
 And the following form fields are required:
 
-| Field name                                                                                                                                               | Field type     | Purpose                                                  |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------- |
-| `submission.articleURL`                                                                                                                                  | TextField      | The DOI link to the article under review                 |
-| `submission.review1`                                                                                                                                     | AbstractEditor | Review number 1                                          |
-| `submission.review1date`                                                                                                                                 | TextField      | Review 1 date, formatted as yyyy-mm-dd or mm/dd/yyyy     |
-| `submission.review1creator`                                                                                                                              | TextField      | Review 1 author, formatted as Firstname Lastname         |
-`submission.review1suffix` | TextField | (Optional) Review 1 custom DOI sufix|
+| Field name                                                                                                                                                                                                       | Field type     | Purpose                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------- |
+| `submission.articleURL`                                                                                                                                                                                          | TextField      | The DOI link to the article under review                 |
+| `submission.review1`                                                                                                                                                                                             | AbstractEditor | Review number 1                                          |
+| `submission.review1date`                                                                                                                                                                                         | TextField      | Review 1 date, formatted as yyyy-mm-dd or mm/dd/yyyy     |
+| `submission.review1creator`                                                                                                                                                                                      | TextField      | Review 1 author, formatted as Firstname Lastname         |
+| `submission.review1suffix`                                                                                                                                                                                       | TextField      | (Optional) Review 1 custom DOI sufix                     |
 | `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review2suffix`, `submission.review3`, `submission.review3date`, `submission.review3creator`, `submission.review3suffix` | As above       | (Optional) Fields for second and third reviews.          |
-| `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
-| `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
+| `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                                                          | As above       | (Optional) Fields for a summary of the reviews.          |
+| `submission.description`                                                                                                                                                                                         | TextField      | Title of the article under review, possibly abbreviated. |
 
 ### Hypothesis
 
@@ -268,22 +268,9 @@ The `unreviewedPreprints` query returns an `id` and `shortId`, and the following
 
 ## Going further
 
-### Can I manually create an admin user?
+### Manipulating the database via yarn console
 
-Admin users can now set other users to be admins from within the dashboard. But this can also be done manually. Once you're logged in, go to the "My profile" page and copy the username (a string of digits). Open a terminal within your Docker **server** container, and perform the following, substituting your username:
-
-```sh
-yarn console
-x = await User.query().where({username:"0000000210481437"}).first()
-x.admin = true
-x.save()
-```
-
-Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
-
-### What else can I do in the console?
-
-If you open a terminal within your Docker **server** container, the console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
+If you open a terminal within your Docker **server** container, the console (`yarn console`) gives you a Node.js REPL with async/await support and models preloaded. You can access all of those as you can in the server-side code.
 
 A few examples:
 

@@ -23,11 +23,11 @@ export const Tab = styled.div`
   padding: calc(${th('gridUnit')} - 1px) 1em;
   padding-bottom: 0;
   position: relative;
-  top: 2px;
 
   div {
     border-bottom: 3px solid
       ${({ active }) => (active ? th('colorPrimary') : 'none')};
+    margin-bottom: -2px;
     padding-bottom: 4px;
   }
 

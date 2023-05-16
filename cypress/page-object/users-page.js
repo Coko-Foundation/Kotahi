@@ -7,7 +7,8 @@ const TITLE = 'General__Heading'
 const USER_TABLE_ROW_LIST = 'Table__Row'
 const ADMIN_COLUMN = 'td:nth-child(3)'
 const DELETE_USER_BUTTON = 'button:nth-child(1)'
-const MAKE_ADMIN_REVIEWER_BUTTON = 'button:nth-child(3)'
+const ADD_GROUP_MANAGER_ROLE_BUTTON = 'button:nth-child(3)'
+const REMOVE_GROUP_MANAGER_ROLE_BUTTON = 'button:nth-child(3)'
 
 // eslint-disable-next-line import/prefer-default-export
 export const UsersPage = {
@@ -26,10 +27,10 @@ export const UsersPage = {
   getDeleteButton() {
     return cy.get(DELETE_USER_BUTTON)
   },
-  getMakeAdminReviewerButton() {
-    return cy.get(MAKE_ADMIN_REVIEWER_BUTTON)
+  getRemoveGroupManagerRoleButton() {
+    return cy.get(REMOVE_GROUP_MANAGER_ROLE_BUTTON)
   },
-  clickMakeReviewer(nth) {
-    this.getMakeAdminReviewerButton().eq(nth).click()
+  getAddGroupManagerRoleButton() {
+    return cy.get(ADD_GROUP_MANAGER_ROLE_BUTTON)
   },
 }

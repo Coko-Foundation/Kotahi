@@ -52,7 +52,9 @@ const Review = ({
       form={reviewForm}
       formData={ensureJsonIsParsed(review?.jsonData) ?? {}}
       hideSpecialInstructions
-      showEditorOnlyFields={showEditorOnlyFields || user.admin}
+      showEditorOnlyFields={
+        showEditorOnlyFields || user.groupRoles.includes('groupManager')
+      }
       threadedDiscussionProps={threadedDiscussionProps}
     />
   </Container>
@@ -61,14 +63,14 @@ const Review = ({
 Review.propTypes = {
   review: PropTypes.shape({}),
   user: PropTypes.shape({
-    admin: PropTypes.bool,
+    groupRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }),
 }
 
 Review.defaultProps = {
   review: null,
   user: {
-    admin: false,
+    groupRoles: [],
   },
 }
 export default Review

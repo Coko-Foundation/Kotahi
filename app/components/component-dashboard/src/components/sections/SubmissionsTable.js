@@ -9,35 +9,31 @@ import ManuscriptsTable from '../../../../component-manuscripts-table/src/Manusc
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import { ConfigContext } from '../../../../config/src'
 import {
-  CommsErrorBanner,
   Pagination,
   PaginationContainerShadowed,
   SectionContent,
   SectionHeader,
-  Spinner,
   Title,
 } from '../../../../shared'
 
 const SubmissionsTable = ({
-  urlFrag,
+  manuscriptsUserHasCurrentRoleIn,
+  submissionForm,
   applyQueryParams,
   uriQueryParams,
-  query: { data, loading, error },
 }) => {
   const config = useContext(ConfigContext)
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
 
   const fieldDefinitions = useMemo(() => {
-    const fields = data?.formForPurposeAndCategory?.structure?.children ?? []
+    const fields = submissionForm?.structure?.children ?? []
     const defs = {}
     fields.forEach(field => {
       // Incomplete fields in the formbuilder may not have a name specified. Ignore these
       if (field.name) defs[field.name] = field
     })
     return defs
-  }, [data])
-
-  if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
+  }, [submissionForm])
 
   const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
   const sortName = extractSortData(uriQueryParams).name
@@ -45,7 +41,7 @@ const SubmissionsTable = ({
 
   const page = uriQueryParams.get(URI_PAGENUM_PARAM) || 1
   const limit = config?.manuscript?.paginationCount || 10
-  const { totalCount } = data.manuscriptsUserHasCurrentRoleIn
+  const { totalCount } = manuscriptsUserHasCurrentRoleIn
 
   const specialComponentValues = {
     urlFrag,
@@ -77,7 +73,7 @@ const SubmissionsTable = ({
         getMainActionLink={manuscript =>
           `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/submit`
         }
-        manuscripts={data.manuscriptsUserHasCurrentRoleIn.manuscripts}
+        manuscripts={manuscriptsUserHasCurrentRoleIn.manuscripts}
         sortDirection={sortDirection}
         sortName={sortName}
       />

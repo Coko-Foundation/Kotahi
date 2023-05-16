@@ -15,17 +15,20 @@ INSERT INTO "public"."reviews" ("id", "created", "updated", "recommendation", "i
 ('a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', '2022-05-13 10:57:38.571+00', '2022-05-13 10:57:39.963+00', 'accepted', 't', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', NULL, NULL, NULL),
 ('c7a95df9-32d8-4bc5-812c-468c18cf53ca', '2022-05-13 10:58:32.521+00', '2022-05-13 10:58:41.719+00', 'accepted', 'f', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', 't', 't', NULL);
 
-INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
-('19dd1446-a8fb-4a4a-8c3b-2babcd8108ab', '2022-05-13 10:58:26.685+00', '2022-05-13 10:58:26.685+00', NULL, '2eb4335a-0037-415c-abab-ec3aa8bf7e79', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('bc3eefda-143f-4208-b666-cb6f3790d4e2', '2022-05-13 10:58:23.404+00', '2022-05-13 10:58:42.896+00', 'completed', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('c0707ae1-a927-4709-9b25-600d7b76404d', '2022-05-13 10:56:32.664+00', '2022-05-13 10:56:32.664+00', NULL, '9816ff49-1641-4ef0-a60d-4d85bd7a044b', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL);
-
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
 ('2eb4335a-0037-415c-abab-ec3aa8bf7e79', '2022-05-13 10:57:28.837+00', '2022-05-13 10:57:28.837+00', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'manuscript'),
 ('9816ff49-1641-4ef0-a60d-4d85bd7a044b', '2022-05-13 10:56:32.656+00', '2022-05-13 10:56:32.656+00', 'Author', 'author', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'manuscript'),
-('a4ee7976-e7f6-42ea-93fe-9798e531f532', '2022-05-13 10:58:23.403+00', '2022-05-13 10:58:23.403+00', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'manuscript');
+('a4ee7976-e7f6-42ea-93fe-9798e531f532', '2022-05-13 10:58:23.403+00', '2022-05-13 10:58:23.403+00', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'manuscript'),
+('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL);
 
 INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online", "recent_tab") VALUES
 ('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-05-13 10:56:32.666+00', NULL, NULL, 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
 ('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-05-14 10:32:14.133+00', 't', 'joanep@example.com', 'Joane Pilger', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
 ('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-05-13 10:58:26.686+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions');
+
+INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
+('19dd1446-a8fb-4a4a-8c3b-2babcd8108ab', '2022-05-13 10:58:26.685+00', '2022-05-13 10:58:26.685+00', NULL, '2eb4335a-0037-415c-abab-ec3aa8bf7e79', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('bc3eefda-143f-4208-b666-cb6f3790d4e2', '2022-05-13 10:58:23.404+00', '2022-05-13 10:58:42.896+00', 'completed', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('c0707ae1-a927-4709-9b25-600d7b76404d', '2022-05-13 10:56:32.664+00', '2022-05-13 10:56:32.664+00', NULL, '9816ff49-1641-4ef0-a60d-4d85bd7a044b', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL),
+('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '5b861dfb-02df-4be1-bc67-41a21611f5e7', NULL, NULL),
+('4d12dc5b-38fe-64f3-db14-b56a4dc1545f', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);

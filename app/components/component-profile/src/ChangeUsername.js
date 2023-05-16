@@ -20,13 +20,13 @@ const WarningBox = styled.div`
   transform: translate(0, 44px);
 `
 
-const ChangeUsername = ({ user, updateCurrentUsername }) => {
+const ChangeUsername = ({ user, updateUsername }) => {
   const [username, setUsername] = useState(user.username)
   // Don't permit usernames starting with a numeral or starting or ending with whitespace
   const isValid = /^[^0-9\s](?:.*\S)?$/.test(username)
 
-  const updateUsername = async updatedUsername => {
-    await updateCurrentUsername({ variables: { username: updatedUsername } })
+  const update = async (id, updatedUsername) => {
+    await updateUsername({ variables: { id, username: updatedUsername } })
   }
 
   return (
@@ -40,7 +40,7 @@ const ChangeUsername = ({ user, updateCurrentUsername }) => {
         onChange={e => setUsername(e.target.value)}
         value={username}
       />
-      <Button disabled={!isValid} onClick={() => updateUsername(username)}>
+      <Button disabled={!isValid} onClick={() => update(user.id, username)}>
         Change
       </Button>
     </Container>

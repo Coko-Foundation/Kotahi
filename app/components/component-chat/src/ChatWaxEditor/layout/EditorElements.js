@@ -181,4 +181,14 @@ export default css`
     text-transform: uppercase;
     top: -1.25rem;
   }
+
+  .ProseMirror p:first-child,
+  .ProseMirror h1:first-child,
+  .ProseMirror h2:first-child,
+  .ProseMirror h3:first-child,
+  .ProseMirror h4:first-child,
+  .ProseMirror h5:first-child,
+  .ProseMirror h6:first-child {
+    margin-top: 0;
+  }
 `

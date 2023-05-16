@@ -34,15 +34,15 @@ const ButtonContainer = styled.div`
   }
 `
 
-const EnterEmail = ({ updateUserEmail }) => {
+const EnterEmail = ({ updateUserEmail, user }) => {
   const [email, setEmail] = useState('')
   const [updateEmailError, setUpdateEmailError] = useState('')
 
   // eslint-disable-next-line no-shadow
-  const updateEmail = async email => {
-    await updateUserEmail({ variables: { email } }).then(response => {
-      if (!response.data.updateCurrentEmail.success) {
-        setUpdateEmailError(response.data.updateCurrentEmail.error)
+  const updateEmail = async (id, email) => {
+    await updateUserEmail({ variables: { id, email } }).then(response => {
+      if (!response.data.updateEmail.success) {
+        setUpdateEmailError(response.data.updateEmail.error)
       } else {
         setUpdateEmailError('')
       }
@@ -53,7 +53,7 @@ const EnterEmail = ({ updateUserEmail }) => {
     <ModalContainer>
       <form
         onSubmit={e => {
-          updateEmail(email)
+          updateEmail(user.id, email)
           e.preventDefault()
         }}
       >
@@ -69,7 +69,7 @@ const EnterEmail = ({ updateUserEmail }) => {
         <br />
         <UpdateEmailError>{updateEmailError}</UpdateEmailError>
         <ButtonContainer>
-          <Button onClick={() => updateEmail(email)} primary>
+          <Button onClick={() => updateEmail(user.id, email)} primary>
             Next
           </Button>
         </ButtonContainer>

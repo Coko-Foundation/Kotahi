@@ -152,12 +152,6 @@ const formStructure = `
 
 const query = gql`
   query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
-
     manuscript(id: $id) {
       parentId
       ${fragmentFields}

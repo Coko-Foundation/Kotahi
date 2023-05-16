@@ -17,7 +17,7 @@ const URI_SEARCH_PARAM = 'search'
 
 /** This returns a modified array of reviews, omitting fields or entire reviews marked as
  * hidden from author, UNLESS the current user is the reviewer the review belongs to.
- * This does not consider whether the user is an admin or editor of the manuscript:
+ * This does not consider whether the user is a groupManager/admin or editor of the manuscript:
  * that must be checked elsewhere.
  */
 const stripConfidentialDataFromReviews = (

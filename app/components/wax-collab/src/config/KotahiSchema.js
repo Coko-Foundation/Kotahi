@@ -1,4 +1,4 @@
-import { DefaultSchema } from 'wax-prosemirror-utilities'
+import { DefaultSchema } from 'wax-prosemirror-core'
 
 const KotahiSchema = {
   ...DefaultSchema,

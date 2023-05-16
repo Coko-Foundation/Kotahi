@@ -82,11 +82,6 @@ const fragmentFields = `
 
 const query = gql`
   query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
     manuscript(id: $id) {
       ${fragmentFields}
     }
@@ -102,7 +97,7 @@ export const updateMutation = gql`
   }
 `
 
-const ProductionPage = ({ match, ...props }) => {
+const ProductionPage = ({ currentUser, match, ...props }) => {
   const client = useApolloClient()
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
@@ -136,7 +131,7 @@ const ProductionPage = ({ match, ...props }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const { manuscript, currentUser } = data
+  const { manuscript } = data
   return (
     <Composed
       client={client}

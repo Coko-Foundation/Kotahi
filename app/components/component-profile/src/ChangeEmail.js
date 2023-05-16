@@ -28,10 +28,10 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
   }, [user.email])
 
   // eslint-disable-next-line no-shadow
-  const updateEmail = async email => {
-    await updateUserEmail({ variables: { email } }).then(response => {
-      if (!response.data.updateCurrentEmail.success) {
-        setUpdateEmailError(response.data.updateCurrentEmail.error)
+  const updateEmail = async (id, email) => {
+    await updateUserEmail({ variables: { id, email } }).then(response => {
+      if (!response.data.updateEmail.success) {
+        setUpdateEmailError(response.data.updateEmail.error)
       } else {
         setUpdateEmailError('')
       }
@@ -45,7 +45,7 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
         onChange={e => setEmail(e.target.value)}
         value={email}
       />
-      <Button onClick={() => updateEmail(email)}>Change</Button>
+      <Button onClick={() => updateEmail(user.id, email)}>Change</Button>
       {updateEmailError && (
         <UpdateEmailError>{updateEmailError}</UpdateEmailError>
       )}

@@ -62,7 +62,11 @@ const ReviewLayout = ({
       content: (
         <div key={msVersion.id}>
           {hasManuscriptFile(msVersion) && (
-            <EditorSection manuscript={msVersion} readonly />
+            <EditorSection
+              currentUser={currentUser}
+              manuscript={msVersion}
+              readonly
+            />
           )}
           <ReadonlyFormTemplate
             form={submissionForm}
@@ -102,7 +106,11 @@ const ReviewLayout = ({
       content: (
         <div key={latestVersion.id}>
           {hasManuscriptFile(latestVersion) && (
-            <EditorSection manuscript={latestVersion} readonly />
+            <EditorSection
+              currentUser={currentUser}
+              manuscript={latestVersion}
+              readonly
+            />
           )}
           <ReadonlyFormTemplate // Display manuscript metadata
             form={submissionForm}

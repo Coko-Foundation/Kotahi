@@ -93,24 +93,24 @@ const EditorSection = ({
     return team.role.toLowerCase().includes('author')
   })
 
-  const isCurrentUserAuthor =
+  const currentUserIsAuthor =
     authorTeam && currentUser
       ? authorTeam.members.find(member => member.user.id === currentUser.id)
       : false
 
-  const isCurrentUserEditor =
+  const currentUserIsEditor =
     editorTeam && currentUser
       ? editorTeam.members.find(member => member.user.id === currentUser.id)
       : false
 
-  const isAuthorMode = !!(isCurrentUserAuthor && readonly)
+  const isAuthorMode = !!(currentUserIsAuthor && readonly)
 
   return (
     <Composed
       currentUser={currentUser}
       isAuthorMode={isAuthorMode}
-      isCurrentUserAuthor={isCurrentUserAuthor}
-      isCurrentUserEditor={isCurrentUserEditor}
+      isCurrentUserAuthor={currentUserIsAuthor}
+      isCurrentUserEditor={currentUserIsEditor}
       manuscript={manuscript}
       readonly={readonly}
       saveSource={saveSource}
@@ -127,9 +127,9 @@ const EditorSection = ({
             saveSource={saveSource}
             useComments={
               !!(
-                isCurrentUserEditor ||
-                currentUser?.admin ||
-                (isCurrentUserAuthor && readonly)
+                currentUserIsEditor ||
+                currentUser.groupRoles.includes('groupManager') ||
+                (currentUserIsAuthor && readonly)
               )
             }
             user={currentUser}

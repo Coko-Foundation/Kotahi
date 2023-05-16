@@ -6,7 +6,8 @@ const QUERY = gql`
       id
       profilePicture
       username
-      admin
+      globalRoles
+      groupRoles
       email
       recentTab
       defaultIdentity {
@@ -17,10 +18,6 @@ const QUERY = gql`
         id
       }
       isOnline
-      _currentRoles {
-        id
-        roles
-      }
       teams {
         id
         objectId

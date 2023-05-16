@@ -10,10 +10,10 @@ import {
 import mutations from '../graphql/mutations'
 import queries from '../graphql/queries'
 import EditorTable from './sections/EditorTable'
+import { CommsErrorBanner, Spinner } from '../../../shared'
 
-const DashboardEditsPage = ({ history }) => {
+const DashboardEditsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
   const wantedRoles = ['seniorEditor', 'handlingEditor', 'editor']
 
   const applyQueryParams = useQueryParams()
@@ -26,7 +26,7 @@ const DashboardEditsPage = ({ history }) => {
 
   const limit = config?.manuscript?.paginationCount || 10
 
-  const query = useQuery(queries.dashboard, {
+  const { data, loading, error } = useQuery(queries.dashboard, {
     variables: {
       wantedRoles,
       sort: sortName
@@ -55,12 +55,16 @@ const DashboardEditsPage = ({ history }) => {
     removeTaskAlertsForCurrentUser()
   }, [])
 
+  if (loading) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
+
   return (
     <EditorTable
       applyQueryParams={applyQueryParams}
-      query={query}
+      currentUser={currentUser}
+      manuscriptsUserHasCurrentRoleIn={data.manuscriptsUserHasCurrentRoleIn}
+      submissionForm={data.formForPurposeAndCategory}
       uriQueryParams={uriQueryParams}
-      urlFrag={urlFrag}
     />
   )
 }

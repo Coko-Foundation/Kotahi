@@ -40,7 +40,7 @@ Once you have those things, try doing this:
 - Click **Dashboard** in the upper right.
 - You'll be prompted to login with ORCID. If you don't yet have an ORCID ID, you can login with account number `0000-0001-6819-2182` and password `KotahiDemoAccess2021`. _Please do not use this account for anything other than testing!_
 - If you're asked, click "Authorize Access".
-- You should be returned to Kotahi; enter an email address to get started. The email you enter will be associated with the ORCID ID in your instance; and the first account created is automatically an admin, so if you're not just trying out Kotahi, there's a benefit to making your own ORCID ID.
+- You should be returned to Kotahi; enter an email address to get started. The email you enter will be associated with the ORCID ID in your instance; and the first account created is automatically a system admin, so if you're not just trying out Kotahi, there's a benefit to making your own ORCID ID.
 
 If something doesn't work, read though the details in the next section; or check through the [FAQ](FAQ.md).
 

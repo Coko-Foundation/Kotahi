@@ -1,5 +1,5 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
-import { DefaultSchema } from 'wax-prosemirror-utilities'
+import { DefaultSchema } from 'wax-prosemirror-core'
 import {
   AnnotationToolGroupService,
   BottomInfoService,
@@ -16,6 +16,7 @@ import {
   TextBlockLevelService,
   TextToolGroupService,
   DisplayBlockLevelService,
+  EnterService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../../../wax-collab/src/CustomWaxToolGroups'
 import CharactersList from '../../../wax-collab/src/config/CharactersList'
@@ -25,7 +26,7 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const chatWaxEditorConfig = () => ({
+const chatWaxEditorConfig = ({ onEnterPress }) => ({
   SchemaService: DefaultSchema,
   MenuService: [
     {
@@ -50,7 +51,14 @@ const chatWaxEditorConfig = () => ({
 
   TitleService: { updateTitle },
 
+  EnterService: {
+    getContentOnEnter: source => {
+      onEnterPress(source)
+    },
+  },
+
   services: [
+    new EnterService(),
     new AnnotationToolGroupService(),
     new BottomInfoService(),
     new DisplayToolGroupService(),

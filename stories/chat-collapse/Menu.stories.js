@@ -72,7 +72,8 @@ Base.args = {
     id: 'ed0d6990-b32a-4b32-8bf6-39bd20078643',
     profilePicture: null,
     username: 'Shanthi',
-    admin: true,
+    groupRoles: ['groupManager'],
+    globalRoles: [],
     email: 'shanthitestemail@mailinator.com',
     defaultIdentity: {
       __typename: 'Identity',
@@ -83,7 +84,6 @@ Base.args = {
       id: '7b03f794-ed3c-4dac-933d-a6616b3d70c2',
     },
     isOnline: true,
-    _currentRoles: [],
     teams: [],
   },
 }

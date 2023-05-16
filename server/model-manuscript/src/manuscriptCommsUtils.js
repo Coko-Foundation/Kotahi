@@ -1,6 +1,5 @@
 const models = require('@pubsweet/models')
 const { pubsubManager } = require('@coko/server')
-const Config = require('../../config/src/config')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
@@ -36,7 +35,7 @@ let isImportInProgress = false
 let isImportingFromSemanticScholarInProgress = false
 
 const importManuscripts = async ctx => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
   if (isImportInProgress) return false
   isImportInProgress = true
 
@@ -65,7 +64,7 @@ const importManuscripts = async ctx => {
 }
 
 const importManuscriptsFromSemanticScholar = async ctx => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   if (isImportingFromSemanticScholarInProgress) return false
   isImportingFromSemanticScholarInProgress = true
@@ -92,7 +91,7 @@ const importManuscriptsFromSemanticScholar = async ctx => {
 }
 
 const archiveOldManuscripts = async () => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
   const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
 

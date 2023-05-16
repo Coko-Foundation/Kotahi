@@ -1,5 +1,4 @@
 const models = require('@pubsweet/models')
-const File = require('@coko/server/src/models/file/file.model')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
@@ -56,7 +55,7 @@ const resolvers = {
       await convertFilesToFullObjects(
         review,
         form,
-        async ids => File.query().findByIds(ids),
+        async ids => models.File.query().findByIds(ids),
         getFilesWithUrl,
       )
 

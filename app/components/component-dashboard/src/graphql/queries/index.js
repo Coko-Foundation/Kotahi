@@ -70,12 +70,6 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
 export default {
   dashboard: gql`
     query Dashboard($reviewerStatus: String, $wantedRoles: [String]!, $sort: ManuscriptsSort, $filters: [ManuscriptsFilter!]!, $offset: Int, $limit: Int, $timezoneOffsetMinutes: Int) {
-      currentUser {
-        id
-        username
-        admin
-        recentTab
-      }
       manuscriptsUserHasCurrentRoleIn(
         reviewerStatus: $reviewerStatus
         wantedRoles: $wantedRoles
@@ -96,18 +90,6 @@ export default {
           }
         }
       ${formForPurposeAndCategoryFragment}
-    }
-  `,
-  getUser: gql`
-    query GetUser($id: ID!) {
-      user(id: $id) {
-        id
-        username
-        admin
-        teams {
-          id
-        }
-      }
     }
   `,
 }

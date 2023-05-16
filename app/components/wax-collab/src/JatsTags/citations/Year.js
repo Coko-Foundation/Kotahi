@@ -1,6 +1,5 @@
 import { decorate, injectable } from 'inversify'
-import { Commands } from 'wax-prosemirror-utilities'
-import { Tools } from 'wax-prosemirror-services'
+import { Commands, Tools } from 'wax-prosemirror-core'
 import removeOrToggleMark from '../removeOrToggleMark'
 
 class Year extends Tools {

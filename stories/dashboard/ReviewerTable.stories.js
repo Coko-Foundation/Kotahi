@@ -169,7 +169,8 @@ const currentUser = {
   __typename: 'User',
   id: '46d6cc04-6310-4021-be5a-5dcf4e24868c',
   username: 'Kotahi Dev',
-  admin: true,
+  groupRoles: ['groupManager'],
+  globalRoles: [],
 }
 
 const props = {

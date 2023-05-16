@@ -1,36 +1,17 @@
-import React from 'react'
-import gql from 'graphql-tag'
-import { useMutation } from '@apollo/client'
+import React, { useState } from 'react'
 import { Action } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
 import { Row, Cell, LastCell } from './style'
-
 import { UserCombo, Primary, Secondary, UserInfo } from '../../shared'
-
+import { ConfirmationModal } from '../../component-modal/src/ConfirmationModal'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
-const DELETE_USER = gql`
-  mutation($id: ID) {
-    deleteUser(id: $id) {
-      id
-    }
-  }
-`
+const User = ({ user, currentUser, deleteUser, setGroupRole }) => {
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
-const UPDATE_USER = gql`
-  mutation($id: ID!, $input: String) {
-    updateUser(id: $id, input: $input) {
-      id
-      admin
-    }
-  }
-`
-
-const User = ({ user, currentUser }) => {
-  const [deleteUser] = useMutation(DELETE_USER)
-  const [updateUser] = useMutation(UPDATE_USER)
-
-  const makeUserText = user.admin ? 'Reviewer' : 'Admin'
+  const makeUserText = user.groupRoles.includes('groupManager')
+    ? 'Remove Group Manager role'
+    : 'Make Group Manager'
 
   return (
     <Row>
@@ -47,30 +28,34 @@ const User = ({ user, currentUser }) => {
       <Cell>
         {user.lastOnline ? convertTimestampToDateString(user.lastOnline) : '-'}
       </Cell>
-      <Cell>{user.admin ? 'yes' : ''}</Cell>
+      <Cell>{user.groupRoles.includes('groupManager') ? 'yes' : ''}</Cell>
       <LastCell>
         {/* TODO confirmation on delete */}
-        <Action onClick={() => deleteUser({ variables: { id: user.id } })}>
-          Delete
-        </Action>
+        <Action onClick={() => setIsConfirmingDelete(true)}>Delete</Action>
         <br />
         {user.id !== currentUser.id && (
           <Action
             onClick={() =>
-              updateUser({
+              setGroupRole({
                 variables: {
-                  id: user.id,
-                  input: JSON.stringify({
-                    admin: !user.admin,
-                  }),
+                  userId: user.id,
+                  role: 'groupManager',
+                  shouldEnable: !user.groupRoles.includes('groupManager'),
                 },
               })
             }
           >
-            Make {makeUserText}
+            {makeUserText}
           </Action>
         )}
       </LastCell>
+      <ConfirmationModal
+        closeModal={() => setIsConfirmingDelete(false)}
+        confirmationAction={() => deleteUser({ variables: { id: user.id } })}
+        confirmationButtonText="Delete"
+        isOpen={isConfirmingDelete}
+        message={`Permanently delete user ${user.username}?`}
+      />
     </Row>
   )
 }

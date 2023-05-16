@@ -15,7 +15,7 @@ const AssignEditor = ({
   createTeam,
   teamLabels,
 }) => {
-  const [team, setTeam] = useState([])
+  const [team, setTeam] = useState(null)
   const [teams, setTeams] = useState([])
   const [selectedEditor, setSelectedEditor] = useState(undefined)
   const [members, setMembers] = useState([])
@@ -26,67 +26,67 @@ const AssignEditor = ({
   }, [manuscript])
 
   useEffect(() => {
-    setTeam(teams.find(t => t.role === teamRole) || {})
+    setTeam(teams.find(t => t.role === teamRole) || null)
   }, [teams])
 
   useEffect(() => {
-    setMembers(team.members || [])
+    setMembers(team?.members || [])
   }, [team])
 
   useEffect(() => {
     setSelectedEditor(members.length > 0 ? members[0].user.id : undefined)
   }, [members])
 
-  useEffect(() => {
-    if (selectedEditor) {
-      if (teams.find(t => t.role === teamRole)) {
-        updateTeam({
-          variables: {
-            id: team.id,
-            input: {
-              members: [{ user: { id: selectedEditor } }],
-            },
-          },
-        })
-      } else {
-        const editor = teamRole === 'editor' ? 'Editor' : 'Handling Editor'
-
-        const input = {
-          // Editors are always linked to the parent manuscript
-          objectId: manuscript.id,
-          objectType: 'manuscript',
-          name: teamRole === 'seniorEditor' ? 'Senior Editor' : editor,
-          role: teamRole,
-          members: [{ user: { id: selectedEditor } }],
-        }
-
-        createTeam({
-          variables: {
-            input,
-          },
-        }).then(({ data }) => {
-          setTeams([
-            ...teams,
-            {
-              id: data.createTeam.id,
-              role: teamRole,
-              members: [{ user: { id: selectedEditor } }],
-            },
-          ])
-        })
-      }
-    }
-  }, [selectedEditor])
-
   const teamName = teamLabels[teamRole].name
   const options = (allUsers || []).map(user => editorOption(user))
+
+  const onChangeEditor = currentSelectedEditor => {
+    let updatedMembers = []
+
+    if (currentSelectedEditor) {
+      updatedMembers = [{ user: { id: currentSelectedEditor } }]
+    }
+
+    if (team) {
+      updateTeam({
+        variables: { id: team.id, input: { members: updatedMembers } },
+      })
+      setSelectedEditor(currentSelectedEditor)
+      return
+    }
+
+    // if team does not exists let's create a new one.
+
+    const input = {
+      // Editors are always linked to the parent manuscript
+      objectId: manuscript.id,
+      objectType: 'manuscript',
+      name: teamName,
+      role: teamRole,
+      members: updatedMembers,
+    }
+
+    createTeam({ variables: { input } }).then(({ data }) => {
+      setTeams([
+        ...teams,
+        {
+          id: data.createTeam.id,
+          role: teamRole,
+          members: updatedMembers,
+        },
+      ])
+    })
+
+    setSelectedEditor(currentSelectedEditor)
+  }
 
   return (
     <Select
       aria-label={`Assign ${teamRole}`}
       data-testid={`assign${teamRole}`}
+      isClearable
       label={teamName}
-      onChange={selected => setSelectedEditor(selected.value)}
+      onChange={selected => onChangeEditor(selected?.value)}
       options={options}
       placeholder={`Assign ${teamName}…`}
       value={selectedEditor}

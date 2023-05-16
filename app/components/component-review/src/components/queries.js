@@ -221,13 +221,6 @@ const teamFields = `
 
 export const query = gql`
   query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-      email
-    }
-
     manuscript(id: $id) {
       ${manuscriptFields}
       manuscriptVersions {
@@ -293,7 +286,6 @@ export const query = gql`
       profilePicture
       isOnline
       email
-      admin
       defaultIdentity {
         id
         identifier
@@ -356,20 +348,6 @@ export const publishManuscriptMutation = gql`
         stepLabel
         succeeded
         errorMessage
-      }
-    }
-  }
-`
-
-export const getUsers = gql`
-  {
-    users {
-      id
-      username
-      email
-      admin
-      defaultIdentity {
-        id
       }
     }
   }

@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
-import React, { useCallback, useContext, useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import Modal from 'react-modal'
 import {
   matchPath,
@@ -36,12 +36,10 @@ import QUERY from './adminPageQueries'
 import Menu from './Menu'
 import { Spinner } from './shared'
 
-import currentRolesVar from '../shared/currentRolesVar'
 import DashboardEditsPage from './component-dashboard/src/components/DashboardEditsPage'
 import DashboardLayout from './component-dashboard/src/components/DashboardLayout'
 import DashboardReviewsPage from './component-dashboard/src/components/DashboardReviewsPage'
 import DashboardSubmissionsPage from './component-dashboard/src/components/DashboardSubmissionsPage'
-import RolesUpdater from './RolesUpdater'
 
 const getParams = ({ routerPath, path }) => {
   return matchPath(routerPath, path).params
@@ -73,7 +71,8 @@ const PrivateRoute = ({ component: Component, redirectLink, ...rest }) => {
   if (
     ['aperture', 'colab'].includes(config.instanceName) &&
     rest.currentUser &&
-    !rest.currentUser.email
+    !rest.currentUser.email &&
+    rest.path !== '/kotahi/profile' // TODO configure this url via config manager
   ) {
     // TODO: remove instance based redirection url's and configure it via config manager after finalizing the requirement
     return <Redirect to="/kotahi/profile" />
@@ -98,15 +97,6 @@ PrivateRoute.propTypes = {
   redirectLink: PropTypes.string.isRequired,
 }
 
-const updateStuff = data => {
-  if (data?.currentUser) {
-    // eslint-disable-next-line no-underscore-dangle
-    return currentRolesVar(data.currentUser._currentRoles)
-  }
-
-  return false
-}
-
 const AdminPage = () => {
   Modal.setAppElement('#root')
   const history = useHistory()
@@ -117,8 +107,6 @@ const AdminPage = () => {
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
     fetchPolicy: 'network-only',
-    // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
   })
 
   const previousDataRef = useRef(null)
@@ -188,7 +176,10 @@ const AdminPage = () => {
     links.push({ link: homeLink, name: 'Dashboard', icon: 'home', hasAlert })
   }
 
-  if (currentUser?.admin) {
+  const isGroupManager = currentUser?.groupRoles?.includes('groupManager')
+  const isAdmin = currentUser?.globalRoles?.includes('admin')
+
+  if (isGroupManager) {
     links.push({
       link: manuscriptsLink,
       name: 'Manuscripts',
@@ -198,7 +189,7 @@ const AdminPage = () => {
       links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
-  if (currentUser?.admin) {
+  if (isGroupManager || isAdmin) {
     links.push({
       menu: 'Settings',
       name: 'Settings',
@@ -225,12 +216,12 @@ const AdminPage = () => {
     ? window.localStorage.getItem('invitationId')
     : ''
 
-  let dashboardRedirectUrl = currentUser.recentTab
+  let dashboardRedirectUrl = currentUser?.recentTab
     ? `${urlFrag}/dashboard/${currentUser.recentTab}`
     : dashboardSubmissionsLink
 
   // TODO: refactor based on roles and update config redirection url default's
-  if (currentUser?.admin) {
+  if (isGroupManager || isAdmin) {
     dashboardRedirectUrl =
       config.dashboard.loginRedirectUrl === '/dashboard'
         ? dashboardRedirectUrl
@@ -271,6 +262,7 @@ const AdminPage = () => {
       <Switch>
         <PrivateRoute
           component={Profile}
+          currentUser={currentUser}
           exact
           path={profileLink}
           redirectLink={redirectLink}
@@ -362,7 +354,7 @@ const AdminPage = () => {
             </Switch>
           </DashboardLayout>
         </Route>
-        {currentUser?.admin && [
+        {(isGroupManager || isAdmin) && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
           <PrivateRoute
             component={FormBuilderPage}
@@ -400,18 +392,32 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
           <PrivateRoute
+            component={UsersManager}
+            currentUser={currentUser}
+            key="users"
+            path={`${urlFrag}/admin/users`}
+            redirectLink={redirectLink}
+          />,
+          <PrivateRoute
+            component={TasksTemplatePage}
+            key="tasks"
+            path={`${urlFrag}/admin/tasks`}
+            redirectLink={redirectLink}
+          />,
+          <PrivateRoute
+            component={ConfigManagerPage}
+            key="configuration"
+            path={`${urlFrag}/admin/configuration`}
+            redirectLink={redirectLink}
+          />,
+        ]}
+        {isGroupManager && [
+          <PrivateRoute
             component={ManuscriptPage}
             currentUser={currentUser}
             exact
             key="manuscript"
             path={`${urlFrag}/versions/:version/manuscript`}
-            redirectLink={redirectLink}
-          />,
-          <PrivateRoute
-            component={UsersManager}
-            currentUser={currentUser}
-            key="users"
-            path={`${urlFrag}/admin/users`}
             redirectLink={redirectLink}
           />,
           <PrivateRoute
@@ -435,21 +441,8 @@ const AdminPage = () => {
             path={`${urlFrag}/versions/:version/production`}
             redirectLink={redirectLink}
           />,
-          <PrivateRoute
-            component={TasksTemplatePage}
-            key="tasks"
-            path={`${urlFrag}/admin/tasks`}
-            redirectLink={redirectLink}
-          />,
-          <PrivateRoute
-            component={ConfigManagerPage}
-            key="configuration"
-            path={`${urlFrag}/admin/configuration`}
-            redirectLink={redirectLink}
-          />,
         ]}
       </Switch>
-      <RolesUpdater />
     </Root>
   )
 }
