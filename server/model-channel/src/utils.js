@@ -33,7 +33,28 @@ const addUserToManuscriptChatChannel = async ({
   }).save()
 }
 
+const removeUserFromManuscriptChatChannel = async ({
+  manuscriptId,
+  userId = null,
+  type = 'all',
+}) => {
+  const channel = await Channel.query()
+    .where({
+      manuscriptId,
+      type,
+    })
+    .first()
+
+  await ChannelMember.query()
+    .where({
+      channelId: channel.id,
+      userId,
+    })
+    .delete()
+}
+
 module.exports = {
   updateChannelLastViewed,
   addUserToManuscriptChatChannel,
+  removeUserFromManuscriptChatChannel,
 }

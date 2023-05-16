@@ -5,6 +5,10 @@ const {
   updateAlertsUponTeamUpdate,
 } = require('../../model-task/src/taskCommsUtils')
 
+const {
+  addUserToManuscriptChatChannel,
+} = require('../../model-channel/src/utils')
+
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
@@ -28,6 +32,20 @@ const resolvers = {
         allowUpsert: '[members, members.alias]',
         eager: '[members.[user.teams, alias]]',
       }
+
+      let type = 'all'
+
+      if (['handlingEditor', 'seniorEditor', 'editor'].includes(input.role)) {
+        type = 'editorial'
+      }
+
+      input.members.forEach(async member => {
+        await addUserToManuscriptChatChannel({
+          manuscriptId: input.objectId,
+          userId: member.user.id,
+          type,
+        })
+      })
 
       return models.Team.query().insertGraphAndFetch(input, options)
     },
@@ -57,6 +75,14 @@ const resolvers = {
           .findById(id)
 
         await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
+
+        input.members.forEach(async member => {
+          await addUserToManuscriptChatChannel({
+            manuscriptId: objectId,
+            userId: member.user.id,
+            type: 'editorial',
+          })
+        })
       }
 
       return models.Team.query().upsertGraphAndFetch(
