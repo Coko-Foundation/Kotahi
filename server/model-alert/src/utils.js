@@ -1,7 +1,10 @@
+const config = require('config')
 const sendEmailNotification = require('../../email-notifications')
 const ChannelMember = require('../../model-channel/src/channel_member')
 const Message = require('../../model-message/src/message')
+const User = require('../../model-user/src/user')
 const Alert = require('./alert')
+const Channel = require('../../model-channel/src/channel')
 
 const sendAlerts = async () => {
   const channelMembers = await ChannelMember.query()
@@ -48,17 +51,21 @@ const sendAlertForMessage = async ({
     triggerTime,
   }).save()
 
+  const message = await Message.query().findById(messageId)
+  const channel = await Channel.query().findById(message.channelId)
+
+  const user = await User.query().findById(userId)
+
   // send email notification
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
+
   const data = {
-    receiverName: 'User Name',
-    manuscriptPageUrl: 'https://google.com',
+    receiverName: user.username,
+    manuscriptPageUrl: `${baseUrl}/versions/${channel.manuscriptId}`,
   }
 
-  await sendEmailNotification(
-    'vaibhav@coloredcow.com',
-    'alertUnreadMessageTemplate',
-    data,
-  )
+  await sendEmailNotification(user.email, 'alertUnreadMessageTemplate', data)
 
   await Alert.query().updateAndFetchById(alert.id, {
     isSent: true,
