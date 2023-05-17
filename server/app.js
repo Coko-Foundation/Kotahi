@@ -15,6 +15,9 @@ setConfig({
 const {
   importManuscripts,
   importManuscriptsFromSemanticScholar,
+} = require('./model-manuscript/src/importManuscripts')
+
+const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 

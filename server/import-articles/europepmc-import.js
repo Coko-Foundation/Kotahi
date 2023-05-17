@@ -1,30 +1,30 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
-
 const models = require('@pubsweet/models')
-const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
-const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
-const Form = require('../model-form/src/form')
 
 const getData = async ctx => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
-  const [checkIfSourceExists] = await ArticleImportSources.query().where({
-    server: 'europepmc',
-  })
+  const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
+    {
+      server: 'europepmc',
+    },
+  )
 
   if (!checkIfSourceExists) {
-    await ArticleImportSources.query().insert({
+    await models.ArticleImportSources.query().insert({
       server: 'europepmc',
     })
   }
 
-  const [europepmcImportSourceId] = await ArticleImportSources.query().where({
+  const [
+    europepmcImportSourceId,
+  ] = await models.ArticleImportSources.query().where({
     server: 'europepmc',
   })
 
-  const lastImportDate = await ArticleImportHistory.query()
+  const lastImportDate = await models.ArticleImportHistory.query()
     .select('date')
     .where({
       sourceId: europepmcImportSourceId.id,
@@ -72,7 +72,7 @@ const getData = async ctx => {
 
   const importedManuscripts = await requests('', date, [])
 
-  const submissionForm = await Form.findOneByField('purpose', 'submit')
+  const submissionForm = await models.Form.findOneByField('purpose', 'submit')
 
   const parsedFormStructure = submissionForm.structure.children
     .map(formElement => {
@@ -182,7 +182,7 @@ const getData = async ctx => {
     )
 
     if (lastImportDate.length) {
-      await ArticleImportHistory.query()
+      await models.ArticleImportHistory.query()
         .update({
           date: new Date().toISOString(),
         })
@@ -190,7 +190,7 @@ const getData = async ctx => {
           date: lastImportDate[0].date,
         })
     } else {
-      await ArticleImportHistory.query().insert({
+      await models.ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId: europepmcImportSourceId.id,
       })
