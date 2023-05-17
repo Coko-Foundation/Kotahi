@@ -19,6 +19,8 @@ variables:
   MINIO_ROOT_PASSWORD: superSecretAdminPassword
   MINIO_CONSOLE_PORT: 9001
   FF_NETWORK_PER_BUILD: 'true'
+  SERVICE_XSWEET_CLIENT_ID: 59a3392b-0c4f-4318-bbe2-f86eff6d3de4
+  SERVICE_XSWEET_SECRET: asldkjLKJLaslkdf897kjhKUJH
 
 stages:
   #- cache
@@ -132,10 +134,6 @@ lint style:
     GIT_STRATEGY: none
   services:
     - postgres
-    - pubsweet/job-xsweet
-  script:
-    - cd components/server/job-xsweet
-    - $POSTGRES_HOST yarn test --testRegex test/standaloneXsweetTest.js
 
 .test_before_script: &run_test_before_script
   - wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -

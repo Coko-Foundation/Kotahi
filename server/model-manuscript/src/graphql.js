@@ -7,13 +7,8 @@ const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
 const { raw } = require('objection')
-
-const {
-  importManuscripts,
-  manuscriptHasOverdueTasksForUser,
-} = require('./manuscriptCommsUtils')
-
-const { getPubsub } = pubsubManager
+const { importManuscripts } = require('./importManuscripts')
+const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 
 const {
   publishToCrossref,
@@ -82,6 +77,8 @@ const {
   addUserToManuscriptChatChannel,
   removeUserFromManuscriptChatChannel,
 } = require('../../model-channel/src/utils')
+
+const { getPubsub } = pubsubManager
 
 /** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
 const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {

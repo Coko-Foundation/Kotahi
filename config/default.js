@@ -132,6 +132,13 @@ module.exports = {
     host: '',
     port: '',
   },
+  xsweet: {
+    clientId: '',
+    clientSecret: '',
+    protocol: '',
+    host: '',
+    port: '',
+  },
   /** These named configuration sections will be available to webpack */
   publicKeys: [
     'pubsweet-client',

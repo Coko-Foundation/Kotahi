@@ -7,6 +7,8 @@ variables:
   POSTGRES_PASSWORD: kotahidev
   PGUSER: kotahidev
   PGPASSWORD: kotahidev
+  SERVICE_XSWEET_CLIENT_ID: 59a3392b-0c4f-4318-bbe2-f86eff6d3de4
+  SERVICE_XSWEET_SECRET: asldkjLKJLaslkdf897kjhKUJH
 
 stages:
   #- cache

@@ -1,10 +1,10 @@
+const models = require('@pubsweet/models')
 const nodemailer = require('nodemailer')
 const config = require('config')
-const Config = require('../config/src/config')
 const createMailOptions = require('./createMailOptions')
 
 const sendEmailNotification = async (receiver, template, data) => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   const mailOptions = createMailOptions(receiver, template, data)
 
