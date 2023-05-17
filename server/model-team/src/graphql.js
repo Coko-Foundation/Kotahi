@@ -33,17 +33,16 @@ const resolvers = {
         eager: '[members.[user.teams, alias]]',
       }
 
-      let type = 'all'
-
-      if (['handlingEditor', 'seniorEditor', 'editor'].includes(input.role)) {
-        type = 'editorial'
-      }
-
       input.members.forEach(async member => {
         await addUserToManuscriptChatChannel({
           manuscriptId: input.objectId,
           userId: member.user.id,
-          type,
+          type: 'all',
+        })
+        await addUserToManuscriptChatChannel({
+          manuscriptId: input.objectId,
+          userId: member.user.id,
+          type: 'editorial',
         })
       })
 
@@ -77,6 +76,11 @@ const resolvers = {
         await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
 
         input.members.forEach(async member => {
+          await addUserToManuscriptChatChannel({
+            manuscriptId: objectId,
+            userId: member.user.id,
+            type: 'all',
+          })
           await addUserToManuscriptChatChannel({
             manuscriptId: objectId,
             userId: member.user.id,

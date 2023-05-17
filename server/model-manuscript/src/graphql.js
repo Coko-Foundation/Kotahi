@@ -80,6 +80,7 @@ const {
 
 const {
   addUserToManuscriptChatChannel,
+  removeUserFromManuscriptChatChannel,
 } = require('../../model-channel/src/utils')
 
 /** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
@@ -872,6 +873,12 @@ const resolvers = {
         invitationData = await models.Invitation.query().findById(invitationId)
       }
 
+      await addUserToManuscriptChatChannel({
+        manuscriptId,
+        userId,
+        type: 'editorial',
+      })
+
       const existingTeam = await manuscript
         .$relatedQuery('teams')
         .where('role', 'reviewer')
@@ -923,6 +930,12 @@ const resolvers = {
           teamId: reviewerTeam.id,
         })
         .delete()
+
+      await removeUserFromManuscriptChatChannel({
+        manuscriptId,
+        userId,
+        type: 'editorial',
+      })
 
       return reviewerTeam.$query().withGraphFetched('members.[user]')
     },
