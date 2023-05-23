@@ -11,7 +11,7 @@ const getUsersById = async userIds => models.User.query().findByIds(userIds)
  * and "editorOrAdmin" indicates if the user is anyEditor or admin. */
 const getUserRolesInManuscript = async (userId, manuscriptId) => {
   const result = {
-    admin: !!(await models.User.query().findById(userId)).admin,
+    admin: false,
     author: false,
     reviewer: false,
     editor: false,
@@ -24,10 +24,13 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
 
   if (!userId || !manuscriptId) return result
 
+  result.admin = !!(await models.User.query().findById(userId)).admin
+
   const teams = await models.Team.query()
     .select('role')
-    .where({ objectId: manuscriptId })
-    .withGraphFetched('members')
+    .withGraphJoined('members')
+    .where({ objectId: manuscriptId, userId })
+    .whereNotIn('status', ['invited', 'rejected']) // Reviewers with status 'invited' or 'rejected' are not actually reviewers
 
   teams.forEach(t => {
     result[t.role] = true
