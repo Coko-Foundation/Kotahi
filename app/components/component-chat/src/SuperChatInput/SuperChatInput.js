@@ -299,7 +299,7 @@ const SuperChatInput = props => {
                 </PreviewWrapper>
               )}
               <ChatWaxEditor
-                autoFocus={false}
+                autoFocus
                 editorRef={editorRef}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
                 inputRef={node => {
