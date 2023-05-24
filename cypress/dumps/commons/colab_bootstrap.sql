@@ -682,4 +682,4 @@ INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "membe
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '85e1300e-003c-4e96-987b-23812f902477', NULL, NULL);
+('4d12dc5b-38fe-64f3-db14-b56a4dc1545f', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '85e1300e-003c-4e96-987b-23812f902477', NULL, NULL);
