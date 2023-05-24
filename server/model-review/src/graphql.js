@@ -99,6 +99,22 @@ const resolvers = {
       // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
       return parent.user || models.User.query().findById(parent.userId)
     },
+    async isShared(parent) {
+      if (parent.isShared || parent.isShared === false) return parent.isShared
+
+      const record = await models.Team.relatedQuery('members').for(
+        models.Team.query()
+          .where({
+            role: 'reviewer',
+            objectId: parent.manuscriptId,
+          })
+          .select('isShared')
+          .findOne({ userId: parent.userId }),
+      )
+
+      if (!record || !record.isShared) return false
+      return true
+    },
   },
 }
 
@@ -117,6 +133,7 @@ const typeDefs = `
     user: User
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
+    isShared: Boolean!
     canBePublishedPublicly: Boolean
     jsonData: String
     userId: String

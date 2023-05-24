@@ -13,37 +13,24 @@ const SharedReviewerGroupReviews = ({
   reviewForm,
   threadedDiscussionProps,
 }) => {
-  const membersInSharedGroup = manuscript.teams
-    ?.find(t => t.role === 'reviewer')
-    ?.members?.filter(m => m.isShared)
+  const thisReviewIsShared = manuscript.reviews?.find(
+    r => r.user?.id === reviewerId && !r.isDecision,
+  )?.isShared
 
-  if (!membersInSharedGroup) return null
+  if (!thisReviewIsShared) return null
 
-  const currentUserIsInSharedGroup = membersInSharedGroup.some(
-    m => m.user.id === reviewerId,
+  const sharedReviews = manuscript.reviews.filter(
+    r => r.isShared && r.user?.id !== reviewerId && !r.isDecision,
   )
 
-  if (!currentUserIsInSharedGroup) return null
-
-  const otherCompletedSharedReviewerIds = membersInSharedGroup
-    .filter(m => m.user.id !== reviewerId && m.status === 'completed')
-    .map(m => m.user.id)
-
-  const otherSharedReviews = manuscript.reviews?.filter(
-    r =>
-      r.user.id !== reviewerId &&
-      !r.isDecision &&
-      otherCompletedSharedReviewerIds.includes(r.user.id),
-  )
-
-  if (!otherSharedReviews?.length) return null
+  if (!sharedReviews.length) return null
 
   return (
     <SectionContent>
       <SectionHeader>
         <Title>Other Reviews</Title>
       </SectionHeader>
-      {otherSharedReviews.map(r => (
+      {sharedReviews.map(r => (
         <SectionRow key={r.id}>
           <Review
             review={r}
@@ -74,7 +61,7 @@ SharedReviewerGroupReviews.propTypes = {
     reviews: PropTypes.arrayOf(
       PropTypes.shape({
         isDecision: PropTypes.bool.isRequired,
-        user: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired,
+        user: PropTypes.shape({ id: PropTypes.string.isRequired }),
       }).isRequired,
     ).isRequired,
   }).isRequired,

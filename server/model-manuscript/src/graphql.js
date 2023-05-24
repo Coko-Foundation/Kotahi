@@ -71,6 +71,7 @@ const {
 const {
   getUsersById,
   getUserRolesInManuscript,
+  getSharedReviewersIds,
 } = require('../../model-user/src/userCommsUtils')
 
 const { getPubsub } = pubsubManager
@@ -125,6 +126,26 @@ const getRelatedReviews = async (
 
   const userRoles = await getUserRolesInManuscript(ctx.user, manuscript.id)
 
+  const sharedReviewersIds = await getSharedReviewersIds(
+    manuscript.id,
+    ctx.user,
+  )
+
+  // Insert isShared flag before userIds are stripped
+  // TODO Should this step and the removal of confidential data be moved to the review resolver?
+  reviews = reviews.map(r => ({
+    ...r,
+    isShared: sharedReviewersIds.includes(r.userId),
+  }))
+
+  const manuscriptHasDecision = [
+    'accepted',
+    'revise',
+    'rejected',
+    'evaluated',
+    'published',
+  ].includes(manuscript.status)
+
   if (
     forceRemovalOfConfidentialData ||
     (!userRoles.admin && !userRoles.anyEditor)
@@ -133,6 +154,8 @@ const getRelatedReviews = async (
       reviews,
       reviewForm,
       decisionForm,
+      sharedReviewersIds,
+      manuscriptHasDecision,
       ctx.user,
     )
   }
