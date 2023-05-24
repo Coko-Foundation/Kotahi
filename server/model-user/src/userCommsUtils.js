@@ -51,6 +51,26 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
   return result
 }
 
+/** If the current user is a 'shared' reviewer for the given manuscript,
+ * return their userId plus the userIds of any other reviewers who are
+ * also 'shared' and have COMPLETED their review.
+ * If the current user isn't a 'shared' reviewer, return an empty array.
+ */
+const getSharedReviewersIds = async (manuscriptId, currentUserId) => {
+  const reviewers = await models.Team.relatedQuery('members')
+    .for(
+      models.Team.query().where({ objectId: manuscriptId, role: 'reviewer' }),
+    )
+    .select('userId')
+    .where({ isShared: true })
+    .where(builder =>
+      builder.where({ status: 'completed' }).orWhere({ userId: currentUserId }),
+    )
+
+  if (!reviewers.some(r => r.userId === currentUserId)) return []
+  return reviewers.map(r => r.userId)
+}
+
 const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   let inputParsed = input
 
@@ -257,6 +277,7 @@ const isAdminOrGroupManager = async userId => {
 module.exports = {
   getUsersById,
   getUserRolesInManuscript,
+  getSharedReviewersIds,
   sendEmailWithPreparedData,
   getGroupAndGlobalRoles,
   isAdminOrGroupManager,
