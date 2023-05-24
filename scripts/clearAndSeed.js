@@ -6,23 +6,16 @@ const clearDb = async () => {
   const { rows } = await db.raw(`
     SELECT tablename, schemaname
     FROM pg_tables
-    WHERE schemaname = 'public' OR schemaname = 'pgboss'
+    WHERE schemaname = 'public'
   `)
 
   if (rows.length) {
     logger.info('Overwriting existing database')
+
     // TODO this is dangerous, change it
-    let dropQuery = rows.map(
-      row => `DROP TABLE ${row.schemaname}.${row.tablename} CASCADE`,
-    )
-
-    // Also delete the pgboss.job_state type
-    dropQuery.push('DROP TYPE IF EXISTS pgboss.job_state')
-
-    // Also delete the schema
-    dropQuery.push('DROP SCHEMA pgboss')
-
-    dropQuery = dropQuery.join('; ')
+    const dropQuery = rows
+      .map(row => `DROP TABLE ${row.schemaname}.${row.tablename} CASCADE; `)
+      .join('')
 
     await db.raw(dropQuery)
   }
