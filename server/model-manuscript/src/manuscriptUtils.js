@@ -24,6 +24,8 @@ const stripConfidentialDataFromReviews = (
   reviews,
   reviewForm,
   decisionForm,
+  sharedReviewersIds,
+  manuscriptHasDecision,
   userId,
 ) => {
   if (!reviewForm || !decisionForm) return []
@@ -37,7 +39,23 @@ const stripConfidentialDataFromReviews = (
     .map(field => field.name)
 
   return reviews
-    .filter(r => !r.isHiddenFromAuthor || r.userId === userId)
+    .filter(
+      r =>
+        (!r.isHiddenFromAuthor && manuscriptHasDecision) ||
+        // TODO the above case is not tightly enough controlled.
+        // Even if the review is not 'hidden' and the manuscript has a decision,
+        // we should also require that the review has been completed, and that
+        // either the manuscript has been published or the current user is its
+        // author.
+        // The current logic is still safer and more secure than what we had
+        // previously, which delivered reviews to the client with few controls.
+        // Further improvements should probably go hand in hand with improving
+        // what data we store in a Review object: it should really store status
+        // and isShared, rather than requiring us to retrieve these from the
+        // TeamMember object.
+        r.userId === userId ||
+        (sharedReviewersIds.includes(r.userId) && !r.isDecision),
+    )
     .map(review => {
       const r = { ...review, jsonData: ensureJsonIsParsed(review.jsonData) }
       if (r.userId === userId) return r
