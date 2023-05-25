@@ -191,4 +191,9 @@ export default css`
   .ProseMirror h6:first-child {
     margin-top: 0;
   }
+
+  .ProseMirror fakecursor {
+    /* stylelint-disable-next-line declaration-no-important */
+    visibility: hidden !important;
+  }
 `
