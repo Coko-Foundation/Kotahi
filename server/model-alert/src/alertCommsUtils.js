@@ -41,13 +41,6 @@ const sendAlertForMessage = async ({
   title,
   triggerTime = new Date(),
 }) => {
-  const alert = await new models.Alert({
-    title,
-    userId,
-    messageId,
-    triggerTime,
-  }).save()
-
   const message = await models.Message.query().findById(messageId)
   const channel = await models.Channel.query().findById(message.channelId)
 
@@ -64,9 +57,13 @@ const sendAlertForMessage = async ({
 
   await sendEmailNotification(user.email, 'alertUnreadMessageTemplate', data)
 
-  await models.Alert.query().updateAndFetchById(alert.id, {
+  await new models.Alert({
+    title,
+    userId,
+    messageId,
+    triggerTime,
     isSent: true,
-  })
+  }).save()
 }
 
 module.exports = {
