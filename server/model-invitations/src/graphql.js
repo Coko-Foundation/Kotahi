@@ -6,7 +6,7 @@ const {
 
 const {
   addUserToManuscriptChatChannel,
-} = require('../../model-channel/src/utils')
+} = require('../../model-channel/src/channelCommsUtils')
 
 const resolvers = {
   Query: {

@@ -1,17 +1,9 @@
-const Channel = require('./channel')
-const ChannelMember = require('./channel_member')
+const models = require('@pubsweet/models')
 
 const updateChannelLastViewed = async ({ channelId, userId }) => {
-  const channelMember = await ChannelMember.query().findOne({
-    channelId,
-    userId,
-  })
-
-  if (channelMember) {
-    await ChannelMember.query().updateAndFetchById(channelMember.id, {
-      lastViewed: new Date(),
-    })
-  }
+  await models.ChannelMember.query()
+    .update({ lastViewed: new Date() })
+    .where({ channelId, userId })
 }
 
 const addUserToManuscriptChatChannel = async ({
@@ -19,14 +11,14 @@ const addUserToManuscriptChatChannel = async ({
   userId,
   type = 'all',
 }) => {
-  const channel = await Channel.query()
+  const channel = await models.Channel.query()
     .where({
       manuscriptId,
       type,
     })
     .first()
 
-  await new ChannelMember({
+  await new models.ChannelMember({
     channelId: channel.id,
     userId,
     lastViewed: new Date(),
@@ -38,19 +30,12 @@ const removeUserFromManuscriptChatChannel = async ({
   userId = null,
   type = 'all',
 }) => {
-  const channel = await Channel.query()
-    .where({
+  await models.ChannelMember.query().delete().where({ userId }).whereExists(
+    models.ChannelMember.relatedQuery('channel').where({
       manuscriptId,
       type,
-    })
-    .first()
-
-  await ChannelMember.query()
-    .where({
-      channelId: channel.id,
-      userId,
-    })
-    .delete()
+    }),
+  )
 }
 
 module.exports = {

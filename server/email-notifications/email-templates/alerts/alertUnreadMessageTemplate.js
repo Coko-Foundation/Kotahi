@@ -13,9 +13,10 @@ const AlertUnreadMessageTemplate = ({ receiverName, manuscriptPageUrl }) => {
       <p>
         On behalf of Biophysics Colab <br>
         <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
-      <p>`
+      </p>
+    </p>`
 
-  result.content = result.content.replace(/\n/g, '')
+  result.content = result.content.replace(/\n/g, ' ')
   return result
 }
 

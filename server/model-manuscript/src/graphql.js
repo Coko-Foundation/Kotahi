@@ -76,7 +76,7 @@ const {
 const {
   addUserToManuscriptChatChannel,
   removeUserFromManuscriptChatChannel,
-} = require('../../model-channel/src/utils')
+} = require('../../model-channel/src/channelCommsUtils')
 
 const { getPubsub } = pubsubManager
 

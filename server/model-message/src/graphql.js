@@ -7,7 +7,9 @@ const MESSAGE_CREATED = 'MESSAGE_CREATED'
 
 const Message = require('./message')
 
-const { updateChannelLastViewed } = require('../../model-channel/src/utils')
+const {
+  updateChannelLastViewed,
+} = require('../../model-channel/src/channelCommsUtils')
 
 const resolvers = {
   Query: {

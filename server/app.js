@@ -27,7 +27,7 @@ const {
 } = require('./model-task/src/taskCommsUtils')
 
 const Config = require('./config/src/config')
-const { sendAlerts } = require('./model-alert/src/utils')
+const { sendAlerts } = require('./model-alert/src/alertCommsUtils')
 
 const runSchedule = async () => {
   const activeConfig = await Config.query().first()
