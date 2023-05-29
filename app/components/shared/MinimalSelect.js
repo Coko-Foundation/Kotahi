@@ -51,17 +51,38 @@ const styles = th => ({
       state.isFocused || state.isSelected ? th.colorFurniture : 'white',
     color: th.colorText,
   }),
-  valueContainer: (provided, state) => ({
-    ...provided,
-    height: '34px',
-    padding: '0',
-  }),
+  valueContainer: (provided, state) =>
+    state.isMulti
+      ? {
+          ...provided,
+          minHeight: '34px', // For multiselect, allow the component to grow vertically to show all selected options
+          padding: '0',
+        }
+      : {
+          ...provided,
+          height: '34px', // For single-select, don't make the select box taller if the selected item wraps
+          padding: '0',
+        },
+  multiValue: (provided, state) => {
+    return state.data.isFixed
+      ? { ...provided, backgroundColor: 'gray' }
+      : provided
+  },
+  multiValueLabel: (provided, state) => {
+    return state.data.isFixed
+      ? { ...provided, fontWeight: 'bold', color: 'white', paddingRight: 6 }
+      : provided
+  },
+  multiValueRemove: (provided, state) => {
+    return state.data.isFixed ? { ...provided, display: 'none' } : provided
+  },
 })
 
 // eslint-disable-next-line import/prefer-default-export
 export const MinimalSelect = ({
   value,
   isMulti,
+  onChange,
   options,
   customStyles,
   ...otherProps
@@ -78,6 +99,14 @@ export const MinimalSelect = ({
   return (
     <ReactSelect
       isMulti={isMulti}
+      onChange={(newVal, actionMeta) => {
+        if (
+          ['remove-value', 'pop-value'].includes(actionMeta.action) &&
+          actionMeta.removedValue.isFixed
+        )
+          return
+        onChange(newVal, actionMeta)
+      }}
       options={options}
       {...otherProps}
       menuPlacement="auto"

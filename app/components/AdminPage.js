@@ -20,7 +20,7 @@ import FormBuilderPage from './component-formbuilder/src/components/FormBuilderP
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
 import ProductionPage from './component-production/src/components/ProductionPage'
-import { Profile } from './component-profile/src'
+import ProfilePage from './component-profile/src/ProfilePage'
 import ReportPage from './component-reporting/src/ReportPage'
 import DecisionPage from './component-review/src/components/DecisionPage'
 import ReviewPage from './component-review/src/components/ReviewPage'
@@ -28,7 +28,7 @@ import ReviewPreviewPage from './component-review/src/components/ReviewPreviewPa
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
 import SubmitPage from './component-submit/src/components/SubmitPage'
 import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
-import UsersManager from './component-users-manager/src/UsersManager'
+import UsersPage from './component-users-manager/src/UsersPage'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
 
 import QUERY from './adminPageQueries'
@@ -261,14 +261,14 @@ const AdminPage = () => {
       />
       <Switch>
         <PrivateRoute
-          component={Profile}
+          component={ProfilePage}
           currentUser={currentUser}
           exact
           path={profileLink}
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={Profile}
+          component={ProfilePage}
           currentUser={currentUser}
           exact
           path={`${urlFrag}/profile/:id`}
@@ -392,7 +392,7 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
           <PrivateRoute
-            component={UsersManager}
+            component={UsersPage}
             currentUser={currentUser}
             key="users"
             path={`${urlFrag}/admin/users`}

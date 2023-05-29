@@ -14,8 +14,7 @@ import { Img, FallbackImg, LoadingImg } from './style'
 // };
 
 export default function Image(props) {
-  const { type, size, mobilesize } = props
-  const { ...rest } = props
+  const { type, size, mobilesize, src } = props
 
   const fallbackSrc =
     type === 'user'
@@ -25,8 +24,13 @@ export default function Image(props) {
   return (
     <VisibilitySensor>
       <Img
-        {...rest}
+        {...props}
         decode={false}
+        key={
+          src // Otherwise, upon updating src it shows only the loading image, not the new image.
+          // TODO This workaround might not be needed with react-image's more modern useImage hook.
+          // What we're using is the legacy standalone component.
+        }
         loader={
           <LoadingImg
             alt=""
