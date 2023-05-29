@@ -129,7 +129,7 @@ export const DashboardPage = {
     return cy.get(DO_REVIEW_BUTTON)
   },
   clickDoReview() {
-    this.getDoReviewButton().click()
+    this.getDoReviewButton().click({ force: true })
   },
   clickDoReviewAndVerifyPageLoaded() {
     this.getDoReviewButton().click()

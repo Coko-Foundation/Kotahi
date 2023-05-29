@@ -5,6 +5,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 // import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('Editor assigning reviewers', () => {
   before(() => {
     // Restore Database (dumps/senior_editor_assigned.sql)
@@ -26,11 +27,13 @@ describe('Editor assigning reviewers', () => {
       // login as seniorEditor
       // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
-
+      cy.reload()
       DashboardPage.clickDashboardTab(2)
+      cy.reload()
       DashboardPage.clickControlPanelTeam() // Navigate to Control Page
 
       // Invite all the reviewers
+      cy.reload()
       name.role.reviewers.forEach((reviewer, index) => {
         ControlPage.clickInviteReviewerDropdown()
         ControlPage.inviteReviewer(reviewer)

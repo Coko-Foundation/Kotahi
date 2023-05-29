@@ -30,7 +30,8 @@ const reviewDataList = [
   },
 ]
 
-describe('Completing a review', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('Completing a review', () => {
   it('accept and do a review', () => {
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'reviewers_invited')

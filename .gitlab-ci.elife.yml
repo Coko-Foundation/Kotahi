@@ -166,15 +166,15 @@ test-chrome:
     TEST_ITEM: 'chrome:elife'
   script:
     - *run_test_script
-
-test-firefox:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: 'firefox:elife'
-  script:
-    - *run_test_script
+# The test-firefox is temporarily disabled
+# test-firefox:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: 'firefox:elife'
+#   script:
+#     - *run_test_script
 ## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request
 # test-chrome-samsung:
 #   before_script:

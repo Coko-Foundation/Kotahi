@@ -9,9 +9,9 @@ const ABSTRACT_EDITOR_FIELD = '.ProseMirror > .paragraph'
 
 // const REVIEW_COMMENT_FIELD = 'reviewComment'
 // const CONFIDENTIAL_COMMENT_FIELD = 'confidentialComment'
-const ACCEPT_RADIO_BUTTON = '.fgnKvm > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = '.izJvPI > .sc-dmlrTW'
-const REJECT_RADIO_BUTTON = '.dPWuRK > .sc-dmlrTW'
+const ACCEPT_RADIO_BUTTON = '[value="accept"]'
+const REVISE_RADIO_BUTTON = '[value="revise"]'
+const REJECT_RADIO_BUTTON = '[value="reject"]'
 const SUBMIT_BUTTON = 'review-action-btn'
 const CONFIRM_SUBMIT_BUTTON = 'article > button:eq(0)'
 // const DECISION_COMMENT_FIELD = 'decisionComment'
@@ -21,7 +21,7 @@ const PUBLISH_BUTTON = 'button[type="button"]'
 const CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX = '[name=canBePublishedPublicly]'
 const PAGE_SECTIONS = 'General__SectionContent'
 const SECTION_HEADER = 'h1[class]'
-const DECISION_TEXT = 'sc-kNMOeM gDlahr'
+const DECISION_TEXT = '[class*=EditorStyles__ReadOnlySimpleEditorDiv]'
 const DECISION_RECOMMENDATION = 'style__Legend-sc-1jvxmxn-2 bTVTjY'
 
 const DECISION_BUTTON_SELECTED =
@@ -36,7 +36,10 @@ export const ReviewPage = {
     return cy.get('[contenteditable="true"]:nth(0)')
   },
   fillInReviewComment(reviewComment) {
-    this.getReviewCommentField().fillInput(reviewComment)
+    this.getReviewCommentField()
+      .clear()
+      .focus()
+      .type(reviewComment, { delay: 200 })
   },
   getConfidentialCommentField() {
     return cy.get('[contenteditable="true"]:nth(1)')
@@ -48,19 +51,19 @@ export const ReviewPage = {
     return cy.get(ACCEPT_RADIO_BUTTON)
   },
   clickAcceptRadioButton() {
-    this.getAcceptRadioButton().eq(0).click()
+    this.getAcceptRadioButton().eq(0).click({ force: true })
   },
   getReviseRadioButton() {
     return cy.get(REVISE_RADIO_BUTTON)
   },
   clickReviseRadioButton() {
-    this.getReviseRadioButton().eq(0).click()
+    this.getReviseRadioButton().eq(0).click({ force: true })
   },
   getRejectRadioButton() {
     return cy.get(REJECT_RADIO_BUTTON)
   },
   clickRejectRadioButton() {
-    this.getRejectRadioButton().eq(0).click()
+    this.getRejectRadioButton().eq(0).click({ force: true })
   },
   getReviseButton() {
     return cy.get(REVISE_RADIO_BUTTON)
@@ -114,7 +117,7 @@ export const ReviewPage = {
     return cy.get(SECTION_HEADER)
   },
   getDecisionText() {
-    return cy.getByContainsClass(DECISION_TEXT)
+    return cy.get(DECISION_TEXT)
   },
   getDecisionRecommendation() {
     return cy.getByContainsClass(DECISION_RECOMMENDATION)

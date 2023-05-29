@@ -17,10 +17,10 @@ const clearDb = async () => {
     )
 
     // Also delete the pgboss.job_state type
-    dropQuery.push('DROP TYPE IF EXISTS pgboss.job_state')
+    // dropQuery.push('DROP TYPE IF EXISTS pgboss.job_state')
 
     // Also delete the schema
-    dropQuery.push('DROP SCHEMA pgboss')
+    // dropQuery.push('DROP SCHEMA pgboss')
 
     dropQuery = dropQuery.join('; ')
 
