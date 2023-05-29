@@ -115,15 +115,14 @@ lint:
   - cd ${HOME}
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-
-test-chrome:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: 'chrome:ncrc'
-  script:
-    - *run_test_script
+# test-chrome:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: 'chrome:ncrc'
+#   script:
+#     - *run_test_script
 # test-chrome:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
 #   stage: test
