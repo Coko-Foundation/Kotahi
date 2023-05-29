@@ -19,7 +19,7 @@ const stripTags = file => {
 }
 
 const cleanOutWmfs = file => {
-  const wmfRegex = /"data:image\/wmf;base64,[0-9a-zA-Z/+=]*"/g
+  const wmfRegex = /"data:image\/[ew]mf;base64,[0-9a-zA-Z/+=]*"/g
 
   return file.replaceAll(
     wmfRegex,
