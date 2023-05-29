@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
 import { UserAvatar } from './component-avatar/src'
 import lightenBy from '../shared/lightenBy'
+import { convertCamelCaseToTitleCase } from '../shared/textUtils'
 
 const Root = styled.nav`
   background: linear-gradient(
@@ -30,8 +31,10 @@ const NonLink = styled.div``
 const Section = styled.div``
 
 const RolesLabel = styled.div`
+  color: ${lightenBy('colorPrimary', 0.6)};
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: normal;
+  line-height: ${th('lineHeightBaseSmall')};
 `
 
 const AlertIndicator = styled.div`
@@ -232,16 +235,10 @@ const Menu = ({
   )
 }
 
-const unCamelCase = string =>
-  Array.from(string).reduce((acc, cur) => {
-    if (cur < 'A' || cur > 'Z') return acc + cur
-    return `${acc} ${cur.toLowerCase()}`
-  }, '')
-
 const FormattedGlobalAndGroupRoles = ({ user }) => {
   const unCamelCasedRoles = user.globalRoles
     .concat(user.groupRoles)
-    .map(role => unCamelCase(role))
+    .map(role => convertCamelCaseToTitleCase(role))
 
   if (!unCamelCasedRoles.length) return null
 

@@ -394,8 +394,6 @@ const typeDefs = `
     username_DESC
     email_ASC
     email_DESC
-    admin_ASC
-    admin_DESC
     created_ASC
     created_DESC
     lastOnline_ASC

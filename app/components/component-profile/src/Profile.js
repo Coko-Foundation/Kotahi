@@ -2,71 +2,23 @@
 
 import React, { useCallback } from 'react'
 import { Button } from '@pubsweet/ui'
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from '@apollo/client'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
 import Modal from '../../component-modal/src/ConfirmationModal'
-import { version as kotahiVersion } from '../../../../package.json'
 
 import {
-  Spinner,
   Container,
-  SectionHeader,
   SectionContent,
   HeadingWithAction,
   SectionRow,
   Heading,
-  Title,
-  CommsErrorBanner,
 } from '../../shared'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
 import ChangeEmail from './ChangeEmail'
 import EnterEmail from './EnterEmail'
-
-const GET_USER = gql`
-  query user($id: ID, $username: String) {
-    user(id: $id, username: $username) {
-      id
-      username
-      profilePicture
-      isOnline
-      email
-      globalRoles
-      groupRoles
-      defaultIdentity {
-        identifier
-        email
-        type
-        aff
-        id
-      }
-    }
-  }
-`
-
-const UPDATE_EMAIL = gql`
-  mutation updateEmail($id: ID!, $email: String!) {
-    updateEmail(id: $id, email: $email) {
-      success
-      error
-      user {
-        id
-        email
-      }
-    }
-  }
-`
-
-const UPDATE_USERNAME = gql`
-  mutation updateUsername($id: ID!, $username: String!) {
-    updateUsername(id: $id, username: $username) {
-      id
-      username
-    }
-  }
-`
+import { convertCamelCaseToTitleCase } from '../../../shared/textUtils'
 
 const VersionText = styled.div`
   color: #757575;
@@ -80,21 +32,17 @@ const ProfileContainer = styled(Container)`
   justify-content: space-between;
 `
 
-// eslint-disable-next-line react/prop-types
-const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
+const SpecialRolesLabel = styled.div`
+  color: ${th('colorPrimary')};
+`
+
+const ProfileDropzone = ({
+  profilePicture,
+  replaceAvatarImage,
+  updateProfilePicture,
+}) => {
   const onDrop = useCallback(async acceptedFiles => {
-    const body = new FormData()
-    body.append('file', acceptedFiles[0])
-
-    // eslint-disable-next-line no-unused-vars, prefer-const
-    let result = await fetch('/api/uploadProfile', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body,
-    })
-
+    await replaceAvatarImage(acceptedFiles)
     updateProfilePicture()
   }, [])
 
@@ -103,42 +51,35 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {profilePicture ? (
-        <BigProfileImage src={profilePicture} />
-      ) : (
-        <BigProfileImage src="/profiles/default_avatar.svg" />
-      )}
-      {isDragActive ? <Button>Drop it here</Button> : <Button>Change</Button>}
+      <BigProfileImage src={profilePicture || '/profiles/default_avatar.svg'} />
+      <Button>
+        {isDragActive ? 'Drop it here' : 'Change profile picture'}
+      </Button>
     </div>
   )
 }
 
-const Profile = ({ currentUser, match }) => {
-  const { id } = match.params
+const SpecialRoles = ({ user }) => {
+  const specialRoles = user.globalRoles
+    .concat(user.groupRoles)
+    .map(convertCamelCaseToTitleCase)
 
-  const { loading, error, data, client, refetch } = useQuery(GET_USER, {
-    variables: { id: id || currentUser.id },
-    fetchPolicy: 'network-only',
-  })
+  if (!specialRoles.length) return null
 
-  // Mutations and Queries
-  const [updateUserEmail] = useMutation(UPDATE_EMAIL)
-  const [updateUsername] = useMutation(UPDATE_USERNAME)
+  return <SpecialRolesLabel>({specialRoles.join(', ')})</SpecialRolesLabel>
+}
 
-  if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
-
-  const localStorage = window.localStorage || undefined
-
-  const logoutUser = () => {
-    localStorage.removeItem('token')
-    client.resetStore()
-  }
-
-  // This is a bridge between the fetch results and the Apollo cache/state
-  const updateProfilePicture = () => refetch()
-
-  const { user } = data
+const Profile = ({
+  currentUser,
+  kotahiVersion,
+  logoutUser,
+  match,
+  replaceAvatarImage,
+  updateProfilePicture,
+  updateUserEmail,
+  updateUsername,
+  user,
+}) => {
   const isCurrentUsersOwnProfile = user.id === currentUser.id
 
   const canEditProfile =
@@ -165,15 +106,15 @@ const Profile = ({ currentUser, match }) => {
           )}
         </HeadingWithAction>
 
+        <SpecialRoles user={user} />
+
         <SectionContent>
-          <SectionHeader>
-            <Title>Profile picture</Title>
-          </SectionHeader>
           <SectionRow key="profilepicture">
             <div>
               {canEditProfile && isCurrentUsersOwnProfile ? (
                 <ProfileDropzone
                   profilePicture={user.profilePicture}
+                  replaceAvatarImage={replaceAvatarImage}
                   updateProfilePicture={updateProfilePicture}
                 />
               ) : (
