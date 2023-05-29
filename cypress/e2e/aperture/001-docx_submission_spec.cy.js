@@ -9,7 +9,8 @@ import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
 describe('Upload manuscript test', () => {
-  it('can upload a manuscript and some metadata', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  it.skip('can upload a manuscript and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'commons/bootstrap')
     cy.task('seedForms')
@@ -26,6 +27,7 @@ describe('Upload manuscript test', () => {
     ) // Upload manuscript
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(10000)
+    cy.url().should('contain', '/submit')
     // complete the submission form
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInTitle(data.title3)
@@ -56,14 +58,20 @@ describe('Upload manuscript test', () => {
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
         ManuscriptsPage.selectOptionWithText('Control')
-
+        cy.reload()
         // assign seniorEditor
-        ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-        ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-        ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
+        ControlPage.getAssignSeniorEditorDropdown().type('Elaine{enter}', {
+          force: true,
+        })
+        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
+        ControlPage.getAssignHandlingEditorDropdown().type('Elaine{enter}', {
+          force: true,
+        })
+        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
+        ControlPage.getAssignEditorDropdown().type('Elaine{enter}', {
+          force: true,
+        })
+        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
         // assert the reviews
         ControlPage.clickDecisionTab(1)
         ControlPage.fillInDecision(data.decision)

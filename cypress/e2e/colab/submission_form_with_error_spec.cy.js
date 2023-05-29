@@ -38,6 +38,7 @@ describe('Submission with errors test', () => {
       cy.contains('Update Field').click()
     })
 
+    // eslint-disable-next-line jest/no-disabled-tests
     it('can upload manuscript and some metadata', () => {
       // login as author and attempt to submit an incomplete submission form
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -50,7 +51,7 @@ describe('Submission with errors test', () => {
       DashboardPage.clickSubmissionButton()
 
       // Upload manuscript
-      cy.get('input[type=file]').selectFile('/cypress/fixtures/test-pdf.pdf', {
+      cy.get('input[type=file]').selectFile('cypress/fixtures/test-pdf.pdf', {
         force: true,
       })
       cy.get('[data-testid="meta.title"]').clear()
@@ -66,10 +67,10 @@ describe('Submission with errors test', () => {
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInLink(data.link)
-        SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
-        SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
-        SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
-        SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()

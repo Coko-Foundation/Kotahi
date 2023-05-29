@@ -14,7 +14,7 @@ const ENTER_URL_FIELD = 'submission.'
 const TITLE_FIELD = 'meta.title'
 const NAME_FIELD = 'submission.name'
 const ABSTRACT_FIELD = 'submission.abstract'
-const OUR_TAKE = 'submission.ourTake'
+// const OUR_TAKE = 'submission.ourTake'
 const MAIN_FINDINGS = 'submission.mainFindings'
 const STUDY_STRENGTHS = 'submission.studyStrengths'
 const LIMITATIONS_FIELD = 'submission.limitations'
@@ -28,6 +28,7 @@ const VALIDATION_ERROR_MESSAGE = 'FormTemplate__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 const SUBMISSION_FORM_INPUT_BOX = 'ProseMirror'
 const WORD_COUNT_INFO = 'Counter Info'
+const EDITOR_CLASS = '.wax-surface-scroll >  div .ProseMirror'
 
 // specific to aperture
 const TYPE_OF_RESEARCH_OBJECT = '.css-1f7humo-control'
@@ -101,31 +102,29 @@ export const SubmissionFormPage = {
   fillInAbstract(abstract) {
     this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(abstract)
   },
-  getOurTakeField() {
-    return cy.getByContainsName(OUR_TAKE)
+  getWaxField(nth) {
+    return cy.get(EDITOR_CLASS).eq(nth)
   },
   fillInOurTake(ourTake) {
-    this.getWaxInputBox(1).find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
+    this.getWaxField(1).fillInput(ourTake)
   },
   getMainFindingsField() {
     return cy.getByContainsName(MAIN_FINDINGS)
   },
   fillInMainFindings(mainFindings) {
-    this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(mainFindings)
+    this.getWaxField(2).fillInput(mainFindings)
   },
   getStudyStrengthsField() {
     return cy.getByContainsName(STUDY_STRENGTHS)
   },
   fillInStudyStrengths(studyStrengths) {
-    this.getWaxInputBox(3)
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(studyStrengths)
+    this.getWaxField(3).fillInput(studyStrengths)
   },
   getLimitationsField() {
     return cy.getByContainsName(LIMITATIONS_FIELD)
   },
   fillInLimitations(limitations) {
-    this.getWaxInputBox(4).find(CONTENT_EDITABLE_VALUE).fillInput(limitations)
+    this.getWaxField(4).fillInput(limitations)
   },
   getLabelsDropdown() {
     return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
@@ -137,7 +136,7 @@ export const SubmissionFormPage = {
     return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
   },
   getAllWaxInputBoxes() {
-    return cy.getByContainsClass(SUBMISSION_FORM_INPUT_BOX)
+    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX)
   },
   getWaxInputBox(nth) {
     return this.getAllWaxInputBoxes().eq(nth)
@@ -248,10 +247,13 @@ export const SubmissionFormPage = {
     this.getReview1Date().fillInput(review1Date)
   },
   getReview1() {
-    return this.getWaxInputBox(0)
+    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(0)
   },
   fillInReview1(review1) {
-    this.getReview1().fillInput(review1)
+    this.getReview1()
+      .clear()
+      .focus()
+      .type(`{selectall}${review1}`, { delay: 300 })
   },
   getReview1Creator() {
     return cy.getByDataTestId(REVIEW_1_CREATOR_FIELD)
@@ -278,7 +280,7 @@ export const SubmissionFormPage = {
     this.getReview2Date().fillInput(review2Date)
   },
   getReview3() {
-    return this.getWaxInputBox(2)
+    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(2)
   },
   fillInReview3(review3) {
     this.getReview3().fillInput(review3)

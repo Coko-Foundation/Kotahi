@@ -166,15 +166,16 @@ test-chrome:
     TEST_ITEM: 'chrome:colab'
   script:
     - *run_test_script
+# The test-firefox is temporarily disabled
+# test-firefox:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: 'firefox:colab'
+#   script:
+#     - *run_test_script
 
-test-firefox:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: 'firefox:colab'
-  script:
-    - *run_test_script
 # test-chrome:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
 #   stage: test

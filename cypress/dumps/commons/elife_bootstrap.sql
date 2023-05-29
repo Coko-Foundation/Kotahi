@@ -1,112 +1,112 @@
-CREATE SCHEMA pgboss;
+-- CREATE SCHEMA pgboss;
 
 
-ALTER SCHEMA pgboss OWNER TO kotahidev;
+-- ALTER SCHEMA pgboss OWNER TO kotahidev;
 
-DROP TABLE IF EXISTS "pgboss"."archive";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- DROP TABLE IF EXISTS "pgboss"."archive";
+-- -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
-DROP TYPE IF EXISTS "pgboss"."job_state" CASCADE;
-CREATE TYPE "pgboss"."job_state" AS ENUM ('created', 'retry', 'active', 'completed', 'expired', 'cancelled', 'failed');
+-- DROP TYPE IF EXISTS "pgboss"."job_state" CASCADE;
+-- CREATE TYPE "pgboss"."job_state" AS ENUM ('created', 'retry', 'active', 'completed', 'expired', 'cancelled', 'failed');
 
--- Table Definition
-CREATE TABLE "pgboss"."archive" (
-    "id" uuid NOT NULL,
-    "name" text NOT NULL,
-    "priority" int4 NOT NULL,
-    "data" jsonb,
-    "state" "pgboss"."job_state" NOT NULL,
-    "retrylimit" int4 NOT NULL,
-    "retrycount" int4 NOT NULL,
-    "retrydelay" int4 NOT NULL,
-    "retrybackoff" bool NOT NULL,
-    "startafter" timestamptz NOT NULL,
-    "startedon" timestamptz,
-    "singletonkey" text,
-    "singletonon" timestamp,
-    "expirein" interval NOT NULL,
-    "createdon" timestamptz NOT NULL,
-    "completedon" timestamptz,
-    "keepuntil" timestamptz NOT NULL,
-    "on_complete" bool NOT NULL,
-    "archivedon" timestamptz NOT NULL DEFAULT now()
-);
+-- -- Table Definition
+-- CREATE TABLE "pgboss"."archive" (
+--     "id" uuid NOT NULL,
+--     "name" text NOT NULL,
+--     "priority" int4 NOT NULL,
+--     "data" jsonb,
+--     "state" "pgboss"."job_state" NOT NULL,
+--     "retrylimit" int4 NOT NULL,
+--     "retrycount" int4 NOT NULL,
+--     "retrydelay" int4 NOT NULL,
+--     "retrybackoff" bool NOT NULL,
+--     "startafter" timestamptz NOT NULL,
+--     "startedon" timestamptz,
+--     "singletonkey" text,
+--     "singletonon" timestamp,
+--     "expirein" interval NOT NULL,
+--     "createdon" timestamptz NOT NULL,
+--     "completedon" timestamptz,
+--     "keepuntil" timestamptz NOT NULL,
+--     "on_complete" bool NOT NULL,
+--     "archivedon" timestamptz NOT NULL DEFAULT now()
+-- );
 
-DROP TABLE IF EXISTS "pgboss"."job";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- DROP TABLE IF EXISTS "pgboss"."job";
+-- -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
-DROP TYPE IF EXISTS "pgboss"."job_state" CASCADE;
-CREATE TYPE "pgboss"."job_state" AS ENUM ('created', 'retry', 'active', 'completed', 'expired', 'cancelled', 'failed');
+-- DROP TYPE IF EXISTS "pgboss"."job_state" CASCADE;
+-- CREATE TYPE "pgboss"."job_state" AS ENUM ('created', 'retry', 'active', 'completed', 'expired', 'cancelled', 'failed');
 
--- Table Definition
-CREATE TABLE "pgboss"."job" (
-    "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-    "name" text NOT NULL,
-    "priority" int4 NOT NULL DEFAULT 0,
-    "data" jsonb,
-    "state" "pgboss"."job_state" NOT NULL DEFAULT 'created'::pgboss.job_state,
-    "retrylimit" int4 NOT NULL DEFAULT 0,
-    "retrycount" int4 NOT NULL DEFAULT 0,
-    "retrydelay" int4 NOT NULL DEFAULT 0,
-    "retrybackoff" bool NOT NULL DEFAULT false,
-    "startafter" timestamptz NOT NULL DEFAULT now(),
-    "startedon" timestamptz,
-    "singletonkey" text,
-    "singletonon" timestamp,
-    "expirein" interval NOT NULL DEFAULT '00:15:00'::interval,
-    "createdon" timestamptz NOT NULL DEFAULT now(),
-    "completedon" timestamptz,
-    "keepuntil" timestamptz NOT NULL DEFAULT (now() + '30 days'::interval),
-    "on_complete" bool NOT NULL DEFAULT true,
-    PRIMARY KEY ("id")
-);
+-- -- Table Definition
+-- CREATE TABLE "pgboss"."job" (
+--     "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+--     "name" text NOT NULL,
+--     "priority" int4 NOT NULL DEFAULT 0,
+--     "data" jsonb,
+--     "state" "pgboss"."job_state" NOT NULL DEFAULT 'created'::pgboss.job_state,
+--     "retrylimit" int4 NOT NULL DEFAULT 0,
+--     "retrycount" int4 NOT NULL DEFAULT 0,
+--     "retrydelay" int4 NOT NULL DEFAULT 0,
+--     "retrybackoff" bool NOT NULL DEFAULT false,
+--     "startafter" timestamptz NOT NULL DEFAULT now(),
+--     "startedon" timestamptz,
+--     "singletonkey" text,
+--     "singletonon" timestamp,
+--     "expirein" interval NOT NULL DEFAULT '00:15:00'::interval,
+--     "createdon" timestamptz NOT NULL DEFAULT now(),
+--     "completedon" timestamptz,
+--     "keepuntil" timestamptz NOT NULL DEFAULT (now() + '30 days'::interval),
+--     "on_complete" bool NOT NULL DEFAULT true,
+--     PRIMARY KEY ("id")
+-- );
 
-DROP TABLE IF EXISTS "pgboss"."schedule";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- DROP TABLE IF EXISTS "pgboss"."schedule";
+-- -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
--- Table Definition
-CREATE TABLE "pgboss"."schedule" (
-    "name" text NOT NULL,
-    "cron" text NOT NULL,
-    "timezone" text,
-    "data" jsonb,
-    "options" jsonb,
-    "created_on" timestamptz NOT NULL DEFAULT now(),
-    "updated_on" timestamptz NOT NULL DEFAULT now(),
-    PRIMARY KEY ("name")
-);
+-- -- Table Definition
+-- CREATE TABLE "pgboss"."schedule" (
+--     "name" text NOT NULL,
+--     "cron" text NOT NULL,
+--     "timezone" text,
+--     "data" jsonb,
+--     "options" jsonb,
+--     "created_on" timestamptz NOT NULL DEFAULT now(),
+--     "updated_on" timestamptz NOT NULL DEFAULT now(),
+--     PRIMARY KEY ("name")
+-- );
 
-DROP TABLE IF EXISTS "pgboss"."version";
--- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- DROP TABLE IF EXISTS "pgboss"."version";
+-- -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
--- Table Definition
-CREATE TABLE "pgboss"."version" (
-    "version" int4 NOT NULL,
-    "maintained_on" timestamptz,
-    "cron_on" timestamptz,
-    PRIMARY KEY ("version")
-);
+-- -- Table Definition
+-- CREATE TABLE "pgboss"."version" (
+--     "version" int4 NOT NULL,
+--     "maintained_on" timestamptz,
+--     "cron_on" timestamptz,
+--     PRIMARY KEY ("version")
+-- );
 
-INSERT INTO "pgboss"."job" ("id", "name", "priority", "data", "state", "retrylimit", "retrycount", "retrydelay", "retrybackoff", "startafter", "startedon", "singletonkey", "singletonon", "expirein", "createdon", "completedon", "keepuntil", "on_complete") VALUES
-('1dc684c0-d2ac-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, 'f', '2022-05-13 11:03:01.742784+00', NULL, NULL, '2022-05-13 11:03:00', '00:15:00', '2022-05-13 11:02:01.742784+00', NULL, '2022-05-13 11:04:01.742784+00', 'f'),
-('1ff79590-d2ac-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'created', 0, 0, 0, 'f', '2022-05-13 11:04:05.421466+00', NULL, '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 11:02:05.421466+00', NULL, '2022-05-13 11:12:05.421466+00', 'f'),
-('234dbae0-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:56:01.52136+00', '2022-05-13 10:56:01.526769+00', NULL, '2022-05-13 10:56:00', '00:15:00', '2022-05-13 10:55:01.52136+00', '2022-05-13 10:56:01.545739+00', '2022-05-13 10:57:01.52136+00', 'f'),
-('47148350-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:57:01.542941+00', '2022-05-13 10:57:05.532135+00', NULL, '2022-05-13 10:57:00', '00:15:00', '2022-05-13 10:56:01.542941+00', '2022-05-13 10:57:05.54742+00', '2022-05-13 10:58:01.542941+00', 'f'),
-('4962e020-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:58:05.412445+00', '2022-05-13 10:59:05.359356+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:56:05.412445+00', '2022-05-13 10:59:05.395813+00', '2022-05-13 11:06:05.412445+00', 'f'),
-('6d271080-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:58:01.41778+00', '2022-05-13 10:58:01.567218+00', NULL, '2022-05-13 10:58:00', '00:15:00', '2022-05-13 10:57:05.41778+00', '2022-05-13 10:58:01.61424+00', '2022-05-13 10:59:01.41778+00', 'f'),
-('8ea4d350-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:59:01.609956+00', '2022-05-13 10:59:01.62243+00', NULL, '2022-05-13 10:59:00', '00:15:00', '2022-05-13 10:58:01.609956+00', '2022-05-13 10:59:01.642694+00', '2022-05-13 11:00:01.609956+00', 'f'),
-('b26cfb50-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:00:01.639764+00', '2022-05-13 11:00:01.680066+00', NULL, '2022-05-13 11:00:00', '00:15:00', '2022-05-13 10:59:01.639764+00', '2022-05-13 11:00:01.710609+00', '2022-05-13 11:01:01.639764+00', 'f'),
-('b4ab79a0-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 11:01:05.407349+00', '2022-05-13 11:02:05.360268+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:59:05.407349+00', '2022-05-13 11:02:05.397952+00', '2022-05-13 11:09:05.407349+00', 'f'),
-('d63a7a80-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:01:01.706942+00', '2022-05-13 11:01:05.704131+00', NULL, '2022-05-13 11:01:00', '00:15:00', '2022-05-13 11:00:01.706942+00', '2022-05-13 11:01:05.727876+00', '2022-05-13 11:02:01.706942+00', 'f'),
-('de127e70-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:53:05.373851+00', '2022-05-13 10:53:05.390018+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:53:05.373851+00', '2022-05-13 10:53:05.454079+00', '2022-05-13 11:01:05.373851+00', 'f'),
-('de193530-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:53:05.43335+00', '2022-05-13 10:53:09.419799+00', NULL, '2022-05-13 10:53:00', '00:15:00', '2022-05-13 10:53:05.43335+00', '2022-05-13 10:53:09.462332+00', '2022-05-13 10:54:05.43335+00', 'f'),
-('de20d650-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:55:05.464524+00', '2022-05-13 10:56:05.387199+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:53:05.464524+00', '2022-05-13 10:56:05.407392+00', '2022-05-13 11:03:05.464524+00', 'f'),
-('e081a9b0-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:54:01.454067+00', '2022-05-13 10:54:01.467355+00', NULL, '2022-05-13 10:54:00', '00:15:00', '2022-05-13 10:53:09.454067+00', '2022-05-13 10:54:01.485519+00', '2022-05-13 10:55:01.454067+00', 'f'),
-('fc35af20-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:02:01.429235+00', '2022-05-13 11:02:01.718187+00', NULL, '2022-05-13 11:02:00', '00:15:00', '2022-05-13 11:01:05.429235+00', '2022-05-13 11:02:01.747406+00', '2022-05-13 11:03:01.429235+00', 'f'),
-('ff84cf90-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:55:01.48296+00', '2022-05-13 10:55:01.485767+00', NULL, '2022-05-13 10:55:00', '00:15:00', '2022-05-13 10:54:01.48296+00', '2022-05-13 10:55:01.528093+00', '2022-05-13 10:56:01.48296+00', 'f');
+-- INSERT INTO "pgboss"."job" ("id", "name", "priority", "data", "state", "retrylimit", "retrycount", "retrydelay", "retrybackoff", "startafter", "startedon", "singletonkey", "singletonon", "expirein", "createdon", "completedon", "keepuntil", "on_complete") VALUES
+-- ('1dc684c0-d2ac-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, 'f', '2022-05-13 11:03:01.742784+00', NULL, NULL, '2022-05-13 11:03:00', '00:15:00', '2022-05-13 11:02:01.742784+00', NULL, '2022-05-13 11:04:01.742784+00', 'f'),
+-- ('1ff79590-d2ac-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'created', 0, 0, 0, 'f', '2022-05-13 11:04:05.421466+00', NULL, '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 11:02:05.421466+00', NULL, '2022-05-13 11:12:05.421466+00', 'f'),
+-- ('234dbae0-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:56:01.52136+00', '2022-05-13 10:56:01.526769+00', NULL, '2022-05-13 10:56:00', '00:15:00', '2022-05-13 10:55:01.52136+00', '2022-05-13 10:56:01.545739+00', '2022-05-13 10:57:01.52136+00', 'f'),
+-- ('47148350-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:57:01.542941+00', '2022-05-13 10:57:05.532135+00', NULL, '2022-05-13 10:57:00', '00:15:00', '2022-05-13 10:56:01.542941+00', '2022-05-13 10:57:05.54742+00', '2022-05-13 10:58:01.542941+00', 'f'),
+-- ('4962e020-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:58:05.412445+00', '2022-05-13 10:59:05.359356+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:56:05.412445+00', '2022-05-13 10:59:05.395813+00', '2022-05-13 11:06:05.412445+00', 'f'),
+-- ('6d271080-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:58:01.41778+00', '2022-05-13 10:58:01.567218+00', NULL, '2022-05-13 10:58:00', '00:15:00', '2022-05-13 10:57:05.41778+00', '2022-05-13 10:58:01.61424+00', '2022-05-13 10:59:01.41778+00', 'f'),
+-- ('8ea4d350-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:59:01.609956+00', '2022-05-13 10:59:01.62243+00', NULL, '2022-05-13 10:59:00', '00:15:00', '2022-05-13 10:58:01.609956+00', '2022-05-13 10:59:01.642694+00', '2022-05-13 11:00:01.609956+00', 'f'),
+-- ('b26cfb50-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:00:01.639764+00', '2022-05-13 11:00:01.680066+00', NULL, '2022-05-13 11:00:00', '00:15:00', '2022-05-13 10:59:01.639764+00', '2022-05-13 11:00:01.710609+00', '2022-05-13 11:01:01.639764+00', 'f'),
+-- ('b4ab79a0-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 11:01:05.407349+00', '2022-05-13 11:02:05.360268+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:59:05.407349+00', '2022-05-13 11:02:05.397952+00', '2022-05-13 11:09:05.407349+00', 'f'),
+-- ('d63a7a80-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:01:01.706942+00', '2022-05-13 11:01:05.704131+00', NULL, '2022-05-13 11:01:00', '00:15:00', '2022-05-13 11:00:01.706942+00', '2022-05-13 11:01:05.727876+00', '2022-05-13 11:02:01.706942+00', 'f'),
+-- ('de127e70-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:53:05.373851+00', '2022-05-13 10:53:05.390018+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:53:05.373851+00', '2022-05-13 10:53:05.454079+00', '2022-05-13 11:01:05.373851+00', 'f'),
+-- ('de193530-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:53:05.43335+00', '2022-05-13 10:53:09.419799+00', NULL, '2022-05-13 10:53:00', '00:15:00', '2022-05-13 10:53:05.43335+00', '2022-05-13 10:53:09.462332+00', '2022-05-13 10:54:05.43335+00', 'f'),
+-- ('de20d650-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, 'f', '2022-05-13 10:55:05.464524+00', '2022-05-13 10:56:05.387199+00', '__pgboss__maintenance', NULL, '00:15:00', '2022-05-13 10:53:05.464524+00', '2022-05-13 10:56:05.407392+00', '2022-05-13 11:03:05.464524+00', 'f'),
+-- ('e081a9b0-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:54:01.454067+00', '2022-05-13 10:54:01.467355+00', NULL, '2022-05-13 10:54:00', '00:15:00', '2022-05-13 10:53:09.454067+00', '2022-05-13 10:54:01.485519+00', '2022-05-13 10:55:01.454067+00', 'f'),
+-- ('fc35af20-d2ab-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 11:02:01.429235+00', '2022-05-13 11:02:01.718187+00', NULL, '2022-05-13 11:02:00', '00:15:00', '2022-05-13 11:01:05.429235+00', '2022-05-13 11:02:01.747406+00', '2022-05-13 11:03:01.429235+00', 'f'),
+-- ('ff84cf90-d2aa-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, 'f', '2022-05-13 10:55:01.48296+00', '2022-05-13 10:55:01.485767+00', NULL, '2022-05-13 10:55:00', '00:15:00', '2022-05-13 10:54:01.48296+00', '2022-05-13 10:55:01.528093+00', '2022-05-13 10:56:01.48296+00', 'f');
 
-INSERT INTO "pgboss"."version" ("version", "maintained_on", "cron_on") VALUES
-(16, '2022-05-13 11:02:05.394453+00', '2022-05-13 11:02:01.730816+00');
+-- INSERT INTO "pgboss"."version" ("version", "maintained_on", "cron_on") VALUES
+-- (16, '2022-05-13 11:02:05.394453+00', '2022-05-13 11:02:01.730816+00');
 
 -- 
 -- 
@@ -644,8 +644,7 @@ INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "st
 ('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
 
 INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "type") VALUES
-('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"loginRedirectUrl": "/admin/manuscripts"}, "manuscript": {"tableColumns": "submission.articleId, created, updated, status, author", "newSubmission": true, "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Metadata"], "displayManuscriptShortId": true}, "instanceName": "elife", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-elife.svg", "brandName": "eLife", "primaryColor": "#0A9DD9", "secondaryColor": "#0A9DD9"}}', 't', 'Config');
-
+('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"loginRedirectUrl": "/admin/manuscripts"}, "manuscript": {"tableColumns": "submission.articleId, created, updated, status, author", "newSubmission": true, "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Metadata"], "displayManuscriptShortId": true}, "instanceName": "elife", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-elife.svg", "brandName": "eLife", "primaryColor": "#0A9DD9", "secondaryColor": "#0A9DD9"}}', true, 'Config');
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-09-15 06:17:35.719777+00'),
 ('1542276313-initial-user-migration.sql', '2022-09-15 06:17:35.781242+00'),

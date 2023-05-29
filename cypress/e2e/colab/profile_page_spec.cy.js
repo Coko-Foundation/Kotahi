@@ -10,6 +10,7 @@ import { ProfilePage } from '../../page-object/profile-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('profile page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql

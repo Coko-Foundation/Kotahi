@@ -9,6 +9,7 @@ const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
 const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('Completing a review', () => {
   it('accept and do a review', () => {
     cy.task('restore', 'commons/bootstrap')
@@ -33,9 +34,12 @@ describe('Completing a review', () => {
       // Fill the decision form
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
-        force: true,
-      })
+      cy.get('[data-testid="dropzone"]:first > input').selectFile(
+        decisinFilePath,
+        {
+          force: true,
+        },
+      )
       ControlPage.clickRevise()
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists() // Check appears in front of button
@@ -63,7 +67,7 @@ describe('Completing a review', () => {
       DashboardPage.clickControlPanelDecision()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
-      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+      ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
         force: true,
       })
       ControlPage.clickAccept()
