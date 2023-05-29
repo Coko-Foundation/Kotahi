@@ -20,7 +20,7 @@ To report a bug, [open a GitLab issue](https://gitlab.coko.foundation/kotahi/kot
 To install Kotahi locally, you'll need these things:
 
 - A copy of this repo.
-- Node & Yarn. Kotahi requires Node 12.
+- Node & Yarn. Kotahi requires Node 16.
 - Docker. Kotahi uses [Docker](https://www.docker.com/) for images of the databases and servers that it uses. Make sure you have Docker installed and running.
 - An ORCID account. Kotahi uses [ORCID](https://orcid.org/) for account authentication. It's free and easy to sign up. The [FAQ](FAQ.md) tells you how.
 - A working _.env_ file. You can start by copying [.env.example](.env.example) (in the shell: `cp .env.example .env`). The .env file contains passwords and other sensitive information; it also contains a lot of configuration options at the moment.
