@@ -2,6 +2,10 @@ const models = require('@pubsweet/models')
 const config = require('config')
 const sendEmailNotification = require('../../email-notifications')
 
+const {
+  getEditorIdsForManuscript,
+} = require('../../model-manuscript/src/manuscriptCommsUtils')
+
 const getUsersById = async userIds => models.User.query().findByIds(userIds)
 
 /** Returns an object of boolean values corresponding to roles the user could hold:
@@ -214,12 +218,15 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     instance = 'generic'
   }
 
+  const ccEmails = await getEditorEmails(manuscriptId)
+
   try {
     await sendEmailNotification(receiverEmail, selectedTemplate, {
       articleTitle: manuscript.meta.title,
       authorName,
       currentUser,
       receiverName,
+      ccEmails,
       shortId: manuscript.shortId,
       instance,
       toEmail,
@@ -272,6 +279,14 @@ const isAdminOrGroupManager = async userId => {
   )
 
   return groupRoles.includes('groupManager') || globalRoles.includes('admin')
+}
+
+const getEditorEmails = async manuscriptId => {
+  const userIds = await getEditorIdsForManuscript(manuscriptId)
+
+  const users = await models.User.query().whereIn('id', userIds)
+
+  return users.map(user => user.email)
 }
 
 module.exports = {
