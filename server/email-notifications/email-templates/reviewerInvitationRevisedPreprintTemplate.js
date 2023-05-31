@@ -5,6 +5,7 @@ const ReviewerInvitationRevisedPreprintTemplate = ({
   receiverName,
   submissionLink,
   currentUser,
+  ccEmails = [],
 }) => {
   const result = {
     cc: '',
@@ -12,7 +13,13 @@ const ReviewerInvitationRevisedPreprintTemplate = ({
     content: '',
   }
 
-  result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
+  result.cc = `lesley@sciencecolab.org, swartzk@ninds.nih.gov`
+
+  if (ccEmails.length) {
+    const ccEmailRecipients = ccEmails.join(', ')
+    result.cc += `, ${ccEmailRecipients}`
+  }
+
   result.subject =
     'Opportunity to review a preprint for Biophysics Colab (in partnership with eLife)'
   result.content = `
@@ -36,6 +43,8 @@ const ReviewerInvitationRevisedPreprintTemplate = ({
     <p>
 
     <h3 style="margin-bottom: 2px;">Instructions for reviewers</h3>
+    <p>After clicking on ‘Accept invitation’, you will be asked to log in to our peer review platform using your ORCID account. If you don’t have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>.</p>
+    <p>Once logged in, please click on ‘do review’ for the appropriate preprint on your dashboard to access the review form.</p>
     <p style="margin-top: 2px;">Our primary goal is to deliver objective feedback on published preprints that is independent of the criteria applied by conventional journals. Our reports detail three types of recommendation: revisions that we consider to be essential for the results to support the conclusions; optional suggestions for the authors to consider; and minor corrections or presentational issues (see below). All these recommendations should help to strengthen the manuscript, but authors can decide which advice to follow. If a revised preprint addresses the revisions that we define as essential, we offer to publicly endorse the work. <br /> <br />
       <u>General assessment</u>: <br />
       Please provide a paragraph summarising your overall assessment of the study, written for both experts and a general audience. Please mention: <br />
