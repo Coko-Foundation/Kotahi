@@ -2,7 +2,7 @@
 import { seniorEditor } from '../../fixtures/role_names'
 import { ControlPage } from '../../page-object/control-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
-// import { Menu } from '../../page-object/page-component/menu'
+import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
 // eslint-disable-next-line jest/no-disabled-tests
@@ -29,7 +29,8 @@ describe('Editor assigning reviewers', () => {
       cy.login(name.role.seniorEditor, dashboard)
       cy.reload()
       DashboardPage.clickDashboardTab(2)
-      cy.reload()
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(2000)
       DashboardPage.clickControlPanelTeam() // Navigate to Control Page
 
       // Invite all the reviewers
@@ -45,5 +46,8 @@ describe('Editor assigning reviewers', () => {
     // maybe we can add an alt atribute to the chart so we can check what info is being sent to it.
     // Menu.clickDashboard()
     // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')
+    Menu.clickDashboard()
+    // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')// this function doesn't work because the change of visuals
+    cy.get('.ReviewStatusDonut__CenterLabel-sc-76zxfe-1').contains('6')
   })
 })
