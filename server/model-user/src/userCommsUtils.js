@@ -40,7 +40,14 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     .select('role')
     .withGraphJoined('members')
     .where({ objectId: manuscriptId, userId })
-    .whereNotIn('status', ['invited', 'rejected']) // Reviewers with status 'invited' or 'rejected' are not actually reviewers
+    // If status is null, whereNotIn('status', ['invited', 'rejected']) returns false.
+    // I'm not sure why this is, but it means we need a separate check for status===null.
+    .where(
+      builder =>
+        builder
+          .whereNull('status')
+          .orWhereNotIn('status', ['invited', 'rejected']), // Reviewers with status 'invited' or 'rejected' are not actually reviewers
+    )
 
   teams.forEach(t => {
     result[t.role] = true
