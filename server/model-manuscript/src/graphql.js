@@ -1508,12 +1508,13 @@ const resolvers = {
     async source(parent, _, ctx, info) {
       if (typeof parent.source !== 'string') return null
 
-      const files =
+      let files =
         parent.manuscriptFiles ||
         (await (
           await models.Manuscript.query().findById(parent.manuscriptId)
         ).$relatedQuery('files'))
 
+      files = await getFilesWithUrl(files)
       // TODO Any reason not to use replaceImageSrcResponsive here?
       return replaceImageSrc(parent.source, files, 'medium')
     },
