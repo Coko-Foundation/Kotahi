@@ -39,7 +39,7 @@ const AuthorInvitationEmailTemplate = ({
             Your agreement to our service would not constitute submission to a journal therefore you would be at liberty to submit your paper for review elsewhere. Indeed, we realise you may have already done so, and this would not preclude your participation in our scheme. Furthermore, some authors have found that <a href="https://sciety.org/lists/ee7e738a-a1f1-465b-807c-132d273ca952" target="_blank">our public evaluations</a> have facilitated publication of their studies in traditional journals.
           </p>
           <p>
-            Would you be interested in receiving expert feedback on your preprint? If so, please accept our invitation using the link below and include any suggestions for potential reviewers in the text box. If not, we’d be grateful if you let us know via the decline link. We’d be happy to arrange a video call if you’d like to learn more about Biophysics Colab before making a decision.
+          Would you be interested in receiving expert feedback on your preprint? If so, please accept our invitation using the link below (see instructions at the foot of this message). If not, we’d be grateful if you let us know via the decline link. We’d be happy to arrange a video call if you’d like to learn more about Biophysics Colab before making a decision.
           </p>
           <p><a href="${appUrl}/acceptarticle/${invitationId}" target="_blank">Accept invitation</a></p>
           <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>

@@ -3,7 +3,6 @@ const ConsolidatedReportWithAuthorsTemplate = ({
   currentUser,
   authorName,
   manuscriptPageUrl,
-  appUrl,
   ccEmails = [],
 }) => {
   const result = {
@@ -39,11 +38,11 @@ const ConsolidatedReportWithAuthorsTemplate = ({
         </li>
         <li>
           <p>Post your response to the report</p>
-          <p>We would naturally be happy to post your response to the reviewers’ comments alongside the consolidated report on both bioRxiv and Sciety; simply provide your response after logging in to our platform (${appUrl}) and we will post it at the first opportunity. Please use “block quote" from the drop-down styling menu to quote from our report.</p>
+          <p>We would naturally be happy to post your response to the reviewers’ comments alongside the consolidated report on both bioRxiv and Sciety; simply provide your response after logging in to our platform (<a href="${manuscriptPageUrl}">${manuscriptPageUrl}</a>) and we will post it at the first opportunity. Please use “block quote" from the drop-down styling menu to quote from our report.</p>
         </li>
         <li>
           <p>Submit a revised preprint for curation</p>
-          <p>We anticipate that you will want to revise your manuscript after reading our advice and encourage you to upload any revision as a revised preprint. This will provide us with an opportunity to ‘curate’ your study by posting our overall evaluation of the work, as we have outlined in the preliminary evaluation statement available at ${appUrl}. If you are ready to finalise your work in this way, please log in to our platform and click on ‘Submit new version’ so that we can revise our evaluation statement appropriately and post it on bioRxiv and Sciety. If your revision addresses the essential revisions outlined in our consolidated report, we’ll add our endorsement to the evaluation and include the study in our list of <a href="https://sciety.org/lists/5ac3a439-e5c6-4b15-b109-92928a740812" target="_blank">endorsed articles on Sciety</a>.</p>
+          <p>We anticipate that you will want to revise your manuscript after reading our advice and encourage you to upload any revision as a revised preprint. This will provide us with an opportunity to ‘curate’ your study by posting our overall evaluation of the work, as we have outlined in the preliminary evaluation statement available at <a href="${manuscriptPageUrl}">${manuscriptPageUrl}</a>. If you are ready to finalise your work in this way, please log in to our platform and click on ‘Submit new version’ so that we can revise our evaluation statement appropriately and post it on bioRxiv and Sciety. If your revision addresses the essential revisions outlined in our consolidated report, we’ll add our endorsement to the evaluation and include the study in our list of <a href="https://sciety.org/lists/5ac3a439-e5c6-4b15-b109-92928a740812" target="_blank">endorsed articles on Sciety</a>.</p>
         </li>
       </ol>
       <p>Alternatively, if you would like further advice from our reviewing team before finalising your study, simply request that when you upload your revised preprint using the chat function.</p>
