@@ -12,7 +12,7 @@ import { ReviewPage } from '../../page-object/review-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
 // eslint-disable-next-line jest/no-disabled-tests
-describe.skip('control page tests', () => {
+describe('control page tests', () => {
   // the commented part below is because of the issue for shared review that doesn't work as expected because of the issue #1011
 
   // context('shared message', () => {
@@ -281,7 +281,9 @@ describe.skip('control page tests', () => {
           ReviewPage.clickAcceptRadioButton()
           ReviewPage.clickSubmitButton()
           ReviewPage.clickConfirmSubmitButton()
-          // cy.contains('COMPLETED') //there is an undefined exception here
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(2000)
+          cy.get('[name="meta.title"]').contains('New submission')
         })
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()

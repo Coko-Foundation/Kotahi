@@ -9,7 +9,6 @@ const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
 const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('checking manuscript version', () => {
   it('editor checks for new manuscript version', () => {
     cy.task('restore', 'commons/bootstrap')

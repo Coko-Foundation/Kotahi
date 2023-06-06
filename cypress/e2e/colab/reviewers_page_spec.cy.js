@@ -4,7 +4,6 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('Editor assigning reviewers', () => {
   it('can assign reviewers', () => {
     // Restore Database (dumps/senior_editor_assigned.sql)

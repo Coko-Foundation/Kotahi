@@ -5,7 +5,6 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('Upload manuscript test', () => {
   it('can upload a manuscript and some metadata', () => {
     cy.task('restore', 'commons/bootstrap') // Populate the Database

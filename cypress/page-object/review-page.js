@@ -20,7 +20,7 @@ const FORM_STATUS = 'style__FormStatus-'
 const PUBLISH_BUTTON = 'button[type="button"]'
 const CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX = '[name=canBePublishedPublicly]'
 const PAGE_SECTIONS = 'General__SectionContent'
-const SECTION_HEADER = 'h1[class]'
+const SECTION_HEADER = 'h2[class]'
 const DECISION_TEXT = '[class*=EditorStyles__ReadOnlySimpleEditorDiv]'
 const DECISION_RECOMMENDATION = 'style__Legend-sc-1jvxmxn-2 bTVTjY'
 

@@ -39,7 +39,6 @@ describe('Submission with errors test', () => {
       cy.contains('Update Field').click()
     })
 
-    // eslint-disable-next-line jest/no-disabled-tests
     it('can upload manuscript and some metadata', () => {
       // login as author and attempt to submit an incomplete submission form
       // eslint-disable-next-line jest/valid-expect-in-promise
