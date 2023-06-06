@@ -199,4 +199,14 @@ module.exports = {
     allowManualImport: 'false',
     semanticScholarImportsRecencyPeriodDays: '42',
   },
+  'flax-site': {
+    clientId: '',
+    clientSecret: '',
+    clientPort: '',
+    clientHost: '',
+    clientProtocol: '',
+    protocol: '',
+    host: '',
+    port: '',
+  },
 }
