@@ -2,74 +2,55 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import FlaxPageRow from './FlaxPageRow'
 
-import {
-  Container,
-  Table,
-  Header,
-  Heading,
-  Content,
-  Spinner,
-  CaretUp,
-  CaretDown,
-  Carets,
-} from './style'
+import { Container, Table, Header, Heading, Content, Spinner } from './style'
 import { CommsErrorBanner } from '../../shared'
-import {
-  extractSortData,
-  URI_PAGENUM_PARAM,
-  URI_SORT_PARAM,
-  useQueryParams,
-} from '../../../shared/urlParamUtils'
+// import { extractSortData, useQueryParams } from '../../../shared/urlParamUtils'
 
 import { ConfigContext } from '../../config/src'
 
 import { getFlaxPages } from './queries'
 
 const FlaxManager = ({ history }) => {
-  const SortHeader = ({ thisSortName, defaultSortDirection, children }) => {
-    const changeSort = () => {
-      let newSortDirection
+  const SortHeader = ({ children }) => {
+    // const changeSort = () => {
+    //   let newSortDirection
 
-      if (sortName !== thisSortName) {
-        newSortDirection = defaultSortDirection || 'ASC'
-      } else if (sortDirection === 'ASC') {
-        newSortDirection = 'DESC'
-      } else if (sortDirection === 'DESC') {
-        newSortDirection = 'ASC'
-      }
+    //   if (sortName !== thisSortName) {
+    //     newSortDirection = defaultSortDirection || 'ASC'
+    //   } else if (sortDirection === 'ASC') {
+    //     newSortDirection = 'DESC'
+    //   } else if (sortDirection === 'DESC') {
+    //     newSortDirection = 'ASC'
+    //   }
 
-      applyQueryParams({
-        [URI_SORT_PARAM]: `${thisSortName}_${newSortDirection}`,
-        [URI_PAGENUM_PARAM]: 1,
-      })
-    }
+    //   applyQueryParams({
+    //     [URI_SORT_PARAM]: `${thisSortName}_${newSortDirection}`,
+    //     [URI_PAGENUM_PARAM]: 1,
+    //   })
+    // }
 
-    const UpDown = () => {
-      if (thisSortName === sortName) {
-        return (
-          <Carets>
-            <CaretUp active={sortDirection === 'ASC'} />
-            <CaretDown active={sortDirection === 'DESC'} />
-          </Carets>
-        )
-        // return sortDirection
-      }
+    // const UpDown = () => {
+    //   if (thisSortName === sortName) {
+    //     return (
+    //       <Carets>
+    //         <CaretUp active={sortDirection === 'ASC'} />
+    //         <CaretDown active={sortDirection === 'DESC'} />
+    //       </Carets>
+    //     )
+    //     // return sortDirection
+    //   }
 
-      return null
-    }
+    //   return null
+    // }
 
-    return (
-      <th onClick={changeSort}>
-        {children} {UpDown()}
-      </th>
-    )
+    return <th>{children}</th>
   }
 
-  const applyQueryParams = useQueryParams()
+  // const applyQueryParams = useQueryParams()
 
-  const params = new URLSearchParams(history.location.search)
-  const sortName = extractSortData(params).name || 'created'
-  const sortDirection = extractSortData(params).direction || 'DESC'
+  // const params = new URLSearchParams(history.location.search)
+  // const sortName = extractSortData(params).name || 'created'
+  // const sortDirection = extractSortData(params).direction || 'DESC'
 
   const config = useContext(ConfigContext)
   const urlFrag = config.journal.metadata.toplevel_urlfragment
