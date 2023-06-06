@@ -27,9 +27,6 @@ export {
   Header,
   Content,
   Heading,
-  Carets,
-  CaretUp,
-  CaretDown,
   Spinner,
   Pagination,
 } from '../../shared'
