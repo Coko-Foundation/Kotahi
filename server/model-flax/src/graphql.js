@@ -11,6 +11,7 @@ const resolvers = {
         const flaxPage = await models.FlaxPage.query().findById(id)
         return flaxPage
       }
+
       return null
     },
 
@@ -19,6 +20,7 @@ const resolvers = {
         const flaxPage = await models.FlaxPage.query().findOne({ shortcode })
         return flaxPage
       }
+
       return null
     },
   },
