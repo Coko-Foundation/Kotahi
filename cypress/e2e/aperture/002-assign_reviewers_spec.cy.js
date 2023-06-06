@@ -18,10 +18,8 @@ describe('Editor assigning reviewers', () => {
     cy.login(seniorEditor, dashboard)
 
     cy.url().should('eq', `${Cypress.config().baseUrl}/kotahi/dashboard`)
-    // cy.get('[data-testid="control-panel"]').scrollIntoView()
     cy.reload()
     cy.awaitDisappearSpinner()
-    // cy.contains('You have not submitted any manuscripts yet')
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // login as seniorEditor
@@ -42,12 +40,7 @@ describe('Editor assigning reviewers', () => {
       })
     })
     // Go to dashboard and verify number of invited reviewer
-    // commented out because with the new updates it is a chart and not a text, the below check is not valid
-    // maybe we can add an alt atribute to the chart so we can check what info is being sent to it.
-    // Menu.clickDashboard()
-    // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')
     Menu.clickDashboard()
-    // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')// this function doesn't work because the change of visuals
     cy.get('.ReviewStatusDonut__CenterLabel-sc-76zxfe-1').contains('6')
   })
 })

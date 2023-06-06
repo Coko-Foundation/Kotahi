@@ -6,7 +6,6 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('Assigning senior editor', () => {
   it('admin can give decision', () => {
     cy.task('restore', 'commons/bootstrap')

@@ -6,10 +6,9 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('Upload manuscript test', () => {
   it('can upload a manuscript and some metadata', () => {
-    // task to restore the database as per the  dumps/initialState.sql
+    // task to restore the database as per the  dumps/bootstrap.sql
     cy.task('restore', 'commons/bootstrap') // Populate the Database
     cy.task('seedForms')
 

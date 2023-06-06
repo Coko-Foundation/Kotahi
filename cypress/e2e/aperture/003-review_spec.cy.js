@@ -30,8 +30,7 @@ const reviewDataList = [
   },
 ]
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Completing a review', () => {
+describe('Completing a review', () => {
   it('accept and do a review', () => {
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'reviewers_invited')
@@ -48,13 +47,17 @@ describe.skip('Completing a review', () => {
       cy.login(name.role.seniorEditor, dashboard)
 
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.getInvitedReviewsStatus().should('have.text', '1 invited')
-      DashboardPage.getAcceptedReviewStatus().should('have.text', '1 accepted')
-      DashboardPage.getCompletedReviewsStatus().should(
-        'have.text',
-        '3 completed',
-      )
-      DashboardPage.getRejectedReviewsStatus().should('have.text', '1 rejected')
+      cy.get('[fill="#56b984"]')
+        .should('be.visible')
+        .trigger('mouseover', { force: true })
+      cy.contains('Completed: 3')
+      cy.get('[fill="#fff2cd"]').should('be.visible').trigger('mouseover')
+      cy.contains('Invited: 1')
+      cy.get('[fill="#d7efd4"]').should('be.visible').trigger('mouseover')
+      cy.contains('Accepted: 1')
+
+      cy.get('[fill="#c23d20"]').should('be.visible').trigger('mouseover')
+      cy.contains('Declined: 1')
     })
   })
 })
@@ -89,6 +92,8 @@ function doReview(name, reviewData) {
       ReviewPage.clickConfirmSubmitButton()
 
       // Verify the review got completed
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(2000)
       cy.get('nav').contains('Dashboard').click()
       DashboardPage.getDoReviewButton().should('contain', 'Completed')
     }

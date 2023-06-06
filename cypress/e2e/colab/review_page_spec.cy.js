@@ -9,7 +9,6 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
 import { ReviewPage } from '../../page-object/review-page'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('review page tests', () => {
   beforeEach(() => {
     cy.task('restore', 'commons/colab_bootstrap')
@@ -65,8 +64,7 @@ describe('review page tests', () => {
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     ReviewPage.getDecisionText().should('contain', 'the article is ok')
   })
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('reviewer should see decision after submitting a positive review', () => {
+  it('reviewer should see decision after submitting a positive review', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
@@ -103,8 +101,7 @@ describe('review page tests', () => {
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'great paper')
   })
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('reviewer should see decision after submitting a neutral review', () => {
+  it('reviewer should see decision after submitting a neutral review', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
@@ -126,7 +123,7 @@ describe('review page tests', () => {
     ManuscriptsPage.selectOptionWithText('Control')
     ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('please revise')
-    ReviewPage.clickRevise()
+    ReviewPage.clickReviseRadioButton()
     ControlPage.clickSubmit()
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
@@ -140,8 +137,7 @@ describe('review page tests', () => {
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'please revise')
   })
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('reviewer should see decision after submitting a negative review', () => {
+  it('reviewer should see decision after submitting a negative review', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })
@@ -163,8 +159,9 @@ describe('review page tests', () => {
     ManuscriptsPage.selectOptionWithText('Control')
     ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('it does not fit our standards')
-    ControlPage.clickReject()
-    ControlPage.clickSubmit()
+    ReviewPage.clickReviseRadioButton()
+    ControlPage.clickSubmitDecisionButton()
+    cy.awaitDisappearSpinner()
     cy.fixture('role_names').then(name => {
       cy.login(name.role.reviewers[1], dashboard)
     })

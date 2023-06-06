@@ -794,8 +794,10 @@ INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type"
 ('049f91da-c84e-4b80-be2e-6e0cfca7a136', '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', 't');
 
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
-('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL);
+('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL),
+('37321ccf-3cb3-43bb-9104-5bf51a82dc03', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Admin', 'admin', NULL, NULL, true, 'team', NULL, NULL);
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('c5886679-c510-46b6-8248-fa081a2ce1b3', '2023-01-17 19:09:08.683+00', '2023-01-17 19:09:08.683+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL, NULL);
+('c5886679-c510-46b6-8248-fa081a2ce1b3', '2023-01-17 19:09:08.683+00', '2023-01-17 19:09:08.683+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL, NULL),
+('3c01cb4a-37ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '37321ccf-3cb3-43bb-9104-5bf51a82dc03', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
