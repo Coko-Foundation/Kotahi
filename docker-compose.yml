@@ -141,6 +141,15 @@ services:
       - SERVICE_XSWEET_PROTOCOL=${SERVICE_XSWEET_PROTOCOL:-http}
       - SERVICE_XSWEET_HOST=${SERVICE_XSWEET_HOST:-xsweet}
       - SERVICE_XSWEET_PORT=${SERVICE_XSWEET_PORT:-3004}
+      - FLAX_EXPRESS_PORT=${FLAX_EXPRESS_PORT:-8082}
+      - SERVICE_FLAX_SITE_CLIENT_ID=${SERVICE_FLAX_SITE_CLIENT_ID:-}
+      - SERVICE_FLAX_SITE_SECRET=${SERVICE_FLAX_SITE_SECRET:-}
+      - SERVICE_FLAX_SITE_PROTOCOL=${SERVICE_FLAX_SITE_PROTOCOL:-http}
+      - SERVICE_FLAX_SITE_HOST=${SERVICE_FLAX_SITE_HOST:-kotahi-flax-site}
+      - SERVICE_FLAX_EXPRESS_HOST=${SERVICE_FLAX_EXPRESS_HOST:-3000}
+      - FLAX_CLIENT_HOST=${FLAX_CLIENT_HOST:-client}
+      - FLAX_CLIENT_PORT=${CLIENT_PORT:-4000}
+      - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
 
     volumes:
       - ./config:/home/node/app/config
@@ -327,6 +336,24 @@ services:
       - POSTGRES_PASSWORD=anystyle_user_password
     volumes:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
+
+  kotahi-flax-site:
+    image: pankajag/kotahi-flax-site:0.1.2
+    depends_on:
+      - client
+    ports:
+      - ${FLAX_EXPRESS_PORT:-8082}:3000
+      - ${FLAX_PORT:-8081}:80
+    environment:
+      - FLAX_EXPRESS_PORT=${FLAX_EXPRESS_PORT:-8082}
+      - SERVICE_FLAX_SITE_CLIENT_ID=${SERVICE_FLAX_SITE_CLIENT_ID:-}
+      - SERVICE_FLAX_SITE_SECRET=${SERVICE_FLAX_SITE_SECRET:-}
+      - SERVICE_FLAX_SITE_PROTOCOL=${SERVICE_FLAX_SITE_PROTOCOL:-http}
+      - SERVICE_FLAX_SITE_HOST=${SERVICE_FLAX_SITE_HOST:-kotahi-flax-site}
+      - SERVICE_FLAX_EXPRESS_HOST=${SERVICE_FLAX_EXPRESS_HOST:-3000}
+      - FLAX_CLIENT_HOST=${FLAX_CLIENT_HOST:-client}
+      - FLAX_CLIENT_PORT=${CLIENT_PORT:-4000}
+      - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
 
 volumes:
   minio_storage:
