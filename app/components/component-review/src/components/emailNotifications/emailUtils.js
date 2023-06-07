@@ -30,8 +30,8 @@ const emailTemplateOptions = [
     value: 'editorAssignmentEmailTemplate',
   },
   {
-    label: 'Review Invitation notification',
-    value: 'reviewInvitationEmailTemplate',
+    label: 'Reviewer Invitation notification',
+    value: 'reviewerInvitationEmailTemplate',
   },
   {
     label: 'Submission Confirmation notification',
@@ -212,10 +212,6 @@ const emailTemplateOptions = [
   {
     label: 'Bradley Buchsbaum - Peer-Review Invitation Assignment',
     value: 'reviewInvitationEmailTemplate37',
-  },
-  {
-    label: 'Reviewer Invitation Email Template',
-    value: 'reviewerInvitationEmailTemplate',
   },
   {
     label: 'Share evaluation with author',
