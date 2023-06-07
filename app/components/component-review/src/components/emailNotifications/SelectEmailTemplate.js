@@ -275,7 +275,7 @@ switch (
       },
       {
         label: 'Reviewer Invitation Email Template',
-        value: 'reviewInvitationEmailTemplate',
+        value: 'reviewerInvitationEmailTemplate',
       },
       {
         label: 'Reviewer invitation - new reviewer for a revised preprint',
@@ -311,7 +311,7 @@ switch (
 
         {
           label: 'Reviewer Invitation Email Template',
-          value: 'reviewInvitationEmailTemplate',
+          value: 'reviewerInvitationEmailTemplate',
         },
 
         {
