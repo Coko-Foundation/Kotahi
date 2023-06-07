@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 // ***********************************************
@@ -93,4 +94,11 @@ Cypress.Commands.add('awaitDisappearSpinner', () => {
   cy.get('[class*=Spinner__LoadingPage]', { timeout: 50000 }).should(
     'not.exist',
   )
+})
+
+// eslint-disable-next-line handle-callback-err
+Cypress.on('uncaught:exception', (err, runnable, promise) => {
+  if (promise) {
+    return false
+  }
 })

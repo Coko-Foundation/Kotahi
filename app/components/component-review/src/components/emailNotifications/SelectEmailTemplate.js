@@ -234,7 +234,7 @@ switch (
         value: 'authorInvitationEmailTemplate',
       },
       {
-        label: 'Consolidated report shared with authors',
+        label: 'Share consolidated report with authors',
         value: 'consolidatedReportWithAuthorsTemplate',
       },
       {
@@ -275,7 +275,7 @@ switch (
       },
       {
         label: 'Reviewer Invitation Email Template',
-        value: 'reviewInvitationEmailTemplate',
+        value: 'reviewerInvitationEmailTemplate',
       },
       {
         label: 'Reviewer invitation - new reviewer for a revised preprint',
@@ -288,6 +288,14 @@ switch (
       {
         label: 'Thanks for Agreeing to Review Template',
         value: 'thanksForAgreeingToReviewTemplate',
+      },
+      {
+        label: 'Share evaluation with author',
+        value: 'notifyAuthorEmailTemplate',
+      },
+      {
+        label: 'Evaluation published',
+        value: 'evaluationPublishedEmailTemplate',
       },
     ]
 
@@ -303,12 +311,20 @@ switch (
 
         {
           label: 'Reviewer Invitation Email Template',
-          value: 'reviewInvitationEmailTemplate',
+          value: 'reviewerInvitationEmailTemplate',
         },
 
         {
           label: 'Author Invitation Email Template',
           value: 'authorInvitationEmailTemplate',
+        },
+        {
+          label: 'Share evaluation with author',
+          value: 'notifyAuthorEmailTemplate',
+        },
+        {
+          label: 'Evaluation published',
+          value: 'evaluationPublishedEmailTemplate',
         },
       ]
     }

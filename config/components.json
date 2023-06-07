@@ -1,6 +1,7 @@
 [
   "./server/model-team/src",
   "./server/model-user/src",
+  "./server/model-flax/src",
   "./server/model-article-import-sources/src/",
   "./server/model-article-import-history/src/",
   "./server/model-manuscript/src/",
@@ -23,5 +24,6 @@
   "./server/model-docmap/src",
   "./server/config/src",
   "./server/anystyle",
-  "./server/xsweet"
+  "./server/xsweet",
+  "./server/flax-site"
 ]

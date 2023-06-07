@@ -5,7 +5,6 @@ const reminderAuthorInvitationTemplate = require('./email-templates/reminderAuth
 const reminderReviewerInvitationTemplate = require('./email-templates/reminderReviewerInvitationTemplate')
 const thanksForAgreeingToReviewTemplate = require('./email-templates/thanksForAgreeingToReviewTemplate.js')
 const reminderReviewOverdueTemplate = require('./email-templates/reminderReviewOverdueTemplate')
-const reviewerInvitationEmailTemplate = require('./email-templates/reviewerInvitationEmailTemplate')
 const deputyEditorAssignmentEmailTemplate = require('./email-templates/deputyEditorAssignmentEmailTemplate')
 const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmentEmailTemplate')
 const evaluationCompleteEmailTemplate = require('./email-templates/evaluationCompleteEmailTemplate')
@@ -50,7 +49,7 @@ const reviewInvitationEmailTemplate34 = require('./email-templates/review-invita
 const reviewInvitationEmailTemplate35 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate35')
 const reviewInvitationEmailTemplate36 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate36')
 const reviewInvitationEmailTemplate37 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate37')
-const reviewInvitationEmailTemplate = require('./email-templates/reviewInvitationEmailTemplate')
+const reviewerInvitationEmailTemplate = require('./email-templates/reviewerInvitationEmailTemplate')
 const genericTaskNotificationEmailTemplate = require('./email-templates/genericTaskNotificationEmailTemplate')
 const genericTaskManagerUpdateNotificationTemplate = require('./email-templates/genericTaskManagerUpdateNotificationTemplate')
 const reportsSharedTemplate = require('./email-templates/reportsSharedTemplate')
@@ -59,6 +58,8 @@ const reportPublishedTemplate = require('./email-templates/reportPublishedTempla
 const authorFollowUpSubmitRevisedPreprintTemplate = require('./email-templates/authorFollowUpSubmitRevisedPreprintTemplate')
 const reviewerInvitationReReviewTemplate = require('./email-templates/reviewerInvitationReReviewTemplate')
 const reviewerInvitationRevisedPreprintTemplate = require('./email-templates/reviewerInvitationRevisedPreprintTemplate')
+const notifyAuthorEmailTemplate = require('./email-templates/notifyAuthorEmailTemplate')
+const evaluationPublishedEmailTemplate = require('./email-templates/evaluationPublishedEmailTemplate')
 
 const templates = {
   adhocEditorAssignmentEmailTemplate,
@@ -112,7 +113,6 @@ const templates = {
   reviewInvitationEmailTemplate35,
   reviewInvitationEmailTemplate36,
   reviewInvitationEmailTemplate37,
-  reviewInvitationEmailTemplate,
   genericTaskNotificationEmailTemplate,
   genericTaskManagerUpdateNotificationTemplate,
   reportsSharedTemplate,
@@ -121,6 +121,8 @@ const templates = {
   authorFollowUpSubmitRevisedPreprintTemplate,
   reviewerInvitationReReviewTemplate,
   reviewerInvitationRevisedPreprintTemplate,
+  notifyAuthorEmailTemplate,
+  evaluationPublishedEmailTemplate,
 }
 
 const createMailOptions = (receiver, template, data) => {

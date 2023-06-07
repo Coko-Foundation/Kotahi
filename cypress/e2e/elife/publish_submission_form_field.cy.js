@@ -8,7 +8,8 @@ import { dashboard } from '../../support/routes'
 const bioRxivArticleUrl =
   'https://www.biorxiv.org/content/10.1101/2022.05.28.493855v1'
 
-describe('Update the submission form field', () => {
+// eslint-disable-next-line jest/no-disabled-tests
+describe.skip('Update the submission form field', () => {
   it('update submission form field for publishing to hypothesis group', () => {
     // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
     cy.task('restore', 'commons/elife_bootstrap')

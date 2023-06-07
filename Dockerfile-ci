@@ -1,5 +1,6 @@
 #FROM cypress/browsers:node14.16.0-chrome89-ff86 // cypress test cases are failing in gitlab hence disabling node 14
-FROM cypress/browsers:node16.18.0-chrome90-ff88
+FROM cypress/browsers:node-16.18.1-chrome-110.0.5481.96-1-ff-109.0-edge-110.0.1587.41-1
+
 
 RUN apt-get update && apt-get install -y \
     make \

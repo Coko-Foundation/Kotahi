@@ -463,9 +463,9 @@ DROP TABLE IF EXISTS "public"."configs";
 -- Table Definition
 CREATE TABLE "public"."configs" (
     "id" uuid NOT NULL,
-    "created" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "created" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
-    "form_data" jsonb NOT NULL,
+    "form_data" jsonb,
     "active" bool NOT NULL DEFAULT false,
     "type" text NOT NULL
 );
@@ -479,10 +479,10 @@ DROP TABLE IF EXISTS "public"."docmaps";
 CREATE TABLE "public"."docmaps" (
 	"id" uuid NOT NULL,
 	"created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	"updated" timestamptz NULL,
+	"updated" timestamptz,
 	"manuscript_id" uuid NOT NULL,
 	"external_id" text NOT NULL,
-	"content" text NULL,
+	"content" text,
 	PRIMARY KEY ("id")
 );
 
@@ -529,7 +529,7 @@ INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "st
 ('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
 	
 INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "type") VALUES
-('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't', 'Config');
+('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', true, 'Config');
 
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-09-15 06:17:35.719777+00'),
@@ -606,7 +606,12 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1677839814-drop-task-notification-id-recipient-id-unique-index.sql', '2022-09-15 06:17:39.357414+00'),
 ('1676497888-config.sql', '2022-09-15 06:17:39.709414+00'),
 ('1678694877-create-config-data-from-env.js', '2022-09-15 06:17:39.789414+00'),
-('1679455713-add-last-tab.sql', '2022-09-15 06:17:39.989414+00');
+('1679455713-add-last-tab.sql', '2022-09-15 06:17:39.989414+00'),
+('1679456198-group-managers-team.sql', '2023-05-17 10:11:38.509513+00'),
+('1679456199-admin-team.sql', '2023-05-17 10:11:38.527553+00'),
+('1680679478-update-config-form-data-show-tabs.js', '2023-05-17 10:11:38.545092+00'),
+('1682351059-delete-status-for-non-reviewers.sql', '2023-05-17 10:11:38.56579+00'),
+('1682429315-fix-message-channel-ids.sql', '2023-05-17 10:11:38.583134+00');
 
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
@@ -676,7 +681,9 @@ INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type"
 ('549e398c-58df-432d-97fd-cc02beb92b72', 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.743+00', '2022-09-14 02:51:21.743+00', 'orcid', '0000-0002-9601-2254', 'David Miller'   , '', '{"accessToken": "a0829b38-4732-4f7c-961d-eac592dbfb07", "refreshToken": "581792f0-a925-4cdb-a491-a519af67273c"}', 't');
 
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
-('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL);
+('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL),
+('37321ccf-3cb3-43bb-9104-5bf51a82dc03', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Admin', 'admin', NULL, NULL, true, 'team', NULL, NULL);
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
-('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
+('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '37321ccf-3cb3-43bb-9104-5bf51a82dc03', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('3c0dcb4a-37ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);

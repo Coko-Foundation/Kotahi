@@ -101,7 +101,7 @@ lint style:
 
 .test_script: &run_test_script
   - cd ${HOME}
-  - sh ./scripts/setupDevServer.sh &
+  - sh ./scripts/setupProdServer.sh &
   - node ./startServer.js &
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 

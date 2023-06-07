@@ -4,10 +4,17 @@ const ReminderAuthorInvitationTemplate = ({
   currentUser,
   invitationId,
   receiverName,
+  ccEmails = [],
 }) => {
   const result = {}
 
-  result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
+  result.cc = `lesley@sciencecolab.org, swartzk@ninds.nih.gov`
+
+  if (ccEmails.length) {
+    const ccEmailRecipients = ccEmails.join(', ')
+    result.cc += `, ${ccEmailRecipients}`
+  }
+
   result.subject =
     'Reminder: Interest in your preprint from Biophysics Colab (in partnership with eLife)'
   result.content = `
@@ -22,22 +29,23 @@ const ReminderAuthorInvitationTemplate = ({
     <p><a href="${appUrl}/acceptarticle/${invitationId}" target="_blank">Accept invitation</a></p>
     <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>
 
-    <p>Please note that you will require an ORCID account in order to log in. If you don’t already have an ORCID, it takes two minutes to register one <a href="https://orcid.org/register" target="_blank">here.</a></p>
-
-    <p>Your invitation ID is ‘${invitationId}’.</p>
-     
     <p>I look forward to hearing from you.</p>
-     
-    <p>
-      Best regards <br />
-      ${currentUser}
+
+    <p>Best regards <br>
+    ${currentUser}
     </p>
-     
+
     <p>
-      On behalf of Biophysics Colab <br />
-      <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
+    On behalf of Biophysics Colab <br>
+    <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
     </p>
-  `
+    
+    <h3 style="margin-bottom: 2px;">Instructions for authors</h3>
+    <p>After clicking on ‘Accept invitation’, you will be asked to log in to our peer review platform using your ORCID account. If you don’t have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>.<br></p>
+    <p>Once logged in, please click on the name of the preprint on your dashboard, complete the submission information, then select ‘submit your research object’.</p>
+    <p>Note that you can log in to our platform at any time by visiting<br>
+    <a href="https://biophysics-sciencecolab.kotahi.cloud/login" target="_blank">https://biophysics-sciencecolab.kotahi.cloud/login</a>
+    </p>`
 
   result.content = result.content.replace(/\n/g, '')
 

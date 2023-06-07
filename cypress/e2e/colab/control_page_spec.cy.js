@@ -11,6 +11,7 @@ import { ControlPage } from '../../page-object/control-page'
 import { ReviewPage } from '../../page-object/review-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe('control page tests', () => {
   // the commented part below is because of the issue for shared review that doesn't work as expected because of the issue #1011
 
@@ -234,23 +235,23 @@ describe('control page tests', () => {
 
   context('admin user can see the icons', () => {
     beforeEach(() => {
-      cy.task('restore', 'initial_state_other')
+      cy.task('restore', 'commons/colab_bootstrap')
       cy.task('seedForms')
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.reviewers.reviewer1, dashboard)
+        cy.login(name.role.reviewers[0], dashboard)
         cy.awaitDisappearSpinner()
         DashboardPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         cy.fixture('submission_form_data').then(data => {
-          SubmissionFormPage.fillInDoi(data.doi)
+          SubmissionFormPage.fillInDoiColab(data.doi)
           SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
           SubmissionFormPage.fillInFirstAuthor(data.creator)
           SubmissionFormPage.fillInDatePublished(data.date)
           SubmissionFormPage.fillInLink(data.doi)
-          SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
-          SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
-          SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
-          SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
+          SubmissionFormPage.fillInOurTake(data.ourTake)
+          SubmissionFormPage.fillInMainFindings(data.mainFindings)
+          SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+          SubmissionFormPage.fillInLimitations(data.limitations)
           SubmissionFormPage.fillInKeywords(data.keywords)
           SubmissionFormPage.fillInReviewCreator(data.creator)
         })
@@ -259,41 +260,63 @@ describe('control page tests', () => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.clickControlAndVerifyPageLoaded()
+        ManuscriptsPage.selectOptionWithText('Control')
+        cy.awaitDisappearSpinner()
+        ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer2)
-        ControlPage.inviteReviewer(name.role.reviewers.reviewer2)
+        ControlPage.selectDropdownOptionByName(name.role.reviewers[1])
+        ControlPage.inviteReviewer(name.role.reviewers[1])
         ControlPage.clickInvitedReviewer()
         ControlPage.clickReviewerSharedCheckbox()
         ControlPage.waitThreeSec()
-        cy.login(name.role.reviewers.reviewer2, dashboard)
+        cy.login(name.role.reviewers[1], dashboard)
         cy.awaitDisappearSpinner()
-        DashboardPage.clickAcceptReview()
+        DashboardPage.clickDashboardTab(1)
+        DashboardPage.clickAcceptReviewButton()
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(2000)
         DashboardPage.clickDoReview()
         cy.fixture('submission_form_data').then(data => {
           ReviewPage.fillInReviewComment(data.review1)
+          ReviewPage.clickAcceptRadioButton()
+          ReviewPage.clickSubmitButton()
+          ReviewPage.clickConfirmSubmitButton()
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(2000)
+          cy.get('[name="meta.title"]').contains('New submission')
         })
+        cy.login(name.role.admin, manuscripts)
+        cy.awaitDisappearSpinner()
+        Menu.clickManuscriptsAndAssertPageLoad()
+        ManuscriptsPage.selectOptionWithText('Control')
+        ControlPage.clickDecisionTab(1)
         ControlPage.clickHideReviewToAuthor()
         ControlPage.clickHideReviewerNameToAuthor()
       })
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[role="button"]').click()
+        cy.get('[name="meta.title"]:last').click()
         ControlPage.getReviewerName().should('contain', name.role.reviewers[1])
       })
     })
-    it('admin user hide review set to false, reviewer can see their name', () => {
+    it('admin user hide review set to true, reviewer can not see their name', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
-        ManuscriptsPage.clickControlAndVerifyPageLoaded()
+        ManuscriptsPage.selectOptionWithText('Control')
+        cy.awaitDisappearSpinner()
+        ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
       })
+      ControlPage.clickDecisionTab(1)
       ControlPage.clickHideReviewToAuthor()
       ControlPage.clickHideReviewerNameToAuthor()
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[role="button"]').click()
-        ControlPage.getReviewerName().should('contain', name.role.reviewers[1])
+        cy.get('[name="meta.title"]:last').click()
+        ControlPage.getReviewerName().should(
+          'not.contain',
+          name.role.reviewers[1],
+        )
       })
     })
   })

@@ -21,6 +21,8 @@ describe('Assigning senior editor', () => {
         Menu.clickManuscripts()
 
         ManuscriptsPage.selectOptionWithText('Control')
+        cy.reload()
+        // added a reload here because tests where failing on an unhandled promise.
 
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
