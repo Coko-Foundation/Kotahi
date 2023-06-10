@@ -71,6 +71,7 @@ const {
 const {
   getUsersById,
   getUserRolesInManuscript,
+  getSharedReviewersIds,
 } = require('../../model-user/src/userCommsUtils')
 
 const {
@@ -130,6 +131,26 @@ const getRelatedReviews = async (
 
   const userRoles = await getUserRolesInManuscript(ctx.user, manuscript.id)
 
+  const sharedReviewersIds = await getSharedReviewersIds(
+    manuscript.id,
+    ctx.user,
+  )
+
+  // Insert isShared flag before userIds are stripped
+  // TODO Should this step and the removal of confidential data be moved to the review resolver?
+  reviews = reviews.map(r => ({
+    ...r,
+    isShared: sharedReviewersIds.includes(r.userId),
+  }))
+
+  const manuscriptHasDecision = [
+    'accepted',
+    'revise',
+    'rejected',
+    'evaluated',
+    'published',
+  ].includes(manuscript.status)
+
   if (
     forceRemovalOfConfidentialData ||
     (!userRoles.admin && !userRoles.anyEditor)
@@ -138,6 +159,8 @@ const getRelatedReviews = async (
       reviews,
       reviewForm,
       decisionForm,
+      sharedReviewersIds,
+      manuscriptHasDecision,
       ctx.user,
     )
   }
@@ -1507,12 +1530,13 @@ const resolvers = {
     async source(parent, _, ctx, info) {
       if (typeof parent.source !== 'string') return null
 
-      const files =
+      let files =
         parent.manuscriptFiles ||
         (await (
           await models.Manuscript.query().findById(parent.manuscriptId)
         ).$relatedQuery('files'))
 
+      files = await getFilesWithUrl(files)
       // TODO Any reason not to use replaceImageSrcResponsive here?
       return replaceImageSrc(parent.source, files, 'medium')
     },

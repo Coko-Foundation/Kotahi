@@ -4,7 +4,6 @@ import { ControlPage } from '../../page-object/control-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
-import { ReviewPage } from '../../page-object/review-page'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
@@ -21,9 +20,9 @@ describe('checking manuscript version', () => {
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
       /* Assign Editor */
-      ControlPage.getAssignSeniorEditorDropdown()
-        .click({ force: true })
-        .type(`${name.role.seniorEditor}{enter}`)
+      // ControlPage.getAssignSeniorEditorDropdown()
+      //   .click({ force: true })
+      //   .type(`${name.role.seniorEditor}{enter}`)
 
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
@@ -37,7 +36,11 @@ describe('checking manuscript version', () => {
       ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
         force: true,
       })
-      ReviewPage.clickRevise()
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000)
+      cy.contains('Decision Status').scrollIntoView()
+      // ReviewPage.clickRevise()
+      cy.get('[class*=FormTemplate__SafeRadioGroup]').eq(1).click()
       /* Submit the decision */
       ControlPage.clickSubmitDecisionButton()
       /* Check appears in front of button */
@@ -61,10 +64,10 @@ describe('checking manuscript version', () => {
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInLink(data.doi)
-        SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
-        SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
-        SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
-        SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
         SubmissionFormPage.fillInReviewCreator(data.creator)
       })

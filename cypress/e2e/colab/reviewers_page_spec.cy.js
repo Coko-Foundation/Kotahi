@@ -29,7 +29,8 @@ describe('Editor assigning reviewers', () => {
 
       // Go to dashboard and verify number of invited reviewer
       Menu.clickDashboard()
-      DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')
+      // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')// this function doesn't work because the change of visuals
+      cy.get('.ReviewStatusDonut__CenterLabel-sc-76zxfe-1').contains('6')
     })
   })
 })

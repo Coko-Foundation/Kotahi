@@ -20,7 +20,7 @@ import FormBuilderPage from './component-formbuilder/src/components/FormBuilderP
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
 import ProductionPage from './component-production/src/components/ProductionPage'
-import { Profile } from './component-profile/src'
+import ProfilePage from './component-profile/src/ProfilePage'
 import ReportPage from './component-reporting/src/ReportPage'
 import DecisionPage from './component-review/src/components/DecisionPage'
 import ReviewPage from './component-review/src/components/ReviewPage'
@@ -28,8 +28,11 @@ import ReviewPreviewPage from './component-review/src/components/ReviewPreviewPa
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
 import SubmitPage from './component-submit/src/components/SubmitPage'
 import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
-import UsersManager from './component-users-manager/src/UsersManager'
+import UsersPage from './component-users-manager/src/UsersPage'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
+
+import FlaxManager from './component-flax-manager/src/FlaxManager'
+import FlaxPageEditor from './component-flax-manager/src/FlaxPageEditor'
 
 import QUERY from './adminPageQueries'
 
@@ -151,6 +154,8 @@ const AdminPage = () => {
   const reportsLink = `${urlFrag}/admin/reports`
   const userAdminLink = `${urlFrag}/admin/users`
   const tasksTemplateLink = `${urlFrag}/admin/tasks`
+  const flaxLink = `${urlFrag}/admin/flax/flax-manager`
+  const FlaxPageEditorLink = `${urlFrag}/admin/flax/flax-edit/:pageId`
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
@@ -206,6 +211,7 @@ const AdminPage = () => {
           ],
         },
         { link: tasksTemplateLink, name: 'Tasks', icon: 'list' },
+        // { link: flaxLink, name: 'Flax', icon: 'globe' },
         { link: userAdminLink, name: 'Users', icon: 'users' },
         { link: configurationLink, name: 'Configuration', icon: 'sliders' },
       ],
@@ -261,14 +267,14 @@ const AdminPage = () => {
       />
       <Switch>
         <PrivateRoute
-          component={Profile}
+          component={ProfilePage}
           currentUser={currentUser}
           exact
           path={profileLink}
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={Profile}
+          component={ProfilePage}
           currentUser={currentUser}
           exact
           path={`${urlFrag}/profile/:id`}
@@ -392,7 +398,7 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
           <PrivateRoute
-            component={UsersManager}
+            component={UsersPage}
             currentUser={currentUser}
             key="users"
             path={`${urlFrag}/admin/users`}
@@ -404,6 +410,22 @@ const AdminPage = () => {
             path={`${urlFrag}/admin/tasks`}
             redirectLink={redirectLink}
           />,
+          <PrivateRoute
+            component={FlaxManager}
+            currentUser={currentUser}
+            key="flax"
+            path={flaxLink}
+            redirectLink={redirectLink}
+          />,
+
+          <PrivateRoute
+            component={FlaxPageEditor}
+            currentUser={currentUser}
+            key="FlaxPageEditor"
+            path={FlaxPageEditorLink}
+            redirectLink={redirectLink}
+          />,
+
           <PrivateRoute
             component={ConfigManagerPage}
             key="configuration"

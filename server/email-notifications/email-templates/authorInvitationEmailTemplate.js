@@ -5,6 +5,7 @@ const AuthorInvitationEmailTemplate = ({
   invitationId,
   receiverName,
   instance,
+  ccEmails = [],
 }) => {
   const result = {
     cc: '',
@@ -14,7 +15,13 @@ const AuthorInvitationEmailTemplate = ({
 
   switch (instance) {
     case 'colab':
-      result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
+      result.cc = `lesley@sciencecolab.org, swartzk@ninds.nih.gov`
+
+      if (ccEmails.length) {
+        const ccEmailRecipients = ccEmails.join(', ')
+        result.cc += `, ${ccEmailRecipients}`
+      }
+
       result.subject =
         'Interest in your preprint from Biophysics Colab (in partnership with eLife)'
       result.content = `<p>
@@ -32,13 +39,10 @@ const AuthorInvitationEmailTemplate = ({
             Your agreement to our service would not constitute submission to a journal therefore you would be at liberty to submit your paper for review elsewhere. Indeed, we realise you may have already done so, and this would not preclude your participation in our scheme. Furthermore, some authors have found that <a href="https://sciety.org/lists/ee7e738a-a1f1-465b-807c-132d273ca952" target="_blank">our public evaluations</a> have facilitated publication of their studies in traditional journals.
           </p>
           <p>
-            Would you be interested in receiving expert feedback on your preprint? If so, please accept our invitation using the link below and include any suggestions for potential reviewers in the text box. If not, we’d be grateful if you let us know via the decline link. We’d be happy to arrange a video call if you’d like to learn more about Biophysics Colab before making a decision.
+          Would you be interested in receiving expert feedback on your preprint? If so, please accept our invitation using the link below (see instructions at the foot of this message). If not, we’d be grateful if you let us know via the decline link. We’d be happy to arrange a video call if you’d like to learn more about Biophysics Colab before making a decision.
           </p>
           <p><a href="${appUrl}/acceptarticle/${invitationId}" target="_blank">Accept invitation</a></p>
           <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>
-          <p>
-            Please note that you will require an ORCID account in order to log in to our platform. If you don’t already have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>. <br>
-          </p>
           <p>
             I look forward to hearing from you.
           </p>
@@ -49,29 +53,37 @@ const AuthorInvitationEmailTemplate = ({
           <p>
             On behalf of Biophysics Colab <br>
             <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
-          <p>`
+          </p>
+          <h3 style="margin-bottom: 2px;">Instructions for authors
+          </h3>
+          <p style="margin-top: 2px;">
+          After clicking on ‘Accept invitation’, you will be asked to log in to our peer review platform using your ORCID account. If you don’t have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>. <br>
+          </p>
+          <p>Once logged in, please click on the name of the preprint on your dashboard, complete the submission information, then select ‘submit your research object’.</p>
+          <p>Note that you can log in to our platform at any time by visiting<br>
+          <a href="https://biophysics-sciencecolab.kotahi.cloud/login" target="_blank">https://biophysics-sciencecolab.kotahi.cloud/login</a>
+          </p>`
       break
     default:
       result.cc = ''
       result.subject = 'Kotahi | Permission to review'
       result.content = `<p>Dear ${receiverName},</p>
-        <p>
-          The manuscript titled ‘${articleTitle}’ has been selected for peer review. Click on the link below to accept or decline the invitation;
-        <p>
-        <p><a href="${appUrl}/acceptarticle/${invitationId}" target="_blank">Accept invitation</a></p>
-        <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>
-        <p>
+          <p>
+            The manuscript titled ‘${articleTitle}’ has been selected for peer review. Click on the link below to accept or decline the invitation;
+          </p>
+          <p><a href="${appUrl}/acceptarticle/${invitationId}" target="_blank">Accept invitation</a></p>
+          <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>
+          <p>
           Please note; that you will require an ORCID account in order to log in. If you don’t already have an account, it takes 2 mins to <a href="https://orcid.org/register" target="_blank">register a new ORCID account here</a>. <br>
           Your invitation id is ‘${invitationId}’
-        </p>
-        <p>
+          </p>
+          <p>
           Regards, <br>
           Kotahi team
         </p>`
   }
 
   result.content = result.content.replace(/\n/g, '')
-
   return result
 }
 

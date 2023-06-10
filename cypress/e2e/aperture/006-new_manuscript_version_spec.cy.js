@@ -35,7 +35,7 @@ describe('checking manuscript version', () => {
       /* Fill the decision form */
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+      ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
         force: true,
       })
       ControlPage.clickRevise()

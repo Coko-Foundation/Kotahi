@@ -36,7 +36,7 @@ const COMPLETED_REVIEWS_STATUS = 'completed'
 const REJECTED_REVIEWS_STATUS = 'rejected'
 const ACCEPTED_REVIEWS_STATUS = 'accepted'
 const VERSION_TITLE = 'VersionTitle__Root-sc'
-const ARTICLE_LINK = '[class*=General__SectionRow] a[href]'
+const ARTICLE_LINK = '[name="reviewerLinks"] button'
 const DASHBOARD_TAB = '[data-test-id=tab-container]'
 
 // eslint-disable-next-line import/prefer-default-export
@@ -129,7 +129,7 @@ export const DashboardPage = {
     return cy.get(DO_REVIEW_BUTTON)
   },
   clickDoReview() {
-    this.getDoReviewButton().click()
+    this.getDoReviewButton().click({ force: true })
   },
   clickDoReviewAndVerifyPageLoaded() {
     this.getDoReviewButton().click()
@@ -152,10 +152,10 @@ export const DashboardPage = {
     return cy.getByContainsClass(VERSION_TITLE)
   },
   getCompletedReviewButton() {
-    return cy.get(ARTICLE_LINK).contains('Completed')
+    return cy.get(ARTICLE_LINK)
   },
   clickCompletedReviewButton() {
-    this.getCompletedReviewButton().click()
+    this.getCompletedReviewButton().click({ force: true })
   },
   getDashboardTab() {
     return cy.get(DASHBOARD_TAB)

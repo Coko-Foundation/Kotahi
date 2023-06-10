@@ -25,7 +25,7 @@ describe('Login test', () => {
       })
       Menu.getLoggedUserButton().should('contain', name.role.admin)
       Menu.getDashboardButton().should('be.visible')
-      Menu.getLoggedUserButton().should('contain', 'group manager')
+      Menu.getLoggedUserButton().should('contain', 'Group Manager')
       DashboardPage.getSectionPlaceholder(0).should(
         'contain',
         'No matching manuscripts were found',

@@ -27,7 +27,7 @@ const INVITE_REVIEWER_OPTION_LIST = 'react-select'
 const INVITE_REVIEWER_SUBMIT_BUTTON = 'button[type="submit"]'
 const INVITED_REVIEWERS = '[class*=KanbanCard__Card]'
 const INVITE_REVIEWER_SUBMIT_MODAL_BUTTON = 'submit-modal'
-const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]'
+const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]:nth(10)'
 
 // Decision + Publishing
 const PUBLISH_BUTTON =
@@ -213,7 +213,7 @@ export const ControlPage = {
     return cy.get(REVIEWER_MODAL_SHARED_CHECKBOX)
   },
   clickReviewerSharedCheckbox(nth) {
-    return this.getInviteReviewerSharedCheckbox()
+    return this.getReviewerSharedCheckbox()
       .eq(nth || 0)
       .click()
   },
@@ -277,7 +277,7 @@ export const ControlPage = {
     return cy.get(EMAIL_NOTIFICATION_DROPDOWNS)
   },
   clickEmailNotificationNthDropdown(nth) {
-    this.getEmailNotificationDropdowns().eq(nth).click()
+    this.getEmailNotificationDropdowns().eq(nth).click({ force: true })
   },
   getNotifyButton() {
     return cy.get(NOTIFY_BUTTON)

@@ -33,9 +33,12 @@ describe('Completing a review', () => {
       // Fill the decision form
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
-        force: true,
-      })
+      cy.get('[data-testid="dropzone"]:first > input').selectFile(
+        decisinFilePath,
+        {
+          force: true,
+        },
+      )
       ControlPage.clickRevise()
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists() // Check appears in front of button
@@ -63,7 +66,7 @@ describe('Completing a review', () => {
       DashboardPage.clickControlPanelDecision()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
-      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
+      ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
         force: true,
       })
       ControlPage.clickAccept()

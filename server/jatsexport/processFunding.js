@@ -26,7 +26,11 @@ const processFunding = html => {
           // get the next paragraph and see if it's an award ID; if so, group them together
           const nextLine = $(el).next()
 
-          if (nextLine[0].attribs.class === 'awardid') {
+          if (
+            nextLine &&
+            nextLine.length &&
+            nextLine[0]?.attribs?.class === 'awardid'
+          ) {
             // console.log('--award ID found: ', nextLine.html())
             awardIdMemo.push(index + 1)
             awardGroups.push(
@@ -62,7 +66,11 @@ const processFunding = html => {
           // get the next paragraph and see if it's an funding source; if so, group them together
           const nextLine = $(el).next()
 
-          if (nextLine[0].attribs.class === 'fundingsource') {
+          if (
+            nextLine &&
+            nextLine.length &&
+            nextLine[0]?.attribs?.class === 'fundingsource'
+          ) {
             // console.log('--funding source found: ', nextLine.html())
             fundingSourceMemo.push(index + 1)
             awardGroups.push(

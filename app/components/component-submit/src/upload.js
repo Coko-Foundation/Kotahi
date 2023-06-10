@@ -19,7 +19,7 @@ const stripTags = file => {
 }
 
 const cleanOutWmfs = file => {
-  const wmfRegex = /"data:image\/wmf;base64,[0-9a-zA-Z/+=]*"/g
+  const wmfRegex = /"data:image\/[ew]mf;base64,[0-9a-zA-Z/+=]*"/g
 
   return file.replaceAll(
     wmfRegex,
@@ -55,6 +55,13 @@ const checkForEmptyBlocks = file => {
       if (inside.childNodes[i].tagName === 'IMG') {
         console.error('Found unwrapped <img> tag:', inside.childNodes[i])
         const figure = doc.createElement('figure')
+
+        if (!inside.childNodes[i + 1]) {
+          console.error('No next sibling, adding dummy paragraph')
+          const dummyp = doc.createElement('p')
+          inside.appendChild(dummyp)
+        }
+
         figure.appendChild(inside.childNodes[i])
         inside.replaceChild(figure, inside.childNodes[i])
       }

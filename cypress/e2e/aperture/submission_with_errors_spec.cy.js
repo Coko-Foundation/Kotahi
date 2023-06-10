@@ -66,6 +66,7 @@ describe('Submission with errors test', () => {
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()
         // Contains new title
+        cy.awaitDisappearSpinner()
         DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
       })
     })

@@ -311,6 +311,8 @@ const resolvers = {
 
       const avatarPlaceholder = '/profiles/default_avatar.svg'
 
+      let { profilePicture } = user
+
       if (user.file) {
         const params = new Proxy(new URLSearchParams(user.profilePicture), {
           get: (searchParams, prop) => searchParams.get(prop),
@@ -328,15 +330,20 @@ const resolvers = {
             storedObject => storedObject.type === 'small',
           ).key
 
-          user.profilePicture = await fileStorage.getURL(objectKey)
-          await user.save()
+          profilePicture = await fileStorage.getURL(objectKey)
+
+          await models.User.query().patchAndFetchById(user.id, {
+            profilePicture,
+          })
         }
-      } else if (user.profilePicture !== avatarPlaceholder) {
-        user.profilePicture = avatarPlaceholder
-        await user.save()
+      } else if (profilePicture !== avatarPlaceholder) {
+        profilePicture = avatarPlaceholder
+        await models.User.query().patchAndFetchById(user.id, {
+          profilePicture,
+        })
       }
 
-      return user.profilePicture
+      return profilePicture
     },
   },
 }
@@ -387,8 +394,6 @@ const typeDefs = `
     username_DESC
     email_ASC
     email_DESC
-    admin_ASC
-    admin_DESC
     created_ASC
     created_DESC
     lastOnline_ASC
