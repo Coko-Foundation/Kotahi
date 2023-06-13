@@ -23,7 +23,7 @@ const cleanOutWmfs = file => {
 
   return file.replaceAll(
     wmfRegex,
-    '"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAABYlAAAWJQFJUiTwAAAADElEQVQImWP4//8/AAX+Av5Y8msOAAAAAElFTkSuQmCC" data-original-name="broken-image.png"',
+    '"" alt="Broken image" data-original-name="broken-image"',
   )
 }
 
@@ -285,16 +285,22 @@ const base64Images = source => {
   const doc = new DOMParser().parseFromString(source, 'text/html')
 
   const images = [...doc.images].map((e, index) => {
-    const mimeType = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
-    const blob = base64toBlob(e.src, mimeType)
-    const mimeTypeSplit = mimeType.split('/')
-    const extFileName = mimeTypeSplit[1]
+    const isDataUrl = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
 
-    const file = new File([blob], `Image${index + 1}.${extFileName}`, {
-      type: mimeType,
-    })
+    if (isDataUrl) {
+      const mimeType = isDataUrl[0]
+      const blob = base64toBlob(e.src, mimeType)
+      const mimeTypeSplit = mimeType.split('/')
+      const extFileName = mimeTypeSplit[1]
 
-    return { dataSrc: e.src, mimeType, file }
+      const file = new File([blob], `Image${index + 1}.${extFileName}`, {
+        type: mimeType,
+      })
+
+      return { dataSrc: e.src, mimeType, file }
+    }
+
+    return null
   })
 
   return images || null
