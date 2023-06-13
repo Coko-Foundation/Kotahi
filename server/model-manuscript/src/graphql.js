@@ -450,16 +450,30 @@ const resolvers = {
           const $ = cheerio.load(source)
 
           map(images, (image, index) => {
-            const elem = $('img').get(index)
-            const $elem = $(elem)
-            $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-            $elem.attr('alt', uploadedImagesWithUrl[index].name)
-            $elem.attr(
-              'src',
-              uploadedImagesWithUrl[index].storedObjects.find(
-                storedObject => storedObject.type === 'medium',
-              ).url,
-            )
+            // uploadedImagesWithUrl[index].name comes in as something like Image4.png
+            // First, get the number so we can identify the image in the DOM
+
+            const imageNumber = uploadedImagesWithUrl[index].name.match(
+              /\d+/,
+            )[0]
+
+            // We are looking for the image with data-original-name in the form "Picture 4"
+
+            const elem = $(`img[data-original-name="Picture ${imageNumber}"]`)
+
+            // elem.length will be 0 if there is an image without a corresponding file
+
+            if (elem.length) {
+              const $elem = $(elem)
+              $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+              $elem.attr('alt', uploadedImagesWithUrl[index].name)
+              $elem.attr(
+                'src',
+                uploadedImagesWithUrl[index].storedObjects.find(
+                  storedObject => storedObject.type === 'medium',
+                ).url,
+              )
+            }
           })
 
           manuscript.meta.source = $.html()
