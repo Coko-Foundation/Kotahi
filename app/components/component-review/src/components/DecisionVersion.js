@@ -257,7 +257,6 @@ const DecisionVersion = ({
                 createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
-                isReadOnly={!isCurrentVersion}
                 manuscript={version}
                 manuscriptId={version.id}
                 roles={roles}

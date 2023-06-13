@@ -15,7 +15,6 @@ import { debounce } from 'lodash'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalButton,
-  CompactDetailLabel,
   ActionButton,
   LooseColumn,
   MediumRow,
@@ -56,21 +55,6 @@ const TitleCell = styled.div`
   input {
     margin-left: 7px;
   }
-`
-
-const AssigneeCell = styled.div`
-  align-items: start;
-  flex-direction: column;
-  justify-content: flex-start;
-`
-
-const DueDateCell = styled.div`
-  justify-content: flex-start;
-  position: relative;
-`
-
-const StatusCell = styled.div`
-  justify-content: flex-start;
 `
 
 const StatusActionCell = styled.div`
@@ -127,11 +111,6 @@ const Ellipsis = styled(MoreVertical)`
   &:hover path {
     fill: ${th('colorPrimary')};
   }
-`
-
-const DaysNoteContainer = styled.div`
-  position: absolute;
-  transform: translate(4px, 16px);
 `
 
 const ModalContainer = styled(LooseColumn)`
@@ -355,10 +334,6 @@ const Task = ({
       ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
       : 'None'
 
-  const dueDateLabel = moment
-    .tz(task.dueDate, config?.taskManager?.teamTimezone)
-    .format('YYYY-MM-DD')
-
   const isDone = task.status === 'Done'
 
   const isOverdue = task.dueDate
@@ -385,45 +360,6 @@ const Task = ({
       )
     }
   }, [task])
-
-  if (isReadOnly)
-    return (
-      <TaskRow isOverdue={isOverdue}>
-        <div>
-          <TitleCell>
-            <Handle />
-            <Handle>
-              {isDone ? (
-                <CheckCircle color={themeContext.colorPrimary} />
-              ) : (
-                <Circle color={themeContext.colorBorder} />
-              )}
-            </Handle>
-            <TextInput isReadOnly value={task.title} />
-          </TitleCell>
-        </div>
-        <div>
-          <AssigneeCell>{task.assignee?.username}</AssigneeCell>
-        </div>
-        {editAsTemplate ? (
-          <div>
-            <DurationDaysCell>{task.defaultDurationDays || 0}</DurationDaysCell>
-          </div>
-        ) : (
-          <div>
-            <DueDateCell title={dueDateLocalString}>
-              <DaysNoteContainer>
-                <CompactDetailLabel isWarning={isOverdue}>
-                  {daysDifferenceLabel}
-                </CompactDetailLabel>
-              </DaysNoteContainer>
-              {dueDateLabel}
-            </DueDateCell>
-            <StatusCell isOverdue={isOverdue}>{task.status}</StatusCell>
-          </div>
-        )}
-      </TaskRow>
-    )
 
   return (
     <Draggable draggableId={task.id} index={index} key={task.id}>

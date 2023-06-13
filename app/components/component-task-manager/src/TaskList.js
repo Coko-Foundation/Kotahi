@@ -261,17 +261,15 @@ const TaskList = ({
             )}
           </Droppable>
         </DragDropContext>
-        {!isReadOnly && (
-          <AddTaskContainer>
-            <RoundIconButton
-              disabled={tasks.some(t => !t.title)}
-              iconName="Plus"
-              onClick={addNewTask}
-              primary
-              title="Add a new task"
-            />
-          </AddTaskContainer>
-        )}
+        <AddTaskContainer>
+          <RoundIconButton
+            disabled={tasks.some(t => !t.title)}
+            iconName="Plus"
+            onClick={addNewTask}
+            primary
+            title="Add a new task"
+          />
+        </AddTaskContainer>
       </MediumColumn>
     </TaskListContainer>
   )
