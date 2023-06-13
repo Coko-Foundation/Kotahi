@@ -11,7 +11,7 @@ const getUsersById = async userIds => models.User.query().findByIds(userIds)
  * and "editorOrAdmin" indicates if the user is anyEditor or admin. */
 const getUserRolesInManuscript = async (userId, manuscriptId) => {
   const result = {
-    admin: !!(await models.User.query().findById(userId)).admin,
+    admin: false,
     author: false,
     reviewer: false,
     editor: false,
@@ -21,6 +21,10 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     anyEditor: false,
     editorOrAdmin: false,
   }
+
+  if (!userId) return result
+  result.admin = !!(await models.User.query().findById(userId)).admin
+  if (!manuscriptId) return result
 
   const teams = await models.Team.query()
     .select('role')
