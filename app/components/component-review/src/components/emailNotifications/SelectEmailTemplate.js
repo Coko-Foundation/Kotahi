@@ -234,7 +234,7 @@ switch (
         value: 'authorInvitationEmailTemplate',
       },
       {
-        label: 'Consolidated report shared with authors',
+        label: 'Share consolidated report with authors',
         value: 'consolidatedReportWithAuthorsTemplate',
       },
       {
@@ -289,9 +289,20 @@ switch (
         label: 'Thanks for Agreeing to Review Template',
         value: 'thanksForAgreeingToReviewTemplate',
       },
+      {
+        label: 'Share evaluation with author',
+        value: 'notifyAuthorEmailTemplate',
+      },
+      {
+        label: 'Evaluation published',
+        value: 'evaluationPublishedEmailTemplate',
+      },
     ]
 
-    if(!process.env.USE_COLAB_EMAIL || process.env.USE_COLAB_EMAIL.toLowerCase() == 'false') {
+    if (
+      !process.env.USE_COLAB_EMAIL ||
+      process.env.USE_COLAB_EMAIL.toLowerCase() === 'false'
+    ) {
       emailTemplateOptions = [
         {
           label: 'Kotahi task notification',
@@ -306,6 +317,14 @@ switch (
         {
           label: 'Author Invitation Email Template',
           value: 'authorInvitationEmailTemplate',
+        },
+        {
+          label: 'Share evaluation with author',
+          value: 'notifyAuthorEmailTemplate',
+        },
+        {
+          label: 'Evaluation published',
+          value: 'evaluationPublishedEmailTemplate',
         },
       ]
     }

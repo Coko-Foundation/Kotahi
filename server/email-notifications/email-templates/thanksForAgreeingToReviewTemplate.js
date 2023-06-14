@@ -1,11 +1,22 @@
-const ThanksForAgreeingTemplate = ({ authorName, currentUser }) => {
+const ThanksForAgreeingTemplate = ({
+  authorName,
+  currentUser,
+  ccEmails = [],
+  manuscriptPageUrl,
+}) => {
   const result = {}
 
-  result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
+  result.cc = `lesley@sciencecolab.org, swartzk@ninds.nih.gov`
+
+  if (ccEmails.length) {
+    const ccEmailRecipients = ccEmails.join(', ')
+    result.cc += `, ${ccEmailRecipients}`
+  }
+
   result.subject = 'Thank you for supporting Biophysics Colab'
   result.content = `
-    <p>Thank you for agreeing to review the preprint by ${authorName} and colleagues for Biophysics Colab. I look forward to receiving your report, formatted as described below, by the agreed date.</p>
 
+    <p>Thank you for agreeing to review the preprint by ${authorName} and colleagues for Biophysics Colab. I look forward to receiving your report, formatted as described below, by the agreed date. Please submit your report by completing the different fields in the review form, which you can access here; <a href="${manuscriptPageUrl}" target="_blank">${manuscriptPageUrl}</a></p>
     <p>When all the reviewers have submitted their feedback, I’ll begin to consolidate the advice into a single report that we can discuss as a reviewing group (either electronically or via a video call). You can decide whether to sign this consolidated report after it has been finalised.</p>
 
     <p>We respectfully ask that you treat the consolidated report as a confidential document until it is publicly associated with the preprint, and we will ask the authors to do the same.</p>

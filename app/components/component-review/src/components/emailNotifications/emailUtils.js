@@ -217,6 +217,14 @@ const emailTemplateOptions = [
     label: 'Reviewer Invitation Email Template',
     value: 'reviewerInvitationEmailTemplate',
   },
+  {
+    label: 'Share evaluation with author',
+    value: 'notifyAuthorEmailTemplate',
+  },
+  {
+    label: 'Evaluation published',
+    value: 'evaluationPublishedEmailTemplate',
+  },
 ]
 
 export const sendEmail = async (

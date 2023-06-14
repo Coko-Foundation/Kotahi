@@ -4,6 +4,7 @@ const ConsolidatedReportWithAuthorsTemplate = ({
   authorName,
   manuscriptPageUrl,
   appUrl,
+  ccEmails = [],
 }) => {
   const result = {
     cc: '',
@@ -11,7 +12,13 @@ const ConsolidatedReportWithAuthorsTemplate = ({
     content: '',
   }
 
-  result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
+  result.cc = `lesley@sciencecolab.org, swartzk@ninds.nih.gov`
+
+  if (ccEmails.length) {
+    const ccEmailRecipients = ccEmails.join(', ')
+    result.cc += `, ${ccEmailRecipients}`
+  }
+
   result.subject = 'Report from Biophysics Colab'
   result.content = `<p>
       <p>Dear ${receiverName}</p>
@@ -32,7 +39,7 @@ const ConsolidatedReportWithAuthorsTemplate = ({
         </li>
         <li>
           <p>Post your response to the report</p>
-          <p>We would naturally be happy to post your response to the reviewers’ comments alongside the consolidated report on both bioRxiv and Sciety; simply provide your response after logging in to our platform (${appUrl}) and we will post it at the first opportunity.</p>
+          <p>We would naturally be happy to post your response to the reviewers’ comments alongside the consolidated report on both bioRxiv and Sciety; simply provide your response after logging in to our platform (${appUrl}) and we will post it at the first opportunity. Please use “block quote" from the drop-down styling menu to quote from our report.</p>
         </li>
         <li>
           <p>Submit a revised preprint for curation</p>
