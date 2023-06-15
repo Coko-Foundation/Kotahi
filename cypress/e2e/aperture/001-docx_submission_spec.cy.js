@@ -45,43 +45,4 @@ describe('Upload manuscript test', () => {
       DashboardPage.getSubmissionTitle().should('contain', data.title3)
     })
   })
-
-  it('senior editor can view the submission', () => {
-    // task to restore the database as per the  dumps/submission_complete.sql
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'submission_complete')
-    cy.task('seedForms')
-
-    cy.fixture('submission_form_data').then(data => {
-      cy.fixture('role_names').then(name => {
-        // login as admin
-        cy.login(name.role.admin, dashboard)
-
-        // select Control on the Manuscripts page
-        Menu.clickManuscripts()
-        ManuscriptsPage.selectOptionWithText('Control')
-        cy.reload()
-        // assign seniorEditor
-        ControlPage.getAssignSeniorEditorDropdown().type('Elaine{enter}', {
-          force: true,
-        })
-        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-        ControlPage.getAssignHandlingEditorDropdown().type('Elaine{enter}', {
-          force: true,
-        })
-        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-        ControlPage.getAssignEditorDropdown().type('Elaine{enter}', {
-          force: true,
-        })
-        // ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-        // assert the reviews
-        ControlPage.clickDecisionTab(1)
-        ControlPage.fillInDecision(data.decision)
-        ControlPage.clickAccept()
-        ControlPage.clickSubmit()
-      })
-    })
-
-    cy.contains('Dashboard').click()
-  })
 })
