@@ -1,7 +1,7 @@
 [
   "./server/model-team/src",
   "./server/model-user/src",
-  "./server/model-flax/src",
+  "./server/model-cms/src",
   "./server/model-article-import-sources/src/",
   "./server/model-article-import-history/src/",
   "./server/model-manuscript/src/",
