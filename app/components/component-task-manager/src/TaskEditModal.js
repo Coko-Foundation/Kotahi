@@ -345,21 +345,19 @@ const TaskEditModal = ({
           ) : null}
         </TaskRecipientsContainer>
         <TaskActionContainer>
-          {!isReadOnly && (
-            <SecondaryActionButton
-              disabled={
-                !editAsTemplate && taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(
-                      t => !t.recipientType && !t.emailTemplateKey,
-                    )
-                  : false
-              }
-              onClick={addNewTaskNotification}
-              primary
-            >
-              Add Notification Recipient
-            </SecondaryActionButton>
-          )}
+          <SecondaryActionButton
+            disabled={
+              !editAsTemplate && taskEmailNotifications?.length
+                ? taskEmailNotifications.some(
+                    t => !t.recipientType && !t.emailTemplateKey,
+                  )
+                : false
+            }
+            onClick={addNewTaskNotification}
+            primary
+          >
+            Add Notification Recipient
+          </SecondaryActionButton>
         </TaskActionContainer>
         {!editAsTemplate ? (
           task.notificationLogs &&

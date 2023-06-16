@@ -38,8 +38,15 @@ const removeUserFromManuscriptChatChannel = async ({
   )
 }
 
+const resetLastAlertTriggerTime = async () => {
+  await models.ChannelMember.query()
+    .update({ lastAlertTriggeredTime: null })
+    .whereRaw('last_alert_triggered_time < last_viewed')
+}
+
 module.exports = {
   updateChannelLastViewed,
   addUserToManuscriptChatChannel,
   removeUserFromManuscriptChatChannel,
+  resetLastAlertTriggerTime,
 }
