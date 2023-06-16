@@ -116,19 +116,21 @@ const resolvers = {
       if (includeInUse) {
         const manuscript = await models.Manuscript.query().findById(entityId)
 
-        imageFiles.forEach(file => {
-          const foundIn = []
-          const { source } = manuscript.meta
+        if (manuscript) {
+          imageFiles.forEach(file => {
+            const foundIn = []
+            const { source } = manuscript.meta
 
-          if (source && typeof source === 'string') {
-            if (imageFinder(source, file.id)) {
-              foundIn.push(manuscript.id)
+            if (source && typeof source === 'string') {
+              if (imageFinder(source, file.id)) {
+                foundIn.push(manuscript.id)
+              }
             }
-          }
 
-          // eslint-disable-next-line no-param-reassign
-          file.inUse = foundIn.length > 0
-        })
+            // eslint-disable-next-line no-param-reassign
+            file.inUse = foundIn.length > 0
+          })
+        }
       }
 
       const data = await getFilesWithUrl(imageFiles)

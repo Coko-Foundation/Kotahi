@@ -31,8 +31,7 @@ import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
 import UsersPage from './component-users-manager/src/UsersPage'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
 
-import FlaxManager from './component-flax-manager/src/FlaxManager'
-import FlaxPageEditor from './component-flax-manager/src/FlaxPageEditor'
+import CMSPagesPage from './component-cms-manager/src/CMSPagesPage'
 
 import QUERY from './adminPageQueries'
 
@@ -154,8 +153,8 @@ const AdminPage = () => {
   const reportsLink = `${urlFrag}/admin/reports`
   const userAdminLink = `${urlFrag}/admin/users`
   const tasksTemplateLink = `${urlFrag}/admin/tasks`
-  const flaxLink = `${urlFrag}/admin/flax/flax-manager`
-  const FlaxPageEditorLink = `${urlFrag}/admin/flax/flax-edit/:pageId`
+  // const CMSManagerLink = `${urlFrag}/admin/cms/manage`
+  const CMSPageEditorLink = `${urlFrag}/admin/cms/pages`
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
@@ -211,9 +210,14 @@ const AdminPage = () => {
           ],
         },
         { link: tasksTemplateLink, name: 'Tasks', icon: 'list' },
-        // { link: flaxLink, name: 'Flax', icon: 'globe' },
         { link: userAdminLink, name: 'Users', icon: 'users' },
         { link: configurationLink, name: 'Configuration', icon: 'sliders' },
+        {
+          menu: 'CMS',
+          name: 'CMS',
+          icon: 'layout',
+          links: [{ link: CMSPageEditorLink, name: 'Pages', icon: '' }],
+        },
       ],
     })
   }
@@ -320,6 +324,7 @@ const AdminPage = () => {
           }`}
           redirectLink={redirectLink}
         />
+
         <Route exact path={`${urlFrag}/dashboard/:path?`}>
           <DashboardLayout urlFrag={urlFrag}>
             <Switch>
@@ -360,6 +365,7 @@ const AdminPage = () => {
             </Switch>
           </DashboardLayout>
         </Route>
+
         {(isGroupManager || isAdmin) && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
           <PrivateRoute
@@ -410,19 +416,12 @@ const AdminPage = () => {
             path={`${urlFrag}/admin/tasks`}
             redirectLink={redirectLink}
           />,
-          <PrivateRoute
-            component={FlaxManager}
-            currentUser={currentUser}
-            key="flax"
-            path={flaxLink}
-            redirectLink={redirectLink}
-          />,
 
           <PrivateRoute
-            component={FlaxPageEditor}
+            component={CMSPagesPage}
             currentUser={currentUser}
-            key="FlaxPageEditor"
-            path={FlaxPageEditorLink}
+            key="CMSPagesPage"
+            path={`${CMSPageEditorLink}/:pageId?`}
             redirectLink={redirectLink}
           />,
 

@@ -4,7 +4,7 @@ CREATE TABLE flax_pages (
   title TEXT,
   content JSONB,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-  updated TIMESTAMP WITH TIME ZONE
+  updated TIMESTAMP WITH TIME ZONE 
 );
 
 INSERT INTO "public"."flax_pages" ("title", "shortcode", "content", "created", "updated") VALUES
