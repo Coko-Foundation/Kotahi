@@ -10,10 +10,15 @@ const sendAlerts = async () => {
       '<',
       new Date(Date.now() - 1000 * 60 * 30), // 30 min ago
     )
+    .withGraphJoined('user')
 
   channelMembers.forEach(async channelMember => {
-    // check if there are messages in the channel that have a larger timestamp than channelMemberlastviewed
+    // Check if notification preference is true for the user
+    if (!channelMember.user.eventNotificationsOptIn) {
+      return
+    }
 
+    // check if there are messages in the channel that have a larger timestamp than channelMemberlastviewed
     const earliestUnreadMessage = await models.Message.query()
       .where('created', '>', channelMember.lastViewed)
       .orderBy('created')
@@ -24,7 +29,7 @@ const sendAlerts = async () => {
     }
 
     await sendAlertForMessage({
-      userId: channelMember.userId,
+      user: channelMember.user,
       messageId: earliestUnreadMessage.id,
       title: 'Unread messages in channel',
     })
@@ -36,15 +41,13 @@ const sendAlerts = async () => {
 }
 
 const sendAlertForMessage = async ({
-  userId,
+  user,
   messageId,
   title,
   triggerTime = new Date(),
 }) => {
   const message = await models.Message.query().findById(messageId)
   const channel = await models.Channel.query().findById(message.channelId)
-
-  const user = await models.User.query().findById(userId)
 
   // send email notification
   const urlFrag = config.journal.metadata.toplevel_urlfragment
@@ -55,11 +58,15 @@ const sendAlertForMessage = async ({
     manuscriptPageUrl: `${baseUrl}/versions/${channel.manuscriptId}`,
   }
 
-  await sendEmailNotification(user.email, 'alertUnreadMessageTemplate', data)
+  await sendEmailNotification(
+    user.email,
+    'alertUnreadMessageDigestTemplate',
+    data,
+  )
 
   await new models.Alert({
     title,
-    userId,
+    userId: user.id,
     messageId,
     triggerTime,
     isSent: true,

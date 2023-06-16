@@ -145,9 +145,9 @@ const DecisionVersions = ({
                 updateSharedStatusForInvitedReviewer={
                   updateSharedStatusForInvitedReviewer
                 }
-                updateTask={index === 0 ? updateTask : null}
+                updateTask={updateTask}
                 updateTaskNotification={updateTaskNotification}
-                updateTasks={index === 0 ? updateTasks : null}
+                updateTasks={updateTasks}
                 updateTeam={updateTeam}
                 updateTeamMember={updateTeamMember}
                 urlFrag={urlFrag}

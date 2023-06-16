@@ -15,6 +15,7 @@ const GET_USER = gql`
       email
       globalRoles
       groupRoles
+      eventNotificationsOptIn
       defaultIdentity {
         identifier
         email
@@ -48,6 +49,21 @@ const UPDATE_USERNAME = gql`
   }
 `
 
+const UPDATE_USER_NOTIFICATION_PREFERENCE = gql`
+  mutation updateEventNotificationsOptIn(
+    $id: ID!
+    $eventNotificationsOptIn: Boolean!
+  ) {
+    updateEventNotificationsOptIn(
+      id: $id
+      event_notifications_opt_in: $eventNotificationsOptIn
+    ) {
+      id
+      eventNotificationsOptIn
+    }
+  }
+`
+
 const ProfilePage = ({ currentUser, match }) => {
   const replaceAvatarImage = async acceptedFiles => {
     const body = new FormData()
@@ -73,6 +89,10 @@ const ProfilePage = ({ currentUser, match }) => {
   const [updateUserEmail] = useMutation(UPDATE_EMAIL)
   const [updateUsername] = useMutation(UPDATE_USERNAME)
 
+  const [updateEventNotificationsOptIn] = useMutation(
+    UPDATE_USER_NOTIFICATION_PREFERENCE,
+  )
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -95,6 +115,7 @@ const ProfilePage = ({ currentUser, match }) => {
       logoutUser={logoutUser}
       match={match}
       replaceAvatarImage={replaceAvatarImage}
+      updateEventNotificationsOptIn={updateEventNotificationsOptIn}
       updateProfilePicture={updateProfilePicture}
       updateUserEmail={updateUserEmail}
       updateUsername={updateUsername}

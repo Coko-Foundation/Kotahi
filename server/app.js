@@ -29,6 +29,10 @@ const {
 const Config = require('./config/src/config')
 const { sendAlerts } = require('./model-alert/src/alertCommsUtils')
 
+const {
+  resetLastAlertTriggerTime,
+} = require('./model-channel/src/channelCommsUtils')
+
 const runSchedule = async () => {
   const activeConfig = await Config.query().first()
 
@@ -99,6 +103,13 @@ const runSchedule = async () => {
       rule: `* * * * *`,
     },
     async () => {
+      const disableSendAlertsScheduler =
+        process.env.DISABLE_EVENT_NOTIFICATIONS === 'true'
+
+      if (disableSendAlertsScheduler) {
+        return
+      }
+
       // eslint-disable-next-line no-console
       console.info(
         `Running scheduler to send alerts ${new Date().toISOString()}`,
@@ -106,6 +117,25 @@ const runSchedule = async () => {
 
       try {
         await sendAlerts()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  )
+
+  schedule.scheduleJob(
+    {
+      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
+      rule: `0 0 * * *`,
+    },
+    async () => {
+      // eslint-disable-next-line no-console
+      console.info(
+        `Resetting last alert trigger for all channel members ${new Date().toISOString()}`,
+      )
+
+      try {
+        await resetLastAlertTriggerTime()
       } catch (error) {
         console.error(error)
       }

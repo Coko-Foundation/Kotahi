@@ -282,6 +282,16 @@ const resolvers = {
         }
       }
     },
+    async updateEventNotificationsOptIn(parent, args, ctx) {
+      // eslint-disable-next-line camelcase
+      const { id, event_notifications_opt_in } = args
+
+      const user = await models.User.query().patchAndFetchById(id, {
+        eventNotificationsOptIn: event_notifications_opt_in,
+      })
+
+      return user
+    },
   },
   User: {
     async isOnline(parent) {
@@ -381,6 +391,7 @@ const typeDefs = `
     updateRecentTab(tab: String): User
     setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
     setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
+    updateEventNotificationsOptIn(id: ID!, event_notifications_opt_in: Boolean!): User
   }
 
   type UpdateEmailResponse {
@@ -416,6 +427,7 @@ const typeDefs = `
     lastOnline: DateTime
     isOnline: Boolean
     recentTab: String
+    eventNotificationsOptIn: Boolean!
   }
 
   type CurrentRole {
