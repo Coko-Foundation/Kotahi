@@ -124,5 +124,6 @@ module.exports = {
     protocol: 'SERVICE_FLAX_SITE_PROTOCOL',
     host: 'SERVICE_FLAX_SITE_HOST',
     port: 'SERVICE_FLAX_EXPRESS_HOST',
+    clientFlaxSiteUrl: 'CLIENT_FLAX_SITE_URL',
   },
 }

@@ -18,6 +18,25 @@ const resolvers = {
     },
   },
   Mutation: {
+    async createCMSPage(_, { input }, ctx) {
+      try {
+        const savedCmsPage = await new models.CMSPage(input).save()
+        const cmsPage = await models.CMSPage.query().findById(savedCmsPage.id)
+        return { success: true, error: null, cmsPage }
+      } catch (e) {
+        if (e.constraint === 'cms_pages_url_key') {
+          return {
+            success: false,
+            error: e.constraint,
+            column: 'url',
+            errorMessage: 'Url already taken.',
+          }
+        }
+
+        return { success: false, error: 'Something went wrong.' }
+      }
+    },
+
     async updateCMSPage(_, { id, input }, ctx) {
       const attrs = input
 
@@ -32,6 +51,28 @@ const resolvers = {
       const cmsPage = await models.CMSPage.query().updateAndFetchById(id, attrs)
       return cmsPage
     },
+
+    async deleteCMSPage(_, { id }, ctx) {
+      try {
+        const response = await models.CMSPage.query().where({ id }).delete()
+
+        if (response) {
+          return {
+            success: true,
+          }
+        }
+
+        return {
+          success: false,
+          error: `Something went wrong`,
+        }
+      } catch (err) {
+        return {
+          success: false,
+          error: `Something went wrong. ${err.message}`,
+        }
+      }
+    },
   },
 
   CMSPage: {
@@ -43,10 +84,11 @@ const resolvers = {
       return null
     },
     async creator(parent) {
-      return (
-        parent.creator ||
-        models.CMSPage.relatedQuery('creator').for(parent.id).first()
-      )
+      if (!parent.creatorId) {
+        return null
+      }
+
+      return models.CMSPage.relatedQuery('creator').for(parent.id).first()
     },
   },
 }
@@ -59,7 +101,9 @@ const typeDefs = `
   }
 
   extend type Mutation {
-    updateCMSPage(id: ID!, input: CMSPageInput!): CMSPage
+    createCMSPage(input: CMSPageInput!): CreatePageResponse!
+    updateCMSPage(id: ID!, input: CMSPageInput!): CMSPage!
+    deleteCMSPage(id: ID!): DeletePageResponse!
   }
 
   type CMSPage {
@@ -77,10 +121,24 @@ const typeDefs = `
     updated: DateTime
   }
 
+  type CreatePageResponse {
+    cmsPage: CMSPage
+    success: Boolean!
+    column: String
+    error: String
+    errorMessage: String
+  }
+
+  type DeletePageResponse {
+    success: Boolean!
+    error: String
+  }
+
   input CMSPageInput {
     title: String
     url: String
     content: String
+    shortcode: String
     meta: String
     published: DateTime
     edited: DateTime

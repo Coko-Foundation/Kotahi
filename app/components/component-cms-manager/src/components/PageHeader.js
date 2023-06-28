@@ -18,6 +18,7 @@ const PageHeader = ({
   onNewItemButtonClick,
   mainHeading,
   newItemButtonText,
+  hideSearch,
 }) => {
   const applyQueryParams = useQueryParams()
   const uriQueryParams = new URLSearchParams(history?.location?.search)
@@ -30,15 +31,17 @@ const PageHeader = ({
   const renderRightSide = () => {
     return (
       <ControlsContainer>
-        <SearchControl
-          applySearchQuery={newQuery =>
-            applyQueryParams({
-              [URI_SEARCH_PARAM]: newQuery,
-              [URI_PAGENUM_PARAM]: 1,
-            })
-          }
-          currentSearchQuery={currentSearchQuery}
-        />
+        {!hideSearch && (
+          <SearchControl
+            applySearchQuery={newQuery =>
+              applyQueryParams({
+                [URI_SEARCH_PARAM]: newQuery,
+                [URI_PAGENUM_PARAM]: 1,
+              })
+            }
+            currentSearchQuery={currentSearchQuery}
+          />
+        )}
         <Button onClick={onNewItemButtonClick} primary>
           {newItemButtonText}
         </Button>

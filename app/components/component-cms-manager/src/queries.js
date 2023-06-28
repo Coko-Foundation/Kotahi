@@ -18,6 +18,24 @@ const cmsPageFields = `
     }
 `
 
+const createCmsPageFields = `
+    cmsPage {
+      id
+      meta
+      url
+      content
+    }
+    success
+    error
+    column
+    errorMessage
+`
+
+const deleteCmsPageFields = `
+    success
+    error
+`
+
 export const getCMSPages = gql`
   query cmsPages {
     cmsPages {
@@ -42,6 +60,14 @@ export const getCMSPageByShortcode = gql`
   }
 `
 
+export const createCMSPageMutation = gql`
+  mutation createCMSPage($input: CMSPageInput!) {
+    createCMSPage(input: $input) {
+      ${createCmsPageFields}
+    }
+  }
+`
+
 export const updateCMSPageDataMutation = gql`
   mutation updateCMSPage($id: ID!, $input: CMSPageInput!) {
     updateCMSPage(id: $id, input: $input) {
@@ -50,6 +76,13 @@ export const updateCMSPageDataMutation = gql`
   }
 `
 
+export const deleteCMSPageMutation = gql`
+  mutation deleteCMSPage($id: ID!) {
+    deleteCMSPage(id: $id) {
+        ${deleteCmsPageFields}
+    }
+  }
+`
 export const rebuildFlaxSiteMutation = gql`
   mutation rebuildFlaxSite {
     rebuildFlaxSite {

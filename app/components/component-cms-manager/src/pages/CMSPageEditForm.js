@@ -1,11 +1,13 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { ValidatedFieldFormik } from '@pubsweet/ui'
 import { adopt } from 'react-adopt'
-import { debounce } from 'lodash'
+import { debounce, kebabCase } from 'lodash'
+import { required } from 'xpub-validators'
 import { inputFields } from '../FormSettings'
 import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
-import { convertTimestampToDateTimeString } from '../../../../shared/dateUtils'
+import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
+import CMSPageStatus from '../components/CMSPageStatus'
 
 import {
   Section,
@@ -13,10 +15,8 @@ import {
   EditorForm,
   ActionButtonContainer,
   FormActionButton,
-  VerticalBar,
-  FlaxCenter,
-  StatusInfoText,
-  NewEditText,
+  FormActionDelete,
+  ErrorMessage,
 } from '../style'
 
 // Todo: Currently this is breaking the rules of keeping all the server calls
@@ -76,22 +76,45 @@ const mapProps = args => ({
 const Composed = adopt(mapper, mapProps)
 
 const CMSPageEditForm = ({
+  isNewPage,
   onSubmit,
+  onDelete,
   setFieldValue,
   setTouched,
   key,
   submitButtonText,
   cmsPage,
-  saveData,
+  autoSaveData,
+  customFormErrors,
+  resetCustomErrors,
+  currentValues,
 }) => {
-  const autoSave = useCallback(debounce(saveData ?? (() => {}), 1000), [])
-
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const autoSave = useCallback(debounce(autoSaveData ?? (() => {}), 1000), [])
   useEffect(() => autoSave.flush, [])
 
   const onDataChanged = (itemKey, value) => {
     const data = {}
     data[itemKey] = value
     autoSave(cmsPage.id, data)
+
+    if (Object.keys(customFormErrors).includes(itemKey)) {
+      resetCustomErrors()
+    }
+
+    if (isNewPage && itemKey === 'title') {
+      setUrlBasedOnTitle(value)
+    }
+  }
+
+  // Currently it changes the url whenever we change the title
+  // So if you change the url and then change the title it will change the url as per the title
+  // We need to think about it and found a better way to fix that.
+  const setUrlBasedOnTitle = title => {
+    const fieldKey = 'url'
+    const titleSlug = `${kebabCase(title)}/`
+    setFieldValue(fieldKey, titleSlug, false)
+    onDataChanged(fieldKey, titleSlug)
   }
 
   const getInputFieldSpecificProps = (item, { onAssetManager }) => {
@@ -130,10 +153,15 @@ const CMSPageEditForm = ({
     return props
   }
 
-  const isPublished = () => !!cmsPage.published
+  const renderCustomErrors = item => {
+    const error = customFormErrors[item.name]
 
-  const isEdited = () =>
-    !cmsPage.published || cmsPage.published < cmsPage.edited
+    if (!error) {
+      return null
+    }
+
+    return <ErrorMessage>{error}</ErrorMessage>
+  }
 
   return (
     <Composed>
@@ -149,35 +177,37 @@ const CMSPageEditForm = ({
                     name={item.name}
                     setTouched={setTouched}
                     style={{ width: '100%' }}
+                    validate={item.isRequired ? required : null}
                     {...getInputFieldSpecificProps(item, { onAssetManager })}
+                    {...item.otherProps}
                   />
+                  {renderCustomErrors(item)}
                 </Section>
               )
             })}
             <ActionButtonContainer>
-              <FormActionButton onClick={onSubmit} primary>
-                {submitButtonText}
-              </FormActionButton>
-
-              <StatusInfoText>
-                {isEdited() && (
-                  <FlaxCenter>
-                    <NewEditText>New edits on page</NewEditText> <VerticalBar />
-                  </FlaxCenter>
+              <div>
+                <FormActionButton onClick={onSubmit} primary type="button">
+                  {submitButtonText}
+                </FormActionButton>
+                {!isNewPage && (
+                  <FormActionDelete
+                    onClick={() => setIsConfirmingDelete(true)}
+                    style={{ minWidth: '104px' }}
+                  >
+                    Delete
+                  </FormActionDelete>
                 )}
-                <FlaxCenter>
-                  Edited on {convertTimestampToDateTimeString(cmsPage.edited)}
-                  <VerticalBar />
-                </FlaxCenter>
-                <FlaxCenter>
-                  {isPublished()
-                    ? `Published on ${convertTimestampToDateTimeString(
-                        cmsPage.published,
-                      )}`
-                    : 'Not published yet'}
-                </FlaxCenter>
-              </StatusInfoText>
+              </div>
+              {!isNewPage && <CMSPageStatus cmsPage={cmsPage} />}
             </ActionButtonContainer>
+            <ConfirmationModal
+              closeModal={() => setIsConfirmingDelete(false)}
+              confirmationAction={() => onDelete(cmsPage)}
+              confirmationButtonText="Delete"
+              isOpen={isConfirmingDelete}
+              message={`Permanently delete ${cmsPage.title} page ?`}
+            />
           </EditorForm>
         </Page>
       )}
