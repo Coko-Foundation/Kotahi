@@ -1,7 +1,7 @@
 const ConsolidatedReportWithAuthorsTemplate = ({
   receiverName,
   currentUser,
-  authorName,
+  articleTitle,
   manuscriptPageUrl,
   ccEmails = [],
 }) => {
@@ -22,7 +22,7 @@ const ConsolidatedReportWithAuthorsTemplate = ({
   result.content = `<p>
       <p>Dear ${receiverName}</p>
 
-      <p>Thank you for the opportunity to review your recent preprint “${authorName}”.</p>
+      <p>Thank you for the opportunity to review your recent preprint “${articleTitle}”.</p>
 
       <p>I’m pleased to let you know that experts in the field have now reviewed and discussed the work, and have approved a consolidated report that you can view at <a href="${manuscriptPageUrl}">${manuscriptPageUrl}</a>.</p>
 
