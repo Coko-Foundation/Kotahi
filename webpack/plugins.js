@@ -51,6 +51,7 @@ module.exports = (opts = {}) => {
       'PUBLIC_CLIENT_PORT',
       'INSTANCE_NAME',
       'USE_COLAB_EMAIL',
+      'CLIENT_FLAX_SITE_URL',
     ]),
   )
 

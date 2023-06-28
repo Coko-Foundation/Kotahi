@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { TextInput, Heading, ActionButton } from '../../shared'
 
+import { SecondaryButton } from '../../component-modal/src/Modal'
+
 export const Section = styled.div`
   margin: 16px 16px 0px 0px;
   ${props =>
@@ -84,6 +86,12 @@ export const ActionButtonContainer = styled.div`
 `
 
 export const FormActionButton = styled(ActionButton)`
+  cursor: pointer;
+  margin-right: 32px;
+  min-width: 104px;
+`
+
+export const FormActionDelete = styled(SecondaryButton)`
   min-width: 0px;
 `
 
@@ -112,8 +120,15 @@ export const StatusInfoText = styled.div`
   margin-right: 16px;
 `
 
-export const FlaxCenter = styled.div`
+export const FlexCenter = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
+`
+
+export const ErrorMessage = styled.div`
+  color: ${th('colorError')};
+  font-size: ${th('fontSizeBaseSmall')};
+  font-weight: normal;
+  line-height: ${th('lineHeightBaseSmall')};
 `
