@@ -152,6 +152,7 @@ services:
       - FLAX_CLIENT_HOST=${FLAX_CLIENT_HOST:-client}
       - FLAX_CLIENT_PORT=${CLIENT_PORT:-4000}
       - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
+      - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
 
     volumes:
       - ./config:/home/node/app/config

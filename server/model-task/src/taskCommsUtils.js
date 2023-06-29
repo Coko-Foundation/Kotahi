@@ -335,11 +335,11 @@ const sendNotification = async n => {
   for (const recipient of notificationRecipients) {
     let logData
 
-    if (n.emailTemplateKey) {
+    if (n.emailTemplateId) {
       try {
         let notificationInput = {
           manuscript,
-          selectedTemplate: n.emailTemplateKey,
+          selectedTemplate: n.emailTemplateId,
           externalName: recipient.name, // New User username
           currentUser,
         }
@@ -356,10 +356,7 @@ const sendNotification = async n => {
           }
         }
 
-        const emailTemplateOption = n.emailTemplateKey.replace(
-          /([A-Z])/g,
-          ' $1',
-        )
+        const emailTemplateOption = n.emailTemplateId.replace(/([A-Z])/g, ' $1')
 
         const selectedTemplateValue =
           emailTemplateOption.charAt(0).toUpperCase() +
@@ -371,6 +368,7 @@ const sendNotification = async n => {
           taskId: n.task.id,
           content: messageBody,
           emailTemplateKey: emailTemplateOption,
+          emailTemplateId: emailTemplateOption,
           senderEmail: editor ? editor.email : '',
           recipientEmail: recipient.email,
         }

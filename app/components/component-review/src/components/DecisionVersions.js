@@ -58,6 +58,7 @@ const DecisionVersions = ({
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
+  emailTemplates,
 }) => {
   const versions = gatherManuscriptVersions(manuscript)
 
@@ -107,6 +108,7 @@ const DecisionVersions = ({
                 deleteTaskNotification={deleteTaskNotification}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
                 dois={dois}
+                emailTemplates={emailTemplates}
                 externalEmail={externalEmail}
                 form={form}
                 invitations={version.manuscript.invitations || []}

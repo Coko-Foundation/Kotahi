@@ -25,6 +25,8 @@ const InviteReviewer = ({
   selectedEmailIsBlacklisted,
   setExternalEmail,
   updateTeamMember,
+  config,
+  emailTemplates,
 }) => {
   const [open, setOpen] = useState(false)
 
@@ -32,6 +34,17 @@ const InviteReviewer = ({
 
   const [isNewUser, setIsNewUser] = useState(false)
   const [notificationStatus, setNotificationStatus] = useState(null)
+
+  let reviewerInvitationEmailTemplate
+
+  if (config.controlPanel.reviewerInvitationPrimaryEmailTemplate) {
+    reviewerInvitationEmailTemplate =
+      config.controlPanel.reviewerInvitationPrimaryEmailTemplate
+  } else {
+    reviewerInvitationEmailTemplate = emailTemplates.find(
+      template => template.emailTemplateType === 'reviewerInvitation',
+    ).id
+  }
 
   return (
     <>
@@ -50,7 +63,7 @@ const InviteReviewer = ({
               isNewUser,
               currentUser,
               sendNotifyEmail,
-              'reviewerInvitationEmailTemplate',
+              reviewerInvitationEmailTemplate,
               selectedEmail,
               values.email,
               values.name,
@@ -68,6 +81,7 @@ const InviteReviewer = ({
                   userName: reviewer.username,
                   value: reviewer.email,
                 })),
+                emailTemplates,
               )
             }
           }
@@ -97,9 +111,11 @@ const InviteReviewer = ({
       <InviteReviewerModal
         addReviewer={addReviewer}
         currentUser={currentUser}
+        emailTemplates={emailTemplates}
         manuscript={manuscript}
         onClose={() => setOpen(false)}
         open={open}
+        reviewerInvitationEmailTemplate={reviewerInvitationEmailTemplate}
         reviewerUsers={reviewerUsers}
         selectedEmail={selectedEmail}
         sendChannelMessage={sendChannelMessage}

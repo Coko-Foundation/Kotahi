@@ -61,6 +61,7 @@ const EmailNotifications = ({
   setSelectedEmail,
   setExternalEmail,
   selectedEmailIsBlacklisted,
+  emailTemplates,
 }) => {
   const [externalName, setExternalName] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
@@ -101,6 +102,7 @@ const EmailNotifications = ({
           setIsNewUser={handlerForNewUserToggle}
         />
         <SelectEmailTemplate
+          emailTemplates={emailTemplates}
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={selectedTemplate}
         />
@@ -130,7 +132,13 @@ const EmailNotifications = ({
             setNotificationStatus(invitation ? 'success' : 'failure')
 
             if (input) {
-              sendEmailChannelMessage(sendChannelMessage, currentUser, input)
+              sendEmailChannelMessage(
+                sendChannelMessage,
+                currentUser,
+                input,
+                options,
+                emailTemplates,
+              )
             }
           }}
           primary

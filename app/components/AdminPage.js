@@ -30,6 +30,7 @@ import SubmitPage from './component-submit/src/components/SubmitPage'
 import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
 import UsersPage from './component-users-manager/src/UsersPage'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
+import EmailTemplatesPage from './component-email-templates/src/EmailTemplatesPage'
 
 import CMSPagesPage from './component-cms-manager/src/CMSPagesPage'
 
@@ -158,6 +159,7 @@ const AdminPage = () => {
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
+  const emailTemplatesLink = `${urlFrag}/admin/email-templates`
 
   if (showLinks) {
     const params = getParams(pathname, path)
@@ -212,6 +214,7 @@ const AdminPage = () => {
         { link: tasksTemplateLink, name: 'Tasks', icon: 'list' },
         { link: userAdminLink, name: 'Users', icon: 'users' },
         { link: configurationLink, name: 'Configuration', icon: 'sliders' },
+        { link: emailTemplatesLink, name: 'Emails', icon: 'mail' },
         {
           menu: 'CMS',
           name: 'CMS',
@@ -324,7 +327,6 @@ const AdminPage = () => {
           }`}
           redirectLink={redirectLink}
         />
-
         <Route exact path={`${urlFrag}/dashboard/:path?`}>
           <DashboardLayout urlFrag={urlFrag}>
             <Switch>
@@ -365,7 +367,6 @@ const AdminPage = () => {
             </Switch>
           </DashboardLayout>
         </Route>
-
         {(isGroupManager || isAdmin) && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
           <PrivateRoute
@@ -463,6 +464,13 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
         ]}
+        <PrivateRoute
+          component={EmailTemplatesPage}
+          key="email-templates"
+          path={`${urlFrag}/admin/email-templates`}
+          redirectLink={redirectLink}
+        />
+        ,
       </Switch>
     </Root>
   )

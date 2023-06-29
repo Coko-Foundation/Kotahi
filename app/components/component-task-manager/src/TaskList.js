@@ -60,6 +60,7 @@ const TaskList = ({
   manuscript,
   sendNotifyEmail,
   createTaskEmailNotificationLog,
+  emailTemplates,
 }) => {
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
   // This is treated as temporary and not persisted until it has a title.
@@ -239,6 +240,7 @@ const TaskList = ({
                         currentUser={currentUser}
                         deleteTaskNotification={deleteTaskNotification}
                         editAsTemplate={editAsTemplate}
+                        emailTemplates={emailTemplates}
                         index={index}
                         isReadOnly={isReadOnly}
                         key={task.id}

@@ -145,6 +145,7 @@ const TaskNotificationDetails = ({
   editAsTemplate,
   createTaskEmailNotificationLog,
   selectedDurationDays,
+  emailTemplates,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const { recipientTypes } = emailNotifications
@@ -377,13 +378,13 @@ const TaskNotificationDetails = ({
           for (const member of team.members) {
             const input = {
               selectedEmail: member.user.email,
-              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              selectedTemplate: taskEmailNotification.emailTemplateId,
               manuscript,
               currentUser: currentUser.username,
             }
 
             logsData = {
-              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              selectedTemplate: taskEmailNotification.emailTemplateId,
               recipientName: member.user.username,
               recipientEmail: member.user.email,
               senderEmail: currentUser.email,
@@ -450,13 +451,13 @@ const TaskNotificationDetails = ({
           input = {
             externalEmail: taskEmailNotification.recipientEmail,
             externalName: taskEmailNotification.recipientName,
-            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            selectedTemplate: taskEmailNotification.emailTemplateId,
             currentUser: currentUser.username,
             manuscript,
           }
           logsData = [
             {
-              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              selectedTemplate: taskEmailNotification.emailTemplateId,
               recipientName: taskEmailNotification.recipientName,
               recipientEmail: taskEmailNotification.recipientEmail,
               senderEmail: currentUser.email,
@@ -478,13 +479,13 @@ const TaskNotificationDetails = ({
         case recipientTypes.REGISTERED_USER:
           input = {
             selectedEmail: taskEmailNotification.recipientUser.email,
-            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            selectedTemplate: taskEmailNotification.emailTemplateId,
             manuscript,
             currentUser: currentUser.username,
           }
           logsData = [
             {
-              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              selectedTemplate: taskEmailNotification.emailTemplateId,
               recipientName: taskEmailNotification.recipientUser.username,
               recipientEmail: taskEmailNotification.recipientUser.email,
               senderEmail: currentUser.email,
@@ -509,13 +510,13 @@ const TaskNotificationDetails = ({
               input = {
                 externalEmail: task.assigneeEmail,
                 externalName: task.assigneeName,
-                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                selectedTemplate: taskEmailNotification.emailTemplateId,
                 currentUser: currentUser.username,
                 manuscript,
               }
               logsData = [
                 {
-                  selectedTemplate: taskEmailNotification.emailTemplateKey,
+                  selectedTemplate: taskEmailNotification.emailTemplateId,
                   recipientName: task.assigneeName,
                   recipientEmail: task.assigneeEmail,
                   senderEmail: currentUser.email,
@@ -537,14 +538,14 @@ const TaskNotificationDetails = ({
             case recipientTypes.REGISTERED_USER:
               input = {
                 selectedEmail: task.assignee.email,
-                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                selectedTemplate: taskEmailNotification.emailTemplateId,
                 manuscript,
                 currentUser: currentUser.username,
               }
 
               logsData = [
                 {
-                  selectedTemplate: taskEmailNotification.emailTemplateKey,
+                  selectedTemplate: taskEmailNotification.emailTemplateId,
                   recipientName: task.assignee.username,
                   recipientEmail: task.assignee.email,
                   senderEmail: currentUser.email,
@@ -605,14 +606,11 @@ const TaskNotificationDetails = ({
   const logTaskNotificationEmails = async logsData => {
     // eslint-disable-next-line no-restricted-syntax
     for (const logData of logsData) {
-      const emailTemplateOption = logData.selectedTemplate.replace(
-        /([A-Z])/g,
-        ' $1',
+      const emailTemplateOption = emailTemplates.find(
+        template => template.id === logData.selectedTemplate,
       )
 
-      const selectedTemplateValue =
-        emailTemplateOption.charAt(0).toUpperCase() +
-        emailTemplateOption.slice(1)
+      const selectedTemplateValue = emailTemplateOption.emailContent.description
 
       const messageBody = `${selectedTemplateValue} sent by Kotahi to ${logData.recipientName}`
 
@@ -622,7 +620,7 @@ const TaskNotificationDetails = ({
           taskEmailNotificationLog: {
             taskId: task.id,
             content: messageBody,
-            emailTemplateKey: emailTemplateOption,
+            emailTemplateId: emailTemplateOption.id,
             senderEmail: logData.senderEmail,
             recipientEmail: logData.recipientEmail,
           },
@@ -680,11 +678,12 @@ const TaskNotificationDetails = ({
       <EmailTemplateFieldContainer>
         <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
+          emailTemplates={emailTemplates}
           isClearable
           onChangeEmailTemplate={handleEmailTemplateChange}
           placeholder="Select email template"
           selectedEmailTemplate={
-            selectedTemplate || taskEmailNotification.emailTemplateKey
+            selectedTemplate || taskEmailNotification.emailTemplateId
           }
           task={task}
           taskEmailNotification={taskEmailNotification}

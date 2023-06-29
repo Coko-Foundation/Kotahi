@@ -112,6 +112,7 @@ services:
       - FLAX_CLIENT_HOST=${FLAX_CLIENT_HOST}
       - FLAX_CLIENT_PORT=${CLIENT_PORT}
       - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL}
+      - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL}
 
     volumes:
       - ./uploads:/home/node/app/uploads

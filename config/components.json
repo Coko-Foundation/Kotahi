@@ -25,5 +25,6 @@
   "./server/config/src",
   "./server/anystyle",
   "./server/xsweet",
+  "./server/model-email-templates/src",
   "./server/flax-site"
 ]
