@@ -88,6 +88,7 @@ const DecisionVersion = ({
   deleteTaskNotification,
   createTaskEmailNotificationLog,
   manuscriptLatestVersionId,
+  emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -238,6 +239,7 @@ const DecisionVersion = ({
               <EmailNotifications
                 allUsers={allUsers}
                 currentUser={currentUser}
+                emailTemplates={emailTemplates}
                 externalEmail={externalEmail}
                 manuscript={version}
                 selectedEmail={selectedEmail}
@@ -257,6 +259,7 @@ const DecisionVersion = ({
                 createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
+                emailTemplates={emailTemplates}
                 manuscript={version}
                 manuscriptId={version.id}
                 roles={roles}
@@ -334,7 +337,9 @@ const DecisionVersion = ({
             <AdminSection>
               <InviteReviewer
                 addReviewer={addReviewer}
+                config={config}
                 currentUser={currentUser}
+                emailTemplates={emailTemplates}
                 manuscript={version}
                 reviewerUsers={allUsers}
                 selectedEmailIsBlacklisted={selectedEmailIsBlacklisted}

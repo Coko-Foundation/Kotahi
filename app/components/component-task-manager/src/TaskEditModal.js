@@ -134,6 +134,7 @@ const TaskEditModal = ({
   isOpen,
   onSave,
   onCancel,
+  emailTemplates,
 }) => {
   const [taskEmailNotifications, setTaskNotifications] = useState(
     task.emailNotifications ?? [],
@@ -173,7 +174,7 @@ const TaskEditModal = ({
     recipientUserId: taskNotification.recipientUserId || null,
     recipientType: taskNotification.recipientType || null,
     notificationElapsedDays: taskNotification.notificationElapsedDays || null,
-    emailTemplateKey: taskNotification.emailTemplateKey || null,
+    emailTemplateId: taskNotification.emailTemplateId || null,
     recipientName: taskNotification.recipientName || null,
     recipientEmail: taskNotification.recipientEmail || null,
   })
@@ -181,7 +182,7 @@ const TaskEditModal = ({
   const updateTaskNotification = async updatedTaskNotification => {
     if (
       updatedTaskNotification.recipientType ||
-      updatedTaskNotification.emailTemplateKey
+      updatedTaskNotification.emailTemplateId
     ) {
       persistTaskNotification({
         variables: {
@@ -330,6 +331,7 @@ const TaskEditModal = ({
                   currentUser={currentUser}
                   deleteTaskNotification={handleDeleteTaskNotification}
                   editAsTemplate={editAsTemplate}
+                  emailTemplates={emailTemplates}
                   key={notification.id}
                   manuscript={manuscript}
                   notificationOptions={notificationOptions}
@@ -349,7 +351,7 @@ const TaskEditModal = ({
             disabled={
               !editAsTemplate && taskEmailNotifications?.length
                 ? taskEmailNotifications.some(
-                    t => !t.recipientType && !t.emailTemplateKey,
+                    t => !t.recipientType && !t.emailTemplateId,
                   )
                 : false
             }

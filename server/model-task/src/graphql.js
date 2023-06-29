@@ -275,7 +275,7 @@ const typeDefs = `
     recipientUserId: ID
     recipientType: String
     notificationElapsedDays: Int
-    emailTemplateKey: String
+    emailTemplateId: ID
     recipientName: String
     recipientEmail: String
     sentAt: DateTime
@@ -285,7 +285,7 @@ const typeDefs = `
     taskId: ID!
     senderEmail: String!
     recipientEmail: String!
-    emailTemplateKey: String!
+    emailTemplateId: ID!
     content: String!
   }
 
@@ -294,7 +294,7 @@ const typeDefs = `
     taskId: ID!
     senderEmail: String!
     recipientEmail: String!
-    emailTemplateKey: String!
+    emailTemplateId: ID!
     content: String!
     created: DateTime!
     updated: DateTime
@@ -306,7 +306,7 @@ const typeDefs = `
     recipientUserId: ID
     recipientType: String
     notificationElapsedDays: Int
-    emailTemplateKey: String
+    emailTemplateId: ID
     recipientName: String
     recipientEmail: String
     created: DateTime!

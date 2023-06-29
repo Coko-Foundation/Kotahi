@@ -445,6 +445,18 @@ CREATE TABLE "public"."configs" (
     "type" text NOT NULL
 );
 
+-- DROP TABLE public.email_templates;
+DROP TABLE IF EXISTS "public"."email_templates";
+
+CREATE TABLE "public"."email_templates" (
+  "id" uuid NOT NULL,
+  "created" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated" TIMESTAMP WITH TIME ZONE,
+  "email_template_type" TEXT,
+  "email_content" JSONB NOT NULL,
+  PRIMARY KEY ("id")
+);
+
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type") VALUES
 ('00493df5-00f0-4a1d-befc-35e2c3d85f32', '10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Editorial discussion', 'editorial'),
 ('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-08-10 01:59:38.39892+00', NULL, 'System-wide discussion', 'editorial'),
@@ -554,6 +566,14 @@ INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "use
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('2bf0ba39-16dc-42d1-b9f2-93482baf323d', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '9160da05-15ce-4836-8cb2-45c6c1855318', NULL, NULL),
 ('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '9160da05-15ce-4836-8cb2-45c6c1855318', NULL, NULL);
+
+INSERT INTO "public"."email_templates" ("id", "created", "updated", "email_template_type", "email_content")
+VALUES 
+('ae7e01ca-fa91-4155-a248-a8b9f38c80a3', '2023-06-27 16:50:15.084+00', '2023-06-27 16:50:15.084+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('f7bf7d8d-e2f6-4c66-a1ac-192a436d3303', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('90ebd711-3e04-4ec2-9cad-69365029e8fb', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('7aeb1c35-99fd-41a2-a63c-9618c365e51f', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('692471e0-4ed7-4430-804c-2c89e55e60f2', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}');
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;

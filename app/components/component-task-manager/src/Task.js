@@ -238,6 +238,7 @@ const Task = ({
   manuscript,
   sendNotifyEmail,
   createTaskEmailNotificationLog,
+  emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
@@ -388,6 +389,7 @@ const Task = ({
             displayDefaultDurationDays={displayDefaultDurationDays}
             dueDateLocalString={dueDateLocalString}
             editAsTemplate={editAsTemplate}
+            emailTemplates={emailTemplates}
             isOpen={isEditTaskMetaModal}
             isOverdue={isOverdue}
             isReadOnly={isReadOnly}

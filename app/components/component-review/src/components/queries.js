@@ -132,7 +132,7 @@ const manuscriptFields = `
       recipientUserId
       recipientType
       notificationElapsedDays
-      emailTemplateKey
+      emailTemplateId
       recipientName
       recipientEmail
       recipientUser {
@@ -147,7 +147,7 @@ const manuscriptFields = `
       taskId
       senderEmail
       recipientEmail
-      emailTemplateKey
+      emailTemplateId
       content
       updated
       created

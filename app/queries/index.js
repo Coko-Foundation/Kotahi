@@ -282,7 +282,7 @@ emailNotifications {
   recipientUserId
   recipientType
   notificationElapsedDays
-  emailTemplateKey
+  emailTemplateId
   recipientName
   recipientEmail
   recipientUser {
@@ -297,7 +297,7 @@ notificationLogs {
   taskId
   senderEmail
   recipientEmail
-  emailTemplateKey
+  emailTemplateId
   content
   updated
   created
@@ -372,6 +372,23 @@ export const UPDATE_CONFIG = gql`
       id
       formData
       active
+    }
+  }
+`
+
+export const GET_EMAIL_TEMPLATES = gql`
+  query {
+    emailTemplates {
+      id
+      created
+      updated
+      emailTemplateType
+      emailContent {
+        cc
+        subject
+        body
+        description
+      }
     }
   }
 `

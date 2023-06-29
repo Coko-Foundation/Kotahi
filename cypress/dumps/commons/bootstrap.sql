@@ -520,6 +520,18 @@ CREATE TABLE "public"."task_email_notifications_logs" (
 	PRIMARY KEY ("id")
 );
 
+-- DROP TABLE public.email_templates;
+DROP TABLE IF EXISTS "public"."email_templates";
+
+CREATE TABLE "public"."email_templates" (
+  "id" uuid NOT NULL,
+  "created" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated" TIMESTAMP WITH TIME ZONE,
+  "email_template_type" TEXT,
+  "email_content" JSONB NOT NULL,
+  PRIMARY KEY ("id")
+);
+
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type") VALUES
 ('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-09-15 06:17:37.142077+00', NULL, 'System-wide discussion', 'editorial');
 
@@ -687,3 +699,11 @@ INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "membe
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '37321ccf-3cb3-43bb-9104-5bf51a82dc03', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
 ('3c0dcb4a-37ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
+
+INSERT INTO "public"."email_templates" ("id", "created", "updated", "email_template_type", "email_content")
+VALUES 
+('ae7e01ca-fa91-4155-a248-a8b9f38c80a3', '2023-06-27 16:50:15.084+00', '2023-06-27 16:50:15.084+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('f7bf7d8d-e2f6-4c66-a1ac-192a436d3303', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('90ebd711-3e04-4ec2-9cad-69365029e8fb', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('7aeb1c35-99fd-41a2-a63c-9618c365e51f', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
+('692471e0-4ed7-4430-804c-2c89e55e60f2', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}');

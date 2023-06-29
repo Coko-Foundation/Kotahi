@@ -104,6 +104,11 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     currentUser,
   } = inputParsed
 
+  const selectedEmailTemplateData = await models.EmailTemplate.query().findById(
+    selectedTemplate,
+  )
+
+  const appUrl = config['pubsweet-client'].baseUrl
   const receiverEmail = externalEmail || selectedEmail
 
   let receiverName = externalName
@@ -167,15 +172,11 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
   let invitationId = ''
 
-  const invitationContainingEmailTemplate = [
-    'authorInvitationEmailTemplate',
-    'reviewerInvitationEmailTemplate',
-    'reminderAuthorInvitationTemplate',
-    'reminderReviewerInvitationTemplate',
-    'reviewerInvitationRevisedPreprintTemplate',
-  ]
-
-  if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
+  if (
+    ['authorInvitation', 'reviewerInvitation'].includes(
+      selectedEmailTemplateData.emailTemplateType,
+    )
+  ) {
     let userId = null
     let invitedPersonName = ''
 
@@ -229,9 +230,12 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const ccEmails = await getEditorEmails(manuscriptId)
 
   try {
-    await sendEmailNotification(receiverEmail, selectedTemplate, {
-      articleTitle: manuscript.meta.title,
+    await sendEmailNotification(receiverEmail, selectedEmailTemplateData, {
+      manuscriptTitle: manuscript.meta.title,
       authorName,
+      senderName: currentUser,
+      recipientName: receiverName,
+      manuscriptNumber: manuscript.shortId,
       currentUser,
       receiverName,
       ccEmails,
@@ -245,8 +249,8 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       purpose,
       status,
       senderId,
-      appUrl: config['pubsweet-client'].baseUrl,
-      manuscriptPageUrl,
+      appUrl,
+      manuscriptLink: manuscriptPageUrl,
     })
     return { success: true }
   } catch (e) {

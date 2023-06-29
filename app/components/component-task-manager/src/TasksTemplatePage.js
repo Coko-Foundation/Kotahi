@@ -31,7 +31,7 @@ const query = gql`
         recipientUserId
         recipientType
         notificationElapsedDays
-        emailTemplateKey
+        emailTemplateId
         recipientName
         recipientEmail
         recipientUser {
@@ -45,7 +45,7 @@ const query = gql`
         taskId
         senderEmail
         recipientEmail
-        emailTemplateKey
+        emailTemplateId
         content
         updated
         created
@@ -64,6 +64,19 @@ const query = gql`
       username
       email
       profilePicture
+    }
+
+    emailTemplates {
+      id
+      created
+      updated
+      emailTemplateType
+      emailContent {
+        cc
+        subject
+        body
+        description
+      }
     }
   }
 `
@@ -92,6 +105,7 @@ const TasksTemplatePage = ({ match, ...props }) => {
   return (
     <TasksTemplate
       deleteTaskNotification={deleteTaskNotification}
+      emailTemplates={data.emailTemplates}
       roles={roles}
       tasks={data.tasks}
       updateTask={updateTask}

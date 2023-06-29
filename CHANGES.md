@@ -1,5 +1,13 @@
 ## Changes
 
+### 2023-06-27
+
+For the Aperture Neuro group _only_, you must add the following to the `.env` file prior to upgrade:
+
+```
+USE_APERTURE_EMAIL=true
+```
+
 ### 2022-10-18
 
 Instances affected: **all**.<br/>

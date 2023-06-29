@@ -671,7 +671,11 @@ const resolvers = {
           handlingEditor.user.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'reviewRejectEmailTemplate'
+        const activeConfig = await models.Config.query().first()
+
+        const selectedTemplate =
+          activeConfig.controlPanel.reviewRejectedEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
@@ -736,6 +740,7 @@ const resolvers = {
           .findById(id)
           .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
+        const activeConfig = await models.Config.query().first()
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
         const receiverName =
@@ -743,7 +748,9 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'submissionConfirmationEmailTemplate'
+        const selectedTemplate =
+          activeConfig.formData.controlPanel.submissionConfirmationEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
@@ -840,7 +847,9 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'evaluationCompleteEmailTemplate'
+        const selectedTemplate =
+          activeConfig.formData.controlPanel.evaluationCompleteEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
