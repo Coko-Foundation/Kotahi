@@ -33,6 +33,7 @@ import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
 import EmailTemplatesPage from './component-email-templates/src/EmailTemplatesPage'
 
 import CMSPagesPage from './component-cms-manager/src/CMSPagesPage'
+import CMSLayoutPage from './component-cms-manager/src/CMSLayoutPage'
 
 import QUERY from './adminPageQueries'
 
@@ -154,8 +155,8 @@ const AdminPage = () => {
   const reportsLink = `${urlFrag}/admin/reports`
   const userAdminLink = `${urlFrag}/admin/users`
   const tasksTemplateLink = `${urlFrag}/admin/tasks`
-  // const CMSManagerLink = `${urlFrag}/admin/cms/manage`
-  const CMSPageEditorLink = `${urlFrag}/admin/cms/pages`
+  const CMSPagesPageLink = `${urlFrag}/admin/cms/pages`
+  const CMSLayoutPageLink = `${urlFrag}/admin/cms/layout`
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
@@ -219,7 +220,10 @@ const AdminPage = () => {
           menu: 'CMS',
           name: 'CMS',
           icon: 'layout',
-          links: [{ link: CMSPageEditorLink, name: 'Pages', icon: '' }],
+          links: [
+            { link: CMSPagesPageLink, name: 'Pages', icon: '' },
+            { link: CMSLayoutPageLink, name: 'Layout', icon: '' },
+          ],
         },
       ],
     })
@@ -422,7 +426,15 @@ const AdminPage = () => {
             component={CMSPagesPage}
             currentUser={currentUser}
             key="CMSPagesPage"
-            path={`${CMSPageEditorLink}/:pageId?`}
+            path={`${CMSPagesPageLink}/:pageId?`}
+            redirectLink={redirectLink}
+          />,
+
+          <PrivateRoute
+            component={CMSLayoutPage}
+            currentUser={currentUser}
+            key="CMSPagesPage"
+            path={`${CMSLayoutPageLink}`}
             redirectLink={redirectLink}
           />,
 

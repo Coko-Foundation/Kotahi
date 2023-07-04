@@ -5,7 +5,7 @@ import ContentWaxEditor from './editor/ContentWaxEditor'
 
 import StaticTextInput from './components/StaticTextInput'
 
-import { FormTextInput } from './style'
+import { FormTextInput, ColorInput } from './style'
 
 import { hasValue } from '../../../shared/htmlUtils'
 
@@ -33,6 +33,7 @@ export const inputComponents = {
   TextField: FormTextInput,
   StaticTextInput: staticTextInput,
   AbstractEditor: richEditor,
+  ColorInput,
 }
 
 export const inputFields = [

@@ -16,6 +16,10 @@ export const Section = styled.div`
     `}
 `
 
+export const CompactSection = styled(Section)`
+  width: 24%;
+`
+
 export const Page = styled.div`
   height: 100%;
   position: relative;
@@ -53,6 +57,11 @@ export const SidebarPageRow = styled.div`
 export const FormTextInput = styled(TextInput)`
   background: white;
   padding: 10px;
+`
+
+export const ColorInput = styled(TextInput)`
+  background: white;
+  padding: 0px;
 `
 
 export const EditPageContainer = styled.div`
@@ -131,4 +140,32 @@ export const ErrorMessage = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: normal;
   line-height: ${th('lineHeightBaseSmall')};
+`
+
+export const LayoutHeaderListContainer = styled.div`
+  padding: grid;
+  width: 30%;
+`
+
+export const LayoutHeaderListItem = styled.div`
+  align-items: center;
+  border: 1px solid #dedede;
+  border-radius: ${grid(1)};
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: ${grid(2)};
+  padding: ${grid(1 / 2)};
+  user-select: 'none';
+`
+
+export const LayoutMainHeading = styled(Heading)`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${grid(3)};
+  margin-bottom: ${grid(2)};
+`
+
+export const LayoutSecondaryHeading = styled(Heading)`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${grid(1.5)};
+  margin-bottom: ${grid(1)};
 `
