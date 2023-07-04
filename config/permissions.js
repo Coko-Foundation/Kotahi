@@ -137,6 +137,12 @@ const isPublicFileFromPublishedManuscript = rule({ cache: 'contextual' })(
   },
 )
 
+const isCMSFile = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return parent.tags && parent.tags.includes('cms')
+  },
+)
+
 const isPublicReviewFromPublishedManuscript = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     if (parent.isHiddenFromAuthor || !parent.manuscriptId) return false
@@ -590,6 +596,7 @@ const permissions = {
   PaginatedManuscripts: allow,
   Manuscript: allow,
   File: or(
+    isCMSFile,
     isPublicFileFromPublishedManuscript,
     userIsAuthorOfTheManuscriptOfTheFile,
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,

@@ -107,9 +107,6 @@ const CMSPageEditForm = ({
     }
   }
 
-  // Currently it changes the url whenever we change the title
-  // So if you change the url and then change the title it will change the url as per the title
-  // We need to think about it and found a better way to fix that.
   const setUrlBasedOnTitle = title => {
     const fieldKey = 'url'
     const titleSlug = `${kebabCase(title)}/`

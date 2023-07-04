@@ -55,7 +55,13 @@ const CMSPageEdit = ({
     })
 
     setSubmitButtonState({ state: 'pending', text: 'Rebuilding...' })
-    await rebuildFlaxSiteQuery()
+    await rebuildFlaxSiteQuery({
+      variables: {
+        params: JSON.stringify({
+          path: 'pages',
+        }),
+      },
+    })
     setSubmitButtonState({ state: 'success', text: 'Published' })
   }
 
@@ -89,6 +95,13 @@ const CMSPageEdit = ({
   const onDelete = async currentCMSPage => {
     await deleteCMSPage({
       variables: { id: currentCMSPage.id },
+    })
+    rebuildFlaxSiteQuery({
+      variables: {
+        params: JSON.stringify({
+          path: 'pages',
+        }),
+      },
     })
     showPage({ id: '' })
   }

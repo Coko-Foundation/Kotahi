@@ -12,11 +12,12 @@ const currentAppUrl = `${clientProtocol}://${clientHost}${
 
 const flaxSiteAccessToken = ''
 
-const rebuild = async url => {
+const rebuild = async params => {
   const requestData = JSON.stringify({
     updatedConfig: {
       url: `${currentAppUrl}/graphql`,
     },
+    buildConfigs: params,
   })
 
   return new Promise((resolve, reject) => {
@@ -87,12 +88,13 @@ const resolvers = {
   },
 
   Mutation: {
-    rebuildFlaxSite: async (_, { url }, ctx) => {
+    rebuildFlaxSite: async (_, { params: paramsAsJson }, ctx) => {
+      const params = paramsAsJson ? JSON.parse(paramsAsJson) : {}
       let status = ''
       let error = ''
 
       try {
-        status = await rebuild(url)
+        status = await rebuild(params)
       } catch (e) {
         error = e
       }
@@ -112,7 +114,7 @@ const typeDefs = `
   }
 
   extend type Mutation {
-		rebuildFlaxSite : rebuildFlaxSiteResponse
+		rebuildFlaxSite(params: String) : rebuildFlaxSiteResponse
 	}
 
 	type rebuildFlaxSiteResponse {

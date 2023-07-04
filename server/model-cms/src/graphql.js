@@ -1,9 +1,23 @@
 const models = require('@pubsweet/models')
 
+const { fileStorage } = require('@coko/server')
+
+const setInitialLayout = async () => {
+  const { formData } = await models.Config.query().first()
+  const { primaryColor, secondaryColor } = formData.groupIdentity
+
+  const layout = await new models.CMSLayout({
+    primaryColor,
+    secondaryColor,
+  }).save()
+
+  return layout
+}
+
 const resolvers = {
   Query: {
     async cmsPages(_, vars, ctx) {
-      const pages = await models.CMSPage.query()
+      const pages = await models.CMSPage.query().orderBy('sequenceIndex')
       return pages
     },
 
@@ -15,6 +29,16 @@ const resolvers = {
     async cmsPageByShortcode(_, { shortcode }, ctx) {
       const cmsPage = await models.CMSPage.query().findOne({ shortcode })
       return cmsPage
+    },
+
+    async cmsLayout(_, vars, ctx) {
+      let layout = await models.CMSLayout.query().first()
+
+      if (!layout) {
+        layout = await setInitialLayout()
+      }
+
+      return layout
     },
   },
   Mutation: {
@@ -73,6 +97,27 @@ const resolvers = {
         }
       }
     },
+
+    async updateCMSLayout(_, { _id, input }, ctx) {
+      const layout = await models.CMSLayout.query().first()
+
+      if (!layout) {
+        const savedCmsLayout = await new models.CMSLayout(input).save()
+
+        const cmsLayout = await models.CMSLayout.query().findById(
+          savedCmsLayout.id,
+        )
+
+        return cmsLayout
+      }
+
+      const cmsLayout = await models.CMSLayout.query().updateAndFetchById(
+        layout.id,
+        input,
+      )
+
+      return cmsLayout
+    },
   },
 
   CMSPage: {
@@ -91,6 +136,29 @@ const resolvers = {
       return models.CMSPage.relatedQuery('creator').for(parent.id).first()
     },
   },
+
+  CMSLayout: {
+    async logo(parent) {
+      if (!parent.logoId) {
+        return null
+      }
+
+      const logoFile = await models.CMSLayout.relatedQuery('logo')
+        .for(parent.id)
+        .first()
+
+      const updatesStoredObjects = []
+      /* eslint-disable no-await-in-loop */
+      Object.keys(logoFile.storedObjects).forEach(async key => {
+        const storedObject = logoFile.storedObjects[key]
+        storedObject.url = await fileStorage.getURL(storedObject.key)
+        updatesStoredObjects.push(storedObject)
+      })
+
+      logoFile.storedObjects = updatesStoredObjects
+      return logoFile
+    },
+  },
 }
 
 const typeDefs = `
@@ -98,12 +166,14 @@ const typeDefs = `
     cmsPage(id: ID!): CMSPage
     cmsPageByShortcode(shortcode: String!): CMSPage!
     cmsPages: [CMSPage!]!
+    cmsLayout: CMSLayout
   }
 
   extend type Mutation {
     createCMSPage(input: CMSPageInput!): CreatePageResponse!
     updateCMSPage(id: ID!, input: CMSPageInput!): CMSPage!
     deleteCMSPage(id: ID!): DeletePageResponse!
+    updateCMSLayout(input: CMSLayoutInput!): CMSLayout!
   }
 
   type CMSPage {
@@ -117,6 +187,8 @@ const typeDefs = `
     creator: User
     published: DateTime
     edited: DateTime
+    menu: Boolean!
+    sequenceIndex: Int!
     created: DateTime!
     updated: DateTime
   }
@@ -128,6 +200,7 @@ const typeDefs = `
     error: String
     errorMessage: String
   }
+
 
   type DeletePageResponse {
     success: Boolean!
@@ -142,6 +215,24 @@ const typeDefs = `
     meta: String
     published: DateTime
     edited: DateTime
+    menu: Boolean
+    sequenceIndex: Int
+  }
+
+  type CMSLayout {
+    id: ID!
+    active: Boolean!
+    primaryColor: String!
+    secondaryColor: String!
+    logo: File
+    created: DateTime!
+    updated: DateTime
+  }
+
+  input CMSLayoutInput {
+    primaryColor: String
+    secondaryColor: String
+    logoId: String
   }
 
 `

@@ -12,10 +12,32 @@ const cmsPageFields = `
     updated
     published
     edited
+    menu
+    sequenceIndex
     creator {
       id
       username
     }
+`
+
+const cmsLayoutFields = `
+    id
+    created
+    updated
+    primaryColor
+    secondaryColor
+    logo {
+      id
+      name
+      tags
+      storedObjects {
+        mimetype
+        key
+        url
+        type
+      }
+    }
+ 
 `
 
 const createCmsPageFields = `
@@ -84,10 +106,51 @@ export const deleteCMSPageMutation = gql`
   }
 `
 export const rebuildFlaxSiteMutation = gql`
-  mutation rebuildFlaxSite {
-    rebuildFlaxSite {
+  mutation rebuildFlaxSite($params: String) {
+    rebuildFlaxSite(params: $params) {
       status
       error
     }
+  }
+`
+
+export const getCMSLayout = gql`
+  query cmsLayout {
+    cmsLayout {
+      ${cmsLayoutFields}
+    }
+  }
+`
+
+export const updateCMSLayoutMutation = gql`
+  mutation updateCMSLayout($input: CMSLayoutInput!) {
+    updateCMSLayout(input: $input) {
+      ${cmsLayoutFields}
+    }
+  }
+`
+
+export const createFileMutation = gql`
+  mutation($file: Upload!, $meta: FileMetaInput!) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
+    }
+  }
+`
+
+export const deleteFileMutation = gql`
+  mutation($id: ID!) {
+    deleteFile(id: $id)
   }
 `
