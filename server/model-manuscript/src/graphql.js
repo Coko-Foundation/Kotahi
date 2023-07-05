@@ -674,7 +674,7 @@ const resolvers = {
         const activeConfig = await models.Config.query().first()
 
         const selectedTemplate =
-          activeConfig.controlPanel.reviewRejectedEmailTemplate
+          activeConfig.formData.eventNotification.reviewRejectedEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -749,7 +749,8 @@ const resolvers = {
           ''
 
         const selectedTemplate =
-          activeConfig.formData.controlPanel.submissionConfirmationEmailTemplate
+          activeConfig.formData.eventNotification
+            .submissionConfirmationEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -848,7 +849,8 @@ const resolvers = {
           ''
 
         const selectedTemplate =
-          activeConfig.formData.controlPanel.evaluationCompleteEmailTemplate
+          activeConfig.formData.eventNotification
+            .evaluationCompleteEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
