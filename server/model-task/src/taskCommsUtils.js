@@ -9,6 +9,7 @@ const {
 const {
   manuscriptIsActive,
   getEditorIdsForManuscript,
+  getIdOfLatestVersionOfManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
@@ -418,10 +419,15 @@ const sendAutomatedTaskEmailNotifications = async () => {
 }
 
 const getTeamRecipients = async (emailNotification, roles) => {
+  // task notifications through scheduler are supposed to be sent only to team members from latest version of manuscript
+  const latestManuscriptVersionId = getIdOfLatestVersionOfManuscript(
+    emailNotification.task.manuscriptId,
+  )
+
   const teamQuery = models.Team.query()
     .where({
       objectType: 'manuscript',
-      objectId: emailNotification.task.manuscriptId,
+      objectId: latestManuscriptVersionId,
     })
     .whereIn('role', roles) // no await here because it's a sub-query
 
