@@ -37,9 +37,9 @@ const InviteReviewer = ({
 
   let reviewerInvitationEmailTemplate
 
-  if (config.controlPanel.reviewerInvitationPrimaryEmailTemplate) {
+  if (config.eventNotification.reviewerInvitationPrimaryEmailTemplate) {
     reviewerInvitationEmailTemplate =
-      config.controlPanel.reviewerInvitationPrimaryEmailTemplate
+      config.eventNotification.reviewerInvitationPrimaryEmailTemplate
   } else {
     reviewerInvitationEmailTemplate = emailTemplates.find(
       template => template.emailTemplateType === 'reviewerInvitation',
