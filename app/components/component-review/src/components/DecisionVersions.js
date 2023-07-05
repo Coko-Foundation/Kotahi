@@ -61,6 +61,7 @@ const DecisionVersions = ({
   emailTemplates,
 }) => {
   const versions = gatherManuscriptVersions(manuscript)
+  const firstVersion = versions[versions.length - 1]
 
   const initialValue = useMemo(
     () =>
@@ -117,7 +118,7 @@ const DecisionVersions = ({
                 makeDecision={makeDecision}
                 manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
-                parent={manuscript}
+                parent={firstVersion.manuscript}
                 publishManuscript={publishManuscript}
                 refetch={refetch}
                 removeReviewer={removeReviewer}

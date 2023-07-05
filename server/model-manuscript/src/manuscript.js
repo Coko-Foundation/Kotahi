@@ -5,7 +5,6 @@ const sortBy = require('lodash/sortBy')
 const { getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
 
 const {
-  populateTemplatedTasksForManuscript,
   deleteAlertsForManuscript,
 } = require('../../model-task/src/taskCommsUtils')
 
@@ -225,7 +224,6 @@ class Manuscript extends BaseModel {
       omit(cloneDeep(newVersion), ['id', 'created', 'updated', 'decision']),
     )
 
-    await populateTemplatedTasksForManuscript(manuscript.id)
     await deleteAlertsForManuscript(this.id)
 
     return manuscript

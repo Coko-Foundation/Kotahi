@@ -153,6 +153,7 @@ const manuscriptFields = `
       created
     }
   }
+  
 `
 
 const formFields = `
@@ -232,7 +233,6 @@ export const query = gql`
         topic
       }
     }
-
     threadedDiscussions(manuscriptId: $id) {
       id
       created
