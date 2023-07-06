@@ -6,7 +6,7 @@ CREATE TABLE cms_layouts(
   logo_id UUID REFERENCES files(id) on delete set null,
   header_config jsonb DEFAULT '{}'::jsonb,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-  updated TIMESTAMP WITH TIME ZONE,
+  updated TIMESTAMP WITH TIME ZONE
 );
 
 

@@ -157,6 +157,7 @@ const getRelatedReviews = async (
       sharedReviewersIds,
       manuscriptHasDecision,
       ctx.user,
+      userRoles,
     )
   }
 
