@@ -9,6 +9,7 @@ const Message = require('./message')
 
 const {
   updateChannelLastViewed,
+  getChannelMemberByChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
 const resolvers = {
@@ -35,15 +36,37 @@ const resolvers = {
       const messages = (await messagesQuery).reverse()
       const total = await messagesQuery.resultSize()
 
-      const userId = context.user
-      await updateChannelLastViewed({ channelId, userId })
+      const channelMember = await getChannelMemberByChannel({
+        channelId,
+        userId: context.user,
+      })
 
+      let unreadMessagesCount = [{ count: 0 }]
+      let firstUnreadMessage = null
+
+      if (channelMember) {
+        unreadMessagesCount = await Message.query()
+          .where({ channelId })
+          .where('created', '>', channelMember.lastViewed)
+          .count()
+
+        firstUnreadMessage = await Message.query()
+          .select('id')
+          .where({ channelId })
+          .where('created', '>', channelMember.lastViewed)
+          .orderBy('created', 'asc')
+          .first()
+      }
+
+      await updateChannelLastViewed({ channelId, userId: context.user })
       return {
         edges: messages,
         pageInfo: {
           startCursor: messages[0] && messages[0].id,
           hasPreviousPage: total > first,
         },
+        unreadMessagesCount: unreadMessagesCount[0].count,
+        firstUnreadMessageId: firstUnreadMessage?.id,
       }
     },
   },
@@ -104,6 +127,8 @@ const typeDefs = `
   type MessagesRelay {
     edges: [Message]
     pageInfo: PageInfo
+    unreadMessagesCount: Int
+    firstUnreadMessageId: ID
   }
 
   extend type Query {

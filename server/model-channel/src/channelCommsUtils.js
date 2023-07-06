@@ -1,9 +1,15 @@
 const models = require('@pubsweet/models')
 
+const getChannelMemberByChannel = async ({ channelId, userId }) => {
+  return models.ChannelMember.query().findOne({ channelId, userId })
+}
+
 const updateChannelLastViewed = async ({ channelId, userId }) => {
   await models.ChannelMember.query()
-    .update({ lastViewed: new Date() })
+    .patch({ lastViewed: new Date() })
     .where({ channelId, userId })
+
+  return models.ChannelMember.query().findOne({ channelId, userId })
 }
 
 const addUserToManuscriptChatChannel = async ({
@@ -45,6 +51,7 @@ const resetLastAlertTriggerTime = async () => {
 }
 
 module.exports = {
+  getChannelMemberByChannel,
   updateChannelLastViewed,
   addUserToManuscriptChatChannel,
   removeUserFromManuscriptChatChannel,
