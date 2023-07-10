@@ -9,14 +9,15 @@ const {
   getGroupAndGlobalRoles,
 } = require('./userCommsUtils')
 
-const addGlobalAndGroupRolesToUserObject = async user => {
+const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
   if (!user) return
-  const groupId = null // TODO When multitenancy is in place, get the current groupId
+  const groupId = ctx.req.headers['group-id']
   Object.assign(user, await getGroupAndGlobalRoles(user.id, groupId))
 }
 
-const setUserMembershipInTeam = async (userId, team, shouldBeMember) => {
+const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
   if (!team) return // We won't create a new team: this is only intended for existing teams
+  const groupId = ctx.req.headers['group-id']
   const teamId = team.id
 
   if (shouldBeMember) {
@@ -24,7 +25,88 @@ const setUserMembershipInTeam = async (userId, team, shouldBeMember) => {
       .insert({ userId, teamId })
       .whereNotExists(models.TeamMember.query().where({ userId, teamId }))
   } else {
-    await models.TeamMember.query().delete().where({ userId, teamId })
+    await models.TeamMember.transaction(async trx => {
+      if (team.role === 'user') {
+        const manuscripts = await models.Manuscript.query(trx)
+          .where({ groupId })
+          .withGraphFetched('[teams, invitations, tasks]')
+
+        const manuscriptTeams = manuscripts.flatMap(
+          manuscript => manuscript.teams,
+        )
+
+        // Remove user from assigned manuscript teams be it author, seniorEditor, handlingEditor, editor, reviewer which are not completed
+        await Promise.all(
+          manuscriptTeams.map(async manuscriptTeam => {
+            const member = await models.TeamMember.query(trx).findOne({
+              userId,
+              teamId: manuscriptTeam.id,
+            })
+
+            // Skips removing reviewer team members with completed reviews
+            if (member && (!member.status || member.status !== 'completed')) {
+              member.delete()
+            }
+          }),
+        )
+
+        const manuscriptInvitations = manuscripts.flatMap(
+          manuscript => manuscript.invitations,
+        )
+
+        // Remove user UNANSWERED invitations and sent out invitations
+        await Promise.all(
+          manuscriptInvitations.map(async manuscriptInvitation => {
+            const invitation = await models.Invitation.query(trx).findById(
+              manuscriptInvitation.id,
+            )
+
+            if (
+              invitation.userId === userId &&
+              invitation.status === 'UNANSWERED'
+            ) {
+              invitation.delete()
+            } else if (invitation.senderId === userId) {
+              // TODO: Fix database validation error sender_id is set not null 1647493905-invitations.sql
+              // await models.Invitation.query(
+              //   trx,
+              // ).patchAndFetchById(invitation.id, { senderId: null })
+            }
+          }),
+        )
+
+        // Remove user from assignee tasks
+        await models.Task.query(trx)
+          .patch({ assigneeUserId: null, assigneeType: null })
+          .where({ assigneeUserId: userId, groupId })
+
+        const manuscriptTasks = manuscripts.flatMap(
+          manuscript => manuscript.tasks,
+        )
+
+        // Remove user from task email notifications
+        await Promise.all(
+          manuscriptTasks.map(async manuscriptTask => {
+            const task = await models.Task.query(trx).findById(
+              manuscriptTask.id,
+            )
+
+            await models.TaskEmailNotification.query(trx)
+              .delete()
+              .where({ recipientUserId: userId, taskId: task.id })
+          }),
+        )
+
+        // Remove user from submitted manuscripts
+        await models.Manuscript.query(trx)
+          .update({ submitterId: null })
+          .where({ submitterId: userId, groupId })
+
+        await models.TeamMember.query(trx).delete().where({ userId, teamId })
+      } else {
+        await models.TeamMember.query(trx).delete().where({ userId, teamId })
+      }
+    })
   }
 }
 
@@ -33,23 +115,39 @@ const resolvers = {
     async user(_, { id, username }, ctx) {
       if (id) {
         const user = await models.User.query().findById(id)
-        await addGlobalAndGroupRolesToUserObject(user)
+        await addGlobalAndGroupRolesToUserObject(ctx, user)
         return user
       }
 
       if (username) {
         const user = await models.User.query().findOne({ username })
-        await addGlobalAndGroupRolesToUserObject(user)
+        await addGlobalAndGroupRolesToUserObject(ctx, user)
         return user
       }
 
       return null
     },
     async users(_, vars, ctx) {
-      return models.User.query()
+      return models.User.query().joinRelated('teams').where({
+        role: 'user',
+        objectId: ctx.req.headers['group-id'],
+      })
     },
     async paginatedUsers(_, { sort, offset, limit }, ctx) {
-      const query = models.User.query()
+      const currentUser = await models.User.query().findById(ctx.user)
+      await addGlobalAndGroupRolesToUserObject(ctx, currentUser)
+
+      let query
+
+      if (currentUser.globalRoles.includes('admin')) {
+        query = models.User.query()
+      } else {
+        query = models.User.query().joinRelated('teams').where({
+          role: 'user',
+          objectId: ctx.req.headers['group-id'],
+        })
+      }
+
       const totalCount = await query.resultSize()
 
       if (sort) {
@@ -79,7 +177,9 @@ const resolvers = {
       for (const someUsers of chunk(users, 10)) {
         // eslint-disable-next-line no-await-in-loop
         await Promise.all(
-          someUsers.map(async user => addGlobalAndGroupRolesToUserObject(user)),
+          someUsers.map(async user =>
+            addGlobalAndGroupRolesToUserObject(ctx, user),
+          ),
         )
       }
 
@@ -97,7 +197,7 @@ const resolvers = {
       })
 
       if (!user) return null
-      await addGlobalAndGroupRolesToUserObject(user)
+      await addGlobalAndGroupRolesToUserObject(ctx, user)
       return user
     },
     searchUsers(_, { teamId, query }, ctx) {
@@ -151,6 +251,7 @@ const resolvers = {
           .update({ submitterId: null })
           .where({ submitterId: id })
         await models.Invitation.query(trx).where({ userId: id }).delete()
+        // TODO: Fix database validation error sender_id is set not null 1647493905-invitations.sql
         await models.Invitation.query(trx)
           .update({ senderId: null })
           .where({ senderId: id })
@@ -175,23 +276,23 @@ const resolvers = {
     },
     async setGlobalRole(_, { userId, role, shouldEnable }, ctx) {
       const team = await models.Team.query().findOne({ role, global: true })
-      await setUserMembershipInTeam(userId, team, shouldEnable)
+      await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
       const user = await models.User.find(userId)
-      await addGlobalAndGroupRolesToUserObject(user)
+      await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
     },
     async setGroupRole(_, { userId, role, shouldEnable }, ctx) {
-      const groupId = null // TODO revise this once we actually have groups
+      const groupId = ctx.req.headers['group-id']
 
       const team = await models.Team.query().findOne({
         role,
         objectId: groupId,
       })
 
-      await setUserMembershipInTeam(userId, team, shouldEnable)
+      await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
       const user = await models.User.find(userId)
-      await addGlobalAndGroupRolesToUserObject(user)
+      await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
     },

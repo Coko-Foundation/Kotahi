@@ -24,7 +24,7 @@ build:
     - |
       if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_PASSWORD" ]; then echo "Not pushing" && exit 0; fi
       docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
-      docker build --build-arg instance_name=aperture --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .   
+      docker build --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .   
       docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME:latest
 

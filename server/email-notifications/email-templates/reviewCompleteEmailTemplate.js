@@ -1,15 +1,14 @@
-const ReviewCompleteEmailTemplate = ({
-  articleTitle,
-  receiverName,
-  shortId,
-}) => {
+const ReviewCompleteEmailTemplate = (
+  { articleTitle, receiverName, shortId },
+  instanceName,
+) => {
   const result = {
     cc: '',
     subject: 'Kotahi Notification Email',
     content: '',
   }
 
-  switch (process.env.INSTANCE_NAME) {
+  switch (instanceName) {
     case 'aperture':
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro – Review Process Complete'

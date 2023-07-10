@@ -14,7 +14,8 @@ const getUsersById = async userIds => models.User.query().findByIds(userIds)
  * Note, an 'invited' or 'rejected' reviewer does NOT have reviewer role.
  * Also, "anyEditor" indicates if the user holds any editorial role for the manuscript. */
 const getUserRolesInManuscript = async (userId, manuscriptId) => {
-  const groupId = null // TODO set groupId when we have multitenancy
+  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+  const { groupId } = manuscript
 
   const { groupRoles, globalRoles } = await getGroupAndGlobalRoles(
     userId,
@@ -102,6 +103,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     externalEmail, // New User Email
     externalName, // New User username
     currentUser,
+    groupId,
   } = inputParsed
 
   const selectedEmailTemplateData = await models.EmailTemplate.query().findById(
@@ -113,8 +115,10 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
   let receiverName = externalName
 
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
-  const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
+  const group = await models.Group.query().findById(groupId)
+
+  const urlFrag = `/${group.name}`
+  const baseUrl = appUrl + urlFrag
   let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
   let roles = {}
 
@@ -230,28 +234,33 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const ccEmails = await getEditorEmails(manuscriptId)
 
   try {
-    await sendEmailNotification(receiverEmail, selectedEmailTemplateData, {
-      manuscriptTitle: manuscript.meta.title,
-      authorName,
-      senderName: currentUser,
-      recipientName: receiverName,
-      manuscriptNumber: manuscript.shortId,
-      currentUser,
-      receiverName,
-      ccEmails,
-      shortId: manuscript.shortId,
-      instance,
-      toEmail,
-      invitationId,
-      submissionLink: ctx
-        ? JSON.parse(manuscript.submission).link
-        : manuscript.submission.link,
-      purpose,
-      status,
-      senderId,
-      appUrl,
-      manuscriptLink: manuscriptPageUrl,
-    })
+    await sendEmailNotification(
+      receiverEmail,
+      selectedEmailTemplateData,
+      {
+        manuscriptTitle: manuscript.meta.title,
+        authorName,
+        senderName: currentUser,
+        recipientName: receiverName,
+        manuscriptNumber: manuscript.shortId,
+        currentUser,
+        receiverName,
+        ccEmails,
+        shortId: manuscript.shortId,
+        instance,
+        toEmail,
+        invitationId,
+        submissionLink: ctx
+          ? JSON.parse(manuscript.submission).link
+          : manuscript.submission.link,
+        purpose,
+        status,
+        senderId,
+        appUrl: baseUrl,
+        manuscriptLink: manuscriptPageUrl,
+      },
+      manuscriptObject.groupId,
+    )
     return { success: true }
   } catch (e) {
     console.error(e)
@@ -282,9 +291,7 @@ const getGroupAndGlobalRoles = async (userId, groupId) => {
   return { groupRoles, globalRoles }
 }
 
-const isAdminOrGroupManager = async userId => {
-  const groupId = null // TODO set groupId once we have multitenancy
-
+const isAdminOrGroupManager = async (userId, groupId) => {
   const { groupRoles, globalRoles } = await getGroupAndGlobalRoles(
     userId,
     groupId,

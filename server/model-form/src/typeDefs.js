@@ -6,6 +6,7 @@ const typeDefs = `
     purpose: String!
     structure: FormStructureInput!
     category: String!
+    groupId: ID!
   }
 
   input CreateFormInput {
@@ -13,6 +14,7 @@ const typeDefs = `
     purpose: String!
     structure: FormStructureInput!
     category: String!
+    groupId: ID!
   }
 
   input FormStructureInput {
@@ -67,6 +69,7 @@ const typeDefs = `
     purpose: String!
     structure: FormStructure!
     category: String!
+    groupId: ID
   }
 
   type FormStructure {
@@ -121,8 +124,8 @@ const typeDefs = `
   extend type Query {
     form(formId: String!): Form
     forms: [Form]
-    formsByCategory(category: String!): [Form]
-    formForPurposeAndCategory(purpose: String!, category: String!): Form
+    formsByCategory(category: String!, groupId: ID): [Form]
+    formForPurposeAndCategory(purpose: String!, category: String!, groupId: ID): Form
   }
 
   extend type Mutation {

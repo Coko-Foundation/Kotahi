@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { sanitize } from 'isomorphic-dompurify'
-import { JournalContext } from '../../xpub-journal/src'
 import { ConfigContext } from '../../config/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
@@ -46,6 +45,8 @@ const LoginLink = styled.a`
 `
 
 const Frontpage = () => {
+  const config = useContext(ConfigContext)
+  const { urlFrag } = config
   const [sortName] = useState('created')
   const [sortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
@@ -63,13 +64,10 @@ const Frontpage = () => {
       sort,
       offset: (page - 1) * limit,
       limit,
+      groupId: config.groupId,
     },
     fetchPolicy: 'network-only',
   })
-
-  const journal = useContext(JournalContext)
-  const config = useContext(ConfigContext)
-  const urlFrag = journal.metadata.toplevel_urlfragment
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -90,12 +88,14 @@ const Frontpage = () => {
   return (
     <Container>
       <HeadingWithAction>
-        <Heading>Recent publications in {journal.metadata.name}</Heading>
+        <Heading>
+          Recent publications in {config?.groupIdentity?.brandName}
+        </Heading>
         <LoginLink
           href={
             window.localStorage.getItem('token')
               ? `${urlFrag}/dashboard`
-              : '/login'
+              : `${urlFrag}/login`
           }
         >
           {window.localStorage.getItem('token') ? 'Dashboard' : 'Login'}

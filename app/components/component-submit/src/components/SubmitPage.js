@@ -77,7 +77,7 @@ let debouncers = {}
 
 const SubmitPage = ({ currentUser, match, history }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
 
   useEffect(() => {
     return () => {
@@ -89,7 +89,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const { data, loading, error } = useQuery(
     query,
     {
-      variables: { id: match.params.version },
+      variables: { id: match.params.version, groupId: config.groupId },
       partialRefetch: true,
     },
     { refetchOnMount: true },
@@ -157,7 +157,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
     return debouncers[path](versionId, manuscriptDelta)
   }
 
-  const republish = async manuscriptId => {
+  const republish = async (manuscriptId, groupId) => {
     const fieldErrors = await validateManuscriptSubmission(
       {
         ...JSON.parse(manuscript.submission),
@@ -165,7 +165,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       },
       submissionForm,
       validateDoi(client),
-      validateSuffix(client),
+      validateSuffix(client, groupId),
     )
 
     if (fieldErrors.filter(Boolean).length) {
@@ -261,7 +261,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}
       validateDoi={validateDoi(client)}
-      validateSuffix={validateSuffix(client)}
+      validateSuffix={validateSuffix(client, config.groupId)}
       versions={versions}
     />
   )

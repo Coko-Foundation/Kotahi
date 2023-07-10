@@ -121,6 +121,7 @@ const InviteReviewerModal = ({
                   identity.email,
                   identity.username,
                   false,
+                  config.groupId,
                 )
 
                 if (!response) return

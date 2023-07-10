@@ -337,7 +337,6 @@ const DecisionVersion = ({
             <AdminSection>
               <InviteReviewer
                 addReviewer={addReviewer}
-                config={config}
                 currentUser={currentUser}
                 emailTemplates={emailTemplates}
                 manuscript={version}

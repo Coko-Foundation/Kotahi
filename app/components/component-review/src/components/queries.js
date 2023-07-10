@@ -110,6 +110,7 @@ const manuscriptFields = `
     created
     updated
     manuscriptId
+    groupId
     title
     assignee {
       id
@@ -221,7 +222,7 @@ const teamFields = `
 `
 
 export const query = gql`
-  query($id: ID!) {
+  query($id: ID!, $groupId: ID!) {
     manuscript(id: $id) {
       ${manuscriptFields}
       manuscriptVersions {
@@ -268,15 +269,15 @@ export const query = gql`
       userCanEditAnyComment
     }
 
-    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
+    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
       ${formFields}
     }
 
-    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision") {
+    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision", groupId: $groupId) {
       ${formFields}
     }
 
-    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review") {
+    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review", groupId: $groupId) {
       ${formFields}
     }
 

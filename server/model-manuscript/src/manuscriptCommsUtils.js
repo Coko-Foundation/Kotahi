@@ -24,8 +24,12 @@ const isLatestVersionOfManuscript = async versionId => {
   return versionId === latestVersionId
 }
 
-const archiveOldManuscripts = async () => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+const archiveOldManuscripts = async groupId => {
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
+
   const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
 
@@ -37,6 +41,7 @@ const archiveOldManuscripts = async () => {
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
     .where('status', 'new')
+    .where('groupId', groupId)
     .whereNot('isHidden', true)
     .where(function subcondition() {
       this.whereRaw(`submission->>'labels' = ''`).orWhereRaw(

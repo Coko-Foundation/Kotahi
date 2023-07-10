@@ -34,9 +34,10 @@ const resolvers = {
 
       return invitations
     },
-    async getBlacklistInformation(_, { email }, ctx) {
+    async getBlacklistInformation(_, { email, groupId }, ctx) {
       const blacklistData = await models.BlacklistEmail.query().where({
         email,
+        groupId,
       })
 
       return blacklistData
@@ -75,8 +76,8 @@ const resolvers = {
 
       return result
     },
-    async addEmailToBlacklist(_, { email }, ctx) {
-      const result = await new models.BlacklistEmail({ email }).save()
+    async addEmailToBlacklist(_, { email, groupId }, ctx) {
+      const result = await new models.BlacklistEmail({ email, groupId }).save()
 
       return result
     },
@@ -164,20 +165,22 @@ type BlacklistEmail {
   id: ID
   created: DateTime
   updated: DateTime
-  email: String
+  email: String!
+  groupId: ID!
 }
+
 extend type Query {
   invitationManuscriptId(id: ID): Invitation
   invitationStatus(id: ID): Invitation
   getInvitationsForManuscript(id: ID): [Invitation!]
-  getBlacklistInformation(email: String): [BlacklistEmail]
+  getBlacklistInformation(email: String!, groupId: ID!): [BlacklistEmail]
   getEmailInvitedReviewers(manuscriptId: ID!): [Invitation!]!
 }
 
 extend type Mutation {
   updateInvitationStatus(id: ID, status: String, userId: ID,  responseDate: DateTime ): Invitation
   updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String ): Invitation
-  addEmailToBlacklist(email: String!): BlacklistEmail
+  addEmailToBlacklist(email: String!, groupId: ID!): BlacklistEmail
   assignUserAsAuthor(manuscriptId: ID!, userId: ID!): Team
   updateSharedStatusForInvitedReviewer(invitationId: ID!, isShared: Boolean!): Invitation!
 }

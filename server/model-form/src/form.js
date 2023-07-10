@@ -18,6 +18,22 @@ class Form extends BaseModel {
     }
   }
 
+  static get relationMappings() {
+    /* eslint-disable-next-line global-require */
+    const Group = require('../../model-group/src/group')
+
+    return {
+      group: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Group,
+        join: {
+          from: 'forms.groupId',
+          to: 'groups.id',
+        },
+      },
+    }
+  }
+
   static get schema() {
     return {
       properties: {
@@ -85,6 +101,7 @@ class Form extends BaseModel {
             },
           },
         },
+        groupId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

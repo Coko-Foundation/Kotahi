@@ -33,7 +33,7 @@ import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
 
 const ManuscriptsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
   const chatRoomId = fnv.hash(config.baseUrl).hex()
 
   /** Returns an array of column names, e.g.
@@ -61,6 +61,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       limit,
       filters,
       timezoneOffsetMinutes: new Date().getTimezoneOffset(),
+      groupId: config.groupId,
     },
     fetchPolicy: 'network-only',
   })
@@ -68,6 +69,9 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   // GET_SYSTEM_WIDE_DISCUSSION_ID
   const systemWideDiscussionChannel = useQuery(
     GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
+    {
+      variables: { groupId: config.groupId },
+    },
   )
 
   useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
@@ -92,7 +96,11 @@ const ManuscriptsPage = ({ currentUser, history }) => {
 
   const importManuscriptsAndRefetch = () => {
     setIsImporting(true)
-    importManuscripts()
+    importManuscripts({
+      variables: {
+        groupId: config.groupId,
+      },
+    })
   }
 
   const [archiveManuscriptMutation] = useMutation(ARCHIVE_MANUSCRIPT, {
@@ -190,7 +198,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       uriQueryParams={uriQueryParams}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}
-      validateSuffix={validateSuffix(client)}
+      validateSuffix={validateSuffix(client, config.groupId)}
     />
   )
 }

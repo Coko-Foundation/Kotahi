@@ -1,16 +1,14 @@
-const MessageNotificationEmailTemplate = ({
-  articleTitle,
-  authorName,
-  receiverName,
-  shortId,
-}) => {
+const MessageNotificationEmailTemplate = (
+  { articleTitle, authorName, receiverName, shortId },
+  instanceName,
+) => {
   const result = {
     cc: '',
     subject: 'Kotahi Notification Email',
     content: '',
   }
 
-  switch (process.env.INSTANCE_NAME) {
+  switch (instanceName) {
     case 'aperture':
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro – Message Notification'

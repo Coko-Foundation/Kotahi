@@ -26,7 +26,7 @@ const ReviewerTable = ({
   applyQueryParams,
 }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
 
   const fieldDefinitions = useMemo(() => {
     const fields = submissionForm?.structure?.children ?? []

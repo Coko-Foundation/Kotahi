@@ -24,7 +24,6 @@ services:
       - SERVER_HOST=server
       - SERVER_PORT=3000
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
-      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
       - CLIENT_FLAX_SITE_URL=${CLIENT_FLAX_SITE_URL:-http://localhost:8081/}
 
@@ -80,7 +79,6 @@ services:
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-true}
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
       - CLIENT_FLAX_SITE_URL=${CLIENT_FLAX_SITE_URL:-http://localhost:8081/}
-      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
       - KOTAHI_API_TOKENS=${KOTAHI_API_TOKENS:-}
       - JOURNAL_NAME=${JOURNAL_NAME:-}
       - JOURNAL_ABBREVIATED_NAME=${JOURNAL_ABBREVIATED_NAME:-}
@@ -153,6 +151,7 @@ services:
       - FLAX_CLIENT_PORT=${CLIENT_PORT:-4000}
       - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
+      - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:aperture}
 
     volumes:
       - ./config:/home/node/app/config

@@ -310,3 +310,37 @@ chown -R node:node uploads
 ```
 
 We’re looking at fixing this.
+
+## INSTANCE_GROUPS and Multitenancy
+
+`INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Each group has its own data, workflow, branding and other settings. You can use multiple groups to run different journals or publishing teams within a single instance of Kotahi, or to experiment with different workflows.
+
+The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:aperture`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and `_` characters. The _group type_ (after the colon) must be either 'aperture', 'colab', 'elife' or 'ncrc'. (These _group types_ will be given more descriptive and generic names in future.)
+
+Example setting for running a single group only:
+
+```
+INSTANCE_GROUPS=kotahi:aperture
+```
+
+Example setting for running multiple groups:
+
+```
+INSTANCE_GROUPS=myjournal:aperture,mypreprints:colab,trial_workflow:colab
+```
+
+### URLs determined by _group name_
+
+Each group must have a different _group name_, and this _group name_ determines the URLs of the group's pages. E.g., the dashboard for a group named "myjournal" will be at `https://domain/myjournal/dashboard`. If you wish a group to have the same URLs as were used in Kotahi prior to version 2.0, you must name that group 'kotahi'.
+
+With only a single group, the root URL `https://domain` will redirect to the frontpage `https://domain/groupname` listing recent publications, and the Login/Dashboard link. If there are multiple groups active, the root URL will be a page allowing the user to select which group they wish to navigate to; recent publications will be listed at `https://domain/groupname`, and login will be at `https://domain/groupname/login`.
+
+### Adding or archiving groups
+
+To add a new group, you must stop all containers, change the `INSTANCE_GROUPS` setting by adding a new _group specification_ separated by a comma, then start the containers again. The new group will be created (or revived from archive if the _group name_ matches an old, archived group) with the specified _group type_. You can then configure the group via the UI, using the Configuration Manager, Form Builders and Task Template Builder.
+
+To archive a group you no longer wish to have active, stop all containers, remove that group's specification from `INSTANCE_GROUPS`, and restart containers.
+
+### Upgrading from old versions
+
+When upgrading from an earlier version of Kotahi prior to 2.0, it is recommended to specify only a single group, with the _group name_ "kotahi" and the same _group type_ as previously specified for the `INSTANCE_NAME` setting. This will keep existing settings and page URLs unchanged. See [CHANGES.md](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/CHANGES.md#2023-07-07) for instructions. You can later change or add groups as you wish.

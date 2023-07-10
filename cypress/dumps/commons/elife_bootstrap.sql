@@ -27,6 +27,7 @@ CREATE TABLE "public"."article_import_history" (
     "updated" timestamptz,
     "date" timestamptz,
     "source_id" uuid NOT NULL,
+    "group_id" uuid NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -66,6 +67,7 @@ CREATE TABLE "public"."channels" (
     "updated" timestamptz,
     "topic" text,
     "type" text,
+    "group_id" uuid NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -78,6 +80,7 @@ CREATE TABLE "public"."email_blacklist" (
     "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" timestamptz,
     "email" text NOT NULL,
+    "group_id" uuid NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -163,6 +166,7 @@ CREATE TABLE "public"."forms" (
     "purpose" text NOT NULL,
     "structure" jsonb NOT NULL,
     "category" text,
+    "group_id" uuid,
     PRIMARY KEY ("id")
 );
 
@@ -245,6 +249,7 @@ CREATE TABLE "public"."manuscripts" (
     "searchable_text" text NOT NULL DEFAULT ''::text,
     "search_tsvector" tsvector NOT NULL DEFAULT ''::tsvector,
     "doi" text,
+    "group_id" uuid NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -357,6 +362,7 @@ CREATE TABLE public.tasks (
   updated TIMESTAMP WITH TIME ZONE,
 --  task_list_id uuid NOT NULL REFERENCES task_lists(id) ON DELETE CASCADE,
   manuscript_id uuid,
+  group_id uuid NOT NULL,
   title TEXT,
   assignee_user_id uuid,
   default_duration_days INTEGER,
@@ -485,7 +491,9 @@ CREATE TABLE "public"."configs" (
     "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "form_data" jsonb NOT NULL,
     "active" bool NOT NULL DEFAULT false,
-    "type" text NOT NULL
+    "group_id" uuid,
+    "type" text NOT NULL,
+    PRIMARY KEY ("id")
 );
 
 -- public.docmaps definition
@@ -529,20 +537,37 @@ CREATE TABLE "public"."email_templates" (
   "updated" TIMESTAMP WITH TIME ZONE,
   "email_template_type" TEXT,
   "email_content" JSONB NOT NULL,
+  "group_id" uuid NOT NULL,
   PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS "public"."groups";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
-INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type") VALUES
-('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-09-15 06:17:37.142077+00', NULL, 'System-wide discussion', 'editorial');
+-- Table Definition
+CREATE TABLE "public"."groups" (
+    "id" uuid NOT NULL,
+    "created" timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "name" text NOT NULL,
+    "is_archived" bool NOT NULL DEFAULT false,
+    "type" text NOT NULL,
+    PRIMARY KEY ("id")
+);
 
-INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "structure", "category") VALUES
-('9f27f699-56b2-4adc-b5c6-f179ff9a5380', 'Form', '2022-09-15 06:18:14.685+00', '2022-09-15 06:18:14.685+00', 'submit', '{"name": "eLife Submission Form", "children": [{"id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6", "name": "submission.articleId", "title": "Article ID", "options": [], "validate": [{"id": "48179c76-55b3-41b8-b330-6115dcbd9b2a", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "5a22ec26-3885-432c-8c80-b207a62a7b04", "name": "submission.articleURL", "title": "Article URL", "options": [], "validate": [{"id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a", "label": "Required", "value": "required"}], "component": "TextField", "doiValidation": "true"}, {"id": "b100e6a0-b00e-413c-823b-862351e9690f", "name": "submission.biorxivURL", "title": "bioRxiv article URL", "options": [], "validate": [{"id": "20708da4-7999-49c0-9881-d28f2ce9f825", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "ec5e5f89-282c-42e9-bde2-d35816152362", "name": "submission.description", "title": "Description", "options": [], "validate": [{"id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "12909732-e675-4270-bb3b-3b4d8d39dace", "name": "submission.review1", "title": "Review 1","component": "AbstractEditor", "placeholder": "Review 1", "doiValidation": "false"}, {"id": "a7cd4965-0741-4b11-aa07-5cf89165a551", "name": "submission.review1creator", "title": "Review 1 creator", "component": "TextField", "doiValidation": "false"}, {"id": "520615da-c193-4722-9509-3d849f3b6dc2", "name": "submission.review1date", "title": "Review 1 date", "component": "TextField", "placeholder": "review 1 date", "doiValidation": "false"}, {"id": "6285b767-66be-4e5f-aa36-b00ec2730177", "name": "submission.review2", "title": "Review 2", "component": "AbstractEditor", "placeholder": "Review 2", "doiValidation": "false"}, {"id": "2fa4f519-5342-4128-ab82-f5e10c4764ee", "name": "submission.review2creator", "title": "Review 2 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864ade-bc8c-11eb-8529-0242ac130003", "name": "submission.review2date", "title": "Review 2 date", "component": "TextField", "placeholder": "review 2 date", "doiValidation": "false"}, {"id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a", "name": "submission.review3", "title": "Review 3", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "3fc01c57-62b2-422e-b5ae-1e76826050c8", "name": "submission.review3creator", "title": "Review 3 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864dc2-bc8c-11eb-8529-0242ac130003", "name": "submission.review3date", "title": "Review 3 date", "component": "TextField", "placeholder": "review 3 date", "doiValidation": "false"}, {"id": "05867f53-ea10-4d3b-8220-48200b92cd4f", "name": "submission.summary", "title": "Summary", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "0a64672c-0fc2-4e99-a023-d89240523a32", "name": "submission.summarycreator", "title": "Summary creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab8654b6-bc8c-11eb-8529-0242ac130003", "name": "submission.summarydate", "title": "Summary date", "component": "TextField", "placeholder": "summary date", "doiValidation": "false"}], "haspopup": "false", "description": "<p>eLife Form</p>"}', 'submission'),
-('d619d5ba-80e5-4ada-8983-87d1312e5250', 'Form', '2022-09-15 06:18:14.689+00', '2022-09-15 06:18:14.689+00', 'review', '{"name": "Review", "children": [{"id": "1880448f-827a-422a-8ed7-c00f8ce9ccae", "name": "comment", "title": "Comments to the Author", "validate": [{"id": "332253be-dc19-47a8-9bfb-c32fa3fc9b43", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Enter your review..."}, {"id": "4e0ee4a6-57bc-4284-957a-f3e17ac4a24d", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "2a1eab32-3e78-49e1-b0e5-24104a39a06a", "name": "confidentialComment", "title": "Confidential comments to the editor (optional)", "component": "AbstractEditor", "placeholder": "Enter a confidential note to the editor (optional)...", "hideFromAuthors": "true", "shortDescription": "Confidential comments"}, {"id": "21b5de2c-10fd-48cb-a00a-ab2c96b1c242", "name": "confidentialFiles", "title": " ", "component": "SupplementaryFiles", "hideFromAuthors": "true", "shortDescription": "Confidential files"}, {"id": "257d6be0-0832-41fc-b6d2-b1f096342bc2", "name": "verdict", "title": "Recommendation", "inline": "true", "options": [{"id": "da8a08bd-d035-400e-856a-f2c6f8040c27", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "da75afd9-aeac-4d24-8f5e-8ed00d233543", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a254f0c1-25e5-45bb-8a8e-8251d2c27f8c", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "d970099e-b05e-4fae-891f-1a81d6f46b65", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "true", "popuptitle": "Confirm your review", "description": "<p class=\"paragraph\">By completing this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>", "popupdescription": "<p class=\"paragraph\">By submitting this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>"}', 'review'),
-('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
+INSERT INTO "public"."groups" ("id", "name", "created", "updated", "is_archived", "type") VALUES
+('a6303daa-fc03-4257-99e5-f4579fea4be8', 'kotahi', '2022-09-15 06:17:37.142077+00', '2022-09-15 06:17:37.142077+00', 'f', 'Group');
 
-INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "type") VALUES
-('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"loginRedirectUrl": "/admin/manuscripts"}, "manuscript": {"tableColumns": "submission.articleId, created, updated, status, author", "newSubmission": true, "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Metadata"], "displayManuscriptShortId": true}, "instanceName": "elife", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-elife.svg", "brandName": "eLife", "primaryColor": "#0A9DD9", "secondaryColor": "#0A9DD9"}, "eventNotification": {"reviewerInvitationPrimaryEmailTemplate": "ae7e01ca-fa91-4155-a248-a8b9f38c80a3"}}', true, 'Config');
+INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "group_id", "type") VALUES
+('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-09-15 06:17:37.142077+00', NULL, 'System-wide discussion', 'a6303daa-fc03-4257-99e5-f4579fea4be8', 'editorial');
+
+INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "structure", "category", "group_id") VALUES
+('9f27f699-56b2-4adc-b5c6-f179ff9a5380', 'Form', '2022-09-15 06:18:14.685+00', '2022-09-15 06:18:14.685+00', 'submit', '{"name": "eLife Submission Form", "children": [{"id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6", "name": "submission.articleId", "title": "Article ID", "options": [], "validate": [{"id": "48179c76-55b3-41b8-b330-6115dcbd9b2a", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "5a22ec26-3885-432c-8c80-b207a62a7b04", "name": "submission.articleURL", "title": "Article URL", "options": [], "validate": [{"id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a", "label": "Required", "value": "required"}], "component": "TextField", "doiValidation": "true"}, {"id": "b100e6a0-b00e-413c-823b-862351e9690f", "name": "submission.biorxivURL", "title": "bioRxiv article URL", "options": [], "validate": [{"id": "20708da4-7999-49c0-9881-d28f2ce9f825", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "ec5e5f89-282c-42e9-bde2-d35816152362", "name": "submission.description", "title": "Description", "options": [], "validate": [{"id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "12909732-e675-4270-bb3b-3b4d8d39dace", "name": "submission.review1", "title": "Review 1","component": "AbstractEditor", "placeholder": "Review 1", "doiValidation": "false"}, {"id": "a7cd4965-0741-4b11-aa07-5cf89165a551", "name": "submission.review1creator", "title": "Review 1 creator", "component": "TextField", "doiValidation": "false"}, {"id": "520615da-c193-4722-9509-3d849f3b6dc2", "name": "submission.review1date", "title": "Review 1 date", "component": "TextField", "placeholder": "review 1 date", "doiValidation": "false"}, {"id": "6285b767-66be-4e5f-aa36-b00ec2730177", "name": "submission.review2", "title": "Review 2", "component": "AbstractEditor", "placeholder": "Review 2", "doiValidation": "false"}, {"id": "2fa4f519-5342-4128-ab82-f5e10c4764ee", "name": "submission.review2creator", "title": "Review 2 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864ade-bc8c-11eb-8529-0242ac130003", "name": "submission.review2date", "title": "Review 2 date", "component": "TextField", "placeholder": "review 2 date", "doiValidation": "false"}, {"id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a", "name": "submission.review3", "title": "Review 3", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "3fc01c57-62b2-422e-b5ae-1e76826050c8", "name": "submission.review3creator", "title": "Review 3 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864dc2-bc8c-11eb-8529-0242ac130003", "name": "submission.review3date", "title": "Review 3 date", "component": "TextField", "placeholder": "review 3 date", "doiValidation": "false"}, {"id": "05867f53-ea10-4d3b-8220-48200b92cd4f", "name": "submission.summary", "title": "Summary", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "0a64672c-0fc2-4e99-a023-d89240523a32", "name": "submission.summarycreator", "title": "Summary creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab8654b6-bc8c-11eb-8529-0242ac130003", "name": "submission.summarydate", "title": "Summary date", "component": "TextField", "placeholder": "summary date", "doiValidation": "false"}], "haspopup": "false", "description": "<p>eLife Form</p>"}', 'submission', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('d619d5ba-80e5-4ada-8983-87d1312e5250', 'Form', '2022-09-15 06:18:14.689+00', '2022-09-15 06:18:14.689+00', 'review', '{"name": "Review", "children": [{"id": "1880448f-827a-422a-8ed7-c00f8ce9ccae", "name": "comment", "title": "Comments to the Author", "validate": [{"id": "332253be-dc19-47a8-9bfb-c32fa3fc9b43", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Enter your review..."}, {"id": "4e0ee4a6-57bc-4284-957a-f3e17ac4a24d", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "2a1eab32-3e78-49e1-b0e5-24104a39a06a", "name": "confidentialComment", "title": "Confidential comments to the editor (optional)", "component": "AbstractEditor", "placeholder": "Enter a confidential note to the editor (optional)...", "hideFromAuthors": "true", "shortDescription": "Confidential comments"}, {"id": "21b5de2c-10fd-48cb-a00a-ab2c96b1c242", "name": "confidentialFiles", "title": " ", "component": "SupplementaryFiles", "hideFromAuthors": "true", "shortDescription": "Confidential files"}, {"id": "257d6be0-0832-41fc-b6d2-b1f096342bc2", "name": "verdict", "title": "Recommendation", "inline": "true", "options": [{"id": "da8a08bd-d035-400e-856a-f2c6f8040c27", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "da75afd9-aeac-4d24-8f5e-8ed00d233543", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a254f0c1-25e5-45bb-8a8e-8251d2c27f8c", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "d970099e-b05e-4fae-891f-1a81d6f46b65", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "true", "popuptitle": "Confirm your review", "description": "<p class=\"paragraph\">By completing this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>", "popupdescription": "<p class=\"paragraph\">By submitting this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>"}', 'review', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision', 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+
+INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "group_id", "type") VALUES
+('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"loginRedirectUrl": "/admin/manuscripts"}, "manuscript": {"tableColumns": "submission.articleId, created, updated, status, author", "newSubmission": true, "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Metadata"], "displayManuscriptShortId": true}, "instanceName": "elife", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-elife.svg", "brandName": "eLife", "primaryColor": "#0A9DD9", "secondaryColor": "#0A9DD9"}, "eventNotification": {"reviewerInvitationPrimaryEmailTemplate": "ae7e01ca-fa91-4155-a248-a8b9f38c80a3"}}', true, 'a6303daa-fc03-4257-99e5-f4579fea4be8', 'Config');
 
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-09-15 06:17:35.719777+00'),
@@ -619,12 +644,44 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1677839814-drop-task-notification-id-recipient-id-unique-index.sql', '2022-09-15 06:17:39.357414+00'),
 ('1676497888-config.sql', '2022-09-15 06:17:39.709414+00'),
 ('1678694877-create-config-data-from-env.js', '2022-09-15 06:17:39.789414+00'),
-('1679455713-add-last-tab.sql', '2022-09-15 06:17:39.989414+00');
+('1679455713-add-last-tab.sql', '2022-09-15 06:17:39.989414+00'),
+('1679456198-group-managers-team.sql', '2023-05-17 10:11:38.509513+00'),
+('1679456199-admin-team.sql', '2023-05-17 10:11:38.527553+00'),
+('1680679478-update-config-form-data-show-tabs.js', '2023-05-17 10:11:38.545092+00'),
+('1682351059-delete-status-for-non-reviewers.sql', '2023-05-17 10:11:38.56579+00'),
+('1682429315-fix-message-channel-ids.sql', '2023-05-17 10:11:38.583134+00'),
+('1684733400-group.sql','2023-06-22 06:56:18.312758+00'),
+('1684733410-create-group-from-env-or-brand-config.js','2023-06-22 06:56:18.328294+00'),
+('1684733420-add-group-id-column-to-config-table.sql','2023-06-22 06:56:18.349565+00'),
+('1684733430-update-group-id-in-config-table.js','2023-06-22 06:56:18.374129+00'),
+('1684733440-add-group-id-column-to-manuscript-table.sql','2023-06-22 06:56:18.394978+00'),
+('1684733450-update-group-id-in-manuscript-table.js','2023-06-22 06:56:18.415066+00'),
+('1684733460-add-group-id-column-to-form-table.sql','2023-06-22 06:56:18.428928+00'),
+('1684733470-update-group-id-in-form-table.js','2023-06-22 06:56:18.443204+00'),
+('1684733480-add-group-id-column-to-channel-table.sql','2023-06-22 06:56:18.46357+00'),
+('1684733490-update-group-id-in-channel-table.js','2023-06-22 06:56:18.486742+00'),
+('1684733500-add-group-id-column-to-task-table.sql','2023-06-22 06:56:18.502643+00'),
+('1684733510-update-group-id-in-task-table.js','2023-06-22 06:56:18.521108+00'),
+('1684733520-add-group-id-column-to-article-import-history-table.sql','2023-06-22 06:56:18.538422+00'),
+('1684733530-update-group-id-in-article-import-history-table.js','2023-06-22 06:56:18.556735+00'),
+('1684733540-add-group-id-column-to-email-blacklist-table.sql','2023-06-22 06:56:18.576986+00'),
+('1684733550-update-group-id-in-email-blacklist-table.js','2023-06-22 06:56:18.601616+00'),
+('1684733560-update-object-id-group-manager-team.js','2023-06-22 06:56:18.623226+00'),
+('1684733570-create-user-team-and-populate-members.js','2023-06-22 06:56:18.638494+00'),
+('1685011254-flax-pages-migration.sql','2023-06-22 06:56:18.664673+00'),
+('1686806096-cms-pages-table-migration.sql','2023-06-22 06:56:18.708335+00'),
+('1687314845-cms-layout-table-migration.sql','2023-07-05 14:12:47.324781+00'),
+('1687697117-create_email_templates_table.sql','2023-06-30 13:35:49.662754+00'),
+('1687697217-migrate_hardcoded_email_templates.js','2023-06-30 13:35:50.224203+00'),
+('1688428655-add-group-id-column-to-email-template-table.sql','2023-07-04 07:35:40.45393+00'),
+('1688428660-update-group-id-in-email-template-table.js','2023-07-04 12:03:39.105942+00');
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
+ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("group_id") REFERENCES "public"."groups"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id");
 ALTER TABLE "public"."channels" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."channels" ADD FOREIGN KEY ("group_id") REFERENCES "public"."groups"("id");
 ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("review_comment_id") REFERENCES "public"."review_comments"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."identities" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
@@ -633,6 +690,7 @@ ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("manuscript_id") REFERENCES 
 ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("submitter_id") REFERENCES "public"."users"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("import_source") REFERENCES "public"."article_import_sources"("id");
+ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("group_id") REFERENCES "public"."groups"("id");
 ALTER TABLE "public"."messages" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."messages" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."review_comments" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE SET NULL;
@@ -650,12 +708,14 @@ ALTER TABLE public.published_artifacts ADD FOREIGN KEY (manuscript_id) REFERENCE
 
 ALTER TABLE tasks ADD FOREIGN KEY (manuscript_id) REFERENCES manuscripts(id) ON DELETE CASCADE;
 ALTER TABLE tasks ADD FOREIGN KEY (assignee_user_id) REFERENCES users(id) ON DELETE SET NULL;
+ALTER TABLE tasks ADD FOREIGN KEY (group_id) REFERENCES groups(id);
 ALTER TABLE task_alerts ADD FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE;
 ALTER TABLE task_alerts ADD FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE task_email_notifications ADD FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE CASCADE;
 ALTER TABLE task_email_notifications ADD FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE;
 CREATE INDEX tasks_manuscript_id_idx ON tasks (manuscript_id);
 CREATE INDEX tasks_user_id_idx ON tasks (assignee_user_id);
+CREATE INDEX tasks_group_id_idx ON tasks (group_id);
 CREATE UNIQUE INDEX task_alerts_alerts_task_id_user_id_uniq_idx ON task_alerts(task_id, user_id);
 CREATE INDEX task_alerts_task_id_idx ON task_alerts (task_id);
 CREATE INDEX task_alerts_user_id_idx ON task_alerts (user_id);
@@ -687,15 +747,27 @@ INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type"
 ('549e398c-58df-432d-97fd-cc02beb92b72', 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.743+00', '2022-09-14 02:51:21.743+00', 'orcid', '0000-0002-9601-2254', 'David Miller'   , '', '{"accessToken": "a0829b38-4732-4f7c-961d-eac592dbfb07", "refreshToken": "581792f0-a925-4cdb-a491-a519af67273c"}', 't');
 
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
-('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, true, 'team', NULL, NULL);
+('125d6ad4-b81e-4320-9934-f29289cb49d6', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'User', 'user', NULL, NULL, false, 'team', 'a6303daa-fc03-4257-99e5-f4579fea4be8', 'Group'),
+('eb61876a-fee2-44cf-a6a9-9cdca2f1b398', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Group Manager', 'groupManager', NULL, NULL, false, 'team', 'a6303daa-fc03-4257-99e5-f4579fea4be8', 'Group'),
+('37321ccf-3cb3-43bb-9104-5bf51a82dc03', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Admin', 'admin', NULL, NULL, true, 'team', NULL, NULL);
+
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
-('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
+('4535a185-9fe1-462a-8010-ff33ebb4c593', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', '5b861dfb-02df-4be1-bc67-41a21611f5e7', NULL, NULL),
+('c2b06634-0090-4ee7-abe1-72a3e91ae092', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', '85e1300e-003c-4e96-987b-23812f902477', NULL, NULL),
+('e7ff940c-c5aa-45ea-9299-4920d84a248b', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL),
+('87511c90-e42f-4de4-85dd-ca3587176bed', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('bedfba23-98fe-428b-bfed-723106d5f154', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', '41d52254-a2b8-4ea4-9ded-bfbfe9671578', NULL, NULL),
+('6f3a4241-0a32-4c66-a2d4-26e71203bf20', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', NULL, NULL),
+('5ea0bb5a-2c36-4a8e-b534-771227970f0e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '125d6ad4-b81e-4320-9934-f29289cb49d6', 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', NULL, NULL),
+('3c01cb4a-27ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '37321ccf-3cb3-43bb-9104-5bf51a82dc03', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('3c0dcb4a-37ed-53e2-ca03-a4593cb0434e', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, 'eb61876a-fee2-44cf-a6a9-9cdca2f1b398', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
 
-INSERT INTO "public"."email_templates" ("id", "created", "updated", "email_template_type", "email_content")
+INSERT INTO "public"."email_templates" ("id", "created", "updated", "email_template_type", "email_content", "group_id")
 VALUES 
-('ae7e01ca-fa91-4155-a248-a8b9f38c80a3', '2023-06-27 16:50:15.084+00', '2023-06-27 16:50:15.084+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
-('f7bf7d8d-e2f6-4c66-a1ac-192a436d3303', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
-('90ebd711-3e04-4ec2-9cad-69365029e8fb', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
-('7aeb1c35-99fd-41a2-a63c-9618c365e51f', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}'),
-('692471e0-4ed7-4430-804c-2c89e55e60f2', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}');
+('ae7e01ca-fa91-4155-a248-a8b9f38c80a3', '2023-06-27 16:50:15.084+00', '2023-06-27 16:50:15.084+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('f7bf7d8d-e2f6-4c66-a1ac-192a436d3303', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('90ebd711-3e04-4ec2-9cad-69365029e8fb', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('7aeb1c35-99fd-41a2-a63c-9618c365e51f', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
+('692471e0-4ed7-4430-804c-2c89e55e60f2', '2023-06-27 16:50:15.083+00', '2023-06-27 16:50:15.083+00', 'reviewerInvitation', '{"cc": "lesley@sciencecolab.org, swartzk@ninds.nih.gov", "body": "<p>\n <p>Dear {{ recipientName }}</p>\n\n<p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>\n\n<p>Thank you</p>\n<p>\n On behalf of Biophysics Colab <br>\n <a href=\"https://www.sciencecolab.org/\" target=\"_blank\">www.sciencecolab.org</a>\n<p>", "subject": "Evaluation from Biophysics Colab now published", "ccEditors": false, "description": "Evaluation published"}', 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+

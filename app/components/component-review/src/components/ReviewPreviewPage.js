@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import ReviewPreview from './reviewPreview/ReviewPreview'
 import { Heading, Page, Spinner } from '../../../shared'
+import { ConfigContext } from '../../../config/src'
 
 const fragmentFields = `
   id
@@ -27,7 +28,7 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!) {
+  query($id: ID!, $groupId: ID) {
     manuscript(id: $id) {
       ${fragmentFields}
       manuscriptVersions {
@@ -35,7 +36,7 @@ const query = gql`
       }
     }
 
-    formForPurposeAndCategory(purpose: "submit", category: "submission") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
       structure {
         children {
           title
@@ -52,9 +53,12 @@ const query = gql`
 `
 
 const ReviewPreviewPage = ({ match, currentUser }) => {
+  const config = useContext(ConfigContext)
+
   const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
+      groupId: config.groupId,
     },
     partialRefetch: true,
   })

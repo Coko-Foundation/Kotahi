@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 // import moment from 'moment-timezone'
 import styled from 'styled-components'
 import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
+import { ConfigContext } from '../../config/src'
 
 const TaskListContainer = styled.div`
   -webkit-font-smoothing: antialiased;
@@ -62,6 +63,7 @@ const TaskList = ({
   createTaskEmailNotificationLog,
   emailTemplates,
 }) => {
+  const config = useContext(ConfigContext)
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
@@ -78,6 +80,7 @@ const TaskList = ({
   const repackageTask = task => ({
     id: task.id,
     manuscriptId,
+    groupId: config.groupId,
     title: task.title,
     assigneeUserId: task.assignee?.id || null,
     defaultDurationDays: task.defaultDurationDays,
@@ -133,6 +136,7 @@ const TaskList = ({
     persistTasks({
       variables: {
         manuscriptId,
+        groupId: config.groupId,
         tasks: tasksToPersist,
       },
     })

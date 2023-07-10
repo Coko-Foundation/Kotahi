@@ -3,7 +3,7 @@ const models = require('@pubsweet/models')
 const { fileStorage } = require('@coko/server')
 
 const setInitialLayout = async () => {
-  const { formData } = await models.Config.query().first()
+  const { formData } = await models.Config.query().first() // TODO: Modify this to be queried with groupId for multi-tenancy phase 2 / CMS release
   const { primaryColor, secondaryColor } = formData.groupIdentity
 
   const layout = await new models.CMSLayout({

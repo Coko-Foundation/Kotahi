@@ -68,8 +68,15 @@ const expandTemplatesAndRemoveDirectivesRecursive = (
 
 const tryPublishDocMaps = async manuscript => {
   if (!docmapsScheme) return false
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
-  const { submissionForm, reviewForm, decisionForm } = await getActiveForms()
+
+  const activeConfig = await Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
+
+  const { submissionForm, reviewForm, decisionForm } = await getActiveForms(
+    manuscript.groupId,
+  )
 
   const fields = getFieldsMapForTemplating(
     manuscript,
@@ -110,6 +117,7 @@ const tryPublishDocMaps = async manuscript => {
               uri,
               manuscriptTitle,
               manuscript.id,
+              manuscript.groupId,
             )
 
             // eslint-disable-next-line no-console

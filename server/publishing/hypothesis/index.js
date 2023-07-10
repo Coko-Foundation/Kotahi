@@ -44,7 +44,10 @@ const prepareTurndownService = () =>
   new TurndownService({ bulletListMarker: '*' })
 
 const publishToHypothesis = async manuscript => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
 
   const headers = {
     headers: {
@@ -67,7 +70,7 @@ const publishToHypothesis = async manuscript => {
 
   const publishableFieldData = getPublishableFields(
     manuscript,
-    await getActiveForms(),
+    await getActiveForms(manuscript.groupId),
     await getThreadedDiscussionsForManuscript(manuscript, getUsersById),
   )
 
@@ -157,8 +160,12 @@ const publishSpecificAnnotationToHypothesis = async (
   uri,
   manuscriptTitle,
   manuscriptId,
+  groupId,
 ) => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const headers = {
     headers: {

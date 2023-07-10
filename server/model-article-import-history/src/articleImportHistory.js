@@ -10,6 +10,7 @@ class ArticleImportHistory extends BaseModel {
       properties: {
         date: { type: ['string', 'object', 'null'], format: 'date-time' },
         sourceId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

@@ -8,15 +8,14 @@ const CALLBACK_URL = '/auth/orcid/callback'
 
 const orcidBackURL = config['pubsweet-client'].baseUrl
 
-const addUserToAdminAndGroupManagerTeams = async userId => {
+const addUserToAdminAndGroupManagerTeams = async (userId, groupId) => {
   // eslint-disable-next-line global-require
   const { Team, TeamMember } = require('@pubsweet/models')
-
-  const groupId = null // TODO get groupId when we have multitenancy
 
   const groupManagerTeam = await Team.query().findOne({
     role: 'groupManager',
     objectId: groupId,
+    objectType: 'Group',
   })
 
   const adminTeam = await Team.query().findOne({ role: 'admin', global: true })
@@ -24,11 +23,22 @@ const addUserToAdminAndGroupManagerTeams = async userId => {
   await TeamMember.query().insert({ userId, teamId: groupManagerTeam.id })
 }
 
+const addUserToUserTeam = async (userId, groupId) => {
+  // eslint-disable-next-line global-require
+  const { Team, TeamMember } = require('@pubsweet/models')
+
+  const userTeam = await Team.query().findOne({
+    role: 'user',
+    objectId: groupId,
+    objectType: 'Group',
+  })
+
+  await TeamMember.query().insert({ userId, teamId: userTeam.id })
+}
+
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const { User } = require('@pubsweet/models')
-  // eslint-disable-next-line global-require
-  const Config = require('../config/src/config')
+  const { Config, Group, User } = require('@pubsweet/models')
 
   // set up OAuth client
   passport.use(
@@ -41,13 +51,21 @@ module.exports = app => {
         // this works here only with webpack dev server's proxy (ie. clientUrl/auth -> serverUrl/auth)
         // or when the server and client are served from the same url
         callbackURL: orcidBackURL + CALLBACK_URL,
+        passReqToCallback: true,
         ...config.get('auth-orcid'),
       },
-      async (accessToken, refreshToken, params, profile, done) => {
+      async (req, accessToken, refreshToken, params, profile, done) => {
+        const urlParams = new URLSearchParams(req.query.state)
+        const groupId = urlParams.get('group_id')
+
         // convert oauth response into a user object
         let user
         let firstLogin = false
-        const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+        const activeConfig = await Config.query().findOne({
+          groupId,
+          active: true,
+        })
 
         try {
           user = await User.query()
@@ -86,7 +104,7 @@ module.exports = app => {
             }).saveGraph()
 
             if (usersCountString === '0' || activeConfig.formData.user.isAdmin)
-              await addUserToAdminAndGroupManagerTeams(user.id)
+              await addUserToAdminAndGroupManagerTeams(user.id, groupId)
 
             // Do another request to the ORCID API for aff/name
             const userDetails = await fetchUserDetails(user)
@@ -103,13 +121,22 @@ module.exports = app => {
           return
         }
 
-        done(null, { ...user, firstLogin })
+        done(null, { ...user, firstLogin, groupId })
       },
     ),
   )
 
   // handle sign in request
-  app.get('/auth/orcid', passport.authenticate('orcid'))
+  app.get('/auth/orcid', (req, res, next) => {
+    // Extract custom parameters from the request query
+    const groupId = req.query.group_id
+
+    const options = {
+      state: `group_id=${groupId}`,
+    }
+
+    passport.authenticate('orcid', options)(req, res, next)
+  })
 
   // handle oauth response
   app.get(
@@ -120,10 +147,30 @@ module.exports = app => {
     }),
     async (req, res) => {
       const jwt = createJWT(req.user)
-      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+      const { groupId } = req.user
+
+      const group = await Group.query().findOne({
+        id: groupId,
+        isArchived: false,
+      })
+
+      if (!group) {
+        throw new Error(`Group not found or archived!`)
+      }
+
+      const urlFrag = `/${group.name}`
+
+      const activeConfig = await Config.query().findOne({
+        groupId,
+        active: true,
+      })
+
+      // Based on configuration User Management -> All users are assigned Group Manager and Admin roles flag
+      if (activeConfig.formData.user.isAdmin)
+        await addUserToAdminAndGroupManagerTeams(req.user.id, groupId)
+
       // eslint-disable-next-line global-require
       const { Team } = require('@pubsweet/models')
-      const groupId = null // TODO set groupId once we have multitenancy
 
       const groupManagerTeam = await Team.query()
         .withGraphJoined('members')
@@ -131,22 +178,39 @@ module.exports = app => {
         .findOne({
           userId: req.user.id,
           objectId: groupId,
+          objectType: 'Group',
           role: 'groupManager',
         })
 
       const isGroupManager = !!groupManagerTeam
+
+      const userTeam = await Team.query()
+        .withGraphJoined('members')
+        .select('role')
+        .findOne({
+          userId: req.user.id,
+          objectId: groupId,
+          objectType: 'Group',
+          role: 'user',
+        })
+
+      const isGroupUser = !!userTeam
+
+      if (!isGroupUser) await addUserToUserTeam(req.user.id, groupId)
+
       let redirectionUrl
 
-      // TODO redirectionURL prefix `/kotahi` to be replaced with value from group based active config in the future
       if (req.user.firstLogin) {
-        redirectionUrl = '/kotahi/profile'
+        redirectionUrl = `${urlFrag}/profile`
       } else if (isGroupManager) {
-        redirectionUrl = `/kotahi${activeConfig.formData.dashboard.loginRedirectUrl}`
+        redirectionUrl = `${urlFrag}${activeConfig.formData.dashboard.loginRedirectUrl}`
       } else {
-        redirectionUrl = '/kotahi/dashboard'
+        redirectionUrl = `${urlFrag}/dashboard`
       }
 
-      res.redirect(`/login?token=${jwt}&redirectUrl=${redirectionUrl}`)
+      res.redirect(
+        `${urlFrag}/login?token=${jwt}&redirectUrl=${redirectionUrl}`,
+      )
     },
   )
 }

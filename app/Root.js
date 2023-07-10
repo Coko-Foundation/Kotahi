@@ -2,6 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { ApolloProvider, ApolloClient, ApolloLink, split } from '@apollo/client'
+import { BrowserRouter } from 'react-router-dom'
 // import { ApolloClient } from 'apollo-client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 // import { split, ApolloLink } from 'apollo-link'
@@ -45,6 +46,15 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
     }
   })
 
+  const groupLink = setContext((_, { headers }) => {
+    return {
+      headers: {
+        ...headers,
+        'group-id': localStorage.getItem('groupId') || null,
+      },
+    }
+  })
+
   const removeTypename = new ApolloLink((operation, forward) => {
     if (operation.variables) {
       operation.variables = stripTypenames(operation.variables)
@@ -53,7 +63,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
     return forward(operation)
   })
 
-  let link = ApolloLink.from([removeTypename, authLink, uploadLink])
+  let link = ApolloLink.from([removeTypename, authLink, groupLink, uploadLink])
 
   if (connectToWebSocket) {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
@@ -158,13 +168,15 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   return new ApolloClient(makeConfig ? makeConfig(config) : config)
 }
 
-const Root = ({ makeApolloConfig, routes, connectToWebSocket = true }) => {
+const Root = ({ makeApolloConfig, connectToWebSocket = true }) => {
   return (
     <div>
       <ApolloProvider
         client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
       >
-        <Pages routes={routes} />
+        <BrowserRouter>
+          <Pages />
+        </BrowserRouter>
       </ApolloProvider>
     </div>
   )
@@ -176,7 +188,6 @@ Root.defaultProps = {
 }
 Root.propTypes = {
   makeApolloConfig: PropTypes.func,
-  routes: PropTypes.node.isRequired,
   connectToWebSocket: PropTypes.bool,
 }
 

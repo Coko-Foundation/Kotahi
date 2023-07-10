@@ -185,11 +185,6 @@ class User extends BaseModel {
       }),
     )
   }
-
-  async isOnline() {
-    const currentDateTime = new Date()
-    return this.lastOnline && currentDateTime - this.lastOnline < 5 * 60 * 1000
-  }
 }
 
 User.type = 'user'

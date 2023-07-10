@@ -14,9 +14,13 @@ const resolvers = {
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await models.Review.query().findById(id)) || {}
 
+      const manuscript = await models.Manuscript.query().findById(
+        existingReview.manuscriptId || input.manuscriptId,
+      )
+
       const form = existingReview.isDecision
-        ? await getDecisionForm()
-        : await getReviewForm()
+        ? await getDecisionForm(manuscript.groupId)
+        : await getReviewForm(manuscript.groupId)
 
       await convertFilesToIdsOnly(reviewDelta, form)
 

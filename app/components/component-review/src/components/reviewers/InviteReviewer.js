@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   SectionContent,
   SectionHeader,
@@ -12,6 +12,7 @@ import {
 } from '../emailNotifications/emailUtils'
 import InviteReviewerModal from './InviteReviewerModal'
 import ReviewerForm from './ReviewerForm'
+import { ConfigContext } from '../../../../config/src'
 
 const InviteReviewer = ({
   reviewerUsers,
@@ -25,9 +26,9 @@ const InviteReviewer = ({
   selectedEmailIsBlacklisted,
   setExternalEmail,
   updateTeamMember,
-  config,
   emailTemplates,
 }) => {
+  const config = useContext(ConfigContext)
   const [open, setOpen] = useState(false)
 
   const [userId, setUserId] = useState(undefined)
@@ -68,6 +69,7 @@ const InviteReviewer = ({
               values.email,
               values.name,
               selectedEmailIsBlacklisted,
+              config.groupId,
             )
 
             setNotificationStatus(output?.invitation ? 'success' : 'failure')

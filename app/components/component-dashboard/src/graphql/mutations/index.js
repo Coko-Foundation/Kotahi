@@ -85,8 +85,8 @@ export default {
     }
   `,
   createNewTaskAlertsMutation: gql`
-    mutation {
-      createNewTaskAlerts
+    mutation($groupId: ID!) {
+      createNewTaskAlerts(groupId: $groupId)
     }
   `,
   removeTaskAlertsForCurrentUserMutation: gql`

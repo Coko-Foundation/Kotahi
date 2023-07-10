@@ -52,7 +52,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
         'DO_NOT_CONTACT'
       ) {
         addEmailToBlacklist({
-          variables: { email: blacklistData.updateInvitationResponse.toEmail },
+          variables: {
+            email: blacklistData.updateInvitationResponse.toEmail,
+            groupId: config.groupId,
+          },
         })
       } else {
         setIsFormSubmitted(true)
@@ -85,8 +88,8 @@ const DeclineArticleOwnershipPage = ({ match }) => {
         <Centered>
           <InvitationContent>
             <img
-              alt={config.groupIdentity.brandName}
-              src={config.groupIdentity.logoPath}
+              alt={config?.groupIdentity?.brandName}
+              src={config?.groupIdentity?.logoPath}
             />
             <ThankYouString>
               Thank you for submitting the feedback.
@@ -103,8 +106,8 @@ const DeclineArticleOwnershipPage = ({ match }) => {
         <Centered>
           <InvitationContent>
             <img
-              alt={config.groupIdentity.brandName}
-              src={config.groupIdentity.logoPath}
+              alt={config?.groupIdentity?.brandName}
+              src={config?.groupIdentity?.logoPath}
             />
             <FeedbackForm>
               <DeclinedInfoString>

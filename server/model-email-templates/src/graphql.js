@@ -25,7 +25,11 @@ const resolvers = {
   },
   Query: {
     async emailTemplates(_, __, ctx) {
-      const emailTemplates = await models.EmailTemplate.query()
+      const groupId = ctx.req.headers['group-id']
+
+      const emailTemplates = await models.EmailTemplate.query().where({
+        groupId,
+      })
 
       emailTemplates.sort((a, b) =>
         a.emailContent.description.localeCompare(
@@ -47,6 +51,7 @@ type EmailTemplate {
   updated: DateTime
   emailTemplateType: String
   emailContent: EmailContent!
+  groupId: String!
 }
 
 type EmailContent {

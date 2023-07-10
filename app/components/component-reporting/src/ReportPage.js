@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Report from './Report'
 import { getStartOfDay, getEndOfDay } from '../../../shared/dateUtils'
 import { Spinner, CommsErrorBanner } from '../../shared'
+import { ConfigContext } from '../../config/src'
 
 const getReportData = gql`
   query reportData(
     $startDate: DateTime
     $endDate: DateTime
+    $groupId: ID!
     $timeZoneOffset: Int
   ) {
     summaryActivity(
       startDate: $startDate
       endDate: $endDate
+      groupId: $groupId
       timeZoneOffset: $timeZoneOffset
     ) {
       avgPublishTimeDays
@@ -45,7 +48,11 @@ const getReportData = gql`
         y
       }
     }
-    manuscriptsActivity(startDate: $startDate, endDate: $endDate) {
+    manuscriptsActivity(
+      startDate: $startDate
+      endDate: $endDate
+      groupId: $groupId
+    ) {
       shortId
       entryDate
       title
@@ -76,7 +83,11 @@ const getReportData = gql`
       publishedDate
       versionReviewDurations
     }
-    editorsActivity(startDate: $startDate, endDate: $endDate) {
+    editorsActivity(
+      startDate: $startDate
+      endDate: $endDate
+      groupId: $groupId
+    ) {
       name
       assignedCount
       givenToReviewersCount
@@ -85,7 +96,11 @@ const getReportData = gql`
       acceptedCount
       publishedCount
     }
-    reviewersActivity(startDate: $startDate, endDate: $endDate) {
+    reviewersActivity(
+      startDate: $startDate
+      endDate: $endDate
+      groupId: $groupId
+    ) {
       name
       invitesCount
       declinedCount
@@ -95,7 +110,11 @@ const getReportData = gql`
       reccAcceptCount
       reccRejectCount
     }
-    authorsActivity(startDate: $startDate, endDate: $endDate) {
+    authorsActivity(
+      startDate: $startDate
+      endDate: $endDate
+      groupId: $groupId
+    ) {
       name
       unsubmittedCount
       submittedCount
@@ -120,6 +139,8 @@ const removeTypeName = rows => {
 const defaultReportDuration = 31 * 24 * 60 * 60 * 1000 // 31 days
 
 const ReportPage = () => {
+  const config = useContext(ConfigContext)
+
   const [startDate, setStartDate] = useState(
     getStartOfDay(Date.now() - defaultReportDuration).getTime(),
   )
@@ -130,6 +151,7 @@ const ReportPage = () => {
     variables: {
       startDate,
       endDate,
+      groupId: config.groupId,
       timeZoneOffset: new Date().getTimezoneOffset(),
     },
     fetchPolicy: 'network-only',

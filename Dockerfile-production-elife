@@ -1,6 +1,5 @@
 FROM node:16.19.0-alpine
 
-ARG instance_name
 ARG use_colab_email
 ARG node_env
 ARG server_protocol
@@ -15,7 +14,6 @@ ARG public_client_port
 ARG client_flax_site_url
 
 
-ENV INSTANCE_NAME $instance_name
 ENV USE_COLAB_EMAIL $use_colab_email
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL "http"

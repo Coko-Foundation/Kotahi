@@ -60,9 +60,19 @@ module.exports = defineConfig({
           return jwt
         },
         seedForms: async () => {
+          // eslint-disable-next-line global-require
+          const { Group, Config } = require('@pubsweet/models')
+
           // eslint-disable-next-line no-console
           console.log('Seeding forms...')
-          await seedForms()
+          const group = await Group.query().findOne({ name: 'kotahi' })
+
+          const activeConfig = await Config.query().findOne({
+            groupId: group.id,
+            active: true,
+          })
+
+          await seedForms(group, activeConfig)
           return null
         },
         log(message) {

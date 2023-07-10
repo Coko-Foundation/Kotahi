@@ -17,7 +17,6 @@ services:
         - public_client_protocol=${PUBLIC_CLIENT_PROTOCOL}
         - public_client_host=${PUBLIC_CLIENT_HOST}
         - public_client_port=${PUBLIC_CLIENT_PORT}
-        - instance_name=${INSTANCE_NAME:-elife}
         - use_colab_email=${USE_COLAB_EMAIL:-false}
         - client_flax_site_url=${CLIENT_FLAX_SITE_URL:-https://site.kotahidev.cloud68.co/}
 
@@ -43,7 +42,6 @@ services:
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
       - CLIENT_FLAX_SITE_URL=${CLIENT_FLAX_SITE_URL:-https://site.kotahidev.cloud68.co/}
-      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
       - KOTAHI_API_TOKENS=${KOTAHI_API_TOKENS:-}
       - JOURNAL_NAME=${JOURNAL_NAME:-}
       - JOURNAL_ABBREVIATED_NAME=${JOURNAL_ABBREVIATED_NAME:-}
@@ -113,6 +111,7 @@ services:
       - FLAX_CLIENT_PORT=${CLIENT_PORT}
       - FLAX_CLIENT_PROTOCOL=${CLIENT_PROTOCOL}
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL}
+      - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:aperture}
 
     volumes:
       - ./uploads:/home/node/app/uploads
