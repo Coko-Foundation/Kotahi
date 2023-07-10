@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { th } from '@pubsweet/ui-toolkit'
 import styled, { css } from 'styled-components'
 import { SectionHeader, SectionRowGrid, Title } from '../style'
@@ -7,6 +7,7 @@ import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
 import ActionButton from '../../../../shared/ActionButton'
 import { sendEmail, sendEmailChannelMessage } from './emailUtils'
+import { ConfigContext } from '../../../../config/src'
 
 const UserEmailWrapper = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -63,6 +64,7 @@ const EmailNotifications = ({
   selectedEmailIsBlacklisted,
   emailTemplates,
 }) => {
+  const config = useContext(ConfigContext)
   const [externalName, setExternalName] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
@@ -120,6 +122,7 @@ const EmailNotifications = ({
               externalEmail,
               externalName,
               selectedEmailIsBlacklisted,
+              config.groupId,
             )
 
             if (!output) {

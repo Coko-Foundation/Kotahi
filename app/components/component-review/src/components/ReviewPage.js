@@ -152,7 +152,7 @@ const formStructure = `
 `
 
 const query = gql`
-  query($id: ID!) {
+  query($id: ID!, $groupId: ID) {
     manuscript(id: $id) {
       parentId
       ${fragmentFields}
@@ -201,15 +201,15 @@ const query = gql`
       userCanEditAnyComment
     }
 
-    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
+    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
       ${formStructure}
     }
 
-    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review") {
+    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review", groupId: $groupId) {
       ${formStructure}
     }
 
-    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision") {
+    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision", groupId: $groupId) {
       ${formStructure}
     }
   }
@@ -225,7 +225,7 @@ const updateReviewMutationQuery = gql`
 
 const ReviewPage = ({ currentUser, history, match }) => {
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS_MUTATION)
   const [createFile] = useMutation(createFileMutation)
@@ -248,6 +248,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const { loading, error, data, refetch } = useQuery(query, {
     variables: {
       id: match.params.version,
+      groupId: config.groupId,
     },
     partialRefetch: true,
   })

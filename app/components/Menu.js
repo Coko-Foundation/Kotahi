@@ -236,9 +236,14 @@ const Menu = ({
 }
 
 const FormattedGlobalAndGroupRoles = ({ user }) => {
-  const unCamelCasedRoles = user.globalRoles
-    .concat(user.groupRoles)
-    .map(role => convertCamelCaseToTitleCase(role))
+  const allRoles = user.globalRoles.concat(user.groupRoles)
+
+  const unCamelCasedRoles =
+    allRoles.includes('groupManager') || allRoles.includes('admin')
+      ? allRoles
+          .filter(role => role !== 'user')
+          .map(role => convertCamelCaseToTitleCase(role))
+      : allRoles.map(role => convertCamelCaseToTitleCase(role))
 
   if (!unCamelCasedRoles.length) return null
 

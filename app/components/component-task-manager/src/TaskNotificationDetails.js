@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
@@ -8,6 +8,7 @@ import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
 import theme from '../../../theme'
 import { emailNotifications } from '../../../../config/journal/tasks.json'
+import { ConfigContext } from '../../config/src'
 
 const TaskTitle = styled.div`
   color: ${theme.colors.neutral.gray20};
@@ -147,6 +148,8 @@ const TaskNotificationDetails = ({
   selectedDurationDays,
   emailTemplates,
 }) => {
+  const config = useContext(ConfigContext)
+  const { groupId } = config
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const { recipientTypes } = emailNotifications
 
@@ -381,6 +384,7 @@ const TaskNotificationDetails = ({
               selectedTemplate: taskEmailNotification.emailTemplateId,
               manuscript,
               currentUser: currentUser.username,
+              groupId,
             }
 
             logsData = {
@@ -454,6 +458,7 @@ const TaskNotificationDetails = ({
             selectedTemplate: taskEmailNotification.emailTemplateId,
             currentUser: currentUser.username,
             manuscript,
+            groupId,
           }
           logsData = [
             {
@@ -482,6 +487,7 @@ const TaskNotificationDetails = ({
             selectedTemplate: taskEmailNotification.emailTemplateId,
             manuscript,
             currentUser: currentUser.username,
+            groupId,
           }
           logsData = [
             {
@@ -513,6 +519,7 @@ const TaskNotificationDetails = ({
                 selectedTemplate: taskEmailNotification.emailTemplateId,
                 currentUser: currentUser.username,
                 manuscript,
+                groupId,
               }
               logsData = [
                 {
@@ -541,6 +548,7 @@ const TaskNotificationDetails = ({
                 selectedTemplate: taskEmailNotification.emailTemplateId,
                 manuscript,
                 currentUser: currentUser.username,
+                groupId,
               }
 
               logsData = [

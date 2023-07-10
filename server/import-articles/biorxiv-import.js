@@ -13,7 +13,9 @@ const {
   pharmaceuticalInterventions,
 } = require('./topics')
 
-const getData = async ctx => {
+const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
+
+const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
@@ -50,6 +52,7 @@ const getData = async ctx => {
     .select('date')
     .where({
       sourceId: biorxivImportSourceId.id,
+      groupId,
     })
 
   const requests = async (cursor = 0, minDate, results = []) => {
@@ -89,7 +92,7 @@ const getData = async ctx => {
       ),
   )
 
-  const submissionForm = await models.Form.findOneByField('purpose', 'submit')
+  const submissionForm = await getSubmissionForm(groupId)
 
   const parsedFormStructure = submissionForm.structure.children
     .map(formElement => {
@@ -178,6 +181,7 @@ const getData = async ctx => {
           files: [],
           reviews: [],
           teams: [],
+          groupId,
         }
       },
     )
@@ -207,11 +211,13 @@ const getData = async ctx => {
         })
         .where({
           date: lastImportDate[0].date,
+          groupId,
         })
     } else {
       await models.ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId: biorxivImportSourceId.id,
+        groupId,
       })
     }
 

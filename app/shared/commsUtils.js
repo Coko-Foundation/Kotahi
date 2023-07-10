@@ -30,18 +30,20 @@ export const validateDoi = client => async value => {
 }
 
 const VALIDATE_SUFFIX = gql`
-  query validateSuffix($suffix: String) {
-    validateSuffix(suffix: $suffix) {
+  query validateSuffix($suffix: String, $groupId: ID!) {
+    validateSuffix(suffix: $suffix, groupId: $groupId) {
       isDOIValid
     }
   }
 `
 
-export const validateSuffix = client => async value => {
+// TODO: Test this changes refelect as expected in sandbox crossref
+export const validateSuffix = (client, groupId) => async value => {
   const res = await client.query({
     query: VALIDATE_SUFFIX,
     variables: {
       suffix: value,
+      groupId,
     },
   })
 

@@ -66,7 +66,7 @@ const UsersTable = ({
               <SortHeader thisSortName="username">Name</SortHeader>
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="lastOnline">Last Online</SortHeader>
-              <SortHeader>Special roles</SortHeader>
+              <SortHeader>Roles</SortHeader>
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th />
             </tr>

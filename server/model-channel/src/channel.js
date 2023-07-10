@@ -11,6 +11,7 @@ class Channel extends BaseModel {
       User,
       Message,
       Manuscript,
+      Group,
       /* eslint-disable-next-line global-require */
     } = require('@pubsweet/models')
 
@@ -62,6 +63,14 @@ class Channel extends BaseModel {
           to: 'users.id',
         },
       },
+      group: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Group,
+        join: {
+          from: 'channels.groupId',
+          to: 'groups.id',
+        },
+      },
     }
   }
 
@@ -72,6 +81,7 @@ class Channel extends BaseModel {
         topic: { type: 'string' },
         teamId: { type: ['string', 'null'], format: 'uuid' },
         manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

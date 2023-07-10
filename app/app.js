@@ -14,7 +14,6 @@ import { JournalProvider } from './components/xpub-journal/src'
 import { XpubProvider } from './components/xpub-with-context/src'
 
 import * as journal from '../config/journal'
-import routes from './routes'
 
 const history = createBrowserHistory()
 
@@ -28,7 +27,7 @@ ReactDOM.render(
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
       <ModalProvider modals={modals}>
-        <Root history={history} routes={routes} />
+        <Root history={history} />
       </ModalProvider>
     </JournalProvider>
   </XpubProvider>,

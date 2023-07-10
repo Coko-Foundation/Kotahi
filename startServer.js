@@ -1,9 +1,9 @@
 const { startServer } = require('@coko/server')
 
-const seedForms = require('./scripts/seedForms')
+const seedGroups = require('./scripts/seedGroups')
 
 const main = async () => {
-  await seedForms()
+  await seedGroups()
   startServer()
 }
 

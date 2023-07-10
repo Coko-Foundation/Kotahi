@@ -379,6 +379,7 @@ const createManuscriptPromise = (
   currentUser,
   fileURL,
   response,
+  config,
 ) => {
   // In the case of a Docx file, response is the HTML
   // In the case of another type of file, response is true/false
@@ -413,6 +414,7 @@ const createManuscriptPromise = (
       title,
       source,
     },
+    groupId: config.groupId,
   }
 
   return client.mutate({
@@ -448,10 +450,9 @@ const redirectPromise = (
   config,
 ) => {
   setConversionState(() => ({ converting: false, completed: true }))
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
 
   // redirect after a new submission path
-  // TODO: refactor redirection url values with config manager
   const route = `${urlFrag}/versions/${data.createManuscript.id}/${
     ['elife', 'ncrc'].includes(config.instanceName) ? 'evaluation' : 'submit'
   }`
@@ -510,6 +511,7 @@ export default ({
         currentUser,
         uploadResponse.fileURL,
         uploadResponse.response,
+        config,
       )
 
       // Moving the below logic to server-side 'createManuscript' to fix slow docx uploads
@@ -577,6 +579,7 @@ export default ({
         currentUser,
         undefined,
         undefined,
+        config,
       )
     }
 

@@ -1,4 +1,4 @@
-CREATE TABLE cms_layouts(
+CREATE TABLE cms_layouts (
   id UUID NOT NULL DEFAULT public.gen_random_uuid(),
   active bool NOT NULL DEFAULT false,
   primary_color TEXT,

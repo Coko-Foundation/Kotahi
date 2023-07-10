@@ -11,8 +11,11 @@ const {
 
 const SAVE_CHUNK_SIZE = 50
 
-const getData = async ctx => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+const getData = async (groupId, ctx) => {
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
     {
@@ -36,9 +39,11 @@ const getData = async ctx => {
 
   const imports = []
 
-  const lastImportDate = await getLastImportDate(sourceId)
+  const lastImportDate = await getLastImportDate(sourceId, groupId)
 
-  const manuscripts = await models.Manuscript.query().orderBy('created', 'desc')
+  const manuscripts = await models.Manuscript.query()
+    .where({ groupId })
+    .orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
     manuscript => manuscript.submission.labels,
@@ -135,7 +140,7 @@ const getData = async ctx => {
       preprints => !currentURLs.has(preprints.url),
     )
 
-    const emptySubmission = getEmptySubmission()
+    const emptySubmission = getEmptySubmission(groupId)
 
     const newManuscripts = withoutUrlDuplicates.map(
       ({
@@ -188,6 +193,7 @@ const getData = async ctx => {
         files: [],
         reviews: [],
         teams: [],
+        groupId,
       }),
     )
 
@@ -213,11 +219,12 @@ const getData = async ctx => {
           .update({
             date: new Date().toISOString(),
           })
-          .where({ sourceId })
+          .where({ sourceId, groupId })
       } else {
         await models.ArticleImportHistory.query().insert({
           date: new Date().toISOString(),
           sourceId,
+          groupId,
         })
       }
 

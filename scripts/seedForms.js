@@ -4,6 +4,7 @@
 
 const { Form } = require('@pubsweet/models')
 
+// TODO: come up with predefined generic forms based on workflows
 const SUBMISSION_FORM_PATHS = {
   aperture: '../app/storage/forms-aperture/submit.json',
   colab: '../app/storage/forms-colab/submit.json',
@@ -14,29 +15,42 @@ const SUBMISSION_FORM_PATHS = {
 const REVIEW_FORM_PATH = '../app/storage/forms/review.json'
 const DECISION_FORM_PATH = '../app/storage/forms/decison.json'
 
-const tryAddForm = async (purpose, category, seedFilePath) => {
-  const hasForm = !!(await Form.query().where({ purpose, category })).length
+const tryAddForm = async (purpose, category, group, seedFilePath) => {
+  const hasForm = !!(
+    await Form.query().where({ purpose, category, groupId: group.id })
+  ).length
 
   if (hasForm) {
-    console.log(`  Form for ${category} already exists in database. Skipping.`)
+    console.log(
+      `    Form for ${category} already exists in database. Skipping.`,
+    )
   } else {
     const formStructure = require(seedFilePath)
-    const form = { purpose, structure: formStructure, category }
+
+    const form = {
+      purpose,
+      structure: formStructure,
+      category,
+      groupId: group.id,
+    }
+
     await Form.query().insert(form)
-    console.log(`  Added ${category} form from ${seedFilePath} to database.`)
+    console.log(
+      `    Added ${category} form from ${seedFilePath} for "${group.name}" group to database.`,
+    )
   }
 }
 
-const seed = async () => {
+const seed = async (group, config) => {
   await Promise.all([
     tryAddForm(
       'submit',
       'submission',
-      SUBMISSION_FORM_PATHS[process.env.INSTANCE_NAME] ||
-        SUBMISSION_FORM_PATHS.aperture, // In case of unknown instance name
+      group,
+      SUBMISSION_FORM_PATHS[config.formData.instanceName],
     ),
-    tryAddForm('review', 'review', REVIEW_FORM_PATH),
-    tryAddForm('decision', 'decision', DECISION_FORM_PATH),
+    tryAddForm('review', 'review', group, REVIEW_FORM_PATH),
+    tryAddForm('decision', 'decision', group, DECISION_FORM_PATH),
   ])
 }
 

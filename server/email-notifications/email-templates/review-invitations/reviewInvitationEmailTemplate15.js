@@ -1,16 +1,14 @@
-const ReviewInvitationEmailTemplate = ({
-  articleTitle,
-  authorName,
-  receiverName,
-  shortId,
-}) => {
+const ReviewInvitationEmailTemplate = (
+  { articleTitle, authorName, receiverName, shortId },
+  instanceName,
+) => {
   const result = {
     cc: '',
     subject: 'Kotahi Notification Email',
     content: '',
   }
 
-  switch (process.env.INSTANCE_NAME) {
+  switch (instanceName) {
     case 'aperture':
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro Peer-Reviewer Invitation Email'

@@ -25,7 +25,7 @@ import {
 const CMSPagesPage = ({ match, history }) => {
   const [isNewPage, setIsNewPage] = useState(false)
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
 
   const { loading, data, error, refetch: refetchCMSPages } = useQuery(
     getCMSPages,

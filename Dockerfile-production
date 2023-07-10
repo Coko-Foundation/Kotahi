@@ -1,7 +1,6 @@
 # IMAGE FOR BUILDING
 FROM node:16.19.0-alpine as build
 
-ARG instance_name
 ARG node_env
 ARG server_protocol
 ARG server_host
@@ -15,7 +14,6 @@ ARG public_client_port
 ARG use_colab_email
 ARG client_flax_site_url
 
-ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL $server_protocol
 ENV SERVER_HOST $server_host

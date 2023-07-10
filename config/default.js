@@ -47,20 +47,19 @@ module.exports = {
     publishingWebhookRef: null,
   },
   'pubsweet-component-xpub-formbuilder': {
+    // TODO: remove as this path is only used in a formbuilder page unit test
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
-    path: deferConfig(cfg => {
-      const formTemplatePath = {
-        elife: '../app/storage/forms',
-        aperture: '../app/storage/forms-aperture',
-        ncrc: '../app/storage/forms-ncrc',
-        colab: '../app/storage/forms-colab',
-      }
-
-      const pathToFormTemplateFolder =
-        formTemplatePath[String(process.env.INSTANCE_NAME)]
-
-      return path.resolve(__dirname, pathToFormTemplateFolder)
-    }),
+    // path: deferConfig(cfg => {
+    //   const formTemplatePath = {
+    //     elife: '../app/storage/forms',
+    //     aperture: '../app/storage/forms-aperture',
+    //     ncrc: '../app/storage/forms-ncrc',
+    //     colab: '../app/storage/forms-colab',
+    //   }
+    //   const pathToFormTemplateFolder =
+    //     formTemplatePath[String(process.env.INSTANCE_NAME)]
+    //   return path.resolve(__dirname, pathToFormTemplateFolder)
+    // }),
   },
   'pubsweet-server': {
     useGraphQLServer: true,
@@ -88,7 +87,6 @@ module.exports = {
   },
   'pubsweet-client': {
     API_ENDPOINT: '/api',
-    'login-redirect': `${journal.metadata.toplevel_urlfragment}/dashboard`,
     theme: process.env.PUBSWEET_THEME,
     baseUrl: deferConfig(cfg => {
       const {

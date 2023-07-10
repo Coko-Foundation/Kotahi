@@ -277,6 +277,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   submissionForm,
   timezoneOffsetMinutes,
   manuscriptIDs = null,
+  groupId = null,
 ) => {
   // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.
   const selectItems = { rawFragments: [], params: [] }
@@ -296,6 +297,10 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
 
   if (manuscriptIDs) {
     addWhere('id = ANY(?)', manuscriptIDs)
+  }
+
+  if (groupId) {
+    addWhere('group_id = ?', groupId)
   }
 
   const searchFilter = filters.find(f => f.field === URI_SEARCH_PARAM)

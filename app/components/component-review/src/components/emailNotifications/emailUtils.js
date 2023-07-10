@@ -10,6 +10,7 @@ export const sendEmail = async (
   externalEmail,
   externalName,
   selectedEmailIsBlacklisted,
+  groupId,
 ) => {
   if (selectedEmailIsBlacklisted) return undefined
   if (!selectedTemplate || !manuscript) return undefined
@@ -21,12 +22,14 @@ export const sendEmail = async (
         selectedTemplate,
         manuscript,
         currentUser: currentUser.username,
+        groupId,
       }
     : {
         selectedEmail,
         selectedTemplate,
         manuscript,
         currentUser: currentUser.username,
+        groupId,
       }
 
   if (isNewUser && (!externalName || !externalEmail)) return undefined

@@ -1,8 +1,10 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
 const models = require('@pubsweet/models')
+const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 
-const getData = async ctx => {
+// Not sure if this code is used anymore could not find any relevant import triggers for europepmc?
+const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
@@ -28,6 +30,7 @@ const getData = async ctx => {
     .select('date')
     .where({
       sourceId: europepmcImportSourceId.id,
+      groupId,
     })
 
   const query =
@@ -72,7 +75,7 @@ const getData = async ctx => {
 
   const importedManuscripts = await requests('', date, [])
 
-  const submissionForm = await models.Form.findOneByField('purpose', 'submit')
+  const submissionForm = await getSubmissionForm(groupId)
 
   const parsedFormStructure = submissionForm.structure.children
     .map(formElement => {
@@ -168,6 +171,7 @@ const getData = async ctx => {
           files: [],
           reviews: [],
           teams: [],
+          groupId,
         }
       },
     )
@@ -188,11 +192,13 @@ const getData = async ctx => {
         })
         .where({
           date: lastImportDate[0].date,
+          groupId,
         })
     } else {
       await models.ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId: europepmcImportSourceId.id,
+        groupId,
       })
     }
 

@@ -36,7 +36,7 @@ invitations {
 }
 `
 
-const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "submit", category: "submission") {
+const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
   structure {
     children {
       id
@@ -69,7 +69,7 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
 
 export default {
   dashboard: gql`
-    query Dashboard($reviewerStatus: String, $wantedRoles: [String]!, $sort: ManuscriptsSort, $filters: [ManuscriptsFilter!]!, $offset: Int, $limit: Int, $timezoneOffsetMinutes: Int) {
+    query Dashboard($reviewerStatus: String, $wantedRoles: [String]!, $sort: ManuscriptsSort, $filters: [ManuscriptsFilter!]!, $offset: Int, $limit: Int, $timezoneOffsetMinutes: Int, $groupId: ID!) {
       manuscriptsUserHasCurrentRoleIn(
         reviewerStatus: $reviewerStatus
         wantedRoles: $wantedRoles
@@ -77,7 +77,8 @@ export default {
         filters: $filters
         offset: $offset
         limit: $limit
-        timezoneOffsetMinutes: $timezoneOffsetMinutes)
+        timezoneOffsetMinutes: $timezoneOffsetMinutes
+        groupId: $groupId)
         {
           totalCount
           manuscripts {

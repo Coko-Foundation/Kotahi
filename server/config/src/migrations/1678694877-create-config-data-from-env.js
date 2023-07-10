@@ -69,6 +69,7 @@ exports.up = async knex => {
           : '/assets/logo-kotahi.png',
       }
 
+      // Only applicable to existing client instances which use INSTANCE_NAME with single instance type one of "elife, ncrc, colab, aperture"
       if (configs.length === 0 && process.env.INSTANCE_NAME) {
         switch (process.env.INSTANCE_NAME) {
           case 'elife':
@@ -251,10 +252,12 @@ exports.up = async knex => {
             break
         }
 
-        // logger.info('config:', config)
         config.formData = JSON.stringify(config.formData)
         createdConfig = await Config.query().insertAndFetch(config)
-        // logger.info('createdConfig:', createdConfig)
+
+        logger.info(
+          `Created config for instance type "${createdConfig.formData.instanceName}"`,
+        )
       }
     })
   } catch (error) {

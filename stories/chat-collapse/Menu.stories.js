@@ -2,6 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import Menu from '../../app/components/Menu'
 import DesignEmbed from '../common/utils'
+import { XpubProvider } from '../../app/components/xpub-with-context/src'
+import { JournalProvider } from '../../app/components/xpub-journal/src'
+import { ConfigProvider } from '../../app/components/config/src'
+import * as journal from '../../config/journal'
+import config from '../../config/sampleConfigFormData'
 
 const Root = styled.div`
   display: grid;
@@ -23,9 +28,15 @@ const Root = styled.div`
 `
 
 export const Base = args => (
-  <Root>
-    <Menu {...args} />
-  </Root>
+  <XpubProvider>
+    <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
+      <ConfigProvider config={config}>
+        <Root>
+          <Menu {...args} />
+        </Root>
+      </ConfigProvider>
+    </JournalProvider>
+  </XpubProvider>
 )
 
 Base.args = {

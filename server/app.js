@@ -2,9 +2,6 @@ const config = require('config')
 const { app } = require('@coko/server')
 const { setConfig } = require('./config/src/configObject')
 
-// You can modify the app or ensure other things are imported here.
-const schedule = require('../node_modules/node-schedule')
-
 setConfig({
   journal: config.journal,
   teams: config.teams,
@@ -12,87 +9,8 @@ setConfig({
   baseUrl: config['pubsweet-client'].baseUrl,
 }) // TODO pass all client config that does not come from `Config` table through this structure or append it to config resolver
 
-const {
-  importManuscripts,
-  importManuscriptsFromSemanticScholar,
-} = require('./model-manuscript/src/importManuscripts')
+const { initiateJobSchedules } = require('./utils/jobUtils')
 
-const {
-  archiveOldManuscripts,
-} = require('./model-manuscript/src/manuscriptCommsUtils')
-
-const {
-  createNewTaskAlerts,
-  sendAutomatedTaskEmailNotifications,
-} = require('./model-task/src/taskCommsUtils')
-
-const Config = require('./config/src/config')
-
-const runSchedule = async () => {
-  const activeConfig = await Config.query().first()
-
-  if (activeConfig.formData.manuscript.autoImportHourUtc) {
-    schedule.scheduleJob(
-      {
-        tz: 'Etc/UTC',
-        rule: `00 ${activeConfig.formData.manuscript.autoImportHourUtc} * * *`,
-      },
-      async () => {
-        // eslint-disable-next-line no-console
-        console.info(
-          `Running scheduler for importing and archiving Manuscripts at ${new Date().toISOString()}`,
-        )
-
-        try {
-          await importManuscripts({ user: null })
-          await importManuscriptsFromSemanticScholar({ user: null })
-          await archiveOldManuscripts()
-        } catch (error) {
-          console.error(error)
-        }
-      },
-    )
-  }
-
-  schedule.scheduleJob(
-    {
-      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
-      rule: `00 00 * * *`,
-    },
-    async () => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `Running scheduler for tracking overdue tasks ${new Date().toISOString()}`,
-      )
-
-      try {
-        await createNewTaskAlerts()
-      } catch (error) {
-        console.error(error)
-      }
-    },
-  )
-
-  schedule.scheduleJob(
-    {
-      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
-      rule: `00 00 * * *`,
-    },
-    async () => {
-      // eslint-disable-next-line no-console
-      console.info(
-        `Running scheduler for sending task email notifications ${new Date().toISOString()}`,
-      )
-
-      try {
-        await sendAutomatedTaskEmailNotifications()
-      } catch (error) {
-        console.error(error)
-      }
-    },
-  )
-}
-
-runSchedule()
+initiateJobSchedules() // Initiate all job schedules
 
 module.exports = app

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import fnv from 'fnv-plus'
 import { grid } from '@pubsweet/ui-toolkit'
 import { RoundIconButton } from '../../shared'
+import { ConfigContext } from '../../config/src'
 
 const FloatRightButton = styled(RoundIconButton)`
   float: right;
@@ -21,12 +22,16 @@ const VideoChat = ({ manuscriptId }) => {
   // Generate the chat room name by hashing the baseUrl, so it is unique to the instance.
   // TODO: Obtain hash from server, with a secret incorporated in it (to prevent outsiders from figuring out the room ID)
   const chatRoomId = fnv.hash(manuscriptId).hex()
+  const config = useContext(ConfigContext)
 
   return (
     <FloatRightButton
       iconName="Video"
       onClick={() =>
-        openInNewTab(`https://8x8.vc/kotahi/${chatRoomId}`, chatRoomId)
+        openInNewTab(
+          `https://8x8.vc${config.urlFrag}/${chatRoomId}`,
+          chatRoomId,
+        )
       }
       primary
       title="Open video chat"

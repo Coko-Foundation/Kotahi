@@ -19,6 +19,7 @@ export const Base = args => (
 )
 
 const props = {
+  invitations: [],
   dois: [],
   roles,
   form: {

@@ -24,9 +24,8 @@ const CITATIONS_PLACEHOLDER = '‖CITATIONS‖'
 const builder = new xml2js.Builder()
 const parser = new xml2js.Parser()
 
-const requestToCrossref = async xmlFiles => {
+const requestToCrossref = async (xmlFiles, activeConfig) => {
   const publishPromises = xmlFiles.map(async file => {
-    const activeConfig = await Config.query().first() // To be replaced with group based active config in future
     const formData = new FormData()
     formData.append('login_id', activeConfig.formData.publishing.crossref.login)
     formData.append(
@@ -54,7 +53,10 @@ const requestToCrossref = async xmlFiles => {
 
 /** Publish either article or reviews to Crossref, according to config */
 const publishToCrossref = async manuscript => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
 
   if (!activeConfig.formData.publishing.crossref.doiPrefix)
     throw new Error(
@@ -129,8 +131,7 @@ const getReviewOrSubmissionField = (manuscript, fieldName) => {
 
 /** Get DOI in form 10.12345/<suffix>
  * If the configured prefix includes 'https://doi.org/' and/or a trailing slash, these are dealt with gracefully. */
-const getDoi = async suffix => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+const getDoi = async (suffix, activeConfig) => {
   let prefix = activeConfig.formData.publishing.crossref.doiPrefix
   if (!prefix) throw new Error('No DOI prefix configured.')
   if (prefix.startsWith(DOI_PATH_PREFIX))
@@ -231,7 +232,11 @@ const emailRegex = /^[\p{L}\p{N}!/+\-_]+(\.[\p{L}\p{N}!/+\-_]+)*@[\p{L}\p{N}!/+\
 
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
+
   if (!manuscript.submission)
     throw new Error('Manuscript has no submission object')
   if (!manuscript.meta.title) throw new Error('Manuscript has no title')
@@ -250,12 +255,12 @@ const publishArticleToCrossref = async manuscript => {
 
   const issueYear = getIssueYear(manuscript)
   const publishDate = new Date()
-  const journalDoi = getDoi(0)
+  const journalDoi = getDoi(0, activeConfig)
 
   const doiSuffix =
     getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id
 
-  const doi = getDoi(doiSuffix)
+  const doi = getDoi(doiSuffix, activeConfig)
   if (!(await doiIsAvailable(doi))) throw Error('Custom DOI is not available.')
 
   const publishedLocation = `${activeConfig.formData.publishing.crossref.publishedArticleLocationPrefix}${manuscript.shortId}`
@@ -367,12 +372,16 @@ const publishArticleToCrossref = async manuscript => {
   const fileName = `submission-${batchId}.xml`
   await fsPromised.appendFile(`${dirName}/${fileName}`, xml)
   const filePath = `${dirName}/${fileName}`
-  await requestToCrossref([filePath])
+  await requestToCrossref([filePath], activeConfig)
   await fs.rmdirSync(dirName, { recursive: true })
 }
 
 const publishReviewsToCrossref = async manuscript => {
-  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const activeConfig = await Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
+
   if (
     !manuscript.submission.articleURL ||
     !manuscript.submission.articleURL.startsWith('https://doi.org/')
@@ -402,7 +411,10 @@ const publishReviewsToCrossref = async manuscript => {
       `${manuscript.id}/`
     : null
 
-  const summaryDoi = summaryDoiSuffix ? getDoi(summaryDoiSuffix) : null
+  const summaryDoi = summaryDoiSuffix
+    ? getDoi(summaryDoiSuffix, activeConfig)
+    : null
+
   // only validate if a summary exists, i.e. there is a summary author/creator
   if (summaryDoi && !(await doiIsAvailable(summaryDoi)))
     throw Error(`Summary suffix is not available: ${summaryDoiSuffix}`)
@@ -420,7 +432,7 @@ const publishReviewsToCrossref = async manuscript => {
             `review${reviewNumber}suffix`,
           ) || `${manuscript.id}/${reviewNumber}`
 
-        const doi = getDoi(doiSuffix)
+        const doi = getDoi(doiSuffix, activeConfig)
         if (!(await doiIsAvailable(doi)))
           throw Error(`Review suffix is not available: ${doiSuffix}`)
 
@@ -597,7 +609,7 @@ const publishReviewsToCrossref = async manuscript => {
   })
 
   const xmlFiles = await Promise.all(fileCreationPromises)
-  await requestToCrossref(xmlFiles)
+  await requestToCrossref(xmlFiles, activeConfig)
   fs.rmdirSync(dirName, {
     recursive: true,
   })

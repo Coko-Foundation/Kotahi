@@ -180,14 +180,14 @@ const wasRejected = m => getLastVersion(m).status === 'rejected'
 const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
-const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
+const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreatedDesc).[teams, reviews]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const avgPublishTimeDays =
@@ -237,23 +237,27 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
   }
 }
 
-const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
+const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
-  const query = models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
+
+  const query = models.Manuscript.query()
+    .where({ groupId })
+    .where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
+
   return query.resultSize()
 }
 
-const getRevisingNowCount = async ctx => {
+const getRevisingNowCount = async (groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreatedDesc)]')
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
 
   return manuscripts.filter(m =>
     ['revise', 'revising'].includes(getFinalStatus(m)),
   ).length
 }
 
-const getDurationsTraces = async (startDate, endDate, ctx) => {
+const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
   const windowSizeForAvg = week
   const smoothingSize = day
 
@@ -265,7 +269,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
     )
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const durations = []
@@ -304,7 +308,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
   }
 }
 
-const getDailyAverageStats = async (startDate, endDate, ctx) => {
+const getDailyAverageStats = async (startDate, endDate, groupId, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
   const manuscripts = await models.Manuscript.query()
@@ -313,7 +317,7 @@ const getDailyAverageStats = async (startDate, endDate, ctx) => {
     )
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const orderedSubmissionDates = manuscripts
@@ -428,14 +432,14 @@ const getVersionReviewDurations = ms => {
   return reviewDurations
 }
 
-const getManuscriptsActivity = async (startDate, endDate, ctx) => {
+const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   return manuscripts.map(m => {
@@ -463,14 +467,14 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   })
 }
 
-const getEditorsActivity = async (startDate, endDate, ctx) => {
+const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const editorsData = {} // Map by user id
@@ -513,14 +517,14 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
   return Object.values(editorsData)
 }
 
-const getReviewersActivity = async (startDate, endDate, ctx) => {
+const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members], reviews]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const reviewersData = {} // Map by user id
@@ -604,14 +608,14 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
   }))
 }
 
-const getAuthorsActivity = async (startDate, endDate, ctx) => {
+const getAuthorsActivity = async (startDate, endDate, groupId, ctx) => {
   const query = models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
-    .where({ parentId: null })
+    .where({ parentId: null, groupId })
     .orderBy('created')
 
   const manuscripts = await query
@@ -653,7 +657,11 @@ const getAuthorsActivity = async (startDate, endDate, ctx) => {
 
 const resolvers = {
   Query: {
-    async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
+    async summaryActivity(
+      _,
+      { startDate, endDate, groupId, timeZoneOffset },
+      ctx,
+    ) {
       const [
         dateRangeSummaryStats,
         publishedTodayCount,
@@ -661,11 +669,11 @@ const resolvers = {
         durationsTraces,
         dailyAverageStats,
       ] = await Promise.all([
-        getDateRangeSummaryStats(startDate, endDate, ctx),
-        getPublishedTodayCount(timeZoneOffset, ctx),
-        getRevisingNowCount(ctx),
-        getDurationsTraces(startDate, endDate, ctx),
-        getDailyAverageStats(startDate, endDate, ctx),
+        getDateRangeSummaryStats(startDate, endDate, groupId, ctx),
+        getPublishedTodayCount(groupId, timeZoneOffset, ctx),
+        getRevisingNowCount(groupId, ctx),
+        getDurationsTraces(startDate, endDate, groupId, ctx),
+        getDailyAverageStats(startDate, endDate, groupId, ctx),
       ])
 
       return {
@@ -676,28 +684,28 @@ const resolvers = {
         ...dailyAverageStats,
       }
     },
-    manuscriptsActivity(_, { startDate, endDate }, ctx) {
-      return getManuscriptsActivity(startDate, endDate, ctx)
+    manuscriptsActivity(_, { startDate, endDate, groupId }, ctx) {
+      return getManuscriptsActivity(startDate, endDate, groupId, ctx)
     },
-    editorsActivity(_, { startDate, endDate }, ctx) {
-      return getEditorsActivity(startDate, endDate, ctx)
+    editorsActivity(_, { startDate, endDate, groupId }, ctx) {
+      return getEditorsActivity(startDate, endDate, groupId, ctx)
     },
-    reviewersActivity(_, { startDate, endDate }, ctx) {
-      return getReviewersActivity(startDate, endDate, ctx)
+    reviewersActivity(_, { startDate, endDate, groupId }, ctx) {
+      return getReviewersActivity(startDate, endDate, groupId, ctx)
     },
-    authorsActivity(_, { startDate, endDate }, ctx) {
-      return getAuthorsActivity(startDate, endDate, ctx)
+    authorsActivity(_, { startDate, endDate, groupId }, ctx) {
+      return getAuthorsActivity(startDate, endDate, groupId, ctx)
     },
   },
 }
 
 const typeDefs = `
   extend type Query {
-    summaryActivity(startDate: DateTime, endDate: DateTime, timeZoneOffset: Int) : SummaryActivity
-    manuscriptsActivity(startDate: DateTime, endDate: DateTime): [ManuscriptActivity]
-    editorsActivity(startDate: DateTime, endDate: DateTime): [EditorActivity]
-    reviewersActivity(startDate: DateTime, endDate: DateTime): [ReviewerActivity]
-    authorsActivity(startDate: DateTime, endDate: DateTime): [AuthorActivity]
+    summaryActivity(startDate: DateTime, endDate: DateTime, groupId: ID!, timeZoneOffset: Int) : SummaryActivity
+    manuscriptsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [ManuscriptActivity]
+    editorsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [EditorActivity]
+    reviewersActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [ReviewerActivity]
+    authorsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [AuthorActivity]
   }
 
   type SummaryActivity {

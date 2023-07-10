@@ -329,7 +329,10 @@ const FormTemplate = ({
                   }
 
                   if (!hasErrors && republish) {
-                    const response = (await republish(manuscriptId)) || {
+                    const response = (await republish(
+                      manuscriptId,
+                      config.groupId,
+                    )) || {
                       steps: [],
                     }
 

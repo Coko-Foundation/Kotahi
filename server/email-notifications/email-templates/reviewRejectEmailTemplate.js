@@ -1,17 +1,14 @@
-const ReviewRejectEmailTemplate = ({
-  articleTitle,
-  authorName,
-  reviewerName,
-  receiverName,
-  shortId,
-}) => {
+const ReviewRejectEmailTemplate = (
+  { articleTitle, authorName, reviewerName, receiverName, shortId },
+  instanceName,
+) => {
   const result = {
     cc: '',
     subject: 'Kotahi Notification Email',
     content: '',
   }
 
-  switch (process.env.INSTANCE_NAME) {
+  switch (instanceName) {
     case 'aperture':
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Reviewer has rejected review invitation'
