@@ -24,8 +24,8 @@ export const CREATE_MESSAGE = gql`
 `
 
 export const GET_BLACKLIST_INFORMATION = gql`
-  query getBlacklistInformation($email: String) {
-    getBlacklistInformation(email: $email) {
+  query getBlacklistInformation($email: String!, $groupId: ID!) {
+    getBlacklistInformation(email: $email, groupId: $groupId) {
       id
     }
   }
@@ -54,8 +54,8 @@ export const UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION = gql`
   }
 `
 export const ADD_EMAIL_TO_BLACKLIST = gql`
-  mutation($email: String!) {
-    addEmailToBlacklist(email: $email) {
+  mutation($email: String!, $groupId: ID!) {
+    addEmailToBlacklist(email: $email, groupId: $groupId) {
       email
     }
   }
@@ -116,6 +116,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
     $offset: Int
     $limit: Int
     $timezoneOffsetMinutes: Int
+    $groupId: ID!
   ) {
     paginatedManuscripts(
       sort: $sort
@@ -123,6 +124,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
       offset: $offset
       limit: $limit
       timezoneOffsetMinutes: $timezoneOffsetMinutes
+      groupId: $groupId
     ) {
       totalCount
       manuscripts {
@@ -205,7 +207,11 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
       }
     }
 
-    formForPurposeAndCategory(purpose: "submit", category: "submission") {
+    formForPurposeAndCategory(
+      purpose: "submit"
+      category: "submission"
+      groupId: $groupId
+    ) {
       structure {
         children {
           id
@@ -239,8 +245,8 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
 `
 
 export const IMPORT_MANUSCRIPTS = gql`
-  mutation {
-    importManuscripts
+  mutation($groupId: ID!) {
+    importManuscripts(groupId: $groupId)
   }
 `
 
@@ -251,8 +257,8 @@ export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
 `
 
 export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
-  query {
-    systemWideDiscussionChannel {
+  query systemWideDiscussionChannel($groupId: ID!) {
+    systemWideDiscussionChannel(groupId: $groupId) {
       id
     }
   }
@@ -263,6 +269,7 @@ id
 created
 updated
 manuscriptId
+groupId
 title
 assigneeUserId
 assignee {
@@ -282,7 +289,7 @@ emailNotifications {
   recipientUserId
   recipientType
   notificationElapsedDays
-  emailTemplateKey
+  emailTemplateId
   recipientName
   recipientEmail
   recipientUser {
@@ -297,7 +304,7 @@ notificationLogs {
   taskId
   senderEmail
   recipientEmail
-  emailTemplateKey
+  emailTemplateId
   content
   updated
   created
@@ -309,8 +316,8 @@ assigneeEmail
 `
 
 export const UPDATE_TASKS = gql`
-  mutation($manuscriptId: ID, $tasks: [TaskInput!]!) {
-    updateTasks(manuscriptId: $manuscriptId, tasks: $tasks) {
+  mutation($manuscriptId: ID, $groupId: ID!, $tasks: [TaskInput!]!) {
+    updateTasks(manuscriptId: $manuscriptId, groupId: $groupId, tasks: $tasks) {
       ${taskFields}
     }
   }
@@ -356,12 +363,13 @@ mutation($taskEmailNotificationLog: TaskEmailNotificationLogInput!) {
 `
 
 export const GET_CONFIG = gql`
-  query config {
+  query config($id: ID!) {
     oldConfig
-    config {
+    config(id: $id) {
       id
       formData
       active
+      groupId
     }
   }
 `
@@ -372,6 +380,54 @@ export const UPDATE_CONFIG = gql`
       id
       formData
       active
+    }
+  }
+`
+
+export const GET_EMAIL_TEMPLATES = gql`
+  query {
+    emailTemplates {
+      id
+      created
+      updated
+      emailTemplateType
+      emailContent {
+        cc
+        subject
+        body
+        description
+      }
+    }
+  }
+`
+
+export const GET_GROUP_BY_NAME = gql`
+  query groupByName($name: String!) {
+    groupByName(name: $name) {
+      id
+      name
+      isArchived
+      oldConfig
+      configs {
+        id
+        formData
+        active
+      }
+    }
+  }
+`
+
+export const GET_GROUPS = gql`
+  query groups {
+    groups {
+      id
+      name
+      isArchived
+      configs {
+        id
+        formData
+        active
+      }
     }
   }
 `

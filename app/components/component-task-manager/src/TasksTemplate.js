@@ -15,6 +15,7 @@ const TasksTemplate = ({
   roles,
   updateTaskNotification,
   deleteTaskNotification,
+  emailTemplates,
 }) => {
   return (
     <Container>
@@ -25,6 +26,7 @@ const TasksTemplate = ({
             <TaskList
               deleteTaskNotification={deleteTaskNotification}
               editAsTemplate
+              emailTemplates={emailTemplates}
               manuscriptId={null}
               roles={roles}
               tasks={tasks}

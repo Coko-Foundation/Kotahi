@@ -51,6 +51,8 @@ const InviteReviewerModal = ({
   currentUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  reviewerInvitationEmailTemplate,
+  emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
   const [condition, setCondition] = useState([])
@@ -114,11 +116,12 @@ const InviteReviewerModal = ({
                   false,
                   currentUser,
                   sendNotifyEmail,
-                  'reviewerInvitationEmailTemplate',
+                  reviewerInvitationEmailTemplate,
                   identity.email,
                   identity.email,
                   identity.username,
                   false,
+                  config.groupId,
                 )
 
                 if (!response) return
@@ -132,6 +135,7 @@ const InviteReviewerModal = ({
                       userName: reviewer.username,
                       value: reviewer.email,
                     })),
+                    emailTemplates,
                   )
                 }
 

@@ -11,8 +11,7 @@ const getNextUrl = config => {
   const url = new URL(window.location.href)
 
   const redirectLink = `${
-    config.journal.metadata.toplevel_urlfragment +
-    config?.dashboard?.loginRedirectUrl
+    config?.urlFrag + config?.dashboard?.loginRedirectUrl
   }`
 
   return `${url.searchParams.get('next') || redirectLink}`
@@ -131,9 +130,7 @@ const Login = ({ logo = null, ...props }) => {
     return <Redirect to={redirectLink} />
   }
 
-  // const journalName = config.journal.metadata.name
-
-  const nextpage = `/auth/orcid`
+  const nextpage = `/auth/orcid?group_id=${config?.groupId}`
 
   return redirectLink ? (
     <Redirect to={redirectLink} />
@@ -142,8 +139,8 @@ const Login = ({ logo = null, ...props }) => {
       <Centered>
         <Content>
           <img
-            alt={config.groupIdentity.brandName}
-            src={config.groupIdentity.logoPath}
+            alt={config?.groupIdentity?.brandName}
+            src={config?.groupIdentity?.logoPath}
           />
           <RegisterInfoString>
             Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff.

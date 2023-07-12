@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     p7zip-full \
     gnupg
- 
-ARG instance_name
+
 ARG node_env
 ARG server_protocol
 ARG server_host
@@ -18,6 +17,7 @@ ARG client_protocol
 ARG client_host
 ARG client_port
 ARG use_colab_email
+ARG client_flax_site_url
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
@@ -26,9 +26,9 @@ ENV SERVER_PORT "3000"
 ENV CLIENT_PROTOCOL "http"
 ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
-ENV INSTANCE_NAME $instance_name
 ENV HOME "/home/node/app"
 ENV USE_COLAB_EMAIL $use_colab_email
+ENV CLIENT_FLAX_SITE_URL $client_flax_site_url
 
 
 RUN mkdir -p ${HOME}

@@ -1,5 +1,5 @@
 import { Formik } from 'formik'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import {
   SectionContent,
   SectionHeader,
@@ -12,6 +12,7 @@ import {
 } from '../emailNotifications/emailUtils'
 import InviteReviewerModal from './InviteReviewerModal'
 import ReviewerForm from './ReviewerForm'
+import { ConfigContext } from '../../../../config/src'
 
 const InviteReviewer = ({
   reviewerUsers,
@@ -25,13 +26,26 @@ const InviteReviewer = ({
   selectedEmailIsBlacklisted,
   setExternalEmail,
   updateTeamMember,
+  emailTemplates,
 }) => {
+  const config = useContext(ConfigContext)
   const [open, setOpen] = useState(false)
 
   const [userId, setUserId] = useState(undefined)
 
   const [isNewUser, setIsNewUser] = useState(false)
   const [notificationStatus, setNotificationStatus] = useState(null)
+
+  let reviewerInvitationEmailTemplate
+
+  if (config.eventNotification?.reviewerInvitationPrimaryEmailTemplate) {
+    reviewerInvitationEmailTemplate =
+      config.eventNotification.reviewerInvitationPrimaryEmailTemplate
+  } else {
+    reviewerInvitationEmailTemplate = emailTemplates.find(
+      template => template.emailTemplateType === 'reviewerInvitation',
+    ).id
+  }
 
   return (
     <>
@@ -50,11 +64,12 @@ const InviteReviewer = ({
               isNewUser,
               currentUser,
               sendNotifyEmail,
-              'reviewerInvitationEmailTemplate',
+              reviewerInvitationEmailTemplate,
               selectedEmail,
               values.email,
               values.name,
               selectedEmailIsBlacklisted,
+              config.groupId,
             )
 
             setNotificationStatus(output?.invitation ? 'success' : 'failure')
@@ -68,6 +83,7 @@ const InviteReviewer = ({
                   userName: reviewer.username,
                   value: reviewer.email,
                 })),
+                emailTemplates,
               )
             }
           }
@@ -97,9 +113,11 @@ const InviteReviewer = ({
       <InviteReviewerModal
         addReviewer={addReviewer}
         currentUser={currentUser}
+        emailTemplates={emailTemplates}
         manuscript={manuscript}
         onClose={() => setOpen(false)}
         open={open}
+        reviewerInvitationEmailTemplate={reviewerInvitationEmailTemplate}
         reviewerUsers={reviewerUsers}
         selectedEmail={selectedEmail}
         sendChannelMessage={sendChannelMessage}

@@ -21,7 +21,24 @@ const User = ({
   setGlobalRole,
   setGroupRole,
 }) => {
-  const roleOptions = [
+  const roleOptions = []
+
+  if (
+    currentUser.globalRoles.includes('admin') &&
+    !user.groupRoles.includes('groupManager') &&
+    !user.globalRoles.includes('admin')
+  )
+    roleOptions.push({
+      value: 'user',
+      label: 'User',
+      scope: 'group',
+      // We don't let someone unassign themselves from 'user' role unless they're also an admin
+      isFixed:
+        user.id === currentUser.id &&
+        !currentUser.globalRoles.includes('admin'),
+    })
+
+  roleOptions.push(
     {
       value: 'groupManager',
       label: 'Group Manager',
@@ -41,7 +58,7 @@ const User = ({
         user.id === currentUser.id ||
         !currentUser.globalRoles.includes('admin'),
     },
-  ]
+  )
 
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const [roleConfirm, setRoleConfirm] = useState(null)
@@ -122,8 +139,14 @@ const User = ({
         />
       </Cell>
       <LastCell>
-        {/* TODO confirmation on delete */}
-        <Action onClick={() => setIsConfirmingDelete(true)}>Delete</Action>
+        {/* 
+        Only admins can delete a user or groupManager; 
+        admins cannot delete themselves; 
+        groupManagers can only remove users with `user` or `groupManager` roles from a group */}
+        {currentUser.globalRoles.includes('admin') &&
+          currentUser.id !== user.id && (
+            <Action onClick={() => setIsConfirmingDelete(true)}>Delete</Action>
+          )}
       </LastCell>
       <ConfirmationModal
         closeModal={() => setIsConfirmingDelete(false)}

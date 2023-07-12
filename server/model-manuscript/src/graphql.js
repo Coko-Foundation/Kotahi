@@ -108,8 +108,8 @@ const getRelatedReviews = async (
   ctx,
   forceRemovalOfConfidentialData,
 ) => {
-  const reviewForm = await getReviewForm()
-  const decisionForm = await getDecisionForm()
+  const reviewForm = await getReviewForm(manuscript.groupId)
+  const decisionForm = await getDecisionForm(manuscript.groupId)
 
   let reviews =
     manuscript.reviews ||
@@ -162,6 +162,7 @@ const getRelatedReviews = async (
       sharedReviewersIds,
       manuscriptHasDecision,
       ctx.user,
+      userRoles,
     )
   }
 
@@ -195,7 +196,9 @@ const getRelatedPublishedArtifacts = async (manuscript, ctx) => {
 
   if (!templatedArtifacts.length) return []
 
-  const { submissionForm, reviewForm, decisionForm } = await getActiveForms()
+  const { submissionForm, reviewForm, decisionForm } = await getActiveForms(
+    manuscript.groupId,
+  )
 
   return applyTemplatesToArtifacts(
     templatedArtifacts,
@@ -286,11 +289,14 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   // ms = manuscript
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
 
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
-
   const ms = await models.Manuscript.query()
     .findById(id)
     .withGraphFetched('[reviews.user, files, tasks]')
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId: ms.groupId,
+    active: true,
+  })
 
   /** Crude hack to circumvent and help diagnose bug 1193 */
   const oldMetaAbstract = ms && ms.meta ? ms.meta.abstract : null
@@ -329,7 +335,12 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = async manuscriptId => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
 
   const publishingWebhookUrl = activeConfig.formData.publishing.webhook.url
 
@@ -353,14 +364,15 @@ const tryPublishingWebhook = async manuscriptId => {
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
-      const submissionForm = await models.Form.findOneByField(
-        'purpose',
-        'submit',
-      )
+      const { meta, files, groupId } = vars.input
+      const group = await models.Group.query().findById(groupId)
 
-      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+      const submissionForm = await getSubmissionForm(group.id)
 
-      const { meta, files } = vars.input
+      const activeConfig = await models.Config.query().findOne({
+        groupId: group.id,
+        active: true,
+      })
 
       const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
@@ -403,10 +415,12 @@ const resolvers = {
           {
             topic: 'Manuscript discussion',
             type: 'all',
+            groupId: group.id,
           },
           {
             topic: 'Editorial discussion',
             type: 'editorial',
+            groupId: group.id,
           },
         ],
         files: files.map(file => {
@@ -423,6 +437,7 @@ const resolvers = {
             objectType: 'manuscript',
           },
         ],
+        groupId: group.id,
       }
 
       if (['ncrc', 'colab'].includes(activeConfig.formData.instanceName)) {
@@ -501,8 +516,8 @@ const resolvers = {
       return updatedManuscript
     },
 
-    async importManuscripts(_, props, ctx) {
-      return importManuscripts(ctx)
+    async importManuscripts(_, { groupId }, ctx) {
+      return importManuscripts(groupId, ctx)
     },
 
     async archiveManuscripts(_, { ids }, ctx) {
@@ -556,7 +571,11 @@ const resolvers = {
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
       const manuscript = await models.Manuscript.find(id)
-      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+
+      const activeConfig = await models.Config.query().findOne({
+        groupId: manuscript.groupId,
+        active: true,
+      })
 
       toDeleteList.push(manuscript.id)
 
@@ -681,7 +700,14 @@ const resolvers = {
           handlingEditor.user.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'reviewRejectEmailTemplate'
+        const activeConfig = await models.Config.query().findOne({
+          groupId: manuscript.groupId,
+          active: true,
+        })
+
+        const selectedTemplate =
+          activeConfig.formData.eventNotification.reviewRejectedEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
@@ -715,7 +741,12 @@ const resolvers = {
         }
 
         try {
-          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+          await sendEmailNotification(
+            receiverEmail,
+            selectedTemplate,
+            data,
+            manuscript.groupId,
+          )
 
           // Send Notification in Editorial Discussion Panel
           models.Message.createMessage({
@@ -746,6 +777,11 @@ const resolvers = {
           .findById(id)
           .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
+        const activeConfig = await models.Config.query().findOne({
+          groupId: manuscript.groupId,
+          active: true,
+        })
+
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
         const receiverName =
@@ -753,7 +789,10 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'submissionConfirmationEmailTemplate'
+        const selectedTemplate =
+          activeConfig.formData.eventNotification
+            .submissionConfirmationEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
@@ -772,7 +811,12 @@ const resolvers = {
         }
 
         try {
-          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+          await sendEmailNotification(
+            receiverEmail,
+            selectedTemplate,
+            data,
+            manuscript.groupId,
+          )
 
           // Get channel ID
           const channelId = manuscript.channels.find(
@@ -800,7 +844,10 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
-      const activeConfig = await models.Config.query().first()
+      const activeConfig = await models.Config.query().findOne({
+        groupId: manuscript.groupId,
+        active: true,
+      })
 
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
@@ -850,7 +897,10 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
-        const selectedTemplate = 'evaluationCompleteEmailTemplate'
+        const selectedTemplate =
+          activeConfig.formData.eventNotification
+            .evaluationCompleteEmailTemplate
+
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
@@ -887,7 +937,12 @@ const resolvers = {
               userId: manuscript.submitterId,
             })
 
-            await sendEmailNotification(receiverEmail, selectedTemplate, data)
+            await sendEmailNotification(
+              receiverEmail,
+              selectedTemplate,
+              data,
+              manuscript.groupId,
+            )
           } catch (e) {
             /* eslint-disable-next-line */
             console.log('email was not sent', e)
@@ -1025,7 +1080,10 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[reviews, publishedArtifacts]')
 
-      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+      const activeConfig = await models.Config.query().findOne({
+        groupId: manuscript.groupId,
+        active: true,
+      })
 
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
@@ -1181,13 +1239,11 @@ const resolvers = {
         limit,
         filters,
         timezoneOffsetMinutes,
+        groupId,
       },
       ctx,
     ) {
-      const submissionForm = await models.Form.findOneByField(
-        'purpose',
-        'submit',
-      )
+      const submissionForm = await getSubmissionForm(groupId)
 
       // Get IDs of the top-level manuscripts
       // TODO move this query to the model
@@ -1201,6 +1257,7 @@ const resolvers = {
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
         .where('is_hidden', false)
+        .where('group_id', groupId)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const allManuscriptsWithInfo = await models.Manuscript.query()
@@ -1253,6 +1310,7 @@ const resolvers = {
         submissionForm,
         timezoneOffsetMinutes || 0,
         Object.keys(userManuscriptsWithInfo),
+        groupId,
       )
 
       const knex = models.Manuscript.knex()
@@ -1276,8 +1334,11 @@ const resolvers = {
         .whereNot({ isHidden: true })
         .orderBy('created', 'desc')
     },
-    async publishedManuscripts(_, { sort, offset, limit }, ctx) {
-      const query = models.Manuscript.query().whereNotNull('published')
+    async publishedManuscripts(_, { sort, offset, limit, groupId }, ctx) {
+      const query = models.Manuscript.query()
+        .where({ groupId })
+        .whereNotNull('published')
+
       const totalCount = await query.resultSize()
 
       if (sort) {
@@ -1296,10 +1357,10 @@ const resolvers = {
     },
     async paginatedManuscripts(
       _,
-      { sort, offset, limit, filters, timezoneOffsetMinutes },
+      { sort, offset, limit, filters, timezoneOffsetMinutes, groupId },
       ctx,
     ) {
-      const submissionForm = await getSubmissionForm()
+      const submissionForm = await getSubmissionForm(groupId)
 
       // TODO Move this to the model, as only the model should interact with DB directly
       const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
@@ -1309,6 +1370,8 @@ const resolvers = {
         filters,
         submissionForm,
         timezoneOffsetMinutes || 0,
+        null,
+        groupId,
       )
 
       const knex = models.Manuscript.knex()
@@ -1328,7 +1391,7 @@ const resolvers = {
 
       return { totalCount, manuscripts: result }
     },
-
+    // TODO: fetch manuscripts per group for flax?
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
       const query = models.Manuscript.query()
         .whereNotNull('published')
@@ -1342,8 +1405,19 @@ const resolvers = {
     async publishedManuscript(_, { id }, ctx) {
       return models.Manuscript.query().findById(id).whereNotNull('published')
     },
-    async unreviewedPreprints(_, { token }, ctx) {
-      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+    async unreviewedPreprints(_, { token, groupName }, ctx) {
+      const group = await models.Group.query().findOne({
+        name: groupName,
+        isArchived: false,
+      })
+
+      if (!group)
+        throw new Error('Group does not exist or it has been archived!')
+
+      const activeConfig = await models.Config.query().findOne({
+        groupId: group.id,
+        active: true,
+      })
 
       if (activeConfig.formData.user.kotahiApiTokens) {
         validateApiToken(token, activeConfig.formData.user.kotahiApiTokens)
@@ -1352,7 +1426,7 @@ const resolvers = {
       }
 
       const manuscripts = await models.Manuscript.query()
-        .where({ status: 'new' })
+        .where({ status: 'new', groupId: group.id })
         .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
 
       return manuscripts.map(m => ({
@@ -1372,15 +1446,18 @@ const resolvers = {
       }))
     },
     async doisToRegister(_, { id }, ctx) {
-      const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+      const manuscript = await models.Manuscript.query()
+        .findById(id)
+        .withGraphFetched('reviews')
+
+      const activeConfig = await models.Config.query().findOne({
+        groupId: manuscript.groupId,
+        active: true,
+      })
 
       if (!activeConfig.formData.publishing.crossref.login) {
         return null
       }
-
-      const manuscript = await models.Manuscript.query()
-        .findById(id)
-        .withGraphFetched('reviews')
 
       const DOIs = []
 
@@ -1389,6 +1466,7 @@ const resolvers = {
       ) {
         const manuscriptDOI = getDoi(
           getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id,
+          activeConfig,
         )
 
         if (manuscriptDOI) {
@@ -1411,6 +1489,7 @@ const resolvers = {
                 manuscript,
                 `review${reviewNumber}suffix`,
               ) || `${manuscript.id}/${reviewNumber}`,
+              activeConfig,
             ),
           ),
         )
@@ -1424,6 +1503,7 @@ const resolvers = {
           const summaryDOI = getDoi(
             getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
               `${manuscript.id}/`,
+            activeConfig,
           )
 
           if (summaryDOI) {
@@ -1442,8 +1522,13 @@ const resolvers = {
     /** Return true if a DOI formed from this suffix has not already been assigned (i.e. not found in Crossref) */
     // To be called in submit manuscript as
     // first validation step for custom suffix
-    async validateSuffix(_, { suffix }, ctx) {
-      const doi = getDoi(suffix)
+    async validateSuffix(_, { suffix, groupId }, ctx) {
+      const activeConfig = await models.Config.query().findOne({
+        groupId,
+        active: true,
+      })
+
+      const doi = getDoi(suffix, activeConfig)
       return { isDOIValid: await doiIsAvailable(doi) }
     },
   },
@@ -1562,17 +1647,17 @@ const typeDefs = `
     globalTeams: [Team]
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
-    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
-    manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
-    publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
+    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
+    manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
+    publishedManuscripts(sort:String, offset: Int, limit: Int, groupId: ID!): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
-    validateSuffix(suffix: String): validateDOIResponse
+    validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
-    unreviewedPreprints(token: String!): [Preprint]
+    unreviewedPreprints(token: String!, groupName: String!): [Preprint]
     doisToRegister(id: ID!): [String]
   }
 
@@ -1612,7 +1697,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: Boolean!
+    importManuscripts(groupId: ID!): Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
     archiveManuscript(id: ID!): ID!
     archiveManuscripts(ids: [ID]!): [ID!]!
@@ -1651,6 +1736,7 @@ const typeDefs = `
     files: [FileInput]
     meta: ManuscriptMetaInput
     submission: String
+    groupId: ID!
   }
 
   input ManuscriptMetaInput {

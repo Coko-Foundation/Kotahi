@@ -8,6 +8,9 @@ class TaskEmailNotificationLog extends BaseModel {
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const Task = require('./task')
+    /* eslint-disable-next-line global-require */
+    const EmailTemplate = require('../../model-email-templates/src/emailTemplate')
+
     return {
       task: {
         relation: BaseModel.BelongsToOneRelation,
@@ -15,6 +18,14 @@ class TaskEmailNotificationLog extends BaseModel {
         join: {
           from: 'task_email_notifications_logs.taskId',
           to: 'tasks.id',
+        },
+      },
+      emailTemplate: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: EmailTemplate,
+        join: {
+          from: 'task_email_notifications_logs.emailTemplateId',
+          to: 'email_templates.id',
         },
       },
     }
@@ -27,6 +38,7 @@ class TaskEmailNotificationLog extends BaseModel {
         senderEmail: { type: 'string' },
         recipientEmail: { type: 'string' },
         emailTemplateKey: { type: 'string' },
+        emailTemplateId: { type: ['string', 'null'], format: 'uuid' },
         content: { type: 'string' },
       },
     }

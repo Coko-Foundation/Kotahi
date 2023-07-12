@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
+/* eslint-disable import/no-unresolved */
 import Form from '@rjsf/core'
-import { schema, uiSchema } from './ui/schema'
+import generateSchema from './ui/schema' // Import the function that generates the schema and uiSchema
+
 import {
   ActionButton,
   Container,
@@ -30,7 +32,18 @@ const ConfigManagerForm = ({
   omitExtraData = true,
   updateConfig,
   updateConfigStatus,
+  emailTemplates,
 }) => {
+  const emailNotificationOptions = emailTemplates.map(template => {
+    const emailOption = {
+      const: template.id,
+      title: template.emailContent.description,
+    }
+
+    return emailOption
+  })
+
+  const { schema, uiSchema } = generateSchema(emailNotificationOptions)
   return (
     <>
       <link

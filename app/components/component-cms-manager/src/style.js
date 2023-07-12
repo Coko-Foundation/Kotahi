@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { TextInput, Heading, ActionButton } from '../../shared'
 
+import { SecondaryButton } from '../../component-modal/src/Modal'
+
 export const Section = styled.div`
   margin: 16px 16px 0px 0px;
   ${props =>
@@ -12,6 +14,10 @@ export const Section = styled.div`
         height: 100%;
       }
     `}
+`
+
+export const CompactSection = styled(Section)`
+  width: 24%;
 `
 
 export const Page = styled.div`
@@ -53,6 +59,11 @@ export const FormTextInput = styled(TextInput)`
   padding: 10px;
 `
 
+export const ColorInput = styled(TextInput)`
+  background: white;
+  padding: 0px;
+`
+
 export const EditPageContainer = styled.div`
   display: flex;
   overflow: scroll;
@@ -84,6 +95,12 @@ export const ActionButtonContainer = styled.div`
 `
 
 export const FormActionButton = styled(ActionButton)`
+  cursor: pointer;
+  margin-right: 32px;
+  min-width: 104px;
+`
+
+export const FormActionDelete = styled(SecondaryButton)`
   min-width: 0px;
 `
 
@@ -112,8 +129,43 @@ export const StatusInfoText = styled.div`
   margin-right: 16px;
 `
 
-export const FlaxCenter = styled.div`
+export const FlexCenter = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
+`
+
+export const ErrorMessage = styled.div`
+  color: ${th('colorError')};
+  font-size: ${th('fontSizeBaseSmall')};
+  font-weight: normal;
+  line-height: ${th('lineHeightBaseSmall')};
+`
+
+export const LayoutHeaderListContainer = styled.div`
+  padding: grid;
+  width: 30%;
+`
+
+export const LayoutHeaderListItem = styled.div`
+  align-items: center;
+  border: 1px solid #dedede;
+  border-radius: ${grid(1)};
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: ${grid(2)};
+  padding: ${grid(1 / 2)};
+  user-select: 'none';
+`
+
+export const LayoutMainHeading = styled(Heading)`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${grid(3)};
+  margin-bottom: ${grid(2)};
+`
+
+export const LayoutSecondaryHeading = styled(Heading)`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${grid(1.5)};
+  margin-bottom: ${grid(1)};
 `

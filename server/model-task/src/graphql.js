@@ -3,7 +3,6 @@ const models = require('@pubsweet/models')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
-const Config = require('../../config/src/config')
 const taskConfigs = require('../../../config/journal/tasks.json')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
@@ -11,18 +10,19 @@ const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 const resolvers = {
   Mutation: {
-    updateTasks: async (_, { manuscriptId, tasks }) => {
+    updateTasks: async (_, { manuscriptId, groupId, tasks }) => {
       // Remove any tasks with repeated IDs; ensure manuscriptIds all match
       const distinctTasks = tasks
         .filter((task, i) => tasks.findIndex(t => t.id === task.id) === i)
         .map(task => ({
           ...task,
           manuscriptId,
+          groupId,
         }))
 
       const currentTaskIdRecords = await Task.query()
         .select('id')
-        .where({ manuscriptId })
+        .where({ manuscriptId, groupId })
 
       const idsToDelete = currentTaskIdRecords
         .filter(record => !distinctTasks.some(t => t.id === record.id))
@@ -34,7 +34,12 @@ const resolvers = {
         const promises = []
 
         for (let i = 0; i < distinctTasks.length; i += 1) {
-          const task = { ...distinctTasks[i], manuscriptId, sequenceIndex: i }
+          const task = {
+            ...distinctTasks[i],
+            manuscriptId,
+            groupId,
+            sequenceIndex: i,
+          }
 
           promises.push(
             Task.query(trx)
@@ -58,7 +63,7 @@ const resolvers = {
     },
     updateTask: async (_, { task }) => {
       const currentCount = await Task.query()
-        .where({ manuscriptId: task.manuscriptId })
+        .where({ manuscriptId: task.manuscriptId, groupId: task.groupId })
         .resultSize()
 
       const existing = await Task.query().findById(task.id)
@@ -66,7 +71,13 @@ const resolvers = {
       // Ensure that we can't switch a task from one manuscript to another
       const manuscriptId = existing ? existing.manuscriptId : task.manuscriptId
       const sequenceIndex = existing ? existing.sequenceIndex : currentCount
-      const taskRecord = { ...task, manuscriptId, sequenceIndex }
+
+      const taskRecord = {
+        ...task,
+        manuscriptId,
+        groupId: task.groupId,
+        sequenceIndex,
+      }
 
       await Task.query().insert(taskRecord).onConflict('id').merge()
 
@@ -111,7 +122,8 @@ const resolvers = {
 
       return associatedTask
     },
-    createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
+    createNewTaskAlerts: async (_, { groupId }, ctx) =>
+      createNewTaskAlerts(groupId), // For testing purposes. Normally initiated by a scheduler on the server.
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
@@ -133,7 +145,10 @@ const resolvers = {
       ) {
         const taskDurationDays = dbTask.defaultDurationDays
 
-        const activeConfig = await Config.query().first()
+        const activeConfig = await models.Config.query().findOne({
+          groupId: dbTask.groupId,
+          active: true,
+        })
 
         data.dueDate =
           taskDurationDays !== null
@@ -172,9 +187,9 @@ const resolvers = {
     },
   },
   Query: {
-    tasks: async (_, { manuscriptId }) => {
+    tasks: async (_, { manuscriptId, groupId }) => {
       return Task.query()
-        .where({ manuscriptId })
+        .where({ manuscriptId, groupId })
         .orderBy('sequenceIndex')
         .withGraphFetched(
           '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
@@ -222,6 +237,7 @@ const typeDefs = `
   input TaskInput {
     id: ID!
     manuscriptId: ID
+    groupId: ID!
     title: String!
     assigneeUserId: ID
     defaultDurationDays: Int
@@ -244,6 +260,7 @@ const typeDefs = `
     created: DateTime!
     updated: DateTime
     manuscriptId: ID
+    groupId: ID
     title: String!
     assigneeUserId: ID
     assignee: User
@@ -265,7 +282,7 @@ const typeDefs = `
   }
 
   extend type Query {
-    tasks(manuscriptId: ID): [Task!]!
+    tasks(manuscriptId: ID, groupId: ID!): [Task!]!
     userHasTaskAlerts: Boolean!
   }
 
@@ -275,7 +292,7 @@ const typeDefs = `
     recipientUserId: ID
     recipientType: String
     notificationElapsedDays: Int
-    emailTemplateKey: String
+    emailTemplateId: ID
     recipientName: String
     recipientEmail: String
     sentAt: DateTime
@@ -285,7 +302,7 @@ const typeDefs = `
     taskId: ID!
     senderEmail: String!
     recipientEmail: String!
-    emailTemplateKey: String!
+    emailTemplateId: ID!
     content: String!
   }
 
@@ -294,7 +311,7 @@ const typeDefs = `
     taskId: ID!
     senderEmail: String!
     recipientEmail: String!
-    emailTemplateKey: String!
+    emailTemplateId: ID!
     content: String!
     created: DateTime!
     updated: DateTime
@@ -306,7 +323,7 @@ const typeDefs = `
     recipientUserId: ID
     recipientType: String
     notificationElapsedDays: Int
-    emailTemplateKey: String
+    emailTemplateId: ID
     recipientName: String
     recipientEmail: String
     created: DateTime!
@@ -316,9 +333,9 @@ const typeDefs = `
   }
 
   extend type Mutation {
-    updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
+    updateTasks(manuscriptId: ID, groupId: ID!, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
-    createNewTaskAlerts: Boolean
+    createNewTaskAlerts(groupId: ID!): Boolean
     removeTaskAlertsForCurrentUser: Boolean
     updateTaskStatus(task: UpdateTaskStatusInput!): Task!
     updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!

@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 
-import * as React from 'react'
+import React, { useContext } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 import AvatarImage from './image'
 import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
-import { JournalContext } from '../../xpub-journal/src'
+import { ConfigContext } from '../../config/src'
 
 export const GET_USER = gql`
   query user($id: ID, $username: String) {
@@ -40,8 +40,8 @@ const GetUserByUsername = props => {
 }
 
 const Avatar = props => {
-  const journal = React.useContext(JournalContext)
-  const urlFrag = journal ? journal.metadata.toplevel_urlfragment : ''
+  const config = useContext(ConfigContext)
+  const { urlFrag } = config
 
   const {
     user,

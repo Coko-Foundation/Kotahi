@@ -1,7 +1,6 @@
 # IMAGE FOR BUILDING
 FROM node:16.19.0-alpine as build
 
-ARG instance_name
 ARG node_env
 ARG server_protocol
 ARG server_host
@@ -13,8 +12,8 @@ ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
 ARG use_colab_email
+ARG client_flax_site_url
 
-ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL $server_protocol
 ENV SERVER_HOST $server_host
@@ -26,6 +25,7 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV USE_COLAB_EMAIL $use_colab_email
+ENV CLIENT_FLAX_SITE_URL $client_flax_site_url
 
 RUN apk add --no-cache git python3 make g++ bash 
 

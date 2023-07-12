@@ -49,17 +49,21 @@ const resolvers = {
   Query: {
     form: async (_, { formId }) => Form.find(formId),
     forms: async () => Form.all(),
-    formsByCategory: async (_, { category }) =>
-      Form.findByField('category', category),
+    formsByCategory: async (_, { category, groupId }) =>
+      Form.query().where({
+        category,
+        groupId,
+      }),
 
     /** Returns the specific requested form, with any incomplete fields omitted */
-    formForPurposeAndCategory: async (_, { purpose, category }) => {
-      const results = await Form.query()
-        .where('purpose', purpose)
-        .where('category', category)
-        .limit(1)
+    formForPurposeAndCategory: async (_, { purpose, category, groupId }) => {
+      const form = await Form.query().findOne({
+        purpose,
+        category,
+        groupId,
+      })
 
-      if (!results.length) {
+      if (!form) {
         throw notFoundError(
           'Category and purpose',
           `${purpose} ${category}`,
@@ -68,11 +72,11 @@ const resolvers = {
       }
 
       // TODO Remove this once the form-builder no longer permits incomplete/malformed fields.
-      results[0].structure.children = results[0].structure.children.filter(
+      form.structure.children = form.structure.children.filter(
         field => field.component && field.name,
       )
 
-      return results[0]
+      return form
     },
   },
 }

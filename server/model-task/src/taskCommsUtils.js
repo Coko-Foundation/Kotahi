@@ -9,18 +9,25 @@ const {
 const {
   manuscriptIsActive,
   getEditorIdsForManuscript,
+  getIdOfLatestVersionOfManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId: manuscript.groupId,
+    active: true,
+  })
 
   const newTasks = await models.Task.query()
     .whereNull('manuscriptId')
+    .where({ groupId: manuscript.groupId })
     .orderBy('sequenceIndex')
     .withGraphFetched('emailNotifications(orderByCreated)')
 
   const existingTasks = await models.Task.query()
-    .where({ manuscriptId })
+    .where({ manuscriptId, groupId: manuscript.groupId })
     .orderBy('sequenceIndex')
 
   const endOfToday = moment()
@@ -161,8 +168,11 @@ const updateAlertsForTask = async (task, trx) => {
 
 /** For all tasks that have gone overdue during the previous calendar day, create alerts as appropriate.
  * Don't look further than yesterday, to avoid regenerating alerts that have already been seen. */
-const createNewTaskAlerts = async () => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+const createNewTaskAlerts = async groupId => {
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -174,7 +184,7 @@ const createNewTaskAlerts = async () => {
     .whereNotNull('dueDate')
     .where('dueDate', '<', startOfToday.toDate())
     .where('dueDate', '>=', startOfYesterday.toDate()) // Don't look earlier than yesterday, so we don't recreate alerts that are already dismissed.
-    .where({ status: 'In progress' })
+    .where({ status: 'In progress', groupId })
 
   const manuscriptIds = [...new Set(overdueTasks.map(t => t.manuscriptId))]
   const manuscriptMap = {}
@@ -216,11 +226,11 @@ const deleteAlertsForManuscript = async manuscriptId => {
     .whereIn('taskId', models.Task.query().select('id').where({ manuscriptId }))
 }
 
-const getTaskEmailNotifications = async ({ status = null }) => {
+const getTaskEmailNotifications = async ({ status = null, groupId }) => {
   let taskQuery = models.Task.query() // no await here because it's a sub-query
 
   if (status) {
-    taskQuery = taskQuery.where({ status })
+    taskQuery = taskQuery.where({ status, groupId })
   }
 
   return models.Task.relatedQuery('emailNotifications')
@@ -335,13 +345,14 @@ const sendNotification = async n => {
   for (const recipient of notificationRecipients) {
     let logData
 
-    if (n.emailTemplateKey) {
+    if (n.emailTemplateId) {
       try {
         let notificationInput = {
           manuscript,
-          selectedTemplate: n.emailTemplateKey,
+          selectedTemplate: n.emailTemplateId,
           externalName: recipient.name, // New User username
           currentUser,
+          groupId: n.task.groupId,
         }
 
         if (recipientIsExternal) {
@@ -356,10 +367,7 @@ const sendNotification = async n => {
           }
         }
 
-        const emailTemplateOption = n.emailTemplateKey.replace(
-          /([A-Z])/g,
-          ' $1',
-        )
+        const emailTemplateOption = n.emailTemplateId.replace(/([A-Z])/g, ' $1')
 
         const selectedTemplateValue =
           emailTemplateOption.charAt(0).toUpperCase() +
@@ -371,6 +379,7 @@ const sendNotification = async n => {
           taskId: n.task.id,
           content: messageBody,
           emailTemplateKey: emailTemplateOption,
+          emailTemplateId: emailTemplateOption,
           senderEmail: editor ? editor.email : '',
           recipientEmail: recipient.email,
         }
@@ -387,8 +396,11 @@ const sendNotification = async n => {
   }
 }
 
-const sendAutomatedTaskEmailNotifications = async () => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+const sendAutomatedTaskEmailNotifications = async groupId => {
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -398,6 +410,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
 
   const taskEmailNotifications = await getTaskEmailNotifications({
     status: taskConfigs.status.IN_PROGRESS,
+    groupId,
   })
 
   // eslint-disable-next-line no-restricted-syntax
@@ -420,10 +433,15 @@ const sendAutomatedTaskEmailNotifications = async () => {
 }
 
 const getTeamRecipients = async (emailNotification, roles) => {
+  // task notifications through scheduler are supposed to be sent only to team members from latest version of manuscript
+  const latestManuscriptVersionId = getIdOfLatestVersionOfManuscript(
+    emailNotification.task.manuscriptId,
+  )
+
   const teamQuery = models.Team.query()
     .where({
       objectType: 'manuscript',
-      objectId: emailNotification.task.manuscriptId,
+      objectId: latestManuscriptVersionId,
     })
     .whereIn('role', roles) // no await here because it's a sub-query
 

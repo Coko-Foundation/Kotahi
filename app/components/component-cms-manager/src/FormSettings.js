@@ -3,7 +3,9 @@ import { set } from 'lodash'
 
 import ContentWaxEditor from './editor/ContentWaxEditor'
 
-import { FormTextInput } from './style'
+import StaticTextInput from './components/StaticTextInput'
+
+import { FormTextInput, ColorInput } from './style'
 
 import { hasValue } from '../../../shared/htmlUtils'
 
@@ -23,24 +25,35 @@ const richEditor = ({ validationStatus, setTouched, onChange, ...rest }) => {
   )
 }
 
+const staticTextInput = props => {
+  return <StaticTextInput {...props} />
+}
+
 export const inputComponents = {
   TextField: FormTextInput,
+  StaticTextInput: staticTextInput,
   AbstractEditor: richEditor,
+  ColorInput,
 }
 
 export const inputFields = [
   {
     component: inputComponents.TextField,
-    label: 'Page title',
+    label: 'Page title*',
     name: 'title',
     type: 'text-input',
+    isRequired: true,
   },
 
   {
-    component: inputComponents.TextField,
+    component: StaticTextInput,
     label: 'URL',
     name: 'url',
     type: 'text-input',
+    isRequired: true,
+    otherProps: {
+      staticText: process.env.CLIENT_FLAX_SITE_URL,
+    },
   },
 
   {
@@ -49,5 +62,7 @@ export const inputFields = [
     name: 'content',
     flexGrow: true,
     type: 'rich-editor',
+    isRequired: true,
+    otherProps: {},
   },
 ]

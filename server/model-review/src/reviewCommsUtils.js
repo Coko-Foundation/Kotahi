@@ -7,13 +7,13 @@ const getForm = async categoryAndPurpose => {
   return form[0]
 }
 
-const getReviewForm = async () =>
-  getForm({ category: 'review', purpose: 'review' })
+const getReviewForm = async groupId =>
+  getForm({ category: 'review', purpose: 'review', groupId })
 
-const getDecisionForm = async () =>
-  getForm({ category: 'decision', purpose: 'decision' })
+const getDecisionForm = async groupId =>
+  getForm({ category: 'decision', purpose: 'decision', groupId })
 
-const getSubmissionForm = async () =>
-  getForm({ category: 'submission', purpose: 'submit' })
+const getSubmissionForm = async groupId =>
+  getForm({ category: 'submission', purpose: 'submit', groupId })
 
 module.exports = { getReviewForm, getDecisionForm, getSubmissionForm }

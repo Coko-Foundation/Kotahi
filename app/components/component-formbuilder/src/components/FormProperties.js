@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { isEmpty, omitBy } from 'lodash'
 import styled from 'styled-components'
@@ -7,6 +7,7 @@ import { th } from '@pubsweet/ui-toolkit'
 import { Formik } from 'formik'
 import { AbstractField, RadioBox } from './builderComponents'
 import { Page, Heading } from './style'
+import { ConfigContext } from '../../../config/src'
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
@@ -117,7 +118,7 @@ FormProperties.defaultProps = {
   purpose: '',
 }
 
-const prepareForSubmit = (form, values) => {
+const prepareForSubmit = (form, values, config) => {
   const cleanedValues = omitBy(values, value => value === '')
 
   const { purpose, created, updated, ...rest } = cleanedValues
@@ -127,12 +128,14 @@ const prepareForSubmit = (form, values) => {
     purpose,
     category: form.category,
     structure: rest,
+    groupId: config.groupId,
   }
 
   return newForm
 }
 
 const FormForm = ({ form, updateForm, createForm }) => {
+  const config = useContext(ConfigContext)
   return (
     <Formik
       initialValues={{
@@ -143,9 +146,13 @@ const FormForm = ({ form, updateForm, createForm }) => {
       }}
       onSubmit={(values, actions) => {
         if (form.id) {
-          updateForm({ variables: { form: prepareForSubmit(form, values) } })
+          updateForm({
+            variables: { form: prepareForSubmit(form, values, config) },
+          })
         } else {
-          createForm({ variables: { form: prepareForSubmit(form, values) } })
+          createForm({
+            variables: { form: prepareForSubmit(form, values, config) },
+          })
           actions.resetForm()
         }
       }}

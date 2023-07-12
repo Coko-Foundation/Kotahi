@@ -28,6 +28,7 @@ import {
   UPDATE_TASK_NOTIFICATION,
   DELETE_TASK_NOTIFICATION,
   CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
+  GET_EMAIL_TEMPLATES,
 } from '../../../../queries'
 import {
   CREATE_TEAM_MUTATION,
@@ -82,7 +83,7 @@ const DecisionPage = ({ currentUser, match }) => {
   // start of code from submit page to handle possible form changes
   const client = useApolloClient()
   const config = useContext(ConfigContext)
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const { urlFrag } = config
 
   useEffect(() => {
     return () => {
@@ -108,6 +109,7 @@ const DecisionPage = ({ currentUser, match }) => {
   const { loading, data, error, refetch: refetchManuscript } = useQuery(query, {
     variables: {
       id: match.params.version,
+      groupId: config.groupId,
     },
   })
 
@@ -119,8 +121,11 @@ const DecisionPage = ({ currentUser, match }) => {
   const blacklistInfoQuery = useQuery(GET_BLACKLIST_INFORMATION, {
     variables: {
       email: inputEmail,
+      groupId: config.groupId,
     },
   })
+
+  const emailTemplates = useQuery(GET_EMAIL_TEMPLATES)
 
   const selectedEmailIsBlacklisted = !!blacklistInfoQuery.data
     ?.getBlacklistInformation?.length
@@ -393,6 +398,7 @@ const DecisionPage = ({ currentUser, match }) => {
         config?.controlPanel?.displayManuscriptShortId
       }
       dois={doisToRegister}
+      emailTemplates={emailTemplates.data?.emailTemplates}
       externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
@@ -429,7 +435,7 @@ const DecisionPage = ({ currentUser, match }) => {
       updateTeamMember={updateTeamMember}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}
-      validateSuffix={validateSuffix(client)}
+      validateSuffix={validateSuffix(client, config.groupId)}
     />
   )
 }

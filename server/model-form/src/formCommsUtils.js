@@ -1,10 +1,10 @@
 const models = require('@pubsweet/models')
 
-const getActiveForms = async () => {
+const getActiveForms = async groupId => {
   const forms = await models.Form.query()
-    .where({ category: 'submission', purpose: 'submit' })
-    .orWhere({ category: 'review', purpose: 'review' })
-    .orWhere({ category: 'decision', purpose: 'decision' })
+    .where({ category: 'submission', purpose: 'submit', groupId })
+    .orWhere({ category: 'review', purpose: 'review', groupId })
+    .orWhere({ category: 'decision', purpose: 'decision', groupId })
 
   return {
     submissionForm: forms.find(f => f.purpose === 'submit'),
@@ -16,10 +16,11 @@ const getActiveForms = async () => {
 /** For form for given purpose and category, return a list of all fields that are not confidential, each structured as
  * { name, title, component }
  */
-const getPublicFields = async (purpose, category) => {
+const getPublicFields = async (purpose, category, groupId) => {
   const forms = await models.Form.query().where({
     category,
     purpose,
+    groupId,
   })
 
   if (!forms.length) return []

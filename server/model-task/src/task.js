@@ -22,6 +22,8 @@ class Task extends BaseModel {
     const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
     /* eslint-disable-next-line global-require */
     const Manuscript = require('../../model-manuscript/src/manuscript')
+    /* eslint-disable-next-line global-require */
+    const Group = require('../../model-group/src/group')
 
     return {
       assignee: {
@@ -56,6 +58,14 @@ class Task extends BaseModel {
           to: 'manuscripts.id',
         },
       },
+      group: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Group,
+        join: {
+          from: 'tasks.groupId',
+          to: 'groups.id',
+        },
+      },
     }
   }
 
@@ -63,6 +73,7 @@ class Task extends BaseModel {
     return {
       properties: {
         manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: { type: ['string', 'null'], format: 'uuid' },
         title: { type: 'string' },
         assigneeUserId: { type: ['string', 'null'], format: 'uuid' },
         defaultDurationDays: { type: ['integer', 'null'] },

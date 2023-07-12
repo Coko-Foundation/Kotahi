@@ -1,7 +1,7 @@
 const he = require('he')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
-const Form = require('../model-form/src/form')
+const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 
 const getServerId = async serverLabel => {
   let [server] = await ArticleImportSources.query().where({
@@ -17,17 +17,17 @@ const getServerId = async serverLabel => {
 }
 
 /** Return the last import date for this server, or if no imports have been done, return start of epoch */
-const getLastImportDate = async serverId => {
+const getLastImportDate = async (serverId, groupId) => {
   const results = await ArticleImportHistory.query()
     .select('date')
-    .where({ sourceId: serverId })
+    .where({ sourceId: serverId, groupId })
 
   if (results.length) return results[0].date
   return 0
 }
 
-const getEmptySubmission = async () => {
-  const submissionForm = await Form.findOneByField('purpose', 'submit')
+const getEmptySubmission = async groupId => {
+  const submissionForm = await getSubmissionForm(groupId)
 
   const parsedFormStructure = submissionForm.structure.children
     .map(formElement => {

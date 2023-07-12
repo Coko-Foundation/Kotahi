@@ -96,7 +96,8 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
 
 const userIsGroupManagerQuery = async ctx => {
   if (!ctx.user) return false
-  const groupId = null // TODO Get groupId from ctx once we have multitenancy
+
+  const groupId = ctx.req.headers['group-id']
 
   const groupManagerRecord = await ctx.connectors.Team.model
     .query()
@@ -134,6 +135,12 @@ const isPublicFileFromPublishedManuscript = rule({ cache: 'contextual' })(
     if (parent.tags && parent.tags.includes('confidential')) return false
     const manuscript = await getManuscriptOfFile(parent, ctx)
     return !!(manuscript && manuscript.published)
+  },
+)
+
+const isCMSFile = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return parent.tags && parent.tags.includes('cms')
   },
 )
 
@@ -453,7 +460,7 @@ const permissions = {
     builtCss: isAuthenticated,
     channels: deny, // Never used
     channelsByTeamName: deny, // Never used
-    config: allow,
+    config: isAuthenticated,
     convertToJats: or(userIsEditor, userIsGmOrAdmin),
     convertToPdf: or(userIsEditor, userIsGmOrAdmin),
     currentUser: isAuthenticated,
@@ -471,6 +478,8 @@ const permissions = {
     getInvitationsForManuscript: or(userIsEditor, userIsGmOrAdmin),
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
+    group: allow,
+    groups: allow,
     invitationManuscriptId: isAuthenticated,
     invitationStatus: allow,
     manuscript: or(isAuthenticated, manuscriptIsPublished),
@@ -546,6 +555,7 @@ const permissions = {
     setShouldPublishField: or(userIsEditor, userIsGmOrAdmin),
     submitManuscript: or(userIsAuthor, userIsEditor, userIsGmOrAdmin),
     updateEmail: or(userIsCurrentUser, userIsGmOrAdmin),
+    updateConfig: userIsGmOrAdmin,
     updateUsername: or(userIsCurrentUser, userIsGmOrAdmin),
     updateFile: isAuthenticated,
     updateForm: userIsGmOrAdmin,
@@ -587,9 +597,12 @@ const permissions = {
   Team: isAuthenticated,
   TeamMember: isAuthenticated,
   User: isAuthenticated,
+  Group: allow,
+  Config: allow,
   PaginatedManuscripts: allow,
   Manuscript: allow,
   File: or(
+    isCMSFile,
     isPublicFileFromPublishedManuscript,
     userIsAuthorOfTheManuscriptOfTheFile,
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,

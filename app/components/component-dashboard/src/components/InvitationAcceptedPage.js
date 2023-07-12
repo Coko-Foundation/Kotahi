@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 
@@ -12,6 +12,7 @@ import {
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/invitation'
 import mutations from '../graphql/mutations'
+import { ConfigContext } from '../../../config/src'
 
 const GET_CURRENT_USER = gql`
   query currentUser {
@@ -22,6 +23,9 @@ const GET_CURRENT_USER = gql`
 `
 
 const InvitationAcceptedPage = () => {
+  const config = useContext(ConfigContext)
+  const { urlFrag } = config
+
   const invitationId = window.localStorage.getItem('invitationId')
     ? window.localStorage.getItem('invitationId')
     : ''
@@ -36,7 +40,7 @@ const InvitationAcceptedPage = () => {
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
       localStorage.removeItem('invitationId')
-      window.location.href = '/kotahi/dashboard'
+      window.location.href = `${urlFrag}/dashboard`
     },
   })
 

@@ -10,18 +10,22 @@ const { getPubsub } = pubsubManager
 let isImportInProgress = false
 let isImportingFromSemanticScholarInProgress = false
 
-const importManuscripts = async ctx => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
+const importManuscripts = async (groupId, ctx) => {
   if (isImportInProgress) return false
   isImportInProgress = true
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const promises = []
 
   if (activeConfig.formData.instanceName === 'ncrc') {
-    promises.push(importArticlesFromBiorxiv(ctx))
-    promises.push(importArticlesFromPubmed(ctx))
+    promises.push(importArticlesFromBiorxiv(groupId, ctx))
+    promises.push(importArticlesFromPubmed(groupId, ctx))
   } else if (activeConfig.formData.instanceName === 'colab') {
-    promises.push(importArticlesFromBiorxivWithFullTextSearch(ctx))
+    promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
   }
 
   if (!promises.length) return false
@@ -39,16 +43,19 @@ const importManuscripts = async ctx => {
   return true
 }
 
-const importManuscriptsFromSemanticScholar = async ctx => {
-  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
-
+const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
   if (isImportingFromSemanticScholarInProgress) return false
   isImportingFromSemanticScholarInProgress = true
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
 
   const promises = []
 
   if (activeConfig.formData.instanceName === 'colab') {
-    promises.push(importArticlesFromSemanticScholar(ctx))
+    promises.push(importArticlesFromSemanticScholar(groupId, ctx))
   }
 
   if (!promises.length) return false

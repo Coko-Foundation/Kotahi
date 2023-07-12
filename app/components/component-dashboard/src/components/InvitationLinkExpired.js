@@ -16,8 +16,8 @@ const InvitationLinkExpired = () => {
       <Centered>
         <InvitationContent>
           <img
-            alt={config.groupIdentity.brandName}
-            src={config.groupIdentity.logoPath}
+            alt={config?.groupIdentity?.brandName}
+            src={config?.groupIdentity?.logoPath}
           />
           <FeedbackForm>
             <DeclinedInfoString>

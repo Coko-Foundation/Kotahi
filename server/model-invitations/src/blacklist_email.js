@@ -10,6 +10,7 @@ class BlacklistEmail extends BaseModel {
       properties: {
         date: { type: ['string', 'object', 'null'], format: 'date-time' },
         email: { type: ['string'], format: 'email' },
+        groupId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

@@ -64,6 +64,11 @@ Base.args = {
       email: 'jane.doe@asdf.com',
     },
   ],
+  roles: [
+    { slug: 'reviewer', name: 'Reviewer' },
+    { slug: 'editor', name: 'Editor' },
+    { slug: 'author', name: 'Author' },
+  ],
 }
 
 export default {

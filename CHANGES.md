@@ -1,5 +1,29 @@
 ## Changes
 
+### 2023-07-07
+
+Instances affected: **all**.<br/>
+
+1. `INSTANCE_NAME` must be replaced with `INSTANCE_GROUPS` when upgrading Kotahi to version 2.0 or later.
+2. `INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Typically, when upgrading an existing instance to 2.0, `INSTANCE_GROUPS` should specify a single group, though you may subsequently add further groups separated by commas to create new mulitenanted groups, each with their own data, workflow, branding and other settings (see the [FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#instance_groups-and-multitenancy) for details).
+   `INSTANCE_GROUPS` must contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:aperture`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and the `_` character. The _group type_ (after the colon) must be either 'aperture', 'colab', 'elife' or 'ncrc'. (These [_group types_](https://docs.coko.foundation/doc/instance-archetypes-LFnzu7leM7) will be given more descriptive and generic names in the near future.)
+
+For all existing instances:
+
+Before upgrading to 2.0, `INSTANCE_NAME` must be changed to `INSTANCE_GROUPS` and your chosen _group name_ with a colon must be inserted before the _group type_. It is recommended that the _group name_ "kotahi" be used, in order to keep URLs to all pages unchanged. Thus, `INSTANCE_NAME=aperture` would become `INSTANCE_GROUPS=kotahi:aperture`.
+
+1. The `INSTANCE_NAME` needs to be replaced with `INSTANCE_GROUPS` as we are moving forward with the support for multi-tenancy feature.
+
+2. The `INSTANCE_GROUPS` setting is required for both existing and new instances. The instance can have a single group workflow or mulitple groups workflow depending on the number of entries added in `INSTANCE_GROUPS` sperated by comma. It should have two values: `group_name` and `instance_type`, separated by a colon (`group_name:instance_type`) for each group. The `group_name` is the identifier which is unique to each instance it can only be lowercase and cannot have spaces or special characters except `_` e.g. `kotahi`. The `instance_type` can be one of the following: `aperture`, `colab`, `elife`, `ncrc`, and may change to a more generic representation of the workflow in the near future.
+
+### 2023-06-27
+
+For the Aperture Neuro group _only_, you must add the following to the `.env` file prior to upgrade:
+
+```
+USE_APERTURE_EMAIL=true
+```
+
 ### 2022-10-18
 
 Instances affected: **all**.<br/>

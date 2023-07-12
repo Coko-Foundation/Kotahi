@@ -40,6 +40,16 @@ const SpecialRolesLabel = styled.div`
   color: ${th('colorPrimary')};
 `
 
+const UserPrivilegeAlert = styled.div`
+  background: ${th('colorWarningLight')};
+  border-left: 3px solid ${th('colorWarning')};
+  color: ${th('colorWarningDark')};
+  line-height: 1.8;
+  margin-top: 0.5em;
+  padding: 0.5em 1em 0.5em 0.5em;
+  width: 100%;
+`
+
 const ProfileDropzone = ({
   profilePicture,
   replaceAvatarImage,
@@ -63,12 +73,19 @@ const ProfileDropzone = ({
   )
 }
 
-const SpecialRoles = ({ user }) => {
+const SpecialRoles = ({ user, isCurrentUsersOwnProfile }) => {
   const specialRoles = user.globalRoles
     .concat(user.groupRoles)
     .map(convertCamelCaseToTitleCase)
 
-  if (!specialRoles.length) return null
+  if (!specialRoles.length)
+    return isCurrentUsersOwnProfile ? (
+      <UserPrivilegeAlert>
+        User Privileges Required
+        <br /> Please ensure that you have the appropriate role permissions or
+        contact your system administrator for assistance.
+      </UserPrivilegeAlert>
+    ) : null
 
   return <SpecialRolesLabel>({specialRoles.join(', ')})</SpecialRolesLabel>
 }
@@ -133,7 +150,10 @@ const Profile = ({
           )}
         </HeadingWithAction>
 
-        <SpecialRoles user={user} />
+        <SpecialRoles
+          isCurrentUsersOwnProfile={isCurrentUsersOwnProfile}
+          user={user}
+        />
 
         <SectionContent>
           <SectionRow key="profilepicture">

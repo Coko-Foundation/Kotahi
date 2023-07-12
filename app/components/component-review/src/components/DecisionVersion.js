@@ -88,6 +88,7 @@ const DecisionVersion = ({
   deleteTaskNotification,
   createTaskEmailNotificationLog,
   manuscriptLatestVersionId,
+  emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -238,6 +239,7 @@ const DecisionVersion = ({
               <EmailNotifications
                 allUsers={allUsers}
                 currentUser={currentUser}
+                emailTemplates={emailTemplates}
                 externalEmail={externalEmail}
                 manuscript={version}
                 selectedEmail={selectedEmail}
@@ -257,11 +259,12 @@ const DecisionVersion = ({
                 createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
+                emailTemplates={emailTemplates}
                 manuscript={version}
-                manuscriptId={version.id}
+                manuscriptId={parent.id}
                 roles={roles}
                 sendNotifyEmail={sendNotifyEmail}
-                tasks={version.tasks}
+                tasks={parent.tasks}
                 updateTask={updateTask}
                 updateTaskNotification={updateTaskNotification}
                 updateTasks={updateTasks}
@@ -285,7 +288,7 @@ const DecisionVersion = ({
               allUsers={allUsers}
               AssignEditor={AssignEditor}
               createTeam={createTeam}
-              manuscript={parent}
+              manuscript={version}
               teamLabels={teamLabels}
               updateTeam={updateTeam}
             />
@@ -296,7 +299,7 @@ const DecisionVersion = ({
                 <Title>Assigned editors</Title>
               </SectionHeader>
               <SectionRow>
-                {parent?.teams?.map(team => {
+                {version?.teams?.map(team => {
                   if (
                     ['seniorEditor', 'handlingEditor', 'editor'].includes(
                       team.role,
@@ -335,6 +338,7 @@ const DecisionVersion = ({
               <InviteReviewer
                 addReviewer={addReviewer}
                 currentUser={currentUser}
+                emailTemplates={emailTemplates}
                 manuscript={version}
                 reviewerUsers={allUsers}
                 selectedEmailIsBlacklisted={selectedEmailIsBlacklisted}

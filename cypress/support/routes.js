@@ -1,4 +1,4 @@
-export const login = '/login'
+export const login = '/kotahi/login'
 export const dashboard = '/kotahi/dashboard'
 export const manuscripts = '/kotahi/admin/manuscripts'
 export const formBuilder = '/kotahi/admin/form-builder'

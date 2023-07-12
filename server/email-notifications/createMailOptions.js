@@ -127,8 +127,8 @@ const templates = {
   alertUnreadMessageDigestTemplate,
 }
 
-const createMailOptions = (receiver, template, data) => {
-  const messageToReceiver = templates[template](data)
+const createMailOptions = (receiver, template, data, instanceName) => {
+  const messageToReceiver = templates[template](data, instanceName)
 
   return {
     to: receiver,
