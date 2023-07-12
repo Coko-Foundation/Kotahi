@@ -5,9 +5,11 @@ import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
+import { useLocation } from 'react-router-dom'
 import { HiddenTabs } from '../../shared'
 import { CREATE_MESSAGE, SEARCH_USERS } from '../../../queries'
 import Chat from './Chat'
+import { getActiveTab } from '../../../shared/manuscriptUtils'
 
 const GET_MESSAGES = gql`
   query messages($channelId: ID, $before: String) {
@@ -297,7 +299,8 @@ const Container = ({
     channels &&
     channels.map(channel => ({
       label: channel.name,
-      key: channel.id,
+      key: channel.type,
+      active: channel.active,
       content: (
         <>
           {chatComponent(
@@ -415,12 +418,21 @@ const Container = ({
 
   const fetchMoreData = () => fetchMore(fetchMoreOptions)
 
+  const location = useLocation()
+
+  const activeTab = React.useMemo(() => getActiveTab(location, 'discussion'), [
+    location,
+  ])
+
+  let activeDiscussionKey = tabs && tabs.length && tabs[0].key
+  if (activeTab) activeDiscussionKey = activeTab
+
   return (
     <MessageContainer channels={channels}>
       {tabs ? (
         <HiddenTabs
           background="colorBackgroundHue"
-          defaultActiveKey={tabs[0].key}
+          defaultActiveKey={activeDiscussionKey}
           hideChat={hideChat}
           sections={tabs}
         />

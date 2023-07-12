@@ -124,3 +124,8 @@ export const getRoles = (manuscript, userId) =>
   manuscript.teams
     .filter(t => t.members.some(member => member.user.id === userId))
     .map(t => t.role)
+
+export const getActiveTab = (location, tabKey = 'tab') => {
+  const searchParams = new URLSearchParams(location.search)
+  return searchParams.get(tabKey)
+}
