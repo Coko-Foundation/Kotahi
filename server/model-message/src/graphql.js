@@ -10,6 +10,7 @@ const Message = require('./message')
 const {
   updateChannelLastViewed,
   getChannelMemberByChannel,
+  addUserToChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
 const resolvers = {
@@ -87,7 +88,7 @@ const resolvers = {
 
       pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
 
-      await updateChannelLastViewed({ channelId, userId })
+      await addUserToChatChannel({ channelId, userId })
 
       return message
     },

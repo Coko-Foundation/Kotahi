@@ -201,7 +201,7 @@ const Profile = ({
         </SectionContent>
         <SectionContent>
           <StyledCheckbox
-            checked={isEventNotificationsOptIn}
+            checked={!isEventNotificationsOptIn}
             label="Mute all discussion email notifications"
             onChange={toggleEventNotificationsCheckbox}
           />
