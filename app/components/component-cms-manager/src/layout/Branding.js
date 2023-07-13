@@ -46,21 +46,32 @@ const brandColorInput = [
   },
 ]
 
-const Branding = ({ formikProps, cmsLayout, createFile, deleteFile }) => {
+const Branding = ({
+  formikProps,
+  cmsLayout,
+  createFile,
+  deleteFile,
+  triggerAutoSave,
+}) => {
+  const onDataChanged = (name, value) => {
+    formikProps.setFieldValue(name, value)
+    const data = {}
+    data[name] = value === undefined ? null : value
+    triggerAutoSave(data)
+  }
+
   return (
     <>
       <CompactSection key={brandLogoInput.name}>
         <LayoutMainHeading>Brand logo</LayoutMainHeading>
         <ValidatedFieldFormik
           component={brandLogoInput.component}
+          confirmBeforeDelete
           createFile={createFile}
           deleteFile={deleteFile}
           entityId={cmsLayout.id}
-          files={cmsLayout?.logo}
           name={brandLogoInput.name}
-          onChange={value => {
-            formikProps.setFieldValue(brandLogoInput.name, value[0])
-          }}
+          onChange={value => onDataChanged(brandLogoInput.name, value[0])}
           setFieldValue={formikProps.setFieldValue}
           setTouched={formikProps.setTouched}
           type={brandLogoInput.type}
@@ -76,11 +87,8 @@ const Branding = ({ formikProps, cmsLayout, createFile, deleteFile }) => {
             <p style={{ fontSize: '14px' }}>{item.label}</p>
             <ValidatedFieldFormik
               component={item.component}
-              files={cmsLayout?.logo}
               name={item.name}
-              onChange={value => {
-                formikProps.setFieldValue(item.name, value.target.value)
-              }}
+              onChange={value => onDataChanged(item.name, value.target.value)}
               setFieldValue={formikProps.setFieldValue}
               setTouched={formikProps.setTouched}
               type={item.type}

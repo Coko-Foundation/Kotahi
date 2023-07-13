@@ -1,19 +1,35 @@
 import { gql } from '@apollo/client'
 
+const fileFields = `
+    id
+    name
+    tags
+    storedObjects {
+      mimetype
+      key
+      url
+      type
+    }
+`
+
+const flaxPageConfigFields = `
+    id
+    title
+    sequenceIndex
+    shownInMenu
+    url
+`
+
 const cmsPageFields = `
     id
     content
     created
-    meta
-    shortcode
     url
     status
     title
     updated
     published
     edited
-    menu
-    sequenceIndex
     creator {
       id
       username
@@ -26,16 +42,25 @@ const cmsLayoutFields = `
     updated
     primaryColor
     secondaryColor
-    logo {
+    footerText
+    published
+    edited
+    flaxHeaderConfig {
+      ${flaxPageConfigFields}
+    }
+    flaxFooterConfig {
+      ${flaxPageConfigFields}
+    }
+    partners {
       id
-      name
-      tags
-      storedObjects {
-        mimetype
-        key
-        url
-        type
+      url
+      sequenceIndex
+      file {
+       ${fileFields}
       }
+    }
+    logo {
+      ${fileFields}
     }
  
 `
@@ -43,7 +68,6 @@ const cmsLayoutFields = `
 const createCmsPageFields = `
     cmsPage {
       id
-      meta
       url
       content
     }
@@ -69,14 +93,6 @@ export const getCMSPages = gql`
 export const getCMSPage = gql`
   query cmsPage($id: ID!) {
     cmsPage(id: $id) {
-      ${cmsPageFields}
-    }
-  }
-`
-
-export const getCMSPageByShortcode = gql`
-  query cmsPageByShortcode($shortcode: String!) {
-    cmsPageByShortcode(shortcode: $shortcode) {
       ${cmsPageFields}
     }
   }

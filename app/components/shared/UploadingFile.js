@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { ConfirmationModal } from '../component-modal/src/ConfirmationModal'
 
 const Icon = styled.div`
   background: ${th('colorFurniture')};
@@ -100,11 +101,13 @@ const UploadingFile = ({
   uploaded,
   index,
   remove,
+  confirmBeforeDelete,
 }) => {
   const Root = uploaded ? Uploaded : Uploading
 
   const extension = getFileExtension(file)
   const isImage = file?.storedObjects[0]?.mimetype.startsWith('image/')
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
 
   const icon = (
     <Icon>
@@ -147,8 +150,24 @@ const UploadingFile = ({
       </Filename>
 
       {!!deleteFile && !!remove && (
-        <Action onClick={() => deleteFile(file, index, remove)}>Remove</Action>
+        <Action
+          onClick={() =>
+            confirmBeforeDelete
+              ? setIsConfirmingDelete(true)
+              : deleteFile(file, index, remove)
+          }
+        >
+          Remove
+        </Action>
       )}
+
+      <ConfirmationModal
+        closeModal={() => setIsConfirmingDelete(false)}
+        confirmationAction={() => deleteFile(file, index, remove)}
+        confirmationButtonText="Delete"
+        isOpen={isConfirmingDelete}
+        message="Permanently delete file ?"
+      />
     </Root>
   )
 }

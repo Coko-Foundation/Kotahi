@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 
 import { Formik } from 'formik'
-import { kebabCase } from 'lodash'
 
 import CMSPageEditForm from './CMSPageEditForm'
 
-import { FullWidthANDHeight } from '../style'
+import { FullWidthAndHeightContainer } from '../style'
 
 const CMSPageEdit = ({
   isNewPage,
@@ -36,14 +35,12 @@ const CMSPageEdit = ({
 
   const publish = async formData => {
     setSubmitButtonState({ state: 'pending', text: 'Saving data' })
-    const meta = JSON.parse(cmsPage.meta)
     const timeStamp = new Date()
 
     const inputData = {
       title: formData.title,
       content: formData.content,
       url: formData.url,
-      meta: JSON.stringify({ ...meta, url: formData.url }),
       published: timeStamp,
     }
 
@@ -68,10 +65,8 @@ const CMSPageEdit = ({
   const createNewPage = async formData => {
     const inputData = {
       title: formData.title,
-      shortcode: kebabCase(formData.title),
       content: formData.content,
       url: formData.url,
-      meta: JSON.stringify({ url: formData.url }),
     }
 
     const newCMSPageResults = await createNewCMSPage({
@@ -108,20 +103,14 @@ const CMSPageEdit = ({
 
   const resetCustomErrors = () => setCustomFormErrors({})
 
-  let meta = {}
-
-  if (cmsPage.meta) {
-    meta = JSON.parse(cmsPage.meta)
-  }
-
   return (
-    <FullWidthANDHeight>
-      <FullWidthANDHeight>
+    <FullWidthAndHeightContainer>
+      <FullWidthAndHeightContainer>
         <Formik
           initialValues={{
             title: cmsPage.title || '',
             content: cmsPage.content || '',
-            url: meta.url || '',
+            url: cmsPage.url || '',
           }}
           onSubmit={async values =>
             isNewPage ? createNewPage(values) : publish(values)
@@ -145,8 +134,8 @@ const CMSPageEdit = ({
             )
           }}
         </Formik>
-      </FullWidthANDHeight>
-    </FullWidthANDHeight>
+      </FullWidthAndHeightContainer>
+    </FullWidthAndHeightContainer>
   )
 }
 

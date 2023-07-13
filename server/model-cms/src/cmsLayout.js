@@ -21,13 +21,30 @@ class CMSLayout extends BaseModel {
   }
 
   static get schema() {
+    const arrayOfStoredPartners = {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['id'],
+        properties: {
+          id: { type: 'string', format: 'uuid' },
+          url: { type: 'string' },
+          sequenceIndex: { type: ['integer', 'null'] },
+        },
+      },
+    }
+
     return {
       properties: {
         active: { type: ['boolean'] },
         primaryColor: { type: 'string' },
         secondaryColor: { type: 'string' },
         logoId: { type: ['string', 'null'], format: 'uuid' },
-        headerConfig: {},
+        partners: arrayOfStoredPartners,
+        footerText: { type: 'string' },
+        published: { type: ['string', 'object', 'null'], format: 'date-time' },
+        edited: { type: ['string', 'object', 'null'], format: 'date-time' },
       },
     }
   }
