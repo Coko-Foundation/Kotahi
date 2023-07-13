@@ -21,9 +21,17 @@ class CMSPage extends BaseModel {
   }
 
   static get schema() {
+    const flaxConfig = {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        shownInMenu: { type: ['boolean', 'null'] },
+        sequenceIndex: { type: ['integer', 'null'] },
+      },
+    }
+
     return {
       properties: {
-        shortcode: { type: 'string' },
         url: { type: 'string' },
         title: { type: 'string' },
         status: { type: 'string' },
@@ -32,8 +40,8 @@ class CMSPage extends BaseModel {
         creatorId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
         edited: { type: ['string', 'object', 'null'], format: 'date-time' },
-        menu: { type: 'boolean' },
-        sequenceIndex: { type: 'integer' },
+        flaxHeaderConfig: flaxConfig,
+        flaxFooterConfig: flaxConfig,
       },
     }
   }

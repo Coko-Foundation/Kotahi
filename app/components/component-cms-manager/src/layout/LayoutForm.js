@@ -1,50 +1,66 @@
 import React from 'react'
 
-import { WidthLimiter, SectionContent, PaddedContent } from '../../../shared'
-
+import { SectionContent, PaddedContent } from '../../../shared'
 import { ActionButtonContainer, FormActionButton } from '../style'
+import PublishStatus from '../components/PublishStatus'
 
 import Header from './Header'
 import Branding from './Branding'
+import Footer from './Footer'
 
 const LayoutForm = ({
   formikProps,
   cmsLayout,
   submitButtonText,
-  onHeaderInfoChanged,
-  cmsPages,
+  onHeaderPageOrderChanged,
+  onFooterPageOrderChanged,
   createFile,
   deleteFile,
+  triggerAutoSave,
 }) => {
   const renderBranding = () => {
     return (
-      <WidthLimiter>
-        <SectionContent>
-          <PaddedContent>
-            <Branding
-              cmsLayout={cmsLayout}
-              createFile={createFile}
-              deleteFile={deleteFile}
-              formikProps={formikProps}
-            />
-          </PaddedContent>
-        </SectionContent>
-      </WidthLimiter>
+      <SectionContent>
+        <PaddedContent>
+          <Branding
+            cmsLayout={cmsLayout}
+            createFile={createFile}
+            deleteFile={deleteFile}
+            formikProps={formikProps}
+            triggerAutoSave={triggerAutoSave}
+          />
+        </PaddedContent>
+      </SectionContent>
     )
   }
 
   const renderHeader = () => {
     return (
-      <WidthLimiter>
-        <SectionContent>
-          <PaddedContent>
-            <Header
-              initialItems={cmsPages}
-              onItemUpdated={onHeaderInfoChanged}
-            />
-          </PaddedContent>
-        </SectionContent>
-      </WidthLimiter>
+      <SectionContent>
+        <PaddedContent>
+          <Header
+            cmsLayout={cmsLayout}
+            onPageOrderUpdated={onHeaderPageOrderChanged}
+          />
+        </PaddedContent>
+      </SectionContent>
+    )
+  }
+
+  const renderFooter = () => {
+    return (
+      <SectionContent>
+        <PaddedContent>
+          <Footer
+            cmsLayout={cmsLayout}
+            createFile={createFile}
+            deleteFile={deleteFile}
+            formikProps={formikProps}
+            onPageOrderUpdated={onFooterPageOrderChanged}
+            triggerAutoSave={triggerAutoSave}
+          />
+        </PaddedContent>
+      </SectionContent>
     )
   }
 
@@ -52,6 +68,7 @@ const LayoutForm = ({
     <div>
       {renderBranding()}
       {renderHeader()}
+      {renderFooter()}
       <ActionButtonContainer>
         <div>
           <FormActionButton
@@ -62,6 +79,7 @@ const LayoutForm = ({
             {submitButtonText}
           </FormActionButton>
         </div>
+        <PublishStatus cmsComponent={cmsLayout} />
       </ActionButtonContainer>
     </div>
   )

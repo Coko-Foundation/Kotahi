@@ -104,7 +104,7 @@ export const FormActionDelete = styled(SecondaryButton)`
   min-width: 0px;
 `
 
-export const FullWidthANDHeight = styled.div`
+export const FullWidthAndHeightContainer = styled.div`
   height: auto;
   width: 100%;
 `

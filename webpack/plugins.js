@@ -50,7 +50,7 @@ module.exports = (opts = {}) => {
       'PUBLIC_CLIENT_HOST',
       'PUBLIC_CLIENT_PORT',
       'USE_COLAB_EMAIL',
-      'CLIENT_FLAX_SITE_URL',
+      'FLAX_SITE_URL',
     ]),
   )
 
