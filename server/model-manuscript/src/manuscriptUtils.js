@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
 const { set, get } = require('lodash')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
@@ -25,9 +26,9 @@ const stripConfidentialDataFromReviews = (
   reviewForm,
   decisionForm,
   sharedReviewersIds,
-  manuscriptHasDecision,
   userId,
   userRoles,
+  manuscriptHasDecision,
 ) => {
   if (!reviewForm || !decisionForm) return []
 
@@ -36,7 +37,12 @@ const stripConfidentialDataFromReviews = (
     .map(field => field.name)
 
   const confidentialDecisionFields = decisionForm.structure.children
-    .filter(field => field.hideFromAuthors === 'true' && userRoles.author)
+    .filter(
+      field =>
+        field.hideFromAuthors === 'true' &&
+        userRoles.author &&
+        field.component !== 'ThreadedDiscussion',
+    )
     .map(field => field.name)
 
   return reviews
@@ -54,6 +60,8 @@ const stripConfidentialDataFromReviews = (
         // what data we store in a Review object: it should really store status
         // and isShared, rather than requiring us to retrieve these from the
         // TeamMember object.
+        (userRoles.author && r.isDecision) ||
+        // decision will have restricted data stripped
         r.userId === userId ||
         (sharedReviewersIds.includes(r.userId) && !r.isDecision),
     )

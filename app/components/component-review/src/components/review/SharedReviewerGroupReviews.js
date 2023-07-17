@@ -15,12 +15,13 @@ const SharedReviewerGroupReviews = ({
 }) => {
   const thisReviewIsShared = manuscript.reviews?.find(
     r => r.user?.id === reviewerId && !r.isDecision,
-  )?.isShared
+  )?.isSharedWithCurrentUser
 
   if (!thisReviewIsShared) return null
 
   const sharedReviews = manuscript.reviews.filter(
-    r => r.isShared && r.user?.id !== reviewerId && !r.isDecision,
+    r =>
+      r.isSharedWithCurrentUser && r.user?.id !== reviewerId && !r.isDecision,
   )
 
   if (!sharedReviews.length) return null
