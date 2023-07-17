@@ -184,7 +184,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
 
-    if ((await userIsGroupManagerQuery(ctx)) || (await userIsAdminQuery()))
+    if ((await userIsGroupManagerQuery(ctx)) || (await userIsAdminQuery(ctx)))
       return true
 
     const user = await ctx.connectors.User.model.query().findById(ctx.user)

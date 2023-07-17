@@ -74,17 +74,24 @@ const DecisionVersions = ({
   )
 
   // Protect if channels don't exist for whatever reason
-  let editorialChannelId, allChannelId
+  let editorialChannel, allChannel
 
   if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
-    editorialChannelId = manuscript.channels.find(c => c.type === 'editorial')
-      .id
-    allChannelId = manuscript.channels.find(c => c.type === 'all').id
+    editorialChannel = manuscript.channels.find(c => c.type === 'editorial')
+    allChannel = manuscript.channels.find(c => c.type === 'all')
   }
 
   const channels = [
-    { id: allChannelId, name: 'Discussion with author' },
-    { id: editorialChannelId, name: 'Editorial discussion' },
+    {
+      id: allChannel?.id,
+      name: 'Discussion with author',
+      type: allChannel?.type,
+    },
+    {
+      id: editorialChannel?.id,
+      name: 'Editorial discussion',
+      type: editorialChannel?.type,
+    },
   ]
 
   const manuscriptLatestVersionId = versions[0].manuscript.id

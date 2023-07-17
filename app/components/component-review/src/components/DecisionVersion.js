@@ -24,6 +24,7 @@ import TaskList from '../../../component-task-manager/src/TaskList'
 import KanbanBoard from './KanbanBoard'
 import InviteReviewer from './reviewers/InviteReviewer'
 import { ConfigContext } from '../../../config/src'
+import { getActiveTab } from '../../../../shared/manuscriptUtils'
 
 const TaskSectionRow = styled(SectionRow)`
   padding: 12px 0 18px;
@@ -108,13 +109,9 @@ const DecisionVersion = ({
   useEffect(() => debouncedSave.flush, [])
   const location = useLocation()
 
-  const getActiveTab = loc => {
-    const { search } = loc
-    const searchParams = new URLSearchParams(search)
-    return searchParams.get('tab')
-  }
-
-  const activeTab = React.useMemo(() => getActiveTab(location), [location])
+  const activeTab = React.useMemo(() => getActiveTab(location, 'tab'), [
+    location,
+  ])
 
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent

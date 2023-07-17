@@ -34,6 +34,14 @@ class ChannelMember extends BaseModel {
       properties: {
         userId: { type: 'string', format: 'uuid' },
         channelId: { type: 'string', format: 'uuid' },
+        lastViewed: {
+          type: ['string', 'object', 'null'],
+          format: 'date-time',
+        },
+        lastAlertTriggeredTime: {
+          type: ['string', 'object', 'null'],
+          format: 'date-time',
+        },
       },
     }
   }

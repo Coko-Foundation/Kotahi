@@ -255,10 +255,14 @@ const Manuscripts = ({ history, ...props }) => {
     displayProps,
   )
 
+  const adminDiscussionChannel =
+    systemWideDiscussionChannel?.data?.systemWideDiscussionChannel
+
   const channels = [
     {
-      id: systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id,
+      id: adminDiscussionChannel?.id,
       name: 'Admin discussion',
+      type: adminDiscussionChannel?.type,
     },
   ]
 

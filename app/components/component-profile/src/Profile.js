@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useCallback } from 'react'
-import { Button } from '@pubsweet/ui'
+import React, { useCallback, useState, useEffect } from 'react'
+import { Button, Checkbox } from '@pubsweet/ui'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import Modal from '../../component-modal/src/ConfirmationModal'
 
 import {
@@ -30,6 +30,10 @@ const ProfileContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+`
+
+const StyledCheckbox = styled(Checkbox)`
+  padding: ${grid(2)} ${grid(3)};
 `
 
 const SpecialRolesLabel = styled.div`
@@ -78,14 +82,37 @@ const Profile = ({
   updateProfilePicture,
   updateUserEmail,
   updateUsername,
+  updateEventNotificationsOptIn,
   user,
 }) => {
+  const [isEventNotificationsOptIn, setEventNotificationsOptIn] = useState(
+    user?.eventNotificationsOptIn,
+  )
+
+  useEffect(() => {
+    if (user) {
+      setEventNotificationsOptIn(user.eventNotificationsOptIn)
+    }
+  }, [user])
+
   const isCurrentUsersOwnProfile = user.id === currentUser.id
 
   const canEditProfile =
     isCurrentUsersOwnProfile ||
     currentUser.groupRoles.includes('groupManager') ||
     currentUser.globalRoles.includes('admin')
+
+  const toggleEventNotificationsCheckbox = async () => {
+    const newEventNotificationsPreference = !isEventNotificationsOptIn
+    setEventNotificationsOptIn(newEventNotificationsPreference)
+
+    await updateEventNotificationsOptIn({
+      variables: {
+        id: user.id,
+        eventNotificationsOptIn: newEventNotificationsPreference,
+      },
+    })
+  }
 
   return (
     <ProfileContainer>
@@ -151,6 +178,13 @@ const Profile = ({
               )}
             </div>
           </SectionRow>
+        </SectionContent>
+        <SectionContent>
+          <StyledCheckbox
+            checked={!isEventNotificationsOptIn}
+            label="Mute all discussion email notifications"
+            onChange={toggleEventNotificationsCheckbox}
+          />
         </SectionContent>
       </div>
 

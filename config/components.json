@@ -1,4 +1,5 @@
 [
+  "./server/model-alert/src/",
   "./server/model-team/src",
   "./server/model-user/src",
   "./server/model-cms/src",
