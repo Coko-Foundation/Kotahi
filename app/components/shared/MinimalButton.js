@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@pubsweet/ui-toolkit'
+import { color } from '../../theme'
 
 const BareButton = styled.button`
   align-items: center;
   background: none;
   border: none;
-  color: ${th('colorTextPlaceholder')};
+  color: ${color.gray40};
   display: flex;
   font-family: inherit;
   font-size: inherit;
@@ -18,15 +19,15 @@ const BareButton = styled.button`
   padding: 0 ${grid(0.5)};
 
   &:hover {
-    color: ${th('colorPrimary')};
+    color: ${color.brand1.base};
   }
 
   & svg {
-    stroke: ${th('colorTextPlaceholder')};
+    stroke: ${color.gray40};
   }
 
   &:hover svg {
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
   }
 `
 

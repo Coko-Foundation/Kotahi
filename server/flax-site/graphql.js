@@ -2,13 +2,10 @@ const axios = require('axios')
 const config = require('config')
 
 const { port, protocol, host } = config['flax-site']
+
 const serverUrl = `${protocol}://${host}${port ? `:${port}` : ''}`
 
-const { clientPort, clientHost, clientProtocol } = config['flax-site']
-
-const currentAppUrl = `${clientProtocol}://${clientHost}${
-  clientPort ? `:${clientPort}` : ''
-}`
+const currentAppUrl = config['flax-site'].clientAPIURL
 
 const flaxSiteAccessToken = ''
 

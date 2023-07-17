@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import Color from 'color'
 import { Check, AlertCircle } from 'react-feather'
 import { th, grid, rotate360 } from '@pubsweet/ui-toolkit'
+import { color } from '../../theme'
 
 const BaseButton = styled.button`
   border: none;
@@ -24,18 +25,16 @@ const BaseButton = styled.button`
 `
 
 const DisabledButton = styled(BaseButton)`
-  background-color: ${th('colorFurniture')};
-  color: ${th('colorBorder')};
+  background-color: ${color.gray90};
+  color: ${color.gray60};
 `
 
 const Button = styled(BaseButton)`
   background-color: ${props =>
-    props.bgColor ||
-    (props.primary ? th('colorPrimary') : th('colorFurniture'))};
+    props.bgColor || (props.primary ? color.brand1.base : color.gray90)};
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   color: ${props =>
-    props.fgColor ||
-    (props.primary ? th('colorText') : th('colorTextReverse'))};
+    props.fgColor || (props.primary ? color.text : color.textReverse)};
 
   ${props =>
     props.onClick
@@ -90,7 +89,7 @@ const ActionButton = ({
   disabled,
   onClick,
   status,
-  color,
+  color: col,
   isCompact,
   children,
   className,
@@ -107,11 +106,9 @@ const ActionButton = ({
     )
 
   const themeContext = useContext(ThemeContext)
-  let bgColor = primary
-    ? themeContext.colorPrimary
-    : themeContext.colorFurniture
+  let bgColor = primary ? color.brand1.base() : color.gray90
   if (status === 'failure') bgColor = themeContext.colorWarning
-  else if (color) bgColor = color
+  else if (col) bgColor = col
 
   let isLight = true
 
@@ -119,12 +116,10 @@ const ActionButton = ({
     isLight = Color(bgColor).isLight()
     // eslint-disable-next-line no-empty
   } catch {
-    bgColor = themeContext.colorFurniture
+    bgColor = color.gray90
   }
 
-  const fgColor = isLight
-    ? themeContext.colorText
-    : themeContext.colorTextReverse
+  const fgColor = isLight ? color.text : color.textReverse
 
   let statusIndicator = null
   if (status === 'pending') statusIndicator = <Spinner fgColor={fgColor} />
@@ -171,7 +166,7 @@ const ActionButton = ({
 }
 
 ActionButton.propTypes = {
-  /** Primary buttons are styled with colorPrimary, unless another color is specified */
+  /** Primary buttons are styled with color.brand1.base, unless another color is specified */
   primary: PropTypes.bool,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,

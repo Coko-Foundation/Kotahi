@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
-import { grid, rotate360, th } from '@pubsweet/ui-toolkit'
+import { grid, rotate360 } from '@pubsweet/ui-toolkit'
 import { Check, AlertCircle } from 'react-feather'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import theme from '../../theme'
+import theme, { color } from '../../theme'
 
 const ActionLink = styled.button`
   background: transparent;
   border-bottom: 2px solid transparent;
-  color: ${th('colors.brand1.base')};
+  color: ${color.brand1.base};
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   display: inline-flex;
   flex-direction: row;
@@ -25,7 +25,7 @@ const ActionLink = styled.button`
       ? ''
       : css`
           &:hover {
-            border-bottom: 2px solid ${th('colors.brand1.base')};
+            border-bottom: 2px solid ${color.brand1.base};
             transition: border-bottom 0.2s;
           }
         `}
@@ -37,9 +37,9 @@ const Spinner = styled.div`
 
   &:after {
     animation: ${rotate360} 1s linear infinite;
-    border: 2.5px solid ${th('colors.brand1.base')};
-    border-color: ${th('colors.brand1.base')} transparent
-      ${th('colors.brand1.base')} transparent;
+    border: 2.5px solid ${color.brand1.base};
+    border-color: ${color.brand1.base} transparent ${color.brand1.base}
+      transparent;
     border-radius: 50%;
     box-sizing: border-box;
     content: '';
@@ -99,7 +99,7 @@ const Action = ({ children, isDisabled, onActionCompleted, onClick }) => {
         {!isInProgress && resultStatus === 'success' && (
           <IconContainer>
             <Check
-              color={th('colors.brand1.base')}
+              color={color.brand1.base}
               data-testid="check-svg"
               size={16}
               strokeWidth={2}
@@ -109,7 +109,7 @@ const Action = ({ children, isDisabled, onActionCompleted, onClick }) => {
         {!isInProgress && resultStatus === 'failure' && (
           <IconContainer>
             <AlertCircle
-              color={theme.colors.warning[700]}
+              color={color.warning.base}
               data-testid="alert-circle-svg"
               size={16}
               strokeWidth={2}

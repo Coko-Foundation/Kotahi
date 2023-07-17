@@ -1,5 +1,6 @@
 import { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import color from '../color'
 
 export default {
   Input: css`
@@ -40,7 +41,7 @@ export default {
           case 'error':
             return props.theme.colorError
           default:
-            return props.theme.colorPrimary
+            return color.brand1.base
         }
       }};
       box-shadow: ${th('boxShadow')};

@@ -4,12 +4,12 @@ import PropTypes from 'prop-types'
 import { sanitize } from 'isomorphic-dompurify'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-import theme from '../../../theme'
+import { color, space } from '../../../theme'
 import { Spinner, CommsErrorBanner } from '../../shared'
 import query from './artifactQuery'
 
 const Page = styled.div`
-  background: ${theme.colors.neutral.gray60};
+  background: ${color.gray60};
   height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
@@ -17,19 +17,18 @@ const Page = styled.div`
 `
 
 const Container = styled.div`
-  background: ${theme.colors.neutral.gray97};
-  border: 1px solid ${th('colors.brand1.shade25')};
+  background: ${color.gray97};
+  border: 1px solid ${color.brand1.shade25};
   border-radius: ${th('borderRadius')};
-  margin: ${theme.spacing.g} auto;
+  margin: ${space.g} auto;
   max-width: 1000px;
-  padding: ${theme.spacing.h} ${theme.spacing.i} ${theme.spacing.i}
-    ${theme.spacing.i};
+  padding: ${space.h} ${space.i} ${space.i} ${space.i};
   width: 90%;
 
   & > h1 {
-    color: ${th('colors.brand1.shade25')};
+    color: ${color.brand1.shade25};
     font-size: 180%;
-    margin: ${theme.spacing.e} 0 ${theme.spacing.f} 0;
+    margin: ${space.e} 0 ${space.f} 0;
   }
 `
 

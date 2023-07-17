@@ -2,7 +2,8 @@ import React from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { ActionButton, LooseRowCentered } from '../../shared'
+import { LooseRowCentered } from '../../shared/Containers'
+import ActionButton from '../../shared/ActionButton'
 
 const styles = {
   overlay: {

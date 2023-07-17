@@ -8,13 +8,12 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'react-feather'
-import { th } from '@pubsweet/ui-toolkit'
 import { UPDATE_TASK_STATUS } from '../../../queries'
-import theme from '../../../theme'
+import theme, { color } from '../../../theme'
 
 const StartButton = styled.button`
   align-items: center;
-  background: ${th('colors.brand1.base')};
+  background: ${color.brand1.base};
   border-radius: 6px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   color: white;
@@ -77,14 +76,14 @@ const DropdownLabel = styled.div`
 `
 
 const InProgressDropdown = styled(BaseDropdown)`
-  border: 2px solid ${theme.colorIconPrimary};
+  border: 2px solid ${color.gray40};
 
   .Dropdown-placeholder {
-    color: ${theme.colorIconPrimary};
+    color: ${color.gray40};
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: ${theme.colorIconPrimary};
+    stroke: ${color.gray40};
   }
 `
 
@@ -101,14 +100,14 @@ const PausedDropdown = styled(BaseDropdown)`
 `
 
 const DoneDropdown = styled(BaseDropdown)`
-  border: 2px solid ${th('colors.brand1.base')};
+  border: 2px solid ${color.brand1.base};
 
   .Dropdown-placeholder {
-    color: ${th('colors.brand1.base')};
+    color: ${color.brand1.base};
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: ${th('colors.brand1.base')};
+    stroke: ${color.brand1.base};
   }
 `
 

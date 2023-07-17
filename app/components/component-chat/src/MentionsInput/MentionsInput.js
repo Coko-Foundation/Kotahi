@@ -9,6 +9,7 @@ import { th } from '@pubsweet/ui-toolkit'
 import { MentionsInputStyle } from './style'
 import MentionSuggestion from './mentionSuggestion'
 import { theme, hexa } from '../SuperChatInput/style'
+import { color } from '../../../../theme'
 
 const CustomMentionsInput = props => {
   const { searchUsersCallBack } = props
@@ -23,7 +24,7 @@ const CustomMentionsInput = props => {
     autoCapitalize: 'sentences',
     autoComplete: 'on',
     autoCorrect: 'on',
-    background: `${props.networkDisabled ? 'none' : th('colorBackground')}`,
+    background: `${props.networkDisabled ? 'none' : color.backgroundA}`,
     fontSize: '16px' /* has to be 16px to avoid zoom on iOS */,
     fontWeight: 400,
     lineHeight: 1.4,
@@ -41,7 +42,7 @@ const CustomMentionsInput = props => {
       color: `${
         props.networkDisabled
           ? hexa(th('colorWarning'), 0.8)
-          : th('colorSecondary')
+          : color.brand2.base()
       }`,
     },
 
@@ -49,7 +50,7 @@ const CustomMentionsInput = props => {
       color: `${
         props.networkDisabled
           ? hexa(th('colorWarning'), 0.8)
-          : th('colorSecondary')
+          : color.brand2.base()
       }`,
     },
 
@@ -57,7 +58,7 @@ const CustomMentionsInput = props => {
       color: `${
         props.networkDisabled
           ? hexa(th('colorWarning'), 0.8)
-          : th('colorSecondary')
+          : color.brand2.base()
       }`,
     },
 
@@ -65,7 +66,7 @@ const CustomMentionsInput = props => {
       color: `${
         props.networkDisabled
           ? hexa(th('colorWarning'), 0.8)
-          : th('colorSecondary')
+          : color.brand2.base()
       }`,
     },
 
@@ -73,7 +74,7 @@ const CustomMentionsInput = props => {
       // `${monoStack}`,
 
       backgroundColor: `${theme.bg.wash}`,
-      border: `1px solid ${th('colorBorder')}`,
+      border: `1px solid ${color.gray60}`,
       borderRadius: `2px`,
       fontSize: `15px`,
       fontWeight: 500,
@@ -82,7 +83,7 @@ const CustomMentionsInput = props => {
     },
 
     blockquote: {
-      borderLeft: `4px solid ${th('colorBorder')}`,
+      borderLeft: `4px solid ${color.gray60}`,
       color: `${theme.text.alt}`,
       lineHeight: 1.5,
       padding: `4px 12px 4px 16px`,

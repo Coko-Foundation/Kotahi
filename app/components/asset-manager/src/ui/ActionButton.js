@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th, darken, lighten } from '@pubsweet/ui-toolkit'
+import { th, darken } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 const Button = styled.button`
   align-items: center;
   background: ${({ type }) => {
     if (type === 'primary') {
-      return th('colorPrimary')
+      return color.brand1.base
     }
 
     if (type === 'delete') {
@@ -35,7 +36,7 @@ const Button = styled.button`
   &:not(:disabled):hover {
     background: ${({ type }) => {
       if (type === 'primary') {
-        return lighten('colorPrimary', 30)
+        return color.brand1.tint25
       }
 
       if (type === 'delete') {

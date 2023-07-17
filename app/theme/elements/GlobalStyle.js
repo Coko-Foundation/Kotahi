@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import color from '../color'
 
 export default createGlobalStyle`
   html {
@@ -11,9 +12,9 @@ export default createGlobalStyle`
   }
 
   body {
-    background-color: ${th('colorBackground')};
+    background-color: ${color.backgroundA};
     box-sizing: border-box;
-    color: ${th('colorText')};
+    color: ${color.text};
     font-family: ${th('fontInterface')}, sans-serif;
     font-size: ${th('fontSizeBase')};
     height: 100%;
@@ -43,7 +44,7 @@ export default createGlobalStyle`
   }
 
   a {
-    color: ${th('colorPrimary')};
+    color: ${color.brand1.base};
   }
 
   strong, b {

@@ -1,5 +1,6 @@
 import { css, keyframes } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import color from '../color'
 
 const checking = keyframes`
   0% {
@@ -23,15 +24,13 @@ export default {
   Root: css`
     &:hover {
       span {
-        color: ${props =>
-          props.checked ? 'inherit' : props.theme.colorPrimary};
+        color: ${props => (props.checked ? 'inherit' : color.brand1.base)};
 
         &:before {
           animation-duration: ${th('transitionDuration')};
           animation-name: ${props => (props.checked ? 'none' : checking)};
           box-shadow: 0 0 0 ${th('borderWidth')}
-            ${props =>
-              props.checked ? 'currentColor' : props.theme.colorPrimary};
+            ${props => (props.checked ? 'currentColor' : color.brand1.base)};
         }
       }
     }
@@ -47,7 +46,7 @@ export default {
       border-radius: 50%;
       box-shadow: 0 0 0 ${th('borderWidth')} currentColor;
 
-      color: ${props => (props.color ? props.color : props.theme.colorText)};
+      color: ${props => (props.color ? props.color : color.text)};
       content: ' ';
       display: inline-block;
       height: calc(${th('gridUnit')} * 2);

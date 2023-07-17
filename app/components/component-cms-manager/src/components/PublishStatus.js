@@ -2,11 +2,11 @@ import React from 'react'
 import { VerticalBar, FlexCenter, StatusInfoText, NewEditText } from '../style'
 import { convertTimestampToDateTimeString } from '../../../../shared/dateUtils'
 
-const CMSPageStatus = ({ cmsPage }) => {
-  const isPublished = () => !!cmsPage.published
+const PublishStatus = ({ cmsComponent }) => {
+  const isPublished = () => !!cmsComponent.published
 
   const isEdited = () =>
-    !cmsPage.published || cmsPage.published < cmsPage.edited
+    !cmsComponent.published || cmsComponent.published < cmsComponent.edited
 
   return (
     <StatusInfoText>
@@ -16,13 +16,13 @@ const CMSPageStatus = ({ cmsPage }) => {
         </FlexCenter>
       )}
       <FlexCenter>
-        Edited on {convertTimestampToDateTimeString(cmsPage.edited)}
+        Edited on {convertTimestampToDateTimeString(cmsComponent.edited)}
         <VerticalBar />
       </FlexCenter>
       <FlexCenter>
         {isPublished()
           ? `Published on ${convertTimestampToDateTimeString(
-              cmsPage.published,
+              cmsComponent.published,
             )}`
           : 'Not published yet'}
       </FlexCenter>
@@ -30,4 +30,4 @@ const CMSPageStatus = ({ cmsPage }) => {
   )
 }
 
-export default CMSPageStatus
+export default PublishStatus

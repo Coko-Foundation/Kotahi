@@ -8,11 +8,11 @@ import { Draggable } from 'react-beautiful-dnd'
 
 import { Page, Heading } from './style'
 import { DragVerticalIcon } from '../../../shared/Icons'
-import lightenBy from '../../../../shared/lightenBy'
 import Modal from '../../../component-modal/src/ConfirmationModal'
+import { color } from '../../../../theme'
 
 const ModalContainer = styled.div`
-  background: ${th('colorBackground')};
+  background: ${color.backgroundA};
   padding: 20px 24px;
   z-index: 100;
 `
@@ -24,23 +24,23 @@ const FeildWrapper = styled.div`
   padding: ${grid(0.5)};
 
   &.active {
-    background-color: ${lightenBy('colorPrimary', 0.7)};
+    background-color: ${color.brand1.tint70};
   }
 
   &:hover svg:first-child {
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
   }
 `
 
 const Element = styled.div`
-  background-color: ${th('colorSecondaryBackground')};
+  background-color: ${color.backgroundB};
   border-radius: ${th('borderRadius')};
   display: flex;
   justify-content: space-between;
   width: 100%;
 
   &.active {
-    background-color: ${lightenBy('colorPrimary', 0.7)};
+    background-color: ${color.brand1.tint70};
   }
 `
 
@@ -55,7 +55,7 @@ const IconAction = styled(Action)`
 `
 
 const StatusIcon = withTheme(({ children, theme }) => (
-  <Icon color={theme.colorPrimary}>{children}</Icon>
+  <Icon color={color.brand1.base()}>{children}</Icon>
 ))
 
 const DragIcon = styled(DragVerticalIcon)`
@@ -71,14 +71,14 @@ const UnpaddedIcon = styled(Icon)`
 `
 
 const SmallIcon = withTheme(({ children, theme }) => (
-  <UnpaddedIcon color={theme.colorPrimary} size={2.5}>
+  <UnpaddedIcon color={color.brand1.base()} size={2.5}>
     {children}
   </UnpaddedIcon>
 ))
 
 const Status = styled.div`
   align-items: center;
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   display: inline-flex;
 `
 
@@ -95,8 +95,8 @@ const Root = styled.div`
 
   &:hover ${StatusIdle} {
     circle {
-      fill: ${th('colorPrimary')};
-      stroke: ${th('colorPrimary')};
+      fill: ${color.brand1.base};
+      stroke: ${color.brand1.base};
     }
 
     line {
@@ -111,12 +111,12 @@ const Main = styled.div`
 `
 
 const CancelButton = styled(Button)`
-  background: #e9ebe8;
+  background: ${color.gray90};
   padding: 8px;
   text-decoration: none;
 
   &:hover {
-    background: #dbdbdb;
+    background: ${color.gray80};
   }
 `
 

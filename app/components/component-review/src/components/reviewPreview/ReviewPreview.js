@@ -2,12 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@pubsweet/ui-toolkit'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { Heading, Title, Icon } from '../../../../shared'
+import { color } from '../../../../../theme'
 
 const Page = styled.div`
-  background: ${th('colorBackgroundHue')};
+  background: ${color.backgroundC};
   height: 100vh;
   overflow-y: scroll;
   padding: ${grid(2)};
@@ -15,7 +16,7 @@ const Page = styled.div`
 
 const IconLink = styled.div`
   align-items: center;
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   cursor: pointer;
   display: flex;
   flex-direction: row;
@@ -45,7 +46,7 @@ const ReviewPreview = ({
         threadedDiscussionProps={threadedDiscussionProps}
       />
       <IconLink onClick={() => history.goBack()}>
-        <Icon color={th('colorPrimary')} inline size={2}>
+        <Icon color={color.brand1.base()} inline size={2}>
           arrow-left
         </Icon>
         Back

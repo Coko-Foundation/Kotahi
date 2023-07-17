@@ -1,13 +1,13 @@
 import styled, { css } from 'styled-components'
 import UnstyledCalendar from 'react-calendar'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../shared/lightenBy'
+import { color } from '../../theme'
 
 const Calendar = styled(UnstyledCalendar)`
   border: none;
 
   & .react-calendar__navigation {
-    background-color: ${th('colorBackgroundHue')};
+    background-color: ${color.backgroundC};
     display: flex;
     font-size: ${th('fontSizeBaseSmall')};
     height: ${grid(4)};
@@ -37,20 +37,20 @@ const Calendar = styled(UnstyledCalendar)`
   }
 
   & .react-calendar__tile:disabled.react-calendar__tile--range {
-    background: ${th('colorFurniture')};
-    border-bottom: 6px solid ${lightenBy('colorPrimary', 0.7)};
-    border-top: 6px solid ${lightenBy('colorPrimary', 0.7)};
+    background: ${color.gray90};
+    border-bottom: 6px solid ${color.brand1.tint70};
+    border-top: 6px solid ${color.brand1.tint70};
     padding-bottom: 4px;
     padding-top: 4px;
   }
 
   & .react-calendar__tile:disabled.react-calendar__tile--rangeStart {
-    border-left: 6px solid ${lightenBy('colorPrimary', 0.7)};
+    border-left: 6px solid ${color.brand1.tint70};
     padding-left: 1px;
   }
 
   & .react-calendar__tile:disabled.react-calendar__tile--rangeEnd {
-    border-right: 6px solid ${lightenBy('colorPrimary', 0.7)};
+    border-right: 6px solid ${color.brand1.tint70};
     padding-right: 1px;
   }
 
@@ -60,7 +60,7 @@ const Calendar = styled(UnstyledCalendar)`
       props.suppressTodayHighlight
         ? ''
         : css`
-            border: 1px solid ${lightenBy('colorPrimary', 0.2)};
+            border: 1px solid ${color.brand1.tint25};
           `}
   }
 
@@ -69,29 +69,29 @@ const Calendar = styled(UnstyledCalendar)`
   }
 
   & .react-calendar__tile--active {
-    background: ${th('colorPrimary')};
+    background: ${color.brand1.base};
     color: inherit;
   }
 
   & .react-calendar__tile--hasActive,
   & .react-calendar__tile--hasActive:focus {
-    background: ${lightenBy('colorPrimary', 0.7)};
+    background: ${color.brand1.tint70};
   }
 
   & .react-calendar__tile--active:enabled:focus,
   & .react-calendar__tile--active:enabled:hover,
   & .react-calendar__tile--hasActive:hover {
-    background: ${th('colorPrimary')};
+    background: ${color.brand1.base};
   }
 
   & .react-calendar__tile--range,
   & .react-calendar__tile--hover {
-    background: ${lightenBy('colorPrimary', 0.7)};
+    background: ${color.brand1.tint70};
     border-radius: 0;
   }
 
   & .react-calendar__tile--hover:hover {
-    background: ${lightenBy('colorPrimary', 0.7)};
+    background: ${color.brand1.tint70};
   }
 
   &

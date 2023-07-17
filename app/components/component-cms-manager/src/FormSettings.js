@@ -52,7 +52,7 @@ export const inputFields = [
     type: 'text-input',
     isRequired: true,
     otherProps: {
-      staticText: process.env.CLIENT_FLAX_SITE_URL,
+      staticText: process.env.FLAX_SITE_URL,
     },
   },
 

@@ -140,7 +140,7 @@ const getRelatedReviews = async (
   // TODO Should this step and the removal of confidential data be moved to the review resolver?
   reviews = reviews.map(r => ({
     ...r,
-    isShared: sharedReviewersIds.includes(r.userId),
+    isSharedWithCurrentUser: sharedReviewersIds.includes(r.userId),
   }))
 
   const manuscriptHasDecision = [

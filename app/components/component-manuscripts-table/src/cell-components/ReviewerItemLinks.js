@@ -1,14 +1,11 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { th } from '@pubsweet/ui-toolkit'
 import { Action, ActionGroup } from '@pubsweet/ui'
 import styled from 'styled-components'
+import { color } from '../../../../theme'
 
 const Divider = styled.div`
-  background-image: linear-gradient(
-    ${th('colorSecondary')},
-    ${th('colorSecondary')}
-  );
+  background-image: linear-gradient(${color.brand2.base}, ${color.brand2.base});
   background-position: center center;
   background-repeat: no-repeat;
   background-size: 1px 100%;

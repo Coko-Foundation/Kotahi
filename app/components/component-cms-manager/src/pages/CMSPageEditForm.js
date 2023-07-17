@@ -7,7 +7,7 @@ import { inputFields } from '../FormSettings'
 import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
 import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
-import CMSPageStatus from '../components/CMSPageStatus'
+import PublishStatus from '../components/PublishStatus'
 
 import {
   Section,
@@ -196,7 +196,7 @@ const CMSPageEditForm = ({
                   </FormActionDelete>
                 )}
               </div>
-              {!isNewPage && <CMSPageStatus cmsPage={cmsPage} />}
+              {!isNewPage && <PublishStatus cmsComponent={cmsPage} />}
             </ActionButtonContainer>
             <ConfirmationModal
               closeModal={() => setIsConfirmingDelete(false)}

@@ -200,11 +200,10 @@ module.exports = {
   'flax-site': {
     clientId: '',
     clientSecret: '',
-    clientPort: '',
-    clientHost: '',
-    clientProtocol: '',
-    protocol: '',
-    host: '',
+    clientAPIURL: '',
+    clientFlaxSiteUrl: '',
     port: '',
+    host: '',
+    protocol: '',
   },
 }

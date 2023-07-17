@@ -1,16 +1,16 @@
 import React, { useContext, useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../shared/lightenBy'
 import { ConfigContext } from '../config/src'
+import { color } from '../../theme'
 
 const Tab = styled.div`
   background-color: ${({ active }) =>
-    active ? lightenBy('colorPrimary', 0.6) : th('colorFurniture')};
+    active ? color.brand1.tint70 : color.gray90};
   border-bottom: 2px solid
-    ${({ active }) => (active ? th('colorPrimary') : th('colorFurniture'))};
+    ${({ active }) => (active ? color.brand1.base : color.gray90)};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;
-  color: ${th('colorText')};
+  color: ${color.text};
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
@@ -51,16 +51,16 @@ const TabContainer = styled.div.attrs(props => ({
 const HideChatButton = styled.button`
   align-items: center;
   /* TODO: add a global style for this */
-  background-color: ${th('colorFurniture')};
+  background-color: ${color.gray90};
   border-radius: ${th('borderRadius')};
-  color: ${th('colorText')};
+  color: ${color.text};
   display: flex;
   float: right;
   font-size: 16px;
   padding: 6px 12px;
 
   &:hover {
-    background-color: ${lightenBy('colorFurniture', 0.2)};
+    background-color: ${color.gray95};
   }
 `
 

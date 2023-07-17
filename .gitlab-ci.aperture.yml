@@ -46,7 +46,7 @@ build:
       docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       docker build --build-arg manuscripts_table_columns="shortId,meta.title,created,updated,status,submission.label,author" --build-arg review_shared=true --build-arg display_shortid_as_identifier=true --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .   
       docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-      docker push $IMAGE_ORG/$IMAGE_NAME:latest
+      # docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
 # lint:
 #   # allow_failure: true
@@ -102,8 +102,9 @@ lint style:
 
 .test_script: &run_test_script
   - cd ${HOME}
-  - sh ./scripts/setupProdServer.sh &
+  - sh ./scripts/setupProdServer.sh &&
   - node ./startServer.js &
+  - sleep 10 &&
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 test-chrome:

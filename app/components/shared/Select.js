@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
-import theme from '../../theme'
+import { color } from '../../theme'
 
 const styles = th => ({
   menu: (provided, state) => ({
@@ -17,28 +17,28 @@ const styles = th => ({
 
   control: (provided, state) => ({
     ...provided,
-    background: th.colors.neutral.gray97,
+    background: color.gray97,
     border: !state.selectProps.standalone
       ? state.isFocused
-        ? `1px solid ${th.colors.neutral.gray70}`
-        : `1px solid ${th.colors.neutral.gray80}`
+        ? `1px solid ${color.gray70}`
+        : `1px solid ${color.gray80}`
       : 'none',
     boxShadow: !state.selectProps.standalone
       ? state.isFocused
-        ? `0 0 0 1px ${th.colorPrimary}`
+        ? `0 0 0 1px ${color.brand1.base}`
         : 'inset 0px 0px 4px rgba(0, 0, 0, 0.07)'
       : state.isFocused
-      ? `0 0 0 1px ${th.colorPrimary}`
+      ? `0 0 0 1px ${color.brand1.base}`
       : th.boxShadow,
 
     borderRadius: th.borderRadius,
     '&:hover': {
-      boxShadow: `1px solid ${th.colors.neutral.gray70}`,
+      boxShadow: `1px solid ${color.gray70}`,
     },
     fontSize: th.fontSizeBaseSmall,
     minHeight: `calc(${th.gridUnit} * 5)`,
     div: {
-      color: theme.colors.neutral.gray20,
+      color: color.gray20,
     },
   }),
 
@@ -52,8 +52,8 @@ const styles = th => ({
   option: (provided, state) => ({
     ...provided,
     backgroundColor:
-      state.isFocused || state.isSelected ? th.colors.neutral.gray90 : 'white',
-    color: th.colorText,
+      state.isFocused || state.isSelected ? color.gray90 : 'white',
+    color: color.text,
   }),
 })
 

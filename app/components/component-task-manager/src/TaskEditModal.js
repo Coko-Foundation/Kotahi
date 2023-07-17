@@ -12,7 +12,7 @@ import DueDateField from './DueDateField'
 import Modal from '../../component-modal/src/Modal'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterField from '../../shared/CounterField'
-import theme from '../../../theme'
+import theme, { color } from '../../../theme'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const TitleCell = styled.div`
@@ -54,7 +54,7 @@ const TaskSectionContainer = styled.div`
 `
 
 const TaskTitle = styled.div`
-  color: ${theme.colors.neutral.gray20};
+  color: ${color.gray20};
   font-family: ${theme.fontInterface};
   font-size: ${theme.fontSizeBase};
   font-style: normal;
@@ -95,14 +95,14 @@ const TaskNotificationLogsContainer = styled.div`
 const NotificationLogsToggle = styled.button`
   background-color: transparent;
   border: none;
-  color: ${theme.colorPrimary};
+  color: ${color.brand1.base};
   font-size: ${theme.fontSizeBaseSmall};
   padding: 20px 10px;
   text-decoration: underline;
 `
 
 const NotificationLogs = styled.div`
-  color: ${theme.colorPrimary};
+  color: ${color.brand1.base};
   font-size: ${theme.fontSizeBaseSmall};
   margin: 10px 0;
   text-align: left;

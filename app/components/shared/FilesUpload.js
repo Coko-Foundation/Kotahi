@@ -7,10 +7,10 @@ import styled from 'styled-components'
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
-import theme from '../../theme'
+import { color } from '../../theme'
 
 const Root = styled.div`
-  border: 1px dashed ${th('colorBorder')};
+  border: 1px dashed ${color.gray60};
   border-radius: ${th('borderRadius')};
   height: ${grid(8)};
   line-height: ${grid(8)};
@@ -26,7 +26,7 @@ const Files = styled.div`
 
 const Message = styled.div`
   align-items: center;
-  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
+  color: ${props => (props.disabled ? color.textPlaceholder : 'inherit')};
   display: flex;
   justify-content: center;
   width: 100%;
@@ -47,10 +47,14 @@ const DropzoneAndList = ({
   fieldName,
   acceptMultiple,
   mimeTypesToAccept,
+  renderFileList,
+  confirmBeforeDelete,
 }) => {
   // Disable the input in case we want a single file upload
   // and a file has already been uploaded
+
   const files = cloneDeep(get(values, fieldName) || [])
+    .filter(file => file != null)
     .map((file, index) => {
       // This is so that we preserve the location of the file in the top-level
       // files array (needed for deletion).
@@ -61,6 +65,24 @@ const DropzoneAndList = ({
     .filter(val => (fileType ? val.tags.includes(fileType) : true))
 
   const disabled = !acceptMultiple && !!files.length
+
+  const defaultFileListing = clonedFiles => {
+    return (
+      <Files>
+        {clonedFiles.map(file => (
+          <UploadingFile
+            confirmBeforeDelete={confirmBeforeDelete}
+            deleteFile={deleteFile}
+            file={file}
+            index={file.originalIndex}
+            key={file.name}
+            remove={remove}
+            uploaded
+          />
+        ))}
+      </Files>
+    )
+  }
 
   return (
     <>
@@ -84,7 +106,7 @@ const DropzoneAndList = ({
               ) : (
                 <>
                   Drag and drop your files here
-                  <Icon color={theme.colorPrimary} inline>
+                  <Icon color={color.brand1.base()} inline>
                     file-plus
                   </Icon>
                 </>
@@ -93,18 +115,10 @@ const DropzoneAndList = ({
           </Root>
         )}
       </Dropzone>
-      <Files>
-        {files.map(file => (
-          <UploadingFile
-            deleteFile={deleteFile}
-            file={file}
-            index={file.originalIndex}
-            key={file.name}
-            remove={remove}
-            uploaded
-          />
-        ))}
-      </Files>
+
+      {renderFileList
+        ? renderFileList(files, { remove, deleteFile })
+        : defaultFileListing(files)}
     </>
   )
 }
@@ -145,6 +159,10 @@ const FilesUpload = ({
   deleteFile: deleteF,
   onChange,
   values,
+  renderFileList,
+  onFileAdded,
+  onFileRemoved,
+  confirmBeforeDelete,
 }) => {
   let existingFiles = []
 
@@ -169,6 +187,7 @@ const FilesUpload = ({
       },
     })
 
+    if (onFileAdded) onFileAdded(data.createFile)
     if (onChange) onChange([...existingFiles, data.createFile.id], fieldName)
 
     return data
@@ -183,6 +202,8 @@ const FilesUpload = ({
         currFile => currFile !== file.id,
       )
 
+      if (onFileRemoved) onFileRemoved(file)
+
       // Update the new array with the file deleted
       onChange(filteredFiles, fieldName)
     }
@@ -196,11 +217,13 @@ const FilesUpload = ({
       render={formikProps => (
         <DropzoneAndList
           acceptMultiple={acceptMultiple}
+          confirmBeforeDelete={confirmBeforeDelete}
           createFile={createFile}
           deleteFile={deleteFile}
           fieldName={fieldName}
           fileType={fileType}
           mimeTypesToAccept={mimeTypesToAccept}
+          renderFileList={renderFileList}
           {...formikProps}
         />
       )}

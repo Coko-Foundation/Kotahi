@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 /* stylelint-disable declaration-no-important */
 const Button = styled.button`
   align-items: center;
   background: none;
   border: none;
-  color: #828282;
+  color: ${color.gray50};
   display: flex;
   font-family: 'Fira Sans Condensed', sans-serif !important;
   padding: 0;
@@ -15,7 +16,7 @@ const Button = styled.button`
   svg {
     svg {
       path {
-        fill: #828282;
+        fill: ${color.gray50};
       }
     }
     height: 28px;
@@ -23,11 +24,11 @@ const Button = styled.button`
   }
 
   &:disabled {
-    color: ${th('colorFurniture')};
+    color: ${color.gray90};
 
     svg {
       path {
-        fill: ${th('colorFurniture')};
+        fill: ${color.gray90};
       }
     }
 
@@ -43,25 +44,25 @@ const Button = styled.button`
   }
 
   &:not(:disabled):hover {
-    /* background-color: ${th('colorBackgroundHue')}; */
-    color: ${th('colorPrimary')};
+    /* background-color: ${color.backgroundC}; */
+    color: ${color.brand1.base};
 
     svg {
       path {
-        fill: ${th('colorPrimary')};
+        fill: ${color.brand1.base};
       }
     }
   }
 
   &:not(:disabled):active {
-    /* background-color: ${th('colorFurniture')}; */
+    /* background-color: ${color.gray90}; */
     border: none;
-    color: ${th('colorPrimary')};
+    color: ${color.brand1.base};
     outline: none;
 
     svg {
       path {
-        fill: ${th('colorPrimary')};
+        fill: ${color.brand1.base};
       }
     }
   }

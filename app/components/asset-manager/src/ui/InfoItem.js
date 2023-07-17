@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
 import { Button, Icons } from './Modal'
+import { color } from '../../../../theme'
 
 const { saveIcon, editIcon, exitIcon } = Icons
 
@@ -16,9 +17,10 @@ const Input = styled.input`
   width: 78.2%;
 
   &:focus {
-    border-bottom: 1px dashed ${th('colorPrimary')};
+    border-bottom: 1px dashed ${color.brand1.base};
     outline: 0;
   }
+
   &:placeholder-shown {
     font-size: ${th('fontSizeBase')};
     line-height: ${th('lineHeightBase')};

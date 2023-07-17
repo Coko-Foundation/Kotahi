@@ -6,13 +6,14 @@ import styled, { css } from 'styled-components'
 import { Img as ReactImage } from 'react-image'
 import { Link } from 'react-router-dom'
 import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../theme'
 
 // import { ProfileHeaderAction } from '../profile/style'
 import { MEDIA_BREAK } from '../../layout'
 // import { zIndex } from '../../globals'
 
 export const Container = styled.div`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   border: none;
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
@@ -53,7 +54,7 @@ export const AvatarLink = styled(Link)`
 // `
 
 export const Img = styled(ReactImage)`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   display: inline-block;
@@ -73,7 +74,7 @@ export const Img = styled(ReactImage)`
 `
 
 export const FallbackImg = styled.img`
-  background-color: ${th('colorSecondary')};
+  background-color: ${color.brand2.base};
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   display: inline-block;
@@ -93,7 +94,7 @@ export const FallbackImg = styled.img`
 `
 
 export const LoadingImg = styled.div`
-  background: ${th('colorSecondary')};
+  background: ${color.brand2.base};
   border-radius: ${props =>
     props.type === 'community' ? `${props.size / 8}px` : '100%'};
   display: inline-block;
@@ -117,7 +118,7 @@ export const OnlineIndicator = styled.span`
     ${props =>
       props.onlineBorderColor
         ? props.onlineBorderColor(props.theme)
-        : th('colorTextReverse')};
+        : color.textReverse};
   border-radius: 5px;
   bottom: 0;
   height: 10px;

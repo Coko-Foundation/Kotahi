@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from './waxDefaultStyles'
 import EditorElements from './EditorElements'
-import theme from '../../../../theme'
+import { color } from '../../../../theme'
 
 // this grid goes around the menu and the editor area beneath it.
 export const Grid = styled.div`
@@ -20,8 +20,8 @@ export const Grid = styled.div`
 export const Menu = styled.div`
   align-items: center;
   background: #fff;
-  border: 1px solid ${th('colorBorder')};
-  border-bottom: 1px solid ${th('colorFurniture')};
+  border: 1px solid ${color.gray60};
+  border-bottom: 1px solid ${color.gray90};
   display: flex;
   flex-wrap: wrap;
   font-size: 80%;
@@ -81,8 +81,8 @@ export const FullWaxEditorGrid = styled.div`
 `
 
 export const EditorDiv = styled.div`
-  background-color: ${th('colorBackground')};
-  border: 1px solid ${th('colorBorder')};
+  background-color: ${color.backgroundA};
+  border: 1px solid ${color.gray60};
   border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
   border-top: none;
   grid-column-start: editorCol;
@@ -133,7 +133,7 @@ export const FullEditorContainer = styled.div`
 `
 
 export const ReadOnlyEditorDiv = styled.div`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   grid-column-start: editorCol;
   grid-row-start: editorRow;
   /* overflow: auto; */
@@ -180,7 +180,7 @@ export const SimpleGrid = styled.div`
 
 export const SimpleMenu = styled.div`
   align-items: center;
-  background: #fff;
+  background: ${color.backgroundA};
   display: flex;
   flex-wrap: wrap;
   grid-area: menu;
@@ -203,8 +203,8 @@ export const SimpleMenu = styled.div`
 `
 
 export const SimpleEditorDiv = styled.div`
-  background-color: ${theme.colors.neutral.gray99};
-  border: 1px solid ${theme.colors.neutral.gray80};
+  background-color: ${color.gray99};
+  border: 1px solid ${color.gray80};
   border-radius: ${th('borderRadius')};
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   grid-area: editor;
@@ -213,7 +213,7 @@ export const SimpleEditorDiv = styled.div`
   position: relative;
 
   &:focus-within {
-    border: 1px solid ${th('colors.brand1.base')};
+    border: 1px solid ${color.brand1.base};
   }
 
   .error & {
@@ -265,7 +265,7 @@ export const SimpleInfoContainer = styled.div`
     margin: 0;
 
     span {
-      color: ${theme.colors.neutral.gray50};
+      color: ${color.gray50};
       font-size: inherit;
     }
   }
@@ -313,8 +313,8 @@ export const EditorArea = styled.div`
 `
 
 export const SideMenu = styled.div`
-  background: ${th('colorBackgroundToolBar')};
-  border-right: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
+  background: ${th('colorBackgroundToolBar')}; /* TODO is this color defined? */
+  border-right: ${th('borderWidth')} ${th('borderStyle')} ${color.gray60};
   height: calc(100% - 16px);
   min-width: 200px; /* We can shrink this now if we want! */
 `

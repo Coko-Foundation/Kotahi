@@ -1,9 +1,10 @@
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@pubsweet/ui-toolkit'
 import EditorElements from './EditorElements'
+import { color } from '../../../../theme'
 
 export const NotesAreaContainer = styled.div`
-  background: #fff;
+  background: ${color.backgroundA};
   bottom: ${grid(-2)};
   box-shadow: 0 ${grid(-0.3)} ${grid(0.5)} ${grid(-0.2)} gray;
   display: flex; /* this is so that comments on notes appear beside the notes */
@@ -29,8 +30,8 @@ export const NotesAreaContainer = styled.div`
 `
 
 export const ReadOnlyNotesAreaContainer = styled.div`
-  background: #fff;
-  border-top: 1px solid ${th('colorFurniture')};
+  background: ${color.backgroundA};
+  border-top: 1px solid ${color.gray90};
   grid-column-start: editorCol;
   grid-row-start: notesRow;
   width: 100%;
@@ -57,7 +58,7 @@ export const NotesContainer = styled.div`
 `
 
 export const NotesHeading = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   margin: 3px 7px 3px -25px;
   text-transform: uppercase;
 `

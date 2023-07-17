@@ -2,6 +2,8 @@ const models = require('@pubsweet/models')
 
 const { fileStorage } = require('@coko/server')
 
+const File = require('@coko/server/src/models/file/file.model')
+
 const setInitialLayout = async () => {
   const { formData } = await models.Config.query().first() // TODO: Modify this to be queried with groupId for multi-tenancy phase 2 / CMS release
   const { primaryColor, secondaryColor } = formData.groupIdentity
@@ -14,20 +16,70 @@ const setInitialLayout = async () => {
   return layout
 }
 
+const getFlaxPageConfig = async configKey => {
+  const pages = await models.CMSPage.query()
+    .select(['id', 'title', 'url', configKey])
+    .orderBy('title')
+
+  if (!pages) return []
+
+  return pages
+    .map(page => ({
+      id: page.id,
+      title: page.title,
+      url: page.url,
+      shownInMenu: page[configKey].shownInMenu,
+      sequenceIndex: page[configKey].sequenceIndex,
+    }))
+    .sort((page1, page2) => {
+      if (page1.sequenceIndex < page2.sequenceIndex) return -1
+      if (page1.sequenceIndex > page2.sequenceIndex) return 1
+      return 0
+    })
+}
+
+const setFileUrls = storedObjects => {
+  const updatedStoredObjects = []
+  /* eslint-disable no-await-in-loop */
+  Object.keys(storedObjects).forEach(async key => {
+    const storedObject = storedObjects[key]
+    storedObject.url = await fileStorage.getURL(storedObject.key)
+    updatedStoredObjects.push(storedObject)
+  })
+
+  return updatedStoredObjects
+}
+
+const addSlashes = inputString => {
+  let str = inputString
+
+  if (!inputString.startsWith('/')) {
+    str = `/${inputString}`
+  }
+
+  if (!inputString.endsWith('/')) {
+    str = `${inputString}/`
+  }
+
+  return str
+}
+
+const cleanCMSPageInput = inputData => {
+  if (!inputData.url) return inputData
+  const attrs = { ...inputData }
+  attrs.url = addSlashes(inputData.url)
+  return inputData
+}
+
 const resolvers = {
   Query: {
     async cmsPages(_, vars, ctx) {
-      const pages = await models.CMSPage.query().orderBy('sequenceIndex')
+      const pages = await models.CMSPage.query().orderBy('title')
       return pages
     },
 
     async cmsPage(_, { id }, ctx) {
       const cmsPage = await models.CMSPage.query().findById(id)
-      return cmsPage
-    },
-
-    async cmsPageByShortcode(_, { shortcode }, ctx) {
-      const cmsPage = await models.CMSPage.query().findOne({ shortcode })
       return cmsPage
     },
 
@@ -44,7 +96,10 @@ const resolvers = {
   Mutation: {
     async createCMSPage(_, { input }, ctx) {
       try {
-        const savedCmsPage = await new models.CMSPage(input).save()
+        const savedCmsPage = await new models.CMSPage(
+          cleanCMSPageInput(input),
+        ).save()
+
         const cmsPage = await models.CMSPage.query().findById(savedCmsPage.id)
         return { success: true, error: null, cmsPage }
       } catch (e) {
@@ -62,11 +117,7 @@ const resolvers = {
     },
 
     async updateCMSPage(_, { id, input }, ctx) {
-      const attrs = input
-
-      if (attrs?.meta) {
-        attrs.meta = JSON.parse(input.meta)
-      }
+      const attrs = cleanCMSPageInput(input)
 
       if (!input.creatorId) {
         attrs.creatorId = ctx.user
@@ -147,26 +198,40 @@ const resolvers = {
         .for(parent.id)
         .first()
 
-      const updatesStoredObjects = []
-      /* eslint-disable no-await-in-loop */
-      Object.keys(logoFile.storedObjects).forEach(async key => {
-        const storedObject = logoFile.storedObjects[key]
-        storedObject.url = await fileStorage.getURL(storedObject.key)
-        updatesStoredObjects.push(storedObject)
-      })
+      const updatedStoredObjects = setFileUrls(logoFile.storedObjects)
 
-      logoFile.storedObjects = updatesStoredObjects
+      logoFile.storedObjects = updatedStoredObjects
       return logoFile
+    },
+
+    async flaxHeaderConfig(parent) {
+      return getFlaxPageConfig('flaxHeaderConfig')
+    },
+
+    async flaxFooterConfig(parent) {
+      return getFlaxPageConfig('flaxFooterConfig')
+    },
+  },
+
+  StoredPartner: {
+    async file(parent) {
+      try {
+        const file = await File.find(parent.id)
+        const updatedStoredObjects = setFileUrls(file.storedObjects)
+        file.storedObjects = updatedStoredObjects
+        return file
+      } catch (err) {
+        return null
+      }
     },
   },
 }
 
 const typeDefs = `
   extend type Query {
-    cmsPage(id: ID!): CMSPage
-    cmsPageByShortcode(shortcode: String!): CMSPage!
+    cmsPage(id: ID!): CMSPage!
     cmsPages: [CMSPage!]!
-    cmsLayout: CMSLayout
+    cmsLayout: CMSLayout!
   }
 
   extend type Mutation {
@@ -178,7 +243,6 @@ const typeDefs = `
 
   type CMSPage {
     id: ID!
-    shortcode: String!
     url: String!
     title: String!
     status: String!
@@ -187,8 +251,6 @@ const typeDefs = `
     creator: User
     published: DateTime
     edited: DateTime
-    menu: Boolean!
-    sequenceIndex: Int!
     created: DateTime!
     updated: DateTime
   }
@@ -207,16 +269,11 @@ const typeDefs = `
     error: String
   }
 
-  input CMSPageInput {
-    title: String
+  type StoredPartner {
+    id: ID!
     url: String
-    content: String
-    shortcode: String
-    meta: String
-    published: DateTime
-    edited: DateTime
-    menu: Boolean
     sequenceIndex: Int
+    file: File
   }
 
   type CMSLayout {
@@ -225,16 +282,64 @@ const typeDefs = `
     primaryColor: String!
     secondaryColor: String!
     logo: File
+    partners: [StoredPartner!]
+    footerText: String
+    published: DateTime
+    edited: DateTime!
     created: DateTime!
     updated: DateTime
+    flaxHeaderConfig: [FlaxPageHeaderConfig!]
+    flaxFooterConfig: [FlaxPageFooterConfig!]
+  }
+
+  type FlaxPageHeaderConfig {
+    id: ID!
+    title: String!
+    url: String!
+    sequenceIndex: Int
+    shownInMenu: Boolean
+  }
+
+  type FlaxPageFooterConfig {
+    id: ID!
+    title: String!
+    url: String!
+    sequenceIndex: Int
+    shownInMenu: Boolean
+  }
+
+  input CMSPageInput {
+    title: String
+    url: String
+    content: String
+    published: DateTime
+    edited: DateTime
+    shownInMenu: Boolean
+    sequenceIndex: Int
+    flaxHeaderConfig: FlaxConfigInput
+    flaxFooterConfig: FlaxConfigInput
+  }
+
+  input StoredPartnerInput {
+    id: ID!
+    url: String
+    sequenceIndex: Int 
   }
 
   input CMSLayoutInput {
     primaryColor: String
     secondaryColor: String
     logoId: String
+    partners: [StoredPartnerInput]
+    footerText: String
+    published: DateTime
+    edited: DateTime
   }
 
+  input FlaxConfigInput {
+    sequenceIndex: Int
+    shownInMenu: Boolean
+  }
 `
 
 module.exports = { resolvers, typeDefs }

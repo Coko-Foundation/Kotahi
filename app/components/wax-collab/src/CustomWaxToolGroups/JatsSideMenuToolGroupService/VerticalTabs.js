@@ -4,6 +4,7 @@ import { WaxContext } from 'wax-prosemirror-core'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Icon from './Icon'
+import { color } from '../../../../../theme'
 
 // n.b. Henrik's current design is at https://www.figma.com/file/uDxsjgDWxjiof0qSNFLelr/Kotahi-storybook?node-id=6256%3A11486
 
@@ -11,10 +12,10 @@ const useCircles = true // turn this on if you want colors next to annotations
 const showHideCitations = false // turn this on if you want show/hide functionality for citations
 
 const TabWrapper = styled.div`
-  display: flex;
-  height: 100%;
-  flex-direction: column;
   border-right: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   margin-right: -1px;
 `
 
@@ -22,32 +23,36 @@ const Tabs = styled.div`
   background: #fff;
   display: flex;
   flex-direction: row;
+
+  & > div {
+    border-radius: 100%;
+    height: 40px;
+    opacity: 0.5;
+  }
+
   & > div:first-child {
     margin-top: 0;
-  }
-  & > div {
-    opacity: 0.5;
-    height: 40px;
-    border-radius: 100%;
   }
 `
 
 const activeTab = css`
-  background: ${th('colorBorder')};
-  /*box-shadow: 0 0 1px ${th('colorPrimary')};*/
+  background: ${color.gray60};
+  /*box-shadow: 0 0 1px ${color.brand1.base};*/
   margin-bottom: -1px;
+  /* stylelint-disable-next-line declaration-no-important */
   opacity: 1 !important;
 `
 
 const disabledTab = css`
-  display: none;
   cursor: not-allowed;
+  display: none;
   margin-bottom: -1px;
 `
 
 const Tab = styled.div`
   cursor: pointer;
   margin: 0 4px 4px 4px;
+
   ${props => props.active && activeTab}
   ${props => props.disabled && disabledTab}
 
@@ -58,17 +63,17 @@ const Tab = styled.div`
   }
 
   &:hover {
-    background: ${th('colorBorder')};
+    background: ${color.gray60};
   }
 `
 
 const Content = styled.div`
-  background: #fff;
+  background: ${color.backgroundA};
+  border-right: 1px solid ${color.gray60};
+  border-top: 1px solid ${color.gray60};
+  border-top-right-radius: 4px;
   height: 100%;
   width: 100%;
-  border-top: 1px solid ${th('colorBorder')};
-  border-top-right-radius: 4px;
-  border-right: 1px solid ${th('colorBorder')};
 `
 
 export const VerticalTabs = ({ tabList }) => {
@@ -106,6 +111,7 @@ const BlockLevelToolsWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
   padding: 8px 8px 16px 8px;
+
   > div:not(:last-child) {
     margin-bottom: 10px;
   }
@@ -113,16 +119,18 @@ const BlockLevelToolsWrapper = styled.div`
 
 const ElementGroup = styled.details`
   & summary {
+    color: ${color.brand1.base};
+    cursor: pointer;
     font-size: 14px;
     font-weight: bold;
-    user-select: none;
-    cursor: pointer;
     margin: 0;
-    color: ${th('colorPrimary')};
+    user-select: none;
+
     &::marker {
-      color: ${th('colorBackgroundTabs')};
+      color: ${th('colorBackgroundTabs' /* TODO Does this color exist? */)};
     }
   }
+
   & + details {
     margin-top: 16px;
   }
@@ -130,50 +138,52 @@ const ElementGroup = styled.details`
 
 const BlockElementWrapper = styled.div`
   display: flex;
+
   & button {
-    transition: 0.25s;
-    border-radius: 4px;
-    margin-left: 2px;
-    position: relative;
-    padding: 0;
-    display: inline-flex;
     align-items: center;
-    background-color: ${props =>
-      props.isActive ? th('colorBackgroundTabs') : 'transparent'};
+    background: none;
+    border-radius: 4px;
+    display: inline-flex;
+    margin-left: 2px;
+
+    /* This cleans up the left menu, but kills off focus mode */
+    ${override('MenuButton')}
+
+    padding: 0;
+    position: relative;
+    transition: 0.25s;
+
     &:before {
       --circleWidth: 5px;
-      display: ${props => (props.color ? 'inline-block' : 'none')};
-      position: relative;
-      content: '';
-      width: ${props => (props.color ? 'var(--circleWidth)' : 0)};
-      /* margin-left: ${props => (props.color ? '-2px' : 0)}; */
-      margin-right: ${props => (props.color ? '-4px' : 0)};
-      height: var(--circleWidth);
-      border-radius: 100%;
       background-color: ${props => th(props.color) || 'transparent'};
       border: 1px solid ${props => th(props.color) || 'transparent'};
+      border-radius: 100%;
+      content: '';
+      display: ${props => (props.color ? 'inline-block' : 'none')};
+      height: var(--circleWidth);
+      margin-right: ${props => (props.color ? '-4px' : 0)};
+      position: relative;
       top: 1px;
+      width: ${props => (props.color ? 'var(--circleWidth)' : 0)};
     }
-    /* This cleans up the left menu, but kills off focus mode */
-    ${override('MenuButton')};
-    background: none;
+
     & span {
-      border-top: 2px solid transparent;
       border-bottom: 2px solid
-        ${props => (props.isActive ? th('colorPrimary') : 'transparent')};
-      padding: 1px 0;
+        ${props => (props.isActive ? color.brand1.base : 'transparent')};
+      border-top: 2px solid transparent;
+      color: ${color.brand1.base};
       font-size: 14px;
-      color: ${th('colorPrimary')};
       font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
+      padding: 1px 0;
     }
+
     &:hover {
+      /* stylelint-disable-next-line declaration-no-important */
       background: none !important;
 
       & span {
+        border-bottom-color: ${color.brand1.base};
         font-weight: bold;
-        border-bottom-color: ${th('colorPrimary')};
-        /* color: ${props =>
-          props.isActive ? th('colorTextReverse') : th('colorPrimary')}; */
       }
     }
   }

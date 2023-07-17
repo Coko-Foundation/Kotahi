@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-import { hexa } from '../../globals'
-import theme from '../../theme'
+import { color } from '../../theme'
 
 export const HasNextPage = styled(Link)`
   align-items: center;
@@ -14,9 +13,9 @@ export const HasNextPage = styled(Link)`
 `
 
 export const NextPageButton = styled.span`
-  border-bottom: 1px solid ${hexa(theme.colorPrimary, 0.06)};
-  border-top: 1px solid ${hexa(theme.colorPrimary, 0.06)};
-  color: ${theme.colorPrimary};
+  border-bottom: 1px solid ${color.brand1.tint90};
+  border-top: 1px solid ${color.brand1.tint90};
+  color: ${color.brand1.base};
   display: flex;
   flex: 1;
   font-size: 15px;
@@ -29,8 +28,8 @@ export const NextPageButton = styled.span`
   width: 100%;
 
   &:hover {
-    background: ${hexa(theme.colorPrimary, 0.08)};
-    color: ${theme.colorPrimary};
+    background: ${color.brand1.tint50};
+    color: ${color.brand1.base};
     cursor: pointer;
   }
 `

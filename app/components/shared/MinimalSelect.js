@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
+import { color } from '../../theme'
 
 const styles = th => ({
   container: (provided, state) => ({
@@ -34,7 +35,7 @@ const styles = th => ({
     background: 'none',
     border: 'none',
     borderRadius: th.borderRadius,
-    boxShadow: state.isFocused ? `0 0 0 1px ${th.colorPrimary}` : 'none',
+    boxShadow: state.isFocused ? `0 0 0 1px ${color.brand1.base()}` : 'none',
     minHeight: '0',
   }),
 
@@ -48,8 +49,8 @@ const styles = th => ({
   option: (provided, state) => ({
     ...provided,
     backgroundColor:
-      state.isFocused || state.isSelected ? th.colorFurniture : 'white',
-    color: th.colorText,
+      state.isFocused || state.isSelected ? color.gray90 : color.backgroundA,
+    color: color.text,
   }),
   valueContainer: (provided, state) =>
     state.isMulti

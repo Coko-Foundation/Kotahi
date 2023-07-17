@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from './layout/waxDefaultStyles'
 import EditorElements from './layout/EditorElements'
+import { color } from '../../../../theme'
 
 // this grid goes around the menu and the editor area beneath it.
 export const Grid = styled.div`
@@ -18,9 +19,9 @@ export const Grid = styled.div`
 
 export const Menu = styled.div`
   align-items: center;
-  background: #fff;
-  border: 1px solid ${th('colorBorder')};
-  border-bottom: 1px solid ${th('colorFurniture')};
+  background: ${color.backgroundA};
+  border: 1px solid ${color.gray60};
+  border-bottom: 1px solid ${color.gray90};
   display: flex;
   flex-wrap: wrap;
   font-size: 80%;
@@ -80,8 +81,8 @@ export const FullWaxEditorGrid = styled.div`
 `
 
 export const EditorDiv = styled.div`
-  background-color: ${th('colorBackground')};
-  border: 1px solid ${th('colorBorder')};
+  background-color: ${color.backgroundA};
+  border: 1px solid ${color.gray60};
   border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
   border-top: none;
   grid-column-start: editorCol;
@@ -133,7 +134,7 @@ export const FullEditorContainer = styled.div`
 `
 
 export const ReadOnlyEditorDiv = styled.div`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   grid-column-start: editorCol;
   grid-row-start: editorRow;
   /* overflow: auto; */
@@ -179,7 +180,7 @@ export const SimpleGrid = styled.div`
 `
 
 export const SimpleMenu = styled.div`
-  border-top: 1px solid ${th('colorFurniture')};
+  border-top: 1px solid ${color.gray90};
   display: flex;
   flex-wrap: wrap;
   left: -12px;
@@ -194,6 +195,7 @@ export const SimpleMenu = styled.div`
   width: calc(100% + 50px);
   z-index: 1;
 
+  /* TODO: this no longer works! */
   button[title='Special Characters'] + div {
     bottom: 34px;
     left: -372px;
@@ -211,7 +213,7 @@ export const SimpleMenu = styled.div`
 `
 
 export const SimpleEditorDiv = styled.div`
-  border: 1px solid ${th('colorBorder')};
+  border: 1px solid ${color.gray60};
   border-radius: ${th('borderRadius')};
   grid-area: editor;
   margin-top: 8px;
@@ -237,7 +239,7 @@ export const SimpleEditorDiv = styled.div`
   }
 
   &:focus-within {
-    border: 1px solid ${th('colors.brand1.base')};
+    border: 1px solid ${color.brand1.base};
   }
 
   .error & {
@@ -271,7 +273,7 @@ export const SimpleInfoContainer = styled.div`
   }
 `
 
-// this is for ProductionWaxEditor //
+/* this is for ProductionWaxEditor */
 
 export const ProductionEditorDiv = styled.div`
   display: flex;
@@ -289,8 +291,8 @@ export const EditorArea = styled.div`
 `
 
 export const SideMenu = styled.div`
-  background: ${th('colorBackgroundToolBar')};
-  border-right: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
+  background: ${th('colorBackgroundToolBar')}; /* TODO is this color defined? */
+  border-right: ${th('borderWidth')} ${th('borderStyle')} ${color.gray60};
   height: calc(100% - 16px);
   min-width: 250px;
 `

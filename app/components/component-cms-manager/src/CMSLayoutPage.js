@@ -8,7 +8,6 @@ import PageHeader from './components/PageHeader'
 import {
   getCMSLayout,
   updateCMSLayoutMutation,
-  getCMSPages,
   updateCMSPageDataMutation,
   rebuildFlaxSiteMutation,
   createFileMutation,
@@ -16,12 +15,6 @@ import {
 } from './queries'
 
 const CMSLayoutPage = ({ history }) => {
-  const {
-    data: cmsPagesData,
-    refetch: refetchCMSPages,
-    loading: loadingCmsPages,
-  } = useQuery(getCMSPages)
-
   const { loading, data, error } = useQuery(getCMSLayout)
   const [updateCMSLayout] = useMutation(updateCMSLayoutMutation)
   const [updateCMSPageInfo] = useMutation(updateCMSPageDataMutation)
@@ -39,40 +32,55 @@ const CMSLayoutPage = ({ history }) => {
     },
   })
 
-  const [submitButtonText, setSubmitButtonText] = useState('Save')
-  let headerInfo = []
+  const [submitButtonText, setSubmitButtonText] = useState('Publish')
 
-  const onHeaderInfoChanged = updatedHeaderInfo => {
-    headerInfo = updatedHeaderInfo
+  const triggerAutoSave = async formData => {
+    updateCMSLayout({
+      variables: {
+        input: { ...formData, edited: new Date() },
+      },
+    })
   }
 
-  const onSubmitLayoutForm = async formData => {
-    setSubmitButtonText('Updating branding')
+  const onHeaderPageOrderChanged = updatedHeaderInfo => {
+    updatePageOrderInfo(updatedHeaderInfo, 'flaxHeaderConfig')
+  }
+
+  const onFooterPageOrderChanged = updatedHeaderInfo => {
+    updatePageOrderInfo(updatedHeaderInfo, 'flaxFooterConfig')
+  }
+
+  const updatePageOrderInfo = (pageOrderInfo, key) => {
+    pageOrderInfo.forEach(cmsPage => {
+      const { id, sequenceIndex, shownInMenu } = cmsPage
+      updateCMSPageInfo({
+        variables: {
+          id,
+          input: {
+            [key]: {
+              sequenceIndex,
+              shownInMenu,
+            },
+          },
+        },
+      })
+    })
+  }
+
+  const publish = async formData => {
+    setSubmitButtonText('Saving data')
     await updateCMSLayout({
       variables: {
         input: {
           primaryColor: formData.primaryColor,
           secondaryColor: formData.secondaryColor,
           logoId: formData.logoId,
+          partners: formData.partners,
+          footerText: formData.footerText,
+          published: new Date(),
         },
       },
     })
-
-    if (headerInfo.length > 0) {
-      setSubmitButtonText('Updating Header')
-      headerInfo.forEach(cmsPage => {
-        const { id, sequenceIndex, menu } = cmsPage
-        updateCMSPageInfo({
-          variables: {
-            id,
-            input: {
-              sequenceIndex,
-              menu,
-            },
-          },
-        })
-      })
-    }
 
     setSubmitButtonText('Rebuilding Site...')
     await rebuildFlaxSite({
@@ -82,40 +90,47 @@ const CMSLayoutPage = ({ history }) => {
         }),
       },
     })
-    setSubmitButtonText('Saved')
+    setSubmitButtonText('Published')
   }
 
-  if (loading || loadingCmsPages) return <Spinner />
+  const setInitialData = cmsLayoutData => {
+    let initialData = {}
+    const currentPartners = cmsLayoutData.partners || []
+    const partnerData = currentPartners.filter(partner => partner != null)
+    initialData = { ...cmsLayoutData }
+    initialData.partners = partnerData.map(
+      ({ file, ...restProps }) => restProps, // removing the file object
+    )
+    // to show the existing image
+    initialData.logo = cmsLayoutData.logo ? [cmsLayoutData.logo] : []
+    initialData.partnerFiles = partnerData.map(partner => partner.file)
+    return initialData
+  }
+
+  if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
+  if (!data.cmsLayout) return <CommsErrorBanner error={error} />
 
   const { cmsLayout } = data
-  const { cmsPages } = cmsPagesData
-  let initialData = {}
-
-  if (cmsLayout) {
-    initialData = { ...cmsLayout }
-    // to show the existing image
-    initialData.logo = cmsLayout.logo ? [cmsLayout.logo] : []
-  }
 
   return (
     <Container>
       <PageHeader history={history} leftSideOnly mainHeading="Layout" />
       <Formik
-        initialValues={initialData}
-        onSubmit={async values => onSubmitLayoutForm(values)}
+        initialValues={setInitialData(cmsLayout)}
+        onSubmit={async values => publish(values)}
       >
         {formikProps => {
           return (
             <LayoutForm
               cmsLayout={cmsLayout}
-              cmsPages={cmsPages}
               createFile={createFile}
               deleteFile={deleteFile}
               formikProps={formikProps}
-              onHeaderInfoChanged={onHeaderInfoChanged}
-              refetchCMSPages={refetchCMSPages}
+              onFooterPageOrderChanged={onFooterPageOrderChanged}
+              onHeaderPageOrderChanged={onHeaderPageOrderChanged}
               submitButtonText={submitButtonText}
+              triggerAutoSave={triggerAutoSave}
             />
           )
         }}

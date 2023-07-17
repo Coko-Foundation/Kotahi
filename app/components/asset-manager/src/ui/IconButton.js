@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 const Button = styled.button`
   align-items: center;
@@ -25,13 +25,13 @@ const Button = styled.button`
 
   &:disabled {
     svg {
-      fill: ${th('colorFurniture')};
+      fill: ${color.gray90};
     }
   }
 
   &:not(:disabled):hover {
     svg {
-      fill: ${th('colorPrimary')};
+      fill: ${color.brand1.base};
     }
   }
 `

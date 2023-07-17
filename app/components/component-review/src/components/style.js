@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
-import lightenBy from '../../../../shared/lightenBy'
+import { color } from '../../../../theme'
 
 export const AdminSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -43,22 +43,8 @@ export const EditorWrapper = styled.div`
   }
 `
 
-// export const Container = styled.div`
-//   // max-width: 90rem;
-//   box-shadow: ${th('boxShadow')};
-//   background-color: ${th('colorBackground')};
-//   border-radius: ${({ noGap }) =>
-//     noGap
-//       ? css`0 ${th('borderRadius')} ${th('borderRadius')}`
-//       : th('borderRadius')};
-//   // padding: ${grid(2)} ${grid(3)};
-//   &:not(:first-of-type) {
-//     margin-top: ${grid(4)};
-//   }
-// `
-
 export const FormStatus = styled.div`
-  color: ${th('colorSecondary')};
+  color: ${color.brand2.base};
   line-height: ${grid(5)};
   text-align: center;
 `
@@ -110,12 +96,12 @@ export const Cell = styled.span`
 `
 
 export const Affiliation = styled.span`
-  color: ${lightenBy('colorText', 0.3)};
+  color: ${color.gray40};
   margin-left: 0.5em;
 `
 
 export const Email = styled.span`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   margin-left: 1em;
 `
 

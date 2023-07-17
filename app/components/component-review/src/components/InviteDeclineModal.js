@@ -1,10 +1,10 @@
 import React from 'react'
-import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { convertTimestampToDateString } from '../../../../shared/dateUtils'
 import { UserAvatar } from '../../../component-avatar/src'
 import Modal from '../../../component-modal/src/Modal'
 import { ConfigurableStatus } from '../../../shared'
+import { color } from '../../../../theme'
 
 const ModalBody = styled.div`
   display: flex;
@@ -34,7 +34,7 @@ const DeclinedBadge = styled(ConfigurableStatus)`
 `
 
 const TextChange = styled.div`
-  color: ${props => (props.gray ? th('colorSecondary') : th('colorText'))};
+  color: ${props => (props.gray ? color.brand2.base : color.text)};
 `
 
 const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {

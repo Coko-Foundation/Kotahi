@@ -2,13 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../shared/lightenBy'
+import { color } from '../../../theme'
 
 const FloatRightButton = styled.a`
   align-items: center;
-  background-color: ${th('colorPrimary')};
+  background-color: ${color.brand1.base};
   border-radius: 27px;
-  color: ${th('colorTextReverse')};
+  color: ${color.textReverse};
   display: flex;
   float: right;
   left: 92%;
@@ -19,7 +19,7 @@ const FloatRightButton = styled.a`
   z-index: 1000;
 
   &:hover {
-    background-color: ${lightenBy('colorPrimary', 0.2)};
+    background-color: ${color.brand1.tint25};
   }
 
   svg {

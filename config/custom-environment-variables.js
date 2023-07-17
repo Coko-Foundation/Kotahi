@@ -116,14 +116,12 @@ module.exports = {
   },
 
   'flax-site': {
-    clientId: 'SERVICE_FLAX_SITE_CLIENT_ID',
-    clientSecret: 'SERVICE_FLAX_SITE_SECRET',
-    clientPort: 'FLAX_CLIENT_PORT',
-    clientHost: 'FLAX_CLIENT_HOST',
-    clientProtocol: 'FLAX_CLIENT_PROTOCOL',
-    protocol: 'SERVICE_FLAX_SITE_PROTOCOL',
-    host: 'SERVICE_FLAX_SITE_HOST',
-    port: 'SERVICE_FLAX_EXPRESS_HOST',
-    clientFlaxSiteUrl: 'CLIENT_FLAX_SITE_URL',
+    clientId: 'FLAX_CLIENT_ID',
+    clientSecret: 'FLAX_CLIENT_SECRET',
+    clientAPIURL: 'FLAX_CLIENT_API_URL',
+    clientFlaxSiteUrl: 'FLAX_SITE_URL',
+    port: 'FLAX_EXPRESS_PORT',
+    host: 'FLAX_EXPRESS_HOST',
+    protocol: 'FLAX_EXPRESS_PROTOCOL',
   },
 }

@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import styled, { ThemeContext, css } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle, MoreVertical } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -29,6 +29,7 @@ import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 import TaskEditModal from './TaskEditModal'
 import CounterField from '../../shared/CounterField'
+import { color } from '../../../theme'
 
 const TaskRow = styled.div`
   align-items: flex-start;
@@ -94,12 +95,12 @@ const Handle = styled.div`
 
 const DragIcon = styled(DragVerticalIcon)`
   height: 20px;
-  stroke: ${th('colorTextPlaceholder')};
+  stroke: ${color.gray40};
   stroke-width: 1.8;
   width: 20px;
 
   &:hover {
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
   }
 `
 
@@ -109,18 +110,18 @@ const Ellipsis = styled(MoreVertical)`
   width: 20px;
 
   &:hover path {
-    fill: ${th('colorPrimary')};
+    fill: ${color.brand1.base};
   }
 `
 
 const ModalContainer = styled(LooseColumn)`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   padding: ${grid(2.5)} ${grid(3)};
   z-index: 10000;
 `
 
 const ActionDialog = styled.div`
-  background: white;
+  background: ${color.backgroundA};
   border-radius: 6px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
   left: -80px;
@@ -145,7 +146,7 @@ const BaseLabel = styled.div`
 
   &:hover,
   &:focus {
-    background-color: #efefef;
+    background-color: ${color.gray95};
   }
 `
 
@@ -241,7 +242,6 @@ const Task = ({
   emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
-  const themeContext = useContext(ThemeContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const [isEditTaskMetaModal, setIsEditTaskMetaModal] = useState(false)
   const [isActionDialog, setIsActionDialog] = useState(false)
@@ -429,9 +429,9 @@ const Task = ({
                       title={isDone ? '' : 'Click to mark as done'}
                     >
                       {isDone ? (
-                        <CheckCircle color={themeContext.colorPrimary} />
+                        <CheckCircle color={color.brand1.base()} />
                       ) : (
-                        <Circle color={themeContext.colorBorder} />
+                        <Circle color={color.gray60} />
                       )}
                     </Handle>
                   )}

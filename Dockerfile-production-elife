@@ -11,7 +11,7 @@ ARG client_port
 ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
-ARG client_flax_site_url
+ARG flax_site_url
 
 
 ENV USE_COLAB_EMAIL $use_colab_email
@@ -25,7 +25,7 @@ ENV CLIENT_PORT "4000"
 ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
-ENV CLIENT_FLAX_SITE_URL $client_flax_site_url
+ENV FLAX_SITE_URL $flax_site_url
 
 
 RUN apk add --no-cache git python3 make g++ bash tar

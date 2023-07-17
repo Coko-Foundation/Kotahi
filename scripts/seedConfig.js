@@ -3,47 +3,86 @@
 /* eslint-disable no-console */
 const { Config } = require('@pubsweet/models')
 
-const seedConfig = async (group, instanceName) => {
+const seedConfig = async (group, instanceName, index) => {
   let config = {}
 
-  const publishing = {
-    hypothesis: {
-      group: process.env.HYPOTHESIS_GROUP || null,
-      apiKey: process.env.HYPOTHESIS_API_KEY || null,
-      shouldAllowTagging: process.env.HYPOTHESIS_ALLOW_TAGGING === 'true',
-      reverseFieldOrder: process.env.HYPOTHESIS_REVERSE_FIELD_ORDER === 'true',
-    },
-    webhook: {
-      ref: process.env.PUBLISHING_WEBHOOK_REF || null,
-      url: process.env.PUBLISHING_WEBHOOK_URL || null,
-      token: process.env.PUBLISHING_WEBHOOK_TOKEN || null,
-    },
-    crossref: {
-      login: process.env.CROSSREF_LOGIN || null,
-      password: process.env.CROSSREF_PASSWORD || null,
-      doiPrefix: process.env.DOI_PREFIX || null,
-      licenseUrl: process.env.PUBLICATION_LICENSE_URL || null,
-      registrant: process.env.CROSSREF_REGISTRANT || null,
-      journalName: process.env.JOURNAL_NAME || null,
-      depositorName: process.env.CROSSREF_DEPOSITOR_NAME || null,
-      depositorEmail: process.env.CROSSREF_DEPOSITOR_EMAIL || null,
-      journalHomepage: process.env.JOURNAL_HOMEPAGE || null,
-      publicationType:
-        process.env.CROSSREF_PUBLICATION_TYPE === 'article'
-          ? 'article'
-          : 'peer review',
-      journalAbbreviatedName: process.env.JOURNAL_ABBREVIATED_NAME || null,
-      publishedArticleLocationPrefix:
-        process.env.PUBLISHED_ARTICLE_LOCATION_PREFIX || null,
-      useSandbox: process.env.CROSSREF_USE_SANDBOX === 'true',
-    },
-  }
+  const publishing =
+    index === 0
+      ? {
+          hypothesis: {
+            group: process.env.HYPOTHESIS_GROUP || null,
+            apiKey: process.env.HYPOTHESIS_API_KEY || null,
+            shouldAllowTagging: process.env.HYPOTHESIS_ALLOW_TAGGING === 'true',
+            reverseFieldOrder:
+              process.env.HYPOTHESIS_REVERSE_FIELD_ORDER === 'true',
+          },
+          webhook: {
+            ref: process.env.PUBLISHING_WEBHOOK_REF || null,
+            url: process.env.PUBLISHING_WEBHOOK_URL || null,
+            token: process.env.PUBLISHING_WEBHOOK_TOKEN || null,
+          },
+          crossref: {
+            login: process.env.CROSSREF_LOGIN || null,
+            password: process.env.CROSSREF_PASSWORD || null,
+            doiPrefix: process.env.DOI_PREFIX || null,
+            licenseUrl: process.env.PUBLICATION_LICENSE_URL || null,
+            registrant: process.env.CROSSREF_REGISTRANT || null,
+            journalName: process.env.JOURNAL_NAME || null,
+            depositorName: process.env.CROSSREF_DEPOSITOR_NAME || null,
+            depositorEmail: process.env.CROSSREF_DEPOSITOR_EMAIL || null,
+            journalHomepage: process.env.JOURNAL_HOMEPAGE || null,
+            publicationType:
+              process.env.CROSSREF_PUBLICATION_TYPE === 'article'
+                ? 'article'
+                : 'peer review',
+            journalAbbreviatedName:
+              process.env.JOURNAL_ABBREVIATED_NAME || null,
+            publishedArticleLocationPrefix:
+              process.env.PUBLISHED_ARTICLE_LOCATION_PREFIX || null,
+            useSandbox: process.env.CROSSREF_USE_SANDBOX === 'true',
+          },
+        }
+      : {
+          hypothesis: {
+            group: null,
+            apiKey: null,
+            shouldAllowTagging: false,
+            reverseFieldOrder: false,
+          },
+          webhook: {
+            ref: null,
+            url: null,
+            token: null,
+          },
+          crossref: {
+            login: null,
+            password: null,
+            doiPrefix: null,
+            licenseUrl: null,
+            registrant: null,
+            journalName: null,
+            depositorName: null,
+            depositorEmail: null,
+            journalHomepage: null,
+            publicationType: 'article',
+            journalAbbreviatedName: null,
+            publishedArticleLocationPrefix: null,
+            useSandbox: false,
+          },
+        }
 
-  const notification = {
-    gmailAuthEmail: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH || null,
-    gmailSenderEmail: process.env.GMAIL_NOTIFICATION_EMAIL_SENDER || null,
-    gmailAuthPassword: process.env.GMAIL_NOTIFICATION_PASSWORD || null,
-  }
+  const notification =
+    index === 0
+      ? {
+          gmailAuthEmail: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH || null,
+          gmailSenderEmail: process.env.GMAIL_NOTIFICATION_EMAIL_SENDER || null,
+          gmailAuthPassword: process.env.GMAIL_NOTIFICATION_PASSWORD || null,
+        }
+      : {
+          gmailAuthEmail: null,
+          gmailSenderEmail: null,
+          gmailAuthPassword: null,
+        }
 
   const groupIdentity = {
     brandName: group.name || 'Kotahi',
@@ -83,6 +122,7 @@ const seedConfig = async (group, instanceName) => {
             displayManuscriptShortId: true,
           },
           notification,
+          eventNotification: {},
           groupIdentity,
         },
         type: 'Config',
@@ -122,6 +162,7 @@ const seedConfig = async (group, instanceName) => {
             displayManuscriptShortId: true,
           },
           notification,
+          eventNotification: {},
           groupIdentity,
         },
         type: 'Config',
@@ -178,6 +219,7 @@ const seedConfig = async (group, instanceName) => {
             displayManuscriptShortId: true,
           },
           notification,
+          eventNotification: {},
           groupIdentity,
         },
         type: 'Config',
@@ -222,6 +264,7 @@ const seedConfig = async (group, instanceName) => {
             displayManuscriptShortId: true,
           },
           notification,
+          eventNotification: {},
           groupIdentity,
         },
         type: 'Config',
@@ -266,6 +309,7 @@ const seedConfig = async (group, instanceName) => {
             displayManuscriptShortId: true,
           },
           notification,
+          eventNotification: {},
           groupIdentity,
         },
         type: 'Config',

@@ -70,6 +70,9 @@ module.exports = {
     gmailSenderEmail: 'test@coko.foundation',
     gmailAuthPassword: 'test',
   },
+  eventNotification: {
+    reviewerInvitationPrimaryEmailTemplate: null,
+  },
   groupIdentity: {
     brandName: 'Kotahi',
     primaryColor: '#3aae2a',

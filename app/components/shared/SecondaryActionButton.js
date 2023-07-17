@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import styled, { ThemeContext } from 'styled-components'
 import { Check, AlertCircle } from 'react-feather'
 import { th, grid, rotate360 } from '@pubsweet/ui-toolkit'
+import { color } from '../../theme'
 
 const BaseButton = styled.button`
-  border: 2px solid ${th('colorPrimary')};
+  border: 2px solid ${color.brand1.base};
   border-radius: ${th('borderRadius')};
   font-family: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
@@ -23,21 +24,21 @@ const BaseButton = styled.button`
 `
 
 const DisabledButton = styled(BaseButton)`
-  background-color: ${th('colorFurniture')};
-  color: ${th('colorBorder')};
-  border: 2px solid ${th('colorFurniture')};
+  background-color: ${color.gray90};
+  border: 2px solid ${color.gray90};
+  color: ${color.gray60};
 `
 
 const Button = styled(BaseButton)`
   background-color: white;
   box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, 0.2);
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
 
   &:hover,
   &:active,
   &:focus {
-    box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, 0.3);
     background-color: rgba(58, 174, 42, 0.03);
+    box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, 0.3);
   }
 `
 
@@ -80,13 +81,13 @@ const SecondaryActionButton = ({
   type,
   status,
   secondaryButton,
-  color,
+  color: col,
 }) => {
   const themeContext = useContext(ThemeContext)
 
   const fgColor =
     status === 'pending' || status === 'success'
-      ? themeContext.colorPrimary
+      ? color.brand1.base()
       : themeContext.colorError
 
   let statusIndicator = null
@@ -142,7 +143,7 @@ const SecondaryActionButton = ({
 }
 
 SecondaryActionButton.propTypes = {
-  /** Primary buttons are styled with colorPrimary, unless another color is specified */
+  /** Primary buttons are styled with color.brand1.base, unless another color is specified */
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   /** 'pending' will show a spinner; 'success' will show a tick; 'failure' will show a warning icon and change the color to colorWarning */

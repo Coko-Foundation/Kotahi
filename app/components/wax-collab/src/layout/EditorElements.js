@@ -1,7 +1,8 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
-import { darken, grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'
+import { color } from '../../../../theme'
 
 // This should only include styles specific to the editor */
 /* Styles that are purely presentational for text should be in textStyles.css */
@@ -33,9 +34,9 @@ const EditorStyles = css`
 
   .ProseMirror footnote {
     align-items: center;
-    background: ${lightenBy('colorPrimary', 0.7)};
+    background: ${lightenBy(color.brand1.base(), 0.7)};
     border-radius: ${grid(2)};
-    color: ${darken('colorPrimary', 0.5)};
+    color: ${color.brand1.shade50};
     cursor: pointer;
     display: inline-flex;
     height: ${grid(4)};
@@ -45,7 +46,7 @@ const EditorStyles = css`
     vertical-align: top;
 
     &:hover {
-      background: ${lightenBy('colorPrimary', 0.3)};
+      background: ${color.brand1.tint25};
     }
 
     ::after {
@@ -87,7 +88,7 @@ const EditorStyles = css`
 
   /* placeholder */
   .empty-node::before {
-    color: #aaa;
+    color: ${color.gray60};
     float: left;
     font-style: italic;
     height: 0;
@@ -106,7 +107,7 @@ const EditorStyles = css`
 
   .invisible:before {
     caret-color: inherit;
-    color: gray;
+    color: ${color.gray50};
     display: inline-block;
     font-style: normal;
     font-weight: 400;
@@ -532,14 +533,14 @@ const EditorStyles = css`
   /* added for figure weirdness */
 
   figure {
-    border: 1px solid ${darken('colorPrimary', 1)};
+    border: 1px solid ${color.brand1.base};
     margin-bottom: 1rem;
     padding: 1rem;
     position: relative;
   }
 
   figure::before {
-    color: ${darken('colorPrimary', 1)};
+    color: ${color.brand1.base};
     content: 'Figure:';
     font-size: 75%;
     left: 0;
@@ -554,7 +555,7 @@ const EditorStyles = css`
   }
 
   figcaption {
-    border: 1px solid ${darken('colorPrimary', 1)};
+    border: 1px solid ${color.brand1.base};
     margin-top: 1rem;
     min-width: 600px; /* in case there's no image, so the caption doesn't get squished */
     padding: 1rem;
@@ -562,7 +563,7 @@ const EditorStyles = css`
   }
 
   figcaption::before {
-    color: ${darken('colorPrimary', 1)};
+    color: ${color.brand1.base};
     content: 'Caption:';
     font-size: 75%;
     left: 0;

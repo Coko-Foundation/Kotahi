@@ -16,6 +16,7 @@ import {
   SectionRow,
 } from '../../../shared'
 import Modal from '../../../component-modal/src/ConfirmationModal'
+import { color } from '../../../../theme'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};
@@ -39,16 +40,16 @@ const UnpaddedIcon = styled(Icon)`
 `
 
 const ControlIcon = withTheme(({ children, theme }) => (
-  <UnpaddedIcon color={theme.colorPrimary}>{children}</UnpaddedIcon>
+  <UnpaddedIcon color={color.brand1.base()}>{children}</UnpaddedIcon>
 ))
 
 const CancelButton = styled(Button)`
-  background: #e9ebe8;
+  background: ${color.gray90};
   padding: 8px;
   text-decoration: none;
 
   &:hover {
-    background: #dbdbdb;
+    background: ${color.gray80};
   }
 `
 
