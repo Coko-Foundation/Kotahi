@@ -1,13 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
-import { ThemeContext } from 'styled-components'
 import gql from 'graphql-tag'
-import { ThemeUpdateContext } from '../../theme/src'
 import { ConfigContext } from '../../config/src'
 import { UPDATE_CONFIG } from '../../../queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import ConfigManagerForm from './ConfigManagerForm'
-import getColors from '../../../theme/colors'
 
 const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
   query GetConfigAndEmailTemplates($id: ID!) {
@@ -34,8 +31,6 @@ const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
 
 const ConfigManagerPage = ({ match, ...props }) => {
   const config = useContext(ConfigContext)
-  const currentTheme = useContext(ThemeContext)
-  const updateTheme = useContext(ThemeUpdateContext)
   const [update] = useMutation(UPDATE_CONFIG)
   const [updateConfigStatus, setUpdateConfigStatus] = useState(null)
 
@@ -50,15 +45,6 @@ const ConfigManagerPage = ({ match, ...props }) => {
 
   const updateConfig = async (configId, formData) => {
     setUpdateConfigStatus('pending')
-    updateTheme({
-      ...currentTheme,
-      colorPrimary: formData.groupIdentity.primaryColor,
-      colorSecondary: formData.groupIdentity.secondaryColor,
-      colors: getColors(
-        formData.groupIdentity.primaryColor,
-        formData.groupIdentity.secondaryColor,
-      ),
-    })
 
     const response = await update({
       variables: {

@@ -6,10 +6,11 @@ import styled from 'styled-components'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { UserAvatar } from '../../../../component-avatar/src'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
+import { color } from '../../../../../theme'
 
 const Card = styled.div`
-  background-color: #f8f8f9;
-  border-bottom: 0.8px solid #bfbfbf;
+  background-color: ${color.gray97};
+  border-bottom: 0.8px solid ${color.gray70};
   border-radius: 8px;
   display: flex;
   flex-direction: row;
@@ -20,7 +21,7 @@ const Card = styled.div`
   width: 100%;
 
   &:hover {
-    box-shadow: 0px 9px 5px -6px #bfbfbf;
+    box-shadow: 0px 9px 5px -6px ${color.gray70};
     cursor: pointer;
     transition: 0.3s ease;
     z-index: 1;
@@ -39,7 +40,7 @@ const NameDisplay = styled.div`
 `
 
 const DateDisplay = styled.div`
-  color: gray;
+  color: ${color.gray50};
   font-size: 12px;
   line-height: 1.2;
 `
@@ -54,7 +55,7 @@ const EmailDisplay = styled(DateDisplay)`
   color: ${props =>
     props.invitationStatus === 'rejected'
       ? th('colorError')
-      : th('colorPrimary')};
+      : color.brand1.base};
   display: flex;
   margin-top: calc(${th('gridUnit')} / 2);
 `

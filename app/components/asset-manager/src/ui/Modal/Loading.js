@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { rotate360, th } from '@pubsweet/ui-toolkit'
+import { rotate360 } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../../theme'
 
 const Wrapper = styled.div`
   align-items: center;
@@ -18,8 +19,8 @@ const SpinnerAnimation = styled.div`
 
   &:after {
     animation: ${rotate360} 1s linear infinite;
-    border: 5px solid ${th('colorPrimary')};
-    border-color: ${th('colorPrimary')} transparent ${th('colorPrimary')}
+    border: 5px solid ${color.brand1.base};
+    border-color: ${color.brand1.base} transparent ${color.brand1.base}
       transparent;
     border-radius: 50%;
     content: ' ';

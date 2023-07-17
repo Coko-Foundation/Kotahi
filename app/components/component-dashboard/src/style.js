@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../shared/lightenBy'
+import { color } from '../../../theme'
 
 export { Container, Section, Content } from '../../shared'
 const Actions = styled.div``
@@ -39,7 +39,7 @@ const Body = styled.div`
 const Divider = styled.span.attrs(props => ({
   children: ` ${props.separator} `,
 }))`
-  color: ${th('colorFurniture')};
+  color: ${color.gray90};
   white-space: pre;
 `
 
@@ -63,7 +63,7 @@ const Page = styled.div`
 `
 
 const Heading = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
@@ -78,7 +78,7 @@ export const HeadingWithAction = styled.div`
 `
 
 export const Placeholder = styled.div`
-  color: ${th('colorTextPlaceholder')};
+  color: ${color.textPlaceholder};
   display: grid;
   height: 100%;
   padding: 4em;
@@ -89,7 +89,7 @@ export const Centered = styled.div`
 `
 
 export const InvitationContent = styled.div`
-  background: ${th('colorBackground')};
+  background: ${color.backgroundA};
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
   margin-bottom: 1rem;
@@ -115,7 +115,7 @@ export const FeedbackForm = styled.p`
 `
 
 export const DeclinedInfoString = styled.p`
-  color: ${th('colorText')};
+  color: ${color.text};
   font-family: ${th('fontWriting')};
   font-size: 20px;
   font-weight: 600;
@@ -126,8 +126,8 @@ export const DeclinedInfoString = styled.p`
 export const InvitationContainer = styled.div`
   background: linear-gradient(
     134deg,
-    ${th('colorPrimary')},
-    ${lightenBy('colorPrimary', 0.3)}
+    ${color.brand1.base},
+    ${color.brand1.tint25}
   );
   display: grid;
   height: 100vh;
@@ -146,7 +146,7 @@ export const ButtonWrapper = styled.div`
 `
 
 export const SubmitFeedbackNote = styled.p`
-  color: ${th('colorIconPrimary')};
+  color: ${color.gray40};
   font-family: ${th('fontWriting')};
   font-size: 16px;
   font-weight: 500;
@@ -155,7 +155,7 @@ export const SubmitFeedbackNote = styled.p`
 `
 
 export const ThankYouString = styled.p`
-  color: ${th('colorIconPrimary')};
+  color: ${color.gray40};
   font-family: ${th('fontWriting')};
   font-size: 16px;
   font-weight: 500;
@@ -167,7 +167,7 @@ export const FormInput = styled.div`
   margin-bottom: 20px;
 
   textarea {
-    background: ${th('colorBackgroundHue')};
+    background: ${color.backgroundC};
     margin-bottom: 15px;
     padding: 20px;
   }

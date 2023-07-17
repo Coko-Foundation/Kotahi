@@ -1,10 +1,11 @@
 import { css } from 'styled-components'
-import { darken, th } from '@pubsweet/ui-toolkit'
+import { th } from '@pubsweet/ui-toolkit'
+import color from '../color'
 
 const secondary = css`
   background: none;
   border: none;
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   padding: 0;
   text-decoration: underline;
 
@@ -13,12 +14,12 @@ const secondary = css`
   &:active {
     background: none;
     border: none;
-    color: ${darken('colorPrimary', 0.3)};
+    color: ${color.brand1.shade25};
     outline: none;
   }
 
   &[disabled] {
-    color: ${th('colorTextPlaceholder')};
+    color: ${color.gray40};
     cursor: default;
 
     &:hover {
@@ -40,6 +41,6 @@ export default css`
 
   &:focus,
   &:hover {
-    background-color: ${darken('colorPrimary', -0.2)};
+    background-color: ${color.brand1.tint25};
   }
 `

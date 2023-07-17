@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import {
   CardCollection,
   Card,
@@ -13,9 +12,10 @@ import {
   getReviewersConcentricBarChartData,
 } from './mockReportingData'
 import DesignEmbed from '../common/utils'
+import { color } from '../../app/theme'
 
 const Header = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font-size: 120%;
   margin-top: 1em;
   text-align: center;

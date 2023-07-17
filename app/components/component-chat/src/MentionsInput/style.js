@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 // import theme from 'shared/theme';
 
@@ -26,7 +27,7 @@ export const MentionContent = styled.div`
 `
 
 export const MentionName = styled.span`
-  color: ${props => (props.focused ? th('colorPrimary') : th('colorText'))};
+  color: ${props => (props.focused ? color.brand1.base : color.text)};
   font-size: 14px;
   font-weight: 500;
   margin-left: 12px;
@@ -37,7 +38,7 @@ export const MentionName = styled.span`
 `
 
 export const MentionUsername = styled.span`
-  color: ${props => (props.focused ? th('colorPrimary') : th('colorWarning'))};
+  color: ${props => (props.focused ? color.brand1.base : th('colorWarning'))};
   font-size: 13px;
   font-weight: 400;
   margin-left: 12px;

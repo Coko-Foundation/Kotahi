@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { color } from '../../theme'
 import { ConfirmationModal } from '../component-modal/src/ConfirmationModal'
 
 const Icon = styled.div`
-  background: ${th('colorFurniture')};
+  background: ${color.gray90};
   height: ${grid(10)};
   margin-bottom: ${th('gridUnit')};
   opacity: 0.5;
@@ -19,17 +20,9 @@ const Icon = styled.div`
   }
 `
 
-// const Progress = styled.div`
-//   color: ${th('colorTextReverse')};
-//   display: block;
-//   position: absolute;
-//   bottom: ${th('gridUnit')};
-//   left: ${grid(4)};
-// `
-
 const Extension = styled.div`
-  background: ${th('colorText')};
-  color: ${th('colorTextReverse')};
+  background: ${color.gray5};
+  color: ${color.textReverse};
   font-size: ${th('fontSizeBaseSmall')};
   left: ${grid(2)};
   line-height: ${th('lineHeightBaseSmall')};
@@ -41,7 +34,7 @@ const Extension = styled.div`
 `
 
 const Filename = styled.div`
-  color: ${th('colorText')};
+  color: ${color.text};
   font-size: ${th('fontSizeBaseSmall')};
   font-style: italic;
   line-height: ${th('lineHeightBaseSmall')};
@@ -61,12 +54,12 @@ const Uploading = styled.div`
 
 const Uploaded = styled(Uploading)`
   &:hover ${Extension} {
-    background: ${th('colorTextReverse')};
-    color: ${th('colorPrimary')};
+    background: ${color.backgroundA};
+    color: ${color.brand1.base};
   }
 
   &:hover ${Icon} {
-    background: ${th('colorPrimary')};
+    background: ${color.brand1.base};
     opacity: 1;
   }
 
@@ -79,8 +72,8 @@ const Uploaded = styled(Uploading)`
 const ErrorWrapper = styled.div`
   background: ${th('colorError')};
   border: calc(${th('borderWidth')} * 2) ${th('borderStyle')}
-    ${th('colorTextReverse')};
-  color: ${th('colorTextReverse')};
+    ${color.textReverse};
+  color: ${color.textReverse};
   font-size: ${th('fontSizeBaseSmall')};
   letter-spacing: 0.01em;
   line-height: ${th('lineHeightBaseSmall')};

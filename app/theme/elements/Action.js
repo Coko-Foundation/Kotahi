@@ -1,5 +1,6 @@
 import { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import color from '../color'
 
 const underlineFade = css`
   &:before {
@@ -33,7 +34,7 @@ const underlineAnimation = css`
   }
 
   &:before {
-    background-color: ${th('colorPrimary')};
+    background-color: ${color.brand1.base};
     bottom: 0;
     content: '';
     height: 2px;
@@ -48,7 +49,7 @@ const underlineAnimation = css`
   }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
-  ${underlineFade};
+  ${underlineFade}
 `
 
 const active = css`

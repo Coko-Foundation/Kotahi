@@ -6,12 +6,12 @@ import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
-import theme from '../../../theme'
+import theme, { color } from '../../../theme'
 import { emailNotifications } from '../../../../config/journal/tasks.json'
 import { ConfigContext } from '../../config/src'
 
 const TaskTitle = styled.div`
-  color: ${theme.colors.neutral.gray20};
+  color: ${color.gray20};
   font-family: 'Roboto', sans-serif;
   font-size: ${theme.fontSizeBase};
   font-style: normal;
@@ -81,7 +81,7 @@ const RoundIconButtonContainer = styled.div`
 
 const NotificationDeadlineCell = styled.div`
   align-items: center;
-  color: ${props => (props.disabled ? theme.colorBorder : 'inherit')};
+  color: ${props => (props.disabled ? color.gray60 : 'inherit')};
   display: flex;
   height: 45px;
 

@@ -1,270 +1,268 @@
 /* this contains CSS that applies to all text styles */
 
 h1 {
-	font-size: 1.75em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.75em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 h2 {
-	font-size: 1.625em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.625em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 h3 {
-	font-size: 1.5em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.5em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 h4 {
-	font-size: 1.375em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.375em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 h5 {
-	font-size: 1.25em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.25em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 h6 {
-	font-size: 1.125em;
-	font-weight: 500;
-	margin: 1em 0;
+  font-size: 1.125em;
+  font-weight: 500;
+  margin: 1em 0;
 }
 
 p {
-	margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 hr {
-	border: none;
-	margin: 1em 0;
-	padding: 2px 10px;
+  border: none;
+  margin: 1em 0;
+  padding: 2px 10px;
 }
 
 hr:after {
-	background-color: silver;
-	content: '';
-	display: block;
-	height: 1px;
-	line-height: 2px;
+  background-color: silver;
+  content: '';
+  display: block;
+  height: 1px;
+  line-height: 2px;
 }
 
 ul,
 ol {
-	padding-left: 30px;
-
+  padding-left: 30px;
 }
 
-ul li p, ol li p {
-	margin-bottom: 0.2em;
+ul li p,
+ol li p {
+  margin-bottom: 0.2em;
 }
 
-ul li:last-child p, ol li:last-child p {
-	margin-bottom: 1em;
+ul li:last-child p,
+ol li:last-child p {
+  margin-bottom: 1em;
 }
-
 
 u {
-	text-decoration: underline;
+  text-decoration: underline;
 }
 
 strong {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 em {
-	font-style: italic;
+  font-style: italic;
 }
 
 blockquote {
-	border-left: 3px solid #eee;
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 1em;
+  border-left: 3px solid #eee;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 1em;
 }
 
 img {
-	cursor: default;
-	max-width: 100%;
-	object-fit: scale-down;
+  cursor: default;
+  max-width: 100%;
+  object-fit: scale-down;
 }
 
 sup,
 sub {
-	line-height: 0;
+  line-height: 0;
 }
 
 /* Tables */
 
 table {
-	border: 1px solid #eee;
-	border-collapse: initial;
-	border-spacing: 0;
-	border-width: 0 thin thin 0;
-	margin: 0;
-	overflow: hidden;
-	/* page-break-inside: avoid; */
-	/* table-layout: fixed; */
-	width: 100%;
-	margin: 1em 0;
+  border: 1px solid #eee;
+  border-collapse: initial;
+  border-spacing: 0;
+  border-width: 0 thin thin 0;
+  margin: 0;
+  overflow: hidden;
+  /* page-break-inside: avoid; */
+  /* table-layout: fixed; */
+  width: 100%;
+  margin: 1em 0;
 }
 
 th,
 td {
-	border: 1px solid #eee;
-	box-sizing: border-box;
-	/*width: 200px;*/
-	padding: 2px 5px;
-	position: relative;
-	vertical-align: top;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+  /*width: 200px;*/
+  padding: 2px 5px;
+  position: relative;
+  vertical-align: top;
 }
 
 th {
-	background-color: hsl(220,18%,81.8%); /*${lightenBy('colorPrimary', 0.7)};*/
+  background-color: hsl(220, 18%, 81.8%);
 }
 
 .tableWrapper {
-	overflow-x: auto;
+  overflow-x: auto;
 }
 
 span.comment {
-	border-bottom: 2px solid #ffab20;
-	border-radius: 3px 3px 0 0;
+  border-bottom: 2px solid #ffab20;
+  border-radius: 3px 3px 0 0;
 }
 
 code {
-	font-family: monospace;
+  font-family: monospace;
 }
 
 .small-caps {
-	font-variant: small-caps;
+  font-variant: small-caps;
 }
 
 a {
-	color: blue;
+  color: blue;
 }
 
 /* == Math Nodes ======================================== */
 
 .math-node {
-	cursor: auto;
-	font-family: 'Consolas', 'Ubuntu Mono', monospace;
-	font-size: 0.95em;
-	min-height: 1em;
-	min-width: 1em;
-
-
+  cursor: auto;
+  font-family: 'Consolas', 'Ubuntu Mono', monospace;
+  font-size: 0.95em;
+  min-height: 1em;
+  min-width: 1em;
 }
 
-.math-node 	.ProseMirror {
-	background: #eee;
-	box-shadow: none;
-	color: rgb(132, 33, 162);
-	min-height: 100%;
-	padding: 0;
+.math-node .ProseMirror {
+  background: #eee;
+  box-shadow: none;
+  color: rgb(132, 33, 162);
+  min-height: 100%;
+  padding: 0;
 }
 
 .math-node.empty-math .math-render::before {
-	color: red;
-	content: '(empty)';
+  color: red;
+  content: '(empty)';
 }
 
 .math-node .math-render.parse-error::before {
-	color: red;
-	content: '(math error)';
-	cursor: help;
+  color: red;
+  content: '(math error)';
+  cursor: help;
 }
 
 /* -- Inline Math --------------------------------------- */
 
 math-inline {
-	display: inline;
-	white-space: nowrap;
+  display: inline;
+  white-space: nowrap;
 }
 
 math-inline .math-render {
-	cursor: pointer;
-	display: inline-block;
-	font-size: 0.85em;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 0.85em;
 }
 
 math-inline .math-src .ProseMirror {
-	display: inline;
+  display: inline;
 }
 
 math-inline .math-src::after,
 math-inline .math-src::before {
-	color: #b0b0b0;
-	content: '$';
+  color: #b0b0b0;
+  content: '$';
 }
 
 /* -- Block Math ---------------------------------------- */
 
 math-display {
-	display: block;
+  display: block;
 }
 
 math-display .math-render {
-	display: block;
-	text-align: center;
+  display: block;
+  text-align: center;
 }
 
 math-display.ProseMirror-selectednode {
-	background-color: #eee;
+  background-color: #eee;
 }
 
 math-display .math-src .ProseMirror {
-	display: block;
-	width: 100%;
+  display: block;
+  width: 100%;
 }
 
 math-display .math-src::after,
 math-display .math-src::before {
-	color: #b0b0b0;
-	content: '$$';
-	text-align: left;
+  color: #b0b0b0;
+  content: '$$';
+  text-align: left;
 }
 
 math-display .katex-display {
-	margin: 0;
+  margin: 0;
 }
 
 /* -- Other Math ---------------------------------------- */
 
 .math-node.ProseMirror-selectednode {
-	outline: none;
+  outline: none;
 }
 
 .math-node .math-src {
-	color: rgb(132, 33, 162);
-	display: none;
-	tab-size: 4;
+  color: rgb(132, 33, 162);
+  display: none;
+  tab-size: 4;
 }
 
 .math-node.ProseMirror-selectednode .math-src {
-	display: flex;
+  display: flex;
 }
 
 .math-node.ProseMirror-selectednode .math-render {
-	display: none;
+  display: none;
 }
 
 .fundingsource:before {
-	content: 'Funding source: ';
-	font-weight: bold;
+  content: 'Funding source: ';
+  font-weight: bold;
 }
 
 .awardid:before {
-	content: 'Award ID: ';
-	font-weight: bold;
+  content: 'Award ID: ';
+  font-weight: bold;
 }
 
 .fundingstatement:before {
-	content: "Funding statement: ";
-	font-weight: bold;
+  content: 'Funding statement: ';
+  font-weight: bold;
 }

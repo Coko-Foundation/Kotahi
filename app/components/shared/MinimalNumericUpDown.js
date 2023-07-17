@@ -3,28 +3,29 @@ import styled, { ThemeContext } from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { SolidColumn, TightRow } from './Containers'
+import { color } from '../../theme'
 
 /** Used for both up button and down button */
 const UpDownButton = styled.button`
   align-items: center;
   background: none;
   border: none;
-  color: ${th('colorBorder')};
+  color: ${color.gray60};
   height: ${grid(2)};
   justify-content: center;
   padding: 0 ${grid(0.5)};
   width: ${grid(3)};
 
   &:hover {
-    color: ${th('colorPrimary')};
+    color: ${color.brand1.base};
   }
 
   & svg {
-    stroke: ${th('colorBorder')};
+    stroke: ${color.gray60};
   }
 
   &:hover svg {
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
   }
 `
 
@@ -42,7 +43,7 @@ const Input = styled.input`
 
   &:hover,
   &:focus {
-    outline: 1px solid ${th('colorPrimary')};
+    outline: 1px solid ${color.brand1.base};
   }
 `
 

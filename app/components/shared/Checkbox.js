@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
-import theme from '../../theme'
+import { color, space } from '../../theme'
 
 const CheckboxContainer = styled.div`
   align-content: center;
@@ -9,27 +8,27 @@ const CheckboxContainer = styled.div`
   margin-bottom: 4px;
 
   input[type='checkbox'] {
-    accent-color: ${th('colors.brand1.shade25')};
-    background: #f8f8f9;
-    border: 1px solid ${theme.colors.neutral.gray80};
+    accent-color: ${color.brand1.shade25};
+    background: ${color.gray97};
+    border: 1px solid ${color.gray80};
     border-radius: 5px;
     color: white;
     padding: 14px 9px;
 
     &:active,
     &:focus-visible {
-      /* border: 1px solid ${theme.colors.neutral.gray70}; */
+      /* border: 1px solid ${color.gray70}; */
       outline: none;
     }
 
     &:hover {
-      accent-color: ${th('colors.brand1.shade25')};
+      accent-color: ${color.brand1.shade25};
       border: none;
     }
   }
 
   label {
-    margin-left: ${theme.spacing.e};
+    margin-left: ${space.e};
   }
 `
 
