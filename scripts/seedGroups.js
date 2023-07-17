@@ -7,7 +7,7 @@ const seedConfig = require('./seedConfig')
 const seedForms = require('./seedForms')
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')
 
-const createGroupAndRelatedData = async (groupName, instanceName) => {
+const createGroupAndRelatedData = async (groupName, instanceName, index) => {
   const groupExists = await Group.query().findOne({ name: groupName })
 
   let group = null
@@ -36,7 +36,7 @@ const createGroupAndRelatedData = async (groupName, instanceName) => {
   }
 
   // Seed config and link it to the created group
-  const config = await seedConfig(group, instanceName)
+  const config = await seedConfig(group, instanceName, index)
 
   // Seed forms and link it to the created group
   await seedForms(group, config)
@@ -157,11 +157,11 @@ const group = async () => {
   const instanceGroupNames = []
 
   await Promise.all(
-    map(instanceGroups, async instanceGroup => {
+    map(instanceGroups, async (instanceGroup, index) => {
       const splittedGroupVariables = instanceGroup && instanceGroup.split(':')
       const groupName = splittedGroupVariables[0]
       const instanceName = splittedGroupVariables[1]
-      await createGroupAndRelatedData(groupName, instanceName)
+      await createGroupAndRelatedData(groupName, instanceName, index)
       instanceGroupNames.push(groupName)
     }),
   ).then(async () => {

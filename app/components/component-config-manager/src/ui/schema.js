@@ -803,7 +803,7 @@ const generateSchema = emailNotificationOptions => {
                   reviewerInvitationPrimaryEmailTemplate: {
                     description:
                       'Reviewer invitation email template for a new manuscript',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
@@ -1205,7 +1205,7 @@ const generateSchema = emailNotificationOptions => {
                   reviewerInvitationPrimaryEmailTemplate: {
                     description:
                       'Reviewer invitation email template for a new manuscript',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
@@ -1603,7 +1603,7 @@ const generateSchema = emailNotificationOptions => {
                   reviewerInvitationPrimaryEmailTemplate: {
                     description:
                       'Reviewer invitation email template for a new manuscript',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
@@ -2002,28 +2002,28 @@ const generateSchema = emailNotificationOptions => {
                   reviewRejectedEmailTemplate: {
                     description:
                       'Email Template to trigger if a manuscript is rejected by the reviewer',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   reviewerInvitationPrimaryEmailTemplate: {
                     description:
                       'Reviewer invitation email template for a new manuscript',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   evaluationCompleteEmailTemplate: {
                     description:
                       'Email Template to trigger once evaluation of a manuscript is completed',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   submissionConfirmationEmailTemplate: {
                     description:
                       'Email Template to trigger after a manuscript is submitted',
-                    type: 'string',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
