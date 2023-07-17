@@ -7,10 +7,10 @@ import styled from 'styled-components'
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
-import theme from '../../theme'
+import { color } from '../../theme'
 
 const Root = styled.div`
-  border: 1px dashed ${th('colorBorder')};
+  border: 1px dashed ${color.gray60};
   border-radius: ${th('borderRadius')};
   height: ${grid(8)};
   line-height: ${grid(8)};
@@ -26,7 +26,7 @@ const Files = styled.div`
 
 const Message = styled.div`
   align-items: center;
-  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
+  color: ${props => (props.disabled ? color.textPlaceholder : 'inherit')};
   display: flex;
   justify-content: center;
   width: 100%;
@@ -106,7 +106,7 @@ const DropzoneAndList = ({
               ) : (
                 <>
                   Drag and drop your files here
-                  <Icon color={theme.colorPrimary} inline>
+                  <Icon color={color.brand1.base()} inline>
                     file-plus
                   </Icon>
                 </>

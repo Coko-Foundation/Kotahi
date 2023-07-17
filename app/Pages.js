@@ -5,12 +5,11 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { ConfigProvider } from './components/config/src'
 import { DynamicThemeProvider } from './components/theme/src'
-import theme from './theme'
+import theme, { setBrandColors } from './theme'
 import GlobalStyle from './theme/elements/GlobalStyle'
 import { Spinner, CommsErrorBanner } from './components/shared'
 
 import { GET_GROUP_BY_NAME } from './queries'
-import getColors from './theme/colors'
 
 import Login from './components/component-login/src'
 import ArticleArtifactPage from './components/component-published-artifact/components/ArticleArtifactPage'
@@ -90,21 +89,16 @@ const Pages = () => {
     ...JSON.parse(activeConfig?.formData || '{}'),
   }
 
-  // Overwrites hardcoded theme with config theme colors
-  const dynamicTheme = {
-    ...theme,
-    colorPrimary: config?.groupIdentity?.primaryColor,
-    colorSecondary: config?.groupIdentity?.secondaryColor,
-    colors: getColors(
-      config?.groupIdentity?.primaryColor,
-      config?.groupIdentity?.secondaryColor,
-    ),
-  }
+  // Overwrites config theme colors
+  setBrandColors(
+    config?.groupIdentity?.primaryColor,
+    config?.groupIdentity?.secondaryColor,
+  )
 
   const { urlFrag } = config
 
   return (
-    <DynamicThemeProvider theme={dynamicTheme}>
+    <DynamicThemeProvider theme={theme}>
       <GlobalStyle />
       <ConfigProvider config={config}>
         <Switch>

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 export const Info = styled.span`
   align-items: center;
@@ -12,75 +12,82 @@ export const Info = styled.span`
 `
 
 export const PopUpH2 = styled.h2`
-	font-weight bold;
-  text-align: center;
-  margin-bottom: 1em;
   font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 1em;
   margin-top: 24px;
+  text-align: center;
 `
 
 export const PopUpTextContainer = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+
   & p.linkurl {
+    background-color: ${color.gray95};
+    border-radius: 2px;
     max-width: 300px;
     overflow-x: scroll;
-    white-space: nowrap;
-    background-color: #eeeeee;
     padding: 3px 8px;
-    border-radius: 2px;
+    white-space: nowrap;
+
     & a {
-      color: black;
+      color: ${color.text};
     }
   }
+
   & p.linknote {
-    text-transform: uppercase;
     color: #b91c1c;
     font-size: 12px;
     letter-spacing: 0.5px;
     margin-top: 12px;
-  }
-  & button.copybutton {
-    margin-top: 24px;
-    border: ${th('colorPrimary')} solid 1px;
-    border-radius: 4px;
-    color: ${th('colorPrimary')};
     text-transform: uppercase;
-    padding: 12px 16px;
-    background-color: white;
+  }
+
+  & button.copybutton {
+    background-color: ${color.backgroundA};
+    border: ${color.brand1.base} solid 1px;
+    border-radius: 4px;
+    color: ${color.brand1.base};
     cursor: pointer;
+    margin-top: 24px;
+    padding: 12px 16px;
+    text-transform: uppercase;
     transition: 0.25s;
     user-select: none;
+
     &:hover {
-      color: black;
-      border-color: black;
+      border-color: ${color.text};
+      color: ${color.text};
     }
   }
 `
 
 export const CloseButton = styled.span`
-  --size: 24px;
-  display: inline-flex;
-  width: var(--size);
-  height: var(--size);
-  background-color: ${th('colorPrimary')};
-  border-radius: 100%;
-  color: white;
-  user-select: none;
-  justify-content: center;
   align-items: center;
+  background-color: ${color.brand1.base};
+  border-radius: 100%;
+  color: ${color.textReverse};
+  display: inline-flex;
+  height: var(--size);
+  justify-content: center;
   position: absolute;
   right: 10px;
   top: 10px;
+  user-select: none;
+  width: var(--size);
+  --size: 24px;
+
   &:hover {
     cursor: pointer;
   }
+
   &:before {
     content: '×';
+    font-size: var(--size);
     position: relative;
     top: calc(0px - calc(var(--size) * 0.1));
-    font-size: var(--size);
   }
 `

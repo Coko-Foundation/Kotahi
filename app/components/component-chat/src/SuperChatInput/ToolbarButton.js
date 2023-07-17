@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../../shared/lightenBy'
+import { grid } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 const Button = styled.a`
   align-items: center;
-  /* background-color: ${th('colorPrimary')}; */
+  /* background-color: ${color.brand1.base}; */
   background-color: ${props =>
-    props.isTopBarOpen ? th('colorPrimary') : th('colorTextReverse')};
-  border: 1px solid #8e8e8e;
+    props.isTopBarOpen ? color.brand1.base : color.textReverse};
+  border: 1px solid ${color.gray50};
   border-radius: 10px;
   height: fit-content;
   margin: ${grid(1)} ${grid(1)} 0 0;
@@ -17,14 +17,11 @@ const Button = styled.a`
 
   &:hover {
     background-color: ${props =>
-      props.isTopBarOpen
-        ? lightenBy('colorPrimary', 0.2)
-        : lightenBy('colorTextReverse', 0.2)};
+      props.isTopBarOpen ? color.brand1.tint25 : color.gray80};
   }
 
   svg {
-    stroke: ${props =>
-      props.isTopBarOpen ? th('colorTextReverse') : th('colorText')};
+    stroke: ${props => (props.isTopBarOpen ? color.textReverse : color.text)};
     width: 0.8em;
   }
 `

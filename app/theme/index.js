@@ -13,7 +13,7 @@ import {
   Logo,
 } from './elements'
 import lightenBy from '../shared/lightenBy'
-import getColors from './colors'
+import color, { setBrandColors as internalSetBrandColors } from './color'
 import spacing from './spacing'
 import typography from './typography'
 
@@ -24,34 +24,44 @@ import '@fontsource/roboto/700.css'
 import '@fontsource/roboto/900.css'
 import '@fontsource/roboto/400-italic.css'
 
-const colors = getColors()
-
 const cokoTheme = {
-  colors,
+  color,
   spacing,
   typography,
 
   /* Colors */
-  // TODO Deprecate these in favour of definitions in colors.js
-  colorBackground: 'white',
-  colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary: colors.brand1.base,
-  colorSecondary: colors.brand2.base,
-  colorFurniture: '#E8E8E8',
-  colorBorder: '#AAA',
-  colorBackgroundHue: '#f4f5f7',
+  // TODO Deprecate these in favour of definitions in color.js
+  /** @deprecated in favor of color.backgroundA */
+  colorBackground: color.backgroundA,
+  /** @deprecated in favor of color.backgroundB */
+  colorSecondaryBackground: color.backgroundB,
+  /** @deprecated in favor of color.brand1.base */
+  colorPrimary: color.brand1.base,
+  /** @deprecated in favor of color.brand2.base */
+  colorSecondary: color.brand2.base,
+  /** @deprecated in favor of color.gray90 */
+  colorFurniture: color.gray90,
+  /** @deprecated in favor of color.gray60 */
+  colorBorder: color.gray60,
+  /** @deprecated in favor of color.backgroundC */
+  colorBackgroundHue: color.backgroundC,
   colorSuccess: '#008800',
   colorError: '#FF2D1A',
-  colorText: '#111',
-  colorTextReverse: '#FFF',
-  colorTextPlaceholder: '#595959',
+  /** @deprecated in favor of color.text */
+  colorText: color.text,
+  /** @deprecated in favor of color.textReverse */
+  colorTextReverse: color.textReverse,
+  /** @deprecated in favor of color.textPlaceholder */
+  colorTextPlaceholder: color.textPlaceholder,
   colorWarning: '#ffc107',
   colorWarningLight: '#fff9ed',
   colorWarningDark: '#503303',
   colorSuccessLight: '#d2ffcc',
   colorSuccessDark: '#17510F',
-  colorIconPrimary: '#6C6C6C',
-  colorContainerBorder: '#DEDEDE',
+  /** @deprecated in favor of color.gray40 */
+  colorIconPrimary: color.gray40,
+  /** @deprecated in favor of color.gray80 */
+  colorContainerBorder: color.gray80,
 
   /* Text variables */
 
@@ -186,5 +196,14 @@ const cokoTheme = {
     },
   },
 }
+
+export const setBrandColors = (color1 = '#3AAE2A', color2 = '#9e9e9e') => {
+  cokoTheme.colorPrimary = color1
+  cokoTheme.colorSecondary = color2
+  internalSetBrandColors(color1, color2)
+}
+
+export { color }
+export { spacing as space }
 
 export default cokoTheme

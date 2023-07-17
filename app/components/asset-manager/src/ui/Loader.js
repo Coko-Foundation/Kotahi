@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../../theme'
 
 const StyledSpinner = styled.svg`
   animation: rotate 1s linear infinite;
@@ -10,7 +11,7 @@ const StyledSpinner = styled.svg`
 
   & .path {
     animation: dash 1.5s ease-in-out infinite;
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
     stroke-linecap: round;
   }
 
@@ -47,7 +48,7 @@ const Wrapper = styled.div`
 `
 
 const Label = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};

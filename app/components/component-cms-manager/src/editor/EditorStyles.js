@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from '../../../wax-collab/src/layout/waxDefaultStyles'
 import EditorElements from '../../../wax-collab/src/layout/EditorElements'
-import theme from '../../../../theme'
+import { color } from '../../../../theme'
 
 // this grid goes around the menu and the editor area beneath it.
 export const Grid = styled.div`
@@ -18,7 +18,7 @@ export const Grid = styled.div`
 export const Menu = styled.div`
   align-items: center;
   background: #fff;
-  border: 1px solid ${theme.colors.neutral.gray80};
+  border: 1px solid ${color.gray80};
   display: flex;
   flex-wrap: wrap;
   font-size: 12.8px;
@@ -49,7 +49,7 @@ export const FullWaxEditorGrid = styled.div`
 
 export const EditorDiv = styled.div`
   background-color: ${th('colorBackground')};
-  border: 1px solid ${theme.colors.neutral.gray80};
+  border: 1px solid ${color.gray80};
   border-width: 0px 1px 1px 1px;
   grid-column-start: editorCol;
   grid-row-start: editorRow;

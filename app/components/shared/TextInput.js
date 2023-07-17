@@ -1,11 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
-import theme from '../../theme'
+import theme, { color } from '../../theme'
 
 const StyledInput = styled.input`
-  background: ${theme.colors.neutral.gray99};
-  border: 1px solid ${theme.colors.neutral.gray80};
+  background: ${color.gray99};
+  border: 1px solid ${color.gray80};
   border-radius: ${theme.borderRadius};
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   font-size: ${theme.fontSizeBaseSmall};
@@ -13,14 +12,14 @@ const StyledInput = styled.input`
   width: 100%;
 
   &:hover {
-    border: 1px solid ${theme.colors.neutral.gray70};
+    border: 1px solid ${color.gray70};
     outline: none;
     transition: ${theme.transitionDuration};
   }
 
   &:active,
   &:focus-visible {
-    border: 1px solid ${th('colors.brand1.base')};
+    border: 1px solid ${color.brand1.base};
     outline: none;
     transition: ${theme.transitionDuration};
   }

@@ -4,12 +4,12 @@ import styled from 'styled-components'
 import { forEach, map } from 'lodash'
 import { Icon } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../shared/lightenBy'
 import DateRangePicker from './DateRangePicker'
 import SummaryReport from './SummaryReport'
 import Table from './Table'
 import SparkBar from './SparkBar'
 import Tooltip from './Tooltip'
+import { color } from '../../../theme'
 
 const Page = styled.div`
   height: 100vh;
@@ -23,7 +23,7 @@ const Select = styled.select`
 `
 
 const Heading = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
@@ -31,12 +31,12 @@ const Heading = styled.div`
 `
 
 const MinorNote = styled.span`
-  color: ${lightenBy('colorText', 0.5)};
+  color: ${color.gray50};
   font-size: 80%;
 `
 
 export const Content = styled.div`
-  background-color: ${th('colorBackgroundHue')};
+  background-color: ${color.backgroundC};
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
 `
@@ -48,12 +48,12 @@ const SelectionLine = styled.div`
 `
 
 const ReviewNote = styled.div`
-  color: ${lightenBy('colorText', 0.5)};
+  color: ${color.gray50};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
 
   & strong {
-    color: ${th('colorText')};
+    color: ${color.text};
     font-weight: normal;
   }
 `
@@ -136,7 +136,7 @@ const getTableDataWithSparkBars = (rows, labelMapper) => {
       return (
         // eslint-disable-next-line react/jsx-key
         <SparkBar
-          color={lightenBy('colorSecondary', 0.7)}
+          color={color.brand2.tint70()}
           label={labelMapper && labelMapper(val, key)}
           onClick={undefined}
           rangeMax={columnMaxima[key]}

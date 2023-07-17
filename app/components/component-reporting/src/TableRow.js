@@ -1,12 +1,12 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { th, lighten } from '@pubsweet/ui-toolkit'
+import { color } from '../../../theme'
 
 const Row = styled.div`
   align-content: stretch;
   align-items: stretch;
-  border: 1px solid ${lighten('colorBorder', 0.4)};
+  border: 1px solid ${color.gray80};
   border-bottom: none;
   display: flex;
   flex-direction: row;
@@ -20,25 +20,25 @@ const Row = styled.div`
         `
       : css`
           &:hover {
-            box-shadow inset 0 0 4px ${th('colorPrimary')};
+            box-shadow inset 0 0 4px ${color.brand1.base};
           }
         `}
 
   width: 100%;
 
   &:last-of-type {
-    border-bottom: 1px solid ${lighten('colorBorder', 0.4)};
+    border-bottom: 1px solid ${color.gray80};
   }
 `
 
 const Cell = styled.div`
-  border-right: 1px solid ${lighten('colorBorder', 0.4)};
+  border-right: 1px solid ${color.gray80};
   flex: ${props => props.flexGrow} 1 ${props => props.width};
 
   ${props =>
     props.isHeading &&
     css`
-      background-color: ${lighten('colorPrimary', 0.8)};
+      background-color: ${color.brand1.tint70};
       line-height: 120%;
     `}
 

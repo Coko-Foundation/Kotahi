@@ -3,9 +3,9 @@ import { Redirect } from 'react-router-dom'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
-import lightenBy from '../../../shared/lightenBy'
 import { ConfigContext } from '../../config/src'
 import { getQueryStringByName } from '../../../shared/urlUtils'
+import { color } from '../../../theme'
 
 const getNextUrl = config => {
   const url = new URL(window.location.href)
@@ -45,8 +45,8 @@ const LoginButton = styled(Button)`
 const Container = styled.div`
   background: linear-gradient(
     134deg,
-    ${th('colorPrimary')},
-    ${lightenBy('colorPrimary', 0.3)}
+    ${color.brand1.base},
+    ${color.brand1.tint25}
   );
   display: grid;
   height: 100vh;

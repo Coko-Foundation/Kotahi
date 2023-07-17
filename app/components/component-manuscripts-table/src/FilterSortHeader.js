@@ -2,23 +2,24 @@ import React from 'react'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import { Calendar as FeatherCalendar } from 'react-feather'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@pubsweet/ui-toolkit'
 import { Cell, HeadingCell } from './style'
 import { Select, DateRangeCalendar, SortUp, SortDown } from '../../shared'
 import {
   dateToCompactStringLocal,
   compactStringToDateLocal,
 } from '../../../shared/dateUtils'
+import { color } from '../../../theme'
 
 const CalendarIcon = styled(({ isActive, ...props }) => (
   <FeatherCalendar {...props} />
 ))`
   height: ${grid(2)};
-  stroke: ${props => th(props.isActive ? 'colorPrimary' : 'colorBorder')};
+  stroke: ${props => (props.isActive ? color.brand1.base : color.gray60)};
   width: ${grid(2)};
 
   &:hover {
-    stroke: ${th('colorPrimary')};
+    stroke: ${color.brand1.base};
   }
 `
 

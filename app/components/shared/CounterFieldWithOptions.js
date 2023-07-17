@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import { th } from '@pubsweet/ui-toolkit'
-import theme from '../../theme'
+import { color } from '../../theme'
 
 const Container = styled.div`
   display: flex;
@@ -11,8 +10,8 @@ const Container = styled.div`
 
 const LabelContainer = styled.div`
   align-items: center;
-  background: white;
-  border: 1.5px solid ${theme.colors.neutral.gray70};
+  background: ${color.backgroundA};
+  border: 1.5px solid ${color.gray70};
   border-radius: 10px;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -33,14 +32,12 @@ const CounterActionContainer = styled.div`
     cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
     svg {
-      color: ${props =>
-        props.disabled ? theme.colorBorder : theme.colorIconPrimary};
+      color: ${props => (props.disabled ? color.gray60 : color.gray40)};
     }
 
     &:hover {
       svg {
-        stroke: ${props =>
-          props.disabled ? theme.colorBorder : th('colors.brand1.base')};
+        stroke: ${props => (props.disabled ? color.gray60 : color.brand1.base)};
       }
     }
   }

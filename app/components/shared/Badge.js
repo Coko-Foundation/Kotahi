@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
+import { color } from '../../theme'
 
 export const Status = styled.span`
   border-radius: 8px;
@@ -32,7 +33,7 @@ export const SuccessStatus = styled(Status)`
         `
       : css`
           background-color: ${th('colorSuccess')};
-          color: ${th('colorTextReverse')};
+          color: ${color.textReverse};
         `}
 `
 
@@ -44,7 +45,7 @@ export const ErrorStatus = styled(Status)`
         `
       : css`
           background-color: ${th('colorError')};
-          color: ${th('colorTextReverse')};
+          color: ${color.textReverse};
         `}
 `
 
@@ -52,7 +53,7 @@ export const NormalStatus = styled(Status)`
   ${props =>
     props.minimal
       ? css`
-          color: ${th('colorPrimary')};
+          color: ${color.brand1.base};
         `
       : css`
           background-color: ${th('colorWarning')};
@@ -61,7 +62,7 @@ export const NormalStatus = styled(Status)`
 
 export const ConfigurableStatus = styled(Status)`
   ${props => css`
-    color: ${props.lightText ? th('colorTextReverse') : th('colorText')};
+    color: ${props.lightText ? color.textReverse : color.text};
     background-color: ${props.color};
   `}
 `

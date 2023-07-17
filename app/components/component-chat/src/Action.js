@@ -15,9 +15,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import { color } from '../../../theme'
 
 const common = css`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
   font-weight: ${props => (props.active ? 'bold' : 'normal')};
@@ -28,7 +29,7 @@ const common = css`
   &:hover,
   &:active {
     background: none;
-    color: ${th('colorPrimary')};
+    color: ${color.brand1.base};
     text-decoration: underline;
   }
 `
@@ -40,7 +41,7 @@ const ActionButton = styled.button`
   padding: 0;
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
-  ${common};
+  ${common}
 `
 
 const Action = props => <ActionButton {...props}>{props.children}</ActionButton>

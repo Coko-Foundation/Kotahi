@@ -6,6 +6,7 @@ import { indexOf } from 'lodash'
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
 import IconButton from './IconButton'
 import { Loading } from './Modal'
+import { color } from '../../../../theme'
 
 const TableWrapper = styled.div`
   align-items: center;
@@ -26,7 +27,7 @@ const TableHead = styled.div`
 
 const TableHeadCell = styled.div`
   align-items: center;
-  background: ${th('colorFurniture')};
+  background: ${color.gray90};
   display: flex;
   flex-basis: ${({ width }) => (width ? `${width}%` : '33.33%')};
   padding: 8px;
@@ -59,17 +60,19 @@ const TableBodyEmpty = styled.div`
 
 const TableRow = styled.div`
   align-items: center;
-  background: ${({ selected }) => (selected ? th('colorPrimary') : 'inherit')};
-  color: ${({ selected }) => (selected ? 'white' : 'inherit')};
+  background: ${({ selected }) => (selected ? color.brand1.base : 'inherit')};
+  color: ${({ selected }) => (selected ? color.textReverse : 'inherit')};
   display: flex;
   user-select: none;
   width: 100%;
+
   &:nth-child(even) {
     background: ${({ selected }) =>
-      selected ? th('colorPrimary') : th('colorBackgroundHue')};
+      selected ? color.brand1.base : color.backgroundC};
   }
+
   &:hover {
-    background: ${th('colorPrimary')};
+    background: ${color.brand1.base};
     color: white;
   }
 `
@@ -91,13 +94,13 @@ const TableCell = styled.div`
 `
 
 const ascIcon = (
-  <svg fill="#111" viewBox="0 0 24 24">
+  <svg fill={color.text} viewBox="0 0 24 24">
     <path d="M19 17H22L18 21L14 17H17V3H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
   </svg>
 )
 
 const descIcon = (
-  <svg fill="#111" viewBox="0 0 24 24">
+  <svg fill={color.text} viewBox="0 0 24 24">
     <path d="M19 7H22L18 3L14 7H17V21H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
   </svg>
 )

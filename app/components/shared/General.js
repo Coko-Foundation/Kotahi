@@ -1,13 +1,14 @@
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import { TabsContainer } from './Tabs'
+import { color } from '../../theme'
 
 export const Section = styled.section`
   padding: ${grid(2)} ${grid(3)};
 `
 
 export const Content = styled.div`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
   clear: both;
@@ -21,7 +22,7 @@ export const ScrollableContent = styled(Content)`
 `
 
 export const SectionContent = styled(Section)`
-  background-color: ${th('colorBackground')};
+  background-color: ${color.backgroundA};
   border-radius: ${th('borderRadius')};
   border-top-left-radius: ${th('borderRadius')};
   box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
@@ -57,7 +58,7 @@ export const PaddedContent = styled(Content)`
 `
 
 export const Container = styled.div`
-  background: ${th('colorBackgroundHue')};
+  background: ${color.backgroundC};
   overflow-y: auto;
   padding: ${grid(2)};
 `
@@ -68,12 +69,12 @@ export const Title = styled.h2`
 `
 
 export const SectionHeader = styled.div`
-  border-bottom: 1px solid ${th('colorFurniture')};
+  border-bottom: 1px solid ${color.gray90};
   padding: ${grid(2)} ${grid(3)};
 `
 
 export const SectionRow = styled.div`
-  border-bottom: 1px solid ${th('colorFurniture')};
+  border-bottom: 1px solid ${color.gray90};
   padding: ${grid(2)} ${grid(3)};
 `
 
@@ -85,11 +86,11 @@ export const ClickableSectionRow = styled(SectionRow)`
   }
 
   &:hover {
-    background-color: ${th('colorBackgroundHue')};
+    background-color: ${color.backgroundC};
     cursor: pointer;
 
     svg {
-      stroke: ${th('colorPrimary')};
+      stroke: ${color.brand1.base};
     }
   }
 `
@@ -114,7 +115,7 @@ const Page = styled.div`
 `
 
 const Heading = styled.div`
-  color: ${th('colorPrimary')};
+  color: ${color.brand1.base};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
@@ -147,14 +148,14 @@ export const Columns = styled.div`
 `
 
 export const Manuscript = styled.div`
-  background: ${props => props.theme.colors.neutral.gray97};
+  background: ${color.gray97};
   grid-area: manuscript;
   overflow-y: scroll;
   padding: ${grid(2)};
 `
 
 export const Chat = styled.div`
-  border-left: 1px solid ${th('colorFurniture')};
+  border-left: 1px solid ${color.gray90};
   display: flex;
   grid-area: chat;
   height: 100vh;

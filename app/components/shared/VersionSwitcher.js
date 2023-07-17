@@ -32,7 +32,7 @@ const StyledSelect = styled(Select)`
     background: white;
   }
 
-  border: 1px solid ${({ theme }) => theme.colors.neutral.gray95};
+  border: 1px solid ${({ theme }) => theme.color.gray95};
   box-shadow: ${props => props.theme.boxShadow.shades[100]};
 `
 

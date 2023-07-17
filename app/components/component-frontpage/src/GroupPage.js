@@ -5,12 +5,12 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { Spinner, CommsErrorBanner, Select } from '../../shared'
 import { GET_GROUPS } from '../../../queries'
-import theme from '../../../theme'
+import theme, { color } from '../../../theme'
 import { DynamicThemeProvider } from '../../theme/src'
 import GlobalStyle from '../../../theme/elements/GlobalStyle'
 
 const Container = styled.div`
-  background: ${theme.colors.neutral.gray97};
+  background: ${color.gray97};
   display: grid;
   height: 100vh;
   place-items: center;
