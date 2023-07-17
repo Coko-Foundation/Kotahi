@@ -50,7 +50,7 @@ const reviewFields = `
   isDecision
   isHiddenReviewerName
   canBePublishedPublicly
-  isShared
+  isSharedWithCurrentUser
   user {
     id
     username

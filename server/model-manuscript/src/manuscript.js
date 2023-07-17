@@ -197,8 +197,11 @@ class Manuscript extends BaseModel {
       clonedDecision.jsonData = {}
 
       Object.entries(decision.jsonData)
-        .filter(e => threadedDiscussionFieldNames.includes(e.key))
-        .forEach(e => (clonedDecision.jsonData[e.key] = e.value))
+        .filter(([key]) => threadedDiscussionFieldNames.includes(key))
+        .forEach(([key, value]) => {
+          clonedDecision.jsonData[key] = value
+        })
+
       return clonedDecision
     })
 
