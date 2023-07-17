@@ -5,9 +5,11 @@ import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
+import { useLocation } from 'react-router-dom'
 import { HiddenTabs } from '../../shared'
 import { CREATE_MESSAGE, SEARCH_USERS } from '../../../queries'
 import Chat from './Chat'
+import { getActiveTab } from '../../../shared/manuscriptUtils'
 
 const GET_MESSAGES = gql`
   query messages($channelId: ID, $before: String) {
@@ -28,6 +30,8 @@ const GET_MESSAGES = gql`
         startCursor
         hasPreviousPage
       }
+      unreadMessagesCount
+      firstUnreadMessageId
     }
   }
 `
@@ -53,6 +57,16 @@ const MESSAGES_SUBSCRIPTION = gql`
           name
         }
       }
+    }
+  }
+`
+
+const CHANNEL_VIEWED = gql`
+  mutation channelViewed($channelId: ID!) {
+    channelViewed(channelId: $channelId) {
+      channelId
+      userId
+      lastViewed
     }
   }
 `
@@ -213,9 +227,13 @@ const chatComponent = (
 
   const queryResult = useQuery(GET_MESSAGES, {
     variables: { channelId },
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   })
 
   const { data, subscribeToMore, fetchMore } = queryResult
+
+  const [updateChannelViewed] = useMutation(CHANNEL_VIEWED)
 
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
@@ -227,7 +245,10 @@ const chatComponent = (
       unsubscribeToNewMessages()
     }
   }, [])
+
   const firstMessage = data?.messages.edges[0]
+  const unreadMessagesCount = data?.messages.unreadMessagesCount
+  const firstUnreadMessageId = data?.messages.firstUnreadMessageId
 
   const fetchMoreOptions = {
     variables: { channelId, before: firstMessage && firstMessage.id },
@@ -250,12 +271,15 @@ const chatComponent = (
       chatRoomId={chatRoomId}
       currentUser={currentUser}
       fetchMoreData={fetchMoreData}
+      firstUnreadMessageId={firstUnreadMessageId}
       manuscriptId={
         channelName !== 'Discussion with author' ? manuscriptId : null
       }
       queryData={queryResult}
       searchUsers={searchUsers}
       sendChannelMessages={sendChannelMessages}
+      unreadMessagesCount={unreadMessagesCount}
+      updateChannelViewed={updateChannelViewed}
     />
   )
 }
@@ -275,7 +299,8 @@ const Container = ({
     channels &&
     channels.map(channel => ({
       label: channel.name,
-      key: channel.id,
+      key: channel.type,
+      active: channel.active,
       content: (
         <>
           {chatComponent(
@@ -361,6 +386,7 @@ const Container = ({
   })
 
   const { data, subscribeToMore, fetchMore } = queryResult
+  const [updateChannelViewed] = useMutation(CHANNEL_VIEWED)
 
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
@@ -373,6 +399,8 @@ const Container = ({
     }
   }, [])
   const firstMessage = data?.messages.edges[0]
+  const unreadMessagesCount = data?.messages.unreadMessagesCount
+  const firstUnreadMessageId = data?.messages.firstUnreadMessageId
 
   const fetchMoreOptions = {
     variables: { channelId, before: firstMessage && firstMessage.id },
@@ -390,12 +418,21 @@ const Container = ({
 
   const fetchMoreData = () => fetchMore(fetchMoreOptions)
 
+  const location = useLocation()
+
+  const activeTab = React.useMemo(() => getActiveTab(location, 'discussion'), [
+    location,
+  ])
+
+  let activeDiscussionKey = tabs && tabs.length && tabs[0].key
+  if (activeTab) activeDiscussionKey = activeTab
+
   return (
     <MessageContainer channels={channels}>
       {tabs ? (
         <HiddenTabs
           background="colorBackgroundHue"
-          defaultActiveKey={tabs[0].key}
+          defaultActiveKey={activeDiscussionKey}
           hideChat={hideChat}
           sections={tabs}
         />
@@ -406,10 +443,13 @@ const Container = ({
             chatRoomId={chatRoomId}
             currentUser={currentUser}
             fetchMoreData={fetchMoreData}
+            firstUnreadMessageId={firstUnreadMessageId}
             manuscriptId={manuscriptId}
             queryData={queryResult}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}
+            unreadMessagesCount={unreadMessagesCount}
+            updateChannelViewed={updateChannelViewed}
           />
         </>
       )}

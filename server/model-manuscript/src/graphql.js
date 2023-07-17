@@ -76,6 +76,11 @@ const {
 
 const { getPubsub } = pubsubManager
 
+const {
+  addUserToManuscriptChatChannel,
+  removeUserFromManuscriptChatChannel,
+} = require('../../model-channel/src/channelCommsUtils')
+
 /** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
 const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
   if (oldMetaAbstract && ms.meta && !ms.meta.abstract)
@@ -489,6 +494,11 @@ const resolvers = {
       // newly uploaded files get tasks populated
       await populateTemplatedTasksForManuscript(manuscript.id)
 
+      // add user to author discussion channel
+      await addUserToManuscriptChatChannel({
+        manuscriptId: updatedManuscript.id,
+        userId: ctx.user,
+      })
       return updatedManuscript
     },
 
@@ -909,6 +919,12 @@ const resolvers = {
         invitationData = await models.Invitation.query().findById(invitationId)
       }
 
+      await addUserToManuscriptChatChannel({
+        manuscriptId,
+        userId,
+        type: 'editorial',
+      })
+
       const existingTeam = await manuscript
         .$relatedQuery('teams')
         .where('role', 'reviewer')
@@ -960,6 +976,12 @@ const resolvers = {
           teamId: reviewerTeam.id,
         })
         .delete()
+
+      await removeUserFromManuscriptChatChannel({
+        manuscriptId,
+        userId,
+        type: 'editorial',
+      })
 
       return reviewerTeam.$query().withGraphFetched('members.[user]')
     },

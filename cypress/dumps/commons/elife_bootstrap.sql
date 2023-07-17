@@ -52,6 +52,8 @@ CREATE TABLE "public"."channel_members" (
     "updated" timestamptz,
     "user_id" uuid NOT NULL,
     "channel_id" uuid NOT NULL,
+    "last_viewed" timestamptz,
+    "last_alert_triggered_time" timestamptz,
     PRIMARY KEY ("id")
 );
 
@@ -472,6 +474,7 @@ CREATE TABLE "public"."users" (
     "online" bool,
     "last_online" timestamptz,
     "recent_tab" text,
+    "event_notifications_opt_in" bool DEFAULT true,
     PRIMARY KEY ("id")
 );
 

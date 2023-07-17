@@ -254,6 +254,7 @@ export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
   query {
     systemWideDiscussionChannel {
       id
+      type
     }
   }
 `

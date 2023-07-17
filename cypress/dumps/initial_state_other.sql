@@ -68,7 +68,9 @@ CREATE TABLE public.channel_members (
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
     user_id uuid NOT NULL,
-    channel_id uuid NOT NULL
+    channel_id uuid NOT NULL,
+    last_viewed timestamp,
+    last_alert_triggered_time timestamp,
 );
 
 
@@ -378,6 +380,7 @@ CREATE TABLE public.users (
     type text NOT NULL,
     profile_picture text,
     online boolean,
+    event_notifications_opt_in boolean DEFAULT true,
     last_online timestamp with time zone
 );
 
