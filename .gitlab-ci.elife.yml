@@ -54,7 +54,7 @@ build:
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
       docker build --build-arg manuscripts_table_columns=submission.articleId,created,updated,status,author --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-      docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
+      # docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
       # docker build \
       # --build-arg public_client_host=elife.kotahi.cloud \
       # --build-arg public_client_port=443 \
@@ -110,7 +110,7 @@ build:
 #     - npm run lint
 
 lint js:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -119,7 +119,7 @@ lint js:
     - yarn lint:js
 
 lint style:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -128,7 +128,7 @@ lint style:
     - yarn lint:style
 
 .test_template: &run_test_template
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -153,9 +153,9 @@ lint style:
 
 .test_script: &run_test_script
   - cd ${HOME}
-  - cp .env.example .env
-  - sh ./scripts/setupProdServer.sh &
+  - sh ./scripts/setupProdServer.sh &&
   - node ./startServer.js &
+  - sleep 10 &&
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 test-chrome:
