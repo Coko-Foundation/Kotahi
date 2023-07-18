@@ -28,7 +28,6 @@ import {
   UPDATE_TASK_NOTIFICATION,
   DELETE_TASK_NOTIFICATION,
   CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
-  GET_EMAIL_TEMPLATES,
 } from '../../../../queries'
 import {
   CREATE_TEAM_MUTATION,
@@ -122,8 +121,6 @@ const DecisionPage = ({ currentUser, match }) => {
       email: inputEmail,
     },
   })
-
-  const emailTemplates = useQuery(GET_EMAIL_TEMPLATES)
 
   const selectedEmailIsBlacklisted = !!blacklistInfoQuery.data
     ?.getBlacklistInformation?.length
@@ -311,6 +308,7 @@ const DecisionPage = ({ currentUser, match }) => {
     users,
     threadedDiscussions,
     doisToRegister,
+    emailTemplates,
   } = data
 
   const form = submissionForm?.structure ?? {
@@ -396,7 +394,7 @@ const DecisionPage = ({ currentUser, match }) => {
         config?.controlPanel?.displayManuscriptShortId
       }
       dois={doisToRegister}
-      emailTemplates={emailTemplates.data?.emailTemplates}
+      emailTemplates={emailTemplates}
       externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}

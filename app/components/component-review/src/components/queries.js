@@ -293,6 +293,19 @@ export const query = gql`
     }
 
     doisToRegister(id: $id)
+
+    emailTemplates {
+      id
+      created
+      updated
+      emailTemplateType
+      emailContent {
+        cc
+        subject
+        body
+        description
+      }
+    }
   }
 `
 
