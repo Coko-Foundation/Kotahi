@@ -1,5 +1,7 @@
 const fetch = require('node-fetch')
 
+const models = require('@pubsweet/models')
+const { updateChannelLastViewed } = require('../channelCommsUtils')
 const Channel = require('../channel')
 
 const resolvers = {
@@ -38,6 +40,15 @@ const resolvers = {
         .whereNull('manuscriptId')
         .where({ topic: 'System-wide discussion', groupId })
         .first(),
+
+    channelMember: async (_, { channelId }, context) => {
+      return models.ChannelMember.query()
+        .where({
+          channelId,
+          userId: context.user,
+        })
+        .first()
+    },
   },
   Mutation: {
     createChannel: async (_, { name, teamId }, context) => {
@@ -66,6 +77,9 @@ const resolvers = {
       channel.topic = topic
       return channel.save()
     },
+    channelViewed: async (_, { channelId }, context) => {
+      return updateChannelLastViewed({ channelId, userId: context.user })
+    },
   },
   // Subscription: {
   // },
@@ -84,6 +98,14 @@ const typeDefs = `
     channels: [Channel]
   }
 
+  type ChannelMember {
+    id: ID!
+    channelId: ID!
+    userId: ID!
+    lastViewed: DateTime
+    lastAlertTriggeredTime: DateTime
+  }
+
   type Work {
     DOI: String
     title: String
@@ -99,12 +121,15 @@ const typeDefs = `
     channels: [Channel]
     manuscriptChannel: Channel
     systemWideDiscussionChannel(groupId: ID!): Channel!
+    updateChannelLastViewed: Channel!
+    channelMember(channelId: ID!): ChannelMember!
   }
 
   extend type Mutation {
     createChannel(name: String, teamId: ID): Channel
     createChannelFromDOI(doi: String): Channel
     changeTopic(channelId: ID, topic: String): Channel
+    channelViewed(channelId: ID!): ChannelMember!
   }
 `
 

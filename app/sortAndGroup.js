@@ -1,40 +1,74 @@
 /* eslint-disable import/prefer-default-export */
-// @flow
-// import sortByDate from '../sort-by-date';
 
-// type Output = {
-//   ...$Exact<MessageInfoType>,
-//   timestamp: string,
-// };
-
-export const sortAndGroupMessages = messages => {
+export const sortAndGroupMessages = (messages, firstUnreadMessageId) => {
   if (messages.length === 0) return []
-  // messages = sortByDate(messages, 'timestamp', 'asc');
   const masterArray = []
   let newArray = []
   let checkId
 
   for (let i = 0; i < messages.length; i += 1) {
-    // on the first message, get the user id and set it to be checked against
-    const robo = [
+    const dateLabel = [
       {
         id: messages[i].created,
         user: {
-          id: 'robo',
+          id: 'dateLabel',
         },
         created: messages[i].created,
         content: messages[i].created,
-        type: 'timestamp',
+        type: 'dateLabel',
       },
     ]
 
-    if (i === 0) {
-      checkId = messages[i].user.id
-      masterArray.push(robo)
+    const dateWithUnreadLabel = [
+      {
+        id: messages[i].created,
+        user: {
+          id: 'dateWithUnreadLabel',
+        },
+        created: messages[i].created,
+        content: messages[i].created,
+        type: 'dateWithUnreadLabel',
+      },
+    ]
+
+    const unreadLabel = [
+      {
+        id: messages[i].created,
+        user: {
+          id: 'unreadLabel',
+        },
+        created: messages[i].created,
+        content: messages[i].created,
+        type: 'unreadLabel',
+      },
+    ]
+
+    let showUnread = firstUnreadMessageId === messages[i].id
+
+    const showDate =
+      new Date(messages[i].created).getDate() !==
+      new Date(messages[Math.max(i - 1, 0)].created).getDate()
+
+    let showDateWithUnread = showUnread && showDate
+
+    if (showUnread) {
+      checkId = null
     }
 
-    const sameUser =
-      messages[i].user.id !== 'robo' && messages[i].user.id === checkId
+    if (i === 0) {
+      showUnread = firstUnreadMessageId === messages[i].id
+      showDateWithUnread = showUnread
+
+      checkId = messages[i].user.id
+
+      if (showDateWithUnread) {
+        masterArray.push(dateWithUnreadLabel)
+      } else {
+        masterArray.push(dateLabel)
+      }
+    }
+
+    const sameUser = messages[i].user.id === checkId
 
     const oldMessage = (current, previous) => {
       // => boolean
@@ -55,7 +89,7 @@ export const sortAndGroupMessages = messages => {
       */
       const c = new Date(current.created).getTime()
       const p = new Date(previous.created).getTime()
-      return c > p + 3600000 * 6 // six hours;
+      return showDate || c > p + 3600000 * 6 // six hours;
     }
 
     // if we are evaulating a bubble from the same user
@@ -71,8 +105,12 @@ export const sortAndGroupMessages = messages => {
         if (oldMessage(messages[i], messages[i - 1])) {
           // push the batch of messages to master array
           masterArray.push(newArray)
-          // insert a new robotext timestamp
-          masterArray.push(robo)
+
+          if (showDate) {
+            // insert a new dateLabel
+            masterArray.push(dateLabel)
+          }
+
           // reset the batch of new messages
           newArray = []
           // populate the new batch of messages with this next old message
@@ -91,10 +129,19 @@ export const sortAndGroupMessages = messages => {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray)
 
+      if (showUnread && !showDateWithUnread) {
+        masterArray.push(unreadLabel)
+      }
+
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
-        // push a robo timestamp
-        masterArray.push(robo)
+        // push a dateLabel
+        if (showDateWithUnread) {
+          masterArray.push(dateWithUnreadLabel)
+        } else if (showDate) {
+          masterArray.push(dateLabel)
+        }
+
         newArray = []
         newArray.push(messages[i])
       } else {

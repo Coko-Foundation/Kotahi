@@ -1,0 +1,2 @@
+CREATE INDEX channel_members_last_alert_triggered_time_idx ON channel_members (last_alert_triggered_time);
+CREATE INDEX channel_members_last_viewed_idx ON channel_members (last_viewed);

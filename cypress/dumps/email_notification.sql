@@ -48,8 +48,12 @@ CREATE TABLE "public"."channel_members" (
     "updated" timestamptz,
     "user_id" uuid NOT NULL,
     "channel_id" uuid NOT NULL,
+    "last_viewed" timestamptz,
+    "last_alert_triggered_time" timestamptz,
     PRIMARY KEY ("id")
 );
+
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
 DROP TABLE IF EXISTS "public"."channels";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
@@ -434,6 +438,7 @@ CREATE TABLE "public"."users" (
     "online" bool,
     "last_online" timestamptz,
     "recent_tab" text,
+    "event_notifications_opt_in" bool DEFAULT true,
     PRIMARY KEY ("id")
 );
 

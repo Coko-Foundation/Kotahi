@@ -99,6 +99,7 @@ class User extends BaseModel {
           format: 'date-time',
         },
         recentTab: { type: ['string', 'null'] },
+        eventNotificationsOptIn: { type: ['boolean', true] },
       },
     }
   }

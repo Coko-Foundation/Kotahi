@@ -60,6 +60,7 @@ const reviewerInvitationReReviewTemplate = require('./email-templates/reviewerIn
 const reviewerInvitationRevisedPreprintTemplate = require('./email-templates/reviewerInvitationRevisedPreprintTemplate')
 const notifyAuthorEmailTemplate = require('./email-templates/notifyAuthorEmailTemplate')
 const evaluationPublishedEmailTemplate = require('./email-templates/evaluationPublishedEmailTemplate')
+const alertUnreadMessageDigestTemplate = require('./email-templates/alerts/alertUnreadMessageDigestTemplate')
 
 const templates = {
   adhocEditorAssignmentEmailTemplate,
@@ -123,6 +124,7 @@ const templates = {
   reviewerInvitationRevisedPreprintTemplate,
   notifyAuthorEmailTemplate,
   evaluationPublishedEmailTemplate,
+  alertUnreadMessageDigestTemplate,
 }
 
 const createMailOptions = (receiver, template, data, instanceName) => {

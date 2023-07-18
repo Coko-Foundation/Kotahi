@@ -68,7 +68,9 @@ CREATE TABLE public.channel_members (
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
     user_id uuid NOT NULL,
-    channel_id uuid NOT NULL
+    channel_id uuid NOT NULL,
+    last_viewed timestamp,
+    last_alert_triggered_time timestamp,
 );
 
 
@@ -378,6 +380,7 @@ CREATE TABLE public.users (
     type text NOT NULL,
     profile_picture text,
     online boolean,
+    event_notifications_opt_in boolean DEFAULT true,
     last_online timestamp with time zone
 );
 
@@ -880,7 +883,7 @@ CREATE TABLE public.invitations (
     response_date TIMESTAMP WITH TIME ZONE,
     response_comment TEXT,
     declined_reason public.invitation_declined_reason_type ,
-    user_id UUID, 
+    user_id UUID,
         CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id),
     sender_id UUID NOT NULL,
         CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES public.users (id)
@@ -1031,8 +1034,8 @@ CREATE TRIGGER invitation_update AFTER INSERT OR UPDATE
 CREATE INDEX IF NOT EXISTS manuscripts_search_idx ON public.manuscripts
   USING GIN (search_tsvector);
 
-INSERT INTO public.channels ( 
-  id, topic, type 
-) VALUES (  
+INSERT INTO public.channels (
+  id, topic, type
+) VALUES (
   '9fd7774c-11e5-4802-804c-ab64aefd5080', 'System-wide discussion', 'editorial'
 ) ON CONFLICT DO NOTHING;

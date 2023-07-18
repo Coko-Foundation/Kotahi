@@ -3,30 +3,20 @@
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
-import { HorizontalRule } from '../../../../globals'
-
 export { Spinner } from '../../../shared'
-export const Timestamp = styled(HorizontalRule)`
-  margin: 24px 0;
-  text-align: center;
-  user-select: none;
-
-  hr {
-    border-color: ${th('colorBorder')};
-  }
-`
-
-export const UnseenRobotext = styled(Timestamp)`
-  hr {
-    border-color: ${th('colorWarning')};
-    opacity: 0.1;
-  }
-`
 
 export const Time = styled.span`
   color: ${th('colorText')};
   font-size: 14px;
   font-weight: 500;
+  margin: 0 24px;
+  text-align: center;
+`
+
+export const InlineTime = styled.span`
+  color: ${th('colorText')};
+  font-size: 14px;
+  font-weight: 300;
   margin: 0 24px;
   text-align: center;
 `
@@ -42,7 +32,6 @@ export const MessagesGroup = styled.div`
   justify-content: flex-end;
   max-width: 100%;
   overflow: hidden auto;
-  padding-bottom: 8px;
   width: 100%;
 `
 
@@ -62,6 +51,22 @@ export const Message = styled.div`
   grid-template-columns: 45px auto;
   padding-right: 4px;
   position: relative;
+
+  .message-timestamp {
+    opacity: 0;
+  }
+
+  &:hover {
+    background-color: #f8f8f9;
+
+    .ProseMirror {
+      background: none;
+    }
+
+    .message-timestamp {
+      opacity: 1;
+    }
+  }
 `
 
 export const GutterContainer = styled.div`
@@ -76,6 +81,10 @@ export const InnerMessageContainer = styled.div`
   flex-direction: column;
   padding: 4px 0px;
   position: relative;
+
+  &:hover {
+    background-color: #f8f8f9;
+  }
 `
 
 export const Byline = styled.span`
@@ -86,6 +95,7 @@ export const Byline = styled.span`
   flex-wrap: wrap;
   font-size: 14px;
   font-weight: 500;
+  justify-content: space-between;
   line-height: 16px;
   margin-bottom: 4px;
   max-width: 100%;
@@ -100,9 +110,9 @@ export const Bubble = styled.div`
   color: rgb(36, 41, 46);
   display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
   font-size: 16px;
   font-weight: 400;
+  justify-content: space-between;
   line-height: ${th('lineHeightBase')};
   overflow-wrap: break-word;
   vertical-align: middle;
@@ -121,6 +131,10 @@ export const Bubble = styled.div`
 
   em {
     font-style: italic;
+  }
+
+  > div {
+    flex: 1;
   }
 `
 
@@ -148,4 +162,40 @@ export const Placeholder = styled.div`
   height: 100%;
   padding: 4em;
   place-items: center;
+`
+
+const ChatLabelContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 35px;
+  position: relative;
+`
+
+const ChatLabel = styled.div`
+  border-radius: 4px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 2px 20px;
+  position: absolute;
+  top: -11px;
+`
+
+export const UnreadLabelContainer = styled(ChatLabelContainer)`
+  border-top: 2px solid #5dab41;
+`
+export const UnreadLabel = styled(ChatLabel)`
+  background-color: #5dab41;
+  color: #ffffff;
+`
+
+export const DateLabelContainer = styled(ChatLabelContainer)`
+  border-top: 2px solid #6c6c6c;
+  margin: 40px 0 30px;
+`
+export const DateLabel = styled(ChatLabel)`
+  background-color: #ffffff;
+  color: #6c6c6c;
+  padding: 2px 12px;
 `

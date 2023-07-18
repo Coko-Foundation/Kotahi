@@ -4,6 +4,10 @@ const {
   isLatestVersionOfManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
+const {
+  addUserToManuscriptChatChannel,
+} = require('../../model-channel/src/channelCommsUtils')
+
 const resolvers = {
   Query: {
     async invitationManuscriptId(_, { id }, ctx) {
@@ -83,6 +87,11 @@ const resolvers = {
     },
     async assignUserAsAuthor(_, { manuscriptId, userId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
+      await addUserToManuscriptChatChannel({
+        manuscriptId,
+        userId,
+      })
 
       const existingTeam = await manuscript
         .$relatedQuery('teams')

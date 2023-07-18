@@ -15,6 +15,12 @@ const {
   sendAutomatedTaskEmailNotifications,
 } = require('../model-task/src/taskCommsUtils')
 
+const { sendAlerts } = require('../model-alert/src/alertCommsUtils')
+
+const {
+  resetLastAlertTriggerTime,
+} = require('../model-channel/src/channelCommsUtils')
+
 const getJobs = async (activeConfig, groupId) => {
   const jobs = []
 
@@ -81,6 +87,53 @@ const getJobs = async (activeConfig, groupId) => {
 
         try {
           await sendAutomatedTaskEmailNotifications(groupId)
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    },
+    // Job 4: Sending automated alerts
+    {
+      name: 'Sending automated alerts',
+      rule: {
+        tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
+        rule: `* * * * *`,
+      },
+      fn: async () => {
+        const disableSendAlertsScheduler =
+          process.env.DISABLE_EVENT_NOTIFICATIONS === 'true'
+
+        if (disableSendAlertsScheduler) {
+          return
+        }
+
+        // eslint-disable-next-line no-console
+        console.info(
+          `Running scheduler to send alerts ${new Date().toISOString()}`,
+        )
+
+        try {
+          await sendAlerts()
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    },
+    // Job 5: Reset last alert trigger time for channel members
+    {
+      name: 'Reset last alert trigger time for channel members',
+      rule: {
+        tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
+        rule: `0 0 * * *`,
+      },
+      fn: async () => {
+        // eslint-disable-next-line no-console
+        console.info(
+          `Resetting last alert trigger for all channel members ${new Date().toISOString()}`,
+        )
+
+        try {
+          await resetLastAlertTriggerTime()
         } catch (error) {
           console.error(error)
         }
