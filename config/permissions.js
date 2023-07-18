@@ -584,6 +584,11 @@ const permissions = {
     uploadFile: isAuthenticated,
     uploadFiles: isAuthenticated,
     updateTaskStatus: isAuthenticated,
+    updateCMSPage: userIsGmOrAdmin,
+    createCMSPage: userIsGmOrAdmin,
+    deleteCMSPage: userIsGmOrAdmin,
+    updateCMSLayout: userIsGmOrAdmin,
+    rebuildFlaxSite: userIsGmOrAdmin,
   },
   Subscription: {
     fileUpdated: isAuthenticated,
