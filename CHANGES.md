@@ -2,7 +2,7 @@
 
 ### 2023-06-27
 
-For the Aperture Neuro group _only_, you must add the following to the `.env` file prior to upgrade:
+For the Aperture Neuro group _only_, you must add the following to the `.env` file prior to upgrading to 1.8.0 (or any later version):
 
 ```
 USE_APERTURE_EMAIL=true
