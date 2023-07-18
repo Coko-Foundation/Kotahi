@@ -5,14 +5,17 @@ const { port, protocol, host } = config['flax-site']
 
 const serverUrl = `${protocol}://${host}${port ? `:${port}` : ''}`
 
-const currentAppUrl = config['flax-site'].clientAPIURL
+const { clientId, clientSecret } = config['flax-site']
 
-const flaxSiteAccessToken = ''
+const currentApIUrl = config['flax-site'].clientAPIURL
+
+const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
+const base64data = buff.toString('base64')
 
 const rebuild = async params => {
   const requestData = JSON.stringify({
     updatedConfig: {
-      url: `${currentAppUrl}/graphql`,
+      url: `${currentApIUrl}/graphql`,
     },
     buildConfigs: params,
   })
@@ -22,14 +25,14 @@ const rebuild = async params => {
       method: 'post',
       url: `${serverUrl}/rebuild`,
       headers: {
-        authorization: `Bearer ${flaxSiteAccessToken}`,
+        authorization: `Basic ${base64data}`,
         'Content-Type': 'application/json',
       },
       data: requestData,
     })
       .then(async res => {
-        const htmledResult = res.data
-        resolve(htmledResult)
+        const flaxResult = res.data
+        resolve(flaxResult)
       })
       .catch(async err => {
         const { response } = err
@@ -61,6 +64,9 @@ const healthCheck = async () => {
     const serviceHealthCheck = await axios({
       method: 'get',
       url,
+      headers: {
+        authorization: `Basic ${base64data}`,
+      },
     })
 
     return {
