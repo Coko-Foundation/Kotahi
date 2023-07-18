@@ -1,33 +1,51 @@
 import React, { useEffect, useState } from 'react'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
-import { Container, Heading, SectionContent, WidthLimiter } from '../../shared'
+import { ChevronRight } from 'react-feather'
 import EmailTemplateContent from './EmailTemplateContent'
 
-const EmailTemplatesContainer = styled.div`
+import { Heading2 } from '../../component-cms-manager/src/style'
+
+import PageHeader from '../../component-cms-manager/src/components/PageHeader'
+
+const RightArrow = styled(ChevronRight)`
+  height: ${grid(2)};
+  stroke: ${th('colorPrimary')};
+  stroke-width: 4px;
+  width: ${grid(2)};
+`
+
+const EmailTemplatePageContainer = styled.div`
   display: flex;
-  padding: 8px;
 `
 
-const TitleList = styled.div`
-  flex: 0 0 30%;
-  max-height: 90vh;
-  overflow-y: auto;
-  padding-right: 20px;
+const EmailTemplateLeftSection = styled.div`
+  height: 100vh;
+  min-width: 300px;
+  overflow: scroll;
+  padding-top: 16px;
 `
 
-const TitleItem = styled.div`
-  background-color: ${({ active }) => (active ? '#f0f0f0' : 'transparent')};
-  cursor: pointer;
-  padding: 8px 15px 15px 15px;
+const EmailTemplateRightSection = styled.div`
+  background-color: #f4f5f7;
+  flex-grow: 1;
+  height: 100vh;
+  padding-left: 16px;
+  padding-top: 16px;
 `
 
-const EmailTemplateDescription = styled.p`
-  color: ${th('colorPrimary')};
-  font-family: ${th('fontReading')};
-  font-size: ${th('fontSizeHeading6')};
-  padding: 8px 15px 15px 15px;
-  text-transform: uppercase;
+export const EmailTemplateSidebar = styled.div`
+  border-bottom: 1px solid #dedede;
+  display: flex;
+  justify-content: space-between;
+  margin-left: 16px;
+  margin-right: 16px;
+  padding: 12px 0px;
+  width: 250px;
+
+  div {
+    padding: 0px;
+  }
 `
 
 const EmailTemplates = ({ emailTemplates }) => {
@@ -51,34 +69,32 @@ const EmailTemplates = ({ emailTemplates }) => {
   }, [emailTemplates, activeTemplate])
 
   return (
-    <Container>
-      <Heading>Email Templates</Heading>
-      <WidthLimiter>
-        <SectionContent>
-          <EmailTemplatesContainer>
-            <TitleList>
-              <EmailTemplateDescription>
-                Email Template Description
-              </EmailTemplateDescription>
-              {emailTemplates.map(template => (
-                <TitleItem
-                  active={template.emailContent.description === activeTitle}
-                  key={template.id}
-                  onClick={() =>
-                    handleTabClick(template.emailContent.description)
-                  }
-                >
-                  {template.emailContent.description}
-                </TitleItem>
-              ))}
-            </TitleList>
-            {activeTemplate && (
-              <EmailTemplateContent activeTemplate={activeTemplate} />
-            )}
-          </EmailTemplatesContainer>
-        </SectionContent>
-      </WidthLimiter>
-    </Container>
+    <EmailTemplatePageContainer>
+      <EmailTemplateLeftSection>
+        <div>
+          {emailTemplates.map(template => (
+            <EmailTemplateSidebar key={template.id}>
+              <Heading2
+                onClick={() =>
+                  handleTabClick(template.emailContent.description)
+                }
+              >
+                {template.emailContent.description}
+              </Heading2>
+              {template.emailContent.description === activeTitle ? (
+                <RightArrow />
+              ) : null}
+            </EmailTemplateSidebar>
+          ))}
+        </div>
+      </EmailTemplateLeftSection>
+      <EmailTemplateRightSection>
+        <PageHeader leftSideOnly mainHeading="Email Templates" />
+        {activeTemplate && (
+          <EmailTemplateContent activeTemplate={activeTemplate} />
+        )}
+      </EmailTemplateRightSection>
+    </EmailTemplatePageContainer>
   )
 }
 
