@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { ChevronRight } from 'react-feather'
 import { TextInput, Heading, ActionButton } from '../../shared'
 
 import { SecondaryButton } from '../../component-modal/src/Modal'
@@ -168,4 +169,10 @@ export const LayoutSecondaryHeading = styled(Heading)`
   color: ${th('colorTextPlaceholder')};
   font-size: ${grid(1.5)};
   margin-bottom: ${grid(1)};
+`
+export const RightArrow = styled(ChevronRight)`
+  height: ${grid(2)};
+  stroke: ${th('colorPrimary')};
+  stroke-width: 4px;
+  width: ${grid(2)};
 `
