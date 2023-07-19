@@ -118,7 +118,7 @@ const DecisionAndReviews = ({
                 readOnly
                 review={review}
                 reviewer={{
-                  name: review.user.username,
+                  name: review.user?.username,
                   ordinal: index + 1,
                   user: review.user,
                 }}
