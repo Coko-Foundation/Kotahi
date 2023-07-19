@@ -126,10 +126,10 @@ const publishToGoogleSpreadSheet = async manuscript => {
     return manuscript.id
   } catch (e) {
     // eslint-disable-next-line
-    console.log('error while publishing in google spreadsheet')
+    console.log('error while publishing to google spreadsheet')
     // eslint-disable-next-line
     console.log(e)
-    return null
+    throw new Error('Error while publishing to google spreadsheet')
   }
 }
 
