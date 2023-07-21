@@ -954,6 +954,7 @@ const resolvers = {
     },
     async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
       const status = invitationId ? 'accepted' : 'invited'
 
       let invitationData
@@ -963,7 +964,7 @@ const resolvers = {
       }
 
       await addUserToManuscriptChatChannel({
-        manuscriptId,
+        manuscriptId: manuscript.parentId || manuscriptId,
         userId,
         type: 'editorial',
       })
