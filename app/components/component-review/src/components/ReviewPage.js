@@ -245,67 +245,42 @@ const ReviewPage = ({ currentUser, history, match }) => {
     },
   })
 
-  const { loading, error, data, refetch } = useQuery(query, {
+  const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
     partialRefetch: true,
   })
 
-  const reviewOrInitial = manuscript =>
-    manuscript?.reviews?.find(
-      review => review?.user?.id === currentUser?.id && !review.isDecision,
-    ) || {
-      // Usually a blank review is created when the user accepts the review invite.
-      // Creating a new review object here is a fallback for unknown error situations
-      // when the blank review was not created in advance for some reason.
-      id: uuid(),
-      isDecision: false,
-      isHiddenReviewerName: true,
-      jsonData: {},
-    }
-
-  const versions = data
-    ? manuscriptVersions(data.manuscript).map(v => ({
-        ...v.manuscript,
-        reviews: v.manuscript.reviews.map(r => ({
-          ...r,
-          jsonData: JSON.parse(r.jsonData),
-        })),
-      }))
-    : []
-
-  const latestVersion = versions.length ? versions[0] : null
-
-  // Find an existing review or create a placeholder, and hold a ref to it
-  const existingReview = reviewOrInitial(latestVersion)
-
-  const updateReviewJsonData = (value, path) => {
-    if (!latestVersion.id) {
-      // we shouldn't need this because of debouncing! But this protects against trying to save while loading is still happening
-      // eslint-disable-next-line no-console
-      console.log('no version id!')
-      return false
-    }
-
-    const reviewDelta = {} // Only the changed fields
+  const updateReviewJsonData = (manuscriptId, review, value, path) => {
+    const delta = {} // Only the changed fields
     // E.g. if path is 'foo.bar' and value is 'Baz' this gives { foo: { bar: 'Baz' } }
-    set(reviewDelta, path, value)
+    set(delta, path, value)
 
     const reviewPayload = {
+      jsonData: JSON.stringify(delta),
+      // TODO The following fields ought to be left out. They are needed only
+      // because we are currently catering for unexplained scenarios where there
+      // is no pre-existing review object by the time we arrive at this page.
+      // Thus we are potentially adding a new entry to the DB and need to supply
+      // the relevant values.
+      // We should instead ensure that a review object is always created prior to
+      // the reviewer visiting this page, then we don't need this.
       isDecision: false,
-      jsonData: JSON.stringify(reviewDelta),
-      manuscriptId: latestVersion.id,
-      userId: currentUser.id,
+      manuscriptId,
+      userId: review.userId,
+      isHiddenReviewerName: review.isHiddenReviewerName,
+      isHiddenFromAuthor: review.isHiddenFromAuthor,
     }
 
     return updateReviewMutation({
-      variables: { id: existingReview.id, input: reviewPayload },
+      variables: { id: review.id, input: reviewPayload },
+      // TODO If the mutation returned the manuscript, we wouldn't need the following cache update logic
       update: (cache, { data: { updateReview: updateReviewTemp } }) => {
         cache.modify({
           id: cache.identify({
             __typename: 'Manuscript',
-            id: latestVersion.id,
+            id: manuscriptId,
           }),
           fields: {
             reviews(existingReviewRefs = [], { readField }) {
@@ -336,7 +311,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
 
   const debouncedUpdateReviewJsonData = useCallback(
     debounce(updateReviewJsonData ?? (() => {}), 1000),
-    [latestVersion?.id],
+    [data],
   )
 
   useEffect(() => debouncedUpdateReviewJsonData.flush, [])
@@ -353,17 +328,33 @@ const ReviewPage = ({ currentUser, history, match }) => {
   }
 
   const { manuscript, threadedDiscussions } = data
-
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
   if (manuscript.parentId)
     return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
 
-  if (
-    !latestVersion.reviews?.find(
-      review => review?.user?.id === currentUser?.id && !review.isDecision,
-    )
-  ) {
-    refetch()
+  const versions = manuscriptVersions(manuscript).map(v => ({
+    ...v.manuscript,
+    reviews: v.manuscript.reviews.map(r => ({
+      ...r,
+      jsonData: JSON.parse(r.jsonData),
+    })),
+  }))
+
+  const latestVersion = versions[0]
+
+  const existingReview = latestVersion.reviews.find(
+    review => review.user?.id === currentUser.id && !review.isDecision,
+  ) || {
+    // Usually a blank review is created when the user accepts the review invite.
+    // Creating a new review object here is a fallback for unknown error situations
+    // when the blank review was not created in advance for some reason.
+    // TODO can we get rid of this fallback? It complicates the logic and could lead to bugs
+    id: uuid(),
+    isDecision: false,
+    isHiddenReviewerName: true,
+    jsonData: {},
+    manuscriptId: latestVersion?.id,
+    userId: currentUser.id,
   }
 
   const submissionForm = data.submissionForm?.structure ?? {
@@ -410,10 +401,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
     }
 
     return updateReviewMutation({
-      variables: {
-        id: existingReview.id || undefined,
-        input: reviewData,
-      },
+      variables: { id: existingReview.id, input: reviewData },
       update: (cache, { data: { updateReviewTemp } }) => {
         cache.modify({
           id: cache.identify(latestVersion.id),
@@ -479,7 +467,14 @@ const ReviewPage = ({ currentUser, history, match }) => {
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
       updateReview={updateReview}
-      updateReviewJsonData={debouncedUpdateReviewJsonData}
+      updateReviewJsonData={(value, path) =>
+        debouncedUpdateReviewJsonData(
+          latestVersion.id,
+          existingReview,
+          value,
+          path,
+        )
+      }
       versions={versions}
     />
   )
