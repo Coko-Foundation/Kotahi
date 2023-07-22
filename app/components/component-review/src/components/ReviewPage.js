@@ -311,7 +311,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
 
   const debouncedUpdateReviewJsonData = useCallback(
     debounce(updateReviewJsonData ?? (() => {}), 1000),
-    [data],
+    [],
   )
 
   useEffect(() => debouncedUpdateReviewJsonData.flush, [])
