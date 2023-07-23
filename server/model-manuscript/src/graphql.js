@@ -152,9 +152,9 @@ const getRelatedReviews = async (manuscript, ctx) => {
     reviewForm,
     decisionForm,
     sharedReviewersIds,
-    manuscriptHasDecision,
     ctx.user,
     userRoles,
+    manuscriptHasDecision,
   )
 
   return reviews.map(review => ({
