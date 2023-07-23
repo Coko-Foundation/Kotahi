@@ -920,7 +920,7 @@ const resolvers = {
       }
 
       await addUserToManuscriptChatChannel({
-        manuscriptId,
+        manuscriptId: manuscript.parentId || manuscriptId,
         userId,
         type: 'editorial',
       })
