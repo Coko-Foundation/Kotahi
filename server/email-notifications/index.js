@@ -22,17 +22,18 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     active: true,
   })
 
-  let ccEmails = template.emailContent.cc
+  let ccEmails = template.emailContent?.cc || ''
 
-  // Append additional emails to ccEmails
-  if (template.emailContent.ccEditors) {
+  // If the template requires sending emails to the editors, then append
+  // data.ccEmails which would be an array of editor emails
+  if (template.emailContent?.ccEditors) {
     ccEmails += `,${data.ccEmails.join(',')}`
   }
 
   const mailOptions = {
     to: receiver,
     cc: ccEmails,
-    subject: template.emailContent.subject,
+    subject: template.emailContent?.subject,
     html: template.emailContent.body,
   }
 

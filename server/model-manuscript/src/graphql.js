@@ -740,10 +740,14 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
         try {
           await sendEmailNotification(
             receiverEmail,
-            selectedTemplate,
+            selectedEmailTemplate,
             data,
             manuscript.groupId,
           )
@@ -810,10 +814,14 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
         try {
           await sendEmailNotification(
             receiverEmail,
-            selectedTemplate,
+            selectedEmailTemplate,
             data,
             manuscript.groupId,
           )
@@ -937,9 +945,13 @@ const resolvers = {
               userId: manuscript.submitterId,
             })
 
+            const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+              selectedTemplate,
+            )
+
             await sendEmailNotification(
               receiverEmail,
-              selectedTemplate,
+              selectedEmailTemplate,
               data,
               manuscript.groupId,
             )
@@ -954,7 +966,6 @@ const resolvers = {
     },
     async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
-
       const status = invitationId ? 'accepted' : 'invited'
 
       let invitationData

@@ -22,7 +22,7 @@ const existingEmailTemplates = async () => {
         <ol>
           <li>Complete this Survey at <a href="https://www.surveymonkey.com/r/ApertureInvite" target="_blank">https://www.surveymonkey.com/r/ApertureInvite</a> indicating whether you accept the review.</li>
           <li>Log into {{{ loginLink }}} with your Orcid ID and set up your profile. Once your profile is set up, you will receive a notification that the submission is ready to review.</li>
-        </ol>  
+        </ol>
         <p>If you have questions about Aperture, the review process, or the submission, please contact the journal manager at <a href="mailto:aperture@humanbrainmapping.org">aperture@humanbrainmapping.org</a>.</p>
         <p>Thank you,</p>
         <p>{{ senderName }}</p>
@@ -172,7 +172,7 @@ const existingEmailTemplates = async () => {
           Please note; that you will require an ORCID account in order to log in. If you don’t already have an account, it takes 2 mins to <a href="https://orcid.org/register" target="_blank">register a new ORCID account here</a>. <br>
         </p>
         <p>Regards, <br>
-          Kotahi team 
+          Kotahi team
         </p>
       </p>`,
       },
@@ -253,11 +253,10 @@ const existingEmailTemplates = async () => {
         type: 'systemEmail',
         body: `<p>
         <p>Dear {{ recipientName }}</p>
-      
+
         <p>You have new discussion messages. Click here to reply; {{{ discussionUrl }}}</p>
         <p>Want to change your notifications settings? Login to Kotahi and go to your profile page<br></p>
-        <p>
-          Regards, <br>
+        <p>Regards, <br>
           Kotahi team
         </p>`,
       },
@@ -326,15 +325,15 @@ const existingEmailTemplates = async () => {
         ccEditors: true,
         body: `<p>
           <p>Dear {{ recipientName }}</p>
-    
+
           <p>Thank you for the opportunity to review your recent preprint “{{ manuscriptTitle }}”.</p>
-    
+
           <p>I’m pleased to let you know that experts in the field have now reviewed and discussed the work, and have approved a consolidated report that you can view at {{{ manuscriptLink }}}.</p>
-    
+
           <p>You’ll see that we have not made any judgements about the suitability of your study for a particular journal, but have articulated its strengths and provided feedback that we believe will tighten its interpretation. I’d be happy to discuss the points we’ve raised, particularly if there’s been a misunderstanding.</p>
-    
+
           <p>After considering our advice, we recommend that you take three actions:</p>
-    
+
           <ol>
             <li>
               <p>Make the report publicly available</p>
@@ -426,37 +425,37 @@ const existingEmailTemplates = async () => {
         cc: 'lesley@sciencecolab.org, swartzk@ninds.nih.gov',
         ccEditors: true,
         body: `<p>Dear {{ recipientName }}</p>
-    
+
           <p>I hope you’ve had an opportunity to consider our request to act as a reviewer for the recent preprint {{{ manuscriptTitleLink }}}.</p>
-            
+
           <p>We understand that our new and innovative service might require additional introduction and therefore encourage you to find out more by visiting our <a href="https://www.sciencecolab.org/biophysics-colab" target="_blank">website</a>. We’d also be happy to arrange a video call at your convenience to answer any questions. Simply email <a href="mailto:lesley@sciencecolab.org" target="_blank">lesley@sciencecolab.org</a> to arrange this.</p>
-            
+
           <p>If you are available to provide expert feedback, please accept our invitation using the link below. If not, we’d be grateful if you let us know via the decline link.</p>
-      
+
           <p>{{{ acceptInviteLink }}}</p>
           <p>{{{ declineInviteLink }}}</p>
           <p>
           I look forward to hearing from you.
           </p>
-        
+
           <p>
             Best regards <br>
             {{ senderName }}
           </p>
-        
+
           <p>
             On behalf of Biophysics Colab <br>
             <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
           </p>
-        
+
           <h3 style="margin-bottom: 2px;">Instructions for reviewers</h3>
-        
+
           <p>
           After clicking on ‘Accept invitation’, you will be asked to log in to our peer review platform using your ORCID account. If you don’t have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>. <br>
           </p>
-        
+
           <p>Once logged in, please click on ‘do review’ for the appropriate preprint on your dashboard to access the review form.</p>
-        
+
           <p>Note that you can log in to our platform at any time by visiting<br>
           {{{ loginLink }}}
           </p>`,
@@ -488,7 +487,7 @@ const existingEmailTemplates = async () => {
             On behalf of Biophysics Colab <br>
             <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
           <p>
-      
+
           <h3 style="margin-bottom: 2px;">Instructions for reviewers</h3>
           <p>After clicking on ‘Accept invitation’, you will be asked to log in to our peer review platform using your ORCID account. If you don’t have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>.</p>
           <p>Once logged in, please click on ‘do review’ for the appropriate preprint on your dashboard to access the review form.</p>
@@ -537,16 +536,16 @@ const existingEmailTemplates = async () => {
         ccEditors: true,
         body: `<p>Thank you for agreeing to review the preprint by {{ authorName }} and colleagues for Biophysics Colab. I look forward to receiving your report, formatted as described below, by the agreed date. Please submit your report by completing the different fields in the review form, which you can access here; {{{ manuscriptLink }}}</p>
           <p>When all the reviewers have submitted their feedback, I’ll begin to consolidate the advice into a single report that we can discuss as a reviewing group (either electronically or via a video call). You can decide whether to sign this consolidated report after it has been finalised.</p>
-      
+
           <p>We respectfully ask that you treat the consolidated report as a confidential document until it is publicly associated with the preprint, and we will ask the authors to do the same.</p>
-      
+
           <p>I look forward to receiving your advice.</p>
-      
+
           <p>
             Best regards <br />
             {{ senderName }}
           </p>
-      
+
           <p>
             On behalf of Biophysics Colab <br />
             <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
@@ -596,9 +595,9 @@ const existingEmailTemplates = async () => {
         ccEditors: false,
         body: `<p>
           <p>Dear {{ recipientName }}</p>
-        
+
         <p>The evaluation for the preprint by {{ authorName }} and colleagues has now been published.</p>
-          
+
         <p>Thank you</p>
         <p>
           On behalf of Biophysics Colab <br>
@@ -613,11 +612,10 @@ const existingEmailTemplates = async () => {
         type: 'systemEmail',
         body: `<p>
           <p>Dear {{ recipientName }}</p>
-        
+
           <p>You have new discussion messages. Click here to reply; {{{ discussionUrl }}}</p>
           <p>Want to change your notifications settings? Login to Kotahi and go to your profile page<br></p>
-          <p>
-            Regards, <br>
+          <p>Regards, <br>
             Kotahi team
           </p>`,
       },
