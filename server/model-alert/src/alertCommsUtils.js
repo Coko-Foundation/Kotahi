@@ -53,11 +53,10 @@ const sendAlertForMessage = async ({
 }) => {
   const message = await models.Message.query().findById(messageId)
   const channel = await models.Channel.query().findById(message.channelId)
-  const { groupId } = channel
-  const group = await models.Group.query().findById(groupId)
 
   // send email notification
-  const baseUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
 
   let discussionUrl = baseUrl
 
@@ -87,10 +86,7 @@ const sendAlertForMessage = async ({
     discussionUrl,
   }
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   const selectedTemplate =
     activeConfig.formData.eventNotification.alertUnreadMessageDigestTemplate
@@ -99,7 +95,7 @@ const sendAlertForMessage = async ({
     selectedTemplate,
   )
 
-  await sendEmailNotification(user.email, selectedEmailTemplate, data, groupId)
+  await sendEmailNotification(user.email, selectedEmailTemplate, data)
 
   await new models.Alert({
     title,
