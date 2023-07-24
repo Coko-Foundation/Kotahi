@@ -807,6 +807,13 @@ const generateSchema = emailNotificationOptions => {
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
+                  alertUnreadMessageDigestTemplate: {
+                    description:
+                      'Email to send when a user has an unread chat message',
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                  },
                 },
               },
               report: {
@@ -1209,6 +1216,13 @@ const generateSchema = emailNotificationOptions => {
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
+                  alertUnreadMessageDigestTemplate: {
+                    description:
+                      'Email to send when a user has an unread chat message',
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                  },
                 },
               },
               report: {
@@ -1604,6 +1618,13 @@ const generateSchema = emailNotificationOptions => {
                     description:
                       'Reviewer invitation email template for a new manuscript',
                     type: 'string',
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                  },
+                  alertUnreadMessageDigestTemplate: {
+                    description:
+                      'Email to send when a user has an unread chat message',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
@@ -2024,6 +2045,13 @@ const generateSchema = emailNotificationOptions => {
                     description:
                       'Email Template to trigger after a manuscript is submitted',
                     type: 'string',
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                  },
+                  alertUnreadMessageDigestTemplate: {
+                    description:
+                      'Email to send when a user has an unread chat message',
+                    type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },

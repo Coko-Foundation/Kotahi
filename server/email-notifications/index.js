@@ -19,17 +19,17 @@ const renderTemplate = async (templateContent, data) => {
 const sendEmailNotification = async (receiver, template, data) => {
   const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
-  let ccEmails = template.emailContent.cc
+  let ccEmails = template.emailContent.cc || ''
 
   // Append additional emails to ccEmails
-  if (template.emailContent.ccEditors) {
+  if (template.emailContent?.ccEditors) {
     ccEmails += `,${data.ccEmails.join(',')}`
   }
 
   const mailOptions = {
     to: receiver,
     cc: ccEmails,
-    subject: template.emailContent.subject,
+    subject: template.emailContent?.subject,
     html: template.emailContent.body,
   }
 

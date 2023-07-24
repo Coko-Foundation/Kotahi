@@ -710,8 +710,16 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
         try {
-          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+          await sendEmailNotification(
+            receiverEmail,
+            selectedEmailTemplate,
+            data,
+          )
 
           // Send Notification in Editorial Discussion Panel
           models.Message.createMessage({
@@ -771,8 +779,16 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
         try {
-          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+          await sendEmailNotification(
+            receiverEmail,
+            selectedEmailTemplate,
+            data,
+          )
 
           // Get channel ID
           const channelId = manuscript.channels.find(
@@ -890,7 +906,15 @@ const resolvers = {
               userId: manuscript.submitterId,
             })
 
-            await sendEmailNotification(receiverEmail, selectedTemplate, data)
+            const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+              selectedTemplate,
+            )
+
+            await sendEmailNotification(
+              receiverEmail,
+              selectedEmailTemplate,
+              data,
+            )
           } catch (e) {
             /* eslint-disable-next-line */
             console.log('email was not sent', e)

@@ -687,9 +687,9 @@ const existingEmailTemplates = async () => {
         type: 'systemEmail',
         body: `<p>
         <p>Dear {{ recipientName }}</p>
-      
+
         <p>You have new discussion messages. Click here to reply; {{{ discussionUrl }}}</p>
-        <p>Want to change your notifications settings? Login to Kotahi and go to your profile page<br></p>        
+        <p>Want to change your notifications settings? Login to Kotahi and go to your profile page<br></p>
         <p>
           Regards, <br>
           Kotahi team
