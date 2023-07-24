@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
 import ChatInput from './SuperChatInput/SuperChatInput'
 import Messages from './Messages/Messages'
 
@@ -16,7 +17,7 @@ export const FloatingUnreadLabelContainer = styled.div`
   width: 100%;
 `
 export const FloatingUnreadLabel = styled.div`
-  background-color: #5dab41;
+  background-color: ${th('colors.brand1.tint25')};
   border-radius: 4px;
   color: #ffffff;
   font-size: 14px;
@@ -34,10 +35,6 @@ export const FloatingUnreadLabelClose = styled.span`
   position: absolute;
   right: 0;
   top: 0;
-
-  &:hover {
-    background-color: #3d9941;
-  }
 `
 
 const Chat = ({
