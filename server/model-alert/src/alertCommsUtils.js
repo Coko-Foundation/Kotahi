@@ -53,44 +53,53 @@ const sendAlertForMessage = async ({
 }) => {
   const message = await models.Message.query().findById(messageId)
   const channel = await models.Channel.query().findById(message.channelId)
+  const { groupId } = channel
+  const group = await models.Group.query().findById(groupId)
 
   // send email notification
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
-  const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
+  const baseUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
 
-  let discussionLink = baseUrl
+  let discussionUrl = baseUrl
 
   if (!channel.manuscriptId) {
-    discussionLink += `/admin/manuscripts` // admin discussion
+    discussionUrl += `/admin/manuscripts` // admin discussion
   } else {
-    discussionLink += `/versions/${channel.manuscriptId}`
+    discussionUrl += `/versions/${channel.manuscriptId}`
     const roles = await getUserRolesInManuscript(user.id, channel.manuscriptId)
 
     if (roles.groupManager || roles.anyEditor) {
-      discussionLink += '/decision'
+      discussionUrl += '/decision'
 
       if (channel.type === 'editorial') {
-        discussionLink += '?discussion=editorial'
+        discussionUrl += '?discussion=editorial'
       }
     } else if (roles.reviewer) {
-      discussionLink += '/review'
+      discussionUrl += '/review'
     } else if (roles.author) {
-      discussionLink += '/submit'
+      discussionUrl += '/submit'
     } else {
-      discussionLink = `${baseUrl}/dashboard`
+      discussionUrl = `${baseUrl}/dashboard`
     }
   }
 
   const data = {
     receiverName: user.username,
-    discussionLink,
+    discussionUrl,
   }
 
-  await sendEmailNotification(
-    user.email,
-    'alertUnreadMessageDigestTemplate',
-    data,
+  const activeConfig = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
+
+  const selectedTemplate =
+    activeConfig.formData.eventNotification.alertUnreadMessageDigestTemplate
+
+  const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+    selectedTemplate,
   )
+
+  await sendEmailNotification(user.email, selectedEmailTemplate, data, groupId)
 
   await new models.Alert({
     title,
