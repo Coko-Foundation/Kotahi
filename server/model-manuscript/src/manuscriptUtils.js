@@ -32,55 +32,60 @@ const stripConfidentialDataFromReviews = (
 ) => {
   if (!reviewForm || !decisionForm) return []
 
-  const confidentialReviewFields = reviewForm.structure.children
-    .filter(field => field.hideFromAuthors === 'true')
-    .map(field => field.name)
+  // Authors and general users can't see data that's hidden from users
+  const reviewFieldsHiddenFromAuthor = reviewForm.structure.children
+    .filter(f => f.hideFromAuthors === 'true')
+    .map(f => f.name)
 
-  const confidentialDecisionFields = decisionForm.structure.children
-    .filter(
-      field =>
-        field.hideFromAuthors === 'true' &&
-        userRoles.author &&
-        field.component !== 'ThreadedDiscussion',
-    )
-    .map(field => field.name)
+  const decisionFieldsHiddenFromAuthor = decisionForm.structure.children
+    .filter(f => f.hideFromAuthors === 'true')
+    .map(f => f.name)
+
+  const decisionThreadedDiscussionFields = decisionForm.structure.children
+    .filter(f => f.component === 'ThreadedDiscussion')
+    .map(f => f.name)
 
   return reviews
-    .filter(
-      r =>
-        (!r.isHiddenFromAuthor && manuscriptHasDecision) ||
-        // TODO the above case is not tightly enough controlled.
-        // Even if the review is not 'hidden' and the manuscript has a decision,
-        // we should also require that the review has been completed, and that
-        // either the manuscript has been published or the current user is its
-        // author.
-        // The current logic is still safer and more secure than what we had
-        // previously, which delivered reviews to the client with few controls.
-        // Further improvements should probably go hand in hand with improving
-        // what data we store in a Review object: it should really store status
-        // and isShared, rather than requiring us to retrieve these from the
-        // TeamMember object.
-        (userRoles.author && r.isDecision) || // decision will have restricted data stripped
-        r.userId === userId ||
-        (sharedReviewersIds.includes(r.userId) && !r.isDecision),
-    )
     .map(review => {
+      const hasPrivilegedAccess =
+        review.userId === userId ||
+        userRoles.anyEditorOrManager ||
+        review.isSharedWithCurrentUser
+
+      if (!hasPrivilegedAccess && review.isHiddenFromAuthor) return null
+      // Reviews are not made available to the author until after the decision
+      if (!hasPrivilegedAccess && !review.isDecision && !manuscriptHasDecision)
+        return null
+      // TODO Two other unprivileged cases we should return null for:
+      // - if the review is not a decision and it hasn't been completed;
+      // - if the current user is not the manuscript author and the manuscript hasn't yet been published.
+
       const r = { ...review, jsonData: ensureJsonIsParsed(review.jsonData) }
-      if (r.userId === userId) return r
+      if (hasPrivilegedAccess) return r
       if (r.isHiddenReviewerName) r.userId = null
 
-      const confidentialFields = r.isDecision
-        ? confidentialDecisionFields
-        : confidentialReviewFields
+      const hiddenFields = r.isDecision
+        ? decisionFieldsHiddenFromAuthor
+        : reviewFieldsHiddenFromAuthor
 
       const filteredJsonData = {}
 
       Object.entries(r.jsonData).forEach(([key, value]) => {
-        if (!confidentialFields.includes(key)) filteredJsonData[key] = value
+        // ThreadedDiscussions in decisions are shown even before the decision is complete,
+        // in order that the discussion can continue.
+        const isThreadedDiscussionFieldInDecision =
+          r.isDecision && decisionThreadedDiscussionFields.includes(key)
+
+        const isVisible =
+          !hiddenFields.includes(key) &&
+          (manuscriptHasDecision || isThreadedDiscussionFieldInDecision)
+
+        if (isVisible) filteredJsonData[key] = value
       })
       r.jsonData = filteredJsonData
       return r
     })
+    .filter(Boolean)
 }
 
 /** Get evaluations as
