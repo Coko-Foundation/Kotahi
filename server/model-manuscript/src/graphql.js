@@ -676,7 +676,7 @@ const resolvers = {
         const activeConfig = await models.Config.query().first()
 
         const selectedTemplate =
-          activeConfig.formData.eventNotification.reviewRejectedEmailTemplate
+          activeConfig.formData.eventNotification?.reviewRejectedEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -710,26 +710,33 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
-        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-          selectedTemplate,
-        )
-
-        try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
+        if (selectedTemplate) {
+          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+            selectedTemplate,
           )
 
-          // Send Notification in Editorial Discussion Panel
-          models.Message.createMessage({
-            content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
-            channelId: editorialChannel.id,
-            userId: manuscript.submitterId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
+          try {
+            await sendEmailNotification(
+              receiverEmail,
+              selectedEmailTemplate,
+              data,
+            )
+
+            // Send Notification in Editorial Discussion Panel
+            models.Message.createMessage({
+              content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
+              channelId: editorialChannel.id,
+              userId: manuscript.submitterId,
+            })
+          } catch (e) {
+            /* eslint-disable-next-line */
+            console.log('email was not sent', e)
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.info(
+            'No email template configured for notifying of invited reviewer declining invitation. Email not sent.',
+          )
         }
       }
 
@@ -760,7 +767,7 @@ const resolvers = {
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
-            .submissionConfirmationEmailTemplate
+            ?.submissionConfirmationEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -779,30 +786,37 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
-        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-          selectedTemplate,
-        )
-
-        try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
+        if (selectedTemplate) {
+          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+            selectedTemplate,
           )
 
-          // Get channel ID
-          const channelId = manuscript.channels.find(
-            channel => channel.topic === 'Editorial discussion',
-          ).id
+          try {
+            await sendEmailNotification(
+              receiverEmail,
+              selectedEmailTemplate,
+              data,
+            )
 
-          models.Message.createMessage({
-            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
-            channelId,
-            userId: manuscript.submitterId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
+            // Get channel ID
+            const channelId = manuscript.channels.find(
+              channel => channel.topic === 'Editorial discussion',
+            ).id
+
+            models.Message.createMessage({
+              content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+              channelId,
+              userId: manuscript.submitterId,
+            })
+          } catch (e) {
+            /* eslint-disable-next-line */
+            console.log('email was not sent', e)
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.info(
+            'No email template configured for notifying of a completed submission. Email not sent.',
+          )
         }
       }
 
@@ -868,7 +882,7 @@ const resolvers = {
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
-            .evaluationCompleteEmailTemplate
+            ?.evaluationCompleteEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -905,6 +919,11 @@ const resolvers = {
               channelId,
               userId: manuscript.submitterId,
             })
+
+            if (!selectedTemplate)
+              throw new Error(
+                'No email template configured for notifying of editorial decision',
+              )
 
             const selectedEmailTemplate = await models.EmailTemplate.query().findById(
               selectedTemplate,
