@@ -12,12 +12,13 @@ const currentApIUrl = config['flax-site'].clientAPIURL
 const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
 const base64data = buff.toString('base64')
 
-const rebuild = async params => {
+const rebuild = async (params, groupId) => {
   const requestData = JSON.stringify({
     updatedConfig: {
       url: `${currentApIUrl}/graphql`,
     },
     buildConfigs: params,
+    groupId,
   })
 
   return new Promise((resolve, reject) => {
@@ -97,7 +98,8 @@ const resolvers = {
       let error = ''
 
       try {
-        status = await rebuild(params)
+        const groupId = ctx.req.headers['group-id']
+        status = await rebuild(params, groupId)
       } catch (e) {
         error = e
       }

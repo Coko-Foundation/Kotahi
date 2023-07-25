@@ -74,10 +74,6 @@ const CMSPagesPage = ({ match, history }) => {
     cmsPage = {}
   }
 
-  if (!cmsPage) {
-    return <p>No CMS page found.</p>
-  }
-
   return (
     <EditPageContainer>
       <EditPageLeft>
@@ -95,16 +91,18 @@ const CMSPagesPage = ({ match, history }) => {
           leftSideOnly
           mainHeading={isNewPage ? 'New Page' : 'Pages'}
         />
-        <CMSPageEditForm
-          cmsPage={cmsPage}
-          createNewCMSPage={createNewCMSPage}
-          deleteCMSPage={deleteCMSPage}
-          isNewPage={isNewPage}
-          key={cmsPage.id}
-          rebuildFlaxSiteQuery={rebuildFlaxSiteQuery}
-          showPage={showPage}
-          updatePageDataQuery={updatePageDataQuery}
-        />
+        {cmsPage && (
+          <CMSPageEditForm
+            cmsPage={cmsPage}
+            createNewCMSPage={createNewCMSPage}
+            deleteCMSPage={deleteCMSPage}
+            isNewPage={isNewPage}
+            key={cmsPage.id}
+            rebuildFlaxSiteQuery={rebuildFlaxSiteQuery}
+            showPage={showPage}
+            updatePageDataQuery={updatePageDataQuery}
+          />
+        )}
       </EditPageRight>
     </EditPageContainer>
   )
