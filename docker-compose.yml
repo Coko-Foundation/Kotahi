@@ -338,7 +338,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.1.9
+    image: cokoapps/kotahi-flax:0.2.0
     depends_on:
       - client
     ports:
@@ -349,6 +349,7 @@ services:
       - FLAX_CLIENT_ID=${FLAX_CLIENT_ID:-}
       - FLAX_CLIENT_SECRET=${FLAX_CLIENT_SECRET:-}
       - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL:-http://client:4000}
+      - FLAX_DEFAULT_GROUP=${FLAX_DEFAULT_GROUP:-"kotahi"}
 
 volumes:
   minio_storage:

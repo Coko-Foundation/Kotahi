@@ -4,20 +4,26 @@ const { fileStorage } = require('@coko/server')
 
 const File = require('@coko/server/src/models/file/file.model')
 
-const setInitialLayout = async () => {
-  const { formData } = await models.Config.query().first() // TODO: Modify this to be queried with groupId for multi-tenancy phase 2 / CMS release
+const setInitialLayout = async groupId => {
+  const { formData } = await models.Config.query().findOne({
+    groupId,
+    active: true,
+  })
+
   const { primaryColor, secondaryColor } = formData.groupIdentity
 
   const layout = await new models.CMSLayout({
     primaryColor,
     secondaryColor,
+    groupId,
   }).save()
 
   return layout
 }
 
-const getFlaxPageConfig = async configKey => {
+const getFlaxPageConfig = async (configKey, groupId) => {
   const pages = await models.CMSPage.query()
+    .where('groupId', groupId)
     .select(['id', 'title', 'url', configKey])
     .orderBy('title')
 
@@ -74,20 +80,28 @@ const cleanCMSPageInput = inputData => {
 const resolvers = {
   Query: {
     async cmsPages(_, vars, ctx) {
-      const pages = await models.CMSPage.query().orderBy('title')
-      return pages
+      const groupId = ctx.req.headers['group-id']
+
+      const cmsPages = await models.CMSPage.query()
+        .where('groupId', groupId)
+        .orderBy('title')
+
+      return cmsPages
     },
 
-    async cmsPage(_, { id }, ctx) {
+    async cmsPage(_, { id }, _ctx) {
       const cmsPage = await models.CMSPage.query().findById(id)
       return cmsPage
     },
 
-    async cmsLayout(_, vars, ctx) {
-      let layout = await models.CMSLayout.query().first()
+    async cmsLayout(_, _vars, ctx) {
+      const groupId = ctx.req.headers['group-id']
+      let layout = await models.CMSLayout.query()
+        .where('groupId', groupId)
+        .first()
 
       if (!layout) {
-        layout = await setInitialLayout()
+        layout = await setInitialLayout(groupId)
       }
 
       return layout
@@ -96,8 +110,10 @@ const resolvers = {
   Mutation: {
     async createCMSPage(_, { input }, ctx) {
       try {
+        const groupId = ctx.req.headers['group-id']
+
         const savedCmsPage = await new models.CMSPage(
-          cleanCMSPageInput(input),
+          cleanCMSPageInput({ ...input, groupId }),
         ).save()
 
         const cmsPage = await models.CMSPage.query().findById(savedCmsPage.id)
@@ -150,7 +166,11 @@ const resolvers = {
     },
 
     async updateCMSLayout(_, { _id, input }, ctx) {
-      const layout = await models.CMSLayout.query().first()
+      const groupId = ctx.req.headers['group-id']
+
+      const layout = await models.CMSLayout.query()
+        .where('groupId', groupId)
+        .first()
 
       if (!layout) {
         const savedCmsLayout = await new models.CMSLayout(input).save()
@@ -179,6 +199,7 @@ const resolvers = {
 
       return null
     },
+
     async creator(parent) {
       if (!parent.creatorId) {
         return null
@@ -205,11 +226,11 @@ const resolvers = {
     },
 
     async flaxHeaderConfig(parent) {
-      return getFlaxPageConfig('flaxHeaderConfig')
+      return getFlaxPageConfig('flaxHeaderConfig', parent.groupId)
     },
 
     async flaxFooterConfig(parent) {
-      return getFlaxPageConfig('flaxFooterConfig')
+      return getFlaxPageConfig('flaxFooterConfig', parent.groupId)
     },
   },
 
@@ -314,8 +335,6 @@ const typeDefs = `
     content: String
     published: DateTime
     edited: DateTime
-    shownInMenu: Boolean
-    sequenceIndex: Int
     flaxHeaderConfig: FlaxConfigInput
     flaxFooterConfig: FlaxConfigInput
   }
