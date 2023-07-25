@@ -43,7 +43,22 @@ const ConfigManagerForm = ({
     return emailOption
   })
 
-  const { schema, uiSchema } = generateSchema(emailNotificationOptions)
+  // This will return first email template found of reviewer invitation type
+  const defaultReviewerInvitationEmail = emailTemplates.find(
+    emailTemplate => emailTemplate.emailTemplateType === 'reviewerInvitation',
+  )
+
+  // modifying the default reviewer invitation template into react json schema form structure
+  const defaultReviewerInvitationTemplate = {
+    const: defaultReviewerInvitationEmail.id,
+    title: defaultReviewerInvitationEmail.emailContent.description,
+  }
+
+  const { schema, uiSchema } = generateSchema(
+    emailNotificationOptions,
+    defaultReviewerInvitationTemplate,
+  )
+
   return (
     <>
       <link
