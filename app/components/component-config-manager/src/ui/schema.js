@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 
-const generateSchema = emailNotificationOptions => {
+const generateSchema = (
+  emailNotificationOptions,
+  defaultReviewerInvitationEmail,
+) => {
   const schema = {
     definitions: {
       timezones: {
@@ -806,6 +809,7 @@ const generateSchema = emailNotificationOptions => {
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
+                    default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description:
@@ -1215,6 +1219,7 @@ const generateSchema = emailNotificationOptions => {
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
+                    default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description:
@@ -1620,6 +1625,7 @@ const generateSchema = emailNotificationOptions => {
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
+                    default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description:
@@ -2033,6 +2039,7 @@ const generateSchema = emailNotificationOptions => {
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
+                    default: defaultReviewerInvitationEmail.const,
                   },
                   evaluationCompleteEmailTemplate: {
                     description:
