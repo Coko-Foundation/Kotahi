@@ -89,13 +89,20 @@ const sendAlertForMessage = async ({
   const activeConfig = await models.Config.query().first() // To be replaced with group based active config in future
 
   const selectedTemplate =
-    activeConfig.formData.eventNotification.alertUnreadMessageDigestTemplate
+    activeConfig.formData.eventNotification?.alertUnreadMessageDigestTemplate
 
-  const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-    selectedTemplate,
-  )
+  if (selectedTemplate) {
+    const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+      selectedTemplate,
+    )
 
-  await sendEmailNotification(user.email, selectedEmailTemplate, data)
+    await sendEmailNotification(user.email, selectedEmailTemplate, data)
+  } else {
+    // eslint-disable-next-line no-console
+    console.info(
+      'No email template is configured for notifying of unread message. Skipping sendig email.',
+    )
+  }
 
   await new models.Alert({
     title,
