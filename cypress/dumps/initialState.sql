@@ -1,3 +1,5 @@
+-- TODO is this dump still used?
+
 INSERT INTO "public"."files" ("id", "created", "updated", "type", "name", "stored_objects", "tags", "reference_id", "object_id", "alt", "upload_status", "caption") VALUES
 ('4aded767-78f0-4bd1-857e-1569f2f7b265', '2022-05-13 10:56:32.657+00', '2022-05-13 10:56:32.657+00', 'file', 'sample pdf.pdf', '[{"id": "42dbd180-a78b-4b14-9e7e-74ac6838dba1", "key": "52ce9cf9c7a8.pdf", "size": 3028, "type": "original", "mimetype": "application/pdf", "extension": "pdf", "imageMetadata": null}]', '["manuscript"]', NULL, '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', NULL, NULL, NULL);
 

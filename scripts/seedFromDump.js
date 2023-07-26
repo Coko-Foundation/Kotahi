@@ -2,9 +2,9 @@
 const { readFileSync } = require('fs')
 const path = require('path')
 
-const seed = require('./clearAndSeed')
+const { applyDump } = require('./resetDb')
 
 const dumpFile = name =>
   path.join(__dirname, '..', 'cypress', 'dumps', `${name}.sql`)
 
-seed(readFileSync(dumpFile(process.argv[2]), 'utf-8'))
+applyDump(readFileSync(dumpFile(process.argv[2]), 'utf-8'), process.argv[2])
