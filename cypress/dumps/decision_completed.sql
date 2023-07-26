@@ -1,14 +1,20 @@
+DO $$
+DECLARE
+  g_id UUID;
+BEGIN
+SELECT id INTO g_id FROM groups LIMIT 1;
+
 -- -------------------------------------------------------------
 -- Senior Editor Assigned 
 -- -------------------------------------------------------------
 -- Existing Manuscripts record is updated
 INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "is_hidden","form_fields_to_publish", "searchable_text", "search_tsvector", "doi", "group_id") VALUES
-('908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.565+00', '2022-09-14 06:47:32.971+00', NULL, 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'revise', 'revise', NULL, '{"title": "test pdf"}', '{"DOI": "", "cover": "", "title": "", "topics": [], "Funding": "", "abstract": "", "datacode": "", "objectType": "", "references": "", "authorNames": "", "dateAccepted": "", "dateReceived": "", "copyrightYear": "", "datePublished": "", "DecisionLetter": "", "copyrightHolder": "", "reviewingEditor": "", "EditorsEvaluation": "", "competingInterests": "", "copyrightStatement": "", "authorContributions": "", "AuthorCorrespondence": ""}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 12, '2022-09-13 14:07:32.475+00', false, '[]', 'test pdf', '"2":9B "demo":4B,7B "kotahi":3B,6B "pdf":2A "test":1A', NULL, 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+('908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.565+00', '2022-09-14 06:47:32.971+00', NULL, 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'revise', 'revise', NULL, '{"title": "test pdf"}', '{"DOI": "", "cover": "", "title": "", "topics": [], "Funding": "", "abstract": "", "datacode": "", "objectType": "", "references": "", "authorNames": "", "dateAccepted": "", "dateReceived": "", "copyrightYear": "", "datePublished": "", "DecisionLetter": "", "copyrightHolder": "", "reviewingEditor": "", "EditorsEvaluation": "", "competingInterests": "", "copyrightStatement": "", "authorContributions": "", "AuthorCorrespondence": ""}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 12, '2022-09-13 14:07:32.475+00', false, '[]', 'test pdf', '"2":9B "demo":4B,7B "kotahi":3B,6B "pdf":2A "test":1A', NULL, g_id);
 INSERT INTO "public"."files" ("id", "created", "updated", "type", "name", "stored_objects", "tags", "reference_id", "object_id", "alt", "upload_status", "caption") VALUES
 ('c3a9c3ee-9822-46da-97e6-e12bb8af6c1c', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'file', 'test-pdf.pdf', '[{"id": "1c28e52b-f5aa-443e-999a-41605340e37c", "key": "915c52f62e1f.pdf", "size": 187018, "type": "original", "mimetype": "application/pdf", "extension": "pdf", "imageMetadata": null}]', '["manuscript"]', NULL, '908587ed-c5f8-4532-aa56-bc94f805d336', NULL, NULL, NULL);
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type", "group_id") VALUES
-('90c5f618-ccc4-4be2-8a79-f396ca5582c7', '908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'Manuscript discussion', 'all', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
-('f1bdad7f-de4c-4833-87d5-27aa2838197f', '908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'Editorial discussion', 'editorial', 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+('90c5f618-ccc4-4be2-8a79-f396ca5582c7', '908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'Manuscript discussion', 'all', g_id),
+('f1bdad7f-de4c-4833-87d5-27aa2838197f', '908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'Editorial discussion', 'editorial', g_id);
 INSERT INTO "public"."messages" ("id", "user_id", "channel_id", "created", "updated", "content") VALUES
 ('43a31e42-3da6-4078-bc69-52565db09caf', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'f1bdad7f-de4c-4833-87d5-27aa2838197f', '2022-09-13 14:07:32.462+00', '2022-09-13 14:07:32.462+00', 'Submission Confirmation Email sent by Kotahi to Emily Clay');
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
@@ -41,12 +47,12 @@ INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team
 -- -------------------------------------------------------------
 -- New Revised Manuscript Recored is added 
 INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "form_fields_to_publish", "group_id") VALUES
-('2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.099+00', '2022-09-14 06:45:47.042+00', '908587ed-c5f8-4532-aa56-bc94f805d336', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'accepted', 'accepted', NULL, '{"title": "test pdf"}', '{"DOI": "", "cover": "", "title": "", "topics": [], "Funding": "", "abstract": "", "datacode": "", "objectType": "dataset", "references": "", "authorNames": "", "dateAccepted": "", "dateReceived": "", "copyrightYear": "", "datePublished": "", "DecisionLetter": "", "copyrightHolder": "", "reviewingEditor": "", "EditorsEvaluation": "", "competingInterests": "", "copyrightStatement": "", "authorContributions": "", "AuthorCorrespondence": ""}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 12, '2022-09-13 14:07:32.475+00', '[]', 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+('2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.099+00', '2022-09-14 06:45:47.042+00', '908587ed-c5f8-4532-aa56-bc94f805d336', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'accepted', 'accepted', NULL, '{"title": "test pdf"}', '{"DOI": "", "cover": "", "title": "", "topics": [], "Funding": "", "abstract": "", "datacode": "", "objectType": "dataset", "references": "", "authorNames": "", "dateAccepted": "", "dateReceived": "", "copyrightYear": "", "datePublished": "", "DecisionLetter": "", "copyrightHolder": "", "reviewingEditor": "", "EditorsEvaluation": "", "competingInterests": "", "copyrightStatement": "", "authorContributions": "", "AuthorCorrespondence": ""}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 12, '2022-09-13 14:07:32.475+00', '[]', g_id);
 
 -- Channels for discussion are created after assigning Editor
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type", "group_id") VALUES
-('1ff6e083-2174-4a71-903f-1ad65c9e05b9', '2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.109+00', '2022-09-14 06:45:34.109+00', 'Editorial discussion', 'editorial', 'a6303daa-fc03-4257-99e5-f4579fea4be8'),
-('b7f43fb6-b0a5-42b6-ba45-c61d0c096ac2', '2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.108+00', '2022-09-14 06:45:34.108+00', 'Manuscript discussion', 'all', 'a6303daa-fc03-4257-99e5-f4579fea4be8');
+('1ff6e083-2174-4a71-903f-1ad65c9e05b9', '2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.109+00', '2022-09-14 06:45:34.109+00', 'Editorial discussion', 'editorial', g_id),
+('b7f43fb6-b0a5-42b6-ba45-c61d0c096ac2', '2bca7987-b4d9-4a33-aa1a-ab4666d0942a', '2022-09-14 06:45:34.108+00', '2022-09-14 06:45:34.108+00', 'Manuscript discussion', 'all', g_id);
 
 -- New files are uploaded from the decision
 INSERT INTO "public"."files" ("id", "created", "updated", "type", "name", "stored_objects", "tags", "reference_id", "object_id", "alt", "upload_status", "caption") VALUES
@@ -64,3 +70,5 @@ INSERT INTO "public"."messages" ("id", "user_id", "channel_id", "created", "upda
 INSERT INTO "public"."reviews" ("id", "created", "updated", "is_decision", "user_id", "manuscript_id", "type", "is_hidden_from_author", "is_hidden_reviewer_name", "can_be_published_publicly", "json_data") VALUES
 ('0d16a291-cc62-46b6-a5cb-87d137690f62', '2022-09-14 06:45:41.913+00', '2022-09-14 06:45:41.913+00', 't', '85e1300e-003c-4e96-987b-23812f902477', '2bca7987-b4d9-4a33-aa1a-ab4666d0942a', 'Review', 'f', 'f', 'f', '{"files": ["9eed538f-4f91-4f42-8484-58aba35ad206"], "comment": "<p class=\"paragraph\">Great Paper!</p>", "verdict": "accept"}'),
 ('62879dfb-c04f-4206-abf3-1f7060794e39', '2022-09-14 06:45:21.694+00', '2022-09-14 06:45:21.694+00', 't', '85e1300e-003c-4e96-987b-23812f902477', '908587ed-c5f8-4532-aa56-bc94f805d336', 'Review', 'f', 'f', 'f', '{"files": ["62813649-bfca-47d5-9b73-c23ffef4bd69"], "comment": "<p class=\"paragraph\">Please fix Foo in the Paper!</p>", "verdict": "revise"}');
+
+END $$;
