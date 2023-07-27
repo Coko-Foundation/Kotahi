@@ -383,6 +383,8 @@ const Container = ({
 
   const queryResult = useQuery(GET_MESSAGES, {
     variables: { channelId },
+    fetchPolicy: 'network-only',
+    nextFetchPolicy: 'cache-first',
   })
 
   const { data, subscribeToMore, fetchMore } = queryResult
