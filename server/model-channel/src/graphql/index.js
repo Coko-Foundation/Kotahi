@@ -129,7 +129,7 @@ const typeDefs = `
     createChannel(name: String, teamId: ID): Channel
     createChannelFromDOI(doi: String): Channel
     changeTopic(channelId: ID, topic: String): Channel
-    channelViewed(channelId: ID!): ChannelMember!
+    channelViewed(channelId: ID!): ChannelMember
   }
 `
 
