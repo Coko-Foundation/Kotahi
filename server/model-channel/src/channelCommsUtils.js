@@ -36,18 +36,29 @@ const addUserToManuscriptChatChannel = async ({
   userId,
   type = 'all',
 }) => {
+  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
   const channel = await models.Channel.query()
     .where({
-      manuscriptId,
+      manuscriptId: manuscript.parentId || manuscriptId,
       type,
     })
     .first()
 
-  await new models.ChannelMember({
-    channelId: channel.id,
-    userId,
-    lastViewed: new Date(),
-  }).save()
+  const channelMember = await models.ChannelMember.query()
+    .where({
+      channelId: channel.id,
+      userId,
+    })
+    .first()
+
+  if (!channelMember) {
+    await new models.ChannelMember({
+      channelId: channel.id,
+      userId,
+      lastViewed: new Date(),
+    }).save()
+  }
 }
 
 const removeUserFromManuscriptChatChannel = async ({
