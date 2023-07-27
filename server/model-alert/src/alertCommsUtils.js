@@ -82,7 +82,7 @@ const sendAlertForMessage = async ({
   }
 
   const data = {
-    receiverName: user.username,
+    recipientName: user.username,
     discussionUrl,
   }
 
