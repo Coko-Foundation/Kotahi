@@ -99,7 +99,8 @@ const makeArticleMeta = (
 ) => {
   // metadata:
   // --pubDate: date
-  // --id: id
+  // --id: id (if this is a publisher's ID and NOT a DOI)
+  // --doi: doi
   // --title: title
   // --submission: submission form PARSED BEFORE IT GETS HERE
   //   --abstract: html
@@ -119,7 +120,18 @@ const makeArticleMeta = (
 
   const formData = metadata.submission || {}
 
+  if (metadata.doi) {
+    // If we have a DOI in the metadata, we export that as the article ID: https://jats.nlm.nih.gov/archiving/tag-library/1.1d1/n-7s30.html
+    thisArticleMeta += `<article-id pub-id-type="doi">${metadata.doi}</article-id>`
+  }
+
+  if (metadata.pmid) {
+    // If there's a PubMed ID as metadata.pmid, we put that in.
+    thisArticleMeta += `<article-id pub-id-type="pmid">${metadata.pmid}</article-id>`
+  }
+
   if (metadata.id) {
+    // And we're including the general ID, which publishers should know (in the form) will be (slightly) public
     thisArticleMeta += `<article-id pub-id-type="publisher-id">${metadata.id}</article-id>`
   }
 
