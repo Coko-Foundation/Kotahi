@@ -290,6 +290,13 @@ const resolvers = {
         eventNotificationsOptIn: event_notifications_opt_in,
       })
 
+      // eslint-disable-next-line camelcase
+      if (event_notifications_opt_in) {
+        await models.ChannelMember.query()
+          .where('user_id', id)
+          .patch({ lastViewed: new Date() })
+      }
+
       return user
     },
   },
