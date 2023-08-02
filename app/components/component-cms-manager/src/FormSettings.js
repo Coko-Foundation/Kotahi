@@ -51,9 +51,6 @@ export const inputFields = [
     name: 'url',
     type: 'text-input',
     isRequired: true,
-    otherProps: {
-      staticText: process.env.FLAX_SITE_URL,
-    },
   },
 
   {

@@ -14,6 +14,7 @@ const CMSPageEdit = ({
   createNewCMSPage,
   showPage,
   deleteCMSPage,
+  flaxSiteUrlForGroup,
 }) => {
   const [customFormErrors, setCustomFormErrors] = useState({})
 
@@ -123,6 +124,7 @@ const CMSPageEdit = ({
                 cmsPage={cmsPage}
                 currentValues={formikProps.values}
                 customFormErrors={customFormErrors}
+                flaxSiteUrlForGroup={flaxSiteUrlForGroup}
                 isNewPage={isNewPage}
                 onDelete={onDelete}
                 onSubmit={formikProps.handleSubmit}
