@@ -25,7 +25,7 @@ import {
 const CMSPagesPage = ({ match, history }) => {
   const [isNewPage, setIsNewPage] = useState(false)
   const config = useContext(ConfigContext)
-  const { urlFrag } = config
+  const { urlFrag, groupName } = config
 
   const { loading, data, error, refetch: refetchCMSPages } = useQuery(
     getCMSPages,
@@ -35,6 +35,8 @@ const CMSPagesPage = ({ match, history }) => {
   const [updatePageDataQuery] = useMutation(updateCMSPageDataMutation)
   const [rebuildFlaxSiteQuery] = useMutation(rebuildFlaxSiteMutation)
   const [deleteCMSPage] = useMutation(deleteCMSPageMutation)
+
+  const flaxSiteUrlForGroup = `${process.env.FLAX_SITE_URL}/${groupName}/`
 
   let currentCMSPageId = null
 
@@ -96,6 +98,7 @@ const CMSPagesPage = ({ match, history }) => {
             cmsPage={cmsPage}
             createNewCMSPage={createNewCMSPage}
             deleteCMSPage={deleteCMSPage}
+            flaxSiteUrlForGroup={flaxSiteUrlForGroup}
             isNewPage={isNewPage}
             key={cmsPage.id}
             rebuildFlaxSiteQuery={rebuildFlaxSiteQuery}

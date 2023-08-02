@@ -42,7 +42,7 @@ class CMSLayout extends BaseModel {
         secondaryColor: { type: 'string' },
         logoId: { type: ['string', 'null'], format: 'uuid' },
         partners: arrayOfStoredPartners,
-        footerText: { type: 'string' },
+        footerText: { type: ['string', 'null'] },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
         edited: { type: ['string', 'object', 'null'], format: 'date-time' },
         groupId: { type: ['string'], format: 'uuid' },

@@ -88,6 +88,7 @@ const CMSPageEditForm = ({
   customFormErrors,
   resetCustomErrors,
   currentValues,
+  flaxSiteUrlForGroup,
 }) => {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const autoSave = useCallback(debounce(autoSaveData ?? (() => {}), 1000), [])
@@ -132,6 +133,8 @@ const CMSPageEditForm = ({
           onDataChanged(item.name, val)
         }
 
+        props.staticText = flaxSiteUrlForGroup
+
         break
 
       case 'rich-editor':
@@ -175,8 +178,8 @@ const CMSPageEditForm = ({
                     setTouched={setTouched}
                     style={{ width: '100%' }}
                     validate={item.isRequired ? required : null}
-                    {...getInputFieldSpecificProps(item, { onAssetManager })}
                     {...item.otherProps}
+                    {...getInputFieldSpecificProps(item, { onAssetManager })}
                   />
                   {renderCustomErrors(item)}
                 </Section>

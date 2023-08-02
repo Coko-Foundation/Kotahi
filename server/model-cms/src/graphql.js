@@ -119,7 +119,7 @@ const resolvers = {
         const cmsPage = await models.CMSPage.query().findById(savedCmsPage.id)
         return { success: true, error: null, cmsPage }
       } catch (e) {
-        if (e.constraint === 'cms_pages_url_key') {
+        if (e.constraint === 'cms_pages_url_group_id_key') {
           return {
             success: false,
             error: e.constraint,

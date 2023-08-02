@@ -1400,12 +1400,15 @@ const resolvers = {
 
       return { totalCount, manuscripts: result }
     },
-    // TODO: fetch manuscripts per group for flax?
+
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
+      const groupId = ctx.req.headers['group-id']
+
       const query = models.Manuscript.query()
         .whereNotNull('published')
         .orderBy('published')
 
+      if (groupId) query.where('group_id', groupId)
       if (startDate) query.where('published', '>=', new Date(startDate))
       if (limit) query.limit(limit)
 
