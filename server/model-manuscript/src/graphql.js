@@ -706,7 +706,7 @@ const resolvers = {
         })
 
         const selectedTemplate =
-          activeConfig.formData.eventNotification.reviewRejectedEmailTemplate
+          activeConfig.formData.eventNotification?.reviewRejectedEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -740,27 +740,34 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
-        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-          selectedTemplate,
-        )
-
-        try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
-            manuscript.groupId,
+        if (selectedTemplate) {
+          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+            selectedTemplate,
           )
 
-          // Send Notification in Editorial Discussion Panel
-          models.Message.createMessage({
-            content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
-            channelId: editorialChannel.id,
-            userId: manuscript.submitterId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
+          try {
+            await sendEmailNotification(
+              receiverEmail,
+              selectedEmailTemplate,
+              data,
+              manuscript.groupId,
+            )
+
+            // Send Notification in Editorial Discussion Panel
+            models.Message.createMessage({
+              content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
+              channelId: editorialChannel.id,
+              userId: manuscript.submitterId,
+            })
+          } catch (e) {
+            /* eslint-disable-next-line */
+            console.log('email was not sent', e)
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.info(
+            'No email template configured for notifying of invited reviewer declining invitation. Email not sent.',
+          )
         }
       }
 
