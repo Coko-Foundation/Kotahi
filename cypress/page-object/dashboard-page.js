@@ -30,7 +30,7 @@ const REJECT_REVIEW_BUTTON = 'reject-review'
 // 'Manuscripts I'm editor of' section
 const CONTROL_PANEL_DECISION_BUTTON = 'control-panel-decision'
 const CONTROL_PANEL_TEAM_BUTTON = 'control-panel-team'
-const MANUSCRIPT_NAV_BUTTON = '[href="/kotahi/admin/manuscripts"]'
+const MANUSCRIPT_NAV_BUTTON = '[href*="/admin/manuscripts"]'
 const INVITED_REVIEWS_STATUS = 'invited'
 const COMPLETED_REVIEWS_STATUS = 'completed'
 const REJECTED_REVIEWS_STATUS = 'rejected'

@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier,jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 
-import { dashboard, manuscripts } from '../../support/routes'
+import { dashboard, manuscripts } from '../../support/routes1'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { Menu } from '../../page-object/page-component/menu'
@@ -236,7 +236,6 @@ describe('control page tests', () => {
   context('admin user can see the icons', () => {
     beforeEach(() => {
       cy.task('restore', 'commons/colab_bootstrap')
-      cy.task('seedForms')
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[0], dashboard)
         cy.awaitDisappearSpinner()

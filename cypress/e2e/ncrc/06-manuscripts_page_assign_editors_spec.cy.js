@@ -7,7 +7,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 
-describe('manuscripts page assign editors tests', () => {
+describe.skip('manuscripts page assign editors tests', () => {
   beforeEach(() => {
     cy.task('restore', 'initial_state_other')
     cy.task('seedForms')

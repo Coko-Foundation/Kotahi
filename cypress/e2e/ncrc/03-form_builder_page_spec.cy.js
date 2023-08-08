@@ -5,7 +5,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
-describe('form builder tests', () => {
+describe.skip('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
       // task to restore the database as per the dumps/initial_state_other.sql

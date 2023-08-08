@@ -4,7 +4,7 @@
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { manuscripts } from '../../support/routes'
+import { manuscripts } from '../../support/routes2'
 import { Menu } from '../../page-object/page-component/menu'
 
 describe('Manuscripts page tests', () => {
@@ -12,7 +12,6 @@ describe('Manuscripts page tests', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -48,7 +47,6 @@ describe('Manuscripts page tests', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -158,7 +156,6 @@ describe('Manuscripts page tests', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

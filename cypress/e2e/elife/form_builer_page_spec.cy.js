@@ -1,13 +1,13 @@
 /* eslint-disable jest/expect-expect */
 import { FormsPage } from '../../page-object/forms-page'
-import { submissionForm } from '../../support/routes'
+import { submissionForm } from '../../support/routes2'
 
 describe('Form builder', () => {
   context('check Form builder elements visibility', () => {
     beforeEach(() => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
+
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
@@ -51,7 +51,6 @@ describe('Form builder', () => {
     it('check form fields type and if are required', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
@@ -110,7 +109,6 @@ describe('Form builder', () => {
     it('views a form field', () => {
       // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

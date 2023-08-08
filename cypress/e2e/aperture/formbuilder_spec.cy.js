@@ -7,7 +7,6 @@ describe('Form builder', () => {
   it('views a form field', () => {
     // task to restore the database as per the  dumps/commons/bootstrap.sql
     cy.task('restore', 'commons/bootstrap')
-    cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

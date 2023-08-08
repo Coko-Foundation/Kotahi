@@ -1,5 +1,5 @@
 /* eslint-disable jest/expect-expect */
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes1'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
@@ -8,7 +8,6 @@ describe('manuscripts page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
     cy.task('restore', 'commons/colab_bootstrap')
-    cy.task('seedForms')
 
     // login as admin
     cy.fixture('role_names').then(name => {

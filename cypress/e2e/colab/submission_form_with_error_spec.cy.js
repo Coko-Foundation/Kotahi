@@ -1,7 +1,7 @@
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes1'
 import { Menu } from '../../page-object/page-component/menu'
 import { FormsPage } from '../../page-object/forms-page'
 
@@ -10,7 +10,6 @@ describe('Submission with errors test', () => {
     it('views a form field', () => {
       // task to restore the database as per the  dumps/commons/bootstrap.sql
       cy.task('restore', 'commons/colab_bootstrap')
-      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

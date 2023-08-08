@@ -8,7 +8,6 @@ describe('Login test', () => {
     // task to restore the database as per the  dumps/commons/bootstrap.sql
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'new_user')
-    cy.task('seedForms')
     // login as admin and validate admin is logged in
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

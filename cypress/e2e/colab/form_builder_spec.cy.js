@@ -1,13 +1,12 @@
 /* eslint-disable jest/expect-expect */
 import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes1'
 
 describe('Form builder', () => {
   it('views a form field', () => {
     // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
     cy.task('restore', 'commons/colab_bootstrap')
-    cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

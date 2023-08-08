@@ -10,7 +10,6 @@ describe('Upload manuscript test', () => {
   it('can upload a manuscript and some metadata', () => {
     // task to restore the database as per the  dumps/bootstrap.sql
     cy.task('restore', 'commons/bootstrap') // Populate the Database
-    cy.task('seedForms')
 
     // login as author
     cy.fixture('role_names').then(name => {

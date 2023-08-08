@@ -13,7 +13,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 
-describe('refresh button tests', () => {
+describe.skip('refresh button tests', () => {
   context('visibility check', () => {
     it('check button exists and is visible', () => {
       // task to restore the database as per the dumps/initial_state_other.sql

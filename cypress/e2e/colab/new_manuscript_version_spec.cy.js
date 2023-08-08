@@ -3,7 +3,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes1'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
@@ -13,10 +13,10 @@ describe('checking manuscript version', () => {
   it('editor checks for new manuscript version', () => {
     cy.task('restore', 'commons/colab_bootstrap')
     cy.task('seed', 'three_reviews_completed')
-    cy.task('seedForms')
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, dashboard)
+      // eslint-disable-next-line jest/valid-expect-in-promise
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
       /* Assign Editor */

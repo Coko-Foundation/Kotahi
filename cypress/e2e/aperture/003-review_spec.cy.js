@@ -32,7 +32,6 @@ describe('Completing a review', () => {
   it('accept and do a review', () => {
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'reviewers_invited')
-    cy.task('seedForms')
     cy.fixture('role_names').then(name => {
       // Reviewers
       doReview(name.role.reviewers[0], reviewDataList[0])
