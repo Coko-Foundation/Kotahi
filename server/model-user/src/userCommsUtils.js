@@ -12,7 +12,8 @@ const getUsersById = async userIds => models.User.query().findByIds(userIds)
  * groupManager, admin, author, reviewer, editor, handlingEditor, seniorEditor, managingEditor.
  * Each is true if the user holds that role.
  * Note, an 'invited' or 'rejected' reviewer does NOT have reviewer role.
- * Also, "anyEditor" indicates if the user holds any editorial role for the manuscript. */
+ * Also, "anyEditor" indicates if the user holds any editorial role for the manuscript;
+ * "anyEditorOrManager" indicates any editorial role or groupManager or admin. */
 const getUserRolesInManuscript = async (userId, manuscriptId) => {
   const manuscript = await models.Manuscript.query().findById(manuscriptId)
   const { groupId } = manuscript
@@ -32,7 +33,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     seniorEditor: false,
     managingEditor: false,
     anyEditor: false,
-    editorOrAdmin: false,
+    anyEditorOrManager: false,
   }
 
   if (!userId || !manuscriptId) return result
@@ -59,6 +60,9 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     result.handlingEditor ||
     result.seniorEditor ||
     result.managingEditor
+
+  result.anyEditorOrManager =
+    result.anyEditor || result.admin || result.groupManager
 
   return result
 }
