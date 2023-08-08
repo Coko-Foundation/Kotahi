@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier,jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 
-import { dashboard, manuscripts } from '../../support/routes'
+import { dashboard, manuscripts } from '../../support/routes1'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { Menu } from '../../page-object/page-component/menu'
@@ -12,7 +12,6 @@ import { ReviewPage } from '../../page-object/review-page'
 describe('review page tests', () => {
   beforeEach(() => {
     cy.task('restore', 'commons/colab_bootstrap')
-    cy.task('seedForms')
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

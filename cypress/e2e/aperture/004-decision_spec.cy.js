@@ -13,12 +13,12 @@ describe('Completing a review', () => {
   it('accept and do a review', () => {
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'three_reviews_completed') // restore the database as per dumps/three_reviews_completed.sql
-    cy.task('seedForms')
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       /* Group Manager assigns Editor to manuscript */
       cy.login(name.role.admin, dashboard)
+      // eslint-disable-next-line jest/valid-expect-in-promise
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
       ControlPage.getAssignSeniorEditorDropdown()

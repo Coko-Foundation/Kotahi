@@ -3,7 +3,7 @@ import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes2'
 
 const bioRxivArticleUrl =
   'https://www.biorxiv.org/content/10.1101/2022.05.28.493855v1'
@@ -13,7 +13,6 @@ describe.skip('Update the submission form field', () => {
   it('update submission form field for publishing to hypothesis group', () => {
     // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
     cy.task('restore', 'commons/elife_bootstrap')
-    cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

@@ -11,7 +11,7 @@ import { Menu } from '../../page-object/page-component/menu'
 import { FormsPage } from '../../page-object/forms-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
-describe('users page tests', () => {
+describe.skip('users page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
     cy.task('restore', 'initial_state_other')

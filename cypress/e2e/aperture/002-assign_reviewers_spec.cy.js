@@ -11,13 +11,12 @@ describe('Editor assigning reviewers', () => {
     // Restore Database (dumps/senior_editor_assigned.sql)
     cy.task('restore', 'commons/bootstrap')
     cy.task('seed', 'senior_editor_assigned')
-    cy.task('seedForms')
   })
   it('can assign 3 reviewers', () => {
     // login as seniorEditor
     cy.login(seniorEditor, dashboard)
 
-    cy.url().should('eq', `${Cypress.config().baseUrl}/kotahi/dashboard`)
+    cy.url().should('eq', `${Cypress.config().baseUrl}/journal/dashboard`)
     cy.reload()
     cy.awaitDisappearSpinner()
     // eslint-disable-next-line jest/valid-expect-in-promise

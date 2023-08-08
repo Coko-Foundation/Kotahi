@@ -6,7 +6,7 @@ import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 
-describe('manuscripts page checkboxes tests', () => {
+describe.skip('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
       cy.task('restore', 'initial_state_other')

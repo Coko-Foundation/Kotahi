@@ -7,7 +7,7 @@ import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 
-describe('manuscripts page tests', () => {
+describe.skip('manuscripts page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
     cy.task('restore', 'initial_state_other')

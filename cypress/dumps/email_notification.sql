@@ -5,7 +5,7 @@ DECLARE
   gm_team_id UUID;
   user_team_id UUID;
 BEGIN
-SELECT id INTO g_id FROM groups LIMIT 1;
+SELECT id INTO g_id FROM groups WHERE name='prc' LIMIT 1;
 SELECT id INTO admin_team_id FROM teams
   WHERE global IS TRUE AND role='admin' LIMIT 1;
 SELECT id INTO gm_team_id FROM teams

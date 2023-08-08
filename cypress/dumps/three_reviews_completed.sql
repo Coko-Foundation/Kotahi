@@ -2,7 +2,9 @@ DO $$
 DECLARE
   g_id UUID;
 BEGIN
-SELECT id INTO g_id FROM groups LIMIT 1;
+SELECT object_id INTO g_id from teams where id = 
+(SELECT team_id FROM team_members WHERE team_members.team_id  <> (SELECT id FROM teams
+  WHERE global IS TRUE AND role='admin' LIMIT 1)  LIMIT 1);
 
 -- -------------------------------------------------------------
 -- Senior Editor Assigned 

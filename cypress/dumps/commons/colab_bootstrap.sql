@@ -4,14 +4,16 @@ DECLARE
   admin_team_id UUID;
   gm_team_id UUID;
   user_team_id UUID;
+  channel_id UUID;
 BEGIN
-SELECT id INTO g_id FROM groups LIMIT 1;
+SELECT id INTO g_id FROM groups WHERE name='prc' LIMIT 1;
 SELECT id INTO admin_team_id FROM teams
   WHERE global IS TRUE AND role='admin' LIMIT 1;
 SELECT id INTO gm_team_id FROM teams
   WHERE object_id=g_id AND role='groupManager' LIMIT 1;
 SELECT id INTO user_team_id FROM teams
   WHERE object_id=g_id AND role='user' LIMIT 1;
+SELECT id INTO channel_id FROM channels WHERE group_id=g_id AND topic='System-wide discussion';
 
 UPDATE configs SET form_data = '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": true}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"labelColumn": true, "tableColumns": "meta.title, created, updated, status, submission.labels, author", "newSubmission": true, "paginationCount": 10, "archivePeriodDays": 60, "autoImportHourUtc": 21, "semanticScholarImportsRecencyPeriodDays": 42}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": true}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "colab", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/biophysics-colab.png", "brandName": "Colab", "primaryColor": "#bc2325", "secondaryColor": "#bc2325"}, "eventNotification": {"reviewerInvitationPrimaryEmailTemplate": "ae7e01ca-fa91-4155-a248-a8b9f38c80a3"}}'
 WHERE group_id = g_id;
@@ -50,5 +52,15 @@ INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, gm_team_id, '85e1300e-003c-4e96-987b-23812f902477', NULL, NULL),
 (gen_random_uuid(), '2023-01-17 19:09:08.683+00', '2023-01-17 19:09:08.683+00', NULL, gm_team_id, '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL, NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, admin_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL);
+
+INSERT INTO "public"."channel_members" ("id", "created", "updated", "user_id", "channel_id", "last_viewed", "last_alert_triggered_time") VALUES 
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '5b861dfb-02df-4be1-bc67-41a21611f5e7', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '85e1300e-003c-4e96-987b-23812f902477', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '41d52254-a2b8-4ea4-9ded-bfbfe9671578', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', channel_id, '2023-07-27 06:58:53.829+00', NULL),
+(gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '231717dd-ba09-43d4-ac98-9d5542b27a0c', channel_id, '2023-07-27 06:58:53.829+00', NULL);
 
 END $$

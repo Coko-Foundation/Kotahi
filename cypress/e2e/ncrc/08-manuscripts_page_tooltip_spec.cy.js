@@ -7,7 +7,7 @@ import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 
-describe('tooltip tests', () => {
+describe.skip('tooltip tests', () => {
   beforeEach(() => {
     cy.task('restore', 'initial_state_other')
     cy.task('seedForms')

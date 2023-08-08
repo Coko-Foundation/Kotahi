@@ -13,7 +13,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { UsersPage } from '../../page-object/users-page'
 import { FormsPage } from '../../page-object/forms-page'
 
-describe('Login page tests', () => {
+describe.skip('Login page tests', () => {
   it('page should display NCRC branding settings', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {

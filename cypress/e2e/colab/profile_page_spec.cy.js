@@ -5,7 +5,7 @@ import {
   manuscripts,
   users,
   formBuilder,
-} from '../../support/routes'
+} from '../../support/routes1'
 import { ProfilePage } from '../../page-object/profile-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
@@ -14,8 +14,6 @@ describe('profile page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the dumps/initial_state_other.sql
     cy.task('restore', 'commons/colab_bootstrap')
-    cy.task('seedForms')
-
     // login and attempt to access the dashboard page
     cy.fixture('role_names').then(name => {
       cy.login(name.role.tester, profile)

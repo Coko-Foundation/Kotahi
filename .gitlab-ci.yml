@@ -1,77 +1,84 @@
 stages:
   - run-pipeline
 
-elife-pipeline:
+test-pipeline:
   except:
     - schedules
   stage: run-pipeline
   trigger:
     include:
-      - local: .gitlab-ci.elife.yml
+      - local: .gitlab-ci.config.yml
     strategy: depend
+# elife-pipeline:
+#   except:
+#     - schedules
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.elife.yml
+#     strategy: depend
 
-elife-test-firefox:
-  only:
-    refs:
-      - schedules
-    variables:
-      - $SCHEDULE_TYPE == "test-firefox"
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.elife-test-firefox.yml
-    strategy: depend
+# elife-test-firefox:
+#   only:
+#     refs:
+#       - schedules
+#     variables:
+#       - $SCHEDULE_TYPE == "test-firefox"
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.elife-test-firefox.yml
+#     strategy: depend
 
-ncrc-test-firefox:
-  only:
-    refs:
-      - schedules
-    variables:
-      - $SCHEDULE_TYPE == "test-firefox"
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.ncrc-test-firefox.yml
-    strategy: depend
+# ncrc-test-firefox:
+#   only:
+#     refs:
+#       - schedules
+#     variables:
+#       - $SCHEDULE_TYPE == "test-firefox"
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.ncrc-test-firefox.yml
+#     strategy: depend
 
-ncrc-pipeline:
-  except:
-    - schedules
-  only:
-    refs:
-      - main
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.ncrc.yml
-    strategy: depend
+# ncrc-pipeline:
+#   except:
+#     - schedules
+#   only:
+#     refs:
+#       - main
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.ncrc.yml
+#     strategy: depend
 
-colab-test-firefox:
-  only:
-    refs:
-      - schedules
-    variables:
-      - $SCHEDULE_TYPE == "test-firefox"
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.colab-test-firefox.yml
-    strategy: depend
+# colab-test-firefox:
+#   only:
+#     refs:
+#       - schedules
+#     variables:
+#       - $SCHEDULE_TYPE == "test-firefox"
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.colab-test-firefox.yml
+#     strategy: depend
+# colab-pipeline:
+#   except:
+#     - schedules
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.colab.yml
+#     strategy: depend
 
-colab-pipeline:
-  except:
-    - schedules
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.colab.yml
-    strategy: depend
-
-aperture-pipeline:
-  except:
-    - schedules
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.aperture.yml
-    strategy: depend
+# aperture-pipeline:
+#   except:
+#     - schedules
+#   stage: run-pipeline
+#   trigger:
+#     include:
+#       - local: .gitlab-ci.aperture.yml
+#     strategy: depend

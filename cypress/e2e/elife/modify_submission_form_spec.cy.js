@@ -3,7 +3,7 @@ import { Menu } from '../../page-object/page-component/menu'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { manuscripts, dashboard } from '../../support/routes'
+import { manuscripts, dashboard } from '../../support/routes2'
 
 const invalidDoiLnk = 'https://hours.com'
 describe('validating doi field in submission form', () => {
@@ -11,7 +11,6 @@ describe('validating doi field in submission form', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/initialState.sql
       cy.task('restore', 'commons/elife_bootstrap')
-      cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
@@ -74,7 +73,7 @@ describe('validating doi field in submission form', () => {
     it('check doi link is available in submission form', () => {
       cy.task('restore', 'commons/elife_bootstrap')
       cy.task('seed', 'submission_complete') // task to restore the database as per the  dumps/submission_complete.sql
-      cy.task('seedForms')
+      // cy.task('seedForms')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         // eslint-disable-next-line jest/valid-expect-in-promise
@@ -102,7 +101,7 @@ describe('validating doi field in submission form', () => {
       cy.task('restore', 'commons/elife_bootstrap')
       cy.task('seed', 'submission_complete') // task to restore the database as per the  dumps/submission_complete.sql
       // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.task('seedForms')
+      // cy.task('seedForms')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         // login as admin

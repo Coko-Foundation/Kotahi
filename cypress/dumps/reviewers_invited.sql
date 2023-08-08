@@ -2,7 +2,7 @@ DO $$
 DECLARE
   g_id UUID;
 BEGIN
-SELECT id INTO g_id FROM groups LIMIT 1;
+SELECT object_id  INTO g_id FROM team_members JOIN teams ON teams.id  = team_members.team_id WHERE object_type = 'Group' LIMIT 1;
 
 -- -------------------------------------------------------------
 -- Senior Editor Assigned 
