@@ -16,7 +16,7 @@ exports.up = async knex => {
       logger.info(`Existing Groups count: ${groups.length}`)
 
       // Existing instances migrating to multi-tenancy groups
-      if (groups.length >= 1 && forms.length > 1 && !forms[0].group_id) {
+      if (groups.length >= 1 && forms.length >= 1 && !forms[0].group_id) {
         /* eslint no-param-reassign: "error" */
         await Form.query(trx)
           .patch({ groupId: groups[0].id })

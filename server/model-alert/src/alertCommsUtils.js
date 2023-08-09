@@ -62,7 +62,7 @@ const sendAlertForMessage = async ({
   let discussionUrl = baseUrl
 
   if (!channel.manuscriptId) {
-    discussionUrl += `/admin/manuscripts` // admin discussion
+    discussionUrl += `/admin/manuscripts` // group manager discussion
   } else {
     discussionUrl += `/versions/${channel.manuscriptId}`
     const roles = await getUserRolesInManuscript(user.id, channel.manuscriptId)

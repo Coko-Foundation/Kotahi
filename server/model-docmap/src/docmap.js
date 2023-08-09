@@ -9,6 +9,7 @@ class Docmap extends BaseModel {
     return {
       properties: {
         manuscriptId: { type: 'string', format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
         externalId: { type: 'string' },
         content: { type: 'string' },
       },
@@ -17,7 +18,7 @@ class Docmap extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable global-require */
-    const { Manuscript } = require('@pubsweet/models')
+    const { Manuscript, Group } = require('@pubsweet/models')
 
     return {
       manuscript: {
@@ -26,6 +27,14 @@ class Docmap extends BaseModel {
         join: {
           from: 'docmaps.manuscriptId',
           to: 'manuscripts.id',
+        },
+      },
+      group: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Group,
+        join: {
+          from: 'docmaps.groupId',
+          to: 'groups.id',
         },
       },
     }

@@ -9,17 +9,15 @@ const {
   getFieldsMapForTemplating,
 } = require('../../model-manuscript/src/manuscriptUtils')
 
-const Config = require('../../config/src/config')
-
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
-let docmapsScheme
+let allDocmapsScheme
 
 try {
   // eslint-disable-next-line global-require, import/no-unresolved
-  docmapsScheme = require('../../../config/journal/docmaps_scheme.json')
+  allDocmapsScheme = require('../../../config/journal/docmaps_scheme.json')
 } catch (err) {
-  docmapsScheme = null
+  allDocmapsScheme = null
 }
 
 const expandTemplate = availableFields => objVal =>
@@ -67,15 +65,25 @@ const expandTemplatesAndRemoveDirectivesRecursive = (
 /* eslint-enable no-param-reassign */
 
 const tryPublishDocMaps = async manuscript => {
-  if (!docmapsScheme) return false
+  if (!allDocmapsScheme) return false
+  const group = await models.Group.query().findById(manuscript.groupId)
 
-  const activeConfig = await Config.query().findOne({
-    groupId: manuscript.groupId,
+  // Checks if docmapsScheme has been configured for that group
+  const docmapsSchemeExists = allDocmapsScheme.find(
+    d => d.groupName === group.name,
+  )
+
+  if (!docmapsSchemeExists) return false
+
+  const { docmapsScheme } = docmapsSchemeExists
+
+  const activeConfig = await models.Config.query().findOne({
+    groupId: group.id,
     active: true,
   })
 
   const { submissionForm, reviewForm, decisionForm } = await getActiveForms(
-    manuscript.groupId,
+    group.id,
   )
 
   const fields = getFieldsMapForTemplating(
@@ -117,7 +125,7 @@ const tryPublishDocMaps = async manuscript => {
               uri,
               manuscriptTitle,
               manuscript.id,
-              manuscript.groupId,
+              group.id,
             )
 
             // eslint-disable-next-line no-console
@@ -132,7 +140,7 @@ const tryPublishDocMaps = async manuscript => {
 
             fragmentOutput.content.push({
               type: 'web-page',
-              url: `${config['pubsweet-client'].baseUrl}/versions/${manuscript.id}/artifacts/${artifactId}`,
+              url: `${config['pubsweet-client'].baseUrl}/${group.name}/versions/${manuscript.id}/artifacts/${artifactId}`,
             })
           }
 
@@ -175,17 +183,19 @@ const tryPublishDocMaps = async manuscript => {
 
   const existingDocmap = await models.Docmap.query().findOne({
     externalId: uri,
+    groupId: group.id,
   })
 
   if (existingDocmap)
     await models.Docmap.query()
       .update({ content, manuscriptId: manuscript.id })
-      .where({ externalId: uri })
+      .where({ externalId: uri, groupId: group.id })
   else
     await models.Docmap.query().insert({
       externalId: uri,
       content,
       manuscriptId: manuscript.id,
+      groupId: group.id,
     })
 
   // eslint-disable-next-line no-console
