@@ -18,7 +18,7 @@ exports.up = async knex => {
       // Existing instances migrating to multi-tenancy groups
       if (
         groups.length >= 1 &&
-        manuscripts.length > 1 &&
+        manuscripts.length >= 1 &&
         !manuscripts[0].group_id
       ) {
         /* eslint no-param-reassign: "error" */

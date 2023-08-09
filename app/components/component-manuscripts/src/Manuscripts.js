@@ -261,7 +261,7 @@ const Manuscripts = ({ history, ...props }) => {
   const channels = [
     {
       id: adminDiscussionChannel?.id,
-      name: 'Admin discussion',
+      name: 'Group Manager discussion',
       type: adminDiscussionChannel?.type,
     },
   ]
@@ -302,7 +302,7 @@ const Manuscripts = ({ history, ...props }) => {
         <RoundIconButton
           iconName="MessageSquare"
           onClick={() => setIsAdminChatOpen(true)}
-          title="Show admin discussion"
+          title="Show group manager discussion"
         />
       )}
     </ControlsContainer>
@@ -379,7 +379,7 @@ const Manuscripts = ({ history, ...props }) => {
           </div>
         </ManuscriptsPane>
 
-        {/* Admin Discussion, Video Chat, Hide Chat, Chat component */}
+        {/* Group Manager Discussion, Video Chat, Hide Chat, Chat component */}
         {isAdminChatOpen && (
           <MessageContainer
             channelId={
