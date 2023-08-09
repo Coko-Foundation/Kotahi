@@ -1,6 +1,7 @@
 const config = require('config')
 const { app } = require('@coko/server')
 const { setConfig } = require('./config/src/configObject')
+const { registerPlugins } = require('./plugins/plugins')
 
 setConfig({
   journal: config.journal,
@@ -11,6 +12,7 @@ setConfig({
 
 const { initiateJobSchedules } = require('./utils/jobUtils')
 
+registerPlugins()
 initiateJobSchedules() // Initiate all job schedules
 
 module.exports = app

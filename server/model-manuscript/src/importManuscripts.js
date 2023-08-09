@@ -4,6 +4,7 @@ const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import'
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const importArticlesFromSemanticScholar = require('../../import-articles/semantic-scholar-papers-import')
+const { runImports } = require('../../plugins/imports')
 
 const { getPubsub } = pubsubManager
 
@@ -18,6 +19,8 @@ const importManuscripts = async (groupId, ctx) => {
     groupId,
     active: true,
   })
+
+  await runImports(groupId, ctx.user)
 
   const promises = []
 
