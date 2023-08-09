@@ -16,6 +16,9 @@ config/local*.*
 .vscode/launch.json
 .DS_Store
 config/*.env
+!config/plugins
+config/plugins/*
+!config/plugins/example_plugins_manifest.json
 minio/data/*
 .minio.sys
 db-data/*

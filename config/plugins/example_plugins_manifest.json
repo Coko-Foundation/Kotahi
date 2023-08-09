@@ -1,0 +1,16 @@
+[
+  {
+    "groupName": "kotahi",
+    "plugins": [
+      {
+        "name": "Example Plugin 1 (a Wax Editor plugin)",
+        "folderName": "example_plugin_1",
+        "targetWaxEditors": ["manuscript", "production", "form", "chat"]
+      },
+      {
+        "name": "Example Plugin 2 (a mauscript-import plugin)",
+        "folderName": "example_plugin_2"
+      }
+    ]
+  }
+]
