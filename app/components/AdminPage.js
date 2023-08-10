@@ -218,15 +218,15 @@ const AdminPage = () => {
         { link: userAdminLink, name: 'Users', icon: 'users' },
         { link: configurationLink, name: 'Configuration', icon: 'sliders' },
         { link: emailTemplatesLink, name: 'Emails', icon: 'mail' },
-        // {
-        //   menu: 'CMS',
-        //   name: 'CMS',
-        //   icon: 'layout',
-        //   links: [
-        //     { link: CMSPagesPageLink, name: 'Pages', icon: '' },
-        //     { link: CMSLayoutPageLink, name: 'Layout', icon: '' },
-        //   ],
-        // },
+        {
+          menu: 'CMS',
+          name: 'CMS',
+          icon: 'layout',
+          links: [
+            { link: CMSPagesPageLink, name: 'Pages', icon: '' },
+            { link: CMSLayoutPageLink, name: 'Layout', icon: '' },
+          ],
+        },
       ],
     })
   }

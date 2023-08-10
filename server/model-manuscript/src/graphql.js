@@ -9,6 +9,9 @@ const cheerio = require('cheerio')
 const { raw } = require('objection')
 const { importManuscripts } = require('./importManuscripts')
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
+const { rebuildCMSSite } = require('../../flax-site/flax-api')
+
+const { getPublishableReviewFields } = require('../../publishing/flax/tools')
 
 const {
   publishToCrossref,
@@ -350,6 +353,11 @@ const tryPublishingWebhook = async manuscriptId => {
         throw new Error(message)
       })
   }
+}
+
+const publishOnCMS = async (groupId, manuscriptId) => {
+  const response = await rebuildCMSSite(groupId, { manuscriptId })
+  return response
 }
 
 const resolvers = {
@@ -1195,6 +1203,17 @@ const resolvers = {
         })
       }
 
+      try {
+        await publishOnCMS(manuscript.groupId, manuscript.id)
+        steps.push({ stepLabel: 'Publishing CMS', succeeded: true })
+      } catch (err) {
+        steps.push({
+          stepLabel: 'Publishing CMS',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
+
       if (!steps.length || steps.some(step => step.succeeded)) {
         update.published = new Date()
 
@@ -1362,6 +1381,7 @@ const resolvers = {
         manuscripts,
       }
     },
+
     async paginatedManuscripts(
       _,
       { sort, offset, limit, filters, timezoneOffsetMinutes, groupId },
@@ -1399,16 +1419,39 @@ const resolvers = {
       return { totalCount, manuscripts: result }
     },
 
-    async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
-      const groupId = ctx.req.headers['group-id']
+    async manuscriptsPublishedSinceDate(_, { startDate, limit, offset }, ctx) {
+      let groupId = ctx.req.headers['group-id']
+
+      if (!groupId) {
+        const groups = await models.Group.query().where({ isArchived: false })
+
+        if (groups.length !== 1) {
+          throw new Error(
+            'Group ID must be specified if more than one group exists',
+          )
+        }
+
+        groupId = groups[0].id
+      }
+
+      const subQuery = models.Manuscript.query()
+        .select('short_id')
+        .max('created as latest_created')
+        .where('group_id', groupId)
+        .groupBy('short_id')
 
       const query = models.Manuscript.query()
-        .whereNotNull('published')
-        .orderBy('published')
+        .select('m.*', raw('count(*) over () as totalCount'))
+        .from(models.Manuscript.query().as('m'))
+        .innerJoin(subQuery.as('sub'), 'm.short_id', 'sub.short_id')
+        .andWhere('m.created', '=', raw('sub.latest_created'))
+        .whereNotNull('m.published')
+        .where('m.group_id', groupId)
+        .orderBy('m.published', 'desc')
 
-      if (groupId) query.where('group_id', groupId)
-      if (startDate) query.where('published', '>=', new Date(startDate))
+      if (startDate) query.where('.published', '>=', new Date(startDate))
       if (limit) query.limit(limit)
+      if (offset) query.offset(offset)
 
       return query
     },
@@ -1634,6 +1677,80 @@ const resolvers = {
     async publishedDate(parent) {
       return parent.published
     },
+    async reviews(parent, { _ }, ctx) {
+      let reviews = await getRelatedReviews(parent, ctx)
+
+      if (!Array.isArray(reviews)) {
+        return []
+      }
+
+      reviews = reviews.filter(review => !review.isDecision)
+      const reviewForm = await getReviewForm(parent.groupId)
+
+      const threadedDiscussions =
+        parent.threadedDiscussions ||
+        (await getThreadedDiscussionsForManuscript(parent, getUsersById))
+
+      return getPublishableReviewFields(
+        reviews,
+        reviewForm,
+        threadedDiscussions,
+        parent,
+      )
+    },
+
+    async decisions(parent, { _ }, ctx) {
+      // filtering decisions in Kotahi itself so that we can change
+      // the logic easily in future.
+      const reviews = await getRelatedReviews(parent, ctx)
+
+      if (!Array.isArray(reviews)) {
+        return []
+      }
+
+      const decisions = reviews.filter(review => review.isDecision)
+      const decisionForm = await getDecisionForm(parent.groupId)
+
+      const threadedDiscussions =
+        parent.threadedDiscussions ||
+        (await getThreadedDiscussionsForManuscript(parent, getUsersById))
+
+      return getPublishableReviewFields(
+        decisions,
+        decisionForm,
+        threadedDiscussions,
+        parent,
+      )
+    },
+    async editors(parent) {
+      const teams = await models.Team.query()
+        .where({ objectId: parent.id })
+        .whereIn('role', ['seniorEditor', 'handlingEditor', 'editor'])
+
+      const teamMembers = await models.TeamMember.query().whereIn(
+        'team_id',
+        teams.map(t => t.id),
+      )
+
+      const editorAndRoles = await Promise.all(
+        teamMembers.map(async member => {
+          const user = await models.User.query().findById(member.userId)
+          const team = teams.find(t => t.id === member.teamId)
+          return {
+            name: user.username,
+            role: team.role,
+          }
+        }),
+      )
+
+      return editorAndRoles
+    },
+
+    // Since we can not change the api response structure right now
+    // So Adding the totalCount field in the manuscript itself.
+    async totalCount(parent) {
+      return parent.totalcount
+    },
   },
   ManuscriptMeta: {
     async source(parent, _, ctx, info) {
@@ -1650,6 +1767,16 @@ const resolvers = {
       return replaceImageSrc(parent.source, files, 'medium')
     },
   },
+  PublishedReview: {
+    async user(parent) {
+      if (parent.isHiddenReviewerName) {
+        return { id: '', username: 'Anonymous User' }
+      }
+
+      const user = await models.User.query().findById(parent.userId)
+      return user
+    },
+  },
 }
 
 const typeDefs = `
@@ -1664,7 +1791,7 @@ const typeDefs = `
     validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
-    manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
+    manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int, offset: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
     unreviewedPreprints(token: String!, groupName: String!): [Preprint]
@@ -1855,7 +1982,40 @@ const typeDefs = `
 		printReadyPdfUrl: String
 		styledHtml: String
 		css: String
+    decision: String
+    totalCount: Int
+    editors: [Editor!]
+    reviews: [PublishedReview!]
+    decisions: [PublishedReview!]
   }
+
+  type PublishedReview {
+    id: ID!
+    created: DateTime!
+    updated: DateTime
+    isDecision: Boolean
+    open: Boolean
+    user: ReviewUser
+    isHiddenFromAuthor: Boolean
+    isHiddenReviewerName: Boolean
+    isSharedWithCurrentUser: Boolean!
+    canBePublishedPublicly: Boolean
+    jsonData: String
+    userId: String
+    files: [File]
+  }
+
+  type Editor {
+    id: ID
+    name: String!
+    role: String!
+  }
+
+  type ReviewUser {
+    id: ID
+    username: String
+  }
+  
 `
 
 module.exports = {

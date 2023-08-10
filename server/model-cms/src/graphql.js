@@ -4,6 +4,11 @@ const { fileStorage } = require('@coko/server')
 
 const File = require('@coko/server/src/models/file/file.model')
 
+const {
+  replaceImageSrc,
+  getFilesWithUrl,
+} = require('../../utils/fileStorageUtils')
+
 const setInitialLayout = async groupId => {
   const { formData } = await models.Config.query().findOne({
     groupId,
@@ -207,6 +212,15 @@ const resolvers = {
 
       return models.CMSPage.relatedQuery('creator').for(parent.id).first()
     },
+
+    async content(parent) {
+      if (!parent.content) return parent.content
+
+      let files = await models.File.query().where('object_id', parent.id)
+      files = await getFilesWithUrl(files)
+
+      return replaceImageSrc(parent.content, files, 'medium')
+    },
   },
 
   CMSLayout: {
@@ -231,6 +245,17 @@ const resolvers = {
 
     async flaxFooterConfig(parent) {
       return getFlaxPageConfig('flaxFooterConfig', parent.groupId)
+    },
+
+    async publishConfig(parent) {
+      const { formData } = await models.Config.query().findOne({
+        groupId: parent.groupId,
+        active: true,
+      })
+
+      return JSON.stringify({
+        licenseUrl: formData.publishing.crossref.licenseUrl,
+      })
     },
   },
 
@@ -311,6 +336,7 @@ const typeDefs = `
     updated: DateTime
     flaxHeaderConfig: [FlaxPageHeaderConfig!]
     flaxFooterConfig: [FlaxPageFooterConfig!]
+    publishConfig: String!
   }
 
   type FlaxPageHeaderConfig {
