@@ -45,6 +45,27 @@ const checkForEmptyBlocks = file => {
         inside.replaceChild(p, inside.childNodes[i])
       }
     } else {
+      // TODO: Only first node images are wrapped with 'figure' tag. Child image node within e.g. a 'p' are ignored!
+      // Below code is a example of the above mentioned scenario
+      // if (inside.childNodes[i].tagName === 'P') {
+      //   if (inside.childNodes[i].childNodes[0]?.tagName === 'IMG') {
+      //     console.error(
+      //       'Found unwrapped <img> tag:',
+      //       inside.childNodes[i].childNodes[0],
+      //     )
+      //     const figure = doc.createElement('figure')
+
+      //     if (!inside.childNodes[i + 1]) {
+      //       console.error('No next sibling, adding dummy paragraph')
+      //       const dummyp = doc.createElement('p')
+      //       inside.appendChild(dummyp)
+      //     }
+
+      //     figure.appendChild(inside.childNodes[i])
+      //     inside.replaceChild(figure, inside.childNodes[i])
+      //   }
+      // }
+
       if (inside.childNodes[i].tagName === 'A') {
         console.error('Found unwrapped <a> tag:', inside.childNodes[i])
         const p = doc.createElement('p')
@@ -219,6 +240,7 @@ const createManuscriptMutation = gql`
         }
       }
       meta {
+        source
         manuscriptId
         title
         history {
@@ -513,63 +535,6 @@ export default ({
         uploadResponse.response,
         config,
       )
-
-      // Moving the below logic to server-side 'createManuscript' to fix slow docx uploads
-      // To be removed after testing the new logic
-      // if (typeof uploadResponse.response === 'string') {
-      //   let source = uploadResponse.response
-      //   // eslint-disable-next-line
-      //   let uploadedImages = Promise.all(
-      //     map(images, async image => {
-      //       const uploadedImage = await uploadImage(
-      //         image,
-      //         client,
-      //         manuscriptData.data.createManuscript.id,
-      //       )
-
-      //       return uploadedImage
-      //     }),
-      //   )
-
-      //   await uploadedImages.then(results => {
-      //     const $ = cheerio.load(source)
-
-      //     $('img').each((i, elem) => {
-      //       const $elem = $(elem)
-
-      //       if (images[i].dataSrc === $elem.attr('src')) {
-      //         $elem.attr('data-fileid', results[i].data.createFile.id)
-      //         $elem.attr('alt', results[i].data.createFile.name)
-      //         $elem.attr(
-      //           'src',
-      //           results[i].data.createFile.storedObjects.find(
-      //             storedObject => storedObject.type === 'medium',
-      //           ).url,
-      //         )
-      //       }
-      //     })
-
-      //     source = $.html()
-
-      //     const manuscript = {
-      //       id: manuscriptData.data.createManuscript.id,
-      //       meta: {
-      //         source,
-      //       },
-      //     }
-
-      //     // eslint-disable-next-line
-      //     const updatedManuscript = client.mutate({
-      //       mutation: updateMutation,
-      //       variables: {
-      //         id: manuscriptData.data.createManuscript.id,
-      //         input: JSON.stringify(manuscript),
-      //       },
-      //     })
-
-      //     manuscriptData.data.createManuscript.meta.source = source
-      //   })
-      // }
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
