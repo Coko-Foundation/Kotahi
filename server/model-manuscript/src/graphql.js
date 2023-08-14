@@ -245,14 +245,10 @@ const uploadAndConvertBase64ImagesInManuscript = async manuscript => {
     const images = base64Images(source)
 
     if (images.length > 0) {
-      const uploadedImages = []
-
-      await Promise.all(
+      const uploadedImages = await Promise.all(
         map(images, async image => {
-          if (image.blob) {
-            const uploadedImage = await uploadImage(image, manuscript.id)
-            uploadedImages.push(uploadedImage)
-          }
+          const uploadedImage = await uploadImage(image, manuscript.id)
+          return uploadedImage
         }),
       )
 
@@ -450,54 +446,7 @@ const resolvers = {
         { relate: true },
       )
 
-      // Base64 conversion moved to server-side as a performance imporvement
-      const { source } = manuscript.meta
-
-      if (typeof source === 'string') {
-        const images = await base64Images(source)
-
-        if (images.length > 0) {
-          const uploadedImages = await Promise.all(
-            map(images, async image => {
-              const uploadedImage = await uploadImage(image, manuscript.id)
-              return uploadedImage
-            }),
-          )
-
-          const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
-
-          const $ = cheerio.load(source)
-
-          map(images, (image, index) => {
-            // uploadedImagesWithUrl[index].name comes in as something like Image4.png
-            // First, get the number so we can identify the image in the DOM
-
-            const imageNumber = uploadedImagesWithUrl[index].name.match(
-              /\d+/,
-            )[0]
-
-            // We are looking for the image with data-original-name in the form "Picture 4"
-
-            const elem = $(`img[data-original-name="Picture ${imageNumber}"]`)
-
-            // elem.length will be 0 if there is an image without a corresponding file
-
-            if (elem.length) {
-              const $elem = $(elem)
-              $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-              $elem.attr('alt', uploadedImagesWithUrl[index].name)
-              $elem.attr(
-                'src',
-                uploadedImagesWithUrl[index].storedObjects.find(
-                  storedObject => storedObject.type === 'medium',
-                ).url,
-              )
-            }
-          })
-
-          manuscript.meta.source = $.html()
-        }
-      }
+      await uploadAndConvertBase64ImagesInManuscript(manuscript)
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         manuscript.id,

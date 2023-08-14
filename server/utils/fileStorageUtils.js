@@ -284,7 +284,7 @@ const base64Images = source => {
     const src = $elem.attr('src')
     const base64Match = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
 
-    if (base64Match) {
+    if (base64Match && $elem.attr('alt') !== 'Broken image') {
       const mimeType = base64Match[0]
       const blob = base64toBlob(src, mimeType)
       const mimeTypeSplit = mimeType.split('/')
