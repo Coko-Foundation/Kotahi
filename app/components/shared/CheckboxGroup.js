@@ -7,7 +7,11 @@ import { Checkbox } from './Checkbox'
 export const CheckboxGroup = ({ options, value: values, ...props }) => {
   const handleChange = event => {
     const { name } = event.target
-    const newValues = values.filter(v => v !== name)
+
+    const newValues = Array.isArray(values)
+      ? values.filter(v => v !== name)
+      : []
+
     if (event.target.checked) newValues.push(name)
     props.onChange(newValues)
   }
