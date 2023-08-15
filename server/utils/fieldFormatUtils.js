@@ -27,7 +27,7 @@ const getPublishableTextFromValue = (value, field) => {
     if (!optionLabels.length) return null
     return `<p>${escape(
       field.shortDescription || field.title,
-    )}:</p><ul>${optionLabels
+    ).trim()}:</p><ul>${optionLabels
       .map(label => `<li>${escape(label)}</li>`)
       .join('')}</ul>`
   }
@@ -37,9 +37,9 @@ const getPublishableTextFromValue = (value, field) => {
       label: value,
     }
 
-    return `<p>${escape(field.shortDescription || field.title)}: ${escape(
-      label,
-    )}</p>`
+    return `<p>${escape(
+      field.shortDescription || field.title,
+    ).trim()}: ${escape(label)}</p>`
   }
 
   if (field.component === 'LinksInput') {
@@ -47,7 +47,7 @@ const getPublishableTextFromValue = (value, field) => {
 
     return `<p>${escape(
       field.shortDescription || field.title,
-    )}:</p><ul>${value
+    ).trim()}:</p><ul>${value
       .map(
         link =>
           `<li><a href="${escape(link.url)}">${escape(link.url)}</a></li>`,
@@ -57,7 +57,9 @@ const getPublishableTextFromValue = (value, field) => {
 
   if (field.component === 'AuthorsInput') {
     if (!Array.isArray(value) || !value.length) return null
-    return `<p>${escape(field.shortDescription || field.title)}:</p><ul>${value
+    return `<p>${escape(
+      field.shortDescription || field.title,
+    ).trim()}:</p><ul>${value
       .map(author => {
         const escapedName = escape(`${author.firstName} ${author.lastName}`)
 
