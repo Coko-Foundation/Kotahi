@@ -1166,17 +1166,6 @@ const resolvers = {
         })
       }
 
-      try {
-        await publishOnCMS(manuscript.groupId, manuscript.id)
-        steps.push({ stepLabel: 'Publishing CMS', succeeded: true })
-      } catch (err) {
-        steps.push({
-          stepLabel: 'Publishing CMS',
-          succeeded: false,
-          errorMessage: err.message,
-        })
-      }
-
       if (!steps.length || steps.some(step => step.succeeded)) {
         update.published = new Date()
 
@@ -1201,6 +1190,17 @@ const resolvers = {
         id,
         update,
       )
+
+      try {
+        await publishOnCMS(manuscript.groupId, manuscript.id)
+        steps.push({ stepLabel: 'Publishing CMS', succeeded: true })
+      } catch (err) {
+        steps.push({
+          stepLabel: 'Publishing CMS',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
 
       return { manuscript: updatedManuscript, steps }
     },
@@ -1708,6 +1708,29 @@ const resolvers = {
 
       return editorAndRoles
     },
+    async submissionWithFields(parent) {
+      // need form structure as well to get all the values for select and checkbox group.
+      // We will move this to tool.js in the next MR
+      const submissionForm = await getSubmissionForm(parent.groupId)
+      const fieldStructure = submissionForm.structure.children
+      const submission = parent.submission
+
+      const submissionKeyPrefix = 'submission.'
+
+      const modifiedSubmission = Object.fromEntries(
+        Object.entries(submission).map(([key, value]) => [
+          key,
+          {
+            value,
+            structure: fieldStructure.find(
+              c => c.name === submissionKeyPrefix + key,
+            ),
+          },
+        ]),
+      )
+
+      return JSON.stringify(modifiedSubmission)
+    },
 
     // Since we can not change the api response structure right now
     // So Adding the totalCount field in the manuscript itself.
@@ -1940,6 +1963,7 @@ const typeDefs = `
     status: String
     meta: ManuscriptMeta
     submission: String
+    submissionWithFields: String
     publishedArtifacts: [PublishedArtifact!]!
     publishedDate: DateTime
 		printReadyPdfUrl: String
