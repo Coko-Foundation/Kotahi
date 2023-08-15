@@ -750,7 +750,7 @@ const resolvers = {
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
-            .submissionConfirmationEmailTemplate
+            ?.submissionConfirmationEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -769,31 +769,38 @@ const resolvers = {
           shortId: manuscript.shortId,
         }
 
-        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-          selectedTemplate,
-        )
-
-        try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
-            manuscript.groupId,
+        if (selectedTemplate) {
+          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+            selectedTemplate,
           )
 
-          // Get channel ID
-          const channelId = manuscript.channels.find(
-            channel => channel.topic === 'Editorial discussion',
-          ).id
+          try {
+            await sendEmailNotification(
+              receiverEmail,
+              selectedEmailTemplate,
+              data,
+              manuscript.groupId,
+            )
 
-          models.Message.createMessage({
-            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
-            channelId,
-            userId: manuscript.submitterId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
+            // Get channel ID
+            const channelId = manuscript.channels.find(
+              channel => channel.topic === 'Editorial discussion',
+            ).id
+
+            models.Message.createMessage({
+              content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+              channelId,
+              userId: manuscript.submitterId,
+            })
+          } catch (e) {
+            /* eslint-disable-next-line */
+            console.log('email was not sent', e)
+          }
+        } else {
+          // eslint-disable-next-line no-console
+          console.info(
+            'No email template configured for notifying of submission confirmation. Email not sent.',
+          )
         }
       }
 
@@ -862,7 +869,7 @@ const resolvers = {
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
-            .evaluationCompleteEmailTemplate
+            ?.evaluationCompleteEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -878,41 +885,48 @@ const resolvers = {
             shortId: manuscript.shortId,
           }
 
-          try {
-            // Add Email Notification Record in Editorial Discussion Panel
-            const author = manuscript.teams.find(team => {
-              if (team.role === 'author') {
-                return team
-              }
+          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+            selectedTemplate,
+          )
 
-              return null
-            }).members[0].user
+          if (selectedTemplate) {
+            try {
+              // Add Email Notification Record in Editorial Discussion Panel
+              const author = manuscript.teams.find(team => {
+                if (team.role === 'author') {
+                  return team
+                }
 
-            const body = `Editor Decision sent by Kotahi to ${author.username}`
+                return null
+              }).members[0].user
 
-            const channelId = manuscript.channels.find(
-              channel => channel.topic === 'Editorial discussion',
-            ).id
+              const body = `Editor Decision sent by Kotahi to ${author.username}`
 
-            models.Message.createMessage({
-              content: body,
-              channelId,
-              userId: manuscript.submitterId,
-            })
+              const channelId = manuscript.channels.find(
+                channel => channel.topic === 'Editorial discussion',
+              ).id
 
-            const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-              selectedTemplate,
+              models.Message.createMessage({
+                content: body,
+                channelId,
+                userId: manuscript.submitterId,
+              })
+
+              await sendEmailNotification(
+                receiverEmail,
+                selectedEmailTemplate,
+                data,
+                manuscript.groupId,
+              )
+            } catch (e) {
+              /* eslint-disable-next-line */
+              console.log('email was not sent', e)
+            }
+          } else {
+            // eslint-disable-next-line no-console
+            console.info(
+              'No email template configured for notifying of evaluation complete. Email not sent.',
             )
-
-            await sendEmailNotification(
-              receiverEmail,
-              selectedEmailTemplate,
-              data,
-              manuscript.groupId,
-            )
-          } catch (e) {
-            /* eslint-disable-next-line */
-            console.log('email was not sent', e)
           }
         }
       }
