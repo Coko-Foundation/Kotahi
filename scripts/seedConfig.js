@@ -91,6 +91,9 @@ const seedConfig = async (group, instanceName, index) => {
     logoPath: '/assets/logo-kotahi.png',
   }
 
+  const kotahiApiTokens =
+    index === 0 ? process.env.KOTAHI_API_TOKENS || null : null
+
   // Creates a config based on instance type one of "elife, ncrc, colab, aperture" and "aperture" being default
   switch (instanceName) {
     case 'elife':
@@ -100,7 +103,7 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'elife',
           user: {
             isAdmin: false,
-            kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
+            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -135,7 +138,7 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'ncrc',
           user: {
             isAdmin: false,
-            kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
+            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -175,7 +178,7 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'colab',
           user: {
             isAdmin: false,
-            kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
+            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: true },
@@ -232,7 +235,7 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'aperture',
           user: {
             isAdmin: false,
-            kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
+            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -277,7 +280,7 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'aperture',
           user: {
             isAdmin: false,
-            kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
+            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },

@@ -10,6 +10,7 @@ const resolvers = {
       if (groupId) group = groups.find(g => g.id === groupId)
 
       if (!group) throw new Error(`Group with ID ${groupId} not found`)
+      if (group && group.isArchived) throw new Error(`Group has been archived`)
 
       const record = await models.Docmap.query().findOne({
         externalId,

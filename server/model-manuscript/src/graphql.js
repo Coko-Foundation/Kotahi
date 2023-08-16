@@ -1421,14 +1421,14 @@ const resolvers = {
     async publishedManuscript(_, { id }, ctx) {
       return models.Manuscript.query().findById(id).whereNotNull('published')
     },
-    async unreviewedPreprints(_, { token, groupName }, ctx) {
-      const group = await models.Group.query().findOne({
-        name: groupName,
-        isArchived: false,
-      })
+    async unreviewedPreprints(_, { token, groupName = null }, ctx) {
+      const groups = await models.Group.query()
+      let group = null
+      if (!groupName && groups.length === 1) [group] = groups
+      if (groupName) group = groups.find(g => g.name === groupName)
 
-      if (!group)
-        throw new Error('Group does not exist or it has been archived!')
+      if (!group) throw new Error(`Group with name ${groupName} not found`)
+      if (group && group.isArchived) throw new Error(`Group has been archived`)
 
       const activeConfig = await models.Config.query().findOne({
         groupId: group.id,
@@ -1780,7 +1780,7 @@ const typeDefs = `
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int, offset: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
-    unreviewedPreprints(token: String!, groupName: String!): [Preprint]
+    unreviewedPreprints(token: String!, groupName: String): [Preprint]
     doisToRegister(id: ID!): [String]
   }
 
