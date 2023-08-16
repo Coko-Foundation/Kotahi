@@ -245,8 +245,8 @@ Kotahi exposes a graphql API for external access. The available queries are:
 
 - `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
 - `publishedManuscript(id: ID!): PublishedManuscript` returns a single published manuscript by ID, or null if this manuscript is not published or not found.
-- `unreviewedPreprints(token: String!): [Preprint]` returns a list of manuscripts with the `readyToEvaluate` label.
-- `docmap(externalId: String!): String!` returns a [DocMap](https://docmaps.knowledgefutures.org/) representing the relationship between a given preprint (`externalId` is the preprint's URL) and related artifacts such as evaluations that have been published from Kotahi. See above for how to enable this.
+- `unreviewedPreprints(token: String!, groupName: String): [Preprint]` returns a list of manuscripts with the `readyToEvaluate` label, for the specified group. `groupName` is required only if your instance has more than one group.
+- `docmap(externalId: String!, groupId: String): String!` returns a [DocMap](https://docmaps.knowledgefutures.org/) from the specified group, representing the relationship between a given preprint (`externalId` is the preprint's URL) and related artifacts such as evaluations that have been published from Kotahi. See above for how to enable this. `groupId` is required only if your instance has more than one group.
 
 Consult the code [here](https://gitlab.coko.foundation/kotahi/kotahi/blob/main/server/model-manuscript/src/graphql.js) and [here](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/a3f6620a553ec3f8a6c869a75021b211019280fd/server/model-docmap/src/graphql.js) for details, or the graphql playground (typically at http://localhost:4000/graphql, when your dev environment is running).
 
