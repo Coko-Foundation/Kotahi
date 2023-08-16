@@ -424,6 +424,7 @@ export const GET_GROUPS = gql`
       id
       name
       isArchived
+      oldConfig
       configs {
         id
         formData

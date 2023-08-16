@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch, useLocation, useHistory } from 'react-router-dom'
+import { Route, Switch, useLocation, Redirect } from 'react-router-dom'
 import { grid } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
@@ -9,7 +9,7 @@ import theme, { setBrandColors } from './theme'
 import GlobalStyle from './theme/elements/GlobalStyle'
 import { Spinner, CommsErrorBanner } from './components/shared'
 
-import { GET_GROUP_BY_NAME } from './queries'
+import { GET_GROUPS } from './queries'
 
 import Login from './components/component-login/src'
 import ArticleArtifactPage from './components/component-published-artifact/components/ArticleArtifactPage'
@@ -19,7 +19,6 @@ import InvitationAcceptedPage from './components/component-dashboard/src/compone
 
 import AdminPage from './components/AdminPage'
 
-import Frontpage from './components/component-frontpage/src/Frontpage'
 import GroupPage from './components/component-frontpage/src/GroupPage'
 
 const Container = styled.div`
@@ -45,21 +44,27 @@ const Centered = styled.div`
 
 const Pages = () => {
   const location = useLocation()
-  const history = useHistory()
 
-  // Handles old login path redirects to group front page
-  if (location.pathname === '/login') {
-    history.push(`/`)
+  const { loading, error, data } = useQuery(GET_GROUPS)
+
+  if (loading && !data) return <Spinner />
+
+  const groups = data?.groups ? data.groups : []
+
+  const hasMultipleGroups = groups && groups.length > 1
+  let onlyGroupName = ''
+  let currentGroup = null
+
+  if (!hasMultipleGroups) {
+    onlyGroupName = groups[0].name
   }
 
   const name = location.pathname.split('/')[1]
 
-  const { loading, error, data } = useQuery(GET_GROUP_BY_NAME, {
-    variables: { name },
-    skip: !name,
-  })
+  if (name) {
+    currentGroup = groups.find(group => group.name === name)
+  }
 
-  if (loading && !data) return <Spinner />
   if (error)
     return (
       <Container>
@@ -71,20 +76,18 @@ const Pages = () => {
       </Container>
     )
 
-  window.localStorage.setItem('groupId', data?.groupByName?.id)
+  window.localStorage.setItem('groupId', currentGroup?.id)
 
   // TODO: Remove old config once refactor of config is completed
-  const oldConfig = JSON.parse(data?.groupByName?.oldConfig || '{}')
+  const oldConfig = JSON.parse(currentGroup?.oldConfig || '{}')
 
-  const activeConfig = data?.groupByName?.configs?.find(
-    config => config?.active,
-  )
+  const activeConfig = currentGroup?.configs?.find(config => config?.active)
 
   const config = {
     id: activeConfig?.id,
-    groupId: data?.groupByName?.id,
-    groupName: data?.groupByName?.name,
-    urlFrag: `/${data?.groupByName?.name}`,
+    groupId: currentGroup?.id,
+    groupName: currentGroup?.name,
+    urlFrag: `/${currentGroup?.name}`,
     ...oldConfig,
     ...JSON.parse(activeConfig?.formData || '{}'),
   }
@@ -102,9 +105,45 @@ const Pages = () => {
       <GlobalStyle />
       <ConfigProvider config={config}>
         <Switch>
-          <Route component={GroupPage} exact path="/" />
-          <Route component={Frontpage} exact path={`${urlFrag}`} />
+          {hasMultipleGroups ? (
+            <Route component={GroupPage} exact path="/" />
+          ) : (
+            <Route
+              exact
+              path="/"
+              render={() => <Redirect to={`/${onlyGroupName}/login`} />}
+            />
+          )}
+
+          <Route
+            exact
+            path="/login"
+            render={() => (
+              <Redirect
+                to={hasMultipleGroups ? '/' : `/${onlyGroupName}/login`}
+              />
+            )}
+          />
+
+          <Route
+            exact
+            path={urlFrag}
+            render={() => (
+              <Redirect
+                to={
+                  window.localStorage.getItem('token')
+                    ? `${urlFrag}/dashboard`
+                    : `${urlFrag}/login`
+                }
+              />
+            )}
+          />
+
+          {/* <Route component={Frontpage} exact path={`${urlFrag}`} /> */}
+          {/* <Route component={GroupPage} exact path="/" /> */}
+
           <Route component={Login} exact path={`${urlFrag}/login`} />
+
           <Route
             component={ArticleArtifactPage}
             exact
