@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components'
 import { Button, Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { AlertCircle } from 'react-feather'
-import Color from 'color'
 import { color } from '../../../theme'
 
 export const StyledButton = styled(Button)`
@@ -119,29 +118,6 @@ export const Cell = styled.div`
 export const HeadingCell = styled(Cell)`
   align-items: center;
   display: flex;
-`
-
-/** Displays the label as a badge colored according to props.color */
-export const LabelBadge = styled.div`
-  border-radius: 8px;
-  display: inline-block;
-  font-size: ${th('fontSizeBaseSmall')};
-  font-variant: all-small-caps;
-  line-height: 1.1em;
-  max-width: 100%;
-  ${props =>
-    props.color &&
-    css`
-      background-color: ${props.color};
-      ${Color(props.color).isDark()
-        ? css`
-            color: ${th('colorTextReverse')};
-          `
-        : ''};
-    `}
-  overflow-wrap: normal;
-  padding: ${grid(0.5)} ${grid(1)};
-  text-overflow: clip;
 `
 
 export const SortArrow = styled.span`

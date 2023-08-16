@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { LabelBadge } from '../style'
+import { LabelBadge } from '../../../shared'
 
 const CellItem = styled.div`
   display: inline-block;

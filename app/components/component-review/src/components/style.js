@@ -105,6 +105,12 @@ export const Email = styled.span`
   margin-left: 1em;
 `
 
+export const BadgeContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  gap: 4px 18px;
+`
+
 export {
   Title,
   SectionHeader,
