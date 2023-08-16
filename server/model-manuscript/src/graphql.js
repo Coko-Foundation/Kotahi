@@ -885,11 +885,11 @@ const resolvers = {
             shortId: manuscript.shortId,
           }
 
-          const selectedEmailTemplate = await models.EmailTemplate.query().findById(
-            selectedTemplate,
-          )
-
           if (selectedTemplate) {
+            const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+              selectedTemplate,
+            )
+
             try {
               // Add Email Notification Record in Editorial Discussion Panel
               const author = manuscript.teams.find(team => {
@@ -1382,25 +1382,26 @@ const resolvers = {
       return { totalCount, manuscripts: result }
     },
 
-    async manuscriptsPublishedSinceDate(_, { startDate, limit, offset }, ctx) {
-      let groupId = ctx.req.headers['group-id']
+    async manuscriptsPublishedSinceDate(
+      _,
+      { startDate, limit, offset, groupName },
+      ctx,
+    ) {
+      const groups = await models.Group.query().where({ isArchived: false })
+      let group = null
+      const groupIdFromHeader = ctx.req.headers['group-id']
 
-      if (!groupId) {
-        const groups = await models.Group.query().where({ isArchived: false })
+      if (groupIdFromHeader)
+        group = groups.find(g => g.id === groupIdFromHeader)
+      else if (groupName) group = groups.find(g => g.name === groupName)
+      else if (groups.length === 1) [group] = groups
 
-        if (groups.length !== 1) {
-          throw new Error(
-            'Group ID must be specified if more than one group exists',
-          )
-        }
-
-        groupId = groups[0].id
-      }
+      if (!group) throw new Error(`Group with name '${groupName}' not found`)
 
       const subQuery = models.Manuscript.query()
         .select('short_id')
         .max('created as latest_created')
-        .where('group_id', groupId)
+        .where('group_id', group.id)
         .groupBy('short_id')
 
       const query = models.Manuscript.query()
@@ -1409,7 +1410,7 @@ const resolvers = {
         .innerJoin(subQuery.as('sub'), 'm.short_id', 'sub.short_id')
         .andWhere('m.created', '=', raw('sub.latest_created'))
         .whereNotNull('m.published')
-        .where('m.group_id', groupId)
+        .where('m.group_id', group.id)
         .orderBy('m.published', 'desc')
 
       if (startDate) query.where('.published', '>=', new Date(startDate))
@@ -1422,13 +1423,11 @@ const resolvers = {
       return models.Manuscript.query().findById(id).whereNotNull('published')
     },
     async unreviewedPreprints(_, { token, groupName = null }, ctx) {
-      const groups = await models.Group.query()
+      const groups = await models.Group.query().where({ isArchived: false })
       let group = null
-      if (!groupName && groups.length === 1) [group] = groups
       if (groupName) group = groups.find(g => g.name === groupName)
-
-      if (!group) throw new Error(`Group with name ${groupName} not found`)
-      if (group && group.isArchived) throw new Error(`Group has been archived`)
+      else if (groups.length === 1) [group] = groups
+      if (!group) throw new Error(`Group with name '${groupName}' not found`)
 
       const activeConfig = await models.Config.query().findOne({
         groupId: group.id,
@@ -1777,10 +1776,10 @@ const typeDefs = `
     validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
-    manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int, offset: Int): [PublishedManuscript]!
+    manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int, offset: Int, groupName: String): [PublishedManuscript!]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
-    unreviewedPreprints(token: String!, groupName: String): [Preprint]
+    unreviewedPreprints(token: String!, groupName: String): [Preprint!]!
     doisToRegister(id: ID!): [String]
   }
 

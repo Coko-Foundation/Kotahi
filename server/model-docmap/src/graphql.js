@@ -3,14 +3,12 @@ const { GraphQLError } = require('graphql')
 
 const resolvers = {
   Query: {
-    async docmap(_, { externalId, groupId = null }, ctx) {
-      const groups = await models.Group.query()
+    async docmap(_, { externalId, groupName = null }, ctx) {
+      const groups = await models.Group.query().where({ isArchived: false })
       let group = null
-      if (!groupId && groups.length === 1) [group] = groups
-      if (groupId) group = groups.find(g => g.id === groupId)
-
-      if (!group) throw new Error(`Group with ID ${groupId} not found`)
-      if (group && group.isArchived) throw new Error(`Group has been archived`)
+      if (groupName) group = groups.find(g => g.name === groupName)
+      else if (groups.length === 1) [group] = groups
+      if (!group) throw new Error(`Group with name '${groupName}' not found`)
 
       const record = await models.Docmap.query().findOne({
         externalId,
@@ -36,7 +34,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Query {
-    docmap(externalId: String!, groupId: String): String!
+    docmap(externalId: String!, groupName: String): String!
   }
 `
 
