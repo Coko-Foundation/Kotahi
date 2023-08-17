@@ -101,6 +101,7 @@ const Footer = ({
           onFileRemoved={onFileRemoved}
           renderFileList={(files, props) => (
             <PartnerListing
+              key={files?.length}
               files={files}
               formikProps={formikProps}
               triggerAutoSave={triggerAutoSave}
