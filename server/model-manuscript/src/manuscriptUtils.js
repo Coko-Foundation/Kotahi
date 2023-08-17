@@ -116,7 +116,7 @@ const getEvaluationsAndDates = manuscript => {
   return evaluationValues
 }
 
-const hasEvaluations = manuscript => {
+const hasElifeStyleEvaluations = manuscript => {
   const evaluations = getEvaluationsAndDates(manuscript)
   return evaluations.map(checkIsAbstractValueEmpty).some(isEmpty => !isEmpty)
 }
@@ -543,7 +543,7 @@ const applyTemplatesToArtifacts = (
 module.exports = {
   buildQueryForManuscriptSearchFilterAndOrder,
   stripConfidentialDataFromReviews,
-  hasEvaluations,
+  hasElifeStyleEvaluations,
   applyTemplatesToArtifacts,
   getFieldsMapForTemplating,
 }

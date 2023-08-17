@@ -24,7 +24,7 @@ const {
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const {
-  hasEvaluations,
+  hasElifeStyleEvaluations,
   stripConfidentialDataFromReviews,
   buildQueryForManuscriptSearchFilterAndOrder,
   applyTemplatesToArtifacts,
@@ -1061,25 +1061,38 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[reviews, publishedArtifacts]')
 
+      const containsElifeStyleEvaluations = hasElifeStyleEvaluations(manuscript)
+
       const activeConfig = await models.Config.query().findOne({
         groupId: manuscript.groupId,
         active: true,
       })
 
-      /** Crude hack to circumvent and help diagnose bug 1193 */
-      const oldMetaAbstract =
-        manuscript && manuscript.meta ? manuscript.meta.abstract : null
+      // We will roll back to the following values if all publishing steps fail:
+      const prevPublishedDate = manuscript.published
+      const prevStatus = manuscript.status
 
-      const update = {} // This will collect any properties we may want to update in the DB
+      const newPublishedDate = new Date()
+      // We update the manuscript in advance, so that external services such as Flax
+      // will be able to retrieve it as a "published" manuscript. If all publishing steps
+      // fail, we will revert these changes at the end.
+      await models.Manuscript.query().patchAndFetchById(id, {
+        published: newPublishedDate,
+        status: 'published',
+      })
+
+      const update = { published: newPublishedDate, status: 'published' } // This will also collect any properties we may want to update in the DB
       const steps = []
-      const containsEvaluations = hasEvaluations(manuscript)
 
       if (activeConfig.formData.publishing.crossref.login) {
         const stepLabel = 'Crossref'
         let succeeded = false
         let errorMessage
 
-        if (containsEvaluations || manuscript.status !== 'evaluated') {
+        if (
+          containsElifeStyleEvaluations ||
+          manuscript.status !== 'evaluated'
+        ) {
           try {
             await publishToCrossref(manuscript)
             succeeded = true
@@ -1116,8 +1129,6 @@ const resolvers = {
         }
 
         steps.push({ succeeded, errorMessage, stepLabel })
-      } else if (['colab'].includes(activeConfig.formData.instanceName)) {
-        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
 
       if (activeConfig.formData.publishing.hypothesis.apiKey) {
@@ -1179,30 +1190,20 @@ const resolvers = {
         })
       }
 
-      if (!steps.length || steps.some(step => step.succeeded)) {
-        update.published = new Date()
+      let updatedManuscript
 
-        // A 'published' article without evaluations will become 'evaluated'.
-        // The intention is that an evaluated article should never revert to any state prior to "evaluated",
-        // but that only articles with evaluations can be 'published'.
-        update.status =
-          !activeConfig.formData.publishing.crossref.login ||
-          containsEvaluations
-            ? 'published'
-            : 'evaluated'
-      }
-
-      // TODO remove this check once bug 1193 is diagnosed/fixed
-      if (oldMetaAbstract && update.meta && !update.meta.abstract)
-        throw new Error(
-          `Deleting meta.abstract from manuscript ${id}, replacing ${oldMetaAbstract} with ${typeof update
-            .meta.abstract}, is illegal!`,
+      if (steps.some(step => step.succeeded)) {
+        updatedManuscript = await models.Manuscript.query().patchAndFetchById(
+          id,
+          update,
         )
-
-      const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
-        id,
-        update,
-      )
+      } else {
+        // Revert the changes to published date and status
+        updatedManuscript = await models.Manuscript.query().patchAndFetchById(
+          id,
+          { published: prevPublishedDate, status: prevStatus },
+        )
+      }
 
       return { manuscript: updatedManuscript, steps }
     },
@@ -1415,7 +1416,7 @@ const resolvers = {
         .where('m.group_id', group.id)
         .orderBy('m.published', 'desc')
 
-      if (startDate) query.where('.published', '>=', new Date(startDate))
+      if (startDate) query.where('m.published', '>=', new Date(startDate))
       if (limit) query.limit(limit)
       if (offset) query.offset(offset)
 
