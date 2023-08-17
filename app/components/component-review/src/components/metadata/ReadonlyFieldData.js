@@ -1,8 +1,8 @@
 import React from 'react'
 import { get } from 'lodash'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
-import { Affiliation, Email } from '../style'
-import { Attachment } from '../../../../shared'
+import { Affiliation, Email, BadgeContainer } from '../style'
+import { Attachment, ColorBadge } from '../../../../shared'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 
 const ReadonlyFieldData = ({
@@ -118,12 +118,34 @@ const ReadonlyFieldData = ({
       ))
   }
 
-  if (Array.isArray(data)) {
-    return data.join(', ')
-  }
-
   if (data && fieldDefinition?.component === 'AbstractEditor')
     return <SimpleWaxEditor readonly value={data} />
+
+  if (fieldDefinition?.options) {
+    const items = Array.isArray(data) ? data : [data]
+
+    return (
+      <BadgeContainer>
+        {items.map(item => {
+          if (!item && item !== 0) return null
+
+          const option = fieldDefinition.options.find(x => x.value === item)
+
+          if (option) {
+            if (option.labelColor)
+              return (
+                <ColorBadge color={option.labelColor} key={option.id}>
+                  {option.label}
+                </ColorBadge>
+              )
+            return option.label
+          }
+
+          return <span key={item}>{item}</span> // Fallback for data not matching any option
+        })}
+      </BadgeContainer>
+    )
+  }
 
   return data || (data === 0 ? '0' : null)
 }
