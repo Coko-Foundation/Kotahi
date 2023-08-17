@@ -352,8 +352,8 @@ const tryPublishingWebhook = async manuscriptId => {
 }
 
 const publishOnCMS = async (groupId, manuscriptId) => {
-  const response = await rebuildCMSSite(groupId, { manuscriptId })
-  return response
+  await rebuildCMSSite(groupId, { manuscriptId })
+  return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
 }
 
 const resolvers = {
@@ -1146,6 +1146,7 @@ const resolvers = {
           await tryPublishingWebhook(manuscript.id)
           steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
         } catch (err) {
+          console.error(err)
           steps.push({
             stepLabel: 'Publishing webhook',
             succeeded: false,
@@ -1161,6 +1162,18 @@ const resolvers = {
         console.error(err)
         steps.push({
           stepLabel: 'DOCMAPS',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
+
+      try {
+        if (await publishOnCMS(manuscript.groupId, manuscript.id))
+          steps.push({ stepLabel: 'Publishing CMS', succeeded: true })
+      } catch (err) {
+        console.error(err)
+        steps.push({
+          stepLabel: 'Publishing CMS',
           succeeded: false,
           errorMessage: err.message,
         })
@@ -1190,17 +1203,6 @@ const resolvers = {
         id,
         update,
       )
-
-      try {
-        await publishOnCMS(manuscript.groupId, manuscript.id)
-        steps.push({ stepLabel: 'Publishing CMS', succeeded: true })
-      } catch (err) {
-        steps.push({
-          stepLabel: 'Publishing CMS',
-          succeeded: false,
-          errorMessage: err.message,
-        })
-      }
 
       return { manuscript: updatedManuscript, steps }
     },
