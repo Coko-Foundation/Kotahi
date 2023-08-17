@@ -53,7 +53,7 @@ describe('checking manuscript version', () => {
       /* Verify Decision Content */
       DashboardPage.getDecisionField(0).should('contain', decisionTextContent)
       DashboardPage.getDecisionField(1).should('contain', decisionFileName)
-      DashboardPage.getDecisionField(2).should('contain', 'revise')
+      DashboardPage.getDecisionField(2).should('contain', 'Revise')
       /* Create new manuscript version */
       DashboardPage.clickCreateNewVersionButton()
       SubmissionFormPage.waitThreeSec()

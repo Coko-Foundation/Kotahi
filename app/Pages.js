@@ -56,7 +56,7 @@ const Pages = () => {
   let currentGroup = null
 
   if (!hasMultipleGroups) {
-    onlyGroupName = groups[0].name
+    onlyGroupName = groups[0]?.name
   }
 
   const name = location.pathname.split('/')[1]

@@ -49,7 +49,7 @@ describe('Completing a review', () => {
       // Verify Decision Content
       DashboardPage.getDecisionField(0).should('contain', decisionTextContent)
       DashboardPage.getDecisionField(1).should('contain', decisionFileName)
-      DashboardPage.getDecisionField(2).should('contain', 'revise')
+      DashboardPage.getDecisionField(2).should('contain', 'Revise')
       DashboardPage.clickCreateNewVersionButton() // Create new manuscript version
       SubmissionFormPage.getTypeOfResearchObject()
         .click()
