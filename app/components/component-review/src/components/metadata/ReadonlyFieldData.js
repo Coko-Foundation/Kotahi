@@ -138,7 +138,7 @@ const ReadonlyFieldData = ({
                   {option.label}
                 </ColorBadge>
               )
-            return option.label
+            return <div>{option.label}</div>
           }
 
           return <span key={item}>{item}</span> // Fallback for data not matching any option
