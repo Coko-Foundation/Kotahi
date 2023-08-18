@@ -1,11 +1,24 @@
 # Kotahi
 
-Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
-It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
+Kotahi is a modern document submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups and PRC (publish-review-curate) groups. Kotahi supports:
+
+- individual **manuscript submission**
+- **bulk imports** of preprints and other documents for review
+- **highly customisable** data and workflows
+- **centralised viewing and editing of manuscripts**, so that authors, editors, reviewers and production editors work on a single source without needing to send versions back and forth
+- **automated export** to various formats including **JATS**
+- a built in, highly customisable **publishing site and CMS** (content management system)
+- several **other publishing options** including **DOI registration**
+- efficiency tools such as **semantic tagging** within documents for easy JATS export, and **citation management and correction**
+- a **task management** system to guide team-members, plus **in-app chat** and alerts to simplify communication
+- **multitenancy**, allowing multiple groups to be hosted in a single instance, and allowing easy experimentation with new workflows
+- a **plugin architecture** for custom functionality and easy extensibility
+
+Kotahi was originally based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project. It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
 
 ## Project roadmap
 
-[The Kotahi project roadmap](https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280) is available to view on Miro.
+[The Kotahi project roadmap](https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280) can be viewed on Miro.
 
 ## Contribute
 
@@ -23,22 +36,21 @@ To install Kotahi locally, you'll need these things:
 - Node & Yarn. Kotahi requires Node 16.
 - Docker. Kotahi uses [Docker](https://www.docker.com/) for images of the databases and servers that it uses. Make sure you have Docker installed and running.
 - An ORCID account. Kotahi uses [ORCID](https://orcid.org/) for account authentication. It's free and easy to sign up. The [FAQ](FAQ.md) tells you how.
-- A working _.env_ file. You can start by copying [.env.example](.env.example) (in the shell: `cp .env.example .env`). The .env file contains passwords and other sensitive information; it also contains a lot of configuration options at the moment.
+- A working _.env_ file. You can start by copying [.env.example](.env.example) (in the shell: `cp .env.example .env`). The .env file contains passwords and other sensitive information, plus other configuration options.
 - In order to work with file attachments you'll need to add the following to your hosts file: `127.0.0.1 filehosting`. (Only needed for a development build.)
 
 Once you have those things, try doing this:
 
 - From the shell in the main directory: `yarn install` to install all the Node packages.
-- From the shell: `docker-compose up` _Do not do this if you do not have a .env file!_
+- From the shell: `docker-compose build`, then `docker-compose up` _Only once you have a .env file!_
 - If the following error occurs during `docker-compose up`:
   ```
   db-pagedjs_1 | 2022-08-02 14:17:42.683 UTC [29] FATAL:database "pagedjs_dev" does not exit
   pagedjs_1 | error: Error while running migrations: database "pagedjs_dev" does not exist
   ```
   Execute `docker system prune`, then `docker-compose up` once again.
-- Point your browser at [http://localhost:4000](http://localhost:4000) – you should see an empty "recent publications" page.
-- Click **Dashboard** in the upper right.
-- You'll be prompted to login with ORCID. If you don't yet have an ORCID ID, you can login with account number `0000-0001-6819-2182` and password `KotahiDemoAccess2021`. _Please do not use this account for anything other than testing!_
+- Point your browser at [http://localhost:4000](http://localhost:4000) – you should be taken to a login page.
+- You'll be prompted to login with ORCID. If you don't yet have an ORCID ID, you can login with account number `0000-0001-6819-2182` and password `KotahiDemoAccess2021`. _Only use this account for testing!_
 - If you're asked, click "Authorize Access".
 - You should be returned to Kotahi; enter an email address to get started. The email you enter will be associated with the ORCID ID in your instance; and the first account created is automatically a system admin, so if you're not just trying out Kotahi, there's a benefit to making your own ORCID ID.
 
@@ -46,7 +58,7 @@ If something doesn't work, read though the details in the next section; or check
 
 ## Installation: details
 
-Developer beware! This project is currently under very heavy development, so things will most definitely be broken. We also don't have a fixed roadmap for it at this point.
+Developer beware! This project is currently under very heavy development, so documentation may be out of date at times.
 
 ### Running the app
 
@@ -56,7 +68,7 @@ We provide docker-compose and docker files to ensure consistency across environm
 
 Several environment variables must be loaded into the shell in order for Kotahi to run correctly. This is usually achieved by specifying these variables in the file `<project root>/.env`, where the `docker-compose` cli will automatically read and load them. Kotahi ships with an example `.env.example` file with typical settings &mdash; you can use it as a guide for your own `.env` file. (Also consult the `docker-compose.yml` and `docker-compose.production.yml` files for a complete list of available variables.)
 
-To load these environment variables for certain scripts, you can use the `dotenv` CLI, e.g. `yarn dotenv yarn test:chrome`.
+To load these environment variables for certain scripts, you can use the `dotenv` CLI, e.g. `yarn dotenv yarn test:all:chrome`.
 
 ORCID OAuth variables must be set up before you can log in. See [FAQ.md](FAQ.md).
 
@@ -65,11 +77,13 @@ ORCID OAuth variables must be set up before you can log in. See [FAQ.md](FAQ.md)
 To bring up the development environment, simply run:
 
 ```sh
+docker-compose build
 docker-compose up
 ```
 
 This will:
 
+- Build the docker images
 - Run the server with `nodemon`, so that changes auto restart the server
 - Run the client with webpack dev server, with hot reload enabled
 - Start a Minio container for storage
@@ -84,7 +98,7 @@ By default you can then access your app at [http://localhost:4000/login](http://
 
 #### Running integration tests
 
-If you're using `docker-compose` to stand up your app, everything will already be configured and you only need to
+If you have used `docker-compose` to stand up your app, everything will already be configured and you only then need to
 
 ```
 > yarn run test:chrome
@@ -101,7 +115,8 @@ Note: The environment variables are needed mainly because Cypress generates an a
 To run the app for production with `docker-compose`:
 
 ```sh
-docker-compose -f docker-compose.production.yml up
+docker-compose -f docker-compose.production.yml --env-file .env build
+docker-compose -f docker-compose.production.yml --env-file .env up
 ```
 
 This does the following:
