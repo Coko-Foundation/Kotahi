@@ -1,20 +1,35 @@
 ## Changes
 
-### 2023-07-07
+### 2023-08-18: Version 2.0.0
 
 Instances affected: **all**.<br/>
 
-1. `INSTANCE_NAME` must be replaced with `INSTANCE_GROUPS` when upgrading Kotahi to version 2.0 or later.
-2. `INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Typically, when upgrading an existing instance to 2.0, `INSTANCE_GROUPS` should specify a single group, though you may subsequently add further groups separated by commas to create new mulitenanted groups, each with their own data, workflow, branding and other settings (see the [FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#instance_groups-and-multitenancy) for details).
-   `INSTANCE_GROUPS` must contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:aperture`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and the `_` character. The _group type_ (after the colon) must be either 'aperture', 'colab', 'elife' or 'ncrc'. (These [_group types_](https://docs.coko.foundation/doc/instance-archetypes-LFnzu7leM7) will be given more descriptive and generic names in the near future.)
+#### Multitenancy
 
-For all existing instances:
+`INSTANCE_NAME` environment variable is no longer used (but may be retained in case rollback is required). Instead, the variable `INSTANCE_GROUPS` must be supplied when upgrading Kotahi to version 2.0.0 or later.
 
-Before upgrading to 2.0, `INSTANCE_NAME` must be changed to `INSTANCE_GROUPS` and your chosen _group name_ with a colon must be inserted before the _group type_. It is recommended that the _group name_ "kotahi" be used, in order to keep URLs to all pages unchanged. Thus, `INSTANCE_NAME=aperture` would become `INSTANCE_GROUPS=kotahi:aperture`.
+`INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Typically, when upgrading an existing instance to 2.0.0, `INSTANCE_GROUPS` should specify a single group, though you may subsequently add further groups separated by commas to create new mulitenanted groups, each with their own data, workflow, branding and other settings (see the [FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#instance_groups-and-multitenancy) for details).
 
-1. The `INSTANCE_NAME` needs to be replaced with `INSTANCE_GROUPS` as we are moving forward with the support for multi-tenancy feature.
+`INSTANCE_GROUPS` must contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:aperture`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and the `_` character. The _group type_ (after the colon) must be either 'aperture', 'colab', 'elife' or 'ncrc'. (These [_group types_](https://docs.coko.foundation/doc/instance-archetypes-LFnzu7leM7) will be given more descriptive and generic names in the near future.)
 
-2. The `INSTANCE_GROUPS` setting is required for both existing and new instances. The instance can have a single group workflow or mulitple groups workflow depending on the number of entries added in `INSTANCE_GROUPS` sperated by comma. It should have two values: `group_name` and `instance_type`, separated by a colon (`group_name:instance_type`) for each group. The `group_name` is the identifier which is unique to each instance it can only be lowercase and cannot have spaces or special characters except `_` e.g. `kotahi`. The `instance_type` can be one of the following: `aperture`, `colab`, `elife`, `ncrc`, and may change to a more generic representation of the workflow in the near future.
+Typically, to keep URLs to pages unchanged it is recommended that the _group name_ "kotahi" be used: thus, if you had `INSTANCE_NAME=aperture`, you would set `INSTANCE_GROUPS=kotahi:aperture`.
+
+#### Flax CMS
+
+Kotahi now also includes an inbuilt Flax content management system for generating a static website of published manuscripts and evaluations. The environment variables to support this are detailed below. Flax and Kotahi require separate DNS configurations if you wish to make Flax accessible without using a port number in the URL. A group's Flax site can be accessed (after at least one manuscript has been published) at `<FLAX_SITE_URL>/<group name>`; e.g. in local development, with the _group name_ "kotahi", the Flax site can be accessed at `http://localhost:8081/kotahi`.
+
+#### Summary of required changes
+
+For all existing instances, _prior to upgrading_, **configure DNS for Flax**, to point your chosen Flax domain/subdomain to your server on the flax site port. Add the following environment variables to the `.env` file:
+
+1. `INSTANCE_GROUPS=kotahi:<group type>` where <group type> is whatever `INSTANCE_NAME` was set to.
+2. `FLAX_EXPRESS_PORT=8082`
+3. `FLAX_EXPRESS_HOST=kotahi-flax-site`
+4. `FLAX_SITE_PORT=8081`
+5. `FLAX_CLIENT_API_URL=http://client:4000`
+6. `FLAX_SITE_URL=<flax site origin>` For local development, <flax site origin> is `http://localhost:8081`; for a production site it's whatever subdomain and domain you wish to configure for it.
+
+These are typical values, but other ports etc can be chosen as desired.
 
 ### 2023-06-27
 

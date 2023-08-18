@@ -46,9 +46,33 @@ _Disclaimer: ORCID is a separate organisation from Coko and we are in no way aff
 
 [1] Even though this URL does not exist for the client (ie. it isn't handled by our `react-router` setup), it will be redirected to the server via `webpack-dev-server`'s proxy.
 
-### Why is ORCID's login page not loading?
+#### Why is ORCID's login page not loading?
 
 ORCID seems to be reliant on Google Tag Manager, so ad-blocker or tracker-blocker extensions in your browser may interfere with authentication.
+
+### Flax content management system
+
+Kotahi includes a microservice, Flax, which serves as a Content Management System (CMS) for Kotahi allowing publication of manuscripts, reviews and evaluations directly to a public-facing site.
+
+Multiple Page Management: alongside the article and evaluation pages, you can add supporting pages such as "About Us", policy pages, contact information, etc, as well as configuring headers and footers for all pages. All this is configured from the CMS section on the Kotahi site.
+
+The publication site's appearance, including color theme and layout, can be customized to your preferences.
+
+The publication site will be built the first time you publish an article or any CMS page.
+
+#### Configuring for Flax:
+
+The following variables must be set in the `.env` file (`.env.example` provides sensible defaults for local development):
+
+- `FLAX_EXPRESS_PORT`: e.g. 8082: a port number for the Express server.
+- `FLAX_EXPRESS_HOST=kotahi-flax-site`: Typically this should not change, as it references the `kotahi-flax-site` docker container where the Express server resides.
+- `FLAX_SITE_PORT`: e.g. 8081: the port for running the Flax site.
+- `FLAX_CLIENT_ID`: choose a random ID
+- `FLAX_CLIENT_SECRET`: choose a password
+- `FLAX_CLIENT_API_URL`: The Kotahi site origin used by Flax to fetch data from Kotahi. Typically `http://client:4000` for local development.
+- `FLAX_SITE_URL`: The desired origin for accessing and running the Flax site. For example, `http://localhost:8081` or `https://myflaxdomain.org`.
+
+When configuring DNS for a production installation, Flax and Kotahi will need two separate DNS configurations. They can differ by subdomain, or you may choose to provide entirely separate domains for the two. Just ensure that `FLAX_SITE_URL` and `FLAX_CLIENT_API_URL` are set correspondingly.
 
 ### What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
 
