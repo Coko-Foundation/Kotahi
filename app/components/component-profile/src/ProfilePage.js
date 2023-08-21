@@ -15,7 +15,6 @@ const GET_USER = gql`
       email
       globalRoles
       groupRoles
-      eventNotificationsOptIn
       defaultIdentity {
         identifier
         email
@@ -49,17 +48,26 @@ const UPDATE_USERNAME = gql`
   }
 `
 
-const UPDATE_USER_NOTIFICATION_PREFERENCE = gql`
-  mutation updateEventNotificationsOptIn(
-    $id: ID!
-    $eventNotificationsOptIn: Boolean!
-  ) {
-    updateEventNotificationsOptIn(
-      id: $id
-      event_notifications_opt_in: $eventNotificationsOptIn
-    ) {
+const GET_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
+  query notificationOption($path: [String!]!) {
+    notificationOption(path: $path) {
+      userId
+      path
+      groupId
+      option
+    }
+  }
+`
+
+const UPDATE_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
+  mutation updateNotificationOption($path: [String!]!, $option: String!) {
+    updateNotificationOption(path: $path, option: $option) {
       id
-      eventNotificationsOptIn
+      created
+      updated
+      userId
+      path
+      option
     }
   }
 `
@@ -89,8 +97,17 @@ const ProfilePage = ({ currentUser, match }) => {
   const [updateUserEmail] = useMutation(UPDATE_EMAIL)
   const [updateUsername] = useMutation(UPDATE_USERNAME)
 
-  const [updateEventNotificationsOptIn] = useMutation(
-    UPDATE_USER_NOTIFICATION_PREFERENCE,
+  const { data: globalChatNotificationUserOption } = useQuery(
+    GET_GLOBAL_CHAT_NOTIFICATION_OPTION,
+    {
+      variables: {
+        path: ['chat'],
+      },
+    },
+  )
+
+  const [updateGlobalChatNotificationOptIn] = useMutation(
+    UPDATE_GLOBAL_CHAT_NOTIFICATION_OPTION,
   )
 
   if (loading) return <Spinner />
@@ -114,8 +131,12 @@ const ProfilePage = ({ currentUser, match }) => {
       kotahiVersion={kotahiVersion}
       logoutUser={logoutUser}
       match={match}
+      notificationUserOption={
+        globalChatNotificationUserOption?.notificationOption?.option ||
+        'inherit'
+      }
       replaceAvatarImage={replaceAvatarImage}
-      updateEventNotificationsOptIn={updateEventNotificationsOptIn}
+      updateGlobalChatNotificationOptIn={updateGlobalChatNotificationOptIn}
       updateProfilePicture={updateProfilePicture}
       updateUserEmail={updateUserEmail}
       updateUsername={updateUsername}

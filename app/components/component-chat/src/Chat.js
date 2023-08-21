@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import ChatInput from './SuperChatInput/SuperChatInput'
 import Messages from './Messages/Messages'
+import UserActivityTracker from '../../shared/UserActivityTracker'
 
 const ChatInputContainer = styled.div`
   position: relative;
@@ -49,6 +50,7 @@ const Chat = ({
   firstUnreadMessageId,
   updateChannelViewed,
   manuscriptId = null,
+  reportUserIsActiveMutation,
 }) => {
   const [showFloatingUnreadLabel, setShowFloatingUnreadLabel] = useState(false)
 
@@ -60,8 +62,20 @@ const Chat = ({
     setShowFloatingUnreadLabel(false)
   }
 
+  const handleReportUserIsActive = async () => {
+    try {
+      await reportUserIsActiveMutation({
+        variables: {
+          path: ['chat', channelId],
+        },
+      })
+    } catch (error) {
+      console.error('Error updating notification digest:', error)
+    }
+  }
+
   return (
-    <>
+    <UserActivityTracker reportUserIsActive={handleReportUserIsActive}>
       <Messages
         channelId={channelId}
         chatRoomId={chatRoomId}
@@ -92,7 +106,7 @@ const Chat = ({
           sendChannelMessages={sendChannelMessages}
         />
       </ChatInputContainer>
-    </>
+    </UserActivityTracker>
   )
 }
 
