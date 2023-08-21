@@ -99,19 +99,20 @@ const Profile = ({
   updateProfilePicture,
   updateUserEmail,
   updateUsername,
-  updateEventNotificationsOptIn,
+  updateGlobalChatNotificationOptIn,
   user,
+  notificationUserOption,
 }) => {
-  const [isEventNotificationsOptIn, setEventNotificationsOptIn] = useState(
-    user?.eventNotificationsOptIn,
-  )
+  const [
+    hasGlobalChatNotificationOptIn,
+    setHasGlobalChatNotificationOptIn,
+  ] = useState(notificationUserOption)
 
   useEffect(() => {
-    if (user) {
-      setEventNotificationsOptIn(user.eventNotificationsOptIn)
+    if (notificationUserOption) {
+      setHasGlobalChatNotificationOptIn(notificationUserOption)
     }
-  }, [user])
-
+  }, [notificationUserOption])
   const isCurrentUsersOwnProfile = user.id === currentUser.id
 
   const canEditProfile =
@@ -119,14 +120,16 @@ const Profile = ({
     currentUser.groupRoles.includes('groupManager') ||
     currentUser.globalRoles.includes('admin')
 
-  const toggleEventNotificationsCheckbox = async () => {
-    const newEventNotificationsPreference = !isEventNotificationsOptIn
-    setEventNotificationsOptIn(newEventNotificationsPreference)
+  const toggleGlobalChatNotificationOptIn = async () => {
+    const updatedGlobalChatNotificationOptIn =
+      hasGlobalChatNotificationOptIn === 'off' ? 'inherit' : 'off'
 
-    await updateEventNotificationsOptIn({
+    setHasGlobalChatNotificationOptIn(updatedGlobalChatNotificationOptIn)
+
+    await updateGlobalChatNotificationOptIn({
       variables: {
-        id: user.id,
-        eventNotificationsOptIn: newEventNotificationsPreference,
+        path: ['chat'],
+        option: updatedGlobalChatNotificationOptIn,
       },
     })
   }
@@ -201,9 +204,9 @@ const Profile = ({
         </SectionContent>
         <SectionContent>
           <StyledCheckbox
-            checked={!isEventNotificationsOptIn}
+            checked={hasGlobalChatNotificationOptIn === 'off'}
             label="Mute all discussion email notifications"
-            onChange={toggleEventNotificationsCheckbox}
+            onChange={toggleGlobalChatNotificationOptIn}
           />
         </SectionContent>
       </div>

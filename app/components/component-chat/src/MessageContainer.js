@@ -71,6 +71,12 @@ const CHANNEL_VIEWED = gql`
   }
 `
 
+const REPORT_USER_IS_ACTIVE = gql`
+  mutation reportUserIsActive($path: [String!]!) {
+    reportUserIsActive(path: $path)
+  }
+`
+
 const MessageContainer = styled.section`
   background: rgb(255, 255, 255);
   display: flex;
@@ -235,6 +241,8 @@ const chatComponent = (
 
   const [updateChannelViewed] = useMutation(CHANNEL_VIEWED)
 
+  const [reportUserIsActiveMutation] = useMutation(REPORT_USER_IS_ACTIVE)
+
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
       subscribeToMore,
@@ -276,6 +284,7 @@ const chatComponent = (
         channelName !== 'Discussion with author' ? manuscriptId : null
       }
       queryData={queryResult}
+      reportUserIsActiveMutation={reportUserIsActiveMutation}
       searchUsers={searchUsers}
       sendChannelMessages={sendChannelMessages}
       unreadMessagesCount={unreadMessagesCount}
@@ -390,6 +399,8 @@ const Container = ({
   const { data, subscribeToMore, fetchMore } = queryResult
   const [updateChannelViewed] = useMutation(CHANNEL_VIEWED)
 
+  const [reportUserIsActiveMutation] = useMutation(REPORT_USER_IS_ACTIVE)
+
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
       subscribeToMore,
@@ -448,6 +459,7 @@ const Container = ({
             firstUnreadMessageId={firstUnreadMessageId}
             manuscriptId={manuscriptId}
             queryData={queryResult}
+            reportUserIsActiveMutation={reportUserIsActiveMutation}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}
             unreadMessagesCount={unreadMessagesCount}
