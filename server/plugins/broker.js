@@ -1,5 +1,4 @@
 const models = require('@pubsweet/models')
-const { set } = require('lodash')
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 const { importWorkersByGroup } = require('./imports')
 
