@@ -199,7 +199,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     }
 
     const invitedPersonType =
-      selectedTemplate === 'authorInvitationEmailTemplate'
+      selectedEmailTemplateData.emailTemplateType === 'authorInvitation'
         ? 'AUTHOR'
         : 'REVIEWER'
 
