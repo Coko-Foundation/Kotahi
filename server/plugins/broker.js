@@ -20,12 +20,18 @@ const assertArgTypes = (args, ...typeSpecs) => {
 const getEmptySubmission = async groupId => {
   const submissionForm = await getSubmissionForm(groupId)
   if (!submissionForm) throw new Error('No submission form was found!')
-  const fields = submissionForm.structure.children
+
+  const fields = submissionForm.structure.children.filter(field =>
+    field.name.startsWith('submission.'),
+  )
 
   const emptySubmission = fields.reduce((acc, curr) => {
-    acc[curr.name] = ['CheckboxGroup', 'LinksInput', 'AuthorsInput'].includes(
-      curr.component,
-    )
+    const [, nameInSubmission] = curr.name.split('submission.')
+    acc[nameInSubmission] = [
+      'CheckboxGroup',
+      'LinksInput',
+      'AuthorsInput',
+    ].includes(curr.component)
       ? []
       : ''
     return {
