@@ -18,6 +18,15 @@ const DefaultField = ({ values, applyFilter }) =>
   values.map(v => {
     const clickAction = applyFilter ? () => applyFilter(v.value) : null
 
+    if (typeof v.displayValue === 'object') {
+      // eslint-disable-next-line no-console
+      console.log(
+        'This object cannot be displayed in the table. Check "columns to display on the Manuscripts page" in Kotahi configuration.',
+        v.displayValue,
+      )
+      return null
+    }
+
     if (typeof v.displayValue !== 'string') return v.displayValue // So displayValue can be a React component
     return (
       <CellItem key={v.value} onClick={clickAction}>

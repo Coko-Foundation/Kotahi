@@ -91,6 +91,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
       centered: true,
     },
     author: { title: 'Author', flex: '0 1 16em', component: Submitter },
+    submitter: { title: 'Author', flex: '0 1 16em', component: Submitter }, // alias of 'author'
     editor: { title: 'Editor', flex: '0 1 12em', component: Editors },
     actions: {
       flex: '0 1 8em',
