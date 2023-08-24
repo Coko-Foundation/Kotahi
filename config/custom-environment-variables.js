@@ -71,6 +71,7 @@ module.exports = {
     automated: 'NOTIFICATION_EMAIL_AUTOMATED',
     cc_enabled: 'NOTIFICATION_EMAIL_CC_ENABLED',
     use_colab: 'USE_COLAB_EMAIL',
+    testEmailRecipient: 'TEST_EMAIL_RECIPIENT',
   },
   fileStorage: {
     minioRootUser: 'MINIO_ROOT_USER',
