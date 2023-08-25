@@ -12,6 +12,7 @@ const TaskListContainer = styled.div`
 `
 
 const AddTaskContainer = styled.div`
+  margin-left: 54px;
   padding: 0 8px;
 `
 
@@ -219,7 +220,9 @@ const TaskList = ({
           <Droppable droppableId="droppable">
             {(provided, snapshot) => (
               <TightColumn {...provided.droppableProps} ref={provided.innerRef}>
-                {!tasks.length && 'Add your first task...'}
+                {!tasks.length && (
+                  <AddTaskContainer>Add your first task...</AddTaskContainer>
+                )}
                 {tasks.length ? (
                   <>
                     <HeaderRowContainer>
