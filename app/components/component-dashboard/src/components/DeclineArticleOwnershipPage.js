@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Checkbox, TextArea } from '@pubsweet/ui/dist/atoms'
 import { Button } from '@pubsweet/ui'
 import { useMutation, useQuery } from '@apollo/client'
@@ -70,7 +70,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
     setChecked(!checked)
   }
 
-  useEffect(() => {
+  const handleDeclineAction = () => {
     if (data && data.invitationStatus.status === 'UNANSWERED') {
       updateInvitationStatus({
         variables: {
@@ -80,7 +80,15 @@ const DeclineArticleOwnershipPage = ({ match }) => {
         },
       })
     }
-  }, [data])
+
+    updateInvitationResponse({
+      variables: {
+        id: invitationId,
+        responseComment: feedbackComment,
+        declinedReason: checked ? 'DO_NOT_CONTACT' : null,
+      },
+    })
+  }
 
   if (isFormSubmitted) {
     return (
@@ -92,7 +100,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
               src={config?.groupIdentity?.logoPath}
             />
             <ThankYouString>
-              Thank you for submitting the feedback.
+              You have declined the invitation. Thank-you for your response.
             </ThankYouString>
           </InvitationContent>
         </Centered>
@@ -111,10 +119,12 @@ const DeclineArticleOwnershipPage = ({ match }) => {
             />
             <FeedbackForm>
               <DeclinedInfoString>
-                You have declined an invitation to participate in a peer review.
+                Are you sure you want to decline this invitation to participate
+                in a peer review?
               </DeclinedInfoString>
               <SubmitFeedbackNote>
-                Please share your reasons for declining the invitation below.
+                You may wish to share your reason for declining the invitation
+                below (optional)
               </SubmitFeedbackNote>
               <FormInput>
                 <TextArea
@@ -131,20 +141,8 @@ const DeclineArticleOwnershipPage = ({ match }) => {
               </FormInput>
             </FeedbackForm>
             <ButtonWrapper>
-              <Button
-                onClick={() =>
-                  updateInvitationResponse({
-                    variables: {
-                      id: invitationId,
-                      responseComment: feedbackComment,
-                      declinedReason: checked ? 'DO_NOT_CONTACT' : 'OTHER',
-                    },
-                  })
-                }
-                primary
-                type="submit"
-              >
-                Submit Feedback
+              <Button onClick={handleDeclineAction} primary type="submit">
+                Decline Invitation
               </Button>
             </ButtonWrapper>
           </InvitationContent>
