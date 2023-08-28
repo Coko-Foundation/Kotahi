@@ -250,12 +250,12 @@ const publishArticleToCrossref = async manuscript => {
 
   const issueYear = getIssueYear(manuscript)
   const publishDate = new Date()
-  const journalDoi = getDoi(0)
+  const journalDoi = await getDoi(0)
 
   const doiSuffix =
     getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id
 
-  const doi = getDoi(doiSuffix)
+  const doi = await getDoi(doiSuffix)
   if (!(await doiIsAvailable(doi))) throw Error('Custom DOI is not available.')
 
   const publishedLocation = `${activeConfig.formData.publishing.crossref.publishedArticleLocationPrefix}${manuscript.shortId}`
@@ -402,7 +402,7 @@ const publishReviewsToCrossref = async manuscript => {
       `${manuscript.id}/`
     : null
 
-  const summaryDoi = summaryDoiSuffix ? getDoi(summaryDoiSuffix) : null
+  const summaryDoi = summaryDoiSuffix ? await getDoi(summaryDoiSuffix) : null
   // only validate if a summary exists, i.e. there is a summary author/creator
   if (summaryDoi && !(await doiIsAvailable(summaryDoi)))
     throw Error(`Summary suffix is not available: ${summaryDoiSuffix}`)
@@ -420,7 +420,7 @@ const publishReviewsToCrossref = async manuscript => {
             `review${reviewNumber}suffix`,
           ) || `${manuscript.id}/${reviewNumber}`
 
-        const doi = getDoi(doiSuffix)
+        const doi = await getDoi(doiSuffix)
         if (!(await doiIsAvailable(doi)))
           throw Error(`Review suffix is not available: ${doiSuffix}`)
 

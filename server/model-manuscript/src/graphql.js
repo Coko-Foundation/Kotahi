@@ -1433,7 +1433,7 @@ const resolvers = {
       if (
         activeConfig.formData.publishing.crossref.publicationType === 'article'
       ) {
-        const manuscriptDOI = getDoi(
+        const manuscriptDOI = await getDoi(
           getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id,
         )
 
@@ -1450,16 +1450,18 @@ const resolvers = {
           )
           .map(([key]) => key.replace('review', ''))
 
-        DOIs.push(
-          ...notEmptyReviews.map(reviewNumber =>
-            getDoi(
+        // eslint-disable-next-line no-restricted-syntax
+        for (const reviewNumber of notEmptyReviews) {
+          DOIs.push(
+            // eslint-disable-next-line no-await-in-loop
+            await getDoi(
               getReviewOrSubmissionField(
                 manuscript,
                 `review${reviewNumber}suffix`,
               ) || `${manuscript.id}/${reviewNumber}`,
             ),
-          ),
-        )
+          )
+        }
 
         if (
           Object.entries(manuscript.submission).some(
@@ -1467,7 +1469,7 @@ const resolvers = {
               key === 'summary' && !checkIsAbstractValueEmpty(value),
           )
         ) {
-          const summaryDOI = getDoi(
+          const summaryDOI = await getDoi(
             getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
               `${manuscript.id}/`,
           )
@@ -1489,7 +1491,7 @@ const resolvers = {
     // To be called in submit manuscript as
     // first validation step for custom suffix
     async validateSuffix(_, { suffix }, ctx) {
-      const doi = getDoi(suffix)
+      const doi = await getDoi(suffix)
       return { isDOIValid: await doiIsAvailable(doi) }
     },
   },
