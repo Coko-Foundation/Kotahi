@@ -12,10 +12,14 @@ const Svg = styled.svg.attrs(() => ({
   xmlns: 'http://www.w3.org/2000/svg',
   xmlnsXlink: 'http://www.w3.org/1999/xlink',
 }))`
-  fill: ${color.brand1.base};
+  fill: ${color.gray60};
   height: 24px;
   vertical-align: top;
   width: 24px;
+  &.active {
+    background: ${color.gray90};
+    // fill: ${color.gray30};
+  }
 `
 
 const kotahiIcons = {
