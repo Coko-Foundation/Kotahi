@@ -36,8 +36,8 @@ const Tabs = styled.div`
 `
 
 const activeTab = css`
-  background: ${color.gray60};
-  /*box-shadow: 0 0 1px ${color.brand1.base};*/
+  background: ${color.gray90};
+  /*box-shadow: 0 0 1px ${color.gray40};*/
   margin-bottom: -1px;
   /* stylelint-disable-next-line declaration-no-important */
   opacity: 1 !important;
@@ -63,7 +63,10 @@ const Tab = styled.div`
   }
 
   &:hover {
-    background: ${color.gray60};
+    background: ${color.gray90};
+    & svg {
+      fill: ${color.gray30};
+    }
   }
 `
 
@@ -119,7 +122,7 @@ const BlockLevelToolsWrapper = styled.div`
 
 const ElementGroup = styled.details`
   & summary {
-    color: ${color.brand1.base};
+    color: ${color.gray40};
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
@@ -169,9 +172,9 @@ const BlockElementWrapper = styled.div`
 
     & span {
       border-bottom: 2px solid
-        ${props => (props.isActive ? color.brand1.base : 'transparent')};
+        ${props => (props.isActive ? color.gray40 : 'transparent')};
       border-top: 2px solid transparent;
-      color: ${color.brand1.base};
+      color: ${color.gray40};
       font-size: 14px;
       font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
       padding: 1px 0;
@@ -182,7 +185,7 @@ const BlockElementWrapper = styled.div`
       background: none !important;
 
       & span {
-        border-bottom-color: ${color.brand1.base};
+        border-bottom-color: ${color.gray40};
         font-weight: bold;
       }
     }
