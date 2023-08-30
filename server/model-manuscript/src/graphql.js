@@ -11,7 +11,10 @@ const { importManuscripts } = require('./importManuscripts')
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 const { rebuildCMSSite } = require('../../flax-site/flax-api')
 
-const { getPublishableReviewFields } = require('../../publishing/flax/tools')
+const {
+  getPublishableReviewFields,
+  getPublishableSubmissionFields,
+} = require('../../publishing/flax/tools')
 
 const {
   publishToCrossref,
@@ -1711,27 +1714,14 @@ const resolvers = {
       return editorAndRoles
     },
     async submissionWithFields(parent) {
-      // need form structure as well to get all the values for select and checkbox group.
-      // We will move this to tool.js in the next MR
       const submissionForm = await getSubmissionForm(parent.groupId)
-      const fieldStructure = submissionForm.structure.children
-      const submission = parent.submission
 
-      const submissionKeyPrefix = 'submission.'
-
-      const modifiedSubmission = Object.fromEntries(
-        Object.entries(submission).map(([key, value]) => [
-          key,
-          {
-            value,
-            structure: fieldStructure.find(
-              c => c.name === submissionKeyPrefix + key,
-            ),
-          },
-        ]),
+      const submissionWithFields = getPublishableSubmissionFields(
+        submissionForm,
+        parent,
       )
 
-      return JSON.stringify(modifiedSubmission)
+      return submissionWithFields
     },
 
     // Since we can not change the api response structure right now
