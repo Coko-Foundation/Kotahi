@@ -438,7 +438,7 @@ const EditorStyles = css`
       margin-bottom: 0;
     }
 
-    & p {
+    & p:not(.ref) {
       --citationColorValues: ${th('colorCitation')};
       --citationTextColor: black;
       --citationOffset: 2px;

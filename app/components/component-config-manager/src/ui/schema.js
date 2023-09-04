@@ -745,6 +745,33 @@ const generateSchema = (
                         title: 'Publish to Crossref sandbox',
                         default: false,
                       },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: 'Email to use for citation search',
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description:
+                          'Number of results to return from citation search',
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: 'Select style formatting for citations',
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: 'Select locale for citations',
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
+                      },
                     },
                   },
                   webhook: {
@@ -1153,6 +1180,33 @@ const generateSchema = (
                         title: 'Publish to Crossref sandbox',
                         default: false,
                       },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: 'Email to use for citation search',
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description:
+                          'Number of results to return from citation search',
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: 'Select style formatting for citations',
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: 'Select locale for citations',
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
+                      },
                     },
                   },
                   webhook: {
@@ -1556,6 +1610,33 @@ const generateSchema = (
                         type: 'boolean',
                         title: 'Publish to Crossref sandbox',
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: 'Email to use for citation search',
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description:
+                          'Number of results to return from citation search',
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: 'Select style formatting for citations',
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: 'Select locale for citations',
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },
@@ -1961,6 +2042,33 @@ const generateSchema = (
                         type: 'boolean',
                         title: 'Publish to Crossref sandbox',
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: 'Email to use for citation search',
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description:
+                          'Number of results to return from citation search',
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: 'Select style formatting for citations',
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: 'Select locale for citations',
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },

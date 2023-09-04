@@ -96,7 +96,7 @@ export default css`
       top: -4px;
     }
 
-    & p,
+    & p:not(.ref),
     & li {
       &:before {
         content: '§ ';

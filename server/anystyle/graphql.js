@@ -7,6 +7,7 @@ const { promisify } = require('util')
 const striptags = require('striptags')
 const config = require('config')
 const anystyleXmlToHtml = require('./anystyleToHtml')
+const { formatCitation } = require('../reference/src/formatting')
 
 const randomBytes = promisify(crypto.randomBytes)
 
@@ -126,7 +127,7 @@ const parseCitations = async (references, startNumber = 0) => {
   // clean any HTML out of what's coming in to Anystyle so it isn't confused
   form.append('txt', fs.createReadStream(`${txtPath}`))
   // eslint-disable-next-line
-  console.log('Text path: ', txtPath)
+  // console.log('Text path: ', txtPath)
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -144,7 +145,7 @@ const parseCitations = async (references, startNumber = 0) => {
         // res.data is Anystyle XML as a string
         // TODO: take an initial index for the reference IDs so we don't make duplicate IDs
         // eslint-disable-next-line
-        console.log('Result from Anystyle:', res.data)
+        // console.log('Result from Anystyle:', res.data)
 
         const htmledResult =
           anystyleXmlToHtml(res.data, startNumber) || references
@@ -179,6 +180,95 @@ const parseCitations = async (references, startNumber = 0) => {
   })
 }
 
+const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
+  // check to see if we have an access token. If not, wait for one.
+
+  if (!anystyleAccessToken) {
+    anystyleAccessToken = await serviceHandshake()
+  }
+
+  const raw = await randomBytes(16)
+  const dirName = `tmp/${raw.toString('hex')}`
+
+  await fsPromised.mkdir(dirName, { recursive: true })
+
+  const txt = await convertHtmlToText(references)
+
+  const txtPath = `${dirName}/references.txt`
+
+  await fsPromised.appendFile(txtPath, txt)
+
+  // 1 pass references to anystyle
+  const form = new FormData()
+  // clean any HTML out of what's coming in to Anystyle so it isn't confused
+  form.append('txt', fs.createReadStream(`${txtPath}`))
+  // eslint-disable-next-line
+  // console.log('Text path: ', txtPath)
+  return new Promise((resolve, reject) => {
+    axios({
+      method: 'post',
+      url: `${serverUrl}/api/referencesToCsl`,
+      headers: {
+        authorization: `Bearer ${anystyleAccessToken}`,
+        ...form.getHeaders(),
+      },
+      // responseType: 'stream',
+      data: form,
+      // timeout: 1000, // adding this because it's failing
+    })
+      .then(async res => {
+        // 2 pass citations to HTML wrapper
+        // res.data is Anystyle XML as a string
+        // TODO: take an initial index for the reference IDs so we don't make duplicate IDs
+        // eslint-disable-next-line
+        // console.log('Result from Anystyle:', res.data)
+
+        const formattedCitations = await Promise.all(
+          res.data.map(async citation => {
+            const formattedCitation = await formatCitation(
+              JSON.stringify(citation),
+              groupId,
+            )
+            // eslint-disable-next-line
+            citation.formattedCitation = formattedCitation.result
+            return citation
+          }),
+        )
+
+        return formattedCitations
+      })
+      .then(async refList => {
+        const stringifiedResult = JSON.stringify(refList) || references
+        resolve(stringifiedResult)
+      })
+      .catch(async err => {
+        const { response } = err
+
+        if (!response) {
+          return reject(
+            new Error(
+              `Anystyle request failed with message: ${err.code}, ${err}`,
+            ),
+          )
+        }
+
+        const { status, data } = response
+        const { msg } = data
+
+        if (status === 401 && msg === 'expired token') {
+          await serviceHandshake()
+          return parseCitationsCSL(references, startNumber, groupId)
+        }
+
+        return reject(
+          new Error(
+            `Anystyle request failed with status ${status} and message: ${msg}`,
+          ),
+        )
+      })
+  })
+}
+
 const resolvers = {
   Query: {
     buildCitations: async (_, { textReferences }, ctx) => {
@@ -196,16 +286,38 @@ const resolvers = {
         error: error ? JSON.stringify(error) : '',
       }
     },
+    buildCitationsCSL: async (_, { textReferences }, ctx) => {
+      const groupId = ctx.req.headers['group-id']
+      let outReferences = textReferences
+      let error = ''
+
+      try {
+        outReferences = await parseCitationsCSL(textReferences, 0, groupId)
+      } catch (e) {
+        error = e.message
+      }
+
+      return {
+        cslReferences: outReferences || '',
+        error: error || '',
+      }
+    },
   },
 }
 
 const typeDefs = `
 	extend type Query {
 		buildCitations(textReferences: String!): BuildCitationsType
+		buildCitationsCSL(textReferences: String!): BuildCitationsCSLType
 	}
 
 	type BuildCitationsType {
 		htmlReferences: String!
+		error: String
+	}
+
+	type BuildCitationsCSLType {
+		cslReferences: String!
 		error: String
 	}
 `
