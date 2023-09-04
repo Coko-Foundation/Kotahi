@@ -48,6 +48,7 @@ const RightArea = ComponentPlugin('rightArea')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 const LeftSideBar = ComponentPlugin('leftSideBar')
+const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
   editor,
@@ -126,6 +127,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                 <div>
                   <WaxSurfaceScroll className="panelWrapper">
                     <EditorContainer>{editor}</EditorContainer>
+                    <CitationArea />
                     <CommentsContainer>
                       <CommentTrackToolsContainer>
                         <CommentTrackTools>

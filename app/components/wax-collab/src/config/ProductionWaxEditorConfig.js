@@ -10,7 +10,6 @@ import {
   ListsService,
   ListToolGroupService,
   TablesService,
-  TableToolGroupService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -42,7 +41,8 @@ import {
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
-import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
+// import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
+import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -53,6 +53,8 @@ const productionWaxEditorConfig = (
   readOnlyComments,
   handleAssetManager,
   updateAnystyle,
+  updateCrossRef,
+  styleReference,
 ) => ({
   EnableTrackChangeService: {
     enabled: false,
@@ -128,8 +130,13 @@ const productionWaxEditorConfig = (
   SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
-  AnyStyleService: { AnyStyleTransformation: updateAnystyle },
+  // AnyStyleService: {},
   ImageService: handleAssetManager ? { handleAssetManager } : {},
+  CitationService: {
+    AnyStyleTransformation: updateAnystyle,
+    CrossRefTransformation: updateCrossRef,
+    CiteProcTransformation: styleReference,
+  },
   services: [
     new AnnotationToolGroupService(),
     new BaseService(),
@@ -150,7 +157,6 @@ const productionWaxEditorConfig = (
     new SpecialCharactersService(),
     new SpecialCharactersToolGroupService(),
     new TablesService(),
-    new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
     // needed for track changes
@@ -171,7 +177,8 @@ const productionWaxEditorConfig = (
     new JatsTagsService(),
     new JatsSideMenuToolGroupService(),
     new JatsAnnotationListTooolGroupService(),
-    new AnyStyleService(),
+    // new AnyStyleService(),
+    new CitationService(),
   ],
 })
 

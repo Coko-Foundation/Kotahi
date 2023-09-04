@@ -521,7 +521,7 @@ class JatsTagsService extends Service {
         ],
         toDOM() {
           // TODO: figure out how to get the href to go to the content?
-          return ['a', { class: 'doi', href: 'hello!', title: 'DOI' }, 0]
+          return ['a', { class: 'doi', href: '', title: 'DOI' }, 0]
         },
         // // this causes an error – why?
         // toDOM(hook, next) {

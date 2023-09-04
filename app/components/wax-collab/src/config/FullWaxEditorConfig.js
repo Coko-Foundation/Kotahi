@@ -9,7 +9,6 @@ import {
   ListsService,
   ListToolGroupService,
   TablesService,
-  TableToolGroupService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -144,7 +143,6 @@ const fullWaxEditorConfig = handleAssetManager => ({
     new SpecialCharactersService(),
     new SpecialCharactersToolGroupService(),
     new TablesService(),
-    new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
     // needed for track changes

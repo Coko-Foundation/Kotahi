@@ -21,6 +21,7 @@ class JatsSideMenu extends ToolGroup {
   tools = []
   toolGroups = []
 
+  /* stylelint-disable */
   constructor(
     @inject('FrontMatterGroup') frontmattergroup,
     @inject('FundingGroup') fundinggroup,
@@ -31,7 +32,7 @@ class JatsSideMenu extends ToolGroup {
     @inject('GlossaryGroup') glossarygroup,
   ) {
     super()
-
+    /* stylelint-enable */
     this.toolGroups = [
       {
         name: 'FrontMatterTab',
@@ -39,7 +40,12 @@ class JatsSideMenu extends ToolGroup {
       },
       {
         name: 'BackMatterTab',
-        groups: [appendixgroup, acknowledgementsgroup, glossarygroup],
+        groups: [
+          appendixgroup,
+          acknowledgementsgroup,
+          glossarygroup,
+          citationgroup,
+        ],
       },
       { name: 'CitationTab', groups: [citationgroup] },
     ]
@@ -81,23 +87,23 @@ class JatsSideMenu extends ToolGroup {
       ),
     }
 
-    const citationList = {
-      id: 'citationlist',
-      title: 'Citation tools',
-      icon: 'citationList',
-      disabled: false,
-      component: (
-        <BlockLevelTools
-          groups={this._toolGroups[2].groups.map(group => ({
-            groupName: group.title.props.title,
-            items: group._tools,
-          }))}
-          view={view}
-        />
-      ),
-    }
+    // const citationList = {
+    //   id: 'citationlist',
+    //   title: 'Citation tools',
+    //   icon: 'citationList',
+    //   disabled: false,
+    //   component: (
+    //     <BlockLevelTools
+    //       groups={this._toolGroups[2].groups.map(group => ({
+    //         groupName: group.title.props.title,
+    //         items: group._tools,
+    //       }))}
+    //       view={view}
+    //     />
+    //   ),
+    // }
 
-    const tabList = [frontMatterList, backMatterList, citationList]
+    const tabList = [frontMatterList, backMatterList /* citationList */]
 
     const TabsComponent = useMemo(
       () => <VerticalTabs key={uuidv4()} tabList={tabList} />,

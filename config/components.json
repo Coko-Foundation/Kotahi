@@ -28,5 +28,6 @@
   "./server/xsweet",
   "./server/model-email-templates/src",
   "./server/flax-site",
-  "./server/model-group/src"
+  "./server/model-group/src",
+	"./server/reference/src"
 ]

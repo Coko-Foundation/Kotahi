@@ -10,10 +10,42 @@ import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
-const getAnystyleQuery = gql`
+const getAnystyleCslQuery = gql`
   query($textReferences: String!) {
-    buildCitations(textReferences: $textReferences) {
-      htmlReferences
+    buildCitationsCSL(textReferences: $textReferences) {
+      cslReferences
+      error
+    }
+  }
+`
+
+const getCrossRefQuery = gql`
+  query($input: CitationSearchInput) {
+    getFormattedReferences(input: $input) {
+      success
+      message
+      matches {
+        doi
+        author {
+          given
+          family
+          sequence
+        }
+        issue
+        page
+        title
+        volume
+        journalTitle
+        formattedCitation
+      }
+    }
+  }
+`
+
+const getCiteProcQuery = gql`
+  query($citation: String!) {
+    formatCitation(citation: $citation) {
+      formattedCitation
       error
     }
   }
@@ -73,10 +105,10 @@ const ProductionWaxEditor = ({
   const updateAnystyle = async text => {
     const { content } = text
     // eslint-disable-next-line no-console
-    console.log('Coming in: ', content)
+    // console.log('Coming in for Anystyle: ', content)
     return client
       .query({
-        query: getAnystyleQuery,
+        query: getAnystyleCslQuery,
         variables: {
           textReferences: content,
         },
@@ -84,17 +116,86 @@ const ProductionWaxEditor = ({
       })
       .then(result => {
         // eslint-disable-next-line no-console
-        console.log('Result:', result?.data?.buildCitations?.htmlReferences)
+        // console.log('Result:', result)
 
         if (
-          result?.data?.buildCitations?.htmlReferences &&
-          !result?.data?.buildCitations?.error
+          result?.data?.buildCitationsCSL?.cslReferences &&
+          !result?.data?.buildCitationsCSL?.error
         ) {
-          return result.data.buildCitations.htmlReferences
+          // console.log(
+          //   'Coming back from Anystyle CSL: ',
+          //   result.data.buildCitationsCSL.cslReferences,
+          // )
+          return result.data.buildCitationsCSL.cslReferences
         }
 
-        console.error('Server-side error: ', result.data.buildCitations.error)
+        console.error(
+          'Server-side error: ',
+          result.data.buildCitationsCSL.error,
+        )
         return content
+      })
+  }
+
+  const updateCrossRef = async text => {
+    // eslint-disable-next-line no-console
+    // console.log('Coming in for CrossRef: ', text, count)
+    return text
+      ? client
+          .query({
+            query: getCrossRefQuery,
+            variables: {
+              input: {
+                text,
+                // count, // We could have this in there if we wanted more results to override the default
+              },
+            },
+            fetchPolicy: 'network-only',
+          })
+          .then(result => {
+            // eslint-disable-next-line no-console
+            // console.log('Result:', result)
+
+            if (
+              result?.data?.getFormattedReferences?.success &&
+              result.data.getFormattedReferences.matches &&
+              result.data.getFormattedReferences.matches.length
+            ) {
+              // This returns an array of CSL
+              return result.data.getFormattedReferences.matches
+            }
+
+            console.error(
+              'Server-side error: ',
+              result.data.getFormattedReferences.message,
+            )
+            return text
+          })
+      : null
+  }
+
+  const updateCiteProc = async csl => {
+    // eslint-disable-next-line no-console
+    // console.log('Coming in for citeproc: ', csl)
+    return client
+      .query({
+        query: getCiteProcQuery,
+        variables: {
+          citation: JSON.stringify(csl),
+        },
+        fetchPolicy: 'network-only',
+      })
+      .then(result => {
+        // eslint-disable-next-line no-console
+        // console.log('Citeproc result:', result)
+
+        if (result?.data?.formatCitation?.formattedCitation) {
+          // This returns an array of CSL
+          return result.data.formatCitation.formattedCitation
+        }
+
+        console.error('Server-side error: ', result.data.formatCitation.error)
+        return JSON.stringify(csl)
       })
   }
 
@@ -107,6 +208,8 @@ const ProductionWaxEditor = ({
             readOnlyComments,
             handleAssetManager,
             updateAnystyle,
+            updateCrossRef,
+            updateCiteProc,
           )}
           fileUpload={file => renderImage(file)}
           layout={
