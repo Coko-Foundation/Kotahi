@@ -49,8 +49,8 @@ const UPDATE_USERNAME = gql`
 `
 
 const GET_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
-  query notificationOption($path: [String!]!) {
-    notificationOption(path: $path) {
+  query {
+    notificationOption(path: ["chat"]) {
       userId
       path
       groupId
@@ -60,14 +60,15 @@ const GET_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
 `
 
 const UPDATE_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
-  mutation updateNotificationOption($path: [String!]!, $option: String!) {
-    updateNotificationOption(path: $path, option: $option) {
+  mutation updateNotificationOption($option: String!) {
+    updateNotificationOption(path: ["chat"], option: $option) {
       id
       created
       updated
       userId
       path
       option
+      objectId
     }
   }
 `
@@ -99,11 +100,6 @@ const ProfilePage = ({ currentUser, match }) => {
 
   const { data: globalChatNotificationUserOption } = useQuery(
     GET_GLOBAL_CHAT_NOTIFICATION_OPTION,
-    {
-      variables: {
-        path: ['chat'],
-      },
-    },
   )
 
   const [updateGlobalChatNotificationOptIn] = useMutation(

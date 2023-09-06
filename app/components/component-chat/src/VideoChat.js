@@ -6,10 +6,9 @@ import { RoundIconButton } from '../../shared'
 import { ConfigContext } from '../../config/src'
 
 const FloatRightButton = styled(RoundIconButton)`
-  float: right;
-  left: 80%;
   margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
   position: absolute;
+  right: 42px;
   z-index: 1000;
 `
 

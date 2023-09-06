@@ -1,7 +1,9 @@
 /* stylelint-disable property-no-vendor-prefix */
 
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
+import { MoreVertical } from 'react-feather'
+import { color } from '../../../../theme'
 
 export { Spinner } from '../../../shared'
 
@@ -198,4 +200,27 @@ export const DateLabel = styled(ChatLabel)`
   background-color: #ffffff;
   color: #6c6c6c;
   padding: 2px 12px;
+`
+export const Ellipsis = styled(MoreVertical)`
+  background-color: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 20.25px;
+  margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
+  padding: 3px;
+  position: absolute;
+  right: 32px;
+  width: 20.25px;
+  z-index: 2000;
+
+  &:hover {
+    background-color: ${color.gray90};
+    border-radius: 50%;
+  }
+  @media (min-width: 1440px) {
+    right: 20px;
+  }
+  @media (min-width: 2560px) {
+    right: 20px;
+  }
 `

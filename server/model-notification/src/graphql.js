@@ -1,6 +1,18 @@
 const models = require('@pubsweet/models')
 const NotificationUserOption = require('./notificationUserOption')
 
+const tryGetObjectIdFromPath = path => {
+  if (!path.length) return null
+  const lastNodeOfPath = path[path.length - 1]
+  if (
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(
+      lastNodeOfPath,
+    )
+  )
+    return lastNodeOfPath
+  return null
+}
+
 const resolvers = {
   Query: {
     notificationOption: async (_, { path }, ctx) => {
@@ -11,11 +23,13 @@ const resolvers = {
       }
 
       const groupId = ctx.req.headers['group-id']
+      const objectId = tryGetObjectIdFromPath(path)
 
       const notificationOption = await NotificationUserOption.query().findOne({
         userId: ctx.user,
         path: `{${path.join(',')}}`,
         groupId,
+        objectId,
       })
 
       return notificationOption
@@ -27,13 +41,16 @@ const resolvers = {
         throw new Error(
           'Cannot updateNotificationOption for an unregistered user',
         )
-      if (!['off', 'inherit', '30MinSummary'].includes(option))
+
+      if (!['off', 'inherit', '30MinSummary'].includes(option)) {
         throw new Error(
           `Unrecognized option '${option}' passed to updateNotificationOption`,
         )
+      }
 
       const groupId = ctx.req.headers['group-id']
       const userId = ctx.user
+      const objectId = tryGetObjectIdFromPath(path)
 
       // Find the existing record based on userId, path, and groupId
       const existingOption = await NotificationUserOption.query()
@@ -55,6 +72,7 @@ const resolvers = {
         path,
         groupId,
         option,
+        objectId,
       })
     },
     reportUserIsActive: async (_, { path }, context) => {
@@ -79,6 +97,7 @@ const typeDefs = `
     created: DateTime!
     updated: DateTime
     userId: ID!
+    objectId: ID
     path: [String!]!
     option: String!
     groupId: ID!
