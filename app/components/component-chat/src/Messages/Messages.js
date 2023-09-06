@@ -1,6 +1,6 @@
 /* eslint-disable prefer-object-spread */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
@@ -12,6 +12,7 @@ import {
 import MessageRenderer from './MessageRenderer'
 import { CommsErrorBanner } from '../../../shared'
 import VideoChat from '../VideoChat'
+import EllipsisDropdown from '../EllipsisDropdown'
 
 import {
   Time,
@@ -29,6 +30,7 @@ import {
   UnreadLabel,
   DateLabelContainer,
   DateLabel,
+  Ellipsis,
 } from './style'
 
 const Messages = ({
@@ -39,9 +41,19 @@ const Messages = ({
   firstUnreadMessageId,
   unreadMessagesCount,
   updateChannelViewed,
+  channelNotificationOption,
+  toggleChannelMuteStatus,
   manuscriptId = null,
 }) => {
   const { loading, error, data } = queryData
+
+  const [openDropdown, setOpenDropdown] = useState(false)
+
+  const toggleDropdown = () => {
+    setOpenDropdown(!openDropdown)
+  }
+
+  const mainRef = useRef(null)
 
   useEffect(() => {
     // when there are new messages while the user is on the page
@@ -68,7 +80,7 @@ const Messages = ({
     scrollToBottom()
 
     return () => {}
-  })
+  }, [mainRef.current])
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -106,10 +118,21 @@ const Messages = ({
   return (
     <MessagesGroup
       id="messages"
+      ref={mainRef}
       style={{ paddingBottom: unreadMessagesCount !== 0 ? '20px' : '8px' }}
     >
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
+      <Ellipsis onClick={toggleDropdown} />
+      {openDropdown && (
+        <EllipsisDropdown
+          isMuted={channelNotificationOption === 'off'}
+          show
+          toggleChannelMuteStatus={toggleChannelMuteStatus}
+          toggleDropdown={toggleDropdown}
+        />
+      )}
+
       {hasPreviousPage && (
         <NextPageButton
           fetchMore={() => fetchMoreData()}

@@ -128,7 +128,6 @@ const Profile = ({
 
     await updateGlobalChatNotificationOptIn({
       variables: {
-        path: ['chat'],
         option: updatedGlobalChatNotificationOptIn,
       },
     })

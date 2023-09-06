@@ -71,6 +71,33 @@ const CHANNEL_VIEWED = gql`
   }
 `
 
+const GET_CHANNEL_NOTIFICATION_OPTION = gql`
+  query notificationOption($path: [String!]!) {
+    notificationOption(path: $path) {
+      userId
+      objectId
+      path
+      groupId
+      option
+      objectId
+    }
+  }
+`
+
+const UPDATE_CHANNEL_NOTIFICATION_OPTION = gql`
+  mutation updateNotificationOption($path: [String!]!, $option: String!) {
+    updateNotificationOption(path: $path, option: $option) {
+      id
+      created
+      updated
+      userId
+      path
+      option
+      groupId
+    }
+  }
+`
+
 const REPORT_USER_IS_ACTIVE = gql`
   mutation reportUserIsActive($path: [String!]!) {
     reportUserIsActive(path: $path)
@@ -243,6 +270,19 @@ const chatComponent = (
 
   const [reportUserIsActiveMutation] = useMutation(REPORT_USER_IS_ACTIVE)
 
+  const [updateNotificationOptionData] = useMutation(
+    UPDATE_CHANNEL_NOTIFICATION_OPTION,
+  )
+
+  const { data: notificationOptionData } = useQuery(
+    GET_CHANNEL_NOTIFICATION_OPTION,
+    {
+      variables: {
+        path: ['chat', channelId],
+      },
+    },
+  )
+
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
       subscribeToMore,
@@ -283,12 +323,14 @@ const chatComponent = (
       manuscriptId={
         channelName !== 'Discussion with author' ? manuscriptId : null
       }
+      notificationOptionData={notificationOptionData}
       queryData={queryResult}
       reportUserIsActiveMutation={reportUserIsActiveMutation}
       searchUsers={searchUsers}
       sendChannelMessages={sendChannelMessages}
       unreadMessagesCount={unreadMessagesCount}
       updateChannelViewed={updateChannelViewed}
+      updateNotificationOptionData={updateNotificationOptionData}
     />
   )
 }
@@ -401,6 +443,19 @@ const Container = ({
 
   const [reportUserIsActiveMutation] = useMutation(REPORT_USER_IS_ACTIVE)
 
+  const { data: notificationOptionData } = useQuery(
+    GET_CHANNEL_NOTIFICATION_OPTION,
+    {
+      variables: {
+        path: ['chat', channelId],
+      },
+    },
+  )
+
+  const [updateNotificationOptionData] = useMutation(
+    UPDATE_CHANNEL_NOTIFICATION_OPTION,
+  )
+
   useEffect(() => {
     const unsubscribeToNewMessages = subscribeToNewMessages(
       subscribeToMore,
@@ -458,12 +513,14 @@ const Container = ({
             fetchMoreData={fetchMoreData}
             firstUnreadMessageId={firstUnreadMessageId}
             manuscriptId={manuscriptId}
+            notificationOptionData={notificationOptionData}
             queryData={queryResult}
             reportUserIsActiveMutation={reportUserIsActiveMutation}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}
             unreadMessagesCount={unreadMessagesCount}
             updateChannelViewed={updateChannelViewed}
+            updateNotificationOptionData={updateNotificationOptionData}
           />
         </>
       )}
