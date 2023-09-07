@@ -7,6 +7,7 @@ const processFunding = require('../jatsexport/processFunding')
 const processKeywords = require('../jatsexport/processKeywords')
 const processGlossary = require('../jatsexport/processGlossary')
 const processAppendices = require('../jatsexport/processAppendices')
+const processTablesWithCaptions = require('../jatsexport/processTablesWithCaptions')
 
 // const { lte } = require('semver')
 
@@ -430,9 +431,15 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deTabledHtml } = fixTableCells(removeNestedTables)
 
+  // TODO: deal with tables with captions
+
+  const { deCaptionTabledHtml } = processTablesWithCaptions(deTabledHtml)
+
   // 1. deal with appendices
 
-  const { deAppendixedHtml, appendices } = processAppendices(deTabledHtml)
+  const { deAppendixedHtml, appendices } = processAppendices(
+    deCaptionTabledHtml,
+  )
 
   // 3 deal with faux frontmatter – these just get thrown away
 
@@ -459,8 +466,6 @@ const makeJats = (html, articleMeta, journalMeta) => {
   let body = fixMath(unfixedMath)
 
   // this is to clean out the bad table tags
-  body = replaceAll(body, '<table>', '<table-wrap><table>')
-  body = replaceAll(body, '</table>', '</table></table-wrap>')
   body = replaceAll(body, '<@title>', '<title>')
   body = replaceAll(body, '</@title>', '</title>')
   body = replaceAll(body, '<@sec>', '<sec>')

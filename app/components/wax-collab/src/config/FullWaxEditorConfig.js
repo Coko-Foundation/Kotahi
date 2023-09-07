@@ -1,5 +1,4 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
-import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
   InlineAnnotationsService,
   AnnotationToolGroupService,
@@ -8,7 +7,6 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  TablesService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -32,10 +30,12 @@ import {
   TrackingAndEditingToolGroupService,
   EditingSuggestingService,
 } from 'wax-prosemirror-services'
+import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
+import 'wax-table-service/dist/index.css'
 
 const updateTrackStatus = change => {
   // this returns "true" when Suggesting Mode is turned on.

@@ -1,6 +1,5 @@
 // import { WaxSelectionPlugin } from 'wax-prosemirror-plugins'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
-import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
   InlineAnnotationsService,
   AnnotationToolGroupService,
@@ -9,7 +8,6 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  TablesService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -33,6 +31,7 @@ import {
   EditingSuggestingService,
   TrackingAndEditingToolGroupService,
 } from 'wax-prosemirror-services'
+import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 import {
   KotahiBlockDropDownToolGroupService,
   JatsSideMenuToolGroupService,
@@ -43,6 +42,7 @@ import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
 // import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
 import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
+import 'wax-table-service/dist/index.css'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
