@@ -612,6 +612,7 @@ const permissions = {
     userIsAuthorOfTheManuscriptOfTheFile,
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
     userIsEditor,
+    reviewIsByUser,
     userIsGmOrAdmin,
   ),
   Form: allow,
