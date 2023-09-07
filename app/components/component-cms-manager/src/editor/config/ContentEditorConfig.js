@@ -1,5 +1,4 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
-import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
   InlineAnnotationsService,
   AnnotationToolGroupService,
@@ -8,7 +7,6 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  TablesService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -22,9 +20,11 @@ import {
   SpecialCharactersService,
   SpecialCharactersToolGroupService,
 } from 'wax-prosemirror-services'
+import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 import { KotahiBlockDropDownToolGroupService } from '../../../../wax-collab/src/CustomWaxToolGroups'
 import CharactersList from '../../../../wax-collab/src/config/CharactersList'
 import KotahiSchema from '../../../../wax-collab/src/config/KotahiSchema'
+import 'wax-table-service/dist/index.css'
 
 const fullWaxEditorConfig = handleAssetManager => ({
   SchemaService: KotahiSchema,

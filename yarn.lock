@@ -17799,7 +17799,7 @@ prosemirror-state@1.4.2, prosemirror-state@^1.0.0, prosemirror-state@^1.2.2, pro
     prosemirror-transform "^1.0.0"
     prosemirror-view "^1.27.0"
 
-prosemirror-tables@1.3.2, prosemirror-tables@1.3.4:
+prosemirror-tables@1.3.2:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/prosemirror-tables/-/prosemirror-tables-1.3.2.tgz#ca208c6a55d510af14b652d23e800e00ba6bebd4"
   integrity sha512-/9JTeN6s58Zq66HXaxP6uf8PAmc7XXKZFPlOGVtLvxEd6xBP6WtzaJB9wBjiGUzwbdhdMEy7V62yuHqk/3VrnQ==
@@ -22381,10 +22381,10 @@ watchpack@^1.7.4:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
 
-wax-prosemirror-core@^0.8.9:
-  version "0.8.9"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.8.9.tgz#b95d988a83cc0e537d4021d5673dbae462a4be43"
-  integrity sha512-B2+h3LwVG7rXKhoGdVtKElaieoxYfS+M2AH7GXWRrxwz5aiXNeI5WxLjEjVO21YqmeigFd7oHCQgH3Lx75qdFQ==
+wax-prosemirror-core@^0.8.10:
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.8.10.tgz#c55b5cece38a58dc79c53e24c90021143bb5ab9c"
+  integrity sha512-G112vU+/7o+ThB32Q9TW2Ljk5aU0/AWFlC1xDx9N+EsECvcogeUth4IAMeXOZKnrGtohOlUCpJQm+Dh8j/kx0A==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     deepmerge "^4.2.2"
@@ -22407,10 +22407,10 @@ wax-prosemirror-core@^0.8.9:
     reflect-metadata "^0.1.13"
     uuid "^7.0.3"
 
-wax-prosemirror-services@^0.8.9:
-  version "0.8.9"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.8.9.tgz#4b0914eb3d6c04c0de432dcc848d19e1420ad1a9"
-  integrity sha512-nMtXcfkQ8GJCiKJKtM8LcSVqF5Q62/N1vyTJdnTkW/NrA2xh9moAWjG68tesWsXI74BoOhWqEf8SgEtiyziMgQ==
+wax-prosemirror-services@^0.8.10:
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.8.10.tgz#a3bddc0070cae18b68e5f4a9961f905ad3dc5a22"
+  integrity sha512-cpXLkqjsqImNDNc0gFtrLFYB9mJdFgAXOwhbIsTWo94HbOowEMJcUT+Zh0uIunYZQvidm5WdTIfEBNLq7rEXrg==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     highlight.js "^10.1.1"
@@ -22427,18 +22427,33 @@ wax-prosemirror-services@^0.8.9:
     prosemirror-model "1.19.0"
     prosemirror-schema-list "1.3.0"
     prosemirror-state "1.4.2"
-    prosemirror-tables "1.3.4"
     prosemirror-transform "1.7.1"
     prosemirror-view "1.30.2"
     react-dropdown "^1.6.2"
     use-deep-compare-effect "^1.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.8.9"
+    wax-prosemirror-core "^0.8.10"
     y-prosemirror "1.2.0"
     y-protocols "1.0.5"
     y-webrtc "10.2.0"
     y-websocket "1.4.5"
     yjs "13.5.38"
+
+wax-table-service@^0.8.10:
+  version "0.8.10"
+  resolved "https://registry.yarnpkg.com/wax-table-service/-/wax-table-service-0.8.10.tgz#b5a2b6f7751e98b2e41a50e1779f018d3cd11e88"
+  integrity sha512-9XgwD5L+pP2Qc/xdk1kHp2t8eZWaomRttXwmQ8sPV/49ToDxv9D6vSSQW2rm41FW/CwI3IPhlGNMOQUZP1eNMA==
+  dependencies:
+    "@pubsweet/ui-toolkit" "^2.3.1"
+    inversify "^5.0.1"
+    lodash "^4.17.4"
+    prosemirror-keymap "1.2.1"
+    prosemirror-state "1.4.2"
+    prosemirror-transform "1.7.1"
+    prosemirror-view "1.30.2"
+    uuid "^7.0.3"
+    wax-prosemirror-core "^0.8.10"
+    wax-prosemirror-services "^0.8.10"
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
