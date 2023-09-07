@@ -354,9 +354,32 @@ const tryPublishingWebhook = async manuscriptId => {
   }
 }
 
+const getSupplementaryFiles = async parentId => {
+  return models.Manuscript.relatedQuery('files')
+    .for(models.Manuscript.query().where({ id: parentId }))
+    .where('tags', '@>', JSON.stringify(['supplementary']))
+}
+
 const publishOnCMS = async (groupId, manuscriptId) => {
   await rebuildCMSSite(groupId, { manuscriptId })
   return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
+}
+
+const getManuscriptSubmissionFiles = async manuscript => {
+  const submissionForm = await getSubmissionForm(manuscript.groupId)
+
+  const supplementaryFileField = submissionForm.structure.children.find(
+    field => field.component === 'SupplementaryFiles',
+  )
+
+  const fieldTitle = supplementaryFileField ? supplementaryFileField.title : ''
+  const supplementaryFiles = await getSupplementaryFiles(manuscript.id)
+  const files = await getFilesWithUrl(supplementaryFiles)
+
+  return {
+    fieldTitle,
+    files,
+  }
 }
 
 const resolvers = {
@@ -1723,6 +1746,13 @@ const resolvers = {
 
       return submissionWithFields
     },
+    async supplementaryFiles(parent) {
+      const supplementaryFilesWithTitles = await getManuscriptSubmissionFiles(
+        parent,
+      )
+
+      return JSON.stringify(supplementaryFilesWithTitles)
+    },
 
     // Since we can not change the api response structure right now
     // So Adding the totalCount field in the manuscript itself.
@@ -1954,8 +1984,9 @@ const typeDefs = `
     files: [File]
     status: String
     meta: ManuscriptMeta
-    submission: String
+    submission: String!
     submissionWithFields: String
+    supplementaryFiles: String
     publishedArtifacts: [PublishedArtifact!]!
     publishedDate: DateTime
 		printReadyPdfUrl: String
