@@ -339,7 +339,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.22
+    image: cokoapps/kotahi-flax:0.2.24
     depends_on:
       - client
     ports:
