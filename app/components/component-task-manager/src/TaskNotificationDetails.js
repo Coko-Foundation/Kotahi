@@ -612,6 +612,14 @@ const TaskNotificationDetails = ({
   }
 
   const logTaskNotificationEmails = async logsData => {
+    const manuscriptEditor = manuscript.teams.reduce((editors, item) => {
+      if (item.role === 'editor') {
+        editors.push(item.members[0].user.username)
+      }
+
+      return editors
+    }, [])
+
     // eslint-disable-next-line no-restricted-syntax
     for (const logData of logsData) {
       const emailTemplateOption = emailTemplates.find(
@@ -620,7 +628,7 @@ const TaskNotificationDetails = ({
 
       const selectedTemplateValue = emailTemplateOption.emailContent.description
 
-      const messageBody = `${selectedTemplateValue} sent by Kotahi to ${logData.recipientName}`
+      const messageBody = `${selectedTemplateValue} sent by ${manuscriptEditor[0]} to ${logData.recipientName}`
 
       // eslint-disable-next-line no-await-in-loop
       await createTaskEmailNotificationLog({

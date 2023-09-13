@@ -125,7 +125,7 @@ const EmailNotifications = ({
               config.groupId,
             )
 
-            if (!output) {
+            if (!output?.emailStatus) {
               setNotificationStatus('failure')
               return
             }

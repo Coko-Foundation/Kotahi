@@ -369,7 +369,7 @@ const resolvers = {
         return {
           invitation: result,
           response: {
-            success: true,
+            success: result.success,
           },
         }
       } catch (error) {
