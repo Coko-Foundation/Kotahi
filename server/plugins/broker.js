@@ -53,22 +53,31 @@ const getBroker = (groupId, workerName) => {
   return {
     addManuscriptImporter: (importType, doImport) => {
       assertArgTypes([importType, doImport], 'string', 'function')
-      importWorkers.push({ name: workerName, importType, doImport })
+      importWorkers.push({
+        name: workerName,
+        importType,
+        doImport,
+      })
     },
     findManuscriptWithDoi: async doi =>
       doi ? models.Manuscript.query().findOne({ doi, groupId }) : null,
-    findManuscriptWithUri: async uri =>
-      uri
-        ? models.Manuscript.query()
-            .where({ groupId })
-            .findOne(builder =>
-              builder
-                .whereRaw("submission->>'link'", '=', uri)
-                .orWhereRaw("submission->>'biorxivURL'", '=', uri)
-                .orWhereRaw("submission->>'url'", '=', uri)
-                .orWhereRaw("submission->>'uri'", '=', uri),
-            )
-        : null,
+
+    findManuscriptWithUri: async uri => {
+      if (uri) {
+        return models.Manuscript.query()
+          .where({ groupId })
+          .findOne(builder =>
+            builder
+              .whereRaw("submission->>'link' = ?", [uri])
+              .orWhereRaw("submission->>'biorxivURL' = ?", [uri])
+              .orWhereRaw("submission->>'url' = ?", [uri])
+              .orWhereRaw("submission->>'uri' = ?", [uri]),
+          )
+      }
+
+      return null
+    },
+
     getStubManuscriptObject: async () => ({
       status: 'new',
       isImported: false,
