@@ -6,13 +6,31 @@ const importWorkersByGroup = {}
 
 const runImports = async (groupId, submitterId = null) => {
   const importType = submitterId ? 'manual' : 'automatic'
-  const allNewManuscripts = []
   const urisAlreadyImporting = []
   const doisAlreadyImporting = []
+  const importWorkers = importWorkersByGroup[groupId] || []
 
-  const importWorkers = importWorkersByGroup[groupId]
+  const saveImportedManuscripts = async allNewManuscripts => {
+    try {
+      const chunks = chunk(allNewManuscripts, 10)
+      await Promise.all(
+        chunks.map(async ch => {
+          await models.Manuscript.query().upsertGraphAndFetch(ch, {
+            relate: true,
+          })
+        }),
+      )
+    } catch (e) {
+      console.error(e)
+    }
+
+    console.info(
+      `Imported ${allNewManuscripts.length} manuscripts into group ${groupId} using plugins, with ${submitterId} as submitterId.`,
+    )
+  }
 
   for (let i = 0; i < importWorkers.length; i += 1) {
+    const allNewManuscripts = []
     const worker = importWorkers[i]
     if (![importType, 'any'].includes(worker.importType)) continue
 
@@ -110,6 +128,10 @@ const runImports = async (groupId, submitterId = null) => {
       if (uri) urisAlreadyImporting.push(uri)
     })
 
+    console.log('Total Manuscripts to save in DB => ', allNewManuscripts.length)
+
+    saveImportedManuscripts(allNewManuscripts)
+
     if (lastImportDate) {
       await models.ArticleImportHistory.query()
         .patch({ date: new Date().toISOString() })
@@ -122,23 +144,6 @@ const runImports = async (groupId, submitterId = null) => {
       })
     }
   }
-
-  try {
-    const chunks = chunk(allNewManuscripts, 10)
-    await Promise.all(
-      chunks.map(async ch => {
-        await models.Manuscript.query().upsertGraphAndFetch(ch, {
-          relate: true,
-        })
-      }),
-    )
-  } catch (e) {
-    console.error(e)
-  }
-
-  console.info(
-    `Imported ${allNewManuscripts.length} manuscripts into group ${groupId} using plugins, with ${submitterId} as submitterId.`,
-  )
 }
 
 module.exports = { runImports, importWorkersByGroup }
