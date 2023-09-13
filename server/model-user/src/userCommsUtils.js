@@ -238,7 +238,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const ccEmails = await getEditorEmails(manuscriptId)
 
   try {
-    await sendEmailNotification(
+    const result = await sendEmailNotification(
       receiverEmail,
       selectedEmailTemplateData,
       {
@@ -265,7 +265,8 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       },
       manuscriptObject.groupId,
     )
-    return { success: true }
+
+    return { success: result }
   } catch (e) {
     console.error(e)
     return { success: false }

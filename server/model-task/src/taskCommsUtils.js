@@ -369,11 +369,12 @@ const sendNotification = async n => {
 
         const emailTemplateOption = n.emailTemplateId.replace(/([A-Z])/g, ' $1')
 
-        const selectedTemplateValue =
-          emailTemplateOption.charAt(0).toUpperCase() +
-          emailTemplateOption.slice(1)
+        // eslint-disable-next-line no-await-in-loop
+        const emailTemplate = await models.EmailTemplate.query().findById(
+          emailTemplateOption,
+        )
 
-        const messageBody = `${selectedTemplateValue} sent by Kotahi to ${recipient.name}`
+        const messageBody = `${emailTemplate.emailContent.description} sent by Kotahi to ${recipient.name}`
 
         logData = {
           taskId: n.task.id,

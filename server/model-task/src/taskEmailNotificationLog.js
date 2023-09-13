@@ -5,6 +5,14 @@ class TaskEmailNotificationLog extends BaseModel {
     return 'task_email_notifications_logs'
   }
 
+  static get modifiers() {
+    return {
+      orderByCreatedDesc(builder) {
+        builder.orderBy('created', 'desc')
+      },
+    }
+  }
+
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const Task = require('./task')
