@@ -1508,13 +1508,18 @@ const resolvers = {
       if (
         activeConfig.formData.publishing.crossref.publicationType === 'article'
       ) {
-        const manuscriptDOI = getDoi(
-          getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id,
-          activeConfig,
-        )
+        try {
+          const manuscriptDOI = await getDoi(
+            getReviewOrSubmissionField(manuscript, 'doiSuffix') ||
+              manuscript.id,
+            activeConfig,
+          )
 
-        if (manuscriptDOI) {
-          DOIs.push(manuscriptDOI)
+          if (manuscriptDOI) {
+            DOIs.push(manuscriptDOI)
+          }
+        } catch (error) {
+          console.error('Error while getting manuscript DOI:', error)
         }
       } else {
         const notEmptyReviews = Object.entries(manuscript.submission)
@@ -1527,15 +1532,25 @@ const resolvers = {
           .map(([key]) => key.replace('review', ''))
 
         DOIs.push(
-          ...notEmptyReviews.map(reviewNumber =>
-            getDoi(
-              getReviewOrSubmissionField(
-                manuscript,
-                `review${reviewNumber}suffix`,
-              ) || `${manuscript.id}/${reviewNumber}`,
-              activeConfig,
-            ),
-          ),
+          ...notEmptyReviews.map(async reviewNumber => {
+            try {
+              const reviewDOI = await getDoi(
+                getReviewOrSubmissionField(
+                  manuscript,
+                  `review${reviewNumber}suffix`,
+                ) || `${manuscript.id}/${reviewNumber}`,
+                activeConfig,
+              )
+
+              return reviewDOI
+            } catch (error) {
+              console.error(
+                `Error while getting review ${reviewNumber} DOI:`,
+                error,
+              )
+              return null
+            }
+          }),
         )
 
         if (
@@ -1544,14 +1559,18 @@ const resolvers = {
               key === 'summary' && !checkIsAbstractValueEmpty(value),
           )
         ) {
-          const summaryDOI = getDoi(
-            getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
-              `${manuscript.id}/`,
-            activeConfig,
-          )
+          try {
+            const summaryDOI = await getDoi(
+              getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
+                `${manuscript.id}/`,
+              activeConfig,
+            )
 
-          if (summaryDOI) {
-            DOIs.push(summaryDOI)
+            if (summaryDOI) {
+              DOIs.push(summaryDOI)
+            }
+          } catch (error) {
+            console.error('Error while getting summary DOI:', error)
           }
         }
       }
