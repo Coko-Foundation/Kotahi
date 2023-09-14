@@ -22,7 +22,22 @@ export const CREATE_MESSAGE = gql`
     }
   }
 `
+export const DELETE_MESSAGE = gql`
+  mutation deleteMessage($messageId: ID!) {
+    deleteMessage(messageId: $messageId) {
+      id
+      content
+    }
+  }
+`
 
+export const UPDATE_MESSAGE = gql`
+  mutation updateMessage($messageId: ID!, $content: String!) {
+    updateMessage(messageId: $messageId, content: $content) {
+      content
+    }
+  }
+`
 export const GET_BLACKLIST_INFORMATION = gql`
   query getBlacklistInformation($email: String!, $groupId: ID!) {
     getBlacklistInformation(email: $email, groupId: $groupId) {

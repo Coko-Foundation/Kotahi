@@ -2,17 +2,21 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { sanitize } from 'isomorphic-dompurify'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
 import NextPageButton from '../../../NextPageButton'
 import {
   convertTimestampToDateWithoutTimeString,
   convertTimestampToTimeString,
+  convertTimestampToDateWithTimeString,
 } from '../../../../shared/dateUtils'
-import MessageRenderer from './MessageRenderer'
 import { CommsErrorBanner } from '../../../shared'
 import VideoChat from '../VideoChat'
 import EllipsisDropdown from '../EllipsisDropdown'
+
+import ChatPostDropdown from './ChatPostDropdown'
+import Tooltip from '../../../component-reporting/src/Tooltip'
 
 import {
   Time,
@@ -31,6 +35,8 @@ import {
   DateLabelContainer,
   DateLabel,
   Ellipsis,
+  EditedTimeContainer,
+  EditedTime,
 } from './style'
 
 const Messages = ({
@@ -44,6 +50,7 @@ const Messages = ({
   channelNotificationOption,
   toggleChannelMuteStatus,
   manuscriptId = null,
+  currentUser,
 }) => {
   const { loading, error, data } = queryData
 
@@ -52,8 +59,6 @@ const Messages = ({
   const toggleDropdown = () => {
     setOpenDropdown(!openDropdown)
   }
-
-  const mainRef = useRef(null)
 
   useEffect(() => {
     // when there are new messages while the user is on the page
@@ -64,6 +69,15 @@ const Messages = ({
       })
     }
   }, [data])
+  const [activeMessageDropdownId, setActiveMessageDropdownId] = useState(null)
+
+  const showOrToggleDropdown = messageId => {
+    setActiveMessageDropdownId(prevId =>
+      prevId === messageId ? null : messageId,
+    )
+  }
+
+  const mainRef = useRef(null)
 
   const scrollToBottom = () => {
     const main = document.getElementById('messages')
@@ -114,6 +128,43 @@ const Messages = ({
       <UnreadLabel>Unread messages</UnreadLabel>
     </UnreadLabelContainer>
   )
+
+  const { globalRoles = [] } = currentUser
+  const isAdmin = globalRoles.includes('admin')
+  const isGroupManager = currentUser.groupRoles.includes('groupManager')
+
+  // eslint-disable-next-line no-shadow
+  const renderDropdownAndEllipsis = (isAdmin, isGroupManager, message) => {
+    // Too many users are currently assigned as Group Managers, and we don't want them
+    // all to be able to modify other users messages; but Admin users may not have
+    // access to this page; so we require that they be Admin AND Group Manager.
+    if ((isAdmin && isGroupManager) || currentUser.id === message.user.id) {
+      return (
+        <>
+          <Ellipsis
+            className="message-ellipsis"
+            onClick={() => showOrToggleDropdown(message.id)}
+          />
+          <ChatPostDropdown
+            currentUser={currentUser}
+            message={message}
+            onDropdownHide={() => setActiveMessageDropdownId(null)}
+            show={activeMessageDropdownId === message.id}
+          />
+        </>
+      )
+    }
+
+    return <></>
+  }
+
+  // eslint-disable-next-line no-shadow
+  const MessageRenderer = ({ message }) => {
+    return (
+      // eslint-disable-next-line react/no-danger
+      <div dangerouslySetInnerHTML={{ __html: sanitize(message.content) }} />
+    )
+  }
 
   return (
     <MessagesGroup
@@ -173,19 +224,44 @@ const Messages = ({
                   {index === 0 && (
                     <Byline>
                       {message.user.username}
-                      <Time>
-                        {convertTimestampToTimeString(message.created)}
-                      </Time>
+                      <div className="message-time">
+                        <Time>
+                          {convertTimestampToTimeString(message.created)}
+                        </Time>
+                        {renderDropdownAndEllipsis(
+                          isAdmin,
+                          isGroupManager,
+                          message,
+                        )}
+                      </div>
                     </Byline>
                   )}
                   <Bubble>
                     <MessageRenderer message={message} />
                     {index !== 0 && (
-                      <InlineTime className="message-timestamp">
-                        {convertTimestampToTimeString(message.created)}
-                      </InlineTime>
+                      <div className="message-time">
+                        <InlineTime className="message-timestamp">
+                          {convertTimestampToTimeString(message.created)}
+                        </InlineTime>
+                        {renderDropdownAndEllipsis(
+                          isAdmin,
+                          isGroupManager,
+                          message,
+                        )}
+                      </div>
                     )}
                   </Bubble>
+                  {message.created !== message.updated && (
+                    <EditedTimeContainer>
+                      <EditedTime>Edited</EditedTime>
+                      <Tooltip
+                        className="tooltip-message"
+                        content={convertTimestampToDateWithTimeString(
+                          message.updated,
+                        )}
+                      />
+                    </EditedTimeContainer>
+                  )}
                 </InnerMessageContainer>
               </Message>
             ))}

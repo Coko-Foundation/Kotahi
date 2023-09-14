@@ -165,6 +165,17 @@ export const convertTimestampToDateWithoutTimeString = timestamp => {
   return `${month} ${pad(day)}, ${year}`
 }
 
+export const convertTimestampToDateWithTimeString = timestamp => {
+  const date = new Date(timestamp)
+  const day = date.getDate()
+  const month = monthAbbrevs[date.getMonth()]
+  const year = date.getFullYear()
+  const hours = date.getHours()
+  const minutes = date.getMinutes()
+
+  return `${month} ${pad(day)}, ${year} ${pad(hours)}:${pad(minutes)}`
+}
+
 export const convertTimestampToTimeString = timestamp => {
   const date = new Date(timestamp)
   const hours = date.getHours()

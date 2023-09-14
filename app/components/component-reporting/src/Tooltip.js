@@ -18,6 +18,7 @@ const Placeholder = styled.div`
 `
 
 const Tip = styled.div`
+  /* Common styles for the Tip component */
   color: ${th('colorText')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
@@ -26,6 +27,11 @@ const Tip = styled.div`
   top: 15px;
   width: max-content;
   z-index: 999;
+
+  &.tooltip-message {
+    right: 0;
+    top: 0;
+  }
 `
 
 const TipInner = styled.div`
@@ -34,10 +40,10 @@ const TipInner = styled.div`
   padding: ${grid(0.25)} ${grid(1)};
 `
 
-const Tooltip = ({ content }) => {
+const Tooltip = ({ content, className }) => {
   return (
     <Placeholder>
-      <Tip>
+      <Tip className={className}>
         <TipInner>{content}</TipInner>
       </Tip>
     </Placeholder>
