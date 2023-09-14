@@ -4,6 +4,8 @@ const { getPubsub } = pubsubManager
 
 // Fires immediately when the message is created
 const MESSAGE_CREATED = 'MESSAGE_CREATED'
+const MESSAGE_UPDATED = 'MESSAGE_UPDATED'
+const MESSAGE_DELETED = 'MESSAGE_DELETED'
 
 const models = require('@pubsweet/models')
 
@@ -110,6 +112,40 @@ const resolvers = {
 
       return message
     },
+    updateMessage: async (_, { messageId, content }) => {
+      const updatedMessage = await models.Message.query().patchAndFetchById(
+        messageId,
+        { content },
+      )
+
+      const pubsub = await getPubsub()
+      pubsub.publish(
+        `${MESSAGE_UPDATED}.${updatedMessage.channelId}`,
+        updatedMessage.id,
+      )
+
+      return updatedMessage
+    },
+    deleteMessage: async (_, { messageId }) => {
+      const deleteMessage = await models.Message.query()
+        .findById(messageId)
+        .first()
+
+      if (!deleteMessage) {
+        throw new Error('Message not found')
+      }
+
+      const pubsub = await getPubsub()
+
+      await models.Message.query().deleteById(messageId)
+
+      pubsub.publish(
+        `${MESSAGE_DELETED}.${deleteMessage.channelId}`,
+        deleteMessage,
+      )
+
+      return deleteMessage
+    },
   },
   Subscription: {
     messageCreated: {
@@ -123,6 +159,28 @@ const resolvers = {
       subscribe: async (_, vars, context) => {
         const pubsub = await getPubsub()
         return pubsub.asyncIterator(`${MESSAGE_CREATED}.${vars.channelId}`)
+      },
+    },
+    messageUpdated: {
+      resolve: async (messageId, _, context) => {
+        const message = await models.Message.query()
+          .findById(messageId)
+          .withGraphJoined('user')
+
+        return message
+      },
+      subscribe: async (_, vars, context) => {
+        const pubsub = await getPubsub()
+        return pubsub.asyncIterator(`${MESSAGE_UPDATED}.${vars.channelId}`)
+      },
+    },
+    messageDeleted: {
+      resolve: async (deletedMessage, _, context) => {
+        return deletedMessage
+      },
+      subscribe: async (_, vars) => {
+        const pubsub = await getPubsub()
+        return pubsub.asyncIterator(`${MESSAGE_DELETED}.${vars.channelId}`)
       },
     },
   },
@@ -157,10 +215,14 @@ const typeDefs = `
 
   extend type Mutation {
     createMessage(content: String, channelId: String, userId: String): Message
+    deleteMessage(messageId: ID!): Message!
+    updateMessage(messageId: ID!, content: String!): Message!
   }
 
   extend type Subscription {
-    messageCreated(channelId: ID): Message
+    messageCreated(channelId: ID!): Message!
+    messageUpdated(channelId: ID!): Message!
+    messageDeleted(channelId: ID!): Message!
   }
 `
 

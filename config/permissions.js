@@ -34,6 +34,18 @@ const userIsEditorQuery = async (ctx, manuscriptId) => {
   return !!rows
 }
 
+const userOwnsMessage = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    if (!ctx.user) return false
+
+    const message = await ctx.connectors.Message.model
+      .query()
+      .findById(args.messageId)
+
+    return message?.userId === ctx.user
+  },
+)
+
 const getManuscriptOfFile = async (file, ctx) => {
   if (!file || !file.objectId) {
     console.error('File without objectId encountered:', file)
@@ -306,6 +318,13 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
   },
 )
 
+const userIsGmAndAdmin = rule({
+  cache: 'contextual',
+})(
+  async (parent, args, ctx, info) =>
+    (await userIsGroupManagerQuery(ctx)) && userIsAdminQuery(ctx),
+)
+
 const userHasAcceptedInvitation = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
@@ -542,6 +561,7 @@ const permissions = {
     deletePendingComment: isAuthenticated,
     deleteTeam: deny, // Never used
     deleteUser: userIsGmOrAdmin,
+    deleteMessage: or(userOwnsMessage, userIsGmAndAdmin),
     importManuscripts: or(userIsEditor, userIsGmOrAdmin),
     loginUser: deny, // Never used
     makeDecision: or(userIsEditor, userIsGmOrAdmin),
@@ -589,6 +609,7 @@ const permissions = {
     deleteCMSPage: userIsGmOrAdmin,
     updateCMSLayout: userIsGmOrAdmin,
     rebuildFlaxSite: userIsGmOrAdmin,
+    updateMessage: or(userOwnsMessage, userIsGmAndAdmin),
   },
   Subscription: {
     fileUpdated: isAuthenticated,

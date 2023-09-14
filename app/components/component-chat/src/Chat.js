@@ -108,6 +108,7 @@ const Chat = ({
         channelId={channelId}
         channelNotificationOption={channelNotificationOption}
         chatRoomId={chatRoomId}
+        currentUser={currentUser}
         fetchMoreData={fetchMoreData}
         firstUnreadMessageId={firstUnreadMessageId}
         manuscriptId={manuscriptId}
