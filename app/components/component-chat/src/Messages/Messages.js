@@ -93,6 +93,9 @@ const Messages = ({
   }
 
   useEffect(() => {
+    // TODO: we should scroll to bottom when a new message arrives ONLY if the last message
+    // was previously in view. If the user has scrolled up and a new message arrives, don't
+    // scroll to bottom.
     if (shouldScrollToBottom) {
       scrollToBottom()
     }
