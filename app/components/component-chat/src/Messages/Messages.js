@@ -202,15 +202,25 @@ const Messages = ({
         const initialMessage = group[0]
 
         if (initialMessage.type === 'dateWithUnreadLabel') {
-          return <DateWithUnreadLabelElement message={initialMessage} />
+          return (
+            <DateWithUnreadLabelElement
+              key={initialMessage.id}
+              message={initialMessage}
+            />
+          )
         }
 
         if (initialMessage.type === 'unreadLabel') {
-          return <UnreadLabelElement />
+          return <UnreadLabelElement key={initialMessage.id} />
         }
 
         if (initialMessage.type === 'dateLabel') {
-          return <DateLabelElement message={initialMessage} />
+          return (
+            <DateLabelElement
+              key={initialMessage.id}
+              message={initialMessage}
+            />
+          )
         }
 
         return (
