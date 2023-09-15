@@ -21,7 +21,6 @@ const WaxEditorContainer = styled.div`
   font-weight: 400;
   line-height: 22px;
   margin-top: 6px;
-  overflow-y: auto;
 
   & > div {
     margin-right: 50px;

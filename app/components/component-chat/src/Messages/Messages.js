@@ -55,6 +55,7 @@ const Messages = ({
   const { loading, error, data } = queryData
 
   const [openDropdown, setOpenDropdown] = useState(false)
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true)
 
   const toggleDropdown = () => {
     setOpenDropdown(!openDropdown)
@@ -72,6 +73,7 @@ const Messages = ({
   const [activeMessageDropdownId, setActiveMessageDropdownId] = useState(null)
 
   const showOrToggleDropdown = messageId => {
+    setShouldScrollToBottom(false)
     setActiveMessageDropdownId(prevId =>
       prevId === messageId ? null : messageId,
     )
@@ -91,10 +93,12 @@ const Messages = ({
   }
 
   useEffect(() => {
-    scrollToBottom()
+    if (shouldScrollToBottom) {
+      scrollToBottom()
+    }
 
     return () => {}
-  }, [mainRef.current])
+  })
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />

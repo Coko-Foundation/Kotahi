@@ -59,7 +59,7 @@ export const Message = styled.div`
     align-items: flex-start;
     display: flex;
     justify-content: flex-end;
-    padding-right: 15px;
+    padding-right: 20px;
     position: relative;
   }
 
@@ -223,12 +223,12 @@ export const Ellipsis = styled(MoreVertical)`
   border-radius: 50%;
   cursor: pointer;
   height: 20.25px;
-  margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
+  margin: ${grid(0.25)} ${grid(1)} ${grid(1)} ${grid(2)};
   padding: 3px;
   position: absolute;
-  right: 32px;
+  right: 0;
   width: 20.25px;
-  z-index: 2000;
+  z-index: 999;
 
   &:hover {
     background-color: ${color.gray90};
@@ -237,15 +237,8 @@ export const Ellipsis = styled(MoreVertical)`
 
   &.dropdown-ellipsis {
     position: absolute;
-    right: 15px;
+    right: 0;
     top: 4px;
-  }
-
-  @media (min-width: 1440px) {
-    right: 20px;
-  }
-  @media (min-width: 2560px) {
-    right: 20px;
   }
 `
 
@@ -253,7 +246,7 @@ export const EditedTimeContainer = styled.div`
   align-items: flex-end;
   display: flex;
   flex-direction: column;
-  padding-right: 50px;
+  padding-right: 35px;
   text-align: right;
 `
 
