@@ -611,7 +611,10 @@ const resolvers = {
       if (!team) throw new Error('No team was found')
 
       for (let i = 0; i < team.members.length; i += 1) {
-        if (team.members[i].userId === context.user)
+        if (
+          team.members[i].userId === context.user &&
+          team.members[i].status !== 'completed'
+        )
           team.members[i].status = action
       }
 
