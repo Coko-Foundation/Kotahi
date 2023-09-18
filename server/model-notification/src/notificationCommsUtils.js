@@ -14,33 +14,40 @@ const sendNotifications = async () => {
     .where('max_notification_time', '<', new Date())
     .orderBy(['user_id', 'path_string', 'max_notification_time'])
 
-  notificationDigestRows.forEach(async notificationDigest => {
-    if (notificationDigest.actioned) return
+  await Promise.all(
+    notificationDigestRows.map(async notificationDigest => {
+      if (notificationDigest.actioned) return
 
-    await sendEmailNotificationOfMessages({
-      userId: notificationDigest.userId,
-      messageId: notificationDigest.context.messageId,
-      title: 'Unread messages in chat',
-    })
-
-    // query to update all notificationdigest entries where user=user and path=path
-    await models.NotificationDigest.query()
-      .update({
-        actioned: true,
-      })
-      .where({
+      await sendEmailNotificationOfMessages({
         userId: notificationDigest.userId,
-        pathString: notificationDigest.pathString,
+        messageId: notificationDigest.context.messageId,
+        title: 'Unread messages in chat',
       })
-  })
+
+      // query to update all notificationdigest entries where user=user and path=path
+      await models.NotificationDigest.query()
+        .patch({
+          actioned: true,
+        })
+        .where({
+          userId: notificationDigest.userId,
+          pathString: notificationDigest.pathString,
+        })
+    }),
+  )
 }
 
 const sendEmailNotificationOfMessages = async ({ userId, messageId }) => {
   const user = await models.User.query().findById(userId)
-  const message = await models.Message.query().findById(messageId)
-  const channel = await models.Channel.query().findById(message.channelId)
-  const { groupId } = channel
-  const group = await models.Group.query().findById(groupId)
+
+  const message = await models.Message.query()
+    .findById(messageId)
+    .withGraphFetched('channel.group')
+
+  if (!message) return // Message has since been deleted
+
+  const { channel } = message
+  const { groupId, group } = channel
 
   // send email notification
   const baseUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
