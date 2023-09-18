@@ -9,6 +9,10 @@ const Config = require('../../config/src/config')
 // eslint-disable-next-line new-cap
 const sys = new citeproc.simpleSys()
 
+// const getStyleNameFromTitle = title => {
+//   return title
+// }
+
 const formatCitation = async (stringifiedCSL, groupId) => {
   // This takes stringified CSL. Feeding it an object will not work.
   // The output is JATS-flavored HTML as a string.
@@ -18,10 +22,11 @@ const formatCitation = async (stringifiedCSL, groupId) => {
     active: true,
   })
 
-  const localeName =
-    activeConfig.formData.publishing.crossref.localeName || 'en-US'
+  const localeName = activeConfig.formData.production?.localeName || 'en-US'
 
-  const styleName = activeConfig.formData.publishing.crossref.styleName || 'apa'
+  const styleName = activeConfig.formData.production?.styleName || 'apa'
+
+  // const styleName = getStyleNameFromTitle(styleTitle)
 
   // console.log('Citeproc settings: ', localeName, styleName)
 
@@ -77,9 +82,11 @@ const formatCitation = async (stringifiedCSL, groupId) => {
       result = results[0]
       // This is CSL-flavored HTML, need to make it JATS-flavored HTML.
       // Not 100% sure that all of the HTML coming out of this will work for us, keep an eye out.
+
+      // Worth noting that sometimes there are spaces between tags, sometimes not. We're going to remove them all.
       result = result
-        .replace(/<div class="csl-entry">/g, '<p class="ref">')
-        .replace(/<\/div>/g, '</p>')
+        .replace(/<div class="csl-entry">\s*/g, '<p class="ref">')
+        .replace(/\s*<\/div>/g, '</p>')
         .replace(/<i>/g, '<em>')
         .replace(/<\/i>/g, '</em>')
         .replace(/<b>/g, '<strong>')

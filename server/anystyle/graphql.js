@@ -221,7 +221,7 @@ const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
         // res.data is Anystyle XML as a string
         // TODO: take an initial index for the reference IDs so we don't make duplicate IDs
         // eslint-disable-next-line
-        // console.log('Result from Anystyle:', res.data)
+        console.log('Result from Anystyle:', res.data)
 
         const formattedCitations = await Promise.all(
           res.data.map(async citation => {
