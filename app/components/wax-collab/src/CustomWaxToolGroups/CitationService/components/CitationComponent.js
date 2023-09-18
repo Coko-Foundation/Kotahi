@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React, { useEffect, useState, useContext } from 'react'
 import { DOMParser, DOMSerializer, Fragment } from 'prosemirror-model'
-import { WaxContext } from 'wax-prosemirror-core'
+import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
 import { sanitize } from 'isomorphic-dompurify'
 import striptags from 'striptags'
 import { List, AlertCircle, CheckCircle } from 'react-feather'
@@ -24,11 +24,9 @@ import {
 
 // TODO LIST FOR THIS COMPONENT:
 //
-// 1) Make sure that no other nodeview is open – close if it is. How?
-// 4) style everything
-//
 // Possible functionality going forward:
 // 1) run recheck if we don't have Crossref versions when component is opened?
+// 2) needs to interact with ReferenceList component
 
 const decodeEntities = s => {
   let temp = document.createElement('p')
@@ -79,6 +77,8 @@ const CitationComponent = ({ node, getPos }) => {
     refId,
   } = node.attrs
 
+  // console.log(originalText, needsReview, needsValidation, valid)
+
   const makeHtmlFrom = content => {
     const serialize = serializer(activeView.state.schema)
     return serialize(content)
@@ -90,7 +90,6 @@ const CitationComponent = ({ node, getPos }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editing, setEditing] = useState(false)
-  const [currentCsl, setCurrentCsl] = useState({})
 
   // Note: state is maintained on the attributes of the node.
   // But that doesn't trigger a re-render (or useEffects), so we need to maintain
@@ -108,7 +107,16 @@ const CitationComponent = ({ node, getPos }) => {
     custom: possibleStructures?.custom || '',
   })
 
+  // These are what's shown in the component
+
   const [currentText, setCurrentText] = useState(
+    `<p class="ref">${makeHtmlFrom(node.content)}</p>`,
+  )
+
+  // These are what's passed back
+  const [potentialCsl, setPotentialCsl] = useState(structure || {})
+
+  const [potentialText, setPotentialText] = useState(
     `<p class="ref">${makeHtmlFrom(node.content)}</p>`,
   )
 
@@ -132,44 +140,8 @@ const CitationComponent = ({ node, getPos }) => {
     return nodeFound
   }
 
-  // const setAttrs = attrs => {
-  //   const thisNode = getNodeWithId(refId)
-  //   // This function replaces the current node with a version with new attributes
-  //   let { tr } = activeView.state
-  //   const startPosition = getPos()
-  //   const endPosition = startPosition + thisNode.content.size + 1
-
-  //   const newNode = activeView.state.schema.nodes.reference.create({
-  //     class: 'ref',
-  //     refId,
-  //     originalText: formattedOriginalText,
-  //     needsReview,
-  //     needsValidation,
-  //     structure,
-  //     possibleStructures: structures,
-  //     valid,
-  //   })
-
-  //   newNode.content = thisNode.content
-
-  //   // eslint-disable-next-line
-  //   for (const [key, value] of Object.entries(attrs)) {
-  //     // check if the value is different from the current value
-  //     const originalValue = node.attrs[key]
-
-  //     if (originalValue !== value) {
-  //       // console.log('Attr change! Key: ', key, 'Value: ', value)
-  //       newNode.attrs[key] = value
-  //     } else {
-  //       // console.log('Not changing: Key: ', key, 'Value: ', value)
-  //     }
-  //   }
-
-  //   tr = tr.replaceWith(startPosition, endPosition, newNode)
-  //   activeView.dispatch(tr) // .scrollIntoView()) // can we take out the .scrollIntoView?
-  // }
-
   const setContent = (attrs, fragment, onlyAttrs) => {
+    // console.log('Running setContent, fragemnt:', fragment, 'attrs:', attrs)
     // This function replaces the current node with a version with new attributes and new content
     // if onlyAttrs is true, we're only changing the attributes, not the content
     const thisNode = getNodeWithId(refId)
@@ -206,7 +178,8 @@ const CitationComponent = ({ node, getPos }) => {
     // console.log('node in setContent:', newNode)
 
     tr = tr.replaceWith(startPosition, endPosition, newNode)
-    activeView.dispatch(tr) // was tr.scrollIntoView())
+    activeView.dispatch(tr)
+    activeView.focus()
   }
 
   const makeFragmentFrom = text => {
@@ -258,6 +231,8 @@ const CitationComponent = ({ node, getPos }) => {
 
         setStructures(newStructures)
         // console.log("Versions found. Setting status to 'needs review'")
+        setInternalNeedsValidation(false)
+        setInternalNeedsReview(true)
         setContent(
           {
             needsValidation: false,
@@ -269,19 +244,26 @@ const CitationComponent = ({ node, getPos }) => {
           null,
           true,
         )
-        setInternalNeedsValidation(false)
-        setInternalNeedsReview(true)
         setLoading(false)
       })
     }
 
-    if (needsValidation && !loading) {
+    if (
+      needsValidation &&
+      !loading &&
+      !structures.crossRef.length &&
+      !(JSON.stringify(structures.anyStyle).length > 2)
+    ) {
+      // we shouldn't do this if we already have crossref/anystyle versions
       getVersions()
     }
   }, [formattedOriginalText, internalNeedsValidation])
 
   useEffect(() => {
-    if (JSON.stringify(structures) !== JSON.stringify(possibleStructures)) {
+    if (
+      JSON.stringify(structures) !== JSON.stringify(possibleStructures) &&
+      !loading
+    ) {
       setContent(
         {
           needsValidation: true,
@@ -298,13 +280,16 @@ const CitationComponent = ({ node, getPos }) => {
   }, [structures])
 
   useEffect(() => {
+    // This is firing whenever we change currentText.
     const newFragment = makeFragmentFrom(currentText)
 
     // If currentText has changed in some way, we need to save it to the node.
     if (JSON.stringify(newFragment) !== JSON.stringify(node.content)) {
       // console.log('something is changed: ', newFragment, node.content)
+      // This should probably not be happening all the time. If you then click CLOSE, it's already been set.
       setContent(
         {
+          structure: potentialCsl,
           needsValidation: false,
           needsReview: false,
           valid: true,
@@ -316,189 +301,201 @@ const CitationComponent = ({ node, getPos }) => {
     }
   }, [currentText])
 
-  const CitationPopUp = () => (
-    <PopUpWrapper>
-      {editing ? (
-        <EditModal
-          citationData={
-            JSON.stringify(currentCsl) === '{}' ? structure : currentCsl
-          }
-          closeModal={() => {
-            setEditing(false)
-          }}
-          formattedCitation={currentText}
-          setCitationData={currentCitation => {
-            const newStructures = { ...structures, custom: currentCitation }
-            setStructures(newStructures)
-            setCurrentText(currentCitation.formattedCitation)
-            setCurrentCsl(currentCitation)
+  const CitationPopUp = () => {
+    const areOtherComponentsLoading = () => {
+      // console.log('Running areOtherComponentsLoading')
 
-            const newFragment = makeFragmentFrom(
-              currentCitation.formattedCitation,
-            )
+      const activeLoading = DocumentHelpers.findChildrenByType(
+        activeView.state.doc,
+        activeView.state.schema.nodes.reference,
+      ).filter(x => x.node.attrs.needsValidation)
 
-            setContent(
-              {
-                structure: currentCitation,
-                possibleStructures: newStructures,
-                needsValidation: false,
-                needsReview: false,
-                valid: true,
-              },
-              newFragment,
-            )
+      // console.log('Other loading components: ', activeLoading)
 
-            setInternalNeedsValidation(false)
-            setInternalNeedsReview(false)
-          }}
-          styleReference={CiteProcTransformation}
-        />
-      ) : (
-        <div>
-          <h4>Select citation</h4>
+      return activeLoading.length > 0
+    }
 
-          <CitationVersion
-            select={() => {
-              setCurrentCsl({})
-              setCurrentText(formattedOriginalText)
+    const [otherLoading, setOtherLoading] = useState(
+      areOtherComponentsLoading(),
+    )
+
+    useEffect(() => {
+      // This checks if other references are in a loading state.
+      if (otherLoading) {
+        const timer = setTimeout(() => {
+          // console.log('Checking other loading!')
+          setOtherLoading(areOtherComponentsLoading())
+        }, 1000)
+
+        return () => clearTimeout(timer)
+      }
+
+      // console.log('Other loading has been turned off.')
+      return undefined
+    }, [otherLoading])
+
+    return (
+      <PopUpWrapper>
+        {editing ? (
+          <EditModal
+            citationData={
+              JSON.stringify(potentialCsl) === '{}' ? structure : potentialCsl
+            }
+            closeModal={() => {
+              setEditing(false)
+            }}
+            formattedCitation={potentialText}
+            setCitationData={currentCitation => {
+              const newStructures = { ...structures, custom: currentCitation }
+              setStructures(newStructures)
+
+              // Question: is it possible someone clicks "close" before formattedCitation has been generated?
+
+              const newFragment = makeFragmentFrom(
+                currentCitation.formattedCitation,
+              )
+
               setContent(
                 {
-                  structure: {},
-                  valid: true,
+                  structure: currentCitation,
+                  possibleStructures: newStructures, // This seems like it's not working.
                   needsValidation: false,
                   needsReview: false,
+                  valid: true,
                 },
-                null,
-                true,
-              ) // TODO: set structure to originalText (how?)
+                newFragment,
+                false,
+              )
 
               setInternalNeedsValidation(false)
               setInternalNeedsReview(false)
+              setPotentialText(currentCitation.formattedCitation) // seeing if this fixes the problem.
+              setPotentialCsl(currentCitation)
+              setCurrentText(currentCitation.formattedCitation) // is this going to do a double-save?
+              // When apply is clicked, we're closing this.
+
+              setIsOpen(false)
             }}
-            selected={
-              decodeEntities(formattedOriginalText) ===
-              decodeEntities(currentText)
-            }
-            text={formattedOriginalText}
-            type="original"
+            styleReference={CiteProcTransformation}
           />
-          {structures.anyStyle && (
+        ) : (
+          <div>
+            <h4>Select citation</h4>
+
             <CitationVersion
               select={() => {
-                setCurrentText(structures.anyStyle.formattedCitation)
-                setCurrentCsl(structures.anyStyle)
-                setContent(
-                  {
-                    structure: structures.anyStyle,
-                    valid: true,
-                    needsValidation: false,
-                    needsReview: false,
-                  },
-                  null,
-                  true,
-                )
-                setInternalNeedsValidation(false)
-                setInternalNeedsReview(false)
+                setPotentialCsl({})
+                setPotentialText(formattedOriginalText)
               }}
               selected={
-                decodeEntities(structures.anyStyle.formattedCitation) ===
-                decodeEntities(currentText)
+                decodeEntities(formattedOriginalText) ===
+                decodeEntities(potentialText)
               }
-              text={structures.anyStyle.formattedCitation}
-              type="anystyle"
+              text={formattedOriginalText}
+              type="original"
             />
-          )}
-          {structures.crossRef
-            ? structures.crossRef.map(
-                (crossRefVersion, crossRefId) =>
-                  crossRefVersion.formattedCitation && (
-                    <CitationVersion
-                      key={
-                        // eslint-disable-next-line
-                        `citationversion-${crossRefId}`
-                      }
-                      select={() => {
-                        setCurrentText(crossRefVersion.formattedCitation)
-                        setCurrentCsl(crossRefVersion)
-                        setContent(
-                          {
-                            structure: crossRefVersion,
-                            valid: true,
-                            needsValidation: false,
-                            needsReview: false,
-                          },
-                          null,
-                          true,
-                        )
-                        setInternalNeedsValidation(false)
-                        setInternalNeedsReview(false)
-                      }}
-                      selected={
-                        decodeEntities(crossRefVersion.formattedCitation) ===
-                        decodeEntities(currentText)
-                      }
-                      text={crossRefVersion.formattedCitation}
-                      type="crossref"
-                    />
-                  ),
-              )
-            : null}
-          {loading ? (
-            <div style={{ marginTop: '16px' }}>
-              <Spinner />
-            </div>
-          ) : null}
-          {structures.custom ? (
-            <CitationVersion
-              select={() => {
-                setCurrentText(structures.custom.formattedCitation)
-                setCurrentCsl(structures.custom)
-                setContent(
-                  {
-                    structure: structures.custom,
-                    valid: true,
-                    needsValidation: false,
-                    needsReview: false,
-                  },
-                  null,
-                  true,
+            {structures.anyStyle && (
+              <CitationVersion
+                select={() => {
+                  setPotentialCsl(structures.anyStyle)
+                  setPotentialText(structures.anyStyle.formattedCitation)
+                }}
+                selected={
+                  decodeEntities(structures.anyStyle.formattedCitation) ===
+                  decodeEntities(potentialText)
+                }
+                text={structures.anyStyle.formattedCitation}
+                type="anystyle"
+              />
+            )}
+            {structures.crossRef
+              ? structures.crossRef.map(
+                  (crossRefVersion, crossRefId) =>
+                    crossRefVersion.formattedCitation && (
+                      <CitationVersion
+                        key={
+                          // eslint-disable-next-line
+                          `citationversion-${crossRefId}`
+                        }
+                        select={() => {
+                          setPotentialCsl(crossRefVersion)
+                          setPotentialText(crossRefVersion.formattedCitation)
+                        }}
+                        selected={
+                          decodeEntities(crossRefVersion.formattedCitation) ===
+                          decodeEntities(potentialText)
+                        }
+                        text={crossRefVersion.formattedCitation}
+                        type="crossref"
+                      />
+                    ),
                 )
-                setInternalNeedsValidation(false)
-                setInternalNeedsReview(false)
-              }}
-              selected={
-                decodeEntities(structures.custom.formattedCitation) ===
-                decodeEntities(currentText)
-              }
-              text={structures.custom.formattedCitation}
-              type="custom"
-            />
-          ) : null}
-          <StatusBar>
-            <Button
-              onClick={e => {
-                e.preventDefault()
-                setEditing(true)
-              }}
-              type="button"
-            >
-              Edit
-            </Button>
-            <Button
-              onClick={e => {
-                e.preventDefault()
-                setIsOpen(false)
-              }}
-              primary
-              type="primary"
-            >
-              Apply
-            </Button>
-          </StatusBar>
-        </div>
-      )}
-    </PopUpWrapper>
-  )
+              : null}
+            {loading ? (
+              <div style={{ marginTop: '16px' }}>
+                <Spinner />
+              </div>
+            ) : null}
+            {structures.custom ? (
+              <CitationVersion
+                select={() => {
+                  setPotentialCsl(structures.custom)
+                  setPotentialText(structures.custom.formattedCitation)
+                }}
+                selected={
+                  decodeEntities(structures.custom.formattedCitation) ===
+                  decodeEntities(potentialText)
+                }
+                text={structures.custom.formattedCitation}
+                type="custom"
+              />
+            ) : null}
+            <StatusBar>
+              <Button
+                disabled={loading || otherLoading} // This is now set to disabled if there are still versions to come in
+                onClick={e => {
+                  e.preventDefault()
+                  setEditing(true)
+                }}
+                type="button"
+              >
+                Edit
+              </Button>
+              <Button
+                onClick={e => {
+                  e.preventDefault()
+                  // this changes the display text. It also kicks off the useEffect
+                  setCurrentText(potentialText)
+                  // This needs to geive it PotentialText as a fragment
+                  const newFragment = makeFragmentFrom(potentialText)
+                  // second save does the text
+                  setContent(
+                    {
+                      structure: potentialCsl,
+                      valid: true,
+                      needsValidation: false,
+                      needsReview: false,
+                    },
+                    newFragment,
+                    true,
+                  )
+
+                  setInternalNeedsValidation(false)
+                  setInternalNeedsReview(false)
+
+                  setIsOpen(false)
+                }}
+                primary
+                type="primary"
+              >
+                Apply
+              </Button>
+            </StatusBar>
+          </div>
+        )}
+      </PopUpWrapper>
+    )
+  }
 
   return (
     <CitationOuterWrapper>
