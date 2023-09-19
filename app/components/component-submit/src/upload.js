@@ -141,15 +141,33 @@ const cleanMath = file => {
   //
   // Sometimes math comes in in the form <h4><h4><math-display>...math...</math-display></h4></h4>
   // It should not be coming in like this! If the duplicated <h4>s are replaced by <p>, math processing works correctly
-
   // console.log('Coming in:\n\n\n', file, '\n\n\n')
+  let cleanedFile = file
+
+  const thirdNewMathErrorRegex = /<h[1-6]><math-display class="math-node">([\s\S]*?)<\/math-display><\/h[1-6]>/g
+
+  while (cleanedFile.match(thirdNewMathErrorRegex)) {
+    // If we have this pattern, we also need to replace double backslashes inside of the latex
+    // This needs to be run before the other error-finding regexes--it substitutes for some of them.
+    const thisOne = cleanedFile.match(thirdNewMathErrorRegex)[0]
+
+    const replacement = thisOne
+      .replace(
+        thirdNewMathErrorRegex,
+        `<p><math-display class="math-node">$1</math-display></p>`,
+      ) // First I am replacing the header math with correct math syntax
+      .replace(/\\\\/g, '\\') // This is replacing the double backslashes with a single backslash
+
+    cleanedFile = cleanedFile.replace(thisOne, replacement)
+  }
+
   const dupedHeaderMathRegex = /<h[1-6]>\s*<\/h[1-6]>\s*<h[1-6]>(<math-(?:inline|display)[^>]*>)([\s\S]*?)(<\/math-(?:inline|display)>)\s*<\/h[1-6]>/g
 
   // A second fix: math was coming in like this: <h3></h3><h3><math-display>...math...</math-display></h3>
 
   const dupedHeaderMathRegex2 = /<h[1-6]>\s*<h[1-6]>(<math-(?:inline|display)[^>]*>)([\s\S]*?)(<\/math-(?:inline|display)>)\s*<\/h[1-6]>\s*<\/h[1-6]>/g
 
-  const dedupedFile = file
+  cleanedFile = cleanedFile
     .replaceAll(dupedHeaderMathRegex, `<p>$1$2$3</p>`)
     .replaceAll(dupedHeaderMathRegex2, `<p>$1$2$3</p>`)
 
@@ -161,11 +179,18 @@ const cleanMath = file => {
   const inlineStart = /<math-inline class="math-node">\s*\$\$/g
   const inlineEnd = /\$\$\s*<\/math-inline>/g
 
-  const cleanedFile = dedupedFile
+  cleanedFile = cleanedFile
     .replaceAll(displayStart, `<math-display class="math-node">`)
     .replaceAll(inlineStart, `<math-inline class="math-node">`)
     .replaceAll(displayEnd, `</math-display>`)
     .replaceAll(inlineEnd, `</math-inline>`)
+
+  const newMathErrorRegex = /<h[1-6]>\$(.*)\$<\/h[1-6]>/g
+
+  cleanedFile = cleanedFile.replaceAll(
+    newMathErrorRegex,
+    `<p><math-display class="math-node">$1</math-display></p>`,
+  )
 
   // console.log('Coming out:\n\n\n', cleanedFile, '\n\n\n')
 
