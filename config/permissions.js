@@ -332,7 +332,7 @@ const userHasAcceptedInvitation = rule({ cache: 'strict' })(
     const teamMember = await ctx.connectors.TeamMember.model
       .query()
       .where({ userId: ctx.user, teamId: args.teamId })
-      .whereIn('status', ['accepted', 'inProgress'])
+      .whereIn('status', ['accepted', 'inProgress', 'completed'])
       .first()
 
     return !!teamMember
