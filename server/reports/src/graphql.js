@@ -188,6 +188,7 @@ const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const avgPublishTimeDays =
@@ -242,6 +243,7 @@ const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
 
   const query = models.Manuscript.query()
     .where({ groupId })
+    .whereNot({ isHidden: true })
     .where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
 
   return query.resultSize()
@@ -251,6 +253,7 @@ const getRevisingNowCount = async (groupId, ctx) => {
   const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreatedDesc)]')
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
 
   return manuscripts.filter(m =>
     ['revise', 'revising'].includes(getFinalStatus(m)),
@@ -270,6 +273,7 @@ const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const durations = []
@@ -318,6 +322,7 @@ const getDailyAverageStats = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const orderedSubmissionDates = manuscripts
@@ -440,6 +445,7 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   return manuscripts.map(m => {
@@ -475,6 +481,7 @@ const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const editorsData = {} // Map by user id
@@ -525,6 +532,7 @@ const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const reviewersData = {} // Map by user id
@@ -616,6 +624,7 @@ const getAuthorsActivity = async (startDate, endDate, groupId, ctx) => {
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
+    .whereNot({ isHidden: true })
     .orderBy('created')
 
   const manuscripts = await query
