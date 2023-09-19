@@ -22,10 +22,10 @@ const validateJats = jats => {
         validationErrors.length > 1 ? 's' : ''
       }:`,
     )
-    console.error(validationErrors)
+    return validationErrors.map(x => ({ ...x, message: x.message })) // message added explicitly because it's not enumerable in Error
   }
 
-  return validationErrors || [] // This comes back as null if it's valid, changing this to [].
+  return [] // This comes back as null if it's valid, changing this to [].
 }
 
 module.exports = validateJats
