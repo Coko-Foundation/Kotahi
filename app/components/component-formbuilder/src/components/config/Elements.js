@@ -241,6 +241,7 @@ const submissionElements = {
     validate: validateOther,
     hideFromReviewers: hideFromReviewersField,
     hideFromAuthors: hideFromAuthorsField,
+    permitPublishing: permitPublishingField,
   },
   VisualAbstract: {
     id: textfield,

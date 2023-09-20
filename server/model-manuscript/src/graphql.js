@@ -365,12 +365,21 @@ const publishOnCMS = async (groupId, manuscriptId) => {
   return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
 }
 
-const getManuscriptSubmissionFiles = async manuscript => {
+const getPublishableSubmissionFiles = async manuscript => {
   const submissionForm = await getSubmissionForm(manuscript.groupId)
 
+  const { fieldsToPublish } =
+    manuscript.formFieldsToPublish.find(ff => ff.objectId === manuscript.id) ||
+    []
+
   const supplementaryFileField = submissionForm.structure.children.find(
-    field => field.component === 'SupplementaryFiles',
+    f =>
+      (f.permitPublishing === 'always' ||
+        (f.permitPublishing === 'true' && fieldsToPublish.includes(f.name))) &&
+      f.component === 'SupplementaryFiles',
   )
+
+  if (!supplementaryFileField) return null
 
   const fieldTitle = supplementaryFileField ? supplementaryFileField.title : ''
   const supplementaryFiles = await getSupplementaryFiles(manuscript.id)
@@ -1769,7 +1778,7 @@ const resolvers = {
       return submissionWithFields
     },
     async supplementaryFiles(parent) {
-      const supplementaryFilesWithTitles = await getManuscriptSubmissionFiles(
+      const supplementaryFilesWithTitles = await getPublishableSubmissionFiles(
         parent,
       )
 
