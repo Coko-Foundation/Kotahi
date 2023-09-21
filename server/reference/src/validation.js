@@ -57,6 +57,7 @@ const createFormattedReference = async (data, groupId) => {
 
   const outputData = {
     doi,
+    DOI: doi,
     author: pluckAuthors(author),
     page,
     issue,
@@ -65,7 +66,10 @@ const createFormattedReference = async (data, groupId) => {
     journalTitle: pluckJournalTitle(journalTitle),
   }
 
-  const formattedCitation = await formatCitation(JSON.stringify(data), groupId)
+  const formattedCitation = await formatCitation(
+    JSON.stringify(outputData),
+    groupId,
+  )
 
   outputData.formattedCitation = formattedCitation.result
 
@@ -118,6 +122,7 @@ const getFormattedReferencesFromCrossRef = async (
   groupId,
 ) => {
   // console.log('Coming in server-side: ', reference, count)
+  // Documentation on this API: https://api.crossref.org/swagger-ui/index.html#/Works/get_works
   // eslint-disable-next-line no-return-await
   return await axios
     .get('https://api.crossref.org/v1/works', {
