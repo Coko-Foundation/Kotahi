@@ -375,7 +375,9 @@ const getPublishableSubmissionFiles = async manuscript => {
   const supplementaryFileField = submissionForm.structure.children.find(
     f =>
       (f.permitPublishing === 'always' ||
-        (f.permitPublishing === 'true' && fieldsToPublish.includes(f.name))) &&
+        (f.permitPublishing === 'true' &&
+          fieldsToPublish &&
+          fieldsToPublish.includes(f.name))) &&
       f.component === 'SupplementaryFiles',
   )
 
