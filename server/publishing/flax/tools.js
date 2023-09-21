@@ -29,11 +29,7 @@ const getPublishableFieldsForFlax = (
   } = form
 
   return fields
-    .filter(
-      f =>
-        ['always', 'true'].includes(f.permitPublishing) &&
-        f.hideFromAuthors !== 'true',
-    )
+    .filter(f => ['always', 'true'].includes(f.permitPublishing))
     .map(field => {
       let fieldName = field.name
 
@@ -55,7 +51,6 @@ const getPublishableFieldsForFlax = (
 
             const shouldPublish =
               text &&
-              field.hideFromAuthors !== 'true' &&
               (field.permitPublishing === 'always' ||
                 fieldsToPublish.includes(expandedFieldName))
 
@@ -76,7 +71,6 @@ const getPublishableFieldsForFlax = (
 
       const shouldPublish =
         text &&
-        field.hideFromAuthors !== 'true' &&
         (field.permitPublishing === 'always' ||
           fieldsToPublish.includes(field.name))
 

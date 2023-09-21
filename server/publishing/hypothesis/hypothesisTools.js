@@ -54,8 +54,7 @@ const getPublishableFieldsForObject = (
   return fields
     .filter(
       f =>
-        (['always', 'true'].includes(f.permitPublishing) &&
-          f.hideFromAuthors !== 'true') ||
+        ['always', 'true'].includes(f.permitPublishing) ||
         lastPublishedFields.includes(f.name),
     )
     .map(field => {
@@ -73,7 +72,6 @@ const getPublishableFieldsForObject = (
 
             const shouldPublish =
               text &&
-              field.hideFromAuthors !== 'true' &&
               (field.permitPublishing === 'always' ||
                 fieldsToPublish.includes(expandedFieldName))
 
@@ -95,7 +93,6 @@ const getPublishableFieldsForObject = (
 
       const shouldPublish =
         text &&
-        field.hideFromAuthors !== 'true' &&
         (field.permitPublishing === 'always' ||
           fieldsToPublish.includes(field.name))
 
