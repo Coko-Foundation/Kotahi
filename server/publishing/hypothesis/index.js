@@ -44,10 +44,7 @@ const prepareTurndownService = () =>
   new TurndownService({ bulletListMarker: '*' })
 
 const publishToHypothesis = async manuscript => {
-  const activeConfig = await Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await Config.getCached(manuscript.groupId)
 
   const headers = {
     headers: {
@@ -162,10 +159,7 @@ const publishSpecificAnnotationToHypothesis = async (
   manuscriptId,
   groupId,
 ) => {
-  const activeConfig = await Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await Config.getCached(groupId)
 
   const headers = {
     headers: {

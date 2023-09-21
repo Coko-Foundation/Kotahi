@@ -15,10 +15,7 @@ const importManuscripts = async (groupId, ctx) => {
   if (isImportInProgress) return false
   isImportInProgress = true
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   await runImports(groupId, ctx.user)
 
@@ -50,10 +47,7 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
   if (isImportingFromSemanticScholarInProgress) return false
   isImportingFromSemanticScholarInProgress = true
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const promises = []
 

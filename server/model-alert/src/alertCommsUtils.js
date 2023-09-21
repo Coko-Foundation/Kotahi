@@ -87,10 +87,7 @@ const sendAlertForMessage = async ({
     discussionUrl,
   }
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const selectedTemplate =
     activeConfig.formData.eventNotification?.alertUnreadMessageDigestTemplate
