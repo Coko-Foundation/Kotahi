@@ -65,6 +65,7 @@ const CitationComponent = ({ node, getPos }) => {
     AnyStyleTransformation,
     CrossRefTransformation,
     CiteProcTransformation,
+    readOnly,
   } = citationConfig
 
   const {
@@ -501,7 +502,12 @@ const CitationComponent = ({ node, getPos }) => {
     <CitationOuterWrapper>
       <Wrapper
         onClick={() => {
-          setIsOpen(true)
+          if (!readOnly) {
+            // We get readOnly from the config –-if it is true, we're in the full wax editor.
+            // Right now, we don't want the possibility of opening the modal in full wax editor
+            // (though this may change going forward.)
+            setIsOpen(true)
+          }
         }}
       >
         <CitationWrapper>
