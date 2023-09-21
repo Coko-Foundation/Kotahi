@@ -56,6 +56,7 @@ const InviteReviewerModal = ({
 }) => {
   const config = useContext(ConfigContext)
   const [condition, setCondition] = useState([])
+  const [inviteStatus, setInviteStatus] = useState(null)
   const identity = reviewerUsers.find(user => user.id === userId)
 
   const toggleSharedStatus = async (isInvitation, reviewerTeamMember) => {
@@ -111,6 +112,8 @@ const InviteReviewerModal = ({
               let teamMember
 
               if (isInvitation) {
+                setInviteStatus('pending')
+
                 const response = await sendEmail(
                   manuscript,
                   false,
@@ -124,7 +127,10 @@ const InviteReviewerModal = ({
                   config.groupId,
                 )
 
-                if (!response) return
+                if (!response || !response?.emailStatus) {
+                  setInviteStatus('failure')
+                  return
+                }
 
                 if (response.input) {
                   sendEmailChannelMessage(
@@ -160,9 +166,12 @@ const InviteReviewerModal = ({
                 })
               }
 
+              setInviteStatus('success')
               onClose()
+              setInviteStatus(null)
             }}
             primary
+            status={inviteStatus}
           >
             Invite
           </ActionButton>
