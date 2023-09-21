@@ -136,6 +136,7 @@ const productionWaxEditorConfig = (
     AnyStyleTransformation: updateAnystyle,
     CrossRefTransformation: updateCrossRef,
     CiteProcTransformation: styleReference,
+    readOnly: false,
   },
   services: [
     new AnnotationToolGroupService(),

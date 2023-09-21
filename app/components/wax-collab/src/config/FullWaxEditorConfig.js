@@ -35,6 +35,7 @@ import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
+import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
 import 'wax-table-service/dist/index.css'
 
 const updateTrackStatus = change => {
@@ -121,7 +122,12 @@ const fullWaxEditorConfig = handleAssetManager => ({
 
   ImageService: handleAssetManager ? { handleAssetManager } : {},
 
-  // end insertion
+  CitationService: {
+    AnyStyleTransformation: () => {},
+    CrossRefTransformation: () => {},
+    CiteProcTransformation: () => {}, // We may need to pass this in if we're letting this editor change these.
+    readOnly: true,
+  },
 
   services: [
     new AnnotationToolGroupService(),
@@ -160,6 +166,7 @@ const fullWaxEditorConfig = handleAssetManager => ({
     new TrackCommentOptionsToolGroupService(),
     new TrackOptionsToolGroupService(),
     new JatsTagsService(),
+    new CitationService(),
   ],
 })
 
