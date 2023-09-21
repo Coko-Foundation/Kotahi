@@ -151,7 +151,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.19
+    image: cokoapps/kotahi-flax:0.2.18
     depends_on:
       - server
     ports:
