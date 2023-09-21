@@ -151,11 +151,7 @@ const initiateJobSchedules = async () => {
   const groups = await models.Group.query().where({ isArchived: false })
 
   groups.forEach(async group => {
-    const activeConfig = await models.Config.query().findOne({
-      groupId: group.id,
-      active: true,
-    })
-
+    const activeConfig = await models.Config.getCached(group.id)
     const jobs = await getJobs(activeConfig, group.id)
 
     // eslint-disable-next-line no-console

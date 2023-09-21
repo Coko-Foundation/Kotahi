@@ -286,10 +286,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     .findById(id)
     .withGraphFetched('[reviews.user, files, tasks]')
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId: ms.groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(ms.groupId)
 
   /** Crude hack to circumvent and help diagnose bug 1193 */
   const oldMetaAbstract = ms && ms.meta ? ms.meta.abstract : null
@@ -329,11 +326,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = async manuscriptId => {
   const manuscript = await models.Manuscript.query().findById(manuscriptId)
-
-  const activeConfig = await models.Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(manuscript.groupId)
 
   const publishingWebhookUrl = activeConfig.formData.publishing.webhook.url
 
@@ -396,13 +389,8 @@ const resolvers = {
     async createManuscript(_, vars, ctx) {
       const { meta, files, groupId } = vars.input
       const group = await models.Group.query().findById(groupId)
-
       const submissionForm = await getSubmissionForm(group.id)
-
-      const activeConfig = await models.Config.query().findOne({
-        groupId: group.id,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(group.id)
 
       const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
@@ -555,10 +543,7 @@ const resolvers = {
       const toDeleteList = []
       const manuscript = await models.Manuscript.find(id)
 
-      const activeConfig = await models.Config.query().findOne({
-        groupId: manuscript.groupId,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
 
       toDeleteList.push(manuscript.id)
 
@@ -686,10 +671,7 @@ const resolvers = {
           handlingEditor.user.defaultIdentity.name ||
           ''
 
-        const activeConfig = await models.Config.query().findOne({
-          groupId: manuscript.groupId,
-          active: true,
-        })
+        const activeConfig = await models.Config.getCached(manuscript.groupId)
 
         const selectedTemplate =
           activeConfig.formData.eventNotification?.reviewRejectedEmailTemplate
@@ -774,10 +756,7 @@ const resolvers = {
           .findById(id)
           .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
-        const activeConfig = await models.Config.query().findOne({
-          groupId: manuscript.groupId,
-          active: true,
-        })
+        const activeConfig = await models.Config.getCached(manuscript.groupId)
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
@@ -852,10 +831,7 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
-      const activeConfig = await models.Config.query().findOne({
-        groupId: manuscript.groupId,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
 
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
@@ -1101,10 +1077,7 @@ const resolvers = {
 
       const containsElifeStyleEvaluations = hasElifeStyleEvaluations(manuscript)
 
-      const activeConfig = await models.Config.query().findOne({
-        groupId: manuscript.groupId,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
 
       // We will roll back to the following values if all publishing steps fail:
       const prevPublishedDate = manuscript.published
@@ -1479,10 +1452,7 @@ const resolvers = {
       else if (groups.length === 1) [group] = groups
       if (!group) throw new Error(`Group with name '${groupName}' not found`)
 
-      const activeConfig = await models.Config.query().findOne({
-        groupId: group.id,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(group.id)
 
       if (activeConfig.formData.user.kotahiApiTokens) {
         validateApiToken(token, activeConfig.formData.user.kotahiApiTokens)
@@ -1515,10 +1485,7 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('reviews')
 
-      const activeConfig = await models.Config.query().findOne({
-        groupId: manuscript.groupId,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
 
       if (!activeConfig.formData.publishing.crossref.login) {
         return null
@@ -1607,10 +1574,7 @@ const resolvers = {
     // To be called in submit manuscript as
     // first validation step for custom suffix
     async validateSuffix(_, { suffix, groupId }, ctx) {
-      const activeConfig = await models.Config.query().findOne({
-        groupId,
-        active: true,
-      })
+      const activeConfig = await models.Config.getCached(groupId)
 
       const doi = getDoi(suffix, activeConfig)
       return { isDOIValid: await doiIsAvailable(doi) }

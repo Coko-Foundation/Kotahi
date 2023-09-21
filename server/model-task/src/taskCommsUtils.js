@@ -14,11 +14,7 @@ const {
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
   const manuscript = await models.Manuscript.query().findById(manuscriptId)
-
-  const activeConfig = await models.Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(manuscript.groupId)
 
   const newTasks = await models.Task.query()
     .whereNull('manuscriptId')
@@ -169,10 +165,7 @@ const updateAlertsForTask = async (task, trx) => {
 /** For all tasks that have gone overdue during the previous calendar day, create alerts as appropriate.
  * Don't look further than yesterday, to avoid regenerating alerts that have already been seen. */
 const createNewTaskAlerts = async groupId => {
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -398,10 +391,7 @@ const sendNotification = async n => {
 }
 
 const sendAutomatedTaskEmailNotifications = async groupId => {
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')

@@ -17,10 +17,7 @@ const renderTemplate = async (templateContent, data) => {
 }
 
 const sendEmailNotification = async (receiver, template, data, groupId) => {
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   let ccEmails = template.emailContent?.cc || ''
 

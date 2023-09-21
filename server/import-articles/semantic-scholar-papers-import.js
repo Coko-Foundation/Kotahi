@@ -12,10 +12,7 @@ const {
 const SAVE_CHUNK_SIZE = 50
 
 const getData = async (groupId, ctx) => {
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
     {

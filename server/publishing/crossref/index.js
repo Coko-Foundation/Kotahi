@@ -53,10 +53,7 @@ const requestToCrossref = async (xmlFiles, activeConfig) => {
 
 /** Publish either article or reviews to Crossref, according to config */
 const publishToCrossref = async manuscript => {
-  const activeConfig = await Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await Config.getCached(manuscript.groupId)
 
   if (!activeConfig.formData.publishing.crossref.doiPrefix)
     throw new Error(
@@ -232,10 +229,7 @@ const emailRegex = /^[\p{L}\p{N}!/+\-_]+(\.[\p{L}\p{N}!/+\-_]+)*@[\p{L}\p{N}!/+\
 
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
-  const activeConfig = await Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await Config.getCached(manuscript.groupId)
 
   if (!manuscript.submission)
     throw new Error('Manuscript has no submission object')
@@ -377,10 +371,7 @@ const publishArticleToCrossref = async manuscript => {
 }
 
 const publishReviewsToCrossref = async manuscript => {
-  const activeConfig = await Config.query().findOne({
-    groupId: manuscript.groupId,
-    active: true,
-  })
+  const activeConfig = await Config.getCached(manuscript.groupId)
 
   if (
     !manuscript.submission.articleURL ||

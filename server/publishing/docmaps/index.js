@@ -77,10 +77,7 @@ const tryPublishDocMaps = async manuscript => {
 
   const { docmapsScheme } = docmapsSchemeExists
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId: group.id,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(group.id)
 
   const { submissionForm, reviewForm, decisionForm } = await getActiveForms(
     group.id,

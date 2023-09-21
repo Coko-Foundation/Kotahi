@@ -10,11 +10,7 @@ const {
 } = require('../../utils/fileStorageUtils')
 
 const setInitialLayout = async groupId => {
-  const { formData } = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
-
+  const { formData } = await models.Config.getCached(groupId)
   const { primaryColor, secondaryColor } = formData.groupIdentity
 
   const layout = await new models.CMSLayout({
@@ -248,10 +244,7 @@ const resolvers = {
     },
 
     async publishConfig(parent) {
-      const { formData } = await models.Config.query().findOne({
-        groupId: parent.groupId,
-        active: true,
-      })
+      const { formData } = await models.Config.getCached(parent.groupId)
 
       return JSON.stringify({
         licenseUrl: formData.publishing.crossref.licenseUrl,

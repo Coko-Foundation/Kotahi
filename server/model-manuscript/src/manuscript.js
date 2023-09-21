@@ -211,10 +211,7 @@ class Manuscript extends BaseModel {
     newVersion.reviews = clonedDecisions
     newVersion.files = files
 
-    const activeConfig = await Config.query().findOne({
-      groupId: this.groupId,
-      active: true,
-    })
+    const activeConfig = await Config.getCached(this.groupId)
 
     if (
       activeConfig.formData.submission.allowAuthorsSubmitNewVersion ||

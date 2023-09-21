@@ -145,10 +145,7 @@ const resolvers = {
       ) {
         const taskDurationDays = dbTask.defaultDurationDays
 
-        const activeConfig = await models.Config.query().findOne({
-          groupId: dbTask.groupId,
-          active: true,
-        })
+        const activeConfig = await models.Config.getCached(dbTask.groupId)
 
         data.dueDate =
           taskDurationDays !== null

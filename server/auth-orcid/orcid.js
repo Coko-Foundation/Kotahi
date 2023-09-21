@@ -62,10 +62,7 @@ module.exports = app => {
         let user
         let firstLogin = false
 
-        const activeConfig = await Config.query().findOne({
-          groupId,
-          active: true,
-        })
+        const activeConfig = await Config.getCached(groupId)
 
         try {
           user = await User.query()
@@ -160,10 +157,7 @@ module.exports = app => {
 
       const urlFrag = `/${group.name}`
 
-      const activeConfig = await Config.query().findOne({
-        groupId,
-        active: true,
-      })
+      const activeConfig = await Config.getCached(groupId)
 
       // Based on configuration User Management -> All users are assigned Group Manager and Admin roles flag
       if (activeConfig.formData.user.isAdmin)

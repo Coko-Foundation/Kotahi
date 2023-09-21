@@ -25,10 +25,7 @@ const isLatestVersionOfManuscript = async versionId => {
 }
 
 const archiveOldManuscripts = async groupId => {
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  const activeConfig = await models.Config.getCached(groupId)
 
   const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
