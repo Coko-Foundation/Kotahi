@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { map } = require('lodash')
+const { map, chunk } = require('lodash')
 const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
@@ -1259,6 +1259,8 @@ const resolvers = {
     async manuscript(_, { id }, ctx) {
       return models.Manuscript.query().findById(id)
     },
+    // TODO This is overcomplicated, trying to do three things at once (find manuscripts
+    // where author is author, reviewer or editor).
     async manuscriptsUserHasCurrentRoleIn(
       _,
       {
@@ -1278,7 +1280,7 @@ const resolvers = {
       // Get IDs of the top-level manuscripts
       // TODO move this query to the model
       const topLevelManuscripts = await models.Manuscript.query()
-        .distinct(
+        .select(
           raw(
             'coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id',
           ),
@@ -1288,17 +1290,24 @@ const resolvers = {
         .where('team_members.user_id', ctx.user)
         .where('is_hidden', false)
         .where('group_id', groupId)
+        .distinct()
 
       // Get those top-level manuscripts with all versions, all with teams and members
-      const allManuscriptsWithInfo = await models.Manuscript.query()
-        .withGraphFetched(
-          '[teams.members, tasks, invitations, manuscriptVersions(orderByCreatedDesc).[teams.members, tasks, invitations]]',
-        )
-        .whereIn(
-          'id',
-          topLevelManuscripts.map(m => m.topLevelId),
-        )
-        .orderBy('created', 'desc')
+      const allManuscriptsWithInfo = []
+      const topLevelIds = topLevelManuscripts.map(m => m.topLevelId)
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const someIds of chunk(topLevelIds, 20)) {
+        // eslint-disable-next-line no-await-in-loop
+        const someManuscriptsWithInfo = await models.Manuscript.query()
+          .withGraphFetched(
+            '[teams.members, tasks, invitations, manuscriptVersions(orderByCreatedDesc).[teams.members, tasks, invitations]]',
+          )
+          .whereIn('id', someIds)
+          .orderBy('created', 'desc')
+
+        allManuscriptsWithInfo.push(...someManuscriptsWithInfo)
+      }
 
       // Get the latest version of each manuscript, and check the users role in that version
       const userManuscriptsWithInfo = {}
