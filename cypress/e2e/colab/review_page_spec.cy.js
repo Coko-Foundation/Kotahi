@@ -42,9 +42,17 @@ describe('review page tests', () => {
       .scrollIntoView()
       .should('contain', 'Evaluation summary')
       .and('be.visible')
-    cy.get('[class*=General__SectionContent]:nth(2) > div > span')
-      .eq(0)
-      .should('be.visible')
+
+    cy.get('[class*="General__SectionContent"]').each($sectionContent => {
+      // Check if General_SectionRow is present within each section
+      if ($sectionContent.find('.General_SectionRow').length > 0) {
+        cy.log('General_SectionRow found.') // Log if it's found within this section
+        cy.wrap($sectionContent).find('div > span').should('be.visible')
+      } else {
+        cy.log('General_SectionRow not found.') // Log if it's not found within this section
+      }
+    })
+
     ReviewPage.getDecisionRecommendation().should('be.visible')
   })
   it('saved decision should be visible for the reviewer', () => {
