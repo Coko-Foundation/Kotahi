@@ -169,7 +169,7 @@ const ProductionWaxEditor = ({
               'Server-side error: ',
               result.data.getFormattedReferences.message,
             )
-            return text
+            return []
           })
       : null
   }
