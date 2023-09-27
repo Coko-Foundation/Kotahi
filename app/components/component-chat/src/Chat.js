@@ -18,7 +18,7 @@ export const FloatingUnreadLabelContainer = styled.div`
   width: 100%;
 `
 export const FloatingUnreadLabel = styled.div`
-  background-color: ${th('colors.brand1.tint25')};
+  background-color: ${th('color.brand1.tint25')};
   border-radius: 4px;
   color: #ffffff;
   font-size: 14px;
