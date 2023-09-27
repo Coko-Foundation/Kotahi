@@ -23,7 +23,10 @@ import { v4 as uuidv4 } from 'uuid'
 
 const reference = {
   content: 'inline*',
-  group: 'block',
+  group: 'block', // 'block reference',
+  // atom: true, // if we set this, we get a "focus" error
+  // selectable: true,
+  // draggable: true, // this may lead to bugs, though it can work.
   priority: 0,
   defining: true,
   attrs: {
@@ -67,6 +70,7 @@ const reference = {
 
     const attrs = {
       class: hook?.node?.attrs?.class,
+      // class: 'ref',
       'data-valid': hook?.node?.attrs?.valid,
       'data-needs-validation': hook?.node?.attrs?.needsValidation,
       'data-needs-review': hook?.node?.attrs?.needsReview,

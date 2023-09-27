@@ -146,41 +146,45 @@ const CitationComponent = ({ node, getPos }) => {
     // This function replaces the current node with a version with new attributes and new content
     // if onlyAttrs is true, we're only changing the attributes, not the content
     const thisNode = getNodeWithId(refId)
+
     // console.log('\n\nSetting content: ', fragment)
-    let { tr } = activeView.state
-    const startPosition = getPos()
-    const endPosition = startPosition + thisNode.content.size + 1
+    if (thisNode) {
+      let { tr } = activeView.state
+      const startPosition = getPos()
 
-    const newNode = activeView.state.schema.nodes.reference.create({
-      class: 'ref',
-      refId,
-      originalText: formattedOriginalText,
-      needsReview,
-      needsValidation,
-      structure,
-      possibleStructures: structures,
-      valid,
-    })
+      const endPosition = startPosition + thisNode.content.size + 1
 
-    newNode.content = onlyAttrs ? thisNode.content : fragment
+      const newNode = activeView.state.schema.nodes.reference.create({
+        class: 'ref',
+        refId,
+        originalText: formattedOriginalText,
+        needsReview,
+        needsValidation,
+        structure,
+        possibleStructures: structures,
+        valid,
+      })
 
-    // eslint-disable-next-line
-    for (const [key, value] of Object.entries(attrs)) {
-      // check if the value is different from the current value
+      newNode.content = onlyAttrs ? thisNode.content : fragment
 
-      if (node.attrs[key] !== value) {
-        // console.log('Attr change! Key: ', key, 'Value: ', value)
-        newNode.attrs[key] = value
-      } else {
-        // console.log('Not changing: Key: ', key, 'Value: ', value)
+      // eslint-disable-next-line
+      for (const [key, value] of Object.entries(attrs)) {
+        // check if the value is different from the current value
+
+        if (node.attrs[key] !== value) {
+          // console.log('Attr change! Key: ', key, 'Value: ', value)
+          newNode.attrs[key] = value
+        } else {
+          // console.log('Not changing: Key: ', key, 'Value: ', value)
+        }
       }
+
+      // console.log('node in setContent:', newNode)
+
+      tr = tr.replaceWith(startPosition, endPosition, newNode)
+      activeView.dispatch(tr)
+      activeView.focus()
     }
-
-    // console.log('node in setContent:', newNode)
-
-    tr = tr.replaceWith(startPosition, endPosition, newNode)
-    activeView.dispatch(tr)
-    activeView.focus()
   }
 
   const makeFragmentFrom = text => {
