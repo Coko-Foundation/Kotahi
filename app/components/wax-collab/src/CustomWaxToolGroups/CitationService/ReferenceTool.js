@@ -2,6 +2,7 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import { findParentNodeOfTypeClosestToPos, liftListItemToType } from './helpers'
 
 class ReferenceTool extends Tools {
   title = 'Change to reference'
@@ -10,12 +11,39 @@ class ReferenceTool extends Tools {
 
   // eslint-disable-next-line class-methods-use-this
   get run() {
-    // console.log('in run')
+    // This fires when the tool is shown
 
     return (state, dispatch) => {
-      Commands.setBlockType(state.config.schema.nodes.reference, {
-        class: 'ref',
-      })(state, dispatch)
+      // this fires when the tool is clicked.
+      // need to check if we're in a list, if so split
+
+      const isInAList = findParentNodeOfTypeClosestToPos(
+        state.selection.$from,
+        state.schema.nodes.list_item,
+      )
+
+      if (isInAList) {
+        let done = false
+        state.doc.nodesBetween(
+          state.selection.$from.pos,
+          state.selection.$to.pos,
+          node => {
+            if (node.type.name === 'list_item' && !done) {
+              // console.log('in list item, running liftListItemToType')
+              liftListItemToType(
+                state.schema.nodes.list_item,
+                state.config.schema.nodes.reference,
+                'ref',
+              )(state, dispatch)
+              done = true
+            }
+          },
+        )
+      } else {
+        Commands.setBlockType(state.config.schema.nodes.reference, {
+          class: 'ref',
+        })(state, dispatch)
+      }
     }
   }
 
@@ -27,17 +55,10 @@ class ReferenceTool extends Tools {
       const currentViewPossible =
         activeViewId === 'main' || activeViewId.indexOf('note-') === 0
 
-      // console.log(
-      //   'in getactive, currentViewPossible:',
-      //   currentViewPossible,
-      //   activeViewId,
-      // )
       if (!currentViewPossible) return false
-      // console.log('could be active')
       const { from, to } = state.selection
       state.doc.nodesBetween(from, to, node => {
         if (node.type.name === 'reference') {
-          // console.log('active!')
           isActive = true
         }
       })
@@ -46,8 +67,10 @@ class ReferenceTool extends Tools {
   }
 
   select = (state, activeViewId) => {
-    if (activeViewId !== 'main' && activeViewId.indexOf('note-') !== 0)
+    if (activeViewId !== 'main' && activeViewId.indexOf('note-') !== 0) {
       return false
+    }
+
     return true
   }
 

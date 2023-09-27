@@ -65,6 +65,8 @@ export const PopUpWrapper = styled.div`
 
 export const Button = styled(OriginalButton)`
   border: 2px solid ${color.brand1.base};
+  user-select: none;
+  cursor: pointer;
   border-radius: 4px;
   padding: 4px 8px;
   text-decoration: none;
@@ -85,6 +87,9 @@ export const Button = styled(OriginalButton)`
 
   &:hover {
     border-color: #444;
+  }
+  &:disabled:hover {
+    border-color: ${color.brand1.base};
   }
 `
 
