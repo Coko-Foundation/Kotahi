@@ -222,7 +222,7 @@ const EditorStyles = css`
 
   math-inline {
     display: inline-block;
-    max-width: 800px;
+    max-width: 765px;
     overflow-x: scroll;
     white-space: nowrap;
   }

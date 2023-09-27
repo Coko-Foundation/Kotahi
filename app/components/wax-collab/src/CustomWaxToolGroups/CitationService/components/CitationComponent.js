@@ -212,7 +212,8 @@ const CitationComponent = ({ node, getPos }) => {
 
   const sendToCrossRef = async text => {
     const response = await CrossRefTransformation(text)
-    return { crossRef: response }
+    // Note: if this is failing, the function should return an empty array
+    return { crossRef: response || [] }
   }
 
   useEffect(() => {

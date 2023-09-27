@@ -35,6 +35,11 @@ const resolvers = {
           crossrefRetrievalEmail,
         )
 
+        if (matches.length === 0) {
+          logger.error('Crossref timed out.')
+          return { matches: [], success: false, message: 'error' }
+        }
+
         return { matches, success: true, message: '' }
       } catch (error) {
         logger.error('Citeproc response error:', error.message)
@@ -63,6 +68,11 @@ const resolvers = {
           crossrefRetrievalEmail,
           groupId,
         )
+
+        if (matches.length === 0) {
+          logger.error('Crossref timed out.')
+          return { matches: [], success: false, message: 'error' }
+        }
 
         return { matches, success: true, message: '' }
       } catch (error) {
