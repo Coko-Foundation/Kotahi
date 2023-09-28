@@ -1,5 +1,13 @@
 ## Changes
 
+### 2023-09-28
+
+We have introduced a new environment variable, USE_COLAB_BIOPHYSICS_IMPORT, which allows you to enable/disable the import of preprints for groups using the `colab` archetype.
+
+Currently, these import queries are client-specific. To enable these imports set the environment variable USE_COLAB_BIOPHYSICS_IMPORT=true.
+
+Moving forward, all import queries should use the import [plugin architecture](https://docs.coko.foundation/s/f961fad5-f903-4561-9d22-b723129edf15).
+
 ### 2023-08-18: Version 2.0.0
 
 Instances affected: **all**.<br/>
