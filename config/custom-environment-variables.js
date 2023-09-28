@@ -115,7 +115,6 @@ module.exports = {
     semanticScholarImportsRecencyPeriodDays:
       'SEMANTIC_SCHOLAR_IMPORTS_RECENCY_PERIOD_DAYS',
   },
-
   'flax-site': {
     clientId: 'FLAX_CLIENT_ID',
     clientSecret: 'FLAX_CLIENT_SECRET',
@@ -124,5 +123,8 @@ module.exports = {
     port: 'FLAX_EXPRESS_PORT',
     host: 'FLAX_EXPRESS_HOST',
     protocol: 'FLAX_EXPRESS_PROTOCOL',
+  },
+  'import-for-colab': {
+    default_import: 'USE_COLAB_BIOPHYSICS_IMPORT',
   },
 }

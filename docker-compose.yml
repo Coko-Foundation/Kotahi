@@ -25,6 +25,7 @@ services:
       - SERVER_PORT=3000
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
+      - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
       - FLAX_SITE_URL=${FLAX_SITE_URL:-http://localhost:8081}
 
     volumes:
@@ -151,6 +152,7 @@ services:
       - FLAX_SITE_URL=${FLAX_SITE_URL:-false}
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:aperture}
+      - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
 
     volumes:
       - ./config:/home/node/app/config
@@ -339,7 +341,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.24
+    image: cokoapps/kotahi-flax:0.2.25
     depends_on:
       - client
     ports:
