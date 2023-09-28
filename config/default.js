@@ -206,4 +206,7 @@ module.exports = {
     host: '',
     protocol: '',
   },
+  'import-for-colab': {
+    default_import: 'false',
+  },
 }
