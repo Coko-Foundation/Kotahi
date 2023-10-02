@@ -1,4 +1,5 @@
 /* stylelint-disable selector-type-no-unknown */
+/* stylelint-disable no-descending-specificity */
 import { css } from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'
@@ -223,7 +224,7 @@ const EditorStyles = css`
   math-inline {
     display: inline-block;
     max-width: 765px;
-    overflow-x: scroll;
+    overflow-x: auto;
     white-space: nowrap;
   }
 
@@ -247,8 +248,8 @@ const EditorStyles = css`
 
   math-display {
     display: block;
-    max-width: 800px;
-    overflow-x: scroll;
+    max-width: 765px;
+    overflow-x: auto;
   }
 
   math-display .math-render {
