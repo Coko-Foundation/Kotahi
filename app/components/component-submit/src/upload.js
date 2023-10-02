@@ -136,6 +136,38 @@ const stripTrackChanges = file => {
   return $.html()
 }
 
+const regexCustomReplace = (
+  regex,
+  text,
+  customReplaceFunction, // Function to do whatever you want with the groups returned by exec() and return a string
+) => {
+  const resultSubstrings = []
+  let lastMatchEnd = 0
+  let groups = regex.exec(text)
+
+  while (groups) {
+    const matchStart = regex.lastIndex - groups[0].length
+    resultSubstrings.push(text.substring(lastMatchEnd, matchStart))
+    resultSubstrings.push(customReplaceFunction(groups))
+    lastMatchEnd = regex.lastIndex
+    groups = regex.exec(text)
+  }
+
+  resultSubstrings.push(text.substring(lastMatchEnd))
+  return resultSubstrings.join('')
+}
+
+const doubleBackSlashReplace = groups => {
+  const openingTag = groups[1]
+  const text = groups[2]
+  const closingTag = groups[3]
+
+  if (/(?<!\\)\\(?!\\)/.test(text)) return groups[0] // If there's any single isolated backslash, return the full match unaltered
+
+  const cleanedText = text.replaceAll('\\\\', '\\') // Replace double-backslash with single backslash
+  return `${openingTag}${cleanedText}${closingTag}`
+}
+
 const cleanMath = file => {
   // PROBLEMATIC FIX FOR XSWEET
   //
@@ -155,6 +187,23 @@ const cleanMath = file => {
       .replace(
         thirdNewMathErrorRegex,
         `<p><math-display class="math-node">$1</math-display></p>`,
+      ) // First I am replacing the header math with correct math syntax
+      .replace(/\\\\/g, '\\') // This is replacing the double backslashes with a single backslash
+
+    cleanedFile = cleanedFile.replace(thisOne, replacement)
+  }
+
+  const fourthNewMathErrorRegex = /<h[1-6]><math-inline class="math-node">([\s\S]*?)<\/math-inline><\/h[1-6]>/g
+
+  while (cleanedFile.match(fourthNewMathErrorRegex)) {
+    // If we have this pattern, we also need to replace double backslashes inside of the latex
+    // This needs to be run before the other error-finding regexes--it substitutes for some of them.
+    const thisOne = cleanedFile.match(fourthNewMathErrorRegex)[0]
+
+    const replacement = thisOne
+      .replace(
+        fourthNewMathErrorRegex,
+        `<p><math-inline class="math-node">$1</math-inline></p>`,
       ) // First I am replacing the header math with correct math syntax
       .replace(/\\\\/g, '\\') // This is replacing the double backslashes with a single backslash
 
@@ -184,6 +233,13 @@ const cleanMath = file => {
     .replaceAll(inlineStart, `<math-inline class="math-node">`)
     .replaceAll(displayEnd, `</math-display>`)
     .replaceAll(inlineEnd, `</math-inline>`)
+
+  const thisRegex = /(<math-(?:inline|display)[\s\S]*?>)([\s\S]*?)(<\/math-(?:inline|display)[\s\S\\]*?>)/g
+  cleanedFile = regexCustomReplace(
+    thisRegex,
+    cleanedFile,
+    doubleBackSlashReplace,
+  )
 
   const newMathErrorRegex = /<h[1-6]>\$(.*)\$<\/h[1-6]>/g
 
@@ -541,6 +597,7 @@ export default ({
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data, client)
+        // console.log('uploadResponse before cleaning: ', uploadResponse.response)
         uploadResponse.response = cleanOutWmfs(
           cleanMath(
             stripTags(
@@ -548,6 +605,7 @@ export default ({
             ),
           ),
         )
+        // console.log('uploadResponse after cleaning: ', uploadResponse.response)
         images = base64Images(uploadResponse.response)
       }
 
