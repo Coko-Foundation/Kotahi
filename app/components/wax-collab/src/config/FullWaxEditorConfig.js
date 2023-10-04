@@ -30,7 +30,10 @@ import {
   TrackingAndEditingToolGroupService,
   EditingSuggestingService,
 } from 'wax-prosemirror-services'
-import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
+import {
+  TablesService,
+  /* tableEditing, */ columnResizing,
+} from 'wax-table-service'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
@@ -110,7 +113,7 @@ const fullWaxEditorConfig = handleAssetManager => ({
     },
   ],
 
-  PmPlugins: [columnResizing(), tableEditing()],
+  PmPlugins: [columnResizing() /* tableEditing() */],
 
   RulesService: [emDash, ellipsis],
 
