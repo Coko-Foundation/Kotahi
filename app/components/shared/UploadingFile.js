@@ -38,7 +38,7 @@ const Filename = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   font-style: italic;
   line-height: ${th('lineHeightBaseSmall')};
-  max-width: ${grid(30)};
+  max-width: ${grid(12)};
   overflow: hidden;
   text-overflow: ellipsis;
 `
