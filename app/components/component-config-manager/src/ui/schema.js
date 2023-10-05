@@ -680,11 +680,11 @@ const generateSchema = (
                         title: 'American Psychological Association (APA)',
                       },
                       {
-                        const: 'chicago-note-bibliogrpahy',
+                        const: 'chicago-note-bibliography',
                         title: 'Chicago Manual of Style (CMOS)',
                       },
                       {
-                        const: 'counctil-of-science-editors-alphabetical',
+                        const: 'council-of-science-editors-alphabetical',
                         title: 'Council of Science Editors (CSE)',
                       },
                     ],
@@ -1132,11 +1132,11 @@ const generateSchema = (
                         title: 'American Psychological Association (APA)',
                       },
                       {
-                        const: 'chicago-note-bibliogrpahy',
+                        const: 'chicago-note-bibliography',
                         title: 'Chicago Manual of Style (CMOS)',
                       },
                       {
-                        const: 'counctil-of-science-editors-alphabetical',
+                        const: 'council-of-science-editors-alphabetical',
                         title: 'Council of Science Editors (CSE)',
                       },
                     ],
@@ -1578,11 +1578,11 @@ const generateSchema = (
                         title: 'American Psychological Association (APA)',
                       },
                       {
-                        const: 'chicago-note-bibliogrpahy',
+                        const: 'chicago-note-bibliography',
                         title: 'Chicago Manual of Style (CMOS)',
                       },
                       {
-                        const: 'counctil-of-science-editors-alphabetical',
+                        const: 'council-of-science-editors-alphabetical',
                         title: 'Council of Science Editors (CSE)',
                       },
                     ],
@@ -2024,11 +2024,11 @@ const generateSchema = (
                         title: 'American Psychological Association (APA)',
                       },
                       {
-                        const: 'chicago-note-bibliogrpahy',
+                        const: 'chicago-note-bibliography',
                         title: 'Chicago Manual of Style (CMOS)',
                       },
                       {
-                        const: 'counctil-of-science-editors-alphabetical',
+                        const: 'council-of-science-editors-alphabetical',
                         title: 'Council of Science Editors (CSE)',
                       },
                     ],

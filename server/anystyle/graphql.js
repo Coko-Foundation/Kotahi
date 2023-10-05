@@ -225,10 +225,7 @@ const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
 
         const formattedCitations = await Promise.all(
           res.data.map(async citation => {
-            const formattedCitation = await formatCitation(
-              JSON.stringify(citation),
-              groupId,
-            )
+            const formattedCitation = await formatCitation(citation, groupId)
             // eslint-disable-next-line
             citation.formattedCitation = formattedCitation.result
             return citation

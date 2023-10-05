@@ -66,10 +66,7 @@ const createFormattedReference = async (data, groupId) => {
     journalTitle: pluckJournalTitle(journalTitle),
   }
 
-  const formattedCitation = await formatCitation(
-    JSON.stringify(outputData),
-    groupId,
-  )
+  const formattedCitation = await formatCitation(outputData, groupId)
 
   outputData.formattedCitation = formattedCitation.result
 

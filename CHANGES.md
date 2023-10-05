@@ -1,12 +1,41 @@
 ## Changes
 
-### 2023-09-28
+### 2023-09-28: Version 2.1.0
 
-We have introduced a new environment variable, USE_COLAB_BIOPHYSICS_IMPORT, which allows you to enable/disable the import of preprints for groups using the `colab` archetype.
+#### Citation manager
 
-Currently, these import queries are client-specific. To enable these imports set the environment variable USE_COLAB_BIOPHYSICS_IMPORT=true.
+Instances affected: **All with `aperture` or `colab` groups, that use the Production page**
 
-Moving forward, all import queries should use the import [plugin architecture](https://docs.coko.foundation/s/f961fad5-f903-4561-9d22-b723129edf15).
+A citation manager has been introduced to the Production page, for correcting and formatting citations and to faciliate better export to JATS. It uses AnyStyle and CrossRef services to provide suggested structured matches to existing citations, and CiteProc to format the citations.
+
+##### Setting up CrossRef
+
+In the Configuration page a new "Production" section contains "Email to use for citation search". You must provide a valid email address here. You can also choose citation style and locale for formatting.
+
+##### Setting up AnyStyle (optional)
+
+AnyStyle is an optional component of the tool, useful when CrossRef doesn't find a good match to a citation. To use AnyStyle, you must set up an AnyStyle server and database -- see `docker-compose.yml` for setup.
+Then add the following to your .env, substituting your own secrets:
+
+```
+SERVICE_ANYSTYLE_CLIENT_ID=59a3392b-0c4f-4318-bbe2-f86eff6d3de4
+SERVICE_ANYSTYLE_SECRET=asldkjLKJLaslkdf897kjhKUJH
+SERVICE_ANYSTYLE_PROTOCOL=http
+SERVICE_ANYSTYLE_HOST=anystyle
+SERVICE_ANYSTYLE_PORT=4567
+```
+
+For a non-local AnyStyle server, the host will be `subdomain.domain`, and protocol will typically be `http`.
+
+#### Imports
+
+Instances affected: **Colab Biophysics organization _only_**
+
+Set `USE_COLAB_BIOPHYSICS_IMPORT=true` in the `.env` file. Without this, imports specific to the Colab Biophysics organization will now be disabled. Note that for these imports to run, the group archetype must also be `colab`.
+
+Previously, all groups using the `colab` archetype performed these imports, despite them being intended for one organization only.
+
+In future we intend to move all imports into plugins, using the import [plugin architecture](https://docs.coko.foundation/s/f961fad5-f903-4561-9d22-b723129edf15).
 
 ### 2023-08-18: Version 2.0.0
 
