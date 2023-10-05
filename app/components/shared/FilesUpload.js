@@ -18,9 +18,8 @@ const Root = styled.div`
 `
 
 const Files = styled.div`
-  display: grid;
-  grid-gap: ${grid(2)};
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  display: flex;
+  gap: ${grid(2)};
   margin-top: ${grid(2)};
 `
 
