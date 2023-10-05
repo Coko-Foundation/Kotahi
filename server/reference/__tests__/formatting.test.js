@@ -34,7 +34,7 @@ const getTestValues = async () => {
   const { groupId } = activeConfig
 
   // This is being done to get an async result in the test, which might not be async?
-  const response1 = await formatCitation(JSON.stringify(doiResult), groupId)
+  const response1 = await formatCitation(doiResult, groupId)
   return { response1 }
 }
 

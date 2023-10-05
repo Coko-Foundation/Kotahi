@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { sanitize } from 'isomorphic-dompurify'
+import { debounce } from 'lodash'
 import { InputP, Button, StatusBar, CitationVersionWrapper } from './styles'
 
 // TODO:
@@ -17,7 +18,6 @@ const EditModal = ({
 }) => {
   const [currentText, setCurrentText] = useState(formattedCitation)
   const [reRender, setReRender] = useState(-1)
-
   const [currentCitation, setCurrentCitation] = useState({})
 
   const sendToCiteProc = async csl => {
@@ -35,6 +35,15 @@ const EditModal = ({
     setCurrentCitation(newCitation)
   }
 
+  const debounceReformat = useCallback(debounce(formatCurrentCitation, 1000), [
+    formatCurrentCitation,
+  ])
+
+  useEffect(() => {
+    debounceReformat()
+    return debounceReformat.cancel
+  }, [currentCitation])
+
   useEffect(() => {
     // citationData is sometimes coming in as a string – why?
 
@@ -51,8 +60,6 @@ const EditModal = ({
       ...(citationData === '{}' ? {} : citationData),
     }
 
-    // console.log(citationData, typeof citationData)
-    // console.log('citation data changed: ', newCitation)
     setCurrentCitation(newCitation)
   }, [citationData])
   // console.log('Re-rendering:', currentCitation)

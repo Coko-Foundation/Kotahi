@@ -4,7 +4,7 @@ import { DOMParser, DOMSerializer, Fragment } from 'prosemirror-model'
 import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
 import { sanitize } from 'isomorphic-dompurify'
 import striptags from 'striptags'
-import { List, AlertCircle, CheckCircle } from 'react-feather'
+import { Loader, List, CheckCircle } from 'react-feather'
 import { color } from '../../../../../../theme'
 import { Spinner } from '../../../../../shared'
 import Modal from '../../../../../component-modal/src/Modal'
@@ -205,9 +205,9 @@ const CitationComponent = ({ node, getPos }) => {
   }
 
   const sendToAnystyle = async text => {
-    const response = await AnyStyleTransformation({
-      content: striptags(text),
-    })
+    const content = striptags(text)
+    const response = await AnyStyleTransformation({ content })
+    if (response === content) return { anyStyle: [] } // response the same as input indicates failure
 
     const thisResponse = JSON.parse(response)[0]
     // thisResponse is a CSL object with .formattedCitation as the formatted version
@@ -225,6 +225,7 @@ const CitationComponent = ({ node, getPos }) => {
     const getVersions = async () => {
       // console.log('Getting versions from CrossRef and AnyStyle')
       setLoading(true)
+
       await Promise.all([
         await sendToAnystyle(formattedOriginalText),
         await sendToCrossRef(formattedOriginalText),
@@ -532,17 +533,17 @@ const CitationComponent = ({ node, getPos }) => {
           )}
           {decideStatus(internalNeedsReview, internalNeedsValidation) ===
             'needs validation' && (
-            <List
+            <Loader
               alt="needs validation"
-              color={color.brand1.base()}
+              color={color.gray70}
               title="needs validation"
             />
           )}
           {decideStatus(internalNeedsReview, internalNeedsValidation) ===
             'needs review' && (
-            <AlertCircle
+            <List
               alt="needs review"
-              color={color.warning.base}
+              color={color.brand1.base()}
               title="needs review"
             />
           )}

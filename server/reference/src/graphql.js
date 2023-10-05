@@ -103,11 +103,10 @@ const resolvers = {
     },
     async formatCitation(_, { citation }, ctx) {
       // You know, it's probably bad to have two formatCitation functions!
-      // citation should be stringified CSL
 
       try {
         const { result, error } = await formatCitation(
-          citation,
+          JSON.parse(citation),
           ctx.req.headers['group-id'],
         )
 
