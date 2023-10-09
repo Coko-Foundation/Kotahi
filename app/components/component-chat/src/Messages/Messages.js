@@ -142,10 +142,16 @@ const Messages = ({
 
   // eslint-disable-next-line no-shadow
   const renderDropdownAndEllipsis = (isAdmin, isGroupManager, message) => {
+    // System-generated logs in the chat don't have <p> tags. Until we move logs out of the chat we have this hack.
+    const containsParagraphTag = /<p[^>]*>.*?<\/p>/.test(message.content)
+
     // Too many users are currently assigned as Group Managers, and we don't want them
     // all to be able to modify other users messages; but Admin users may not have
     // access to this page; so we require that they be Admin AND Group Manager.
-    if ((isAdmin && isGroupManager) || currentUser.id === message.user.id) {
+    if (
+      ((isAdmin && isGroupManager) || currentUser.id === message.user.id) &&
+      containsParagraphTag
+    ) {
       return (
         <>
           <Ellipsis
