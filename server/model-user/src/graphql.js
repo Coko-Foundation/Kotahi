@@ -188,6 +188,43 @@ const resolvers = {
         users,
       }
     },
+    // eslint-disable-next-line consistent-return
+    channelUsersForMention: async (_, { channelId }, context) => {
+      if (!channelId) {
+        throw new Error('Channel ID is required.')
+      }
+
+      const usersWithRoles = await models.User.query()
+        .join('team_members', 'users.id', 'team_members.user_id')
+        .join('teams', 'team_members.team_id', 'teams.id')
+        .select('teams.role')
+        .where('users.id', context.user)
+        .distinct('teams.role')
+
+      const query = models.User.query()
+        .join('team_members', 'users.id', 'team_members.user_id')
+        .join('teams', 'team_members.team_id', 'teams.id')
+        .leftJoin('channel_members', 'users.id', 'channel_members.user_id') // need left join here to also include users who are in team but not in channel member, i.e. group managers
+        .distinct('users.*')
+
+      const channel = await models.Channel.query().findById(channelId)
+
+      // admin discussion
+      if (!channel.manuscriptId) {
+        return query.where('teams.role', 'groupManager')
+      }
+
+      if (
+        channel.type === 'editorial' &&
+        usersWithRoles.some(user => user.role === 'editor')
+      ) {
+        return query
+          .where('teams.role', 'groupManager')
+          .orWhere('channel_members.channel_id', channelId)
+      }
+
+      return query.where('channel_members.channel_id', channelId)
+    },
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
@@ -455,6 +492,7 @@ const typeDefs = `
     users: [User]
     paginatedUsers(sort: UsersSort, offset: Int, limit: Int): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
+    channelUsersForMention(channelId: ID!): [User]
   }
 
   type PaginatedUsers {

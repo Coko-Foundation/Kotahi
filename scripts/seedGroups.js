@@ -141,6 +141,42 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
       `    ${existingEmailTemplates.length} email templates already exists in database for "${group.name}". Skipping.`,
     )
   }
+
+  // Check if an email template for @mention notification already exists
+  const existingEmailTemplateForMentionNotification = await EmailTemplate.query()
+    .where({
+      group_id: group.id,
+      email_template_type: 'systemEmail',
+    })
+    .andWhereRaw("email_content->>'description' = '@mention notification'")
+
+  if (existingEmailTemplateForMentionNotification.length === 0) {
+    const emailTemplatesData = {
+      emailTemplateType: 'systemEmail',
+      emailContent: {
+        description: '@mention notification',
+        subject: `Kotahi | {{ currentUser }} has mentioned you in a discussion`,
+        ccEditors: false,
+        body: `<p>
+        <p>Dear {{ recipientName }},</p>
+        <p>{{ currentUser }} mentioned you in a discussion. Click here to reply; {{ discussionUrl }}</p>
+        <p>Want to change your notification settings? Login to Kotahi and go to your profile page.</p>
+        <p>Regards,<br>
+        Kotahi team</p>`,
+      },
+      groupId: group.id,
+    }
+
+    await EmailTemplate.query().insertGraph(emailTemplatesData)
+
+    console.log(
+      `    Added @mention notification email template for "${group.name}".`,
+    )
+  } else {
+    console.log(
+      `    @mention Notification email template already exists in database for "${group.name}". Skipping.`,
+    )
+  }
 }
 
 const group = async () => {

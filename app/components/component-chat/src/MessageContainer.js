@@ -138,6 +138,15 @@ const REPORT_USER_IS_ACTIVE = gql`
   }
 `
 
+const CHANNEL_USERS_FOR_MENTION = gql`
+  query channelUsersForMention($channelId: ID!) {
+    channelUsersForMention(channelId: $channelId) {
+      id
+      username
+    }
+  }
+`
+
 const MessageContainer = styled.section`
   background: rgb(255, 255, 255);
   display: flex;
@@ -374,6 +383,12 @@ const chatComponent = (
     }
   }, [])
 
+  const { data: usersData } = useQuery(CHANNEL_USERS_FOR_MENTION, {
+    variables: {
+      channelId,
+    },
+  })
+
   const firstMessage = data?.messages.edges[0]
   const unreadMessagesCount = data?.messages.unreadMessagesCount
   const firstUnreadMessageId = data?.messages.firstUnreadMessageId
@@ -411,6 +426,7 @@ const chatComponent = (
       unreadMessagesCount={unreadMessagesCount}
       updateChannelViewed={updateChannelViewed}
       updateNotificationOptionData={updateNotificationOptionData}
+      usersData={usersData}
     />
   )
 }
@@ -577,6 +593,12 @@ const Container = ({
     },
   }
 
+  const { data: usersData } = useQuery(CHANNEL_USERS_FOR_MENTION, {
+    variables: {
+      channelId,
+    },
+  })
+
   const fetchMoreData = () => fetchMore(fetchMoreOptions)
 
   const location = useLocation()
@@ -614,6 +636,7 @@ const Container = ({
             unreadMessagesCount={unreadMessagesCount}
             updateChannelViewed={updateChannelViewed}
             updateNotificationOptionData={updateNotificationOptionData}
+            usersData={usersData}
           />
         </>
       )}

@@ -12,7 +12,7 @@ const models = require('@pubsweet/models')
 const {
   updateChannelLastViewed,
   getChannelMemberByChannel,
-  addUserToChatChannel,
+  addUsersToChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
 const {
@@ -80,11 +80,11 @@ const resolvers = {
   Mutation: {
     createMessage: async (_, { content, channelId }, context) => {
       const pubsub = await getPubsub()
-      const userId = context.user
+      const currentUserId = context.user
 
       const savedMessage = await new models.Message({
         content,
-        userId,
+        userId: currentUserId,
         channelId,
       }).save()
 
@@ -94,20 +94,42 @@ const resolvers = {
 
       pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
 
-      await addUserToChatChannel({ channelId, userId })
+      // using Set() to avoid having duplicate user ids
+      const taggedUserIds = new Set()
+      const taggedRegex = /<span class="mention-tag" id="([^"]+)">@([^<]+)<\/span>/g
+      let match
+
+      // eslint-disable-next-line no-cond-assign
+      while ((match = taggedRegex.exec(content))) {
+        const taggedUserId = match[1]
+        taggedUserIds.add(taggedUserId)
+      }
 
       const channelMembers = await models.ChannelMember.query()
         .where({
           channelId: message.channelId,
         })
         .whereNot({ userId: message.userId })
-        .withGraphJoined('user')
 
+      await addUsersToChatChannel(channelId, [...taggedUserIds, context.user])
+
+      // Notify non-mentioned users
       notify(['chat', message.channelId], {
         time: message.created,
         context: { messageId: message.id },
-        users: channelMembers.map(channelMember => channelMember.user),
+        users: channelMembers
+          .filter(member => !taggedUserIds.has(member.userId))
+          .map(member => member.userId),
         groupId: message.channel.groupId,
+      })
+
+      // Notify mentioned users
+      notify(['chat', message.channelId], {
+        time: message.created,
+        context: { messageId: message.id, isMentioned: true },
+        users: [...taggedUserIds],
+        groupId: message.channel.groupId,
+        currentUserId,
       })
 
       return message
