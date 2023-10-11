@@ -78,14 +78,12 @@ const resolvers = {
     reportUserIsActive: async (_, { path }, context) => {
       if (path) {
         const pathString = path.join('/')
-        await models.NotificationDigest.query()
-          .update({
-            actioned: true,
-          })
-          .where({
-            userId: context.user,
-            pathString,
-          })
+
+        await models.NotificationDigest.query().delete().where({
+          userId: context.user,
+          pathString,
+          actioned: false,
+        })
       }
     },
   },

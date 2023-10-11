@@ -7,6 +7,7 @@ const {
 
 const {
   addUserToManuscriptChatChannel,
+  removeUserFromManuscriptChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
 const resolvers = {
@@ -74,6 +75,39 @@ const resolvers = {
           .findById(id)
 
         await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
+
+        const channels = await models.Manuscript.relatedQuery('channels').for(
+          objectId,
+        )
+
+        membersRemoved.forEach(async userId => {
+          // Check if the user has any messages in the channels before removing them from the channelMember
+          const hasPostedToChannel = await models.Message.query()
+            .where({ userId })
+            .whereIn(
+              'channelId',
+              channels.map(channel => channel.id),
+            )
+            .first()
+
+          if (!hasPostedToChannel) {
+            await removeUserFromManuscriptChatChannel({
+              manuscriptId: objectId,
+              userId,
+              type: 'all',
+            })
+            await removeUserFromManuscriptChatChannel({
+              manuscriptId: objectId,
+              userId,
+              type: 'editorial',
+            })
+            const pathStrings = channels.map(channel => `chat/${channel.id}`)
+            await models.NotificationDigest.query()
+              .delete()
+              .where({ user_id: userId })
+              .whereIn('path_string', pathStrings)
+          }
+        })
 
         input.members.forEach(async member => {
           await addUserToManuscriptChatChannel({

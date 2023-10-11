@@ -266,6 +266,16 @@ class Manuscript extends BaseModel {
           from: 'manuscripts.id',
           to: 'channels.manuscriptId',
         },
+        onBuildKnex: (knexBuilder, builder) => {
+          // Modify the join condition based on manuscripts.parent_id
+          if (builder.parentModel().parent_id !== null) {
+            knexBuilder.on(
+              'manuscripts.parent_id',
+              '=',
+              'channels.manuscriptId',
+            )
+          }
+        },
       },
       tasks: {
         relation: BaseModel.HasManyRelation,
