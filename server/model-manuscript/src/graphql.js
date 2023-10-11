@@ -616,6 +616,14 @@ const resolvers = {
 
       await new models.Team(team).saveGraph()
 
+      if (action === 'accepted') {
+        await addUserToManuscriptChatChannel({
+          manuscriptId: team.objectId,
+          userId: context.user,
+          type: 'editorial',
+        })
+      }
+
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
         userId: context.user,
@@ -958,12 +966,6 @@ const resolvers = {
       if (invitationId) {
         invitationData = await models.Invitation.query().findById(invitationId)
       }
-
-      await addUserToManuscriptChatChannel({
-        manuscriptId: manuscript.parentId || manuscriptId,
-        userId,
-        type: 'editorial',
-      })
 
       const existingTeam = await manuscript
         .$relatedQuery('teams')
@@ -2031,7 +2033,7 @@ const typeDefs = `
     id: ID
     username: String
   }
-  
+
 `
 
 module.exports = {

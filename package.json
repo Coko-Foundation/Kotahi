@@ -51,6 +51,9 @@
     "pg": "8.4.0",
     "prettier": "2.2.1",
     "react": "16.14.0",
+    "prosemirror-inputrules": "1.2.0",
+    "prosemirror-state": "1.4.2",
+    "prosemirror-view": "1.30.2",
     "styled-components": "5.2.1"
   },
   "dependencies": {
@@ -112,6 +115,7 @@
     "passport": "^0.4.1",
     "passport-orcid": "0.0.4",
     "prop-types": "15.7.2",
+    "prosemirror-autocomplete": "^0.4.3",
     "prosemirror-commands": "1.5.1",
     "prosemirror-inputrules": "1.2.0",
     "prosemirror-model": "1.19.0",

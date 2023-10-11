@@ -17700,6 +17700,15 @@ property-information@^5.0.0, property-information@^5.3.0:
   dependencies:
     xtend "^4.0.0"
 
+prosemirror-autocomplete@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/prosemirror-autocomplete/-/prosemirror-autocomplete-0.4.3.tgz#813505a0c945c6ec504d2df4bc54feab66e8e3d0"
+  integrity sha512-a4w/SOzgrTjXaWpSYMrai6H3KHSUBuADZC/DBm4VApiD9LGHpv98zQbHzsHgInrEoWcBGzYVT0HUD3tLgrsEVQ==
+  dependencies:
+    prosemirror-inputrules "^1.2.0"
+    prosemirror-state "^1.4.1"
+    prosemirror-view "^1.27.0"
+
 prosemirror-commands@1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/prosemirror-commands/-/prosemirror-commands-1.5.1.tgz#89ddfa14e144dcc7fb0938aa0e2568c7fdde306f"
@@ -17742,7 +17751,7 @@ prosemirror-history@1.3.0:
     prosemirror-transform "^1.0.0"
     rope-sequence "^1.3.0"
 
-prosemirror-inputrules@1.2.0:
+prosemirror-inputrules@1.2.0, prosemirror-inputrules@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/prosemirror-inputrules/-/prosemirror-inputrules-1.2.0.tgz#476dde2dc244050b3aca00cf58a82adfad6749e7"
   integrity sha512-eAW/M/NTSSzpCOxfR8Abw6OagdG0MiDAiWHQMQveIsZtoKVYzm0AflSPq/ymqJd56/Su1YPbwy9lM13wgHOFmQ==
@@ -17774,7 +17783,7 @@ prosemirror-schema-list@1.3.0:
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.7.3"
 
-prosemirror-state@1.4.2, prosemirror-state@^1.0.0, prosemirror-state@^1.2.2:
+prosemirror-state@1.4.2, prosemirror-state@^1.0.0, prosemirror-state@^1.2.2, prosemirror-state@^1.4.1:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/prosemirror-state/-/prosemirror-state-1.4.2.tgz#f93bd8a33a4454efab917ba9b738259d828db7e5"
   integrity sha512-puuzLD2mz/oTdfgd8msFbe0A42j5eNudKAAPDB0+QJRw8cO1ygjLmhLrg9RvDpf87Dkd6D4t93qdef00KKNacQ==

@@ -4,9 +4,17 @@ import { th } from '@pubsweet/ui-toolkit'
 import ChatInput from './SuperChatInput/SuperChatInput'
 import Messages from './Messages/Messages'
 import UserActivityTracker from '../../shared/UserActivityTracker'
+import color from '../../../theme/color'
 
 const ChatInputContainer = styled.div`
   position: relative;
+
+  span.mention-tag {
+    background-color: ${th('colorPrimary')};
+    border-radius: 4px;
+    color: ${color.white};
+    padding: 2px 4px;
+  }
 `
 
 export const FloatingUnreadLabelContainer = styled.div`
@@ -53,7 +61,13 @@ const Chat = ({
   reportUserIsActiveMutation,
   notificationOptionData,
   updateNotificationOptionData,
+  usersData,
 }) => {
+  // Filter out the current user's data from all users for @-MENTION feature
+  const usersForMention = (usersData?.channelUsersForMention || []).filter(
+    user => user.id !== currentUser.id,
+  )
+
   const [showFloatingUnreadLabel, setShowFloatingUnreadLabel] = useState(false)
 
   useEffect(() => {
@@ -133,6 +147,7 @@ const Chat = ({
         <ChatInput
           channelId={channelId}
           currentUser={currentUser}
+          mentionsList={usersForMention}
           searchUsers={searchUsers}
           sendChannelMessages={sendChannelMessages}
         />

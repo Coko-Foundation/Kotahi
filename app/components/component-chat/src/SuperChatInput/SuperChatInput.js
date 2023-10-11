@@ -15,9 +15,9 @@ import {
   PreviewWrapper,
   RemovePreviewButton,
 } from './style'
-import ChatWaxEditor from '../ChatWaxEditor'
 
 import { useAppScroller } from '../../../../hooks/useAppScroller'
+import EditorMention from './EditorMention'
 
 const QuotedMessage = styled.div``
 
@@ -38,7 +38,7 @@ export const cleanSuggestionUserObject = user => {
 }
 
 const SuperChatInput = props => {
-  const { sendChannelMessages, searchUsers } = props
+  const { sendChannelMessages, searchUsers, mentionsList } = props
 
   const cacheKey = `last-content-${props.channelId}`
   const [text, changeText] = React.useState('')
@@ -213,17 +213,21 @@ const SuperChatInput = props => {
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
-              <ChatWaxEditor
+              <EditorMention
                 autoFocus={chatInputFocus}
                 editorRef={editorRef}
+                field={{
+                  name: 'comment',
+                }}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
-                key={messageSentCount}
+                id={`comment-editor-${props.channelId}`}
+                mentionsList={mentionsList}
+                messageSentCount={messageSentCount}
                 networkDisabled={networkDisabled}
                 onEnterPress={onEnterPress}
                 placeholder="Your message here..."
                 searchUsersCallBack={searchUsers} // props.participants is currently undefined
                 staticSuggestions={props.participants}
-                value=""
               />
             </InputWrapper>
             <SendButton

@@ -36,6 +36,13 @@ export const MessagesGroup = styled.div`
   max-width: 100%;
   overflow: hidden auto;
   width: 100%;
+
+  span.mention-tag {
+    background-color: ${th('colorPrimary')};
+    border-radius: 4px;
+    color: ${color.white};
+    padding: 2px 4px;
+  }
 `
 
 export const MessageGroupContainer = styled.div`

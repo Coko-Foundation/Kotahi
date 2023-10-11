@@ -15,14 +15,18 @@ const ChatWaxEditor = ({
   spellCheck,
   onEnterPress,
   editorRef,
+  autoCompleteReducer,
+  editorType,
   ...rest
 }) => {
   return (
     <div className={validationStatus}>
       <Wax
+        autoCompleteReducer={autoCompleteReducer}
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
-        config={chatWaxEditorConfig({ onEnterPress })}
+        className={editorType}
+        config={chatWaxEditorConfig({ onEnterPress, autoCompleteReducer })}
         debug={false}
         layout={chatWaxEditorLayout(readonly)}
         placeholder={placeholder}
