@@ -356,7 +356,6 @@ const TaskNotificationDetails = ({
         return team.role === notificationRecipientType && team.members.length
       })
 
-    let logsData
     const logsDataArray = []
 
     const prepareEmailRecipients = () => {
@@ -387,7 +386,7 @@ const TaskNotificationDetails = ({
               groupId,
             }
 
-            logsData = {
+            const logsData = {
               selectedTemplate: taskEmailNotification.emailTemplateId,
               recipientName: member.user.username,
               recipientEmail: member.user.email,
