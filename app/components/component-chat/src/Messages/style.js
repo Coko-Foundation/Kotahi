@@ -247,6 +247,10 @@ export const Ellipsis = styled(MoreVertical)`
     right: 0;
     top: 4px;
   }
+
+  &.toggle-ellipsis-menu {
+    z-index: 2000;
+  }
 `
 
 export const EditedTimeContainer = styled.div`
