@@ -29,6 +29,7 @@ meta {
 submission
 created
 updated
+firstVersionCreated
 published
 hasOverdueTasksForUser
 invitations {

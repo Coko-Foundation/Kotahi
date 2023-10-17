@@ -65,7 +65,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
     },
     status: {
       title: 'Status',
-      filterOptions: ['elife', 'ncrc'].includes(config?.instanceName)
+      filterOptions: ['aperture', 'colab'].includes(config?.instanceName)
         ? [
             { label: 'Unsubmitted', value: 'new' },
             { label: 'Submitted', value: 'submitted' },

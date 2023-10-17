@@ -49,7 +49,7 @@ const ManuscriptsTable = ({
         manuscripts.map((manuscript, key) => {
           const latestVersion = {
             numVersions: getNumVersions(manuscript),
-            ...(manuscript.manuscriptVersions?.[0] || manuscript),
+            ...manuscript,
           }
 
           if (typeof latestVersion.submission === 'string')
