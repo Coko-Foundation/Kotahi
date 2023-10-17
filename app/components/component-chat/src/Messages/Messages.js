@@ -187,7 +187,7 @@ const Messages = ({
     >
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
-      <Ellipsis onClick={toggleDropdown} />
+      <Ellipsis className="toggle-ellipsis-menu" onClick={toggleDropdown} />
       {openDropdown && (
         <EllipsisDropdown
           isMuted={channelNotificationOption === 'off'}
