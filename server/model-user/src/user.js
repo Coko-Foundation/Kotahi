@@ -2,6 +2,7 @@ const { BaseModel } = require('@coko/server')
 const bcrypt = require('bcrypt')
 const pick = require('lodash/pick')
 const config = require('config')
+const { raw } = require('objection')
 
 const BCRYPT_COST = config.util.getEnv('NODE_ENV') === 'test' ? 1 : 12
 
@@ -175,6 +176,14 @@ class User extends BaseModel {
     )[0]
 
     return user
+  }
+
+  static get modifiers() {
+    return {
+      orderByUsername(builder) {
+        builder.orderBy(raw('LOWER(username)'), 'ASC')
+      },
+    }
   }
 
   // For API display/JSON purposes only
