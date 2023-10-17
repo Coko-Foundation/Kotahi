@@ -29,7 +29,7 @@ const ModalContainer = styled.div`
   z-index: 10000;
 `
 
-const MessageString = styled.p`
+const MessageString = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
