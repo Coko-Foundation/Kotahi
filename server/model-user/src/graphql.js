@@ -188,43 +188,44 @@ const resolvers = {
         users,
       }
     },
-    // eslint-disable-next-line consistent-return
-    channelUsersForMention: async (_, { channelId }, context) => {
+    channelUsersForMention: async (_, { channelId }, ctx) => {
       if (!channelId) {
         throw new Error('Channel ID is required.')
       }
 
-      const usersWithRoles = await models.User.query()
-        .join('team_members', 'users.id', 'team_members.user_id')
-        .join('teams', 'team_members.team_id', 'teams.id')
-        .select('teams.role')
-        .where('users.id', context.user)
-        .distinct('teams.role')
+      const channelWithUsers = await models.Channel.query()
+        .findById(channelId)
+        .withGraphFetched('users(orderByUsername)')
 
-      const query = models.User.query()
-        .join('team_members', 'users.id', 'team_members.user_id')
-        .join('teams', 'team_members.team_id', 'teams.id')
-        .leftJoin('channel_members', 'users.id', 'channel_members.user_id') // need left join here to also include users who are in team but not in channel member, i.e. group managers
-        .distinct('users.*')
-
-      const channel = await models.Channel.query().findById(channelId)
-
-      // admin discussion
-      if (!channel.manuscriptId) {
-        return query.where('teams.role', 'groupManager')
+      if (!channelWithUsers) {
+        throw new Error('Channel not found.')
       }
 
-      if (
-        channel.type === 'editorial' &&
-        usersWithRoles.some(user => user.role === 'editor')
-      ) {
-        return query
-          .where('teams.role', 'groupManager')
-          .orWhere('channel_members.channel_id', channelId)
+      const result = [...channelWithUsers.users]
+
+      if (channelWithUsers.type !== 'all') {
+        const groupId = ctx.req.headers['group-id']
+
+        const groupManagers = await models.Team.relatedQuery('users')
+          .for(
+            models.Team.query().where({
+              role: 'groupManager',
+              objectId: groupId,
+              objectType: 'Group',
+            }),
+          )
+          .whereNotIn(
+            'users.id',
+            result.map(user => user.id),
+          )
+          .modify('orderByUsername')
+
+        result.push(...groupManagers)
       }
 
-      return query.where('channel_members.channel_id', channelId)
+      return result
     },
+
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
