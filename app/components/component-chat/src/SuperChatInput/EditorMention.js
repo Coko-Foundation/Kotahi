@@ -164,6 +164,12 @@ const EditorMention = ({
         currentIndex = 0
         filter = action.filter
         setFilter(action.filter)
+        setPicker({
+          open: true,
+          range: action.range,
+          view: action.view,
+          current: currentIndex,
+        })
         return true
 
       case ActionKind.up: {
