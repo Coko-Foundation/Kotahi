@@ -191,17 +191,22 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
 
   if (jsonbField) {
     const { groupName: jsonGroup, name: jsonName } = jsonbField
-    addOrder(`LOWER(${jsonGroup}->>?)${sortDirection}`, jsonName)
+    addOrder(`LOWER(m.${jsonGroup}->>?)${sortDirection}`, jsonName)
   } else if (isValidNonJsonbField(field, submissionForm)) {
     // eslint-disable-next-line no-param-reassign
-    field = field === 'shortId' ? 'short_id' : field
 
-    addOrder(`${field}${sortDirection}`)
+    let sortingField = ''
+    if (field === 'created') sortingField = 'COALESCE(p.created, m.created)'
+    else if (field === 'shortId') sortingField = 'm.short_id'
+    else if (field === 'updated') sortingField = 'm.updated'
+    else console.warn(`Could not sort on field "${field}"`)
+
+    addOrder(`${sortingField}${sortDirection}`)
   } else {
     console.warn(`Could not sort on field "${field}`)
   }
 
-  addOrder(`short_id${sortDirection}`) // Secondary ordering
+  addOrder(`m.short_id${sortDirection}`) // Secondary ordering
 }
 
 /** Apply all the specified filters to the query,
@@ -222,6 +227,13 @@ const applyFilters = (
       if (['created', 'updated'].includes(filter.field)) {
         try {
           const parts = filter.value.split('-')
+          let filterField = ''
+
+          if (filter.field === 'created') {
+            filterField = `COALESCE(p.${filter.field}, m.${filter.field})`
+          } else {
+            filterField = `m.${filter.field}`
+          }
 
           const dateFrom = getStartOfDay(
             compactStringToDate(parts[0], timezoneOffsetMinutes),
@@ -233,8 +245,8 @@ const applyFilters = (
             timezoneOffsetMinutes,
           )
 
-          addWhere(`${filter.field} >= ?`, dateFrom.toISOString())
-          addWhere(`${filter.field} <= ?`, dateTo.toISOString())
+          addWhere(`${filterField} >= ?`, dateFrom.toISOString())
+          addWhere(`${filterField} <= ?`, dateTo.toISOString())
         } catch (error) {
           console.warn(
             `Could not filter ${filter.field} by value '${filter.value}': could not parse as a date range.`,
@@ -264,12 +276,12 @@ const applyFilters = (
         } = jsonbField
 
         if (isKeyed) {
-          addWhere(`(${jsonGroup}->?)::jsonb \\? ?`, jsonName, filter.value)
+          addWhere(`(m.${jsonGroup}->?)::jsonb \\? ?`, jsonName, filter.value)
         } else {
-          addWhere(`${jsonGroup}->>? = ?`, jsonName, filter.value)
+          addWhere(`m.${jsonGroup}->>? = ?`, jsonName, filter.value)
         }
       } else if (filter.field === 'status') {
-        addWhere('status = ?', filter.value)
+        addWhere('m.status = ?', filter.value)
       } else {
         console.warn(
           `Could not filter on field "${filter.field}" by value "${filter.value}"`,
@@ -294,26 +306,44 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
 ) => {
   // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.
   const selectItems = { rawFragments: [], params: [] }
-  const fromItems = { rawFragments: [], params: [] }
   const whereItems = { rawFragments: [], params: [] }
   const orderItems = { rawFragments: [], params: [] }
   const addSelect = (frag, ...params) => addItem(selectItems, frag, params)
-  const addFrom = (frag, ...params) => addItem(fromItems, frag, params)
   const addWhere = (frag, ...params) => addItem(whereItems, frag, params)
   const addOrder = (frag, ...params) => addItem(orderItems, frag, params)
 
   addSelect('id')
   addSelect('count(1) OVER() AS full_count') // Count of all results (not just this page)
-  addFrom('manuscripts')
-  addWhere('parent_id IS NULL')
-  addWhere('is_hidden IS NOT TRUE')
+  addWhere('m.created = sub.latest_created')
+  addWhere('m.is_hidden IS NOT TRUE')
+
+  let subQuery = `WITH subQuery AS (
+    SELECT short_id, MAX(created) AS latest_created
+    FROM manuscripts
+    WHERE group_id = '${groupId}'
+    GROUP BY short_id
+  )`
+
+  let manuscriptIds
+  let setOrderOnRank = ''
 
   if (manuscriptIDs) {
-    addWhere('id = ANY(?)', manuscriptIDs)
+    manuscriptIds = manuscriptIDs.map(id => `'${id}'`)
+  }
+
+  if (Array.isArray(manuscriptIds) && manuscriptIds.length > 0) {
+    subQuery = `WITH subQuery AS (
+      SELECT short_id, MAX(created) AS latest_created
+      FROM manuscripts
+      WHERE id IN (${manuscriptIds})
+      OR parent_id IN (${manuscriptIds})
+      AND group_id = '${groupId}'
+      GROUP BY short_id
+    )`
   }
 
   if (groupId) {
-    addWhere('group_id = ?', groupId)
+    addWhere('m.group_id = ?', groupId)
   }
 
   const searchFilter = filters.find(f => f.field === URI_SEARCH_PARAM)
@@ -322,40 +352,41 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
     searchFilter && formatSearchQueryForPostgres(searchFilter.value)
 
   if (searchQuery) {
-    addSelect('ts_rank_cd(search_tsvector, query) AS rank')
+    addSelect(`ts_rank_cd(search_tsvector, '${searchQuery}') AS rank`)
     addSelect(
-      `ts_headline('english', manuscripts.searchable_text, query) AS snippet`,
+      `ts_headline('english', searchable_text, '${searchQuery}') AS snippet`,
     )
-    addFrom('to_tsquery(?) query', searchQuery)
-    addWhere('search_tsvector @@ query')
-    addOrder('rank DESC')
+    addWhere(`m.search_tsvector @@ to_tsquery('${searchQuery}')`)
+    setOrderOnRank = 'ORDER BY rank DESC'
   }
 
   if (!searchQuery && sort) {
     applySortOrder(sort, submissionForm, addOrder)
   } else {
     // Give it some order to prevent it changing on refetch.
-    addOrder('created DESC')
-    addOrder('short_id DESC')
+    addOrder('COALESCE(p.created, m.created) DESC')
+    addOrder('m.short_id DESC')
   }
 
   applyFilters(filters, submissionForm, addWhere, timezoneOffsetMinutes)
 
   const query = `
-      SELECT ${selectItems.rawFragments.join(', ')}
-      FROM ${fromItems.rawFragments.join(', ')}
+    SELECT ${selectItems.rawFragments.join(', ')}
+    FROM (
+      SELECT m.*
+      FROM manuscripts AS m
+      INNER JOIN subQuery AS sub ON m.short_id = sub.short_id
+      LEFT JOIN manuscripts AS p ON m.parent_id = p.id
       WHERE ${whereItems.rawFragments.join(' AND ')}
       ORDER BY ${orderItems.rawFragments.join(', ')}
-      LIMIT ${limit}
-      OFFSET ${offset};`
+    ) AS m
+    ${setOrderOnRank}
+    LIMIT ${limit}
+    OFFSET ${offset};`
 
-  const params = selectItems.params.concat(
-    fromItems.params,
-    whereItems.params,
-    orderItems.params,
-  )
+  const params = selectItems.params.concat(whereItems.params, orderItems.params)
 
-  return [query, params]
+  return [subQuery + query, params]
 }
 
 /** Get the current version of a ThreadedDiscussion comment */

@@ -45,8 +45,10 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
   if (column.name === 'created')
     return [
       {
-        value: manuscript.created,
-        displayValue: convertTimestampToRelativeDateString(manuscript.created),
+        value: manuscript.firstVersionCreated,
+        displayValue: convertTimestampToRelativeDateString(
+          manuscript.firstVersionCreated,
+        ),
       },
     ]
   if (column.name === 'updated')
