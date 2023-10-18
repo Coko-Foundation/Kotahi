@@ -357,6 +357,8 @@ const chatComponent = (
       variables: {
         path: ['chat', channelId],
       },
+      fetchPolicy: 'network-only',
+      nextFetchPolicy: 'cache-first',
     },
   )
 
@@ -545,6 +547,8 @@ const Container = ({
       variables: {
         path: ['chat', channelId],
       },
+      fetchPolicy: 'network-only',
+      nextFetchPolicy: 'cache-first',
     },
   )
 
