@@ -6,13 +6,16 @@ const {
   getUserRolesInManuscript,
 } = require('../../model-user/src/userCommsUtils')
 
-const sendNotifications = async () => {
+const sendNotifications = async groupId => {
   // The following query results first row for every user and path string combination
   // in the notification digest, where max notification time is in the past.
   const notificationDigestRows = await models.NotificationDigest.query()
     .distinctOn(['user_id', 'path_string'])
     .where('max_notification_time', '<', new Date())
+    .where({ groupId })
     .orderBy(['user_id', 'path_string', 'max_notification_time'])
+
+  let notificationCount = 0
 
   await Promise.all(
     notificationDigestRows.map(async notificationDigest => {
@@ -21,8 +24,10 @@ const sendNotifications = async () => {
       await sendChatNotification({
         recipientId: notificationDigest.userId,
         messageId: notificationDigest.context.messageId,
-        title: 'Unread messages in chat',
+        groupId,
       })
+
+      notificationCount += 1
 
       // query to update all notificationdigest entries where user=user and path=path
       await models.NotificationDigest.query()
@@ -32,21 +37,35 @@ const sendNotifications = async () => {
         .where({
           userId: notificationDigest.userId,
           pathString: notificationDigest.pathString,
+          groupId,
         })
     }),
   )
+
+  if (notificationCount > 0) {
+    // eslint-disable-next-line no-console
+    console.info(
+      `Sent ${notificationCount} event notification${
+        notificationCount === 1 ? '' : 's'
+      } for group ${groupId}`,
+    )
+  }
 }
 
 const sendChatNotification = async ({
   recipientId,
   messageId,
+  groupId,
   currentUserId = null,
   isMentioned = false,
 }) => {
   const recipient = await models.User.query().findById(recipientId)
   const message = await models.Message.query().findById(messageId)
   const channel = await models.Channel.query().findById(message.channelId)
-  const { groupId } = channel
+  if (channel.groupId !== groupId)
+    throw new Error(
+      `Attempt by group ${groupId} to send chat notification for group ${channel.groupId}`,
+    )
   const group = await models.Group.query().findById(groupId)
 
   // send email notification
@@ -156,6 +175,7 @@ const notify = async (
       return sendChatNotification({
         recipientId: userId,
         messageId: context.messageId,
+        groupId,
         isMentioned: context.isMentioned,
         currentUserId,
       })
@@ -186,9 +206,15 @@ const notify = async (
   await Promise.all(notificationPromises)
 }
 
+const deleteActionedEntries = async groupId => {
+  await models.NotificationDigest.query()
+    .delete()
+    .where({ actioned: true, groupId })
+}
+
 module.exports = {
   sendNotifications,
-  sendChatNotification,
   getNotificationOptionForUser,
   notify,
+  deleteActionedEntries,
 }

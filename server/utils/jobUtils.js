@@ -17,11 +17,8 @@ const {
 
 const {
   sendNotifications,
-} = require('../model-notification/src/notificationCommsUtils')
-
-const {
   deleteActionedEntries,
-} = require('../model-channel/src/channelCommsUtils')
+} = require('../model-notification/src/notificationCommsUtils')
 
 const getJobs = async (activeConfig, groupId) => {
   const jobs = []
@@ -115,7 +112,7 @@ const getJobs = async (activeConfig, groupId) => {
         )
 
         try {
-          await sendNotifications()
+          await sendNotifications(groupId)
         } catch (error) {
           console.error(error)
         }
@@ -135,7 +132,7 @@ const getJobs = async (activeConfig, groupId) => {
         )
 
         try {
-          await deleteActionedEntries()
+          await deleteActionedEntries(groupId)
         } catch (error) {
           console.error(error)
         }

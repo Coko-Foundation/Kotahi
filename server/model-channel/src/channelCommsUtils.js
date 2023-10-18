@@ -70,15 +70,10 @@ const removeUserFromManuscriptChatChannel = async ({
   )
 }
 
-const deleteActionedEntries = async () => {
-  await models.NotificationDigest.query().delete().where({ actioned: true })
-}
-
 module.exports = {
   getChannelMemberByChannel,
   updateChannelLastViewed,
   addUserToManuscriptChatChannel,
   addUsersToChatChannel,
   removeUserFromManuscriptChatChannel,
-  deleteActionedEntries,
 }
