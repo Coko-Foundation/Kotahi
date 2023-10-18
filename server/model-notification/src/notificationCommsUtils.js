@@ -170,7 +170,13 @@ const notify = async (
 
   // eslint-disable-next-line consistent-return
   const notificationPromises = users.map(async userId => {
-    if (context.isMentioned) {
+    const option = await getNotificationOptionForUser({
+      userId,
+      path,
+      groupId,
+    })
+
+    if (context.isMentioned && option === '30MinSummary') {
       // Immediate notification recipients
       return sendChatNotification({
         recipientId: userId,
@@ -180,12 +186,6 @@ const notify = async (
         currentUserId,
       })
     }
-
-    const option = await getNotificationOptionForUser({
-      userId,
-      path,
-      groupId,
-    })
 
     if (option === '30MinSummary') {
       const maxNotificationTime = new Date(time)
