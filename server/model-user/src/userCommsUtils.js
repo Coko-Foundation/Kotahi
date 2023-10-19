@@ -139,7 +139,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   }
 
   if (roles.groupManager || roles.anyEditor) {
-    manuscriptPageUrl += '/decision?tab=tasks'
+    manuscriptPageUrl += '/decision?tab=decision'
   } else if (roles.reviewer) {
     manuscriptPageUrl += '/review'
   } else if (roles.author) {
