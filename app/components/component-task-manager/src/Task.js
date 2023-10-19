@@ -12,6 +12,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle, MoreVertical } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalButton,
@@ -249,6 +250,7 @@ const Task = ({
   const taskRef = useRef()
 
   const [task, setTask] = useState(propTask)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setTask(propTask)
@@ -324,16 +326,15 @@ const Task = ({
   if (task.defaultDurationDays === null) {
     displayDefaultDurationDaysUnit = ''
   } else {
-    displayDefaultDurationDaysUnit =
-      task.defaultDurationDays && task.defaultDurationDays === 1
-        ? ' day'
-        : ' days'
+    displayDefaultDurationDaysUnit = t('common.days.day', {
+      count: task.defaultDurationDays,
+    })
   }
 
   const displayDefaultDurationDays =
     task.defaultDurationDays !== null
-      ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
-      : 'None'
+      ? `${task.defaultDurationDays} ${displayDefaultDurationDaysUnit}`
+      : t('taskManager.task.durationDaysNone')
 
   const isDone = task.status === 'Done'
 
@@ -368,14 +369,14 @@ const Task = ({
         <>
           <Modal isOpen={isConfirmingDelete}>
             <ModalContainer>
-              Permanently delete this task?
+              {t('modals.taskDelete.permanentlyDelete')}
               <MediumRow>
                 <ActionButton onClick={() => onDelete(task.id)} primary>
-                  Ok
+                  {t('modals.taskDelete.Ok')}
                 </ActionButton>
                 &nbsp;
                 <ActionButton onClick={() => setIsConfirmingDelete(false)}>
-                  Cancel
+                  {t('modals.taskDelete.Cancel')}
                 </ActionButton>
               </MediumRow>
             </ModalContainer>
@@ -426,7 +427,11 @@ const Task = ({
                           status: isDone ? 'In progress' : 'Done',
                         })
                       }
-                      title={isDone ? '' : 'Click to mark as done'}
+                      title={
+                        isDone
+                          ? ''
+                          : t('taskManager.task.Click to mark as done')
+                      }
                     >
                       {isDone ? (
                         <CheckCircle color={color.brand1.base()} />
@@ -437,7 +442,7 @@ const Task = ({
                   )}
                   <TextInput
                     onChange={event => updateTaskTitle(event.target.value)}
-                    placeholder="Give your task a name..."
+                    placeholder={t('taskManager.task.Give your task a name')}
                     value={taskTitle}
                   />
                   <TaskAction ref={taskRef}>
@@ -451,12 +456,12 @@ const Task = ({
                     {isActionDialog && (
                       <ActionDialog>
                         <EditLabel onClick={() => setIsEditTaskMetaModal(true)}>
-                          Edit
+                          {t('taskManager.task.Edit')}
                         </EditLabel>
                         <DeleteLabel
                           onClick={() => setIsConfirmingDelete(true)}
                         >
-                          Delete
+                          {t('taskManager.task.Delete')}
                         </DeleteLabel>
                       </ActionDialog>
                     )}

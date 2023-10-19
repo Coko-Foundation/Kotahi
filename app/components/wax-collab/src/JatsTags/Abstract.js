@@ -3,10 +3,11 @@ import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
 import { wrapIn } from 'prosemirror-commands'
+import i18next from 'i18next'
 
 class Abstract extends Tools {
-  title = 'Change to abstract'
-  label = 'Abstract'
+  title = i18next.t('waxEditor.Change to abstract')
+  label = i18next.t('waxEditor.Abstract')
   name = 'Abstract'
 
   // eslint-disable-next-line class-methods-use-this

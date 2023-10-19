@@ -3,6 +3,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
 
 const styles = th => ({
@@ -68,6 +69,7 @@ export const Select = ({
 }) => {
   const th = useContext(ThemeContext)
   let selectedOption = value
+  const { t } = useTranslation()
 
   if (!isMulti && value) {
     if (hasGroupedOptions) {
@@ -95,6 +97,7 @@ export const Select = ({
       options={options}
       {...otherProps}
       menuPlacement="auto"
+      noOptionsMessage={() => t('common.noOption')}
       styles={myStyles}
       value={selectedOption}
     />

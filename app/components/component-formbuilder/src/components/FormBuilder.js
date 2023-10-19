@@ -5,7 +5,7 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action, Button } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
 import { Draggable } from 'react-beautiful-dnd'
-
+import { useTranslation } from 'react-i18next'
 import { Page, Heading } from './style'
 import { DragVerticalIcon } from '../../../shared/Icons'
 import Modal from '../../../component-modal/src/ConfirmationModal'
@@ -141,6 +141,7 @@ const BuilderElement = ({
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formFieldId, setFormFieldId] = useState()
+  const { t } = useTranslation()
 
   const openModalHandler = id => {
     setOpenModal(true)
@@ -183,8 +184,7 @@ const BuilderElement = ({
               onClick={() => setActiveFieldId(element.id)}
             >
               <MainAction>
-                {element.shortDescription ?? element.title} ({element.component}
-                )
+                {element.shortDescription ?? element.title} ({element.label})
               </MainAction>
               <IconAction
                 onClick={() =>
@@ -200,7 +200,7 @@ const BuilderElement = ({
             <Modal isOpen={openModal}>
               <ModalContainer>
                 <ConfirmationString>
-                  Permanently delete this field?
+                  {t('modals.deleteField.Permanently delete this field')}
                 </ConfirmationString>
                 <Button
                   onClick={event => {
@@ -208,11 +208,11 @@ const BuilderElement = ({
                   }}
                   primary
                 >
-                  Ok
+                  {t('modals.deleteField.Ok')}
                 </Button>
                 &nbsp;
                 <CancelButton onClick={() => closeModalHandler()}>
-                  Cancel
+                  {t('modals.deleteField.Cancel')}
                 </CancelButton>
               </ModalContainer>
             </Modal>
@@ -238,25 +238,28 @@ BuilderElement.propTypes = {
   formId: PropTypes.string.isRequired,
 }
 
-const AddElementButton = ({ addElement }) => (
-  <Root>
-    <Main>
-      <Action
-        onClick={() =>
-          addElement({
-            title: 'New Field',
-            id: uuid(),
-          })
-        }
-      >
-        <Heading>
-          <StatusIdle />
-          Add Field
-        </Heading>
-      </Action>
-    </Main>
-  </Root>
-)
+const AddElementButton = ({ addElement }) => {
+  const { t } = useTranslation()
+  return (
+    <Root>
+      <Main>
+        <Action
+          onClick={() =>
+            addElement({
+              title: t('formBuilder.New Field'),
+              id: uuid(),
+            })
+          }
+        >
+          <Heading>
+            <StatusIdle />
+            {t('formBuilder.Add Field')}
+          </Heading>
+        </Action>
+      </Main>
+    </Root>
+  )
+}
 
 AddElementButton.propTypes = {
   addElement: PropTypes.func.isRequired,
@@ -271,9 +274,21 @@ const FormBuilder = ({
   moveFieldUp,
   moveFieldDown,
 }) => {
+  const { t } = useTranslation()
+  // localize children elements
+  const newForm = { ...form }
+
+  if (form.structure.children) {
+    newForm.structure.children = newForm.structure.children.map(element => {
+      const newElement = { ...element }
+      newElement.label = t(`formBuilder.typeOptions.${element.component}`)
+      return newElement
+    })
+  }
+
   return (
     <Page>
-      {form.structure.children?.map((element, index) => (
+      {newForm.structure.children?.map((element, index) => (
         <BuilderElement
           deleteField={deleteField}
           element={element}

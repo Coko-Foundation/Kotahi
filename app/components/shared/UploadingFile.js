@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
 import { ConfirmationModal } from '../component-modal/src/ConfirmationModal'
 
@@ -97,7 +98,7 @@ const UploadingFile = ({
   confirmBeforeDelete,
 }) => {
   const Root = uploaded ? Uploaded : Uploading
-
+  const { t } = useTranslation()
   const extension = getFileExtension(file)
   const isImage = file?.storedObjects[0]?.mimetype.startsWith('image/')
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
@@ -150,7 +151,7 @@ const UploadingFile = ({
               : deleteFile(file, index, remove)
           }
         >
-          Remove
+          {t('dragndrop.Remove')}
         </Action>
       )}
 

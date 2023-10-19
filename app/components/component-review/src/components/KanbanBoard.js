@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import { AdminSection } from './style'
 import {
   SectionContent,
@@ -11,6 +12,7 @@ import {
 import ReviewersDeclined from './ReviewersDeclined'
 import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import statuses from '../../../../../config/journal/review-status'
+import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 import KanbanCard from './reviewers/KanbanCard'
 
 const Kanban = styled.div`
@@ -67,6 +69,7 @@ const KanbanBoard = ({
   updateReview,
 }) => {
   const reviewers = getMembersOfTeam(version, 'reviewer')
+  const { t } = useTranslation()
 
   const emailAndWebReviewers = [
     ...invitations.map(invitation => {
@@ -76,6 +79,8 @@ const KanbanBoard = ({
       return { ...reviewer, isEmail: false }
     }),
   ]
+
+  const LocalizedReviewFilterOptions = localizeReviewFilterOptions(statuses, t)
 
   emailAndWebReviewers.sort((a, b) => {
     const aDate = a.responseComment ? a.responseDate : a.updated
@@ -103,62 +108,62 @@ const KanbanBoard = ({
       <SectionContent>
         <SectionHeader>
           <ReviewerStatusHeader>
-            <Title>Reviewer Status</Title>
+            <Title>{t('decisionPage.Reviewer Status')}</Title>
             <Title>
-              <VersionNumber>Version {versionNumber}</VersionNumber>
+              <VersionNumber>
+                {t('decisionPage.Version')} {versionNumber}
+              </VersionNumber>
             </Title>
           </ReviewerStatusHeader>
         </SectionHeader>
         <SectionRow style={{ padding: 0 }}>
           <Kanban>
-            {statuses
-              .filter(
-                status => !['rejected'].includes(status.value.toLowerCase()),
-              )
-              .map(status => (
-                <Column key={status.value}>
-                  <StatusLabel
-                    lightText={status.lightText}
-                    statusColor={status.color}
-                  >
-                    {status.label}
-                  </StatusLabel>
-                  <CardsWrapper>
-                    {emailAndWebReviewers
-                      .filter(
-                        reviewer =>
-                          reviewer.status === status.value ||
-                          (reviewer.status === 'UNANSWERED' &&
-                            status.value === 'invited'),
-                      )
-                      .map(reviewer => (
-                        <KanbanCard
-                          isCurrentVersion={isCurrentVersion}
-                          isInvitation={reviewer.isEmail}
-                          key={reviewer.id}
-                          manuscript={version}
-                          removeReviewer={removeReviewer}
-                          review={
-                            status.value === 'completed'
-                              ? findReview(reviewer)
-                              : null
-                          }
-                          reviewer={reviewer}
-                          reviewForm={reviewForm}
-                          showEmailInvitation={
-                            reviewer.isEmail && status.value === 'invited'
-                          }
-                          status={status.value}
-                          updateReview={updateReview}
-                          updateSharedStatusForInvitedReviewer={
-                            updateSharedStatusForInvitedReviewer
-                          }
-                          updateTeamMember={updateTeamMember}
-                        />
-                      ))}
-                  </CardsWrapper>
-                </Column>
-              ))}
+            {LocalizedReviewFilterOptions.filter(
+              status => !['rejected'].includes(status.value.toLowerCase()),
+            ).map(status => (
+              <Column key={status.value}>
+                <StatusLabel
+                  lightText={status.lightText}
+                  statusColor={status.color}
+                >
+                  {status.label}
+                </StatusLabel>
+                <CardsWrapper>
+                  {emailAndWebReviewers
+                    .filter(
+                      reviewer =>
+                        reviewer.status === status.value ||
+                        (reviewer.status === 'UNANSWERED' &&
+                          status.value === 'invited'),
+                    )
+                    .map(reviewer => (
+                      <KanbanCard
+                        isCurrentVersion={isCurrentVersion}
+                        isInvitation={reviewer.isEmail}
+                        key={reviewer.id}
+                        manuscript={version}
+                        removeReviewer={removeReviewer}
+                        review={
+                          status.value === 'completed'
+                            ? findReview(reviewer)
+                            : null
+                        }
+                        reviewer={reviewer}
+                        reviewForm={reviewForm}
+                        showEmailInvitation={
+                          reviewer.isEmail && status.value === 'invited'
+                        }
+                        status={status.value}
+                        updateReview={updateReview}
+                        updateSharedStatusForInvitedReviewer={
+                          updateSharedStatusForInvitedReviewer
+                        }
+                        updateTeamMember={updateTeamMember}
+                      />
+                    ))}
+                </CardsWrapper>
+              </Column>
+            ))}
           </Kanban>
           <ReviewersDeclined emailAndWebReviewers={emailAndWebReviewers} />
         </SectionRow>

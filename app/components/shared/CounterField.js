@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { X as CloseIcon, ChevronUp, ChevronDown } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
 
 const Container = styled.div`
@@ -72,9 +73,10 @@ const CounterField = ({
   disabled = false,
 }) => {
   const [value, setValue] = useState(propsValue)
+  const { t } = useTranslation()
 
   const [displayValue, setDisplayValue] = useState(
-    propsValue === null ? 'None' : propsValue,
+    propsValue === null ? t('taskManager.task.durationDaysNone') : propsValue,
   )
 
   const [showResetIcon, setShowResetIcon] = useState(false)
@@ -86,7 +88,9 @@ const CounterField = ({
   }, [propsValue])
 
   useEffect(() => {
-    setDisplayValue(value === null ? 'None' : value)
+    setDisplayValue(
+      value === null ? t('taskManager.task.durationDaysNone') : value,
+    )
     // this check is required to avoid infinite loop as `value` change leads to `propsValue`
     // change via `onChange` and then `propsChange` change leads to `value` change
     if (value !== propsValue) onChange(value)

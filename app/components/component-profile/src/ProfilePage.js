@@ -48,6 +48,15 @@ const UPDATE_USERNAME = gql`
   }
 `
 
+export const UPDATE_LANGUAGE = gql`
+  mutation updateLanguage($id: ID!, $preferredLanguage: String!) {
+    updateLanguage(id: $id, preferredLanguage: $preferredLanguage) {
+      id
+      preferredLanguage
+    }
+  }
+`
+
 const GET_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
   query {
     notificationOption(path: ["chat"]) {
@@ -97,6 +106,7 @@ const ProfilePage = ({ currentUser, match }) => {
   // Mutations and Queries
   const [updateUserEmail] = useMutation(UPDATE_EMAIL)
   const [updateUsername] = useMutation(UPDATE_USERNAME)
+  const [updateLanguage] = useMutation(UPDATE_LANGUAGE)
 
   const { data: globalChatNotificationUserOption } = useQuery(
     GET_GLOBAL_CHAT_NOTIFICATION_OPTION,
@@ -133,6 +143,7 @@ const ProfilePage = ({ currentUser, match }) => {
       }
       replaceAvatarImage={replaceAvatarImage}
       updateGlobalChatNotificationOptIn={updateGlobalChatNotificationOptIn}
+      updateLanguage={updateLanguage}
       updateProfilePicture={updateProfilePicture}
       updateUserEmail={updateUserEmail}
       updateUsername={updateUsername}

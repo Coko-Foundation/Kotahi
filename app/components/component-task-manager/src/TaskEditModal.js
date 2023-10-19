@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { ActionButton, TextInput } from '../../shared'
 
 import TaskNotificationDetails from './TaskNotificationDetails'
@@ -151,6 +152,8 @@ const TaskEditModal = ({
     [],
   )
 
+  const { t } = useTranslation()
+
   useEffect(() => {
     return updateTaskTitleDebounce.flush()
   }, [])
@@ -207,8 +210,8 @@ const TaskEditModal = ({
     }
 
     setTaskNotifications(currentTaskEmailNotifications =>
-      currentTaskEmailNotifications.map(t =>
-        t.id === updatedTaskNotification.id ? updatedTaskNotification : t,
+      currentTaskEmailNotifications.map(tN =>
+        tN.id === updatedTaskNotification.id ? updatedTaskNotification : tN,
       ),
     )
   }
@@ -258,26 +261,26 @@ const TaskEditModal = ({
       onClose={() => onCancel(false)}
       rightActions={
         <ActionButton onClick={() => onSave(false)} primary>
-          Save
+          {t('modals.taskEdit.Save')}
         </ActionButton>
       }
-      title="Task details"
+      title={t('modals.taskEdit.Task details')}
     >
       <TaskSectionContainer>
         <TaskPrimaryFieldsContainer>
           <TitleFieldContainer>
-            <TaskTitle>Task title</TaskTitle>
+            <TaskTitle>{t('modals.taskEdit.Task title')}</TaskTitle>
             <TitleCell>
               <TextInput
                 autoFocus={!taskTitle}
                 onChange={event => updateTaskTitle(event.target.value)}
-                placeholder="Give your task a name..."
+                placeholder={t('modals.taskEdit.Give your task a name')}
                 value={taskTitle}
               />
             </TitleCell>
           </TitleFieldContainer>
           <AssigneeFieldContainer>
-            <TaskTitle>Assignee</TaskTitle>
+            <TaskTitle>{t('modals.taskEdit.Assignee')}</TaskTitle>
             <AssigneeDropdown
               assigneeGroupedOptions={assigneeGroupedOptions}
               task={task}
@@ -287,7 +290,7 @@ const TaskEditModal = ({
           </AssigneeFieldContainer>
           {!editAsTemplate && task && task.status !== status.NOT_STARTED ? (
             <DueDateFieldContainer>
-              <TaskTitle>Due date</TaskTitle>
+              <TaskTitle>{t('modals.taskEdit.Due date')}</TaskTitle>
               <DueDateField
                 displayDefaultDurationDays={displayDefaultDurationDays}
                 dueDateLocalString={dueDateLocalString}
@@ -300,7 +303,7 @@ const TaskEditModal = ({
             </DueDateFieldContainer>
           ) : (
             <div>
-              <TaskTitle>Duration in days</TaskTitle>
+              <TaskTitle>{t('modals.taskEdit.Duration in days')}</TaskTitle>
               <DurationDaysCell>
                 <CounterField
                   minValue={0}
@@ -351,14 +354,14 @@ const TaskEditModal = ({
             disabled={
               !editAsTemplate && taskEmailNotifications?.length
                 ? taskEmailNotifications.some(
-                    t => !t.recipientType && !t.emailTemplateId,
+                    tN => !tN.recipientType && !tN.emailTemplateId,
                   )
                 : false
             }
             onClick={addNewTaskNotification}
             primary
           >
-            Add Notification Recipient
+            {t('modals.taskEdit.Add Notification Recipient')}
           </SecondaryActionButton>
         </TaskActionContainer>
         {!editAsTemplate ? (
@@ -367,8 +370,12 @@ const TaskEditModal = ({
             <TaskNotificationLogsContainer>
               <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
                 {isToggled
-                  ? `Hide all notifications sent (${task.notificationLogs?.length})`
-                  : `Show all notifications sent (${task.notificationLogs?.length})`}
+                  ? t('modals.taskEdit.Hide all notifications sent', {
+                      count: task.notificationLogs?.length,
+                    })
+                  : t('modals.taskEdit.Show all notifications sent', {
+                      count: task.notificationLogs?.length,
+                    })}
               </NotificationLogsToggle>
               {isToggled && (
                 <NotificationLogs>

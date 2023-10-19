@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 
 import { useMutation, useQuery } from '@apollo/client'
-
+import { useTranslation } from 'react-i18next'
 import { Spinner, CommsErrorBanner } from '../../shared'
 
 import CMSPageEditForm from './pages/CMSPageEdit'
@@ -23,6 +23,7 @@ import {
 } from './queries'
 
 const CMSPagesPage = ({ match, history }) => {
+  const { t } = useTranslation()
   const [isNewPage, setIsNewPage] = useState(false)
   const config = useContext(ConfigContext)
   const { urlFrag, groupName } = config
@@ -91,7 +92,9 @@ const CMSPagesPage = ({ match, history }) => {
         <PageHeader
           history={history}
           leftSideOnly
-          mainHeading={isNewPage ? 'New Page' : 'Pages'}
+          mainHeading={
+            isNewPage ? t('cmsPage.pages.New Page') : t('cmsPage.pages.Pages')
+          }
         />
         {cmsPage && (
           <CMSPageEditForm

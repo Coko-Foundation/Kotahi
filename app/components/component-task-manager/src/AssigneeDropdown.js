@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { Select, TextInput } from '../../shared'
 import theme from '../../../theme'
 import { assigneeTypes } from '../../../../config/journal/tasks.json'
@@ -62,6 +63,7 @@ const AssigneeDropdown = ({
     task.assigneeType === assigneeTypes.UNREGISTERED_USER,
   )
 
+  const { t } = useTranslation()
   const [assigneeEmail, setAssigneeEmail] = useState(task?.assigneeEmail || '')
   const [assigneeName, setAssigneeName] = useState(task?.assigneeName || '')
 
@@ -171,7 +173,7 @@ const AssigneeDropdown = ({
       label="Assignee"
       onChange={selected => handleAssigneeInput(selected, task)}
       options={assigneeGroupedOptions}
-      placeholder="Select..."
+      placeholder={t('taskManager.task.selectAssignee')}
       value={task.assignee?.id || task.assigneeType}
     />
   )
@@ -181,13 +183,13 @@ const AssigneeDropdown = ({
       <TextInput
         data-cy="new-user-email"
         onChange={event => updateTaskAssigneeEmail(event.target.value)}
-        placeholder="Email"
+        placeholder={t('taskManager.task.unregisteredUser.Email')}
         value={assigneeEmail}
       />
       <TextInput
         data-cy="new-user-name"
         onChange={event => updateTaskAssigneeName(event.target.value)}
-        placeholder="Name"
+        placeholder={t('taskManager.task.unregisteredUser.Name')}
         value={assigneeName}
       />
     </UnregisteredUserCell>

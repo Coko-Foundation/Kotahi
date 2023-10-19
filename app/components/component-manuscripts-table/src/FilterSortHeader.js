@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import { Calendar as FeatherCalendar } from 'react-feather'
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { Cell, HeadingCell } from './style'
 import { Select, DateRangeCalendar, SortUp, SortDown } from '../../shared'
 import {
@@ -52,6 +53,8 @@ const FilterSortHeader = ({
   setSort,
   setFilter,
 }) => {
+  const { t } = useTranslation()
+
   if (columnInfo.canFilterByDateRange) {
     const changeSort = () => {
       const priorSortName = sortName
@@ -115,9 +118,12 @@ const FilterSortHeader = ({
   }
 
   if (columnInfo.filterOptions && columnInfo.filterOptions.length > 1) {
-    const options = [{ label: <i>All</i>, value: '' }].concat(
-      columnInfo.filterOptions,
-    )
+    const options = [
+      {
+        label: <i>{t('manuscriptsTable.all')}</i>,
+        value: '',
+      },
+    ].concat(columnInfo.filterOptions)
 
     return (
       <Cell {...columnInfo}>

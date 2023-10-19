@@ -9,6 +9,10 @@ import {
 } from 'recharts'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+import { monthAbbrevs } from '../../../shared/dateUtils'
+import { languagesLabels } from '../../../i18n/index'
 
 const Container = styled.div`
   height: 300px;
@@ -56,23 +60,12 @@ const generateSeries = data => {
 
 const day = 24 * 60 * 60 * 1000
 
-const monthNames = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-]
-
 const dateFormatter = timestamp => {
   const date = new Date(timestamp)
+  let monthNames = monthAbbrevs
+  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  if (curLang?.monthAbbrevs) monthNames = curLang.monthAbbrevs
+
   return `${monthNames[date.getUTCMonth()]} ${date.getUTCDate()}`
 }
 
@@ -95,15 +88,16 @@ const getTicks = (startTimestamp, endTimestamp, interval) => {
 }
 
 const DurationsLabel = () => {
+  const { t } = useTranslation()
   return (
     <>
       <text transform="rotate(-90, 14, 260)" x={14} y={260}>
-        <tspan>Days spent on </tspan>
-        <tspan fill="#ffa900">review, </tspan>
-        <tspan fill="#475ae8">post-review</tspan>
+        <tspan>{t('reportsPage.Days spent on')} </tspan>
+        <tspan fill="#ffa900">{t('reportsPage.daysSpentReview')} </tspan>
+        <tspan fill="#475ae8">{t('reportsPage.daysSpentPostreview')}</tspan>
       </text>
       <text fill="#dddddd" transform="rotate(-90, 32, 260)" x={32} y={260}>
-        (or incomplete)
+        {t('reportsPage.or incomplete')}
       </text>
     </>
   )
@@ -116,6 +110,8 @@ const DurationsChart = ({
   reviewAvgsTrace,
   completionAvgsTrace,
 }) => {
+  const { t } = useTranslation()
+
   const {
     reviewSeries,
     completionSeries,
@@ -141,7 +137,7 @@ const DurationsChart = ({
             <Label
               offset={-5}
               position="insideBottom"
-              value="Submission date"
+              value={t('reportsPage.Submission date')}
             />
           </XAxis>
           <YAxis

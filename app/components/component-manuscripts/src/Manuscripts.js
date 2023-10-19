@@ -5,6 +5,7 @@ import { Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Trans, useTranslation } from 'react-i18next'
 import { articleStatuses } from '../../../globals'
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 import {
@@ -81,6 +82,8 @@ const Manuscripts = ({ history, ...props }) => {
     currentUser,
   } = props
 
+  const { t } = useTranslation()
+
   const config = useContext(ConfigContext)
 
   const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
@@ -155,8 +158,7 @@ const Manuscripts = ({ history, ...props }) => {
       result = [
         {
           stepLabel: 'publishing',
-          errorMessage:
-            'This manuscript has incomplete or invalid fields. Please correct these and try again.',
+          errorMessage: t('manuscriptsPage.manuscriptInvalid'),
         },
       ]
     } else {
@@ -261,7 +263,7 @@ const Manuscripts = ({ history, ...props }) => {
   const channels = [
     {
       id: adminDiscussionChannel?.id,
-      name: 'Group Manager discussion',
+      name: t('chat.Group Manager discussion'),
       type: adminDiscussionChannel?.type,
     },
   ]
@@ -277,15 +279,17 @@ const Manuscripts = ({ history, ...props }) => {
           onClick={() => history.push(`${urlFrag}/newSubmission`)}
           primary
         >
-          ＋ New submission
+          {t('dashboardPage.New submission')}
         </ActionButton>
       )}
       {shouldAllowBulkImport && (
         <ActionButton
           onClick={importManuscripts}
-          status={isImporting ? 'pending' : ''}
+          status={isImporting ? t('manuscriptsPage.importPending') : ''}
         >
-          {isImporting ? 'Refreshing' : 'Refresh'}
+          {isImporting
+            ? t('manuscriptsPage.Refreshing')
+            : t('manuscriptsPage.Refresh')}
         </ActionButton>
       )}
 
@@ -302,7 +306,7 @@ const Manuscripts = ({ history, ...props }) => {
         <RoundIconButton
           iconName="MessageSquare"
           onClick={() => setIsAdminChatOpen(true)}
-          title="Show group manager discussion"
+          title={t('chat.Show group manager discussion')}
         />
       )}
     </ControlsContainer>
@@ -324,7 +328,7 @@ const Manuscripts = ({ history, ...props }) => {
       <Columns>
         <ManuscriptsPane>
           <FlexRow>
-            <Heading>Manuscripts</Heading>
+            <Heading>{t('manuscriptsPage.Manuscripts')}</Heading>
             {topRightControls}
           </FlexRow>
           {shouldAllowBulkDelete && (
@@ -341,17 +345,23 @@ const Manuscripts = ({ history, ...props }) => {
                         selectedNewManuscripts.includes(manuscript.id),
                       ).length && selectedNewManuscripts.length !== 0
                   }
-                  label="Select All"
+                  label={t('manuscriptsPage.Select All')}
                   onChange={toggleAllNewManuscriptsCheck}
                 />
-                <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
+                <SelectedManuscriptsNumber>
+                  <Trans
+                    count={selectedNewManuscripts.length}
+                    i18nKey="manuscriptsPage.selectedArticles"
+                    values={{ count: selectedNewManuscripts.length }}
+                  />
+                </SelectedManuscriptsNumber>
                 <ActionButton
                   disabled={selectedNewManuscripts.length === 0}
                   isCompact
                   onClick={openModalBulkArchiveConfirmation}
                   primary={selectedNewManuscripts.length > 0}
                 >
-                  Archive
+                  {t('manuscriptsPage.Archive')}
                 </ActionButton>
               </SelectAllField>
             </FlexRowWithSmallGapAbove>

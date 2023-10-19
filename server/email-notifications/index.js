@@ -43,8 +43,10 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
   // Modify the email template using Handlebars
   mailOptions.html = await renderTemplate(template.emailContent.body, {
     ...data,
-    acceptInviteLink: `<a href="${data.appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
-    declineInviteLink: `<a href="${data.appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
+    // acceptInviteLink: `<a href="${data.appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
+    // declineInviteLink: `<a href="${data.appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
+    acceptInviteLink: `${data.appUrl}/acceptarticle/${data.invitationId}`,
+    declineInviteLink: `${data.appUrl}/decline/${data.invitationId}`,
     manuscriptTitleLink: `<a href="${data.submissionLink}">${data.manuscriptTitle}</a>`,
     manuscriptLink: `<a href="${data.manuscriptLink}" target="_blank">${data.manuscriptLink}</a>`,
     loginLink: `<a href="${data.appUrl}/login" target="_blank">${data.appUrl}/login</a>`,

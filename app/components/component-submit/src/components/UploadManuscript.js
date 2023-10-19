@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import styled, { css, keyframes, withTheme } from 'styled-components'
 import { Icon, Action } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import { XpubContext } from '../../../xpub-with-context/src'
 import upload from '../upload'
@@ -152,6 +153,8 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
   const config = useContext(ConfigContext)
   const { client, history, journals, currentUser } = props
 
+  const { t } = useTranslation()
+
   // const [error, setError] = useState(false)
   // const [completed, setCompleted] = useState(false)
   const [conversion, setConversion] = useContext(XpubContext)
@@ -207,27 +210,32 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
               {converting && <StatusConverting />}
               {!converting && !error && !completed && <StatusIdle />}
               {error ? (
-                <Error>{error.message}</Error>
+                <Error>
+                  {t('newSubmission.errorUploading', { error: error.message })}
+                </Error>
               ) : (
                 <Info completed={completed}>
-                  {completed ? 'Submission created' : 'Upload Manuscript'}
+                  {completed
+                    ? t('newSubmission.Submission created')
+                    : t('newSubmission.Upload Manuscript')}
                 </Info>
               )}
             </Main>
             <SubInfo>
-              {converting &&
-                'Your manuscript is being converted into a directly editable version. This might take a few seconds.'}
+              {converting && t('newSubmission.converting')}
               {!converting && (
                 <>
-                  <p>Drag and drop or click to select file</p>
-                  <em>Accepted file types: pdf, epub, zip, docx, latex</em>
+                  <p>{t('newSubmission.dragNDrop')}</p>
+                  <em>{t('newSubmission.acceptedFiletypes')}</em>
                 </>
               )}
             </SubInfo>
           </Root>
         )}
       </Dropzone>
-      <Action onClick={() => uploadManuscript()}>Submit a URL instead</Action>
+      <Action onClick={() => uploadManuscript()}>
+        {t('newSubmission.Submit a URL instead')}
+      </Action>
     </>
   )
 }

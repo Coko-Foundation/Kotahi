@@ -167,7 +167,7 @@ describe.skip('refresh button tests', () => {
             .find('span')
             .invoke('text')
             .should('be.eq', title)
-          ManuscriptsPage.getStatus(0).should('be.eq', 'evaluated')
+          ManuscriptsPage.getStatus(0).should('be.eq', 'Evaluated')
         })
     })
     it('reviewer should see article description on dashboard page', () => {

@@ -2,6 +2,7 @@ import { CheckboxGroup } from '@pubsweet/ui'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { UserAvatar } from '../../../../component-avatar/src'
 import Modal from '../../../../component-modal/src/Modal'
 import { ConfigContext } from '../../../../config/src'
@@ -58,6 +59,7 @@ const InviteReviewerModal = ({
   const [condition, setCondition] = useState([])
   const [inviteStatus, setInviteStatus] = useState(null)
   const identity = reviewerUsers.find(user => user.id === userId)
+  const { t } = useTranslation()
 
   const toggleSharedStatus = async (isInvitation, reviewerTeamMember) => {
     if (isInvitation) {
@@ -79,11 +81,18 @@ const InviteReviewerModal = ({
 
   const options = []
   if (config.controlPanel?.sharedReview)
-    options.push({ value: 'shared', label: 'Shared' })
-  options.push({ value: 'email-notification', label: 'Email Notification' })
+    options.push({ value: 'shared', label: t('modals.inviteReviewer.Shared') })
+  options.push({
+    value: 'email-notification',
+    label: t('modals.inviteReviewer.Email Notification'),
+  })
 
   return (
-    <Modal isOpen={open} onClose={onClose} title="Invite Reviewer">
+    <Modal
+      isOpen={open}
+      onClose={onClose}
+      title={t('modals.inviteReviewer.Invite Reviewer')}
+    >
       <ModalContainer>
         <StyledInfo>
           <UserAvatar isClickable={false} size={48} user={identity?.username} />
@@ -100,7 +109,9 @@ const InviteReviewerModal = ({
           </StyledCheckbox>
         </StyledInfo>
         <MediumRow>
-          <ActionButton onClick={onClose}>Cancel</ActionButton>
+          <ActionButton onClick={onClose}>
+            {t('modals.inviteReviewer.Cancel')}
+          </ActionButton>
           &nbsp;
           <ActionButton
             dataTestid="submit-modal"
@@ -173,7 +184,7 @@ const InviteReviewerModal = ({
             primary
             status={inviteStatus}
           >
-            Invite
+            {t('modals.inviteReviewer.Invite')}
           </ActionButton>
         </MediumRow>
       </ModalContainer>

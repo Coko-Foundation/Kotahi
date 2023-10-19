@@ -1,3 +1,4 @@
+import i18next from 'i18next'
 import moment from 'moment'
 
 const getDescendingOrderOfCreation = (mA, mB) =>
@@ -19,7 +20,9 @@ const manuscriptVersions = manuscript => {
   return versions.map((manuscript, index) => ({
     label:
       index === 0
-        ? `Current version (${versions.length})`
+        ? `${i18next.t('manuscriptSubmit.Current version')} (${
+            versions.length
+          })`
         : `${moment(manuscript.created).format('YYYY-MM-DD')} (${
             versions.length - index
           })`,

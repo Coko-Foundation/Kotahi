@@ -3,6 +3,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 // import moment from 'moment-timezone'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
 import { ConfigContext } from '../../config/src'
@@ -68,7 +69,7 @@ const TaskList = ({
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
-
+  const { t } = useTranslation()
   useEffect(() => {
     setTasks(
       // Reorder required, as optimisticResponse doesn't honour array order, causing jitter with drag-n-drop
@@ -111,7 +112,7 @@ const TaskList = ({
     }
 
     setTasks(currentTasks =>
-      currentTasks.map(t => (t.id === id ? updatedTask : t)),
+      currentTasks.map(curTask => (curTask.id === id ? updatedTask : curTask)),
     )
   }
 
@@ -131,8 +132,8 @@ const TaskList = ({
 
   const updateTasks = updatedTasks => {
     const tasksToPersist = updatedTasks
-      .filter(t => t.title)
-      .map(t => repackageTask(t))
+      .filter(task => task.title)
+      .map(task => repackageTask(task))
 
     persistTasks({
       variables: {
@@ -159,7 +160,7 @@ const TaskList = ({
   }))
 
   const userRoles = roles.map(role => ({
-    label: role.name,
+    label: t(`taskManager.list.userRoles.${role.name}`),
     value: role.slug,
     key: 'userRole',
   }))
@@ -168,19 +169,19 @@ const TaskList = ({
     {
       options: [
         {
-          label: 'Unregistered User',
+          label: t('taskManager.list.Unregistered User'),
           value: 'unregisteredUser',
           key: 'unregisteredUser',
         },
       ],
     },
     {
-      label: 'User Roles',
+      label: t('taskManager.list.User Roles'),
       options: userRoles,
     },
 
     {
-      label: 'Registered Users',
+      label: t('taskManager.list.Registered Users'),
       options: userOptions,
     },
   ]
@@ -189,21 +190,27 @@ const TaskList = ({
     {
       options: [
         {
-          label: 'Unregistered User',
+          label: t('taskManager.list.Unregistered User'),
           value: 'unregisteredUser',
           key: 'unregisteredUser',
         },
       ],
     },
     {
-      options: [{ label: 'Assignee', value: 'assignee', key: 'assignee' }],
+      options: [
+        {
+          label: t('taskManager.list.Assignee'),
+          value: 'assignee',
+          key: 'assignee',
+        },
+      ],
     },
     {
-      label: 'User Roles',
+      label: t('taskManager.list.User Roles'),
       options: userRoles,
     },
     {
-      label: 'Registered Users',
+      label: t('taskManager.list.Registered Users'),
       options: userOptions,
     },
   ]
@@ -221,20 +228,24 @@ const TaskList = ({
             {(provided, snapshot) => (
               <TightColumn {...provided.droppableProps} ref={provided.innerRef}>
                 {!tasks.length && (
-                  <AddTaskContainer>Add your first task...</AddTaskContainer>
+                  <AddTaskContainer>
+                    {t('taskManager.list.Add your first task...')}
+                  </AddTaskContainer>
                 )}
                 {tasks.length ? (
                   <>
                     <HeaderRowContainer>
                       <HeaderRow>
                         <TitleHeader>
-                          <TitleLabel>Title</TitleLabel>
+                          <TitleLabel>{t('taskManager.list.Title')}</TitleLabel>
                         </TitleHeader>
-                        <AssigneeHeader>Assignee</AssigneeHeader>
+                        <AssigneeHeader>
+                          {t('taskManager.list.Assignee')}
+                        </AssigneeHeader>
                         <DurationHeader editAsTemplate={editAsTemplate}>
                           {editAsTemplate
-                            ? 'Duration in days'
-                            : 'Duration/Due Date'}
+                            ? t('taskManager.list.Duration in days')
+                            : t('taskManager.list.Duration/Due Date')}
                         </DurationHeader>
                       </HeaderRow>
                     </HeaderRowContainer>
@@ -252,9 +263,15 @@ const TaskList = ({
                         isReadOnly={isReadOnly}
                         key={task.id}
                         manuscript={manuscript}
-                        onCancel={() => updateTasks(tasks.filter(t => t.title))}
+                        onCancel={() =>
+                          updateTasks(
+                            tasks.filter(taskUpdate => taskUpdate.title),
+                          )
+                        }
                         onDelete={id =>
-                          updateTasks(tasks.filter(t => t.id !== id))
+                          updateTasks(
+                            tasks.filter(taskUpdate => taskUpdate.id !== id),
+                          )
                         }
                         recipientGroupedOptions={recipientGroupedOptions}
                         sendNotifyEmail={sendNotifyEmail}
@@ -272,11 +289,11 @@ const TaskList = ({
         </DragDropContext>
         <AddTaskContainer>
           <RoundIconButton
-            disabled={tasks.some(t => !t.title)}
+            disabled={tasks.some(taskUpdate => !taskUpdate.title)}
             iconName="Plus"
             onClick={addNewTask}
             primary
-            title="Add a new task"
+            title={t('taskManager.list.Add a new task')}
           />
         </AddTaskContainer>
       </MediumColumn>

@@ -6,6 +6,7 @@ import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'isomorphic-dompurify'
 import { RadioGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import {
   Section as Container,
   Select,
@@ -294,6 +295,7 @@ const FormTemplate = ({
         const [submitSucceeded, setSubmitSucceeded] = useState(false)
         const [buttonIsPending, setButtonIsPending] = useState(false)
         const [publishingResponse, setPublishingResponse] = useState([])
+        const { t } = useTranslation()
 
         const [
           publishErrorsModalIsOpen,
@@ -388,7 +390,10 @@ const FormTemplate = ({
         return (
           <FormContainer>
             {displayShortIdAsIdentifier && (
-              <NoteRight>Manuscript Number: {manuscriptShortId}</NoteRight>
+              <NoteRight>
+                {t('decisionPage.metadataTab.Manuscript Number')}{' '}
+                {manuscriptShortId}
+              </NoteRight>
             )}
             <header>
               <Heading1>{form.name}</Heading1>
@@ -594,8 +599,10 @@ const FormTemplate = ({
               <Modal
                 isOpen={publishErrorsModalIsOpen}
                 onClose={() => setPublishErrorsModalIsOpen(false)}
-                subtitle="Some targets failed to publish."
-                title="Publishing error"
+                subtitle={t(
+                  'modals.publishError.Some targets failed to publish',
+                )}
+                title={t('modals.publishError.Publishing error')}
               >
                 <PublishingResponse response={publishingResponse} />
               </Modal>

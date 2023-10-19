@@ -3,10 +3,11 @@ import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
 import { wrapIn } from 'prosemirror-commands'
+import i18next from 'i18next'
 
 class AcknowledgementsSection extends Tools {
-  title = 'Change to acknowledgements'
-  label = 'Acknowledgements'
+  title = i18next.t('waxEditor.Change to acknowledgements')
+  label = i18next.t('waxEditor.Acknowledgements')
   name = 'AcknowledgementsSection'
 
   // eslint-disable-next-line class-methods-use-this

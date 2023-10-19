@@ -3,10 +3,11 @@ import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
 import { wrapIn } from 'prosemirror-commands'
+import i18next from 'i18next'
 
 class FrontMatter extends Tools {
-  label = 'Front matter'
-  title = 'Change to front matter'
+  label = i18next.t('waxEditor.Front matter')
+  title = i18next.t('waxEditor.Change to front matter')
   name = 'FrontMatter'
 
   // eslint-disable-next-line class-methods-use-this

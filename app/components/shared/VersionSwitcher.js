@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { Select } from './Select'
 
 const Container = styled.div`
@@ -36,13 +37,13 @@ const StyledSelect = styled(Select)`
   box-shadow: ${props => props.theme.boxShadow.shades[100]};
 `
 
-const generateLabel = (created, versionNumber, count, manuscriptName) => {
+const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
   return (
     <VerisonLabelWrapper>
       <Title>{manuscriptName}</Title>
       <VersionIndicator>
         {versionNumber >= count
-          ? `— Current version (${versionNumber})`
+          ? `— ${t('decisionPage.Current version')} (${versionNumber})`
           : `— ${new Date(created)
               .toISOString()
               .slice(0, 10)} (${versionNumber})`}
@@ -64,6 +65,8 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
     normalizedVersions = children
     mode = 'children'
   }
+
+  const { t } = useTranslation()
 
   const defaultVersion = normalizedVersions[0] && normalizedVersions[0].key
   const [selectedVersionKey, selectVersionKey] = useState(defaultVersion)
@@ -95,6 +98,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
               normalizedVersions.length - i,
               normalizedVersions.length,
               d.props.version.meta.title,
+              t,
             ),
         }))}
         placeholder="Select version..."

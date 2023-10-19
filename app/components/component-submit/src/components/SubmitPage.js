@@ -86,10 +86,20 @@ const SubmitPage = ({ currentUser, match, history }) => {
     }
   }, [])
 
+  const submitPurpose = 'submit'
+  const decisionPurpose = 'decision'
+  const reviewPurpose = 'review'
+
   const { data, loading, error } = useQuery(
     query,
     {
-      variables: { id: match.params.version, groupId: config.groupId },
+      variables: {
+        id: match.params.version,
+        groupId: config.groupId,
+        submitPurpose,
+        decisionPurpose,
+        reviewPurpose,
+      },
       partialRefetch: true,
     },
     { refetchOnMount: true },

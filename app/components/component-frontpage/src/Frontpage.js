@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { sanitize } from 'isomorphic-dompurify'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../config/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
@@ -52,6 +53,7 @@ const Frontpage = () => {
   const [page, setPage] = useState(1)
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
+  const { t } = useTranslation()
 
   const skipXSweet = file =>
     !(
@@ -89,7 +91,9 @@ const Frontpage = () => {
     <Container>
       <HeadingWithAction>
         <Heading>
-          Recent publications in {config?.groupIdentity?.brandName}
+          {t('frontPage.recent', {
+            brandName: config?.groupIdentity?.brandName,
+          })}
         </Heading>
         <LoginLink
           href={
@@ -98,7 +102,9 @@ const Frontpage = () => {
               : `${urlFrag}/login`
           }
         >
-          {window.localStorage.getItem('token') ? 'Dashboard' : 'Login'}
+          {window.localStorage.getItem('token')
+            ? t('frontPage.Dashboard')
+            : t('frontPage.Login')}
         </LoginLink>
       </HeadingWithAction>
       <Pagination

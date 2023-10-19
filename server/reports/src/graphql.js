@@ -4,12 +4,6 @@ const generateMovingAverages = require('./movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
 
-/** Capitalize the first letter of the string */
-const capitalize = text => {
-  if (text.length <= 0) return ''
-  return text.charAt(0).toUpperCase() + text.slice(1)
-}
-
 /** Get date string in the form yyyy-mm-dd */
 const getIsoDateString = date => (date ? date.toISOString().slice(0, 10) : null)
 
@@ -450,14 +444,12 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
 
   return manuscripts.map(m => {
     const lastVer = getLastVersion(m)
-    let statusLabel
+    let status
     if (lastVer.published) {
       if (['accepted', 'published'].includes(lastVer.status))
-        statusLabel = 'published'
-      else statusLabel = `published, ${lastVer.status}`
-    } else statusLabel = lastVer.status
-
-    statusLabel = capitalize(statusLabel)
+        status = 'published'
+      else status = `published, ${lastVer.status}`
+    } else status = lastVer.status
 
     return {
       shortId: m.shortId.toString(),
@@ -466,7 +458,7 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
       authors: getTeamUsers(m, 'Author'),
       editors: getTeamUsers(m, editorTeams),
       reviewers: getReviewersAndLatestStatuses(m),
-      status: statusLabel,
+      status,
       publishedDate: getIsoDateString(getLastPublishedDate(m)),
       versionReviewDurations: getVersionReviewDurations(m),
     }

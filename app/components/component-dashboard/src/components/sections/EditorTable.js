@@ -1,4 +1,5 @@
 import React, { useMemo, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import ManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import {
@@ -64,11 +65,13 @@ const EditorTable = ({
     displayProps,
   )
 
+  const { t } = useTranslation()
+
   return (
     <>
       <SectionContent>
         <SectionHeader>
-          <Title>Manuscripts I&apos;m editor of</Title>
+          <Title>{t("dashboardPage.edit.Manuscripts I'm editor of")}</Title>
         </SectionHeader>
         <ManuscriptsTable
           applyQueryParams={applyQueryParams}

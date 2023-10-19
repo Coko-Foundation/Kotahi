@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import User from './User'
 import {
   Container,
@@ -56,17 +57,25 @@ const UsersTable = ({
     )
   }
 
+  const { t } = useTranslation()
+
   return (
     <Container>
-      <Heading>Users</Heading>
+      <Heading>{t('usersTable.Users')}</Heading>
       <Content>
         <StyledTable>
           <Header>
             <tr>
-              <SortHeader thisSortName="username">Name</SortHeader>
-              <SortHeader thisSortName="created">Created</SortHeader>
-              <SortHeader thisSortName="lastOnline">Last Online</SortHeader>
-              <SortHeader>Roles</SortHeader>
+              <SortHeader thisSortName="username">
+                {t('usersTable.Name')}
+              </SortHeader>
+              <SortHeader thisSortName="created">
+                {t('usersTable.Created')}
+              </SortHeader>
+              <SortHeader thisSortName="lastOnline">
+                {t('usersTable.Last Online')}
+              </SortHeader>
+              <SortHeader>{t('usersTable.Roles')}</SortHeader>
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th />
             </tr>

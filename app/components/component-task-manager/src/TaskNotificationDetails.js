@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
@@ -156,6 +157,8 @@ const TaskNotificationDetails = ({
   const [taskEmailNotification, setTaskNotification] = useState(
     propTaskEmailNotification,
   )
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     setTaskNotification(propTaskEmailNotification)
@@ -654,7 +657,7 @@ const TaskNotificationDetails = ({
   return (
     <NotificationDetailsContainer>
       <RecipientFieldContainer>
-        <TaskTitle>Recipient</TaskTitle>
+        <TaskTitle>{t('modals.taskEdit.Recipient')}</TaskTitle>
         <AssigneeCell title={taskEmailNotification.recipientType}>
           <Select
             aria-label="Recipient"
@@ -668,7 +671,7 @@ const TaskNotificationDetails = ({
               handleRecipientInput(selected, taskEmailNotification)
             }
             options={recipientGroupedOptions}
-            placeholder="Select a recipient"
+            placeholder={t('modals.taskEdit.Select a recipient')}
             value={
               taskEmailNotification?.recipientUserId ||
               taskEmailNotification?.recipientType
@@ -680,25 +683,25 @@ const TaskNotificationDetails = ({
             <TextInput
               data-cy="new-recipient-email"
               onChange={event => updateRecipientEmail(event.target.value)}
-              placeholder="Email"
+              placeholder={t('taskManager.task.unregisteredUser.Email')}
               value={recipientEmail}
             />
             <TextInput
               data-cy="new-recipient-name"
               onChange={event => updateRecipientName(event.target.value)}
-              placeholder="Name"
+              placeholder={t('taskManager.task.unregisteredUser.Name')}
               value={recipientName}
             />
           </UnregisteredUserCell>
         )}
       </RecipientFieldContainer>
       <EmailTemplateFieldContainer>
-        <TaskTitle>Select email template</TaskTitle>
+        <TaskTitle>{t('modals.taskEdit.Select email template')}</TaskTitle>
         <SelectEmailTemplate
           emailTemplates={emailTemplates}
           isClearable
           onChangeEmailTemplate={handleEmailTemplateChange}
-          placeholder="Select email template"
+          placeholder={t('modals.taskEdit.Select email template')}
           selectedEmailTemplate={
             selectedTemplate || taskEmailNotification.emailTemplateId
           }
@@ -709,9 +712,9 @@ const TaskNotificationDetails = ({
       </EmailTemplateFieldContainer>
       <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
-          <TaskTitle>Send notification</TaskTitle>
+          <TaskTitle>{t('modals.taskEdit.Send notification')}</TaskTitle>
           <NotificationDeadlineCell disabled={selectedDurationDays === null}>
-            <span>Send</span>
+            <span>{t('modals.taskEdit.Send')}</span>
             <CounterField
               compact
               disabled={selectedDurationDays === null}
@@ -726,7 +729,7 @@ const TaskNotificationDetails = ({
               }}
               value={taskEmailNotificationElapsedDays || 0}
             />
-            <span>days</span>
+            <span>{t('modals.taskEdit.days')}</span>
             <CounterFieldWithOptions
               disabled={selectedDurationDays === null}
               onChange={selected => {
@@ -740,12 +743,12 @@ const TaskNotificationDetails = ({
                 }
               }}
               options={[
-                { label: 'before', value: 'before' },
-                { label: 'after', value: 'after' },
+                { label: t('modals.taskEdit.before'), value: 'before' },
+                { label: t('modals.taskEdit.after'), value: 'after' },
               ]}
               value={taskEmailNotificationDeadline || 'before'}
             />
-            <span>due date</span>
+            <span>{t('modals.taskEdit.due date')}</span>
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
       </ScheduleNotificationFieldContainer>
@@ -755,7 +758,7 @@ const TaskNotificationDetails = ({
             onClick={sendTaskNotificationEmailHandler}
             status={taskNotificationStatus}
           >
-            Send Now
+            {t('modals.taskEdit.Send Now')}
           </SecondaryActionButton>
         </SendNowActionContainer>
       )}

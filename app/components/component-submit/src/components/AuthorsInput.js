@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
+import { useTranslation } from 'react-i18next'
 import { DeleteControl, TextInput } from '../../../shared'
 import {
   fields,
@@ -44,9 +45,25 @@ const StyledDeleteControl = styled(DeleteControl)`
   top: 66px;
 `
 
+const localizeFields = (origFields, t) => {
+  let clonedFieds = JSON.parse(JSON.stringify(origFields))
+
+  clonedFieds = clonedFieds.map((field, index) => {
+    const newField = { ...field }
+    newField.label = t(`authorsInput.${field.name}.label`)
+    newField.placeholder = t(`authorsInput.${field.name}.placeholder`)
+    return newField
+  })
+
+  return clonedFieds
+}
+
 // TODO This is not following Formik idioms. Improve?
 const AuthorsInput = ({ onChange, value }) => {
+  const { t } = useTranslation()
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
+  const localizedFields = localizeFields(fields, t)
+
   if (value && !Array.isArray(value))
     console.error('Illegal AuthorsInput value:', value)
   return (
@@ -54,7 +71,7 @@ const AuthorsInput = ({ onChange, value }) => {
       {cleanedVal.map((author, index) => (
         <AuthorContainer key={author.id}>
           <Author>
-            {fields.map(f => {
+            {localizedFields.map(f => {
               const invalidity = f.validate && f.validate(author[f.name])
 
               return (
@@ -78,7 +95,7 @@ const AuthorsInput = ({ onChange, value }) => {
             onClick={() => {
               onChange(cleanedVal.filter((_, i) => i !== index))
             }}
-            tooltip="Delete this author"
+            tooltip={t('decisionPage.Delete this author')}
           />
         </AuthorContainer>
       ))}
@@ -101,7 +118,7 @@ const AuthorsInput = ({ onChange, value }) => {
         plain
         type="button"
       >
-        Add another person
+        {t('decisionPage.Add another person')}
       </Button>
     </div>
   )

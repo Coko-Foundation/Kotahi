@@ -2,10 +2,11 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class AwardId extends Tools {
-  title = 'Change to award ID'
-  label = 'Award ID'
+  title = i18next.t('waxEditor.Change to award ID')
+  label = i18next.t('waxEditor.Award ID')
   name = 'AwardId'
   color = 'colorAwardId'
   className = 'awardid'

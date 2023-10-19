@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { color } from '../../../../theme'
 
 const Button = styled.a`
@@ -27,11 +28,13 @@ const Button = styled.a`
 `
 
 const ToolbarButton = ({ onClick, isTopBarOpen }) => {
+  const { t } = useTranslation()
+
   return (
     <Button
       isTopBarOpen={isTopBarOpen}
       onClick={onClick}
-      title={isTopBarOpen ? 'Hide formatting' : 'Formatting'}
+      title={isTopBarOpen ? t('chat.Hide formatting') : t('chat.Formatting')}
     >
       {isTopBarOpen ? <Icon>chevron-down</Icon> : <Icon>chevron-up</Icon>}
     </Button>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
+import { useTranslation } from 'react-i18next'
 import { UserAvatar } from './component-avatar/src'
 import { color } from '../theme'
 import { convertCamelCaseToTitleCase } from '../shared/textUtils'
@@ -110,6 +111,7 @@ export const Item = styled(NavItem)`
   & > span {
     align-items: center;
     display: flex;
+    line-height: 1;
   }
 
   svg {
@@ -204,7 +206,7 @@ const Menu = ({
   profileLink,
 }) => {
   const location = useLocation()
-
+  const { t } = useTranslation()
   return (
     <Root className={className} data-testid="menu-container">
       <Section>
@@ -213,6 +215,7 @@ const Menu = ({
         <UserComponent
           loginLink={loginLink}
           profileLink={profileLink}
+          t={t}
           user={user}
         />
         {navLinkComponents &&
@@ -232,10 +235,10 @@ const Menu = ({
   )
 }
 
-const FormattedGlobalAndGroupRoles = ({ user }) => {
+const FormattedGlobalAndGroupRoles = ({ user, t }) => {
   const allRoles = user.globalRoles.concat(user.groupRoles)
 
-  const unCamelCasedRoles =
+  let unCamelCasedRoles =
     allRoles.includes('groupManager') || allRoles.includes('admin')
       ? allRoles
           .filter(role => role !== 'user')
@@ -243,20 +246,22 @@ const FormattedGlobalAndGroupRoles = ({ user }) => {
       : allRoles.map(role => convertCamelCaseToTitleCase(role))
 
   if (!unCamelCasedRoles.length) return null
-
+  unCamelCasedRoles = unCamelCasedRoles.map(elem => {
+    return t(`common.roles.${elem}`)
+  })
   return <RolesLabel>({unCamelCasedRoles.join(', ')})</RolesLabel>
 }
 
-const UserComponent = ({ user, loginLink, profileLink }) => (
+const UserComponent = ({ user, loginLink, profileLink, t }) => (
   <Section>
     {user && (
-      <UserItem title="Go to your profile" to={profileLink}>
+      <UserItem title={t('leftMenu.Go to your profile')} to={profileLink}>
         <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
           <UserName>{user.username}</UserName>
           <span>{user.isOnline ? '' : 'Offline'}</span>
           {/* ({user.username}) */}
-          <FormattedGlobalAndGroupRoles user={user} />
+          <FormattedGlobalAndGroupRoles t={t} user={user} />
         </UserInfo>
       </UserItem>
     )}

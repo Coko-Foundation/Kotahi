@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Button, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { Formik } from 'formik'
+import { useTranslation } from 'react-i18next'
 import { AbstractField, RadioBox } from './builderComponents'
 import { Page, Heading } from './style'
 import { ConfigContext } from '../../../config/src'
@@ -27,7 +28,7 @@ const FormProperties = ({
   structure,
 }) => {
   const [popup, setPopup] = useState(structure.haspopup)
-
+  const { t } = useTranslation()
   return isEmpty(structure) && mode !== 'create' ? (
     <Page>
       <span>&nbsp;</span>
@@ -35,17 +36,21 @@ const FormProperties = ({
   ) : (
     <Page>
       <form onSubmit={onSubmit}>
-        <Heading>{mode === 'create' ? 'Create Form' : 'Update Form'}</Heading>
+        <Heading>
+          {mode === 'create'
+            ? t('formBuilder.Create Form')
+            : t('formBuilder.Update Form')}
+        </Heading>
         <Section id="form.purpose" key="form.purpose">
-          <Legend>Form purpose identifier</Legend>
+          <Legend>{t('formBuilder.Form purpose identifier')}</Legend>
           <ValidatedFieldFormik component={TextField} name="purpose" required />
         </Section>
         <Section id="form.name" key="form.name">
-          <Legend>Form Name</Legend>
+          <Legend>{t('formBuilder.Form Name')}</Legend>
           <ValidatedFieldFormik component={TextField} name="name" required />
         </Section>
         <Section id="form.description" key="form.description">
-          <Legend>Description</Legend>
+          <Legend>{t('formBuilder.Description')}</Legend>
           <ValidatedFieldFormik
             component={AbstractField.default}
             name="description"
@@ -55,7 +60,7 @@ const FormProperties = ({
           />
         </Section>
         <Section id="form.submitpopup" key="form.submitpopup">
-          <Legend>Submit on Popup</Legend>
+          <Legend>{t('formBuilder.Submit on Popup')}</Legend>
           <ValidatedFieldFormik
             component={RadioBox.default}
             inline
@@ -66,11 +71,11 @@ const FormProperties = ({
             }}
             options={[
               {
-                label: 'Yes',
+                label: t('formBuilder.submitYes'),
                 value: 'true',
               },
               {
-                label: 'No',
+                label: t('formBuilder.submitNo'),
                 value: 'false',
               },
             ]}
@@ -78,11 +83,11 @@ const FormProperties = ({
         </Section>
         {popup === 'true' && [
           <Section id="popup.title" key="popup.title">
-            <Legend>Popup Title</Legend>
+            <Legend>{t('formBuilder.Popup Title')}</Legend>
             <ValidatedFieldFormik component={TextField} name="popuptitle" />
           </Section>,
           <Section id="popup.description" key="popup.description">
-            <Legend>Description</Legend>
+            <Legend>{t('formBuilder.Description')}</Legend>
             <ValidatedFieldFormik
               component={AbstractField.default}
               name="popupdescription"
@@ -93,7 +98,9 @@ const FormProperties = ({
           </Section>,
         ]}
         <Button primary type="submit">
-          {mode === 'create' ? 'Create Form' : 'Update Form'}
+          {mode === 'create'
+            ? t('formBuilder.Create Form')
+            : t('formBuilder.Update Form')}
         </Button>
       </form>
     </Page>

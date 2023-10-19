@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { ConfigContext } from '../../../../config/src'
 import ShareIcon from '../../../../../shared/icons/share'
@@ -11,11 +12,15 @@ import { UserAvatar } from '../../../../component-avatar/src'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
 
-export const ToggleReview = ({ open, toggle }) => (
-  <Button onClick={toggle} plain>
-    {open ? 'Hide' : 'Show'}
-  </Button>
-)
+export const ToggleReview = ({ open, toggle, t }) => {
+  return (
+    <Button onClick={toggle} plain>
+      {open
+        ? t('decisionPage.decisionTab.reviewModalHide')
+        : t('decisionPage.decisionTab.reviewModalShow')}
+    </Button>
+  )
+}
 
 const Bullet = styled.span`
   background-color: black;
@@ -75,6 +80,7 @@ const ReviewHeading = ({
 }) => {
   const config = useContext(ConfigContext)
   if (!currentUser) return null
+  const { t } = useTranslation()
 
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')
@@ -108,7 +114,9 @@ const ReviewHeading = ({
   return (
     <ReviewHeadingRoot>
       <Bullet journal={journal} recommendation={recommendation} />
-      <Ordinal>Review {ordinal}</Ordinal>
+      <Ordinal>
+        {t('decisionPage.decisionTab.reviewNum', { num: ordinal })}
+      </Ordinal>
       &nbsp;
       <Name>
         {
@@ -122,7 +130,9 @@ const ReviewHeading = ({
             />
             <UserInfo>
               {review.isHiddenReviewerName && !isControlPage ? (
-                <Primary>Anonmyous Reviewer</Primary>
+                <Primary>
+                  {t('decisionPage.decisionTab.Anonmyous Reviewer')}
+                </Primary>
               ) : (
                 <>
                   <Primary>{user.username}</Primary>
@@ -148,12 +158,12 @@ const ReviewHeading = ({
           <>
             <StyledCheckbox
               checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
-              label="Hide review"
+              label={t('decisionPage.decisionTab.Hide review')}
               onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
             />
             <StyledCheckbox
               checked={isHiddenReviewerName || isHiddenReviewerName == null}
-              label="Hide reviewer name"
+              label={t('decisionPage.decisionTab.Hide reviewer name')}
               onChange={() =>
                 toggleIsHiddenReviewerNameFromPublishedAndAuthor(
                   id,
@@ -164,7 +174,7 @@ const ReviewHeading = ({
           </>
         )}
       <Controls>
-        <ToggleReview open={open} toggle={toggleOpen} />
+        <ToggleReview open={open} t={t} toggle={toggleOpen} />
       </Controls>
     </ReviewHeadingRoot>
   )

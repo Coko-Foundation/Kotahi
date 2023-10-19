@@ -6,8 +6,10 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import { Chart } from 'react-google-charts'
 import { countBy } from 'lodash'
+import i18next from 'i18next'
 import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import reviewStatuses from '../../../../../config/journal/review-status'
+import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 
 const Root = styled.div`
   font-family: ${th('fontReviewer')};
@@ -62,7 +64,13 @@ const header = [
 // TODO Refactor to use recharts instead of react-google-charts
 const ReviewStatusDonut = ({ manuscript }) => {
   const statusOptions = {}
-  reviewStatuses.forEach(item => {
+
+  const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
+    reviewStatuses,
+    i18next.t,
+  )
+
+  LocalizedReviewFilterOptions.forEach(item => {
     statusOptions[item.value] = { text: item.label, color: item.color }
   })
 
@@ -76,7 +84,6 @@ const ReviewStatusDonut = ({ manuscript }) => {
 
   const allStatuses = [...reviewerStatuses, ...invitationStatuses]
   const statusCounts = countBy(allStatuses)
-
   const statusTooltips = {}
   Object.keys(statusCounts).forEach(status => {
     const count = statusCounts[status]

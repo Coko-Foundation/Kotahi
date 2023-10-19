@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'
 import { color } from '../../theme'
@@ -80,6 +81,8 @@ const HiddenTabs = ({
   const config = useContext(ConfigContext)
   const [activeKey, setActiveKey] = useState(defaultActiveKey)
 
+  const { t } = useTranslation()
+
   useEffect(() => {
     setActiveKey(defaultActiveKey)
   }, [defaultActiveKey])
@@ -119,7 +122,9 @@ const HiddenTabs = ({
 
         {/* TODO: Hide Chat could be a seperate component */}
         {hideChat && (
-          <HideChatButton onClick={hideChat}>Hide Chat</HideChatButton>
+          <HideChatButton onClick={hideChat}>
+            {t('chat.Hide Chat')}
+          </HideChatButton>
         )}
       </HiddenTabsContainer>
 

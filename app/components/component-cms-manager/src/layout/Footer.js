@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { ValidatedFieldFormik } from '@pubsweet/ui'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import PageOrder from './PageOrder'
 import {
   CompactSection,
@@ -61,6 +62,7 @@ const Footer = ({
   )
 
   useEffect(() => onDataChanged('partners', selectedFiles), [selectedFiles])
+  const { t } = useTranslation()
 
   const onDataChanged = (name, value) => {
     formikProps.setFieldValue(name, value)
@@ -87,9 +89,11 @@ const Footer = ({
 
   return (
     <FullWidthAndHeightContainer>
-      <LayoutMainHeading>Footer</LayoutMainHeading>
+      <LayoutMainHeading>{t('cmsPage.layout.Footer')}</LayoutMainHeading>
       <CompactSectionWithFullWidth key={partnersInput.name}>
-        <LayoutSecondaryHeading>Partners</LayoutSecondaryHeading>
+        <LayoutSecondaryHeading>
+          {t('cmsPage.layout.Partners')}
+        </LayoutSecondaryHeading>
         <ValidatedFieldFormik
           component={partnersInput.component}
           createFile={createFile}
@@ -119,7 +123,9 @@ const Footer = ({
       </CompactSectionWithFullWidth>
 
       <CompactSectionWithFullWidth key={footerTextInput.name}>
-        <LayoutSecondaryHeading>Footer Text</LayoutSecondaryHeading>
+        <LayoutSecondaryHeading>
+          {t('cmsPage.layout.Footer Text')}
+        </LayoutSecondaryHeading>
         <ValidatedFieldFormik
           component={footerTextInput.component}
           name={footerTextInput.name}
@@ -132,7 +138,9 @@ const Footer = ({
       </CompactSectionWithFullWidth>
 
       <CompactSectionWithFullWidth key="footer_page_links">
-        <LayoutSecondaryHeading>Footer Page links</LayoutSecondaryHeading>
+        <LayoutSecondaryHeading>
+          {t('cmsPage.layout.Footer Page links')}
+        </LayoutSecondaryHeading>
         <PageOrder
           initialItems={cmsLayout.flaxFooterConfig}
           onPageOrderUpdated={onPageOrderUpdated}

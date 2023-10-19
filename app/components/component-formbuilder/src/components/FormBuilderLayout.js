@@ -4,6 +4,7 @@ import { forEach } from 'lodash'
 import styled, { withTheme } from 'styled-components'
 import { Tabs, Action, Icon, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
 import FormProperties from './FormProperties'
@@ -79,6 +80,7 @@ const FormBuilderLayout = ({
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formId, setFormId] = useState()
+  const { t } = useTranslation()
 
   const openModalHandler = id => {
     setOpenModal(true)
@@ -134,7 +136,7 @@ const FormBuilderLayout = ({
       <ControlIcon key="new-form" size={2.5}>
         plus
       </ControlIcon>,
-      ' New Form',
+      ` ${t('formBuilder.New Form')}`,
     ],
   })
 
@@ -157,9 +159,7 @@ const FormBuilderLayout = ({
     <div>
       <Container style={{ height: '100vh' }}>
         <HeadingWithAction>
-          <Heading>
-            {category.charAt(0).toUpperCase() + category.slice(1)} Form Builder
-          </Heading>
+          <Heading>{t(`formBuilder.${category}.title`)}</Heading>
         </HeadingWithAction>
         <Columns>
           <Form>
@@ -201,7 +201,9 @@ const FormBuilderLayout = ({
 
       <Modal isOpen={openModal}>
         <ModalContainer>
-          <ConfrimationString>Permanently delete this form?</ConfrimationString>
+          <ConfrimationString>
+            {t('modals.deleteForm.Permanently delete this form')}
+          </ConfrimationString>
           <Button
             onClick={event => {
               deleteForm(formId)
@@ -209,11 +211,11 @@ const FormBuilderLayout = ({
             }}
             primary
           >
-            Ok
+            {t('modals.deleteForm.Ok')}
           </Button>
           &nbsp;
           <CancelButton onClick={() => closeModalHandler()}>
-            Cancel
+            {t('modals.deleteForm.Cancel')}
           </CancelButton>
         </ModalContainer>
       </Modal>

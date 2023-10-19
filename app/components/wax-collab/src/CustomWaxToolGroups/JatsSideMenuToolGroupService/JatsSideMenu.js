@@ -4,6 +4,7 @@ import { decorate, injectable, inject } from 'inversify'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { ToolGroup } from 'wax-prosemirror-core'
+import { useTranslation } from 'react-i18next'
 import { VerticalTabs, BlockLevelTools } from './VerticalTabs'
 
 // nb this was forked from /wax-prosemirror-services/src/WaxToolGroups/DisplayTextToolGroupService/DisplayText.js
@@ -53,11 +54,12 @@ class JatsSideMenu extends ToolGroup {
 
   /* eslint-disable no-underscore-dangle */
   renderTools(view) {
+    const { t } = useTranslation()
     if (isEmpty(view)) return null
 
     const frontMatterList = {
       id: 'frontmatterlist',
-      title: 'Front matter tools',
+      title: t('waxEditor.Front matter tools'),
       icon: 'frontMatter',
       disabled: false,
       component: (
@@ -73,7 +75,7 @@ class JatsSideMenu extends ToolGroup {
 
     const backMatterList = {
       id: 'backmatterlist',
-      title: 'Back matter tools',
+      title: t('waxEditor.Back matter tools'),
       icon: 'backMatter',
       disabled: false,
       component: (

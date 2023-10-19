@@ -1,5 +1,6 @@
 import { Formik } from 'formik'
 import React, { useState, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   SectionContent,
   SectionHeader,
@@ -30,6 +31,7 @@ const InviteReviewer = ({
 }) => {
   const config = useContext(ConfigContext)
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
 
   const [userId, setUserId] = useState(undefined)
 
@@ -93,7 +95,7 @@ const InviteReviewer = ({
           <>
             <SectionContent>
               <SectionHeader>
-                <Title>Invite Reviewers</Title>
+                <Title>{t('decisionPage.Invite Reviewers')}</Title>
               </SectionHeader>
               <SectionRow>
                 <ReviewerForm

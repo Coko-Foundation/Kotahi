@@ -145,7 +145,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInReviewer(data.creator)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
-        ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+        ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
         ManuscriptsPage.getArticleTopic(0)
           .should('be.visible')
           .should('contain', data.topic.toLowerCase())
@@ -233,7 +233,7 @@ describe.skip('manuscripts page tests', () => {
 
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
-      ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+      ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
       ManuscriptsPage.getOptionWithText('Publish')
         .scrollIntoView()
         .should('be.visible')

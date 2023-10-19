@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
 
 const EmailContentWrapper = styled.div`
@@ -30,13 +31,14 @@ const EmailHeader = styled.p`
 `
 
 const EmailTemplateContent = ({ activeTemplate }) => {
+  const { t } = useTranslation()
   return (
     <EmailContentWrapper key={activeTemplate?.id}>
-      <EmailHeader>Subject</EmailHeader>
+      <EmailHeader>{t('emailtemplatesPage.Subject')}</EmailHeader>
       <SimpleWaxEditor readonly value={activeTemplate?.emailContent.subject} />
-      <EmailHeader>CC</EmailHeader>
+      <EmailHeader>{t('emailtemplatesPage.CC')}</EmailHeader>
       <SimpleWaxEditor readonly value={activeTemplate?.emailContent.cc} />
-      <EmailHeader>Body</EmailHeader>
+      <EmailHeader>{t('emailtemplatesPage.Body')}</EmailHeader>
       <EmailBody>
         <SimpleWaxEditor readonly value={activeTemplate?.emailContent.body} />
       </EmailBody>

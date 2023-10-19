@@ -5,6 +5,7 @@ import { sanitize } from 'isomorphic-dompurify'
 import { Button, PlainButton } from '@pubsweet/ui'
 import { unescape } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { Heading1 } from '../style'
 
 const Wrapper = styled.div`
@@ -31,35 +32,39 @@ const createMarkup = encodedHtml => ({
   __html: sanitize(unescape(encodedHtml)),
 })
 
-const Confirm = ({ toggleConfirming, form, submit, errors }) => (
-  <Wrapper>
-    <article>
-      {Object.keys(errors).length > 0 ? (
-        <>
-          <Heading1>Errors in your submission</Heading1>
-          <Paragraph>
-            There are errors in your submission, please correct the following:{' '}
-            {JSON.stringify(errors)}
-          </Paragraph>
-        </>
-      ) : (
-        <>
-          <Heading1 dangerouslySetInnerHTML={createMarkup(form.popuptitle)} />
-          <Paragraph
-            dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
-          />
-          <Button onClick={submit} primary type="submit">
-            Submit
-          </Button>
-          <Divider> or </Divider>
-        </>
-      )}
-      <PlainButton onClick={toggleConfirming}>
-        get back to your submission
-      </PlainButton>
-    </article>
-  </Wrapper>
-)
+const Confirm = ({ toggleConfirming, form, submit, errors }) => {
+  const { t } = useTranslation()
+  return (
+    <Wrapper>
+      <article>
+        {Object.keys(errors).length > 0 ? (
+          <>
+            <Heading1>
+              {t('manuscriptSubmit.Errors in your submission')}
+            </Heading1>
+            <Paragraph>
+              {t('manuscriptSubmit.errorsList')} {JSON.stringify(errors)}
+            </Paragraph>
+          </>
+        ) : (
+          <>
+            <Heading1 dangerouslySetInnerHTML={createMarkup(form.popuptitle)} />
+            <Paragraph
+              dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
+            />
+            <Button onClick={submit} primary type="submit">
+              {t('manuscriptSubmit.Submit')}
+            </Button>
+            <Divider> {t('manuscriptSubmit.or')} </Divider>
+          </>
+        )}
+        <PlainButton onClick={toggleConfirming}>
+          {t('manuscriptSubmit.get back to your submission')}
+        </PlainButton>
+      </article>
+    </Wrapper>
+  )
+}
 
 Confirm.propTypes = {
   toggleConfirming: PropTypes.func.isRequired,

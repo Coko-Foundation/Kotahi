@@ -2,10 +2,11 @@ import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
 import { ToolGroup, LeftMenuTitle } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class FundingGroup extends ToolGroup {
   tools = []
-  title = (<LeftMenuTitle title="Funding Group" />)
+  title = (<LeftMenuTitle title={i18next.t('waxEditor.Funding Group')} />)
 
   constructor(
     @inject('FundingSource') fundingSource,

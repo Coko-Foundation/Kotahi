@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import fnv from 'fnv-plus'
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { RoundIconButton } from '../../shared'
 import { ConfigContext } from '../../config/src'
 
@@ -22,6 +23,7 @@ const VideoChat = ({ manuscriptId }) => {
   // TODO: Obtain hash from server, with a secret incorporated in it (to prevent outsiders from figuring out the room ID)
   const chatRoomId = fnv.hash(manuscriptId).hex()
   const config = useContext(ConfigContext)
+  const { t } = useTranslation()
 
   return (
     <FloatRightButton
@@ -33,7 +35,7 @@ const VideoChat = ({ manuscriptId }) => {
         )
       }
       primary
-      title="Open video chat"
+      title={t('chat.Open video chat')}
     />
   )
 }

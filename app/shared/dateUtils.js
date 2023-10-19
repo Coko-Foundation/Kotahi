@@ -1,4 +1,6 @@
+import i18next from 'i18next'
 import moment from 'moment-timezone'
+import { languagesLabels } from '../i18n/index'
 
 const tzOffset = new Date().getTimezoneOffset()
 
@@ -126,9 +128,9 @@ export const parseDate = dateString => {
   return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
 }
 
-const pad = num => (num < 10 ? `0${num}` : num.toString())
+export const pad = num => (num < 10 ? `0${num}` : num.toString())
 
-const monthAbbrevs = [
+export const monthAbbrevs = [
   'Jan',
   'Feb',
   'Mar',
@@ -144,23 +146,35 @@ const monthAbbrevs = [
 ]
 
 export const convertTimestampToDateString = timestamp => {
+  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
   const date = new Date(timestamp)
   const day = date.getDate()
-  const month = monthAbbrevs[date.getMonth()]
+  let month = monthAbbrevs[date.getMonth()]
   const year = date.getFullYear()
   const hours = date.getHours()
   const minutes = date.getMinutes()
   const ampm = hours < 12 ? 'am' : 'pm'
   const cleanHours = ((hours + 11) % 12) + 1
+  if (curLang?.monthAbbrevs) month = curLang.monthAbbrevs[date.getMonth()]
+
+  if (curLang?.funcs?.convertTimestampToDateString) {
+    return curLang.funcs.convertTimestampToDateString(date, month, pad)
+  }
 
   return `${month} ${pad(day)}, ${year} ${cleanHours}:${pad(minutes)}${ampm}`
 }
 
 export const convertTimestampToDateWithoutTimeString = timestamp => {
+  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
   const date = new Date(timestamp)
   const day = date.getDate()
-  const month = monthAbbrevs[date.getMonth()]
+  let month = monthAbbrevs[date.getMonth()]
   const year = date.getFullYear()
+  if (curLang?.monthAbbrevs) month = curLang.monthAbbrevs[date.getMonth()]
+
+  if (curLang?.funcs?.convertTimestampToDateWithoutTimeString) {
+    return curLang.funcs.convertTimestampToDateWithoutTimeString(date, month)
+  }
 
   return `${month} ${pad(day)}, ${year}`
 }
@@ -190,15 +204,17 @@ export const convertTimestampToRelativeDateString = timestamp => {
   const diff = Math.round((currTime - updatedTime) / (1000 * 3600 * 24))
 
   if (diff === 0) {
-    return 'today'
+    return i18next.t('common.relativeDateStrings.today')
   }
 
   if (diff === 1) {
-    return 'yesterday'
+    return i18next.t('common.relativeDateStrings.yesterday')
   }
 
   if (diff <= 7) {
-    return `${diff} days ago`
+    return i18next.t('common.relativeDateStrings.daysAgo', {
+      count: diff,
+    })
   }
 
   return convertTimestampToDateWithoutTimeString(timestamp)

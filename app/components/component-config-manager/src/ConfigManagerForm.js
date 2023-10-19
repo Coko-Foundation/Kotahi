@@ -2,6 +2,7 @@
 import React from 'react'
 /* eslint-disable import/no-unresolved */
 import Form from '@rjsf/core'
+import { useTranslation } from 'react-i18next'
 import generateSchema from './ui/schema' // Import the function that generates the schema and uiSchema
 
 import {
@@ -34,6 +35,8 @@ const ConfigManagerForm = ({
   updateConfigStatus,
   emailTemplates,
 }) => {
+  const { t } = useTranslation()
+
   const emailNotificationOptions = emailTemplates.map(template => {
     const emailOption = {
       const: template.id,
@@ -57,6 +60,7 @@ const ConfigManagerForm = ({
   const { schema, uiSchema } = generateSchema(
     emailNotificationOptions,
     defaultReviewerInvitationTemplate,
+    t,
   )
 
   return (
@@ -69,7 +73,7 @@ const ConfigManagerForm = ({
       />
       <Container>
         <HeadingWithAction>
-          <Heading>Configuration</Heading>
+          <Heading>{t('configPage.Configuration')}</Heading>
         </HeadingWithAction>
         <WidthLimiter>
           <SectionContent>
@@ -91,7 +95,7 @@ const ConfigManagerForm = ({
                   status={updateConfigStatus}
                   type="submit"
                 >
-                  Submit
+                  {t('configPage.Submit')}
                 </ActionButton>
               </Form>
             </PaddedContent>

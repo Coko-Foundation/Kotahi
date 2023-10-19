@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { th } from '@pubsweet/ui-toolkit'
 import styled, { css } from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { SectionHeader, SectionRowGrid, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
@@ -69,6 +70,7 @@ const EmailNotifications = ({
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
   const [notificationStatus, setNotificationStatus] = useState(null)
+  const { t } = useTranslation()
 
   const resetAll = () => {
     setExternalEmail('')
@@ -89,7 +91,7 @@ const EmailNotifications = ({
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>Notifications</Title>
+        <Title>{t('decisionPage.tasksTab.Notifications')}</Title>
       </SectionHeader>
       <RowGridStyled>
         <SelectReceiver
@@ -147,11 +149,11 @@ const EmailNotifications = ({
           primary
           status={notificationStatus}
         >
-          Notify
+          {t('decisionPage.tasksTab.Notify')}
         </ActionButton>
       </RowGridStyled>
       <EmailErrorMessageWrapper isVisible={selectedEmailIsBlacklisted}>
-        User email address opted out
+        {t('decisionPage.tasksTab.User email address opted out')}
       </EmailErrorMessageWrapper>
     </SectionContent>
   )

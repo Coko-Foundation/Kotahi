@@ -2,6 +2,7 @@ import React from 'react'
 
 import { required } from 'xpub-validators'
 import { ValidatedFieldFormik } from '@pubsweet/ui'
+import { useTranslation } from 'react-i18next'
 import { CompactSection, LayoutMainHeading } from '../style'
 
 import { inputComponents } from '../FormSettings'
@@ -60,10 +61,24 @@ const Branding = ({
     triggerAutoSave(data)
   }
 
+  const { t } = useTranslation()
+
+  const localizeFields = fields => {
+    return fields.map(field => {
+      if (field.label.length) {
+        const newField = field
+        newField.label = t(`cmsPage.layout.fields.${newField.name}`)
+        return newField
+      }
+
+      return field
+    })
+  }
+
   return (
     <>
       <CompactSection key={brandLogoInput.name}>
-        <LayoutMainHeading>Brand logo</LayoutMainHeading>
+        <LayoutMainHeading>{t('cmsPage.layout.Brand logo')}</LayoutMainHeading>
         <ValidatedFieldFormik
           component={brandLogoInput.component}
           confirmBeforeDelete
@@ -80,8 +95,8 @@ const Branding = ({
         />
       </CompactSection>
 
-      <LayoutMainHeading>Brand Color</LayoutMainHeading>
-      {brandColorInput.map(item => {
+      <LayoutMainHeading>{t('cmsPage.layout.Brand Color')}</LayoutMainHeading>
+      {localizeFields(brandColorInput).map(item => {
         return (
           <CompactSection key={item.name}>
             <p style={{ fontSize: '14px' }}>{item.label}</p>

@@ -364,6 +364,12 @@ const resolvers = {
       await user.save()
       return user
     },
+    async updateLanguage(_, { id, preferredLanguage }, ctx) {
+      const user = await models.User.find(id)
+      user.preferredLanguage = preferredLanguage
+      await user.save()
+      return user
+    },
     async updateEmail(_, { id, email }, ctx) {
       const user = await models.User.find(id)
 
@@ -375,13 +381,13 @@ const resolvers = {
       const emailValidationResult = emailValidationRegexp.test(email)
 
       if (!emailValidationResult) {
-        return { success: false, error: 'Email is invalid' }
+        return { success: false, error: 'invalidEmail' }
       }
 
       const userWithSuchEmail = await models.User.query().findOne({ email })
 
       if (userWithSuchEmail) {
-        return { success: false, error: 'Email is already taken' }
+        return { success: false, error: 'emailTaken' }
       }
 
       try {
@@ -391,7 +397,7 @@ const resolvers = {
 
         return { success: true, user: updatedUser }
       } catch (e) {
-        return { success: false, error: 'Something went wrong', user: null }
+        return { success: false, error: 'smthWentWrong', user: null }
       }
     },
     async updateRecentTab(_, { tab }, ctx) {
@@ -516,6 +522,7 @@ const typeDefs = `
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
     updateUsername(id: ID!, username: String!): User
+    updateLanguage(id: ID!, preferredLanguage: String!): User
     sendEmail(input: String!): SendEmailPayload!
     updateEmail(id: ID!, email: String!): UpdateEmailResponse
     updateRecentTab(tab: String): User
@@ -548,6 +555,7 @@ const typeDefs = `
     email: String
     groupRoles: [String]
     globalRoles: [String]
+    preferredLanguage: String
     identities: [Identity]
     defaultIdentity: Identity
     file: File

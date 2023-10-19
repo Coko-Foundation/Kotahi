@@ -3,6 +3,7 @@ import { Button } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import {
   Heading,
   HeadingWithAction,
@@ -45,29 +46,31 @@ const DashboardLayout = ({
   const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
   const dashboardPages = []
 
+  const { t } = useTranslation()
+
   if (config.dashboard?.showSections?.includes('submission'))
     dashboardPages.push({
       href: '/dashboard/submissions',
-      label: 'My Submissions',
+      label: t('dashboardPage.My Submissions'),
     })
 
   if (config.dashboard?.showSections?.includes('review'))
     dashboardPages.push({
       href: '/dashboard/reviews',
-      label: 'To Review',
+      label: t('dashboardPage.To Review'),
     })
 
   if (config.dashboard?.showSections?.includes('editor'))
     dashboardPages.push({
       href: '/dashboard/edits',
-      label: "Manuscripts I'm Editor of",
+      label: t("dashboardPage.Manuscripts I'm Editor of"),
     })
 
   return (
     <Container>
       <HeadingWithAction>
         <FlexRow>
-          <Heading>Dashboard</Heading>
+          <Heading>{t('dashboardPage.Dashboard')}</Heading>
           <ControlsContainer>
             <SearchControl
               applySearchQuery={newQuery =>
@@ -82,11 +85,13 @@ const DashboardLayout = ({
               onClick={() => history.push(`${urlFrag}/newSubmission`)}
               primary
             >
-              + New submission
+              {t('dashboardPage.New submission')}
             </Button>
 
             {createNewTaskAlerts && (
-              <Button onClick={createNewTaskAlerts}>New Alerts</Button>
+              <Button onClick={createNewTaskAlerts}>
+                {t('dashboardPage.New Alerts')}
+              </Button>
             )}
           </ControlsContainer>
         </FlexRow>

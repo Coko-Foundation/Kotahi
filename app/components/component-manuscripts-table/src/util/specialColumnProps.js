@@ -1,3 +1,4 @@
+import i18next from 'i18next'
 import {
   DefaultField,
   NewItemCheckbox,
@@ -16,6 +17,8 @@ import {
   ReviewerStatusBadge,
 } from '../cell-components'
 import reviewFilterOptions from '../../../../../config/journal/review-status'
+
+import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 
 /**
  * buildSpecialColumnProps: Build the special components for specific form fields
@@ -37,62 +40,79 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
     updateReviewerStatus,
   } = specialComponentValues
 
+  const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
+    reviewFilterOptions,
+    i18next.t,
+  )
+
   const specialColumnProps = {
     shortId: {
-      title: 'Manuscript number',
+      title: i18next.t('manuscriptsTable.Manuscript number'),
       canSort: true,
       defaultSortDirection: 'DESC',
       flex: '0 1 6em',
     },
     created: {
-      title: 'Created',
+      title: i18next.t('manuscriptsTable.Created'),
       canSort: true,
       canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
       flex: '0.25 1 7em',
     },
     updated: {
-      title: 'Updated',
+      title: i18next.t('manuscriptsTable.Updated'),
       canSort: true,
       canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
       flex: '0.25 1 7em',
     },
     lastUpdated: {
-      title: 'Last Status Update',
+      title: i18next.t('manuscriptsTable.Last Status Update'),
       component: LastReviewerUpdated,
       flex: '0.25 1 8em',
     },
     status: {
-      title: 'Status',
+      title: i18next.t('manuscriptsTable.Status'),
       filterOptions: ['aperture', 'colab'].includes(config?.instanceName)
         ? [
-            { label: 'Unsubmitted', value: 'new' },
-            { label: 'Submitted', value: 'submitted' },
-            { label: 'Accepted', value: 'accepted' },
-            { label: 'Rejected', value: 'rejected' },
-            { label: 'Revise', value: 'revise' },
-            { label: 'Revising', value: 'revising' },
-            { label: 'Published', value: 'published' },
+            { label: i18next.t('msStatus.new'), value: 'new' },
+            { label: i18next.t('msStatus.submitted'), value: 'submitted' },
+            { label: i18next.t('msStatus.accepted'), value: 'accepted' },
+            { label: i18next.t('msStatus.rejected'), value: 'rejected' },
+            { label: i18next.t('msStatus.revise'), value: 'revise' },
+            { label: i18next.t('msStatus.revising'), value: 'revising' },
+            { label: i18next.t('msStatus.published'), value: 'published' },
           ]
         : [
-            { label: 'Unsubmitted', value: 'new' },
-            { label: 'Submitted', value: 'submitted' },
-            { label: 'Evaluated', value: 'evaluated' },
-            { label: 'Published', value: 'published' },
+            { label: i18next.t('msStatus.new'), value: 'new' },
+            { label: i18next.t('msStatus.submitted'), value: 'submitted' },
+            { label: i18next.t('msStatus.evaluated'), value: 'evaluated' },
+            { label: i18next.t('msStatus.published'), value: 'published' },
           ],
       flex: '0.25 1 10em',
       component: FilterableStatusBadge,
       centered: true,
     },
     manuscriptVersions: {
-      title: 'Version',
+      title: i18next.t('manuscriptsTable.Version'),
       flex: '0 1 6em',
       centered: true,
     },
-    author: { title: 'Author', flex: '0 1 16em', component: Submitter },
-    submitter: { title: 'Author', flex: '0 1 16em', component: Submitter }, // alias of 'author'
-    editor: { title: 'Editor', flex: '0 1 12em', component: Editors },
+    author: {
+      title: i18next.t('manuscriptsTable.Author'),
+      flex: '0 1 16em',
+      component: Submitter,
+    },
+    submitter: {
+      title: i18next.t('manuscriptsTable.Author'),
+      flex: '0 1 16em',
+      component: Submitter,
+    }, // alias of 'author'
+    editor: {
+      title: i18next.t('manuscriptsTable.Editor'),
+      flex: '0 1 12em',
+      component: Editors,
+    },
     actions: {
       flex: '0 1 8em',
       component: Actions,
@@ -112,11 +132,11 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
       },
     },
     reviewerStatusBadge: {
-      title: 'Your Status',
+      title: i18next.t('manuscriptsTable.Your Status'),
       flex: '0.25 1 10em',
       canSort: true,
       defaultSortDirection: 'DESC',
-      filterOptions: reviewFilterOptions,
+      filterOptions: LocalizedReviewFilterOptions,
       component: ReviewerStatusBadge,
       centered: true,
       extraProps: {
@@ -124,13 +144,13 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
       },
     },
     statusCounts: {
-      title: 'Reviewer Status',
+      title: i18next.t('manuscriptsTable.Reviewer Status'),
       flex: '0.25 1 10em',
       centered: true,
       component: ReviewStatusDonut,
     },
     editorLinks: {
-      title: 'Actions',
+      title: i18next.t('manuscriptsTable.Actions'),
       flex: '0 1 10em',
       component: EditorItemLinks,
       extraProps: {
@@ -175,6 +195,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
           : DefaultField,
     },
     'meta.title': {
+      title: i18next.t('manuscriptsTable.Title'),
       component:
         config?.instanceName === 'colab'
           ? TitleWithAbstractAsTooltip

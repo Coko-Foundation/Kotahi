@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { Heading, Title, Icon } from '../../../../shared'
 import { color } from '../../../../../theme'
@@ -30,9 +31,10 @@ const ReviewPreview = ({
   threadedDiscussionProps,
 }) => {
   const history = useHistory()
+  const { t } = useTranslation()
   return (
     <Page>
-      <Heading>Summary</Heading>
+      <Heading>{t('reviewPreviewPage.Summary')}</Heading>
       <Title>{manuscript.meta.title}</Title>
       <ReadonlyFormTemplate
         form={submissionForm}
@@ -49,7 +51,7 @@ const ReviewPreview = ({
         <Icon color={color.brand1.base()} inline size={2}>
           arrow-left
         </Icon>
-        Back
+        {t('reviewPreviewPage.Back')}
       </IconLink>
     </Page>
   )

@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
@@ -62,6 +63,7 @@ const Submit = ({
   const handleSave = (source, versionId) =>
     updateManuscript(versionId, { meta: { source } })
 
+  const { t } = useTranslation()
   const debouncedSave = useCallback(debounce(handleSave, 2000), [])
   useEffect(() => {
     debouncedSave.flush()
@@ -87,7 +89,7 @@ const Submit = ({
         />
       ),
       key: `editor`,
-      label: 'Manuscript text',
+      label: t('manuscriptSubmit.Manuscript text'),
     }
 
     let decisionSection
@@ -127,7 +129,7 @@ const Submit = ({
       decisionSection = {
         content: <SubmissionForm {...submissionProps} />,
         key: version.id,
-        label: 'Edit submission info',
+        label: t('manuscriptSubmit.Edit submission info'),
       }
     } else {
       decisionSection = {
@@ -150,12 +152,12 @@ const Submit = ({
               manuscript={version}
               showEditorOnlyFields={false}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
-              title="Metadata"
+              title={t('manuscriptSubmit.Metadata')}
             />
           </>
         ),
         key: version.id,
-        label: 'Submitted info',
+        label: t('manuscriptSubmit.Submitted info'),
       }
     }
 

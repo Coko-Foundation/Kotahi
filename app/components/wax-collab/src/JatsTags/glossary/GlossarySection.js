@@ -3,10 +3,11 @@ import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
 import { wrapIn } from 'prosemirror-commands'
+import i18next from 'i18next'
 
 class GlossarySection extends Tools {
-  title = 'Change to glossary section'
-  label = 'Glossary section'
+  title = i18next.t('waxEditor.Change to glossary section')
+  label = i18next.t('waxEditor.Glossary section')
   name = 'GlossarySection'
 
   // eslint-disable-next-line class-methods-use-this

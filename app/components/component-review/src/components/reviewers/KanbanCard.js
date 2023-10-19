@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React, { useState } from 'react'
 import { Mail } from 'react-feather'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { UserAvatar } from '../../../../component-avatar/src'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
@@ -81,7 +82,7 @@ const KanbanCard = ({
   showEmailInvitation,
 }) => {
   const [open, setOpen] = useState(false)
-
+  const { t } = useTranslation()
   return (
     <>
       <ReviewDetailsModal
@@ -118,13 +119,15 @@ const KanbanCard = ({
               {reviewer.user?.username ?? reviewer.invitedPersonName}
             </NameDisplay>
             <DateDisplay>
-              Last updated
+              {t('common.kanban.Last updated')}
               {` ${convertTimestampToRelativeDateString(reviewer.updated)}`}
             </DateDisplay>
             {showEmailInvitation && (
               <EmailDisplay>
-                <MailIcon invitationStatus={reviewer.status.toLowerCase()} />
-                {' Invited via email'}
+                <MailIcon
+                  invitationStatus={reviewer.status} // TODO why are we setting an arbitrary 'invitationStatus' attribute on this svg element?
+                />{' '}
+                {t('common.kanban.Invited via email')}
               </EmailDisplay>
             )}
           </InfoGrid>

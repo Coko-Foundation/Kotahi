@@ -124,7 +124,7 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
       })
-      ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+      ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
     })
 
     it('sort article after Article id', () => {
@@ -203,7 +203,7 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getOptionsElife().should('contain', 'Publish')
     })
     it('submission details should be visible', () => {
-      ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+      ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
       ManuscriptsPage.clickEvaluation()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -266,7 +266,7 @@ describe('Manuscripts page tests', () => {
         // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('role_names').then(name => {
           ManuscriptsPage.getAuthor(0).should('eq', name.role.admin)
-          ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+          ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
         })
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInArticleld('123 - Evaluated')

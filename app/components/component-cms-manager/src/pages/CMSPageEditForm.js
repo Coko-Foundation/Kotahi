@@ -3,6 +3,7 @@ import { ValidatedFieldFormik } from '@pubsweet/ui'
 import { adopt } from 'react-adopt'
 import { debounce, kebabCase } from 'lodash'
 import { required } from 'xpub-validators'
+import { useTranslation } from 'react-i18next'
 import { inputFields } from '../FormSettings'
 import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
@@ -94,6 +95,8 @@ const CMSPageEditForm = ({
   const autoSave = useCallback(debounce(autoSaveData ?? (() => {}), 1000), [])
   useEffect(() => autoSave.flush, [])
 
+  const { t } = useTranslation()
+
   const onDataChanged = (itemKey, value) => {
     const data = {}
     data[itemKey] = value
@@ -163,12 +166,24 @@ const CMSPageEditForm = ({
     return <ErrorMessage>{error}</ErrorMessage>
   }
 
+  const localizeInputFields = fields => {
+    return fields.map(field => {
+      if (field.label.length) {
+        const newField = field
+        newField.label = t(`cmsPage.pages.fields.${newField.name}`)
+        return newField
+      }
+
+      return field
+    })
+  }
+
   return (
     <Composed>
       {({ onAssetManager }) => (
         <Page>
           <EditorForm key={key} onSubmit={onSubmit}>
-            {inputFields.map(item => {
+            {localizeInputFields(inputFields).map(item => {
               return (
                 <Section flexGrow={item.flexGrow || false} key={item.name}>
                   <p style={{ fontSize: '10px' }}>{item.label}</p>
@@ -195,18 +210,21 @@ const CMSPageEditForm = ({
                     onClick={() => setIsConfirmingDelete(true)}
                     style={{ minWidth: '104px' }}
                   >
-                    Delete
+                    {t('cmsPage.pages.Delete')}
                   </FormActionDelete>
                 )}
               </div>
               {!isNewPage && <PublishStatus cmsComponent={cmsPage} />}
             </ActionButtonContainer>
             <ConfirmationModal
+              cancelButtonText={t('modals.cmsPageDelete.Cancel')}
               closeModal={() => setIsConfirmingDelete(false)}
               confirmationAction={() => onDelete(cmsPage)}
-              confirmationButtonText="Delete"
+              confirmationButtonText={t('modals.cmsPageDelete.Delete')}
               isOpen={isConfirmingDelete}
-              message={`Permanently delete ${cmsPage.title} page ?`}
+              message={t('modals.cmsPageDelete.permanentlyDelete', {
+                pageName: cmsPage.title,
+              })}
             />
           </EditorForm>
         </Page>

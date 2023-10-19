@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { Checkbox, TextArea } from '@pubsweet/ui/dist/atoms'
 import { Button } from '@pubsweet/ui'
 import { useMutation, useQuery } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { ADD_EMAIL_TO_BLACKLIST } from '../../../../queries/index'
 import {
   UPDATE_INVITATION_RESPONSE,
@@ -29,6 +30,8 @@ const DeclineArticleOwnershipPage = ({ match }) => {
   const { data } = useQuery(GET_INVITATION_STATUS, {
     variables: { id: invitationId },
   })
+
+  const { t } = useTranslation()
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
@@ -99,9 +102,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
               alt={config?.groupIdentity?.brandName}
               src={config?.groupIdentity?.logoPath}
             />
-            <ThankYouString>
-              You have declined the invitation. Thank-you for your response.
-            </ThankYouString>
+            <ThankYouString>{t('declineReviewPage.thanks')}</ThankYouString>
           </InvitationContent>
         </Centered>
       </InvitationContainer>
@@ -119,30 +120,28 @@ const DeclineArticleOwnershipPage = ({ match }) => {
             />
             <FeedbackForm>
               <DeclinedInfoString>
-                Are you sure you want to decline this invitation to participate
-                in a peer review?
+                {t('declineReviewPage.youHaveDeclined')}
               </DeclinedInfoString>
               <SubmitFeedbackNote>
-                You may wish to share your reason for declining the invitation
-                below (optional)
+                {t('declineReviewPage.reason')}
               </SubmitFeedbackNote>
               <FormInput>
                 <TextArea
                   onChange={event => setFeedbackComment(event.target.value)}
-                  placeholder="Your message here..."
+                  placeholder={t('declineReviewPage.messageHere')}
                   rows="4"
                   value={feedbackComment}
                 />
                 <Checkbox
                   checked={checked}
-                  label="I don’t want to be contacted again"
+                  label={t('declineReviewPage.dontWantContact')}
                   onChange={handleChange}
                 />
               </FormInput>
             </FeedbackForm>
             <ButtonWrapper>
               <Button onClick={handleDeclineAction} primary type="submit">
-                Decline Invitation
+                {t('declineReviewPage.Decline Invitation')}
               </Button>
             </ButtonWrapper>
           </InvitationContent>

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import { Mail } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Primary, Secondary } from '../../../shared'
 import { convertTimestampToRelativeDateString } from '../../../../shared/dateUtils'
 import { UserAction } from '../../../component-manuscripts-table/src/style'
@@ -61,6 +62,12 @@ const ViewDetails = styled(UserAction)`
 
 const DeclinedReviewer = ({ declined }) => {
   const [isModalOpen, setModalOpen] = useState(false)
+  const { t } = useTranslation()
+
+  const declinedDateString = convertTimestampToRelativeDateString(
+    declined.responseComment ? declined.responseDate : declined.updated,
+  )
+
   return (
     <>
       <InviteDeclineModal
@@ -75,8 +82,7 @@ const DeclinedReviewer = ({ declined }) => {
           </Primary>
           {declined.isEmail && (
             <EmailDisplay>
-              <MailIcon />
-              {' Invited via email'}
+              <MailIcon /> {t('decisionPage.Invited via email')}
             </EmailDisplay>
           )}
         </UserName>
@@ -84,19 +90,16 @@ const DeclinedReviewer = ({ declined }) => {
         <Date>
           <Secondary>
             <TextChange>
-              Declined{' '}
-              {convertTimestampToRelativeDateString(
-                declined.responseComment
-                  ? declined.responseDate
-                  : declined.updated,
-              )}
+              {t('decisionPage.declinedInvitation', {
+                dateString: declinedDateString,
+              })}
             </TextChange>
           </Secondary>
         </Date>
 
         <ViewDetailsWrapper>
           <ViewDetails onClick={() => setModalOpen(true)}>
-            View Details
+            {t('decisionPage.View Details')}
           </ViewDetails>
         </ViewDetailsWrapper>
       </DeclinedReviewerContainer>

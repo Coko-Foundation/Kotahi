@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { FieldArray } from 'formik'
 import { TextField, ValidatedFieldFormik, Button } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 import { DeleteControl } from '../../../../shared'
 
 const Inline = styled.div`
@@ -39,11 +41,19 @@ const StyledDeleteControl = styled(DeleteControl)`
 `
 
 const LabelInput = props => (
-  <TextField label="Label to display" placeholder="Enter label…" {...props} />
+  <TextField
+    label={i18next.t('formBuilder.Label to display')}
+    placeholder={i18next.t('formBuilder.Enter label')}
+    {...props}
+  />
 )
 
 const ValueInput = props => (
-  <TextField label="Internal name" placeholder="Enter name…" {...props} />
+  <TextField
+    label={i18next.t('formBuilder.Internal name')}
+    placeholder={i18next.t('formBuilder.Enter name')}
+    {...props}
+  />
 )
 
 const ColorPicker = ({ name, value, onChange }) => {
@@ -61,6 +71,8 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
   const hasNewOption = values.options?.some(
     opt => opt === undefined || !opt.label || !opt.value,
   )
+
+  const { t } = useTranslation()
 
   return (
     <UnbulletedList>
@@ -102,7 +114,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
               />
             </Inline>
             <InlineColorPicker>
-              <div>Color label</div>
+              <div>{t('formBuilder.Color label')}</div>
               <ValidatedFieldFormik
                 component={ColorPicker}
                 name={`options.${index}.labelColor`}
@@ -110,7 +122,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
             </InlineColorPicker>
             <StyledDeleteControl
               onClick={() => remove(index)}
-              tooltip="Delete this option"
+              tooltip={t('formBuilder.Delete this option')}
             />
           </OptionsRow>
         </li>
@@ -122,7 +134,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
           plain
           type="button"
         >
-          Add another option
+          {t('formBuilder.Add another option')}
         </Button>
       </li>
     </UnbulletedList>

@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { Button } from '@pubsweet/ui'
 import { gql } from '@apollo/client'
 
+import { Trans, useTranslation } from 'react-i18next'
 import {
   SectionHeader,
   SectionRow,
@@ -20,21 +21,19 @@ const CreateANewVersion = ({
   allowAuthorsSubmitNewVersion,
 }) => {
   const [newVerButtonIsEnabled, setNewVerButtonIsEnabled] = useState(true)
-
+  const { t } = useTranslation()
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>Submit a new version</Title>
+        <Title>{t('manuscriptSubmit.Submit a new version')}</Title>
       </SectionHeader>
       <SectionRow>
         <HeadingWithAction>
           {allowAuthorsSubmitNewVersion ? (
-            <p>You can modify and resubmit a new version of your manuscript.</p>
+            <p>{t('manuscriptSubmit.canModify')}</p>
           ) : (
             <p>
-              You have been asked to <strong>revise</strong> your manuscript;
-              see the reviews and decision below. You may modify and resubmit a
-              new version of your manuscript.
+              <Trans i18nKey="manuscriptSubmit.askedToRevise" />
             </p>
           )}
           <Button
@@ -85,7 +84,7 @@ const CreateANewVersion = ({
             }}
             primary
           >
-            Submit a new version...
+            {t('manuscriptSubmit.submitVersionButton')}
           </Button>
         </HeadingWithAction>
       </SectionRow>

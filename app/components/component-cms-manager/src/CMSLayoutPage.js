@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Formik } from 'formik'
 import { useMutation, useQuery } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import LayoutForm from './layout/LayoutForm'
 import { Container, Spinner, CommsErrorBanner } from '../../shared'
 import PageHeader from './components/PageHeader'
@@ -32,7 +33,11 @@ const CMSLayoutPage = ({ history }) => {
     },
   })
 
-  const [submitButtonText, setSubmitButtonText] = useState('Publish')
+  const { t } = useTranslation()
+
+  const [submitButtonText, setSubmitButtonText] = useState(
+    t('cmsPage.layout.Publish'),
+  )
 
   const triggerAutoSave = async formData => {
     updateCMSLayout({
@@ -68,7 +73,7 @@ const CMSLayoutPage = ({ history }) => {
   }
 
   const publish = async formData => {
-    setSubmitButtonText('Saving data')
+    setSubmitButtonText(t('cmsPage.layout.Saving data'))
     await updateCMSLayout({
       variables: {
         input: {
@@ -82,7 +87,7 @@ const CMSLayoutPage = ({ history }) => {
       },
     })
 
-    setSubmitButtonText('Rebuilding Site...')
+    setSubmitButtonText(t('cmsPage.layout.Rebuilding Site'))
     await rebuildFlaxSite({
       variables: {
         params: JSON.stringify({
@@ -90,7 +95,7 @@ const CMSLayoutPage = ({ history }) => {
         }),
       },
     })
-    setSubmitButtonText('Published')
+    setSubmitButtonText(t('cmsPage.layout.Published'))
   }
 
   const setInitialData = cmsLayoutData => {
@@ -115,7 +120,11 @@ const CMSLayoutPage = ({ history }) => {
 
   return (
     <Container>
-      <PageHeader history={history} leftSideOnly mainHeading="Layout" />
+      <PageHeader
+        history={history}
+        leftSideOnly
+        mainHeading={t('cmsPage.layout.Layout')}
+      />
       <Formik
         initialValues={setInitialData(cmsLayout)}
         onSubmit={async values => publish(values)}

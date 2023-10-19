@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Action } from '@pubsweet/ui'
+import { Trans, useTranslation } from 'react-i18next'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   UserCombo,
@@ -21,6 +22,7 @@ const User = ({
   setGlobalRole,
   setGroupRole,
 }) => {
+  const { t } = useTranslation()
   const roleOptions = []
 
   if (
@@ -30,7 +32,7 @@ const User = ({
   )
     roleOptions.push({
       value: 'user',
-      label: 'User',
+      label: t('common.roles.User'),
       scope: 'group',
       // We don't let someone unassign themselves from 'user' role unless they're also an admin
       isFixed:
@@ -41,7 +43,7 @@ const User = ({
   roleOptions.push(
     {
       value: 'groupManager',
-      label: 'Group Manager',
+      label: t('common.roles.Group Manager'),
       scope: 'group',
       // We don't let someone unassign themselves from 'groupManager' role unless they're also an admin
       isFixed:
@@ -50,7 +52,7 @@ const User = ({
     },
     {
       value: 'admin',
-      label: 'Admin',
+      label: t('common.roles.Admin'),
       scope: 'global',
       // We don't let someone unassign themselves from 'admin' role;
       // and non-admins can't assign/unassign admin role
@@ -97,8 +99,15 @@ const User = ({
       },
       message: (
         <p>
-          Do you wish to {isAdding ? 'assign' : 'remove'} the{' '}
-          <b>{differingRole.label}</b> role for user {user.username}?
+          {isAdding ? (
+            <Trans i18nKey="modals.assignUserRole.text">
+              {{ role: differingRole.label }} {{ user: user.username }}
+            </Trans>
+          ) : (
+            <Trans i18nKey="modals.removeUserRole.text">
+              {{ role: differingRole.label }} {{ user: user.username }}
+            </Trans>
+          )}
         </p>
       ),
     })
@@ -125,15 +134,17 @@ const User = ({
           isClearable={false}
           isMulti
           menuPortalTarget={document.querySelector('body')}
+          noOptionsMessage={() => t('common.noOption')}
           onChange={onChangeRoles}
           options={roleOptions.filter(x => !x.isFixed)}
-          placeholder="None"
+          placeholder={t('usersTable.None')}
           value={roles}
         />
         <ConfirmationModal
+          cancelButtonText={t('usersTable.Cancel')}
           closeModal={() => setRoleConfirm(null)}
           confirmationAction={roleConfirm?.action}
-          confirmationButtonText="Yes"
+          confirmationButtonText={t('usersTable.Yes')}
           isOpen={!!roleConfirm}
           message={roleConfirm?.message}
         />
@@ -145,15 +156,20 @@ const User = ({
         groupManagers can only remove users with `user` or `groupManager` roles from a group */}
         {currentUser.globalRoles.includes('admin') &&
           currentUser.id !== user.id && (
-            <Action onClick={() => setIsConfirmingDelete(true)}>Delete</Action>
+            <Action onClick={() => setIsConfirmingDelete(true)}>
+              {t('usersTable.Delete')}
+            </Action>
           )}
       </LastCell>
       <ConfirmationModal
+        cancelButtonText={t('modals.deleteUser.Cancel')}
         closeModal={() => setIsConfirmingDelete(false)}
         confirmationAction={() => deleteUser({ variables: { id: user.id } })}
-        confirmationButtonText="Delete"
+        confirmationButtonText={t('modals.deleteUser.Delete')}
         isOpen={isConfirmingDelete}
-        message={`Permanently delete user ${user.username}?`}
+        message={t('modals.deleteUser.Permanently delete user', {
+          userName: user.username,
+        })}
       />
     </Row>
   )

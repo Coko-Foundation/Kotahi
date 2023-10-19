@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
 import { DownloadDropdown } from './DownloadDropdown'
 import {
@@ -30,11 +31,12 @@ const Production = ({
   )
 
   useEffect(() => debouncedSave.flush, [])
+  const { t } = useTranslation()
 
   return (
     <Container>
       <HeadingWithAction>
-        <Heading>Production</Heading>
+        <Heading>{t('productionPage.Production')}</Heading>
         <DownloadDropdown
           makeJats={makeJats}
           makePdf={makePdf}
@@ -64,7 +66,7 @@ const Production = ({
         </SectionContent>
       ) : (
         <SectionContent>
-          <Info>No supported view of the file</Info>
+          <Info>{t('productionPage.No supported view of the file')}</Info>
         </SectionContent>
       )}
     </Container>

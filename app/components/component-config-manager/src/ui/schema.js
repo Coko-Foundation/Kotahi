@@ -4,6 +4,7 @@ import React from 'react'
 const generateSchema = (
   emailNotificationOptions,
   defaultReviewerInvitationEmail,
+  t,
 ) => {
   const schema = {
     definitions: {
@@ -429,7 +430,7 @@ const generateSchema = (
       },
     },
     type: 'object',
-    title: 'Instance Type',
+    title: t('configPage.Instance Type'),
     properties: {
       instanceName: {
         type: 'string',
@@ -448,25 +449,25 @@ const generateSchema = (
               },
               groupIdentity: {
                 type: 'object',
-                title: 'Group Identity',
+                title: t('configPage.Group Identity'),
                 properties: {
                   brandName: {
                     type: 'string',
-                    description: 'Brand name',
+                    description: t('configPage.Brand name'),
                     default: 'Kotahi',
                   },
                   primaryColor: {
                     type: 'string',
-                    description: 'Brand primary colour',
+                    description: t('configPage.Brand primary colour'),
                     default: '#3aae2a',
                   },
                   secondaryColor: {
                     type: 'string',
-                    description: 'Brand secondary colour',
+                    description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
                   logoPath: {
-                    description: 'Logo',
+                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
                   },
@@ -474,41 +475,40 @@ const generateSchema = (
               },
               dashboard: {
                 type: 'object',
-                title: 'Dashboard',
+                title: t('configPage.Dashboard'),
                 properties: {
                   loginRedirectUrl: {
                     type: 'string',
-                    description:
-                      'Landing page for Group Manager users upon login',
+                    description: t('configPage.landingPage'),
                     default: '/admin/manuscripts',
                     oneOf: [
                       {
                         const: '/dashboard',
-                        title: 'Dashboard Page',
+                        title: t('configPage.Dashboard Page'),
                       },
                       {
                         const: '/admin/manuscripts',
-                        title: 'Manuscript Page',
+                        title: t('configPage.Manuscript Page'),
                       },
                     ],
                   },
                   showSections: {
                     type: 'array',
-                    description: 'Dashboard pages visible to registered users',
+                    description: t('configPage.pagesVisibleToRegistered'),
                     items: {
                       type: 'string',
                       oneOf: [
                         {
                           const: 'submission',
-                          title: 'My Submissions',
+                          title: t('configPage.My Submissions'),
                         },
                         {
                           const: 'review',
-                          title: 'To Review',
+                          title: t('configPage.To Review'),
                         },
                         {
                           const: 'editor',
-                          title: "Manuscripts I'm editor of",
+                          title: t("configPage.Manuscripts I'm editor of"),
                         },
                       ],
                     },
@@ -518,95 +518,115 @@ const generateSchema = (
               },
               manuscript: {
                 type: 'object',
-                title: 'Manuscripts page',
+                title: t('configPage.Manuscripts page'),
                 properties: {
                   tableColumns: {
                     type: 'string',
-                    description:
-                      'List columns to display on the Manuscripts page',
+                    description: t(
+                      'configPage.List columns to display on the Manuscripts page',
+                    ),
                     default:
                       'shortId, meta.title, created, updated, status, submission.labels, author',
                   },
                   paginationCount: {
                     type: 'number',
-                    description:
-                      'Number of manuscripts listed per page on the Manucripts page',
+                    description: t('configPage.numberOfManuscripts'),
                     enum: [10, 20, 50, 100],
                     default: 10,
                   },
                   autoImportHourUtc: {
                     type: 'integer',
-                    description:
-                      'Hour when manuscripts are imported daily (UTC)',
+                    description: t('configPage.hourManuscriptsImported'),
                     $ref: '#/definitions/hours',
                   },
                   archivePeriodDays: {
                     type: 'integer',
-                    description:
-                      'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+                    description: t('configPage.daysManuscriptRemain'),
                     minimum: 1,
                     maximum: 90,
                   },
                   semanticScholarImportsRecencyPeriodDays: {
                     type: 'integer',
-                    description:
-                      'Import manuscripts from Sematic Scholar no older than ‘x’ number of days',
+                    description: t('configPage.importFromSematic'),
                     minimum: 1,
                     maximum: 90,
                   },
                   newSubmission: {
                     type: 'boolean',
-                    title:
-                      "'Add new submission' action visible on the Manuscripts page",
+                    title: t('configPage.newSubmissionActionVisisble'),
                     default: true,
                   },
                   labelColumn: {
                     type: 'boolean',
-                    title:
-                      'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
+                    title: t('configPage.displayActionToSelect'),
                     default: false,
                   },
                   manualImport: {
                     type: 'boolean',
-                    title:
-                      "Import manuscripts manually using the 'Refresh' action",
+                    title: t('configPage.importManuscriptsManually'),
                     default: false,
                   },
                 },
               },
               controlPanel: {
                 type: 'object',
-                title: 'Control panel',
+                title: t('configPage.Control panel'),
                 properties: {
                   displayManuscriptShortId: {
                     type: 'boolean',
-                    title: 'Display manuscript short id',
+                    title: t('configPage.Display manuscript short id'),
                     default: true,
                   },
                   sharedReview: {
                     type: 'boolean',
-                    title: 'Reviewers can see submitted reviews',
+                    title: t('configPage.Reviewers can see submitted reviews'),
                     default: false,
                   },
                   hideReview: {
                     type: 'boolean',
-                    title: 'Authors can see individual peer reviews',
+                    title: t(
+                      'configPage.Authors can see individual peer reviews',
+                    ),
                     default: false,
                   },
                   showTabs: {
                     type: 'array',
-                    description: 'Control pages visible to editors',
+                    description: t(
+                      'configPage.Control pages visible to editors',
+                    ),
                     minItems: 1,
                     default: ['Metadata'],
                     items: {
                       type: 'string',
-                      enum: [
-                        'Team',
-                        'Decision',
-                        'Manuscript text',
-                        'Metadata',
-                        'Tasks & Notifications',
+                      oneOf: [
+                        {
+                          const: 'Team',
+                          title: t('configPage.showTabs.Team'),
+                        },
+                        {
+                          const: 'Decision',
+                          title: t('configPage.showTabs.Decision'),
+                        },
+                        {
+                          const: 'Manuscript text',
+                          title: t('configPage.showTabs.Manuscript text'),
+                        },
+                        {
+                          const: 'Metadata',
+                          title: t('configPage.showTabs.Metadata'),
+                        },
+                        {
+                          const: 'Tasks & Notifications',
+                          title: t('configPage.showTabs.Tasks & Notifications'),
+                        },
                       ],
+                      // enum: [
+                      //   'Team',
+                      //   'Decision',
+                      //   'Manuscript text',
+                      //   'Metadata',
+                      //   'Tasks & Notifications',
+                      // ],
                     },
                     uniqueItems: true,
                   }, // TODO: discuss more on this hiding features and refactor
@@ -635,64 +655,70 @@ const generateSchema = (
               },
               submission: {
                 type: 'object',
-                title: 'Submission',
+                title: t('configPage.Submission'),
                 properties: {
                   allowAuthorsSubmitNewVersion: {
                     type: 'boolean',
-                    title:
-                      'Allow an author to submit a new version of their manuscript at any time',
+                    title: t('configPage.allowToSubmitNewVersion'),
                     default: false,
                   },
                 },
               },
               review: {
                 type: 'object',
-                title: 'Review page',
+                title: t('configPage.Review page'),
                 properties: {
                   showSummary: {
                     type: 'boolean',
-                    title: 'Reviewers can see the Decision form data ',
+                    title: t('configPage.showSummary'),
                     default: false,
                   },
                 },
               },
               production: {
                 type: 'object',
-                title: 'Production',
+                title: t('configPage.production.Production'),
                 properties: {
                   crossrefRetrievalEmail: {
                     type: ['string', 'null'],
-                    description: 'Email to use for citation search',
+                    description: t(
+                      'configPage.production.Email to use for citation search',
+                    ),
                     default: '',
                   },
                   crossrefSearchResultCount: {
                     type: 'number',
-                    description:
-                      'Number of results to return from citation search',
+                    description: t(
+                      'configPage.production.Number of results to return from citation search',
+                    ),
                     default: 3,
                   },
                   styleName: {
                     type: ['string', 'null'],
-                    description: 'Select style formatting for citations',
+                    description: t(
+                      'configPage.production.Select style formatting for citations',
+                    ),
                     oneOf: [
                       {
                         const: 'apa',
-                        title: 'American Psychological Association (APA)',
+                        title: t('configPage.production.apa'),
                       },
                       {
                         const: 'chicago-note-bibliography',
-                        title: 'Chicago Manual of Style (CMOS)',
+                        title: t('configPage.production.cmos'),
                       },
                       {
                         const: 'council-of-science-editors-alphabetical',
-                        title: 'Council of Science Editors (CSE)',
+                        title: t('configPage.production.cse'),
                       },
                     ],
                     default: 'apa',
                   },
                   localeName: {
                     type: ['string', 'null'],
-                    description: 'Select locale for citations',
+                    description: t(
+                      'configPage.production.Select locale for citations',
+                    ),
                     enum: ['en-US', 'en-GB'],
                     default: 'en-US',
                   },
@@ -701,110 +727,147 @@ const generateSchema = (
 
               publishing: {
                 type: 'object',
-                title: 'Publishing',
+                title: t('configPage.Publishing'),
                 properties: {
                   hypothesis: {
                     type: 'object',
-                    title: 'Hypothesis',
+                    title: t('configPage.Hypothesis'),
                     properties: {
                       apiKey: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis API key',
+                        description: t('configPage.Hypothesis API key'),
                       },
                       group: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis group id',
+                        description: t('configPage.Hypothesis group id'),
                       },
                       shouldAllowTagging: {
                         type: 'boolean',
-                        title: 'Apply Hypothesis tags in the submission form',
+                        title: t('configPage.shouldAllowTagging'),
                         default: false,
                       },
                       reverseFieldOrder: {
                         type: 'boolean',
-                        title:
-                          'Reverse the order of Submission/Decision form fields published to Hypothesis',
+                        title: t('configPage.reverseFieldOrder'),
                         default: false,
                       },
                     },
                   },
                   crossref: {
                     type: 'object',
-                    title: 'Crossref',
+                    title: t('configPage.Crossref'),
                     properties: {
                       journalName: {
                         type: ['string', 'null'],
-                        description: 'Journal/Group name',
+                        description: t('configPage.journalName'),
                       },
                       journalAbbreviatedName: {
                         type: ['string', 'null'],
-                        description: 'Abbreviated name',
+                        description: t('configPage.journalAbbreviatedName'),
                       },
                       journalHomepage: {
                         type: ['string', 'null'],
-                        description: 'Home page',
+                        description: t('configPage.journalHomepage'),
                       },
                       login: {
                         type: ['string', 'null'],
-                        description: 'Crossref username',
+                        description: t('configPage.crossrefLogin'),
                       },
                       password: {
                         type: ['string', 'null'],
-                        description: 'Crossref password',
+                        description: t('configPage.crossrefPassword'),
                       },
                       registrant: {
                         type: ['string', 'null'],
-                        description: 'Crossref registrant id',
+                        description: t('configPage.crossrefRegistrant'),
                       },
                       depositorName: {
                         type: ['string', 'null'],
-                        description: 'Crossref depositor name',
+                        description: t('configPage.crossrefDepositorName'),
                       },
                       depositorEmail: {
                         type: ['string', 'null'],
-                        description: 'Depositor email address',
+                        description: t('configPage.crossrefDepositorEmail'),
                         // format: 'email',
                       },
                       publicationType: {
                         type: ['string', 'null'],
-                        description: 'Select publication type',
-                        enum: ['article', 'peer review'],
+                        description: t('configPage.publicationType'),
+                        // enum: ['article', 'peer review'],
                         default: 'peer review',
+                        oneOf: [
+                          {
+                            const: 'article',
+                            title: t('configPage.article'),
+                          },
+                          {
+                            const: 'peer review',
+                            title: t('configPage.peer review'),
+                          },
+                        ],
                       },
                       doiPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref DOI prefix',
+                        description: t('configPage.doiPrefix'),
                       },
                       publishedArticleLocationPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref published article location',
+                        description: t(
+                          'configPage.publishedArticleLocationPrefix',
+                        ),
                       },
                       licenseUrl: {
                         type: ['string', 'null'],
-                        description: 'Publication license URL',
+                        description: t('configPage.licenseUrl'),
                       },
                       useSandbox: {
                         type: 'boolean',
-                        title: 'Publish to Crossref sandbox',
+                        title: t('configPage.useSandbox'),
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefRetrievalEmail'),
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description: t('configPage.crossrefSearchResultCount'),
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefStyleName'),
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefLocaleName'),
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },
                   webhook: {
                     type: 'object',
-                    title: 'Webhook',
+                    title: t('configPage.Webhook'),
                     properties: {
                       url: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook URL',
+                        description: t('configPage.webhookUrl'),
                       },
                       token: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook token',
+                        description: t('configPage.webhookToken'),
                       },
                       ref: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook reference',
+                        description: t('configPage.webhookRef'),
                       },
                     },
                   },
@@ -812,11 +875,11 @@ const generateSchema = (
               },
               taskManager: {
                 type: 'object',
-                title: 'Task Manager',
+                title: t('configPage.Task Manager'),
                 properties: {
                   teamTimezone: {
                     type: 'string',
-                    description: 'Set timezone for Task Manager due dates',
+                    description: t('configPage.teamTimezone'),
                     default: 'Etc/UTC',
                     $ref: '#/definitions/timezones',
                   },
@@ -824,37 +887,41 @@ const generateSchema = (
               },
               notification: {
                 type: 'object',
-                title: 'Emails',
+                title: t('configPage.Emails'),
                 properties: {
                   gmailAuthEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail email address',
+                    description: t('configPage.gmailAuthEmail'),
                     // format: 'email',
                   },
                   gmailSenderEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail sender email address',
+                    description: t('configPage.gmailSenderEmail'),
                     // format: 'email',
                   },
                   gmailAuthPassword: {
                     type: ['string', 'null'],
-                    description: 'Gmail password',
+                    description: t('configPage.gmailAuthPassword'),
                   },
                 },
               },
               eventNotification: {
                 type: 'object',
-                title: 'Event Notifications',
+                title: t('configPage.eventNotification'),
                 properties: {
                   reviewerInvitationPrimaryEmailTemplate: {
-                    description: 'Reviewer invitation',
+                    description: t(
+                      'configPage.reviewerInvitationPrimaryEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                     default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
-                    description: 'Unread discussion message',
+                    description: t(
+                      'configPage.alertUnreadMessageDigestTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
@@ -870,28 +937,27 @@ const generateSchema = (
               },
               report: {
                 type: 'object',
-                title: 'Reports',
+                title: t('configPage.Reports'),
                 properties: {
                   showInMenu: {
                     type: 'boolean',
-                    title: 'Group Manager and admin can access Reports',
+                    title: t('configPage.reportShowInMenu'),
                     default: true,
                   },
                 },
               },
               user: {
                 type: 'object',
-                title: 'User Management',
+                title: t('configPage.User Management'),
                 properties: {
                   isAdmin: {
                     type: 'boolean',
-                    title:
-                      'All users are assigned Group Manager and Admin roles',
+                    title: t('configPage.userIsAdmin'),
                     default: false,
                   },
                   kotahiApiTokens: {
                     type: ['string', 'null'],
-                    description: 'Kotahi API tokens',
+                    description: t('configPage.kotahiApiTokens'),
                   },
                 },
               },
@@ -904,25 +970,25 @@ const generateSchema = (
               },
               groupIdentity: {
                 type: 'object',
-                title: 'Group Identity',
+                title: t('configPage.Group Identity'),
                 properties: {
                   brandName: {
                     type: 'string',
-                    description: 'Brand name',
+                    description: t('configPage.Brand name'),
                     default: 'Kotahi',
                   },
                   primaryColor: {
                     type: 'string',
-                    description: 'Brand primary colour',
+                    description: t('configPage.Brand primary colour'),
                     default: '#3aae2a',
                   },
                   secondaryColor: {
                     type: 'string',
-                    description: 'Brand secondary colour',
+                    description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
                   logoPath: {
-                    description: 'Logo',
+                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
                   },
@@ -930,27 +996,26 @@ const generateSchema = (
               },
               dashboard: {
                 type: 'object',
-                title: 'Dashboard',
+                title: t('configPage.Dashboard'),
                 properties: {
                   loginRedirectUrl: {
                     type: 'string',
-                    description:
-                      'Landing page for Group Manager users upon login',
+                    description: t('configPage.landingPage'),
                     default: '/dashboard',
                     oneOf: [
                       {
                         const: '/dashboard',
-                        title: 'Dashboard Page',
+                        title: t('configPage.Dashboard Page'),
                       },
                       {
                         const: '/admin/manuscripts',
-                        title: 'Manuscript Page',
+                        title: t('configPage.Manuscript Page'),
                       },
                     ],
                   },
                   showSections: {
                     type: 'array',
-                    description: 'Dashboard pages visible to registered users',
+                    description: t('configPage.pagesVisibleToRegistered'),
                     minItems: 1,
                     default: ['editor'],
                     items: {
@@ -958,15 +1023,15 @@ const generateSchema = (
                       oneOf: [
                         {
                           const: 'submission',
-                          title: 'My Submissions',
+                          title: t('configPage.My Submissions'),
                         },
                         {
                           const: 'review',
-                          title: 'To Review',
+                          title: t('configPage.To Review'),
                         },
                         {
                           const: 'editor',
-                          title: "Manuscripts I'm editor of",
+                          title: t("configPage.Manuscripts I'm editor of"),
                         },
                       ],
                     },
@@ -976,95 +1041,115 @@ const generateSchema = (
               },
               manuscript: {
                 type: 'object',
-                title: 'Manuscripts page',
+                title: t('configPage.Manuscripts page'),
                 properties: {
                   tableColumns: {
                     type: 'string',
-                    description:
-                      'List columns to display on the Manuscripts page',
+                    description: t(
+                      'configPage.List columns to display on the Manuscripts page',
+                    ),
                     default:
                       'shortId, meta.title, created, updated, status, submission.labels, author',
                   },
                   paginationCount: {
                     type: 'number',
-                    description:
-                      'Number of manuscripts listed per page on the Manucripts page',
+                    description: t('configPage.numberOfManuscripts'),
                     enum: [10, 20, 50, 100],
                     default: 10,
                   },
                   autoImportHourUtc: {
                     type: 'integer',
-                    description:
-                      'Hour when manuscripts are imported daily (UTC)',
+                    description: t('configPage.hourManuscriptsImported'),
                     $ref: '#/definitions/hours',
                   },
                   archivePeriodDays: {
                     type: 'integer',
-                    description:
-                      'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+                    description: t('configPage.daysManuscriptRemain'),
                     minimum: 1,
                     maximum: 90,
                   },
                   semanticScholarImportsRecencyPeriodDays: {
                     type: 'integer',
-                    description:
-                      'Import manuscripts from Sematic Scholar no older than ‘x’ number of days',
+                    description: t('configPage.importFromSematic'),
                     minimum: 1,
                     maximum: 90,
                   },
                   newSubmission: {
                     type: 'boolean',
-                    title:
-                      "'Add new submission' action visible on the Manuscripts page",
+                    title: t('configPage.newSubmissionActionVisisble'),
                     default: true,
                   },
                   labelColumn: {
                     type: 'boolean',
-                    title:
-                      'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
+                    title: t('configPage.displayActionToSelect'),
                     default: false,
                   },
                   manualImport: {
                     type: 'boolean',
-                    title:
-                      "Import manuscripts manually using the 'Refresh' action",
+                    title: t('configPage.importManuscriptsManually'),
                     default: false,
                   },
                 },
               },
               controlPanel: {
                 type: 'object',
-                title: 'Control panel',
+                title: t('configPage.Control panel'),
                 properties: {
                   displayManuscriptShortId: {
                     type: 'boolean',
-                    title: 'Display manuscript short id',
+                    title: t('configPage.Display manuscript short id'),
                     default: true,
                   },
                   sharedReview: {
                     type: 'boolean',
-                    title: 'Reviewers can see submitted reviews',
+                    title: t('configPage.Reviewers can see submitted reviews'),
                     default: false,
                   },
                   hideReview: {
                     type: 'boolean',
-                    title: 'Authors can see individual peer reviews',
+                    title: t(
+                      'configPage.Authors can see individual peer reviews',
+                    ),
                     default: false,
                   },
                   showTabs: {
                     type: 'array',
-                    description: 'Control pages visible to editors',
+                    description: t(
+                      'configPage.Control pages visible to editors',
+                    ),
                     minItems: 1,
                     default: ['Metadata'],
                     items: {
                       type: 'string',
-                      enum: [
-                        'Team',
-                        'Decision',
-                        'Manuscript text',
-                        'Metadata',
-                        'Tasks & Notifications',
+                      oneOf: [
+                        {
+                          const: 'Team',
+                          title: t('configPage.showTabs.Team'),
+                        },
+                        {
+                          const: 'Decision',
+                          title: t('configPage.showTabs.Decision'),
+                        },
+                        {
+                          const: 'Manuscript text',
+                          title: t('configPage.showTabs.Manuscript text'),
+                        },
+                        {
+                          const: 'Metadata',
+                          title: t('configPage.showTabs.Metadata'),
+                        },
+                        {
+                          const: 'Tasks & Notifications',
+                          title: t('configPage.showTabs.Tasks & Notifications'),
+                        },
                       ],
+                      // enum: [
+                      //   'Team',
+                      //   'Decision',
+                      //   'Manuscript text',
+                      //   'Metadata',
+                      //   'Tasks & Notifications',
+                      // ],
                     },
                     uniqueItems: true,
                   },
@@ -1094,64 +1179,70 @@ const generateSchema = (
               },
               submission: {
                 type: 'object',
-                title: 'Submission',
+                title: t('configPage.Submission'),
                 properties: {
                   allowAuthorsSubmitNewVersion: {
                     type: 'boolean',
-                    title:
-                      'Allow an author to submit a new version of their manuscript at any time',
+                    title: t('configPage.allowToSubmitNewVersion'),
                     default: false,
                   },
                 },
               },
               review: {
                 type: 'object',
-                title: 'Review page',
+                title: t('configPage.Review page'),
                 properties: {
                   showSummary: {
                     type: 'boolean',
-                    title: 'Reviewers can see the Decision form data ',
+                    title: t('configPage.showSummary'),
                     default: false,
                   },
                 },
               },
               production: {
                 type: 'object',
-                title: 'Production',
+                title: t('configPage.production.Production'),
                 properties: {
                   crossrefRetrievalEmail: {
                     type: ['string', 'null'],
-                    description: 'Email to use for citation search',
+                    description: t(
+                      'configPage.production.Email to use for citation search',
+                    ),
                     default: '',
                   },
                   crossrefSearchResultCount: {
                     type: 'number',
-                    description:
-                      'Number of results to return from citation search',
+                    description: t(
+                      'configPage.production.Number of results to return from citation search',
+                    ),
                     default: 3,
                   },
                   styleName: {
                     type: ['string', 'null'],
-                    description: 'Select style formatting for citations',
+                    description: t(
+                      'configPage.production.Select style formatting for citations',
+                    ),
                     oneOf: [
                       {
                         const: 'apa',
-                        title: 'American Psychological Association (APA)',
+                        title: t('configPage.production.apa'),
                       },
                       {
                         const: 'chicago-note-bibliography',
-                        title: 'Chicago Manual of Style (CMOS)',
+                        title: t('configPage.production.cmos'),
                       },
                       {
                         const: 'council-of-science-editors-alphabetical',
-                        title: 'Council of Science Editors (CSE)',
+                        title: t('configPage.production.cse'),
                       },
                     ],
                     default: 'apa',
                   },
                   localeName: {
                     type: ['string', 'null'],
-                    description: 'Select locale for citations',
+                    description: t(
+                      'configPage.production.Select locale for citations',
+                    ),
                     enum: ['en-US', 'en-GB'],
                     default: 'en-US',
                   },
@@ -1159,109 +1250,146 @@ const generateSchema = (
               },
               publishing: {
                 type: 'object',
-                title: 'Publishing',
+                title: t('configPage.Publishing'),
                 properties: {
                   hypothesis: {
                     type: 'object',
-                    title: 'Hypothesis',
+                    title: t('configPage.Hypothesis'),
                     properties: {
                       apiKey: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis API key',
+                        description: t('configPage.Hypothesis API key'),
                       },
                       group: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis group id',
+                        description: t('configPage.Hypothesis group id'),
                       },
                       shouldAllowTagging: {
                         type: 'boolean',
-                        title: 'Apply Hypothesis tags in the submission form',
+                        title: t('configPage.shouldAllowTagging'),
                         default: false,
                       },
                       reverseFieldOrder: {
                         type: 'boolean',
-                        title:
-                          'Reverse the order of Submission/Decision form fields published to Hypothesis',
+                        title: t('configPage.reverseFieldOrder'),
                         default: false,
                       },
                     },
                   },
                   crossref: {
                     type: 'object',
-                    title: 'Crossref',
+                    title: t('configPage.Crossref'),
                     properties: {
                       journalName: {
                         type: ['string', 'null'],
-                        description: 'Journal/Group name',
+                        description: t('configPage.journalName'),
                       },
                       journalAbbreviatedName: {
                         type: ['string', 'null'],
-                        description: 'Abbreviated name',
+                        description: t('configPage.journalAbbreviatedName'),
                       },
                       journalHomepage: {
                         type: ['string', 'null'],
-                        description: 'Home page',
+                        description: t('configPage.journalHomepage'),
                       },
                       login: {
                         type: ['string', 'null'],
-                        description: 'Crossref username',
+                        description: t('configPage.crossrefLogin'),
                       },
                       password: {
                         type: ['string', 'null'],
-                        description: 'Crossref password',
+                        description: t('configPage.crossrefPassword'),
                       },
                       registrant: {
                         type: ['string', 'null'],
-                        description: 'Crossref registrant id',
+                        description: t('configPage.crossrefRegistrant'),
                       },
                       depositorName: {
                         type: ['string', 'null'],
-                        description: 'Crossref depositor name',
+                        description: t('configPage.crossrefDepositorName'),
                       },
                       depositorEmail: {
                         type: ['string', 'null'],
-                        description: 'Depositor email address',
+                        description: t('configPage.crossrefDepositorEmail'),
                         // format: 'email',
                       },
                       publicationType: {
                         type: ['string', 'null'],
-                        description: 'Select publication type',
-                        enum: ['article', 'peer review'],
+                        description: t('configPage.publicationType'),
+                        // enum: ['article', 'peer review'],
+                        oneOf: [
+                          {
+                            const: 'article',
+                            title: t('configPage.article'),
+                          },
+                          {
+                            const: 'peer review',
+                            title: t('configPage.peer review'),
+                          },
+                        ],
                       },
                       doiPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref DOI prefix',
+                        description: t('configPage.doiPrefix'),
                       },
                       publishedArticleLocationPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref published article location',
+                        description: t(
+                          'configPage.publishedArticleLocationPrefix',
+                        ),
                       },
                       licenseUrl: {
                         type: ['string', 'null'],
-                        description: 'Publication license URL',
+                        description: t('configPage.licenseUrl'),
                       },
                       useSandbox: {
                         type: 'boolean',
-                        title: 'Publish to Crossref sandbox',
+                        title: t('configPage.useSandbox'),
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefRetrievalEmail'),
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description: t('configPage.crossrefSearchResultCount'),
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefStyleName'),
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefLocaleName'),
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },
                   webhook: {
                     type: 'object',
-                    title: 'Webhook',
+                    title: t('configPage.Webhook'),
                     properties: {
                       url: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook URL',
+                        description: t('configPage.webhookUrl'),
                       },
                       token: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook token',
+                        description: t('configPage.webhookToken'),
                       },
                       ref: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook reference',
+                        description: t('configPage.webhookRef'),
                       },
                     },
                   },
@@ -1269,11 +1397,11 @@ const generateSchema = (
               },
               taskManager: {
                 type: 'object',
-                title: 'Task Manager',
+                title: t('configPage.Task Manager'),
                 properties: {
                   teamTimezone: {
                     type: 'string',
-                    description: 'Set timezone for Task Manager due dates',
+                    description: t('configPage.teamTimezone'),
                     default: 'Etc/UTC',
                     $ref: '#/definitions/timezones',
                   },
@@ -1281,37 +1409,41 @@ const generateSchema = (
               },
               notification: {
                 type: 'object',
-                title: 'Emails',
+                title: t('configPage.Emails'),
                 properties: {
                   gmailAuthEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail email address',
+                    description: t('configPage.gmailAuthEmail'),
                     // format: 'email',
                   },
                   gmailSenderEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail sender email address',
+                    description: t('configPage.gmailSenderEmail'),
                     // format: 'email',
                   },
                   gmailAuthPassword: {
                     type: ['string', 'null'],
-                    description: 'Gmail password',
+                    description: t('configPage.gmailAuthPassword'),
                   },
                 },
               },
               eventNotification: {
                 type: 'object',
-                title: 'Event Notifications',
+                title: t('configPage.eventNotification'),
                 properties: {
                   reviewerInvitationPrimaryEmailTemplate: {
-                    description: 'Reviewer invitation',
+                    description: t(
+                      'configPage.reviewerInvitationPrimaryEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                     default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
-                    description: 'Unread discussion message',
+                    description: t(
+                      'configPage.alertUnreadMessageDigestTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
@@ -1327,28 +1459,27 @@ const generateSchema = (
               },
               report: {
                 type: 'object',
-                title: 'Reports',
+                title: t('configPage.Reports'),
                 properties: {
                   showInMenu: {
                     type: 'boolean',
-                    title: 'Group Manager and admin can access Reports',
+                    title: t('configPage.reportShowInMenu'),
                     default: true,
                   },
                 },
               },
               user: {
                 type: 'object',
-                title: 'User Management',
+                title: t('configPage.User Management'),
                 properties: {
                   isAdmin: {
                     type: 'boolean',
-                    title:
-                      'All users are assigned Group Manager and Admin roles',
+                    title: t('configPage.userIsAdmin'),
                     default: false,
                   },
                   kotahiApiTokens: {
                     type: ['string', 'null'],
-                    description: 'Kotahi API tokens',
+                    description: t('configPage.kotahiApiTokens'),
                   },
                 },
               },
@@ -1361,25 +1492,25 @@ const generateSchema = (
               },
               groupIdentity: {
                 type: 'object',
-                title: 'Group Identity',
+                title: t('configPage.Group Identity'),
                 properties: {
                   brandName: {
                     type: 'string',
-                    description: 'Brand name',
+                    description: t('configPage.Brand name'),
                     default: 'Kotahi',
                   },
                   primaryColor: {
                     type: 'string',
-                    description: 'Brand primary colour',
+                    description: t('configPage.Brand primary colour'),
                     default: '#3aae2a',
                   },
                   secondaryColor: {
                     type: 'string',
-                    description: 'Brand secondary colour',
+                    description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
                   logoPath: {
-                    description: 'Logo',
+                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
                   },
@@ -1387,27 +1518,26 @@ const generateSchema = (
               },
               dashboard: {
                 type: 'object',
-                title: 'Dashboard',
+                title: t('configPage.Dashboard'),
                 properties: {
                   loginRedirectUrl: {
                     type: 'string',
-                    description:
-                      'Landing page for Group Manager users upon login',
+                    description: t('configPage.landingPage'),
                     default: '/dashboard',
                     oneOf: [
                       {
                         const: '/dashboard',
-                        title: 'Dashboard Page',
+                        title: t('configPage.Dashboard Page'),
                       },
                       {
                         const: '/admin/manuscripts',
-                        title: 'Manuscript Page',
+                        title: t('configPage.Manuscript Page'),
                       },
                     ],
                   },
                   showSections: {
                     type: 'array',
-                    description: 'Dashboard pages visible to registered users',
+                    description: t('configPage.pagesVisibleToRegistered'),
                     minItems: 1,
                     default: ['submission', 'review', 'editor'],
                     items: {
@@ -1415,15 +1545,15 @@ const generateSchema = (
                       oneOf: [
                         {
                           const: 'submission',
-                          title: 'My Submissions',
+                          title: t('configPage.My Submissions'),
                         },
                         {
                           const: 'review',
-                          title: 'To Review',
+                          title: t('configPage.To Review'),
                         },
                         {
                           const: 'editor',
-                          title: "Manuscripts I'm editor of",
+                          title: t("configPage.Manuscripts I'm editor of"),
                         },
                       ],
                     },
@@ -1433,84 +1563,82 @@ const generateSchema = (
               },
               manuscript: {
                 type: 'object',
-                title: 'Manuscripts page',
+                title: t('configPage.Manuscripts page'),
                 properties: {
                   tableColumns: {
                     type: 'string',
-                    description:
-                      'List columns to display on the Manuscripts page',
+                    description: t(
+                      'configPage.List columns to display on the Manuscripts page',
+                    ),
                     default:
                       'shortId, meta.title, created, updated, status, submission.labels, author',
                   },
                   paginationCount: {
                     type: 'number',
-                    description:
-                      'Number of manuscripts listed per page on the Manucripts page',
+                    description: t('configPage.numberOfManuscripts'),
                     enum: [10, 20, 50, 100],
                     default: 10,
                   },
                   autoImportHourUtc: {
                     type: 'integer',
-                    description:
-                      'Hour when manuscripts are imported daily (UTC)',
+                    description: t('configPage.hourManuscriptsImported'),
                     $ref: '#/definitions/hours',
                   },
                   archivePeriodDays: {
                     type: 'integer',
-                    description:
-                      'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+                    description: t('configPage.daysManuscriptRemain'),
                     minimum: 1,
                     maximum: 90,
                   },
                   semanticScholarImportsRecencyPeriodDays: {
                     type: 'integer',
-                    description:
-                      'Import manuscripts from Sematic Scholar no older than ‘x’ number of days',
+                    description: t('configPage.importFromSematic'),
                     minimum: 1,
                     maximum: 90,
                   },
                   newSubmission: {
                     type: 'boolean',
-                    title:
-                      "'Add new submission' action visible on the Manuscripts page",
+                    title: t('configPage.newSubmissionActionVisisble'),
                     default: false,
                   },
                   labelColumn: {
                     type: 'boolean',
-                    title:
-                      'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
+                    title: t('configPage.displayActionToSelect'),
                     default: false,
                   },
                   manualImport: {
                     type: 'boolean',
-                    title:
-                      "Import manuscripts manually using the 'Refresh' action",
+                    title: t('configPage.importManuscriptsManually'),
                     default: false,
                   },
                 },
               },
               controlPanel: {
                 type: 'object',
-                title: 'Control panel',
+                title: t('configPage.Control panel'),
                 properties: {
                   displayManuscriptShortId: {
                     type: 'boolean',
-                    title: 'Display manuscript short id',
+                    title: t('configPage.Display manuscript short id'),
                     default: true,
                   },
                   sharedReview: {
                     type: 'boolean',
-                    title: 'Reviewers can see submitted reviews',
+                    title: t('configPage.Reviewers can see submitted reviews'),
                     default: false,
                   },
                   hideReview: {
                     type: 'boolean',
-                    title: 'Authors can see individual peer reviews',
+                    title: t(
+                      'configPage.Authors can see individual peer reviews',
+                    ),
                     default: false,
                   },
                   showTabs: {
                     type: 'array',
-                    description: 'Control pages visible to editors',
+                    description: t(
+                      'configPage.Control pages visible to editors',
+                    ),
                     minItems: 1,
                     default: [
                       'Team',
@@ -1521,13 +1649,35 @@ const generateSchema = (
                     ],
                     items: {
                       type: 'string',
-                      enum: [
-                        'Team',
-                        'Decision',
-                        'Manuscript text',
-                        'Metadata',
-                        'Tasks & Notifications',
+                      oneOf: [
+                        {
+                          const: 'Team',
+                          title: t('configPage.showTabs.Team'),
+                        },
+                        {
+                          const: 'Decision',
+                          title: t('configPage.showTabs.Decision'),
+                        },
+                        {
+                          const: 'Manuscript text',
+                          title: t('configPage.showTabs.Manuscript text'),
+                        },
+                        {
+                          const: 'Metadata',
+                          title: t('configPage.showTabs.Metadata'),
+                        },
+                        {
+                          const: 'Tasks & Notifications',
+                          title: t('configPage.showTabs.Tasks & Notifications'),
+                        },
                       ],
+                      // enum: [
+                      //   'Team',
+                      //   'Decision',
+                      //   'Manuscript text',
+                      //   'Metadata',
+                      //   'Tasks & Notifications',
+                      // ],
                     },
                     uniqueItems: true,
                   },
@@ -1547,64 +1697,70 @@ const generateSchema = (
               },
               submission: {
                 type: 'object',
-                title: 'Submission',
+                title: t('configPage.Submission'),
                 properties: {
                   allowAuthorsSubmitNewVersion: {
                     type: 'boolean',
-                    title:
-                      'Allow an author to submit a new version of their manuscript at any time',
+                    title: t('configPage.allowToSubmitNewVersion'),
                     default: true,
                   },
                 },
               },
               review: {
                 type: 'object',
-                title: 'Review page',
+                title: t('configPage.Review page'),
                 properties: {
                   showSummary: {
                     type: 'boolean',
-                    title: 'Reviewers can see the Decision form data ',
+                    title: t('configPage.showSummary'),
                     default: false,
                   },
                 },
               },
               production: {
                 type: 'object',
-                title: 'Production',
+                title: t('configPage.production.Production'),
                 properties: {
                   crossrefRetrievalEmail: {
                     type: ['string', 'null'],
-                    description: 'Email to use for citation search',
+                    description: t(
+                      'configPage.production.Email to use for citation search',
+                    ),
                     default: '',
                   },
                   crossrefSearchResultCount: {
                     type: 'number',
-                    description:
-                      'Number of results to return from citation search',
+                    description: t(
+                      'configPage.production.Number of results to return from citation search',
+                    ),
                     default: 3,
                   },
                   styleName: {
                     type: ['string', 'null'],
-                    description: 'Select style formatting for citations',
+                    description: t(
+                      'configPage.production.Select style formatting for citations',
+                    ),
                     oneOf: [
                       {
                         const: 'apa',
-                        title: 'American Psychological Association (APA)',
+                        title: t('configPage.production.apa'),
                       },
                       {
                         const: 'chicago-note-bibliography',
-                        title: 'Chicago Manual of Style (CMOS)',
+                        title: t('configPage.production.cmos'),
                       },
                       {
                         const: 'council-of-science-editors-alphabetical',
-                        title: 'Council of Science Editors (CSE)',
+                        title: t('configPage.production.cse'),
                       },
                     ],
                     default: 'apa',
                   },
                   localeName: {
                     type: ['string', 'null'],
-                    description: 'Select locale for citations',
+                    description: t(
+                      'configPage.production.Select locale for citations',
+                    ),
                     enum: ['en-US', 'en-GB'],
                     default: 'en-US',
                   },
@@ -1612,109 +1768,146 @@ const generateSchema = (
               },
               publishing: {
                 type: 'object',
-                title: 'Publishing',
+                title: t('configPage.Publishing'),
                 properties: {
                   hypothesis: {
                     type: 'object',
-                    title: 'Hypothesis',
+                    title: t('configPage.Hypothesis'),
                     properties: {
                       apiKey: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis API key',
+                        description: t('configPage.Hypothesis API key'),
                       },
                       group: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis group id',
+                        description: t('configPage.Hypothesis group id'),
                       },
                       shouldAllowTagging: {
                         type: 'boolean',
-                        title: 'Apply Hypothesis tags in the submission form',
+                        title: t('configPage.shouldAllowTagging'),
                         default: false,
                       },
                       reverseFieldOrder: {
                         type: 'boolean',
-                        title:
-                          'Reverse the order of Submission/Decision form fields published to Hypothesis',
+                        title: t('configPage.reverseFieldOrder'),
                         default: false,
                       },
                     },
                   },
                   crossref: {
                     type: 'object',
-                    title: 'Crossref',
+                    title: t('configPage.Crossref'),
                     properties: {
                       journalName: {
                         type: ['string', 'null'],
-                        description: 'Journal/Group name',
+                        description: t('configPage.journalName'),
                       },
                       journalAbbreviatedName: {
                         type: ['string', 'null'],
-                        description: 'Abbreviated name',
+                        description: t('configPage.journalAbbreviatedName'),
                       },
                       journalHomepage: {
                         type: ['string', 'null'],
-                        description: 'Home page',
+                        description: t('configPage.journalHomepage'),
                       },
                       login: {
                         type: ['string', 'null'],
-                        description: 'Crossref username',
+                        description: t('configPage.crossrefLogin'),
                       },
                       password: {
                         type: ['string', 'null'],
-                        description: 'Crossref password',
+                        description: t('configPage.crossrefPassword'),
                       },
                       registrant: {
                         type: ['string', 'null'],
-                        description: 'Crossref registrant id',
+                        description: t('configPage.crossrefRegistrant'),
                       },
                       depositorName: {
                         type: ['string', 'null'],
-                        description: 'Crossref depositor name',
+                        description: t('configPage.crossrefDepositorName'),
                       },
                       depositorEmail: {
                         type: ['string', 'null'],
-                        description: 'Depositor email address',
+                        description: t('configPage.crossrefDepositorEmail'),
                         // format: 'email',
                       },
                       publicationType: {
                         type: ['string', 'null'],
-                        description: 'Select publication type',
-                        enum: ['article', 'peer review'],
+                        description: t('configPage.publicationType'),
+                        // enum: ['article', 'peer review'],
+                        oneOf: [
+                          {
+                            const: 'article',
+                            title: t('configPage.article'),
+                          },
+                          {
+                            const: 'peer review',
+                            title: t('configPage.peer review'),
+                          },
+                        ],
                       },
                       doiPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref DOI prefix',
+                        description: t('configPage.doiPrefix'),
                       },
                       publishedArticleLocationPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref published article location',
+                        description: t(
+                          'configPage.publishedArticleLocationPrefix',
+                        ),
                       },
                       licenseUrl: {
                         type: ['string', 'null'],
-                        description: 'Publication license URL',
+                        description: t('configPage.licenseUrl'),
                       },
                       useSandbox: {
                         type: 'boolean',
-                        title: 'Publish to Crossref sandbox',
+                        title: t('configPage.useSandbox'),
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefRetrievalEmail'),
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description: t('configPage.crossrefSearchResultCount'),
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefStyleName'),
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefLocaleName'),
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },
                   webhook: {
                     type: 'object',
-                    title: 'Webhook',
+                    title: t('configPage.Webhook'),
                     properties: {
                       url: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook URL',
+                        description: t('configPage.webhookUrl'),
                       },
                       token: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook token',
+                        description: t('configPage.webhookToken'),
                       },
                       ref: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook reference',
+                        description: t('configPage.webhookRef'),
                       },
                     },
                   },
@@ -1722,11 +1915,11 @@ const generateSchema = (
               },
               taskManager: {
                 type: 'object',
-                title: 'Task Manager',
+                title: t('configPage.Task Manager'),
                 properties: {
                   teamTimezone: {
                     type: 'string',
-                    description: 'Set timezone for Task Manager due dates',
+                    description: t('configPage.teamTimezone'),
                     default: 'Etc/UTC',
                     $ref: '#/definitions/timezones',
                   },
@@ -1734,37 +1927,41 @@ const generateSchema = (
               },
               notification: {
                 type: 'object',
-                title: 'Emails',
+                title: t('configPage.Emails'),
                 properties: {
                   gmailAuthEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail email address',
+                    description: t('configPage.gmailAuthEmail'),
                     // format: 'email',
                   },
                   gmailSenderEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail sender email address',
+                    description: t('configPage.gmailSenderEmail'),
                     // format: 'email',
                   },
                   gmailAuthPassword: {
                     type: ['string', 'null'],
-                    description: 'Gmail password',
+                    description: t('configPage.gmailAuthPassword'),
                   },
                 },
               },
               eventNotification: {
                 type: 'object',
-                title: 'Event Notifications',
+                title: t('configPage.eventNotification'),
                 properties: {
                   reviewerInvitationPrimaryEmailTemplate: {
-                    description: 'Reviewer invitation',
+                    description: t(
+                      'configPage.reviewerInvitationPrimaryEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                     default: defaultReviewerInvitationEmail.const,
                   },
                   alertUnreadMessageDigestTemplate: {
-                    description: 'Unread discussion message',
+                    description: t(
+                      'configPage.alertUnreadMessageDigestTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
@@ -1780,28 +1977,27 @@ const generateSchema = (
               },
               report: {
                 type: 'object',
-                title: 'Reports',
+                title: t('configPage.Reports'),
                 properties: {
                   showInMenu: {
                     type: 'boolean',
-                    title: 'Group Manager and admin can access Reports',
+                    title: t('configPage.reportShowInMenu'),
                     default: true,
                   },
                 },
               },
               user: {
                 type: 'object',
-                title: 'User Management',
+                title: t('configPage.User Management'),
                 properties: {
                   isAdmin: {
                     type: 'boolean',
-                    title:
-                      'All users are assigned Group Manager and Admin roles',
+                    title: t('configPage.userIsAdmin'),
                     default: false,
                   },
                   kotahiApiTokens: {
                     type: ['string', 'null'],
-                    description: 'Kotahi API tokens',
+                    description: t('configPage.kotahiApiTokens'),
                   },
                 },
               },
@@ -1814,25 +2010,25 @@ const generateSchema = (
               },
               groupIdentity: {
                 type: 'object',
-                title: 'Group Identity',
+                title: t('configPage.Group Identity'),
                 properties: {
                   brandName: {
                     type: 'string',
-                    description: 'Brand name',
+                    description: t('configPage.Brand name'),
                     default: 'Kotahi',
                   },
                   primaryColor: {
                     type: 'string',
-                    description: 'Brand primary colour',
+                    description: t('configPage.Brand primary colour'),
                     default: '#3aae2a',
                   },
                   secondaryColor: {
                     type: 'string',
-                    description: 'Brand secondary colour',
+                    description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
                   logoPath: {
-                    description: 'Logo',
+                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
                   },
@@ -1840,27 +2036,26 @@ const generateSchema = (
               },
               dashboard: {
                 type: 'object',
-                title: 'Dashboard',
+                title: t('configPage.Dashboard'),
                 properties: {
                   loginRedirectUrl: {
                     type: 'string',
-                    description:
-                      'Landing page for Group Manager users upon login',
+                    description: t('configPage.landingPage'),
                     default: '/dashboard',
                     oneOf: [
                       {
                         const: '/dashboard',
-                        title: 'Dashboard Page',
+                        title: t('configPage.Dashboard Page'),
                       },
                       {
                         const: '/admin/manuscripts',
-                        title: 'Manuscript Page',
+                        title: t('configPage.Manuscript Page'),
                       },
                     ],
                   },
                   showSections: {
                     type: 'array',
-                    description: 'Dashboard pages visible to registered users',
+                    description: t('configPage.pagesVisibleToRegistered'),
                     minItems: 1,
                     default: ['submission', 'review', 'editor'],
                     items: {
@@ -1868,15 +2063,15 @@ const generateSchema = (
                       oneOf: [
                         {
                           const: 'submission',
-                          title: 'My Submissions',
+                          title: t('configPage.My Submissions'),
                         },
                         {
                           const: 'review',
-                          title: 'To Review',
+                          title: t('configPage.To Review'),
                         },
                         {
                           const: 'editor',
-                          title: "Manuscripts I'm editor of",
+                          title: t("configPage.Manuscripts I'm editor of"),
                         },
                       ],
                     },
@@ -1886,84 +2081,82 @@ const generateSchema = (
               },
               manuscript: {
                 type: 'object',
-                title: 'Manuscripts page',
+                title: t('configPage.Manuscripts page'),
                 properties: {
                   tableColumns: {
                     type: 'string',
-                    description:
-                      'List columns to display on the Manuscripts page',
+                    description: t(
+                      'configPage.List columns to display on the Manuscripts page',
+                    ),
                     default:
                       'shortId, meta.title, created, updated, status, submission.labels, author',
                   },
                   paginationCount: {
                     type: 'number',
-                    description:
-                      'Number of manuscripts listed per page on the Manucripts page',
+                    description: t('configPage.numberOfManuscripts'),
                     enum: [10, 20, 50, 100],
                     default: 10,
                   },
                   autoImportHourUtc: {
                     type: 'integer',
-                    description:
-                      'Hour when manuscripts are imported daily (UTC)',
+                    description: t('configPage.hourManuscriptsImported'),
                     $ref: '#/definitions/hours',
                   },
                   archivePeriodDays: {
                     type: 'integer',
-                    description:
-                      'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+                    description: t('configPage.daysManuscriptRemain'),
                     minimum: 1,
                     maximum: 90,
                   },
                   semanticScholarImportsRecencyPeriodDays: {
                     type: 'integer',
-                    description:
-                      'Import manuscripts from Sematic Scholar no older than ‘x’ number of days',
+                    description: t('configPage.importFromSematic'),
                     minimum: 1,
                     maximum: 90,
                   },
                   newSubmission: {
                     type: 'boolean',
-                    title:
-                      "'Add new submission' action visible on the Manuscripts page",
+                    title: t('configPage.newSubmissionActionVisisble'),
                     default: false,
                   },
                   labelColumn: {
                     type: 'boolean',
-                    title:
-                      'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
+                    title: t('configPage.displayActionToSelect'),
                     default: false,
                   },
                   manualImport: {
                     type: 'boolean',
-                    title:
-                      "Import manuscripts manually using the 'Refresh' action",
+                    title: t('configPage.importManuscriptsManually'),
                     default: false,
                   },
                 },
               },
               controlPanel: {
                 type: 'object',
-                title: 'Control panel',
+                title: t('configPage.Control panel'),
                 properties: {
                   displayManuscriptShortId: {
                     type: 'boolean',
-                    title: 'Display manuscript short id',
+                    title: t('configPage.Display manuscript short id'),
                     default: true,
                   },
                   sharedReview: {
                     type: 'boolean',
-                    title: 'Reviewers can see submitted reviews',
+                    title: t('configPage.Reviewers can see submitted reviews'),
                     default: false,
                   },
                   hideReview: {
                     type: 'boolean',
-                    title: 'Authors can see individual peer reviews',
+                    title: t(
+                      'configPage.Authors can see individual peer reviews',
+                    ),
                     default: false,
                   },
                   showTabs: {
                     type: 'array',
-                    description: 'Control pages visible to editors',
+                    description: t(
+                      'configPage.Control pages visible to editors',
+                    ),
                     minItems: 1,
                     default: [
                       'Team',
@@ -1974,13 +2167,35 @@ const generateSchema = (
                     ],
                     items: {
                       type: 'string',
-                      enum: [
-                        'Team',
-                        'Decision',
-                        'Manuscript text',
-                        'Metadata',
-                        'Tasks & Notifications',
+                      oneOf: [
+                        {
+                          const: 'Team',
+                          title: t('configPage.showTabs.Team'),
+                        },
+                        {
+                          const: 'Decision',
+                          title: t('configPage.showTabs.Decision'),
+                        },
+                        {
+                          const: 'Manuscript text',
+                          title: t('configPage.showTabs.Manuscript text'),
+                        },
+                        {
+                          const: 'Metadata',
+                          title: t('configPage.showTabs.Metadata'),
+                        },
+                        {
+                          const: 'Tasks & Notifications',
+                          title: t('configPage.showTabs.Tasks & Notifications'),
+                        },
                       ],
+                      // enum: [
+                      //   'Team',
+                      //   'Decision',
+                      //   'Manuscript text',
+                      //   'Metadata',
+                      //   'Tasks & Notifications',
+                      // ],
                     },
                     uniqueItems: true,
                   },
@@ -2000,64 +2215,70 @@ const generateSchema = (
               },
               submission: {
                 type: 'object',
-                title: 'Submission',
+                title: t('configPage.Submission'),
                 properties: {
                   allowAuthorsSubmitNewVersion: {
                     type: 'boolean',
-                    title:
-                      'Allow an author to submit a new version of their manuscript at any time',
+                    title: t('configPage.allowToSubmitNewVersion'),
                     default: false,
                   },
                 },
               },
               review: {
                 type: 'object',
-                title: 'Review page',
+                title: t('configPage.Review page'),
                 properties: {
                   showSummary: {
                     type: 'boolean',
-                    title: 'Reviewers can see the Decision form data ',
+                    title: t('configPage.showSummary'),
                     default: false,
                   },
                 },
               },
               production: {
                 type: 'object',
-                title: 'Production',
+                title: t('configPage.production.Production'),
                 properties: {
                   crossrefRetrievalEmail: {
                     type: ['string', 'null'],
-                    description: 'Email to use for citation search',
+                    description: t(
+                      'configPage.production.Email to use for citation search',
+                    ),
                     default: '',
                   },
                   crossrefSearchResultCount: {
                     type: 'number',
-                    description:
-                      'Number of results to return from citation search',
+                    description: t(
+                      'configPage.production.Number of results to return from citation search',
+                    ),
                     default: 3,
                   },
                   styleName: {
                     type: ['string', 'null'],
-                    description: 'Select style formatting for citations',
+                    description: t(
+                      'configPage.production.Select style formatting for citations',
+                    ),
                     oneOf: [
                       {
                         const: 'apa',
-                        title: 'American Psychological Association (APA)',
+                        title: t('configPage.production.apa'),
                       },
                       {
                         const: 'chicago-note-bibliography',
-                        title: 'Chicago Manual of Style (CMOS)',
+                        title: t('configPage.production.cmos'),
                       },
                       {
                         const: 'council-of-science-editors-alphabetical',
-                        title: 'Council of Science Editors (CSE)',
+                        title: t('configPage.production.cse'),
                       },
                     ],
                     default: 'apa',
                   },
                   localeName: {
                     type: ['string', 'null'],
-                    description: 'Select locale for citations',
+                    description: t(
+                      'configPage.production.Select locale for citations',
+                    ),
                     enum: ['en-US', 'en-GB'],
                     default: 'en-US',
                   },
@@ -2065,110 +2286,147 @@ const generateSchema = (
               },
               publishing: {
                 type: 'object',
-                title: 'Publishing',
+                title: t('configPage.Publishing'),
                 properties: {
                   hypothesis: {
                     type: 'object',
-                    title: 'Hypothesis',
+                    title: t('configPage.Hypothesis'),
                     properties: {
                       apiKey: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis API key',
+                        description: t('configPage.Hypothesis API key'),
                       },
                       group: {
                         type: ['string', 'null'],
-                        description: 'Hypothesis group id',
+                        description: t('configPage.Hypothesis group id'),
                       },
                       shouldAllowTagging: {
                         type: 'boolean',
-                        title: 'Apply Hypothesis tags in the submission form',
+                        title: t('configPage.shouldAllowTagging'),
                         default: false,
                       },
                       reverseFieldOrder: {
                         type: 'boolean',
-                        title:
-                          'Reverse the order of Submission/Decision form fields published to Hypothesis',
+                        title: t('configPage.reverseFieldOrder'),
                         default: false,
                       },
                     },
                   },
                   crossref: {
                     type: 'object',
-                    title: 'Crossref',
+                    title: t('configPage.Crossref'),
                     properties: {
                       journalName: {
                         type: ['string', 'null'],
-                        description: 'Journal/Group name',
+                        description: t('configPage.journalName'),
                       },
                       journalAbbreviatedName: {
                         type: ['string', 'null'],
-                        description: 'Abbreviated name',
+                        description: t('configPage.journalAbbreviatedName'),
                       },
                       journalHomepage: {
                         type: ['string', 'null'],
-                        description: 'Home page',
+                        description: t('configPage.journalHomepage'),
                       },
                       login: {
                         type: ['string', 'null'],
-                        description: 'Crossref username',
+                        description: t('configPage.crossrefLogin'),
                       },
                       password: {
                         type: ['string', 'null'],
-                        description: 'Crossref password',
+                        description: t('configPage.crossrefPassword'),
                       },
                       registrant: {
                         type: ['string', 'null'],
-                        description: 'Crossref registrant id',
+                        description: t('configPage.crossrefRegistrant'),
                       },
                       depositorName: {
                         type: ['string', 'null'],
-                        description: 'Crossref depositor name',
+                        description: t('configPage.crossrefDepositorName'),
                       },
                       depositorEmail: {
                         type: ['string', 'null'],
-                        description: 'Depositor email address',
+                        description: t('configPage.crossrefDepositorEmail'),
                         // format: 'email',
                       },
                       publicationType: {
                         type: ['string', 'null'],
-                        description: 'Select publication type',
-                        enum: ['article', 'peer review'],
+                        description: t('configPage.publicationType'),
+                        // enum: ['article', 'peer review'],
                         default: 'article',
+                        oneOf: [
+                          {
+                            const: 'article',
+                            title: t('configPage.article'),
+                          },
+                          {
+                            const: 'peer review',
+                            title: t('configPage.peer review'),
+                          },
+                        ],
                       },
                       doiPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref DOI prefix',
+                        description: t('configPage.doiPrefix'),
                       },
                       publishedArticleLocationPrefix: {
                         type: ['string', 'null'],
-                        description: 'Crossref published article location',
+                        description: t(
+                          'configPage.publishedArticleLocationPrefix',
+                        ),
                       },
                       licenseUrl: {
                         type: ['string', 'null'],
-                        description: 'Publication license URL',
+                        description: t('configPage.licenseUrl'),
                       },
                       useSandbox: {
                         type: 'boolean',
-                        title: 'Publish to Crossref sandbox',
+                        title: t('configPage.useSandbox'),
                         default: false,
+                      },
+                      crossrefRetrievalEmail: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefRetrievalEmail'),
+                        default: '',
+                      },
+                      crossrefSearchResultCount: {
+                        type: 'number',
+                        description: t('configPage.crossrefSearchResultCount'),
+                        default: 3,
+                      },
+                      styleName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefStyleName'),
+                        enum: [
+                          'apa',
+                          'chicago-note-bibliogrpahy',
+                          'counctil-of-science-editors-alphabetical',
+                        ],
+                        default: 'apa',
+                      },
+                      localeName: {
+                        type: ['string', 'null'],
+                        description: t('configPage.crossrefLocaleName'),
+                        enum: ['en-US', 'en-GB'],
+                        default: 'en-US',
                       },
                     },
                   },
                   webhook: {
                     type: 'object',
-                    title: 'Webhook',
+                    title: t('configPage.Webhook'),
                     properties: {
                       url: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook URL',
+                        description: t('configPage.webhookUrl'),
                       },
                       token: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook token',
+                        description: t('configPage.webhookToken'),
                       },
                       ref: {
                         type: ['string', 'null'],
-                        description: 'Publishing webhook reference',
+                        description: t('configPage.webhookRef'),
                       },
                     },
                   },
@@ -2176,11 +2434,11 @@ const generateSchema = (
               },
               taskManager: {
                 type: 'object',
-                title: 'Task Manager',
+                title: t('configPage.Task Manager'),
                 properties: {
                   teamTimezone: {
                     type: 'string',
-                    description: 'Set timezone for Task Manager due dates',
+                    description: t('configPage.teamTimezone'),
                     default: 'Etc/UTC',
                     $ref: '#/definitions/timezones',
                   },
@@ -2188,55 +2446,63 @@ const generateSchema = (
               },
               notification: {
                 type: 'object',
-                title: 'Emails',
+                title: t('configPage.Emails'),
                 properties: {
                   gmailAuthEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail email address',
+                    description: t('configPage.gmailAuthEmail'),
                     // format: 'email',
                   },
                   gmailSenderEmail: {
                     type: ['string', 'null'],
-                    description: 'Gmail sender email address',
+                    description: t('configPage.gmailSenderEmail'),
                     // format: 'email',
                   },
                   gmailAuthPassword: {
                     type: ['string', 'null'],
-                    description: 'Gmail password',
+                    description: t('configPage.gmailAuthPassword'),
                   },
                 },
               },
               eventNotification: {
                 type: 'object',
-                title: 'Event Notifications',
+                title: t('configPage.eventNotification'),
                 properties: {
                   reviewRejectedEmailTemplate: {
-                    description: 'Reviewer rejects an invitation to review',
+                    description: t('configPage.reviewRejectedEmailTemplate'),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   reviewerInvitationPrimaryEmailTemplate: {
-                    description: 'Reviewer invitation',
+                    description: t(
+                      'configPage.reviewerInvitationPrimaryEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                     default: defaultReviewerInvitationEmail.const,
                   },
                   evaluationCompleteEmailTemplate: {
-                    description: 'Submitted review',
+                    description: t(
+                      'configPage.evaluationCompleteEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   submissionConfirmationEmailTemplate: {
-                    description: 'Submitted manuscript',
+                    description: t(
+                      'configPage.submissionConfirmationEmailTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
                   },
                   alertUnreadMessageDigestTemplate: {
-                    description: 'Unread discussion message',
+                    description: t(
+                      'configPage.alertUnreadMessageDigestTemplate',
+                    ),
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
@@ -2252,28 +2518,27 @@ const generateSchema = (
               },
               report: {
                 type: 'object',
-                title: 'Reports',
+                title: t('configPage.Reports'),
                 properties: {
                   showInMenu: {
                     type: 'boolean',
-                    title: 'Group Manager and admin can access Reports',
+                    title: t('configPage.reportShowInMenu'),
                     default: true,
                   },
                 },
               },
               user: {
                 type: 'object',
-                title: 'User Management',
+                title: t('configPage.User Management'),
                 properties: {
                   isAdmin: {
                     type: 'boolean',
-                    title:
-                      'All users are assigned Group Manager and Admin roles',
+                    title: t('configPage.userIsAdmin'),
                     default: false,
                   },
                   kotahiApiTokens: {
                     type: ['string', 'null'],
-                    description: 'Kotahi API tokens',
+                    description: t('configPage.kotahiApiTokens'),
                   },
                 },
               },

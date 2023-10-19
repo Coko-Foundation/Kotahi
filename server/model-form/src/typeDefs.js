@@ -33,6 +33,7 @@ const typeDefs = `
     id: ID!
     component: String
     name: String
+    label: String
     description: String
     doiValidation: String
     doiUniqueSuffixValidation: String

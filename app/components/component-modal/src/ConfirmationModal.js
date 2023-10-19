@@ -2,6 +2,7 @@ import React from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { LooseRowCentered } from '../../shared/Containers'
 import ActionButton from '../../shared/ActionButton'
 
@@ -51,8 +52,11 @@ export const ConfirmationModal = ({
   message,
   confirmationAction,
   confirmationButtonText,
+  cancelButtonText,
   closeModal,
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Modal isOpen={isOpen}>
       <ModalContainer>
@@ -65,9 +69,11 @@ export const ConfirmationModal = ({
             }}
             primary
           >
-            {confirmationButtonText || 'OK'}
+            {confirmationButtonText || t('common.OK')}
           </ActionButton>
-          <ActionButton onClick={closeModal}>Cancel</ActionButton>
+          <ActionButton onClick={closeModal}>
+            {cancelButtonText || t('common.Cancel')}
+          </ActionButton>
         </LooseRowCentered>
       </ModalContainer>
     </Modal>
