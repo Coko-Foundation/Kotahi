@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { Heading2, SidebarPageRow, RightArrow } from '../style'
 import { RoundIconButton } from '../../../shared'
 
@@ -18,6 +19,7 @@ const CMSPageEditSidebar = ({
   onItemClick,
   onNewItemButtonClick,
 }) => {
+  const { t } = useTranslation()
   return (
     <div>
       {cmsPages.map(cmsPage => (
@@ -34,7 +36,7 @@ const CMSPageEditSidebar = ({
         iconName="Plus"
         onClick={onNewItemButtonClick}
         primary
-        title="Add a new page"
+        title={t('cmsPage.pages.addNew')}
       />
     </div>
   )

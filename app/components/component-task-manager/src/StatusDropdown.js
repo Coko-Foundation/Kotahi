@@ -8,6 +8,7 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import theme, { color } from '../../../theme'
 
@@ -120,6 +121,8 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
     DONE: 'Done',
   }
 
+  const { t } = useTranslation()
+
   const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
     refetchQueries: ['getTasksQuery'],
   })
@@ -140,7 +143,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   if (task.status === status.NOT_STARTED) {
     return (
       <StartButton onClick={() => handleStatusUpdate(status.IN_PROGRESS)}>
-        Start
+        {t('taskManager.task.statuses.Start')}
       </StartButton>
     )
   }
@@ -150,14 +153,20 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   const PauseLabel = (
     <DropdownLabel>
       <PauseIcon size={15} />
-      <span>{task.status === status.PAUSED ? 'Paused' : 'Pause'}</span>
+      <span>
+        {task.status === status.PAUSED
+          ? t('taskManager.task.statuses.Paused')
+          : t('taskManager.task.statuses.Pause')}
+      </span>
     </DropdownLabel>
   )
 
   const ContinueLabel = (
     <DropdownLabel>
       <span>
-        {task.status === status.IN_PROGRESS ? 'In progress' : 'Continue'}
+        {task.status === status.IN_PROGRESS
+          ? t('taskManager.task.statuses.In progress')
+          : t('taskManager.task.statuses.Continue')}
       </span>
     </DropdownLabel>
   )
@@ -165,7 +174,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   const DoneLabel = (
     <DropdownLabel>
       <CheckIcon size={15} />
-      <span>Done</span>
+      <span>{t('taskManager.task.statuses.Done')}</span>
     </DropdownLabel>
   )
 

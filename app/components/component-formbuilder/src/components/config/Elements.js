@@ -1,3 +1,4 @@
+import i18next from 'i18next'
 import { required } from '../../../../xpub-validators/src'
 
 const textfield = {
@@ -52,8 +53,7 @@ const submissionNameField = {
   component: 'TextField',
   props: {
     label: 'Name (internal field name)',
-    description:
-      'Use either "submission.yourFieldNameHere", or one of the following: "meta.title" for manuscript title, "meta.abstract" for abstract, "fileName" for SupplementaryFiles, or "visualAbstract" for a VisualAbstract, or "manuscriptFile" for a ManuscriptFile.',
+    description: i18next.t('formBuilder.internalNameDescription'),
     validate: val =>
       submissionNameFieldRegex.test(val) ? null : 'Invalid name',
   },

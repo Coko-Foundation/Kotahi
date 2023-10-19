@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import { sanitize } from 'isomorphic-dompurify'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
@@ -103,6 +104,8 @@ const Messages = ({
     return () => {}
   })
 
+  const { t } = useTranslation()
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -116,7 +119,7 @@ const Messages = ({
   const DateWithUnreadLabelElement = ({ message }) => (
     <UnreadLabelContainer>
       <UnreadLabel>
-        Unread messages:{' '}
+        {t('chat.Unread messages')}:{' '}
         {convertTimestampToDateWithoutTimeString(new Date(message.created))}
       </UnreadLabel>
     </UnreadLabelContainer>
@@ -132,7 +135,7 @@ const Messages = ({
 
   const UnreadLabelElement = () => (
     <UnreadLabelContainer>
-      <UnreadLabel>Unread messages</UnreadLabel>
+      <UnreadLabel>{t('chat.Unread messages')}</UnreadLabel>
     </UnreadLabelContainer>
   )
 
@@ -206,10 +209,7 @@ const Messages = ({
         </NextPageButton>
       )}
       {messages && !messages.length && (
-        <Placeholder>
-          No discussion for this manuscript yet. Start by typing a message
-          below.
-        </Placeholder>
+        <Placeholder>{t('chat.noDiscussion')}</Placeholder>
       )}
       {messages.map(group => {
         const initialMessage = group[0]
@@ -276,7 +276,7 @@ const Messages = ({
                   </Bubble>
                   {message.created !== message.updated && (
                     <EditedTimeContainer>
-                      <EditedTime>Edited</EditedTime>
+                      <EditedTime>{t('chat.Edited')}</EditedTime>
                       <Tooltip
                         className="tooltip-message"
                         content={convertTimestampToDateWithTimeString(

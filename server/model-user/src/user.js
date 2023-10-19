@@ -100,6 +100,7 @@ class User extends BaseModel {
           format: 'date-time',
         },
         recentTab: { type: ['string', 'null'] },
+        preferredLanguage: { type: ['string', 'null'] },
         eventNotificationsOptIn: { type: ['boolean', true] },
       },
     }

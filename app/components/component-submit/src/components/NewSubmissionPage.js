@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { ApolloConsumer } from '@apollo/client'
 import config from 'config'
+import { useTranslation } from 'react-i18next'
 import { Container, Content, UploadContainer, Heading } from '../style'
 import UploadManuscript from './UploadManuscript'
 
@@ -13,9 +14,10 @@ const acceptFiles =
     : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 
 const Dashboard = ({ currentUser, history }) => {
+  const { t } = useTranslation()
   return (
     <Container>
-      <Heading>New submission</Heading>
+      <Heading>{t('newSubmission.New submission')}</Heading>
       <Content>
         <UploadContainer>
           <ApolloConsumer>

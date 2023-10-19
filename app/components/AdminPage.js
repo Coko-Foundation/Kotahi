@@ -1,7 +1,7 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import Modal from 'react-modal'
 import {
   matchPath,
@@ -12,6 +12,7 @@ import {
   useLocation,
 } from 'react-router-dom'
 import styled from 'styled-components'
+import i18next from 'i18next'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 import { ConfigContext } from './config/src'
@@ -20,7 +21,9 @@ import FormBuilderPage from './component-formbuilder/src/components/FormBuilderP
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
 import ProductionPage from './component-production/src/components/ProductionPage'
-import ProfilePage from './component-profile/src/ProfilePage'
+import ProfilePage, {
+  UPDATE_LANGUAGE,
+} from './component-profile/src/ProfilePage'
 import ReportPage from './component-reporting/src/ReportPage'
 import DecisionPage from './component-review/src/components/DecisionPage'
 import ReviewPage from './component-review/src/components/ReviewPage'
@@ -116,6 +119,17 @@ const AdminPage = () => {
 
   const previousDataRef = useRef(null)
 
+  const [updateLanguage] = useMutation(UPDATE_LANGUAGE)
+  useEffect(() => {
+    if (!data?.currentUser) return
+
+    if (!data.currentUser.preferredLanguage) {
+      updateLanguage({
+        variables: { id: currentUser.id, preferredLanguage: i18next.language },
+      })
+    }
+  }, [data?.currentUser])
+
   // Do this to prevent polling-related flicker
   if (loading && !previousDataRef.current) {
     return <Spinner />
@@ -136,6 +150,10 @@ const AdminPage = () => {
   const currentUser = data?.currentUser
   journal.textStyles = data?.builtCss.css
   const hasAlert = data?.userHasTaskAlerts
+
+  if (currentUser.preferredLanguage) {
+    i18next.changeLanguage(currentUser.preferredLanguage)
+  }
 
   previousDataRef.current = data
 
@@ -170,8 +188,11 @@ const AdminPage = () => {
 
     links = showLinks
       ? [
-          { link: submitLink, name: 'Summary Info' },
-          { link: manuscriptLink, name: 'Manuscript' },
+          { link: submitLink, name: i18next.t('leftMenu.Summary Info') },
+          {
+            link: manuscriptLink,
+            name: i18next.t('leftMenu.Manuscript'),
+          },
         ]
       : null
   }
@@ -185,46 +206,88 @@ const AdminPage = () => {
     (isUser || isGroupManager || isAdmin) &&
     ['aperture', 'colab', 'ncrc'].includes(instanceName) // TODO: remove instance based logic and refactor it to be enabled and disabled from config manager
   ) {
-    links.push({ link: homeLink, name: 'Dashboard', icon: 'home', hasAlert })
+    links.push({
+      link: homeLink,
+      name: i18next.t('leftMenu.Dashboard'),
+      icon: 'home',
+      hasAlert,
+    })
   }
 
   if (isGroupManager) {
     links.push({
       link: manuscriptsLink,
-      name: 'Manuscripts',
+      name: i18next.t('leftMenu.Manuscripts'),
       icon: 'file-text',
     })
     if (config?.report?.showInMenu)
-      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
+      links.push({
+        link: reportsLink,
+        name: i18next.t('leftMenu.Reports'),
+        icon: 'activity',
+      })
   }
 
   if (isGroupManager || isAdmin) {
     links.push({
       menu: 'Settings',
-      name: 'Settings',
+      name: i18next.t('leftMenu.Settings'),
       icon: 'settings',
       links: [
         {
           menu: 'Forms',
-          name: 'Forms',
+          name: i18next.t('leftMenu.Forms'),
           icon: 'check-square',
           links: [
-            { link: submissionFormBuilderLink, name: 'Submission' },
-            { link: reviewFormBuilderLink, name: 'Review' },
-            { link: decisionFormBuilderLink, name: 'Decision' },
+            {
+              link: submissionFormBuilderLink,
+              name: i18next.t('leftMenu.Submission'),
+            },
+            {
+              link: reviewFormBuilderLink,
+              name: i18next.t('leftMenu.Review'),
+            },
+            {
+              link: decisionFormBuilderLink,
+              name: i18next.t('leftMenu.Decision'),
+            },
           ],
         },
-        { link: tasksTemplateLink, name: 'Tasks', icon: 'list' },
-        { link: userAdminLink, name: 'Users', icon: 'users' },
-        { link: configurationLink, name: 'Configuration', icon: 'sliders' },
-        { link: emailTemplatesLink, name: 'Emails', icon: 'mail' },
+        {
+          link: tasksTemplateLink,
+          name: i18next.t('leftMenu.Tasks'),
+          icon: 'list',
+        },
+        {
+          link: userAdminLink,
+          name: i18next.t('leftMenu.Users'),
+          icon: 'users',
+        },
+        {
+          link: configurationLink,
+          name: i18next.t('leftMenu.Configuration'),
+          icon: 'sliders',
+        },
+        {
+          link: emailTemplatesLink,
+          name: i18next.t('leftMenu.Emails'),
+          icon: 'mail',
+        },
         {
           menu: 'CMS',
-          name: 'CMS',
+          name: i18next.t('leftMenu.CMS'),
           icon: 'layout',
           links: [
-            { link: CMSPagesPageLink, name: 'Pages', icon: '' },
-            { link: CMSLayoutPageLink, name: 'Layout', icon: '' },
+            {
+              link: CMSPagesPageLink,
+              name: i18next.t('leftMenu.Pages'),
+              icon: '',
+            },
+            {
+              link: CMSLayoutPageLink,
+              name: i18next.t('leftMenu.Layout'),
+              icon: '',
+            },
           ],
         },
       ],

@@ -2,10 +2,11 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class KeywordList extends Tools {
-  title = 'Change to keyword list'
-  label = 'Keyword list'
+  title = i18next.t('waxEditor.Change to keyword list')
+  label = i18next.t('waxEditor.Keyword list')
   name = 'KeywordList'
   // color = 'colorKeyWordList'
   // className = 'keywordlist'

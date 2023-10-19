@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 
 import {
@@ -11,6 +12,7 @@ import {
 
 const InvitationLinkExpired = () => {
   const config = useContext(ConfigContext)
+  const { t } = useTranslation()
   return (
     <InvitationContainer>
       <Centered>
@@ -20,10 +22,7 @@ const InvitationLinkExpired = () => {
             src={config?.groupIdentity?.logoPath}
           />
           <FeedbackForm>
-            <DeclinedInfoString>
-              This invitation link has expired. Please contact the system
-              administrator to send a new invitation.
-            </DeclinedInfoString>
+            <DeclinedInfoString>{t('linkExpiredPage')}</DeclinedInfoString>
           </FeedbackForm>
         </InvitationContent>
       </Centered>

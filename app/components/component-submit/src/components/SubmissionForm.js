@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { SectionContent } from '../../../shared'
 import FormTemplate from './FormTemplate'
 import { articleStatuses } from '../../../../globals'
@@ -18,7 +19,9 @@ const SubmissionForm = ({
   validateDoi,
   validateSuffix,
 }) => {
-  let submissionButtonText = 'Submit your research object'
+  const { t } = useTranslation()
+
+  let submissionButtonText = t('manuscriptSubmit.Submit your research object')
   let submitButtonShouldRepublish = false
 
   if (match.url.includes('/evaluation')) {

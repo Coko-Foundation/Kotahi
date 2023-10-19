@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useMutation } from '@apollo/client'
-import EditDeleteMessageModal from './EditDeleteMessageModal'
+import { useTranslation } from 'react-i18next'
+import EditMessageModal from './EditMessageModal'
 import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
 import { DELETE_MESSAGE, UPDATE_MESSAGE } from '../../../../queries'
 import { Ellipsis } from './style'
@@ -51,6 +52,7 @@ const ChatPostDropdown = ({
   const isGroupManager = groupRoles.includes('groupManager')
   const canDeletePost = isAuthor || (isAdmin && isGroupManager)
   const canEditPost = isAuthor
+  const { t } = useTranslation()
 
   const handleEditConfirmation = async editedMessage => {
     try {
@@ -133,12 +135,12 @@ const ChatPostDropdown = ({
           <div>
             {canEditPost && (
               <DropdownItem onClick={() => setIsEditingMessage(true)}>
-                Edit
+                {t('chat.edit')}
               </DropdownItem>
             )}
             {canDeletePost && (
               <DropdownItem onClick={() => setIsDeletingMessage(true)}>
-                Delete
+                {t('chat.delete')}
               </DropdownItem>
             )}
           </div>
@@ -147,24 +149,22 @@ const ChatPostDropdown = ({
       <ConfirmationModal
         closeModal={() => setIsDeletingMessage(false)}
         confirmationAction={handleDeleteConfirmation}
-        confirmationButtonText="Delete"
+        confirmationButtonText={t('chat.delete')}
         isOpen={isDeletingMessage}
         message={
           <LooseColumn>
-            Are you sure you want to delete this message?
+            {t(
+              'modals.deleteMessage.Are you sure you want to delete this message?',
+            )}
             <IsolatedMessageWithDetails message={message} />
           </LooseColumn>
         }
       />
       {isEditingMessage && (
-        <EditDeleteMessageModal
-          cancelText="No"
+        <EditMessageModal
           close={() => setIsEditingMessage(false)}
-          confirmText="Update"
-          isEdit
           message={message}
           onConfirm={handleEditConfirmation}
-          title="Edit message"
         />
       )}
     </>

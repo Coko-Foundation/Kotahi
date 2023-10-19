@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import TaskList from './TaskList'
 import { Container, Heading, SectionContent, WidthLimiter } from '../../shared'
 
@@ -17,9 +18,10 @@ const TasksTemplate = ({
   deleteTaskNotification,
   emailTemplates,
 }) => {
+  const { t } = useTranslation()
   return (
     <Container>
-      <Heading>Task Template Builder</Heading>
+      <Heading>{t('tasksPage.Task Template Builder')}</Heading>
       <WidthLimiter>
         <SectionContent>
           <TaskListContainer>

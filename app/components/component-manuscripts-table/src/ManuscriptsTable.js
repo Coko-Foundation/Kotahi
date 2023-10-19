@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { ManuscriptsHeaderRow, ManuscriptsTableStyled } from './style'
 import FilterSortHeader from './FilterSortHeader'
 import ManuscriptRow from './ManuscriptRow'
@@ -17,6 +18,8 @@ const ManuscriptsTable = ({
   sortName,
   getMainActionLink,
 }) => {
+  const { t } = useTranslation()
+
   const setFilter = (name, value) =>
     applyQueryParams({
       [name]: value,
@@ -44,7 +47,9 @@ const ManuscriptsTable = ({
         ))}
       </ManuscriptsHeaderRow>
       {manuscripts.length === 0 ? (
-        <Placeholder>No matching manuscripts were found</Placeholder>
+        <Placeholder>
+          {t('manuscriptsTable.No matching manuscripts were found')}
+        </Placeholder>
       ) : (
         manuscripts.map((manuscript, key) => {
           const latestVersion = {

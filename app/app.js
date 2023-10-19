@@ -15,6 +15,8 @@ import { XpubProvider } from './components/xpub-with-context/src'
 
 import * as journal from '../config/journal'
 
+import './i18n'
+
 const history = createBrowserHistory()
 
 const rootEl = document.getElementById('root')

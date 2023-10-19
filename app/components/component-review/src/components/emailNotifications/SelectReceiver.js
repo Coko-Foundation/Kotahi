@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Checkbox, TextField } from '@pubsweet/ui'
 
+import { useTranslation } from 'react-i18next'
 import { Select } from '../../../../shared'
 
 const InputField = styled(TextField)`
@@ -20,33 +21,38 @@ const SelectReceiver = ({
   setExternalEmail,
   setExternalName,
 }) => {
+  const { t } = useTranslation()
   return (
     <>
-      <Checkbox checked={isNewUser} label="New User" onChange={setIsNewUser} />
+      <Checkbox
+        checked={isNewUser}
+        label={t('decisionPage.tasksTab.New User')}
+        onChange={setIsNewUser}
+      />
       {isNewUser ? (
         <>
           <InputField
             data-cy="new-user-email"
             onChange={e => setExternalEmail(e.target.value)}
-            placeholder="Email"
+            placeholder={t('decisionPage.tasksTab.newUser.Email')}
             value={externalEmail}
           />
           <InputField
             data-cy="new-user-name"
             onChange={e => setExternalName(e.target.value)}
-            placeholder="Name"
+            placeholder={t('decisionPage.tasksTab.newUser.Name')}
             value={externalName}
           />
         </>
       ) : (
         <Select
           aria-label="Choose receiver"
-          label="Choose receiver"
+          label={t('decisionPage.tasksTab.Choose receiver')}
           onChange={selected => {
             onChangeReceiver(selected.value)
           }}
           options={options}
-          placeholder="Choose receiver"
+          placeholder={t('decisionPage.tasksTab.Choose receiver')}
           value={selectedReceiver}
           width="100%"
         />

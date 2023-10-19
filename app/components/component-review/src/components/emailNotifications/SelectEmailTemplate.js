@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Select } from '../../../../shared'
 
 const SelectEmailTemplate = ({
@@ -25,6 +26,7 @@ const SelectEmailTemplate = ({
     return emailOption
   })
 
+  const { t } = useTranslation()
   return (
     <Select
       aria-label="Notification_email_select"
@@ -46,7 +48,9 @@ const SelectEmailTemplate = ({
         onChangeEmailTemplate(selected ? selected.value : '')
       }}
       options={emailNotificationOptions}
-      placeholder={placeholder || 'Choose notification template'}
+      placeholder={
+        placeholder || t('decisionPage.tasksTab.Choose notification template')
+      }
       value={selectedEmailTemplate}
     />
   )

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import Calendar from './Calendar'
 import MinimalButton from './MinimalButton'
 import ActionButton from './ActionButton'
@@ -41,6 +42,7 @@ const DateRangeCalendar = ({
   onChange,
 }) => {
   const [dateRange, setDateRange] = useState(value?.length === 2 ? value : [])
+  const { t } = useTranslation()
 
   const applyOffsetRange = (startOffsetDays, endOffsetDays) => {
     const start = new Date(Date.now() + startOffsetDays * 24 * 60 * 60 * 1000)
@@ -53,21 +55,21 @@ const DateRangeCalendar = ({
     <MainContainer>
       <LeftControls>
         <PresetsContainer>
-          <Title>Presets</Title>
+          <Title>{t('common.danteRangeCalendar.Presets')}</Title>
           <MinimalButton onClick={() => applyOffsetRange(0, 0)}>
-            Today
+            {t('common.danteRangeCalendar.Today')}
           </MinimalButton>
           <MinimalButton onClick={() => applyOffsetRange(-1, -1)}>
-            Yesterday
+            {t('common.danteRangeCalendar.Yesterday')}
           </MinimalButton>
           <MinimalButton onClick={() => applyOffsetRange(-7, 0)}>
-            Past 7 days
+            {t('common.danteRangeCalendar.Past 7 days')}
           </MinimalButton>
           <MinimalButton onClick={() => applyOffsetRange(-30, 0)}>
-            Past 30 days
+            {t('common.danteRangeCalendar.Past 30 days')}
           </MinimalButton>
           <MinimalButton onClick={() => applyOffsetRange(-90, 0)}>
-            Past 90 days
+            {t('common.danteRangeCalendar.Past 90 days')}
           </MinimalButton>
           <MinimalButton
             onClick={() =>
@@ -75,7 +77,7 @@ const DateRangeCalendar = ({
               applyOffsetRange(-365, 0)
             }
           >
-            Past year
+            {t('common.danteRangeCalendar.Past year')}
           </MinimalButton>
         </PresetsContainer>
         <ActionButton
@@ -86,7 +88,7 @@ const DateRangeCalendar = ({
           }}
           primary
         >
-          Clear
+          {t('common.danteRangeCalendar.Clear')}
         </ActionButton>
       </LeftControls>
       <VerticalDivider />

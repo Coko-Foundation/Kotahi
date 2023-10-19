@@ -2,6 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Action, ActionGroup } from '@pubsweet/ui'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { color } from '../../../../theme'
 
 const Divider = styled.div`
@@ -31,11 +32,12 @@ const ReviewerItemLinks = ({
   const history = useHistory()
 
   const mainActionLink = getMainActionLink && getMainActionLink(manuscript)
+  const { t } = useTranslation()
 
   const reviewLinkText = {
-    completed: 'Completed',
-    accepted: 'Do Review',
-    inProgress: 'Continue Review',
+    completed: t('manuscriptsTable.reviewCompleted'),
+    accepted: t('manuscriptsTable.reviewDo'),
+    inProgress: t('manuscriptsTable.reviewContinue'),
   }
 
   if (['accepted', 'completed', 'inProgress'].includes(status)) {
@@ -80,7 +82,7 @@ const ReviewerItemLinks = ({
             })
           }}
         >
-          Accept
+          {t('manuscriptsTable.reviewAccept')}
         </Action>
         <Divider>&nbsp;</Divider>
         <Action
@@ -96,7 +98,7 @@ const ReviewerItemLinks = ({
             })
           }}
         >
-          Reject
+          {t('manuscriptsTable.reviewReject')}
         </Action>
       </ActionGroup>
     )
@@ -104,7 +106,7 @@ const ReviewerItemLinks = ({
 
   return (
     <ActionGroup>
-      <Action disabled>{status}</Action>
+      <Action disabled>{t(`reviewerStatus.${status}`)}</Action>
     </ActionGroup>
   )
 }

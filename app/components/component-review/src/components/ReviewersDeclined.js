@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'
+import { useTranslation } from 'react-i18next'
 import { SectionHeader, SectionRow } from '../../../shared'
 import { UserAction } from '../../../component-manuscripts-table/src/style'
 import DeclinedReviewer from './DeclinedReviewer'
@@ -33,9 +34,10 @@ const AddBorder = styled.div`
 
 const ReviewersDeclined = ({ emailAndWebReviewers }) => {
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
 
   const declinations = emailAndWebReviewers.filter(user => {
-    return user.status.toLowerCase() === 'rejected'
+    return user.status === 'rejected' // internal name for "Declined"
   })
 
   return (
@@ -43,7 +45,9 @@ const ReviewersDeclined = ({ emailAndWebReviewers }) => {
       <SectionHeader onClick={() => setOpen(!open)}>
         <DropdownTitleContainer>
           <UserAction>
-            {open ? 'Hide Declined' : `See Declined (${declinations.length})`}
+            {open
+              ? t('decisionPage.Hide Declined')
+              : t('decisionPage.See Declined', { count: declinations.length })}
           </UserAction>
           <Icon color="#9e9e9e">{open ? 'chevron-up' : 'chevron-down'}</Icon>
         </DropdownTitleContainer>
@@ -61,7 +65,7 @@ const ReviewersDeclined = ({ emailAndWebReviewers }) => {
             })}
           </DeclinedReviewerContainer>
         ) : (
-          <SectionRow>No Declined Reviewers</SectionRow>
+          <SectionRow>{t('decisionPage.No Declined Reviewers')}</SectionRow>
         ))}
     </>
   )

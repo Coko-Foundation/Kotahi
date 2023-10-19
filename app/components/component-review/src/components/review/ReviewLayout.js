@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Tabs } from '@pubsweet/ui'
 
+import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
@@ -43,6 +44,7 @@ const ReviewLayout = ({
   priorVersions.reverse() // Convert to chronological order (was reverse-chron)
 
   const decision = latestVersion.reviews.find(r => r.isDecision) || {}
+  const { t } = useTranslation()
 
   const decisionIsComplete = [
     'accepted',
@@ -165,7 +167,7 @@ const ReviewLayout = ({
                 onSubmit={onSubmit}
                 shouldStoreFilesInForm
                 showEditorOnlyFields={false}
-                submissionButtonText="Submit"
+                submissionButtonText={t('reviewPage.Submit')}
                 tagForFiles="review"
                 threadedDiscussionProps={threadedDiscussionProps}
                 validateDoi={validateDoi}
@@ -180,7 +182,7 @@ const ReviewLayout = ({
               hideSpecialInstructions
               manuscript={latestVersion}
               threadedDiscussionProps={threadedDiscussionProps}
-              title="Evaluation summary"
+              title={decisionForm.name}
             />
           )}
         </div>
@@ -196,7 +198,7 @@ const ReviewLayout = ({
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
           sections={reviewSections}
-          title="Versions"
+          title={t('reviewPage.Versions')}
         />
       </Manuscript>
       <Chat>

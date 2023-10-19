@@ -5,6 +5,8 @@ import { Button, Checkbox } from '@pubsweet/ui'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 import Modal from '../../component-modal/src/ConfirmationModal'
 import { convertCamelCaseToTitleCase } from '../../../shared/textUtils'
 
@@ -19,6 +21,8 @@ import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
 import ChangeEmail from './ChangeEmail'
 import EnterEmail from './EnterEmail'
+import ChangeLanguage from './ChangeLanguage'
+import { languagesLabels } from '../../../i18n/index'
 
 const VersionText = styled.div`
   color: #757575;
@@ -54,6 +58,7 @@ const ProfileDropzone = ({
   profilePicture,
   replaceAvatarImage,
   updateProfilePicture,
+  t,
 }) => {
   const onDrop = useCallback(async acceptedFiles => {
     await replaceAvatarImage(acceptedFiles)
@@ -67,23 +72,27 @@ const ProfileDropzone = ({
       <input {...getInputProps()} />
       <BigProfileImage src={profilePicture || '/profiles/default_avatar.svg'} />
       <Button>
-        {isDragActive ? 'Drop it here' : 'Change profile picture'}
+        {isDragActive
+          ? t('profilePage.Drop it here')
+          : t('profilePage.Change profile picture')}
       </Button>
     </div>
   )
 }
 
-const SpecialRoles = ({ user, isCurrentUsersOwnProfile }) => {
-  const specialRoles = user.globalRoles
+const SpecialRoles = ({ user, isCurrentUsersOwnProfile, t }) => {
+  let specialRoles = user.globalRoles
     .concat(user.groupRoles)
     .map(convertCamelCaseToTitleCase)
+
+  specialRoles = specialRoles.map(elem => {
+    return t(`common.roles.${elem}`)
+  })
 
   if (!specialRoles.length)
     return isCurrentUsersOwnProfile ? (
       <UserPrivilegeAlert>
-        User Privileges Required
-        <br /> Please ensure that you have the appropriate role permissions or
-        contact your system administrator for assistance.
+        {t('profilePage.userPrivilegeAlert')}
       </UserPrivilegeAlert>
     ) : null
 
@@ -99,6 +108,7 @@ const Profile = ({
   updateProfilePicture,
   updateUserEmail,
   updateUsername,
+  updateLanguage,
   updateGlobalChatNotificationOptIn,
   user,
   notificationUserOption,
@@ -108,6 +118,7 @@ const Profile = ({
     setHasGlobalChatNotificationOptIn,
   ] = useState(notificationUserOption)
 
+  const { t } = useTranslation()
   useEffect(() => {
     if (notificationUserOption) {
       setHasGlobalChatNotificationOptIn(notificationUserOption)
@@ -142,18 +153,19 @@ const Profile = ({
         <HeadingWithAction>
           <Heading>
             {isCurrentUsersOwnProfile
-              ? 'Your profile'
-              : `Profile: ${user.username}`}
+              ? t('profilePage.Your profile')
+              : t('profilePage.Profile: ') + user.username}
           </Heading>
           {isCurrentUsersOwnProfile && (
             <Button onClick={() => logoutUser()} primary>
-              Logout
+              {t('profilePage.Logout')}
             </Button>
           )}
         </HeadingWithAction>
 
         <SpecialRoles
           isCurrentUsersOwnProfile={isCurrentUsersOwnProfile}
+          t={t}
           user={user}
         />
 
@@ -164,6 +176,7 @@ const Profile = ({
                 <ProfileDropzone
                   profilePicture={user.profilePicture}
                   replaceAvatarImage={replaceAvatarImage}
+                  t={t}
                   updateProfilePicture={updateProfilePicture}
                 />
               ) : (
@@ -178,10 +191,11 @@ const Profile = ({
             </div>
           </SectionRow>
           <SectionRow>
-            <label>ORCID</label> <div>{user.defaultIdentity.identifier}</div>
+            <label>{t('profilePage.ORCID')}</label>{' '}
+            <div>{user.defaultIdentity.identifier}</div>
           </SectionRow>
           <SectionRow>
-            <label htmlFor="2">Username</label>
+            <label htmlFor="2">{t('profilePage.Username')}</label>
             <div>
               {canEditProfile ? (
                 <ChangeUsername updateUsername={updateUsername} user={user} />
@@ -191,7 +205,7 @@ const Profile = ({
             </div>
           </SectionRow>
           <SectionRow>
-            <label>Email</label>
+            <label>{t('profilePage.Email')}</label>
             <div>
               {canEditProfile ? (
                 <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
@@ -200,11 +214,27 @@ const Profile = ({
               )}
             </div>
           </SectionRow>
+          <SectionRow>
+            <label>{t('profilePage.Language')}</label>
+            <div>
+              {canEditProfile ? (
+                <ChangeLanguage updateLanguage={updateLanguage} user={user} />
+              ) : (
+                <div>
+                  {
+                    languagesLabels.find(
+                      elem => elem.value === i18next.language,
+                    ).label
+                  }
+                </div>
+              )}
+            </div>
+          </SectionRow>
         </SectionContent>
         <SectionContent>
           <StyledCheckbox
             checked={hasGlobalChatNotificationOptIn === 'off'}
-            label="Mute all discussion email notifications"
+            label={t('profilePage.Mute all discussion email notifications')}
             onChange={toggleGlobalChatNotificationOptIn}
           />
         </SectionContent>

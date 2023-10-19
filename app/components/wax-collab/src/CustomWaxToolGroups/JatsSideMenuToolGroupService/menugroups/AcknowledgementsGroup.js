@@ -2,10 +2,11 @@ import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
 import { ToolGroup, LeftMenuTitle } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class AcknowledgementsGroup extends ToolGroup {
   tools = []
-  title = (<LeftMenuTitle title="Acknowledgements" />)
+  title = (<LeftMenuTitle title={i18next.t('waxEditor.Acknowledgements')} />)
 
   constructor(@inject('AcknowledgementsSection') acknowledgementsSection) {
     super()

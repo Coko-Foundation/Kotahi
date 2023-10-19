@@ -4,6 +4,7 @@ import { cloneDeep, get } from 'lodash'
 import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
@@ -51,6 +52,7 @@ const DropzoneAndList = ({
 }) => {
   // Disable the input in case we want a single file upload
   // and a file has already been uploaded
+  const { t } = useTranslation()
 
   const files = cloneDeep(get(values, fieldName) || [])
     .filter(file => file != null)
@@ -101,10 +103,10 @@ const DropzoneAndList = ({
             <input {...getInputProps()} />
             <Message disabled={disabled}>
               {disabled ? (
-                'Your file has been uploaded.'
+                t('dragndrop.Your file has been uploaded')
               ) : (
                 <>
-                  Drag and drop your files here
+                  {t('dragndrop.Drag and drop your files here')}
                   <Icon color={color.brand1.base()} inline>
                     file-plus
                   </Icon>

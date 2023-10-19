@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import { Formik } from 'formik'
-
+import { useTranslation } from 'react-i18next'
 import CMSPageEditForm from './CMSPageEditForm'
 
 import { FullWidthAndHeightContainer } from '../style'
@@ -16,11 +16,12 @@ const CMSPageEdit = ({
   deleteCMSPage,
   flaxSiteUrlForGroup,
 }) => {
+  const { t } = useTranslation()
   const [customFormErrors, setCustomFormErrors] = useState({})
 
   const [submitButtonState, setSubmitButtonState] = useState({
     state: null,
-    text: 'Publish',
+    text: t('cmsPage.pages.Publish'),
   })
 
   const autoSaveData = async (id, data) => {
@@ -35,7 +36,10 @@ const CMSPageEdit = ({
   }
 
   const publish = async formData => {
-    setSubmitButtonState({ state: 'pending', text: 'Saving data' })
+    setSubmitButtonState({
+      state: 'pending',
+      text: t('cmsPage.pages.Saving data'),
+    })
     const timeStamp = new Date()
 
     const inputData = {
@@ -52,7 +56,10 @@ const CMSPageEdit = ({
       },
     })
 
-    setSubmitButtonState({ state: 'pending', text: 'Rebuilding...' })
+    setSubmitButtonState({
+      state: 'pending',
+      text: t('cmsPage.pages.Rebuilding'),
+    })
     await rebuildFlaxSiteQuery({
       variables: {
         params: JSON.stringify({
@@ -60,7 +67,10 @@ const CMSPageEdit = ({
         }),
       },
     })
-    setSubmitButtonState({ state: 'success', text: 'Published' })
+    setSubmitButtonState({
+      state: 'success',
+      text: t('cmsPage.pages.Published'),
+    })
   }
 
   const createNewPage = async formData => {
@@ -131,7 +141,9 @@ const CMSPageEdit = ({
                 resetCustomErrors={resetCustomErrors}
                 setFieldValue={formikProps.setFieldValue}
                 setTouched={formikProps.setTouched}
-                submitButtonText={isNewPage ? 'Save' : submitButtonState.text}
+                submitButtonText={
+                  isNewPage ? t('cmsPage.pages.Save') : submitButtonState.text
+                }
               />
             )
           }}

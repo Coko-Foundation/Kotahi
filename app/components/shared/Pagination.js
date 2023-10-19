@@ -2,6 +2,7 @@ import React from 'react'
 import ReactPagination from 'react-paginate'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { Trans, useTranslation } from 'react-i18next'
 
 const PaginationInfo = styled.div`
   strong {
@@ -60,6 +61,8 @@ export const Pagination = ({
   // eslint-disable-next-line no-shadow
   PaginationContainer,
 }) => {
+  const { t } = useTranslation()
+
   // e.g. Get [1,2,3] from totalCount 9, limit 3
   const pages = [...new Array(Math.ceil(totalCount / limit)).keys()].map(
     p => p + 1,
@@ -72,13 +75,17 @@ export const Pagination = ({
     <PaginationContainer>
       <PaginationInfo>
         {totalCount > 0 ? (
-          <>
-            Showing <strong>{firstResult}</strong> to{' '}
-            <strong>{lastResult}</strong> of <strong>{totalCount}</strong>{' '}
-            results
-          </>
+          <Trans
+            count={totalCount}
+            i18nKey="manuscriptsTable.pagination"
+            values={{
+              firstResult,
+              lastResult,
+              totalCount,
+            }}
+          />
         ) : (
-          <>No results found</>
+          t('manuscriptsTable.No results found')
         )}
       </PaginationInfo>
       <Styles>

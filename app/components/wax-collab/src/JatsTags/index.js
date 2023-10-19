@@ -31,6 +31,7 @@ class JatsTagsService extends Service {
     this.container.bind('Appendix').to(Appendix)
     this.container.bind('RefList').to(RefList)
     this.container.bind('FrontMatter').to(FrontMatter)
+    // this.container.bind('Title').to(Title)
     this.container.bind('Abstract').to(Abstract)
     this.container.bind('AwardId').to(AwardId)
     this.container.bind('FundingStatement').to(FundingStatement)

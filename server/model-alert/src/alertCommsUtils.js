@@ -33,11 +33,11 @@ const sendAlerts = async () => {
       return
     }
 
-    await sendAlertForMessage({
-      user: channelMember.user,
-      messageId: earliestUnreadMessage.id,
-      title: 'Unread messages in channel',
-    })
+    // await sendAlertForMessage({
+    //   user: channelMember.user,
+    //   messageId: earliestUnreadMessage.id,
+    //   title: 'Unread messages in channel',
+    // })
 
     await models.ChannelMember.query().updateAndFetchById(channelMember.id, {
       lastAlertTriggeredTime: new Date(),

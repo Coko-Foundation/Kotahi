@@ -6,6 +6,7 @@ import { Formik } from 'formik'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
+import { useTranslation } from 'react-i18next'
 import {
   elements as components,
   submissionElements as submissionComponents,
@@ -51,6 +52,8 @@ const ComponentProperties = ({
     })
   }
 
+  const { t } = useTranslation()
+
   let componentTypeOptions = Object.keys(components).map(value => ({
     value,
     label: value,
@@ -66,7 +69,14 @@ const ComponentProperties = ({
       o => o.label !== 'ManuscriptFile',
     )
 
-  const editableProperties = getEditableComponentProperties(
+  // localize options
+  componentTypeOptions = componentTypeOptions.map(typeOption => {
+    const newOption = { ...typeOption }
+    newOption.label = t(`formBuilder.typeOptions.${typeOption.value}`)
+    return newOption
+  })
+
+  let editableProperties = getEditableComponentProperties(
     selectedComponent,
     category,
     shouldAllowHypothesisTagging,
@@ -74,12 +84,27 @@ const ComponentProperties = ({
 
   const formIsValid = !Object.keys(formErrors).length
 
+  // localize editableProps
+  editableProperties = editableProperties.map(([key, prop]) => {
+    const newProp = { ...prop }
+
+    if (newProp.component === 'RadioBox' || newProp.component === 'Menu') {
+      newProp.props.options = prop.props.options.map(option => {
+        const newOption = { ...option }
+        newOption.label = t(`fields.${key}.${option.value}`)
+        return newOption
+      })
+    }
+
+    return [key, newProp]
+  })
+
   return (
     <Page key={selectedComponent}>
       <form onSubmit={onSubmit}>
-        <Heading>Field Properties</Heading>
+        <Heading>{t('formBuilder.Field Properties')}</Heading>
         <Section>
-          <Legend space>Field type</Legend>
+          <Legend space>{t('formBuilder.Field type')}</Legend>
           <ValidatedFieldFormik
             component={Menu}
             name="component"
@@ -94,7 +119,14 @@ const ComponentProperties = ({
         </Section>
         {editableProperties.map(([key, value]) => (
           <Section key={key}>
-            <Legend space>{value.props?.label ?? `Field ${key}`}</Legend>
+            <Legend space>
+              {/* {value.props?.label ?? `Field ${key}`} */}
+              {t(
+                `formBuilder.Field ${key}`,
+                value.props?.label ?? `Field ${key}`,
+              )}
+            </Legend>
+
             <ValidatedFieldFormik
               component={elements[value.component].default}
               name={key}
@@ -110,16 +142,21 @@ const ComponentProperties = ({
               {...{ ...value.props, label: undefined, description: undefined }}
             />
             {value.props?.description && (
-              <DetailText>{value.props.description}</DetailText>
+              <DetailText>
+                {t(
+                  `formBuilder.FieldDescription ${key}`,
+                  value.props.description,
+                )}
+              </DetailText>
             )}
           </Section>
         ))}
         <Button disabled={!formIsValid} primary type="submit">
-          Update Field
+          {t('formBuilder.Update Field')}
         </Button>
         {!formIsValid && (
           <InvalidWarning>
-            Correct invalid values before updating
+            {t('formBuilder.Correct invalid values before updating')}
           </InvalidWarning>
         )}
       </form>

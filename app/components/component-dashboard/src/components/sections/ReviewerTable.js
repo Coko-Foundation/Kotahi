@@ -1,4 +1,5 @@
 import React, { useMemo, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import ManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import {
@@ -79,10 +80,12 @@ const ReviewerTable = ({
     displayProps,
   )
 
+  const { t } = useTranslation()
+
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>To Review</Title>
+        <Title>{t('dashboardPage.toReview.To Review')}</Title>
       </SectionHeader>
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}

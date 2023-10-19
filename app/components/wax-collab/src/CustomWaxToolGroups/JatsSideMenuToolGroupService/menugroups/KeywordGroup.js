@@ -2,10 +2,11 @@ import React from 'react'
 // eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
 import { ToolGroup, LeftMenuTitle } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class KeywordGroup extends ToolGroup {
   tools = []
-  title = (<LeftMenuTitle title="Keywords" />)
+  title = (<LeftMenuTitle title={i18next.t('waxEditor.Keywords')} />)
 
   constructor(@inject('KeywordList') keywordList, @inject('Keyword') keyword) {
     super()

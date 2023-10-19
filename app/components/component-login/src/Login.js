@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
+import { Trans, useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../config/src'
 import { getQueryStringByName } from '../../../shared/urlUtils'
 import { color } from '../../../theme'
@@ -109,7 +110,7 @@ const StyledORCIDIcon = styled(ORCIDIcon)`
 const Login = ({ logo = null, ...props }) => {
   const config = useContext(ConfigContext)
   const token = getQueryStringByName('token')
-
+  const { t } = useTranslation()
   // If a JWT token is supplied as a query param (e.g. from OAuth)
   // go ahead and fetch the redirect URL
   let redirectLink = token ? getNextUrl(config) : null
@@ -131,7 +132,6 @@ const Login = ({ logo = null, ...props }) => {
   }
 
   const nextpage = `/auth/orcid?group_id=${config?.groupId}`
-
   return redirectLink ? (
     <Redirect to={redirectLink} />
   ) : (
@@ -143,13 +143,16 @@ const Login = ({ logo = null, ...props }) => {
             src={config?.groupIdentity?.logoPath}
           />
           <RegisterInfoString>
-            Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff.
+            <Trans
+              components={[<StyledORCIDIcon key="icon" />]}
+              i18nKey="loginPage.kotahiUses"
+            />
           </RegisterInfoString>
           <LoginButton as="a" href={nextpage} primary>
-            Login with ORCID
+            {t('loginPage.Login with ORCID')}
           </LoginButton>
           <RegisterLinkButton as="a" href={nextpage}>
-            Register with ORCID
+            {t('loginPage.Register with ORCID')}
           </RegisterLinkButton>
         </Content>
       </Centered>

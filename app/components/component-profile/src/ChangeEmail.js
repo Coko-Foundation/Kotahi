@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { TextField, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 const InlineTextField = styled(TextField)`
   border-color: ${props => (props.error ? '#ff2d1a' : '#AAA')};
@@ -22,6 +23,7 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
     user.email ? '' : 'Required',
   )
 
+  const { t } = useTranslation()
   React.useEffect(() => {
     setEmail(user.email || '')
     setUpdateEmailError('')
@@ -31,7 +33,9 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
   const updateEmail = async (id, email) => {
     await updateUserEmail({ variables: { id, email } }).then(response => {
       if (!response.data.updateEmail.success) {
-        setUpdateEmailError(response.data.updateEmail.error)
+        setUpdateEmailError(
+          t(`common.emailUpdate.${response.data.updateEmail.error}`),
+        )
       } else {
         setUpdateEmailError('')
       }
@@ -45,7 +49,9 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
         onChange={e => setEmail(e.target.value)}
         value={email}
       />
-      <Button onClick={() => updateEmail(user.id, email)}>Change</Button>
+      <Button onClick={() => updateEmail(user.id, email)}>
+        {t('profilePage.Change')}
+      </Button>
       {updateEmailError && (
         <UpdateEmailError>{updateEmailError}</UpdateEmailError>
       )}

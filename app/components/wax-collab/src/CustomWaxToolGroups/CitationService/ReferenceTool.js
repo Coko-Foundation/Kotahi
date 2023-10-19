@@ -2,11 +2,12 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 import { findParentNodeOfTypeClosestToPos, liftListItemToType } from './helpers'
 
 class ReferenceTool extends Tools {
-  title = 'Change to reference'
-  label = 'Reference'
+  title = i18next.t('waxEditor.Change to reference')
+  label = i18next.t('waxEditor.Reference')
   name = 'Reference'
 
   // eslint-disable-next-line class-methods-use-this

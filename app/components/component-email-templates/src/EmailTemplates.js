@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import EmailTemplateContent from './EmailTemplateContent'
 
 import { Heading2, RightArrow } from '../../component-cms-manager/src/style'
@@ -43,6 +44,8 @@ const EmailTemplates = ({ emailTemplates }) => {
   const [activeTitle, setActiveTitle] = useState('')
   const [activeTemplate, setActiveTemplate] = useState(null)
 
+  const { t } = useTranslation()
+
   const handleTabClick = title => {
     const selectedTemplate = emailTemplates.find(
       template => template.emailContent.description === title,
@@ -80,7 +83,10 @@ const EmailTemplates = ({ emailTemplates }) => {
         </div>
       </EmailTemplateLeftSection>
       <EmailTemplateRightSection>
-        <PageHeader leftSideOnly mainHeading="Email Templates" />
+        <PageHeader
+          leftSideOnly
+          mainHeading={t('emailtemplatesPage.Email Templates')}
+        />
         {activeTemplate && (
           <EmailTemplateContent activeTemplate={activeTemplate} />
         )}

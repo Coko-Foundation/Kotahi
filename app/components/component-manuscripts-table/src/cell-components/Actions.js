@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { Action, LinkAction } from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
@@ -27,7 +28,7 @@ const Actions = ({
   )
 
   const [publishingResponse, setPublishingResponse] = useState([])
-
+  const { t } = useTranslation()
   return (
     <Container>
       {['elife', 'ncrc'].includes(config.instanceName) &&
@@ -38,22 +39,22 @@ const Actions = ({
           articleStatuses.published,
         ].includes(manuscript.status) && (
           <LinkAction to={`${urlFrag}/versions/${manuscript.id}/evaluation`}>
-            Evaluation
+            {t('manuscriptsTable.actions.Evaluation')}
           </LinkAction>
         )}
       {['aperture', 'colab'].includes(config.instanceName) && (
         <LinkAction to={`${urlFrag}/versions/${manuscript.id}/decision`}>
-          Control
+          {t('manuscriptsTable.actions.Control')}
         </LinkAction>
       )}
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
-        View
+        {t('manuscriptsTable.actions.View')}
       </LinkAction>
       <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
-        Archive
+        {t('manuscriptsTable.actions.Archive')}
       </Action>
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
-        Production
+        {t('manuscriptsTable.actions.Production')}
       </LinkAction>
       {['elife', 'ncrc'].includes(config.instanceName) &&
         manuscript.status === articleStatuses.evaluated && (
@@ -69,21 +70,24 @@ const Actions = ({
             }}
             onClick={async () => tryPublishManuscript(manuscript)}
           >
-            Publish
+            {t('manuscriptsTable.actions.Publish')}
           </Action>
         )}
       <ConfirmationModal
+        cancelButtonText={t('manuscriptsTable.actions.cancelArchiveButton')}
         closeModal={() => setConfirmArchiveModalIsOpen(false)}
         confirmationAction={() => archiveManuscript(manuscript.id)}
-        confirmationButtonText="Archive"
+        confirmationButtonText={t(
+          'manuscriptsTable.actions.confirmArchiveButton',
+        )}
         isOpen={confirmArchiveModalIsOpen}
-        message="Please confirm you would like to archive this manuscript"
+        message={t('manuscriptsTable.actions.confirmArchive')}
       />
       <Modal
         isOpen={publishErrorsModalIsOpen}
         onClose={() => setPublishErrorsModalIsOpen(false)}
-        subtitle="Some targets failed to publish."
-        title="Publishing error"
+        subtitle={t('manuscriptsTable.actions.Some targets failed to publish')}
+        title={t('manuscriptsTable.actions.Publishing error')}
       >
         <PublishingResponse response={publishingResponse} />
       </Modal>

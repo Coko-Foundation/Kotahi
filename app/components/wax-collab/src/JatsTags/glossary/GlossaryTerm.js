@@ -1,10 +1,11 @@
 import { decorate, injectable } from 'inversify'
 import { toggleMark } from 'prosemirror-commands'
 import { Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class GlossaryTerm extends Tools {
-  title = 'Change to glossary term'
-  label = 'Glossary term'
+  title = i18next.t('waxEditor.Change to glossary term')
+  label = i18next.t('waxEditor.Glossary term')
   // color = 'colorGlossaryTerm'
   // className = 'glossaryTerm'
   // icon = 'title'

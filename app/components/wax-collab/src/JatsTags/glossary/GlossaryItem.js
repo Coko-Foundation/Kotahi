@@ -2,10 +2,11 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class GlossaryItem extends Tools {
-  title = 'Change to glossary item'
-  label = 'Glossary item'
+  title = i18next.t('waxEditor.Change to glossary item')
+  label = i18next.t('waxEditor.Glossary item')
   name = 'GlossaryItem'
   // color = 'colorGlossaryItem'
   // className = 'glossaryitem'

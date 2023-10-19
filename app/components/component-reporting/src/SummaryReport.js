@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Color from 'color'
 import { th } from '@pubsweet/ui-toolkit'
+import { Trans, useTranslation } from 'react-i18next'
 import CardCollection, { Card } from './CardCollection'
 import ConcentricStepsChart from './ConcentricStepsChart'
 import DurationsChart from './DurationsChart'
@@ -96,7 +97,14 @@ const to1Dp = value => Math.round(value * 10) / 10
 
 const getDaysStringTo1Dp = valueDays => {
   const roundedDays = to1Dp(valueDays)
-  return `${roundedDays} day${roundedDays === 1 ? '' : 's'}`
+
+  return (
+    <Trans
+      count={roundedDays}
+      i18nKey="reportsPage.summaryInfo.roundedDays"
+      values={{ days: roundedDays }}
+    />
+  )
 }
 
 const SummaryReport = ({
@@ -121,17 +129,25 @@ const SummaryReport = ({
   reviewAvgsTrace,
   completionAvgsTrace,
 }) => {
+  const { t } = useTranslation()
+
   const getEditorsConcentricBarChartData = () => {
     const data = [
-      { name: 'All manuscripts', value: unsubmittedCount + submittedCount },
-      { name: 'Submitted', value: submittedCount },
-      { name: 'Editor assigned', value: submittedCount - unassignedCount },
       {
-        name: 'Decision complete',
+        name: t('reportsPage.All manuscripts'),
+        value: unsubmittedCount + submittedCount,
+      },
+      { name: t('reportsPage.Submitted'), value: submittedCount },
+      {
+        name: t('reportsPage.Editor assigned'),
+        value: submittedCount - unassignedCount,
+      },
+      {
+        name: t('reportsPage.Decision complete'),
         value: rejectedCount + revisingCount + acceptedCount,
       },
-      { name: 'Accepted', value: acceptedCount },
-      { name: 'Published', value: publishedCount },
+      { name: t('reportsPage.Accepted'), value: acceptedCount },
+      { name: t('reportsPage.Published'), value: publishedCount },
     ]
 
     const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
@@ -145,10 +161,16 @@ const SummaryReport = ({
 
   const getReviewersConcentricBarChartData = () => {
     const data = [
-      { name: 'All manuscripts', value: unsubmittedCount + submittedCount },
-      { name: 'Reviewer invited', value: reviewInvitedCount },
-      { name: 'Invite accepted', value: reviewInviteAcceptedCount },
-      { name: 'Review completed', value: reviewedCount },
+      {
+        name: t('reportsPage.All manuscripts'),
+        value: unsubmittedCount + submittedCount,
+      },
+      { name: t('reportsPage.Reviewer invited'), value: reviewInvitedCount },
+      {
+        name: t('reportsPage.Invite accepted'),
+        value: reviewInviteAcceptedCount,
+      },
+      { name: t('reportsPage.Review completed'), value: reviewedCount },
     ]
 
     const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
@@ -164,34 +186,34 @@ const SummaryReport = ({
     <Container>
       <CardCollection style={{ width: 950, height: 680 }}>
         <ChartCard>
-          <CardHeader>Editors&rsquo; workflow</CardHeader>
+          <CardHeader>{t('reportsPage.Editors workflow')}</CardHeader>
           <ConcentricStepsChart {...getEditorsConcentricBarChartData()} />
         </ChartCard>
         <ChartCard>
-          <CardHeader>Reviewers&rsquo; workflow</CardHeader>
+          <CardHeader>{t('reportsPage.Reviewers workflow')}</CardHeader>
           <ConcentricStepsChart {...getReviewersConcentricBarChartData()} />
         </ChartCard>
         <BigNumbersCard>
           <CardHeader>
-            Manuscripts published today
-            <Tooltip content="From midnight local time" />
+            {t('reportsPage.Manuscripts published today')}
+            <Tooltip content={t('reportsPage.From midnight local time')} />
           </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
           <NoteCenter>
-            Average {to1Dp(avgPublishedDailyCount)}
+            {t('reportsPage.Average')} {to1Dp(avgPublishedDailyCount)}
             <Tooltip content="Based on the selected date range" />
           </NoteCenter>
-          <CardHeader>Manuscripts in progress</CardHeader>
+          <CardHeader>{t('reportsPage.Manuscripts in progress')}</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
           <NoteCenter>
-            Average {to1Dp(avgInProgressDailyCount)}
-            <Tooltip content="Based on the selected date range" />
+            {t('reportsPage.Average')} {to1Dp(avgInProgressDailyCount)}
+            <Tooltip
+              content={t('reportsPage.Based on the selected date range')}
+            />
           </NoteCenter>
         </BigNumbersCard>
         <ChartCard>
-          <CardHeader>
-            Reviewing and editing durations for individual manuscripts
-          </CardHeader>
+          <CardHeader>{t('reportsPage.reviwingAndEditing')}</CardHeader>
           <DurationsChart
             completionAvgsTrace={completionAvgsTrace}
             durationsData={durationsData}
@@ -205,45 +227,51 @@ const SummaryReport = ({
         <Card>
           <Stat>
             <StatTitle>
-              Average time to publish
-              <Note>From submission to published</Note>
+              {t('reportsPage.summaryInfo.Average time to publish')}
+              <Note>
+                {t('reportsPage.summaryInfo.From submission to published')}
+              </Note>
             </StatTitle>
             <StatContent>{getDaysStringTo1Dp(avgPublishTimeDays)}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Average time to review</StatTitle>
+            <StatTitle>
+              {t('reportsPage.summaryInfo.Average time to review')}
+            </StatTitle>
             <StatContent>{getDaysStringTo1Dp(avgReviewTimeDays)}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Unsubmitted</StatTitle>
+            <StatTitle>{t('msStatus.new')}</StatTitle>
             <StatContent>{unsubmittedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Submitted</StatTitle>
+            <StatTitle>{t('msStatus.submitted')}</StatTitle>
             <StatContent>{submittedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Unassigned</StatTitle>
+            <StatTitle>{t('reportsPage.summaryInfo.unassigned')}</StatTitle>
             <StatContent>{unassignedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Reviewed</StatTitle>
+            <StatTitle>{t('reportsPage.summaryInfo.reviewed')}</StatTitle>
             <StatContent>{reviewedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Rejected</StatTitle>
+            <StatTitle>{t('msStatus.rejected')}</StatTitle>
             <StatContent>{rejectedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Awaiting revision</StatTitle>
+            <StatTitle>
+              {t('reportsPage.summaryInfo.awaitingRevision')}
+            </StatTitle>
             <StatContent>{revisingCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Accepted</StatTitle>
+            <StatTitle>{t('msStatus.accepted')}</StatTitle>
             <StatContent>{acceptedCount}</StatContent>
           </Stat>
           <Stat>
-            <StatTitle>Published</StatTitle>
+            <StatTitle>{t('msStatus.published')}</StatTitle>
             <StatContent>{publishedCount}</StatContent>
           </Stat>
         </Card>

@@ -40,7 +40,7 @@ describe('review page tests', () => {
     cy.get('h2[class]')
       .eq(-1)
       .scrollIntoView()
-      .should('contain', 'Evaluation summary')
+      .should('contain', 'Decision')
       .and('be.visible')
 
     cy.get('[class*="General__SectionContent"]').each($sectionContent => {
@@ -104,7 +104,7 @@ describe('review page tests', () => {
     ReviewPage.getAllSectionHeaders()
       .eq(-1)
       .scrollIntoView()
-      .should('contain', 'Evaluation summary')
+      .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'great paper')
   })
@@ -140,7 +140,7 @@ describe('review page tests', () => {
     cy.get('h2[class]')
       .eq(-1)
       .scrollIntoView()
-      .should('contain', 'Evaluation summary')
+      .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'please revise')
   })
@@ -177,7 +177,7 @@ describe('review page tests', () => {
     ReviewPage.getAllSectionHeaders()
       .eq(-1)
       .scrollIntoView()
-      .should('contain', 'Evaluation summary')
+      .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should(
       'contain',

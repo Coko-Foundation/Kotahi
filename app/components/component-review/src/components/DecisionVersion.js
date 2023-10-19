@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
@@ -106,6 +107,7 @@ const DecisionVersion = ({
     [],
   )
 
+  const { t } = useTranslation()
   useEffect(() => debouncedSave.flush, [])
   const location = useLocation()
 
@@ -145,7 +147,7 @@ const DecisionVersion = ({
 
   const editorSection = addEditor(
     version,
-    'Manuscript text',
+    t('decisionPage.Manuscript text'),
     isCurrentVersion,
     currentUser,
   )
@@ -223,7 +225,7 @@ const DecisionVersion = ({
         </>
       ),
       key: `metadata`,
-      label: 'Metadata',
+      label: t('decisionPage.Metadata'),
     }
   }
 
@@ -249,7 +251,7 @@ const DecisionVersion = ({
             )}
           <SectionContent>
             <SectionHeader>
-              <Title>Tasks</Title>
+              <Title>{t('decisionPage.tasksTab.Tasks')}</Title>
             </SectionHeader>
             <TaskSectionRow>
               <TaskList
@@ -272,7 +274,7 @@ const DecisionVersion = ({
         </>
       ),
       key: `tasks`,
-      label: 'Tasks & Notifications',
+      label: t('decisionPage.Tasks & Notifications'),
     }
   }
 
@@ -352,7 +354,7 @@ const DecisionVersion = ({
         </>
       ),
       key: `team`,
-      label: 'Team',
+      label: t('decisionPage.Team'),
     }
   }
 
@@ -363,11 +365,10 @@ const DecisionVersion = ({
           {!isCurrentVersion && (
             <SectionContent>
               <SectionHeader>
-                <Title>Archived version</Title>
+                <Title>{t('decisionPage.decisionTab.Archived version')}</Title>
               </SectionHeader>
               <SectionRow>
-                This is not the current, but an archived read-only version of
-                the manuscript.
+                {t('decisionPage.decisionTab.notCurrentVersion')}
               </SectionRow>
             </SectionContent>
           )}
@@ -445,7 +446,7 @@ const DecisionVersion = ({
                   shouldShowOptionToPublish
                   shouldStoreFilesInForm
                   showEditorOnlyFields
-                  submissionButtonText="Submit"
+                  submissionButtonText={t('decisionPage.decisionTab.Submit')}
                   tagForFiles="decision"
                   threadedDiscussionProps={threadedDiscussionExtendedProps}
                   urlFrag={urlFrag}
@@ -467,7 +468,7 @@ const DecisionVersion = ({
         </>
       ),
       key: `decision`,
-      label: 'Decision',
+      label: t('decisionPage.Decision'),
     }
   }
 

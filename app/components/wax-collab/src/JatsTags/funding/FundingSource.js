@@ -2,10 +2,11 @@ import React from 'react'
 import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class FundingSource extends Tools {
-  title = 'Change to funding source'
-  label = 'Funding source'
+  title = i18next.t('waxEditor.Change to funding source')
+  label = i18next.t('waxEditor.Funding source')
   name = 'FundingSource'
   color = 'colorFundingSource'
   className = 'fundingsource'

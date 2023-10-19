@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { X } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { RoundIconButton } from '../../shared'
 import { color } from '../../../theme'
 
@@ -46,6 +47,7 @@ const SearchControl = ({ currentSearchQuery, applySearchQuery }) => {
     setSearchText(query || '')
   }
 
+  const { t } = useTranslation()
   useEffect(() => {
     setIsOpen(!!currentSearchQuery)
     setSearchText(currentSearchQuery || '')
@@ -72,9 +74,9 @@ const SearchControl = ({ currentSearchQuery, applySearchQuery }) => {
                 if (!currentSearchQuery) setIsOpen(false)
               }
             }}
-            placeholder="Enter search terms..."
+            placeholder={t('common.Enter search terms...')}
             ref={ref}
-            title='Surround multi-word phrases with quotes "". Exclude a term by prefixing with -. Specify alternate matches using OR. Use * as wildcard for word endings. Wrap subexpressions in parentheses ().'
+            title={t('common.surroundMultiword')}
             type="text"
             value={searchText}
           />
@@ -100,7 +102,7 @@ const SearchControl = ({ currentSearchQuery, applySearchQuery }) => {
           } else setIsOpen(true)
         }}
         primary={isOpen}
-        title="Search"
+        title={t('manuscriptsTable.Search')}
       />
     </SearchContainer>
   )

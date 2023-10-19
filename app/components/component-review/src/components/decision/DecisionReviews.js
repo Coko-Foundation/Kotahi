@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import DecisionReview from './DecisionReview'
 import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
@@ -44,10 +45,11 @@ const DecisionReviews = ({
       )
     : []
 
+  const { t } = useTranslation()
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>Completed Reviews</Title>
+        <Title>{t('decisionPage.decisionTab.Completed Reviews')}</Title>
       </SectionHeader>
       <InvitationResults invitations={invitations} />
       {reviewsToShow.length > 0 ? (
@@ -93,7 +95,7 @@ const DecisionReviews = ({
             </SectionRow>
           ))
       ) : (
-        <SectionRow>No reviews completed yet.</SectionRow>
+        <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
       )}
     </SectionContent>
   )

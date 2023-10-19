@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import Modal from '../../../component-modal/src/Modal'
 import { ActionButton, LooseRow } from '../../../shared'
 import IsolatedMessageWithDetails from './IsolatedMessageWithDetails'
@@ -20,8 +21,9 @@ const ExtendedModal = styled(Modal)`
   }
 `
 
-const EditDeleteMessageModal = ({ close, onConfirm, message, title }) => {
+const EditMessageModal = ({ close, onConfirm, message }) => {
   const [updatedContent, setUpdatedContent] = useState(message.content)
+  const { t } = useTranslation()
 
   const handleSave = () => onConfirm(updatedContent)
 
@@ -40,12 +42,14 @@ const EditDeleteMessageModal = ({ close, onConfirm, message, title }) => {
       rightActions={
         <LooseRow>
           <ActionButton disabled={saveIsDisabled} onClick={handleSave} primary>
-            Save
+            {t('modals.editMessage.save')}
           </ActionButton>
-          <ActionButton onClick={close}>Cancel</ActionButton>
+          <ActionButton onClick={close}>
+            {t('modals.editMessage.cancel')}
+          </ActionButton>
         </LooseRow>
       }
-      title={title}
+      title={t('modals.editMessage.Edit message')}
     >
       <IsolatedMessageWithDetails
         message={message}
@@ -56,10 +60,8 @@ const EditDeleteMessageModal = ({ close, onConfirm, message, title }) => {
   )
 }
 
-const defaultProps = {
+EditMessageModal.defaultProps = {
   readonly: false,
 }
 
-EditDeleteMessageModal.defaultProps = defaultProps
-
-export default EditDeleteMessageModal
+export default EditMessageModal

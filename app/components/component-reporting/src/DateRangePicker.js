@@ -2,12 +2,14 @@ import React from 'react'
 import DatePicker from 'react-date-picker'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import i18next from 'i18next'
 import {
   getStartOfDay,
   getEndOfDay,
   transposeUtcToLocal,
   transposeLocalToUtc,
 } from '../../../shared/dateUtils'
+import { languagesLabels } from '../../../i18n/index'
 
 const InlineBlock = styled.div`
   display: inline-block;
@@ -21,11 +23,15 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
   const trueMax = getEndOfDay(max)
   const trueStart = getStartOfDay(startDate)
   const trueEnd = getEndOfDay(endDate)
+  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  let dateFormat = 'yyyy-MM-dd'
+  if (!!curLang && !!curLang.dateFormat) dateFormat = curLang.dateFormat
+
   return (
     <InlineBlock>
       <DatePicker
         clearIcon={null}
-        format="yyyy-MM-dd"
+        format={dateFormat}
         maxDate={transposeUtcToLocal(trueEnd)}
         minDate={transposeUtcToLocal(minDate)}
         onChange={val =>
@@ -39,7 +45,7 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
       {' — '}
       <DatePicker
         clearIcon={null}
-        format="yyyy-MM-dd"
+        format={dateFormat}
         maxDate={transposeUtcToLocal(trueMax)}
         minDate={transposeUtcToLocal(minDate)}
         onChange={val => {

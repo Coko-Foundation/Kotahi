@@ -60,22 +60,22 @@ describe('Form builder', () => {
       const requiredField = 'Required'
 
       const typeField = [
-        'TextField',
-        'TextField',
-        'TextField',
-        'TextField',
-        'AbstractEditor',
-        'TextField',
-        'TextField',
-        'AbstractEditor',
-        'TextField',
-        'TextField',
-        'AbstractEditor',
-        'TextField',
-        'TextField',
-        'AbstractEditor',
-        'TextField',
-        'TextField',
+        'Text',
+        'Text',
+        'Text',
+        'Text',
+        'Rich text',
+        'Text',
+        'Text',
+        'Rich text',
+        'Text',
+        'Text',
+        'Rich text',
+        'Text',
+        'Text',
+        'Rich text',
+        'Text',
+        'Text',
       ]
 
       // eslint-disable-next-line no-plusplus
@@ -129,7 +129,7 @@ describe('Form builder', () => {
       cy.contains('Add Field').click({ force: true })
       cy.contains('Choose in the list').click()
       cy.get('button')
-      cy.contains('VisualAbstract').click()
+      cy.contains('Single image attachment').click()
       cy.contains('Name (internal field name)').click()
       cy.get('[name=name]').type('submission.visualAbstract')
       cy.contains('Update Field').click()
@@ -146,7 +146,7 @@ describe('Form builder', () => {
       cy.contains('Add Field').click({ force: true })
       cy.contains('Choose in the list').click()
       cy.get('button')
-      cy.contains('VisualAbstract').click()
+      cy.contains('Single image attachment').click()
       cy.contains('Name (internal field name)').click()
       cy.get('[name=name]').type('visualAbstract')
       cy.contains('Update Field').click()
@@ -163,7 +163,7 @@ describe('Form builder', () => {
       cy.contains('Add Field').click({ force: true })
       cy.contains('Choose in the list').click()
       cy.get('button')
-      cy.contains('VisualAbstract').click()
+      cy.contains('Single image attachment').click()
       cy.contains('Name (internal field name)').click()
       cy.get('[name=name]').type('visualAbstract')
       cy.contains('Update Field').click()

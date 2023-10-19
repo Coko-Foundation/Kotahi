@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { useTranslation } from 'react-i18next'
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import DecisionReview from '../../../component-review/src/components/decision/DecisionReview'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
@@ -88,11 +88,13 @@ const DecisionAndReviews = ({
         review => !review.isHiddenFromAuthor && isCurrentUserAuthor,
       )
 
+  const { t } = useTranslation()
+
   return (
     <>
       <SectionContent>
         <SectionHeader>
-          <Title>Decision</Title>
+          <Title>{decisionForm.name}</Title>
         </SectionHeader>
         <Decision
           allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
@@ -105,7 +107,7 @@ const DecisionAndReviews = ({
       </SectionContent>
       <SectionContent>
         <SectionHeader>
-          <Title>Reviews</Title>
+          <Title>{t('manuscriptSubmit.Reviews')}</Title>
         </SectionHeader>
 
         {reviewsToShow.length ? (
@@ -131,7 +133,9 @@ const DecisionAndReviews = ({
           ))
         ) : (
           <SectionRow>
-            {reviews.length ? 'No reviews to show.' : 'No completed reviews.'}
+            {reviews.length
+              ? t('manuscriptSubmit.No reviews to show')
+              : t('manuscriptSubmit.No completed reviews')}
           </SectionRow>
         )}
       </SectionContent>

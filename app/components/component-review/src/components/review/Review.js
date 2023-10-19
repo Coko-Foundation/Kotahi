@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 
@@ -22,6 +23,16 @@ const filesToAttachment = file => ({
 })
 */
 
+const localizeReviewRecommendations = (jsonData, t) => {
+  const clonedData = JSON.parse(JSON.stringify(jsonData))
+
+  if (clonedData?.verdict) {
+    clonedData.verdict = t(`reviewVerdict.${clonedData.verdict}`)
+  }
+
+  return clonedData
+}
+
 const Review = ({
   review,
   reviewForm,
@@ -29,36 +40,43 @@ const Review = ({
   showEditorOnlyFields,
   showUserInfo = true,
   threadedDiscussionProps,
-}) => (
-  <Container>
-    {review && !review?.isHiddenReviewerName && showUserInfo && (
-      <div>
-        <Heading>
-          <strong>{review.user.username}</strong>
-        </Heading>
-        {review.user.defaultIdentity.identifier}
-      </div>
-    )}
+}) => {
+  const { t } = useTranslation()
+  let localizedData
+  if (review) localizedData = localizeReviewRecommendations(review?.jsonData, t)
+  return (
+    <Container>
+      {review && !review?.isHiddenReviewerName && showUserInfo && (
+        <div>
+          <Heading>
+            <strong>{review.user.username}</strong>
+          </Heading>
+          {review.user.defaultIdentity.identifier}
+        </div>
+      )}
 
-    {review?.isHiddenReviewerName && showUserInfo && (
-      <div>
-        <Heading>
-          <strong style={{ color: '#545454' }}>Anonymous Reviewer</strong>
-        </Heading>
-      </div>
-    )}
+      {review?.isHiddenReviewerName && showUserInfo && (
+        <div>
+          <Heading>
+            <strong style={{ color: '#545454' }}>
+              {t('reviewPage.Anonymous Reviewer')}
+            </strong>
+          </Heading>
+        </div>
+      )}
 
-    <ReadonlyFormTemplate
-      form={reviewForm}
-      formData={ensureJsonIsParsed(review?.jsonData) ?? {}}
-      hideSpecialInstructions
-      showEditorOnlyFields={
-        showEditorOnlyFields || user.groupRoles.includes('groupManager')
-      }
-      threadedDiscussionProps={threadedDiscussionProps}
-    />
-  </Container>
-)
+      <ReadonlyFormTemplate
+        form={reviewForm}
+        formData={ensureJsonIsParsed(localizedData) ?? {}}
+        hideSpecialInstructions
+        showEditorOnlyFields={
+          showEditorOnlyFields || user.groupRoles.includes('groupManager')
+        }
+        threadedDiscussionProps={threadedDiscussionProps}
+      />
+    </Container>
+  )
+}
 
 Review.propTypes = {
   review: PropTypes.shape({}),

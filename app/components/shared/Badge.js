@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
+import i18next from 'i18next'
 import { color } from '../../theme'
 
 export const Status = styled.span`
@@ -70,30 +71,13 @@ export const ConfigurableStatus = styled(Status)`
 export const label = (status, published) => {
   const isPublished = !!published
 
-  const labels = {
-    accepted: 'Accepted',
-    assignedToEditor: 'Assigned to editor',
-    assigningReviewers: 'Assigning reviewers',
-    new: 'Unsubmitted',
-    rejected: 'Rejected',
-    submitted: 'Submitted',
-    revise: 'Revise',
-    revising: 'Revising',
-    invited: 'Invited', // reviewer status
-    inProgress: 'In Progress', // reviewer status
-    completed: 'Completed', // reviewer status
-    unanswered: 'Invited',
-    evaluated: 'evaluated',
-    published: 'published',
-  }
+  if (isPublished && ['accepted', 'evaluated', 'published'].includes(status))
+    return i18next.t('msStatus.published')
 
-  if (isPublished) {
-    if (['accepted', 'evaluated', 'published'].includes(status))
-      return 'Published'
-    return `${labels[status] ?? `Unknown (${status})`} & Published`
-  }
-
-  return labels[status] ?? `Unknown (${status})`
+  const unknownFallback = `${i18next.t('msStatus.unknown')} (${status})`
+  const mainStatus = i18next.t(`msStatus.${status}`, unknownFallback)
+  if (isPublished) return `${mainStatus} & ${i18next.t('msStatus.published')}`
+  return mainStatus
 }
 
 // TODO: Make this configurable

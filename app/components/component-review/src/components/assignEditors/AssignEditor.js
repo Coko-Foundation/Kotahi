@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import { Select } from '../../../../shared'
 
 const editorOption = user => ({
@@ -33,11 +34,16 @@ const AssignEditor = ({
     setMembers(team?.members || [])
   }, [team])
 
+  const { t } = useTranslation()
+
   useEffect(() => {
     setSelectedEditor(members.length > 0 ? members[0].user.id : undefined)
   }, [members])
 
   const teamName = teamLabels[teamRole].name
+
+  const teamNameLoc = t(`common.teams.${teamName}`)
+
   const options = (allUsers || []).map(user => editorOption(user))
 
   const onChangeEditor = currentSelectedEditor => {
@@ -88,7 +94,7 @@ const AssignEditor = ({
       label={teamName}
       onChange={selected => onChangeEditor(selected?.value)}
       options={options}
-      placeholder={`Assign ${teamName}…`}
+      placeholder={t('common.teams.assign', { teamLabel: teamNameLoc })}
       value={selectedEditor}
     />
   )

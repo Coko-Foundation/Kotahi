@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
+import { useTranslation } from 'react-i18next'
 import DecisionVersion from './DecisionVersion'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 
@@ -62,6 +63,7 @@ const DecisionVersions = ({
 }) => {
   const versions = gatherManuscriptVersions(manuscript)
   const firstVersion = versions[versions.length - 1]
+  const { t } = useTranslation()
 
   const initialValue = useMemo(
     () =>
@@ -84,12 +86,12 @@ const DecisionVersions = ({
   const channels = [
     {
       id: allChannel?.id,
-      name: 'Discussion with author',
+      name: t('chat.Discussion with author'),
       type: allChannel?.type,
     },
     {
       id: editorialChannel?.id,
-      name: 'Editorial discussion',
+      name: t('chat.Editorial discussion'),
       type: editorialChannel?.type,
     },
   ]

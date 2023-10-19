@@ -1,15 +1,16 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { LayoutMainHeading, LayoutSecondaryHeading } from '../style'
 import PageOrder from './PageOrder'
 
 const Header = ({ cmsLayout, onPageOrderUpdated }) => {
+  const { t } = useTranslation()
   return (
     <div>
       <LayoutMainHeading>
-        Header
+        {t('cmsPage.layout.Header')}
         <LayoutSecondaryHeading>
-          Use checkbox to show and hide the page in the menu. Click and Drag to
-          order them.
+          {t('cmsPage.layout.useCheckbox')}
         </LayoutSecondaryHeading>
       </LayoutMainHeading>
       <PageOrder

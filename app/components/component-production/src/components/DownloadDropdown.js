@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
+import { useTranslation } from 'react-i18next'
 
 /* eslint-disable import/prefer-default-export */
 export const DownloadDropdown = ({
@@ -9,6 +10,8 @@ export const DownloadDropdown = ({
   makePdf,
   makeJats,
 }) => {
+  const { t } = useTranslation()
+
   const options = [
     {
       id: 1,
@@ -51,7 +54,7 @@ export const DownloadDropdown = ({
 
   return manuscriptSource ? (
     <Dropdown itemsList={options} primary>
-      Download
+      {t('productionPage.Download')}
     </Dropdown>
   ) : null
 }

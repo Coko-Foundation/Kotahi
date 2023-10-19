@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { TextField, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 
 const InlineTextField = styled(TextField)`
   display: inline;
@@ -25,23 +26,21 @@ const ChangeUsername = ({ user, updateUsername }) => {
   // Don't permit usernames starting with a numeral or starting or ending with whitespace
   const isValid = /^[^0-9\s](?:.*\S)?$/.test(username)
 
+  const { t } = useTranslation()
+
   const update = async (id, updatedUsername) => {
     await updateUsername({ variables: { id, username: updatedUsername } })
   }
 
   return (
     <Container>
-      {!isValid && (
-        <WarningBox>
-          Cannot begin with a numeral or start or end with space characters
-        </WarningBox>
-      )}
+      {!isValid && <WarningBox>{t('profilePage.usernameWarn')}</WarningBox>}
       <InlineTextField
         onChange={e => setUsername(e.target.value)}
         value={username}
       />
       <Button disabled={!isValid} onClick={() => update(user.id, username)}>
-        Change
+        {t('profilePage.Change')}
       </Button>
     </Container>
   )

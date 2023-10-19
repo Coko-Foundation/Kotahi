@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { convertTimestampToDateString } from '../../../../shared/dateUtils'
 import { UserAvatar } from '../../../component-avatar/src'
 import Modal from '../../../component-modal/src/Modal'
@@ -39,15 +40,20 @@ const TextChange = styled.div`
 
 const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {
   const name = invitation.invitedPersonName ?? invitation.user.username
+  const { t } = useTranslation()
+
+  const declinedDateString = convertTimestampToDateString(
+    invitation.responseDate ?? invitation.updated,
+  )
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      subtitle={`Declined: ${convertTimestampToDateString(
-        invitation.responseDate ?? invitation.updated,
-      )}`}
-      title={`${name}'s Invitation Decline`}
+      subtitle={t('modals.inviteDeclined.Declined', {
+        dateString: declinedDateString,
+      })}
+      title={t('modals.inviteDeclined.Invitation Decline', { name })}
     >
       <ModalBody style={{ width: '600px' }}>
         <ModalBodyRow style={{ gap: '0px' }}>
@@ -56,20 +62,27 @@ const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {
             style={{ marginRight: '15px' }}
             user={invitation.user}
           />
-          <StyledH4 style={{ marginRight: '5px' }}>Reviewer: </StyledH4>
+          <StyledH4 style={{ marginRight: '5px' }}>
+            {t('modals.inviteDeclined.Reviewer')}{' '}
+          </StyledH4>
           <p>{name}</p>
         </ModalBodyRow>
         <ModalBodyRow>
-          <StyledH4>Status</StyledH4>
-          <DeclinedBadge lightText>Declined</DeclinedBadge>
+          <StyledH4>{t('modals.inviteDeclined.Status')}</StyledH4>
+          <DeclinedBadge lightText>
+            {t('modals.inviteDeclined.declinedBadge')}
+          </DeclinedBadge>
           {invitation.declinedReason === 'DO_NOT_CONTACT' && (
-            <DeclinedBadge lightText>Opted Out</DeclinedBadge>
+            <DeclinedBadge lightText>
+              {t('modals.inviteDeclined.Opted Out')}
+            </DeclinedBadge>
           )}
         </ModalBodyRow>
         <ResponseCommentRow>
-          <StyledH4>Declined Reason</StyledH4>
+          <StyledH4>{t('modals.inviteDeclined.Declined Reason')}</StyledH4>
           <TextChange gray={!invitation.responseComment}>
-            {invitation.responseComment || 'No reason provided.'}
+            {invitation.responseComment ||
+              t('modals.inviteDeclined.No reason provided')}
           </TextChange>
         </ResponseCommentRow>
       </ModalBody>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { useTranslation } from 'react-i18next'
 import { SectionRow } from '../style'
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
@@ -62,7 +63,7 @@ const ResponseComment = styled.div`
 const InvitationResult = ({ invitation }) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
-
+  const { t } = useTranslation()
   const invitationStatus = invitation.status
 
   if (invitationStatus === 'UNANSWERED') {
@@ -80,20 +81,26 @@ const InvitationResult = ({ invitation }) => {
   let invitationType = ''
 
   if (invitation?.invitedPersonType === 'AUTHOR') {
-    invitationType = 'author'
+    invitationType = t('invitationResults.author')
   } else {
-    invitationType = 'reviewer'
+    invitationType = t('invitationResults.reviewer')
   }
 
   if (
     invitationStatus === 'REJECTED' &&
     declinedResponse === 'DO_NOT_CONTACT'
   ) {
-    ordinalString = `Declined ${invitationType} invitation and opted out`
+    ordinalString = t('invitationResults.declinedAndOptedOut', {
+      invitationType,
+    })
   } else if (invitationStatus === 'REJECTED') {
-    ordinalString = `Declined ${invitationType} invitation`
+    ordinalString = t('invitationResults.declined', {
+      invitationType,
+    })
   } else if (invitationStatus === 'ACCEPTED') {
-    ordinalString = `Accepted ${invitationType} invitation`
+    ordinalString = t('invitationResults.accepted', {
+      invitationType,
+    })
   }
 
   return (

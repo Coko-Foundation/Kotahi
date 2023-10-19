@@ -1,6 +1,7 @@
 import { th } from '@pubsweet/ui-toolkit'
 import React from 'react'
 import styled from 'styled-components'
+import { useTranslation } from 'react-i18next'
 import { UserAvatar } from '../../../../component-avatar/src'
 import Modal, { StackedHeader } from '../../../../component-modal/src/Modal'
 import {
@@ -28,6 +29,8 @@ const DeleteReviewerModal = ({
   onClose,
   removeReviewer,
 }) => {
+  const { t } = useTranslation()
+
   const actions = (
     <MediumRow>
       <ActionButton
@@ -41,22 +44,26 @@ const DeleteReviewerModal = ({
         }}
         primary
       >
-        Ok
+        {t('modals.deleteReviewer.Ok')}
       </ActionButton>
       &nbsp;
-      <ActionButton onClick={onClose}>Cancel</ActionButton>
+      <ActionButton onClick={onClose}>
+        {t('modals.deleteReviewer.Cancel')}
+      </ActionButton>
     </MediumRow>
   )
 
   return (
     <Modal isOpen={isOpen} leftActions={actions}>
       <ModalContainer>
-        <StackedHeader title="Delete this reviewer?" />
+        <StackedHeader
+          title={t('modals.deleteReviewer.Delete this reviewer')}
+        />
         <UserCombo>
           <UserAvatar user={reviewer.user} />
           <UserInfo>
             <Primary>
-              Reviewer:{' '}
+              {t('modals.deleteReviewer.Reviewer')}{' '}
               <ReviewerName>
                 {reviewer.user?.username ?? reviewer.invitedPersonName}
               </ReviewerName>

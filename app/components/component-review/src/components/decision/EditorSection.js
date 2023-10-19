@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { adopt } from 'react-adopt'
+import { useTranslation } from 'react-i18next'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
 import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
@@ -68,15 +69,17 @@ const EditorSection = ({
     file.tags.includes('manuscript'),
   )
 
+  const { t } = useTranslation()
+
   if (!manuscriptFile) {
-    return <Info>No manuscript file loaded</Info>
+    return <Info>{t('editorSection.noFileLoaded')}</Info>
   }
 
   if (
     manuscriptFile.storedObjects[0].mimetype !==
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   )
-    return <Info>No supported view of the file</Info>
+    return <Info>{t('editorSection.noSupportedView')}</Info>
 
   // React.useEffect(() => {
   //   // If we have an onBlur function specified, fire it when there's a dismount

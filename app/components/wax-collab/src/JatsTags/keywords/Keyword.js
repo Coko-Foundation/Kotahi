@@ -1,10 +1,11 @@
 import { decorate, injectable } from 'inversify'
 import { toggleMark } from 'prosemirror-commands'
 import { Commands, Tools } from 'wax-prosemirror-core'
+import i18next from 'i18next'
 
 class Keyword extends Tools {
-  title = 'Change to keyword'
-  label = 'Keyword'
+  title = i18next.t('waxEditor.Change to keyword')
+  label = i18next.t('waxEditor.Keyword')
   // color = 'colorKeyword'
   // className = 'keyword'
   // icon = 'title'

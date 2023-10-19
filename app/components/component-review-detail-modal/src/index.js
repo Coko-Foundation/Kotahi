@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
+import { useTranslation } from 'react-i18next'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 import { ensureJsonIsParsed } from '../../../shared/objectUtils'
 import Modal, { SecondaryButton } from '../../component-modal/src/Modal'
@@ -18,6 +19,8 @@ import { UserAvatar } from '../../component-avatar/src'
 import DeleteReviewerModal from '../../component-review/src/components/reviewers/DeleteReviewerModal'
 import ReadonlyFieldData from '../../component-review/src/components/metadata/ReadonlyFieldData'
 import { ConfigContext } from '../../config/src'
+import localizeReviewFilterOptions from '../../../shared/localizeReviewFilterOptions'
+import localizeRecommendations from '../../../shared/localizeRecommendations'
 
 const Header = styled.div`
   font-size: 18px;
@@ -72,8 +75,14 @@ const ReviewDetailsModal = (
   } = props
 
   const [open, setOpen] = useState(false)
+  const { t } = useTranslation()
 
-  const statusConfig = reviewStatuses.find(
+  const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
+    reviewStatuses,
+    t,
+  )
+
+  const statusConfig = LocalizedReviewFilterOptions.find(
     item => item.value === (status ?? 'completed'),
   )
 
@@ -83,6 +92,10 @@ const ReviewDetailsModal = (
   const reviewerName = showRealReviewer
     ? `${reviewer?.username ?? reviewerTeamMember.invitedPersonName}`
     : 'Anonymous Reviewer'
+
+  const timeString = convertTimestampToDateString(
+    review ? review.updated : reviewerTeamMember.updated,
+  )
 
   return (
     <Modal
@@ -109,7 +122,7 @@ const ReviewDetailsModal = (
         !isInvitation && (
           <>
             <SecondaryButton onClick={() => setOpen(true)}>
-              Delete
+              {t('modals.reviewReport.Delete')}
             </SecondaryButton>
             <DeleteReviewerModal
               isOpen={open}
@@ -121,10 +134,10 @@ const ReviewDetailsModal = (
           </>
         )
       }
-      subtitle={`Last Updated:  ${convertTimestampToDateString(
-        review ? review.updated : reviewerTeamMember.updated,
-      )}`}
-      title={`${reviewerName}'s Review Report`}
+      subtitle={t(`modals.reviewReport.Last Updated`, {
+        dateString: timeString,
+      })}
+      title={t('modals.reviewReport.Review Report', { name: reviewerName })}
     >
       <UserCombo style={{ marginBottom: '1em' }}>
         <UserAvatar
@@ -135,7 +148,8 @@ const ReviewDetailsModal = (
         />
         <UserInfo>
           <p>
-            <Primary>Reviewer: </Primary> {`${reviewerName}`}
+            <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
+            {`${reviewerName}`}
           </p>
           {showRealReviewer && (
             <Secondary>
@@ -146,7 +160,7 @@ const ReviewDetailsModal = (
         </UserInfo>
       </UserCombo>
       <StatusContainer>
-        <Header>Status</Header>
+        <Header>{t('modals.reviewReport.Status')}</Header>
         <ConfigurableStatus
           color={statusConfig.color}
           lightText={statusConfig.lightText}
@@ -163,7 +177,7 @@ const ReviewDetailsModal = (
         />
       ) : (
         <ReviewItemsContainer>
-          <i>Review hasn&apos;t been completed yet</i>
+          <i>{t('modals.reviewReport.reviewNotCompleted')}</i>
         </ReviewItemsContainer>
       )}
     </Modal>
@@ -180,6 +194,7 @@ const CheckboxActions = ({
   updateReview,
 }) => {
   const config = useContext(ConfigContext)
+  const { t } = useTranslation()
 
   const toggleSharedStatus = async () => {
     if (isInvitation) {
@@ -221,14 +236,14 @@ const CheckboxActions = ({
             checked={
               review.isHiddenFromAuthor || review.isHiddenFromAuthor == null
             }
-            label="Hide Review"
+            label={t('modals.reviewReport.Hide Review')}
             onChange={toggleIsHiddenFromAuthor}
           />
           <Checkbox
             checked={
               review.isHiddenReviewerName || review.isHiddenReviewerName == null
             }
-            label="Hide Reviewer Name"
+            label={t('modals.reviewReport.Hide Reviewer Name')}
             onChange={toggleIsHiddenReviewerNameFromPublishedAndAuthor}
           />
         </>
@@ -236,7 +251,7 @@ const CheckboxActions = ({
       {config.controlPanel?.sharedReview && (
         <Checkbox
           checked={reviewerTeamMember.isShared}
-          label="Shared"
+          label={t('modals.reviewReport.Shared')}
           onChange={toggleSharedStatus}
         />
       )}
@@ -251,8 +266,10 @@ const ReviewData = ({
   showEditorOnlyFields,
 }) => {
   const reviewFormData = ensureJsonIsParsed(review.jsonData) ?? {}
+  const { t } = useTranslation()
+  const localizedRecommendations = localizeRecommendations(recommendations, t)
 
-  const recommendationConfig = recommendations.find(
+  const recommendationConfig = localizedRecommendations.find(
     item => item.value === get(reviewFormData, 'verdict'),
   )
 
@@ -276,7 +293,7 @@ const ReviewData = ({
     <>
       {recommendationConfig && (
         <StatusContainer>
-          <Header>Recommendation</Header>
+          <Header>{t('modals.reviewReport.Recommendation')}</Header>
           <ConfigurableStatus color={recommendationConfig.color} lightText>
             {recommendationConfig.label}
           </ConfigurableStatus>

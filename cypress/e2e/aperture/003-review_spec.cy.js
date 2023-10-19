@@ -105,6 +105,6 @@ function doReview(name, reviewData) {
   // Reject Review Request Workflow
   if (reviewData.verdict === 'reject') {
     DashboardPage.clickRejectReviewButton()
-    cy.get('[role="button"]').should('contain', 'rejected')
+    cy.get('[role="button"]').should('contain', 'Declined')
   }
 }

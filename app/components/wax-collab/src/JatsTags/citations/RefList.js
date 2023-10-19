@@ -3,10 +3,11 @@ import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton, Commands, Tools } from 'wax-prosemirror-core'
 import { wrapIn } from 'prosemirror-commands'
+import i18next from 'i18next'
 
 class RefList extends Tools {
-  title = 'Change to reference list'
-  label = 'Reference list'
+  title = i18next.t('waxEditor.Change to reference list')
+  label = i18next.t('waxEditor.Reference list')
   name = 'RefList'
 
   // eslint-disable-next-line class-methods-use-this

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 import Review from './Review'
 import { Title, SectionHeader, SectionRow } from '../style'
 import { SectionContent } from '../../../../shared'
@@ -25,11 +26,11 @@ const SharedReviewerGroupReviews = ({
   )
 
   if (!sharedReviews.length) return null
-
+  const { t } = useTranslation()
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>Other Reviews</Title>
+        <Title>{t('sharedReviews.Other Reviews')}</Title>
       </SectionHeader>
       {sharedReviews.map(r => (
         <SectionRow key={r.id}>
