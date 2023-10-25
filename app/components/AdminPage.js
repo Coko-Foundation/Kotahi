@@ -298,17 +298,9 @@ const AdminPage = () => {
     ? window.localStorage.getItem('invitationId')
     : ''
 
-  let dashboardRedirectUrl = currentUser?.recentTab
+  const dashboardRedirectUrl = currentUser?.recentTab
     ? `${urlFrag}/dashboard/${currentUser.recentTab}`
     : dashboardSubmissionsLink
-
-  // TODO: refactor based on roles and update config redirection url default's
-  if (isGroupManager || isAdmin) {
-    dashboardRedirectUrl =
-      config?.dashboard?.loginRedirectUrl === '/dashboard'
-        ? dashboardRedirectUrl
-        : `${urlFrag}${config?.dashboard?.loginRedirectUrl}`
-  }
 
   const dashboardRedirect = () =>
     invitationId ? (
