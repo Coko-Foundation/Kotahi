@@ -470,7 +470,7 @@ const DocxToHTMLPromise = (file, data, client) => {
         }
       }
 
-      console.error('Server-side error: ', result.data.docxToHtml.error)
+      console.error('Server-side error: ', result?.data?.docxToHtml?.error)
       return file
     })
 }
