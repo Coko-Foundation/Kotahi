@@ -6,6 +6,7 @@ const FormData = require('form-data')
 const crypto = require('crypto')
 const { promisify } = require('util')
 const config = require('config')
+const { logger } = require('@coko/server')
 
 // To test:
 // POST http://localhost:3004/healthCheck
@@ -121,7 +122,7 @@ const getXsweet = async url => {
         }
 
         const { status, data } = response
-        const { msg } = data
+        const { msg, error } = data
 
         if (status === 401 && msg === 'expired token') {
           await serviceHandshake()
@@ -130,7 +131,9 @@ const getXsweet = async url => {
 
         return reject(
           new Error(
-            `XSweet request failed with status ${status} and message: ${msg}`,
+            `XSweet request failed with status ${status} and message: ${
+              error || msg
+            }`,
           ),
         )
       })
@@ -146,12 +149,13 @@ const resolvers = {
       try {
         outHtml = await getXsweet(url)
       } catch (e) {
-        error = e
+        error = e.message
+        logger.error(e)
       }
 
       return {
         html: outHtml || '',
-        error: error ? JSON.stringify(error) : '',
+        error: error || '',
       }
     },
   },
