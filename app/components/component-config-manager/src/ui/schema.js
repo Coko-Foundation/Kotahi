@@ -961,6 +961,16 @@ const generateSchema = (
                   },
                 },
               },
+              coarNotify: {
+                type: 'object',
+                title: t('configPage.api'),
+                properties: {
+                  repoIpAddress: {
+                    type: ['string', 'null'],
+                    description: t('configPage.allowedIPs'),
+                  },
+                },
+              },
             },
           },
           {
@@ -1483,6 +1493,16 @@ const generateSchema = (
                   },
                 },
               },
+              coarNotify: {
+                type: 'object',
+                title: t('configPage.api'),
+                properties: {
+                  repoIpAddress: {
+                    type: ['string', 'null'],
+                    description: t('configPage.allowedIPs'),
+                  },
+                },
+              },
             },
           },
           {
@@ -1995,9 +2015,20 @@ const generateSchema = (
                     title: t('configPage.userIsAdmin'),
                     default: false,
                   },
+
                   kotahiApiTokens: {
                     type: ['string', 'null'],
                     description: t('configPage.kotahiApiTokens'),
+                  },
+                },
+              },
+              coarNotify: {
+                type: 'object',
+                title: t('configPage.api'),
+                properties: {
+                  repoIpAddress: {
+                    type: ['string', 'null'],
+                    description: t('configPage.allowedIPs'),
                   },
                 },
               },
@@ -2539,6 +2570,16 @@ const generateSchema = (
                   kotahiApiTokens: {
                     type: ['string', 'null'],
                     description: t('configPage.kotahiApiTokens'),
+                  },
+                },
+              },
+              coarNotify: {
+                type: 'object',
+                title: t('configPage.api'),
+                properties: {
+                  repoIpAddress: {
+                    type: ['string', 'null'],
+                    description: t('configPage.allowedIPs'),
                   },
                 },
               },

@@ -445,7 +445,7 @@ const esLa = {
       'User Management': 'Gestión de Usuarios',
       userIsAdmin:
         'Todos los usuarios tienen roles de Gerente de Grupo y Administrador',
-      kotahiApiTokens: 'Tokens de API de Kotahi',
+      kotahiApiTokens: 'Tokens de API',
       Submit: 'Enviar',
       article: 'artículo',
       'peer review': 'revisión de pares',
@@ -475,6 +475,8 @@ const esLa = {
         'Select locale for citations':
           'Seleccionar configuración regional para citas',
       },
+      allowedIPs: 'Lista de IP del repositorio a las que se permite el acceso',
+      api: 'API de Kotahi',
     },
     reportsPage: {
       Reports: 'Reportes',
