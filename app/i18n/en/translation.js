@@ -428,7 +428,7 @@ const en = {
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
       userIsAdmin: 'All users are assigned Group Manager and Admin roles',
-      kotahiApiTokens: 'Kotahi API tokens',
+      kotahiApiTokens: 'API Tokens',
       Submit: 'Submit',
       article: 'article',
       'peer review': 'peer review',
@@ -456,6 +456,8 @@ const en = {
         cse: 'Council of Science Editors (CSE)',
         'Select locale for citations': 'Select locale for citations',
       },
+      allowedIPs: 'List of repository IPs allowed access',
+      api: 'COAR Notify',
     },
     reportsPage: {
       Reports: 'Reports',

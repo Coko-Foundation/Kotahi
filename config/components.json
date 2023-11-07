@@ -14,6 +14,8 @@
   "./server/model-channel/src",
   "./server/model-message/src",
   "./server/reports/src",
+  "./server/coar-notify",
+  "./server/coar-notify/src",
   "./server/profile-upload",
   "./server/auth-orcid",
   "@coko/server/src/models/file",
@@ -29,5 +31,7 @@
   "./server/model-email-templates/src",
   "./server/flax-site",
   "./server/model-group/src",
-	"./server/reference/src"
+  "./server/reference/src",
+  "./server/coar-notify",
+  "./server/coar-notify/src"
 ]

@@ -392,6 +392,8 @@ const fr = {
         'Pages de contrôle visibles aux éditeurs',
       Team: 'Équipe',
       Submission: 'Soumission',
+      coarNotify: 'COAR-Notifier',
+      acceptedIPs: 'IP acceptées',
       allowToSubmitNewVersion:
         'Permettre à un auteur de soumettre une nouvelle version de son manuscrit à tout moment',
       'Review page': "Page d'évaluation",
@@ -444,7 +446,7 @@ const fr = {
       'User Management': 'Gestion des utilisateurs',
       userIsAdmin:
         "Tous les utilisateurs sont assignés les rôles de gestionnaire de groupe et d'administrateur",
-      kotahiApiTokens: 'Jetons API Kotahi',
+      kotahiApiTokens: 'Jetons API',
       Submit: 'Soumettre',
       article: 'article',
       'peer review': 'évaluation par les pairs',
@@ -475,6 +477,8 @@ const fr = {
         'Select locale for citations':
           'Sélectionnez la langue pour les citations',
       },
+      allowedIPs: 'Liste des adresses IP du référentiel autorisées à accéder',
+      api: 'API Kotahi',
     },
     reportsPage: {
       Reports: 'Rapports',

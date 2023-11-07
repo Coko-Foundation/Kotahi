@@ -3,10 +3,15 @@ import styled from 'styled-components'
 import Tooltip from 'rc-tooltip'
 import { InfoIcon } from '../style'
 import { stripHtml } from '../../../component-review/src/components/review/util'
-import { SemanticScholarIcon } from '../../../shared/Icons'
+import { SemanticScholarIcon, CoarIcon } from '../../../shared/Icons'
 
 const FloatingIcon = styled.div`
   float: right;
+`
+
+const IsImportedFromCoar = styled(CoarIcon)`
+  margin-bottom: -5px;
+  margin-right: 10px;
 `
 
 const IsImportSemanticScholar = styled(SemanticScholarIcon)`
@@ -32,6 +37,10 @@ const TitleWithAbstractAsTooltip = ({ manuscript }) => {
   const isManuscriptFromSemanticScholar = !!(
     manuscript.importSourceServer &&
     manuscript.importSourceServer === 'semantic-scholar'
+  )
+
+  const isManuscriptFromCoarNotify = !!(
+    manuscript.importSourceServer && manuscript.importSourceServer === 'COAR'
   )
 
   let url = manuscript.submission.articleURL
@@ -73,6 +82,9 @@ const TitleWithAbstractAsTooltip = ({ manuscript }) => {
       )}
       {isManuscriptFromSemanticScholar && (
         <IsImportSemanticScholar height="60" width="80" />
+      )}
+      {isManuscriptFromCoarNotify && (
+        <IsImportedFromCoar height="20" width="20" />
       )}
       <span style={{ wordBreak: 'break-word' }}>
         {url ? (
