@@ -89,8 +89,8 @@ const ru = {
       Tasks: 'Задачи',
       Users: 'Пользователи',
       Configuration: 'Настройки',
-      Emails: 'Emails',
-      CMS: 'CMS',
+      Emails: 'Почта',
+      CMS: 'Система управления контентом',
       Pages: 'Страницы',
       Layout: 'Макет',
       'Go to your profile': 'Перейти в ваш профиль',
@@ -580,11 +580,26 @@ const ru = {
         },
       },
     },
-    emailtemplatesPage: {
+    emailTemplate: {
       'Email Templates': 'Шаблоны писем',
-      Subject: 'Тема письма',
-      CC: 'Копия письма',
-      Body: 'Текст',
+      'New Email Template': 'Новый шаблон письма',
+      subject: 'Тема письма',
+      cc: 'Копия письма',
+      ccEditorsCheckboxDescription:
+        'Автоматически включить редакторов рукописей в «Копию» при отправке этого письма (при необходимости)',
+      body: 'Текст',
+      description: 'Описание',
+      save: 'Сохранить',
+      update: 'Обновить',
+      addANewEmailTemplate: 'Добавить новый шаблон письма',
+      'Edited on': 'Изменено {{date}}',
+      delete: 'Удалить',
+      permanentlyDelete:
+        'Удаление этого шаблона письма также приведет к удалению его назначения из задач и настроек конфигурации. Это действие нельзя отменить. Вы уверены, что хотите удалить?',
+      validationMessages: {
+        invalidEmail: 'Некорректный адрес электронной почты',
+        duplicateDescription: 'Шаблон с таким же описанием уже существует.',
+      },
     },
     loginPage: {
       kotahiUses:

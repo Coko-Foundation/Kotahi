@@ -34,10 +34,10 @@ const CheckboxContainer = styled.div`
 
 // eslint-disable-next-line import/prefer-default-export
 export const Checkbox = props => {
-  const { checked, id, label, value, handleChange } = props
+  const { checked, id, label, value, style = {}, handleChange } = props
 
   return (
-    <CheckboxContainer>
+    <CheckboxContainer style={style}>
       <input
         checked={checked}
         id={id}

@@ -25,6 +25,7 @@ const SimpleWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
+        key={value}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)

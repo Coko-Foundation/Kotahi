@@ -87,10 +87,10 @@ const fr = {
       Tasks: 'Tâches',
       Users: 'Utilisateurs',
       Configuration: 'Configuration',
-      Emails: 'Emails',
+      Emails: 'E-mails',
       CMS: 'CMS',
       Pages: 'Pages',
-      Layout: 'Disposition',
+      Layout: 'Mise en page',
       'Go to your profile': 'Accéder à votre profil',
     },
 
@@ -484,9 +484,9 @@ const fr = {
       Reports: 'Rapports',
       Show: 'Afficher',
       activityForManuscripts: 'activité pour les manuscrits arrivant',
-      activityForManuscriptsTooltip: `Les métriques sont montrées pour les manuscrits qui ont été ajoutés en premier 
+      activityForManuscriptsTooltip: `Les métriques sont montrées pour les manuscrits qui ont été ajoutés en premier
                     <br />
-                    entre ces dates. Les limites de date sont 
+                    entre ces dates. Les limites de date sont
                     <br />
                     à minuit en temps universel.`,
       'Editors workflow': 'Flux de travail des éditeurs',
@@ -579,11 +579,26 @@ const fr = {
         },
       },
     },
-    emailtemplatesPage: {
+    emailTemplate: {
       'Email Templates': "Modèles d'email",
-      Subject: 'Sujet',
-      CC: 'CC',
-      Body: 'Corps',
+      'New Email Template': "Nouveau modèle d'email",
+      subject: 'Sujet',
+      cc: 'CC',
+      ccEditorsCheckboxDescription:
+        "Ajouter automatiquement les éditeurs de manuscrit en « CC » lors de l'envoi de cet e-mail (si applicable)",
+      body: 'Corps',
+      description: 'Description',
+      save: 'Enregistrer',
+      update: 'Mettre à jour',
+      addANewEmailTemplate: "Ajouter un nouveau modèle d'email",
+      'Edited on': 'Modifié le {{date}}',
+      delete: 'Supprimer',
+      permanentlyDelete:
+        "La suppression de ce modèle d'email entraînera également la suppression de son affectation aux tâches et aux paramètres de configuration. Cette action est irréversible. Êtes-vous sûr de vouloir supprimer ?",
+      validationMessages: {
+        invalidEmail: "L'adresse email est invalide",
+        duplicateDescription: 'Un modèle avec la même description existe déjà.',
+      },
     },
     loginPage: {
       kotahiUses:

@@ -1,97 +1,82 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
+import { RoundIconButton } from '../../shared'
 import EmailTemplateContent from './EmailTemplateContent'
 
-import { Heading2, RightArrow } from '../../component-cms-manager/src/style'
+import {
+  Heading2,
+  SidebarPageRow,
+  RightArrow,
+  EditPageContainer,
+  EditPageLeft,
+  EditPageRight,
+} from '../../component-cms-manager/src/style'
 
 import PageHeader from '../../component-cms-manager/src/components/PageHeader'
 
-const EmailTemplatePageContainer = styled.div`
-  display: flex;
+const AddNewEmailTemplate = styled(RoundIconButton)`
+  margin-left: ${grid(1)};
+  margin-top: ${grid(2)};
+  min-width: 0px;
 `
 
-const EmailTemplateLeftSection = styled.div`
-  height: 100vh;
-  min-width: 300px;
-  overflow: scroll;
-  padding-top: 16px;
-`
-
-const EmailTemplateRightSection = styled.div`
-  background-color: #f4f5f7;
-  flex-grow: 1;
-  height: 100vh;
-  padding-left: 16px;
-  padding-top: 16px;
-`
-
-export const EmailTemplateSidebar = styled.div`
-  border-bottom: 1px solid #dedede;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 16px;
-  margin-right: 16px;
-  padding: 12px 0px;
-  width: 250px;
-
-  div {
-    padding: 0px;
-  }
-`
-
-const EmailTemplates = ({ emailTemplates }) => {
-  const [activeTitle, setActiveTitle] = useState('')
-  const [activeTemplate, setActiveTemplate] = useState(null)
-
+const EmailTemplates = ({
+  emailTemplates,
+  onNewItemButtonClick,
+  activeTemplate,
+  isNewEmailTemplate,
+  createEmailTemplate,
+  deleteEmailTemplate,
+  showEmailTemplate,
+  onItemClick,
+  updateEmailTemplate,
+}) => {
   const { t } = useTranslation()
-
-  const handleTabClick = title => {
-    const selectedTemplate = emailTemplates.find(
-      template => template.emailContent.description === title,
-    )
-
-    setActiveTitle(title)
-    setActiveTemplate(selectedTemplate)
-  }
-
-  useEffect(() => {
-    if (!activeTemplate && emailTemplates.length > 0) {
-      setActiveTitle(emailTemplates[0].emailContent.description)
-      setActiveTemplate(emailTemplates[0])
-    }
-  }, [emailTemplates, activeTemplate])
-
   return (
-    <EmailTemplatePageContainer>
-      <EmailTemplateLeftSection>
+    <EditPageContainer>
+      <EditPageLeft>
         <div>
           {emailTemplates.map(template => (
-            <EmailTemplateSidebar key={template.id}>
-              <Heading2
-                onClick={() =>
-                  handleTabClick(template.emailContent.description)
-                }
-              >
+            <SidebarPageRow key={template.id}>
+              <Heading2 onClick={() => onItemClick(template)}>
                 {template.emailContent.description}
               </Heading2>
-              {template.emailContent.description === activeTitle ? (
-                <RightArrow />
-              ) : null}
-            </EmailTemplateSidebar>
+              {template.id === activeTemplate?.id ? <RightArrow /> : null}
+            </SidebarPageRow>
           ))}
         </div>
-      </EmailTemplateLeftSection>
-      <EmailTemplateRightSection>
+        <AddNewEmailTemplate
+          disabled={isNewEmailTemplate}
+          iconName="Plus"
+          onClick={onNewItemButtonClick}
+          primary
+          title={t('emailTemplate.addANewEmailTemplate')}
+        />
+      </EditPageLeft>
+      <EditPageRight>
         <PageHeader
           leftSideOnly
-          mainHeading={t('emailtemplatesPage.Email Templates')}
+          mainHeading={
+            isNewEmailTemplate
+              ? t('emailTemplate.New Email Template')
+              : t('emailTemplate.Email Templates')
+          }
         />
         {activeTemplate && (
-          <EmailTemplateContent activeTemplate={activeTemplate} />
+          <EmailTemplateContent
+            activeTemplate={activeTemplate}
+            createEmailTemplate={createEmailTemplate}
+            deleteEmailTemplate={deleteEmailTemplate}
+            emailTemplates={emailTemplates}
+            isNewEmailTemplate={isNewEmailTemplate}
+            showEmailTemplate={showEmailTemplate}
+            updateEmailTemplate={updateEmailTemplate}
+          />
         )}
-      </EmailTemplateRightSection>
-    </EmailTemplatePageContainer>
+      </EditPageRight>
+    </EditPageContainer>
   )
 }
 
