@@ -89,7 +89,7 @@ const esLa = {
       Users: 'Usuarios',
       Configuration: 'Configuración',
       Emails: 'Correos Electrónicos',
-      CMS: 'CMS',
+      CMS: 'Gestor de Contenidos',
       Pages: 'Páginas',
       Layout: 'Diseño',
       'Go to your profile': 'Ir a tu perfil',
@@ -575,11 +575,27 @@ const esLa = {
         },
       },
     },
-    emailtemplatesPage: {
+    emailTemplate: {
       'Email Templates': 'Plantillas de Correo Electrónico',
-      Subject: 'Asunto',
-      CC: 'CC',
-      Body: 'Cuerpo',
+      'New Email Template': 'Nueva Plantilla de Correo Electrónico',
+      subject: 'Asunto',
+      cc: 'CC',
+      ccEditorsCheckboxDescription:
+        'Agregar automáticamente editores de manuscritos en "CC" al enviar este correo electrónico (si corresponde)',
+      body: 'Cuerpo',
+      description: 'Descripción',
+      save: 'Guardar',
+      update: 'Actualizar',
+      addANewEmailTemplate: 'Agregar una nueva plantilla de correo electrónico',
+      'Edited on': 'Editado el {{date}}',
+      delete: 'Eliminar',
+      permanentlyDelete:
+        'Eliminar esta plantilla de correo electrónico también eliminará su asignación de tareas y configuraciones. Esta acción no se puede deshacer. ¿Estás seguro de que quieres eliminar?',
+      validationMessages: {
+        invalidEmail: 'Email no válido',
+        duplicateDescription:
+          'Ya existe una plantilla con la misma descripción.',
+      },
     },
     loginPage: {
       kotahiUses:

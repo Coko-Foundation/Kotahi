@@ -413,6 +413,7 @@ export const GET_EMAIL_TEMPLATES = gql`
         subject
         body
         description
+        ccEditors
       }
     }
   }

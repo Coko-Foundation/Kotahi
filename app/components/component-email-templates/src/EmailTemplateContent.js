@@ -1,48 +1,172 @@
-import React from 'react'
-import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import React, { useState } from 'react'
+import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
-import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
+import { FullWidthAndHeightContainer } from '../../component-cms-manager/src/style'
+import EmailTemplateEditForm from './EmailTemplateEditForm'
 
-const EmailContentWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 20px 20px 0px 0px;
-`
-
-const EmailBody = styled.div`
-  p {
-    margin-bottom: 20px;
-  }
-
-  div {
-    height: 100%;
-  }
-  height: 60vh;
-  overflow: scroll;
-`
-
-const EmailHeader = styled.p`
-  color: ${th('colorPrimary')};
-  font-family: ${th('fontReading')};
-  font-size: ${th('fontSizeHeading6')};
-  margin: 20px 0px;
-  text-transform: uppercase;
-`
-
-const EmailTemplateContent = ({ activeTemplate }) => {
+const EmailTemplateContent = ({
+  activeTemplate,
+  emailTemplates,
+  isNewEmailTemplate,
+  showEmailTemplate,
+  updateEmailTemplate,
+  createEmailTemplate,
+  deleteEmailTemplate,
+}) => {
   const { t } = useTranslation()
+  const [submitButtonStatus, setSubmitButtonStatus] = useState(null)
+
+  const emailValidationRegexp = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+
+  const validateEmailList = cc => {
+    const emailList = cc.split(',').map(email => email.trim())
+
+    const invalidEmails = emailList.filter(
+      email => !emailValidationRegexp.test(email),
+    )
+
+    if (invalidEmails.length > 0) {
+      return t('emailTemplate.validationMessages.invalidEmail')
+    }
+
+    return null
+  }
+
+  const autoSaveData = async (id, data) => {
+    if (isNewEmailTemplate) {
+      return
+    }
+
+    const inputData = { ...data }
+    await updateEmailTemplate({
+      variables: { id, input: inputData },
+    })
+  }
+
+  const handleUpdate = async formData => {
+    setSubmitButtonStatus('pending')
+
+    const inputData = {
+      id: activeTemplate.id,
+      emailContent: {
+        subject: formData?.subject,
+        cc: formData?.cc,
+        body: formData?.body,
+        description: formData?.description,
+        ccEditors: formData?.ccEditors,
+      },
+    }
+
+    await updateEmailTemplate({
+      variables: {
+        input: inputData,
+      },
+    })
+
+    setSubmitButtonStatus('success')
+  }
+
+  const createNewPage = async formData => {
+    const inputData = {
+      emailContent: {
+        subject: formData?.subject,
+        cc: formData?.cc,
+        body: formData?.body,
+        description: formData?.description,
+        ccEditors: formData?.ccEditors,
+      },
+    }
+
+    const newEmailTemplateResults = await createEmailTemplate({
+      variables: {
+        input: inputData,
+      },
+    })
+
+    const newEmailTemplate = newEmailTemplateResults?.data?.createEmailTemplate
+
+    if (newEmailTemplate.success) {
+      showEmailTemplate(newEmailTemplate?.emailTemplate)
+    }
+  }
+
+  const onDelete = async currentEmailTemplate => {
+    try {
+      await deleteEmailTemplate({
+        variables: { id: currentEmailTemplate.id },
+      })
+
+      // eslint-disable-next-line no-console
+      console.log('Email template deleted successfully.')
+    } catch (error) {
+      console.error('Error deleting email template:', error)
+    }
+
+    showEmailTemplate({ id: '' })
+  }
+
   return (
-    <EmailContentWrapper key={activeTemplate?.id}>
-      <EmailHeader>{t('emailtemplatesPage.Subject')}</EmailHeader>
-      <SimpleWaxEditor readonly value={activeTemplate?.emailContent.subject} />
-      <EmailHeader>{t('emailtemplatesPage.CC')}</EmailHeader>
-      <SimpleWaxEditor readonly value={activeTemplate?.emailContent.cc} />
-      <EmailHeader>{t('emailtemplatesPage.Body')}</EmailHeader>
-      <EmailBody>
-        <SimpleWaxEditor readonly value={activeTemplate?.emailContent.body} />
-      </EmailBody>
-    </EmailContentWrapper>
+    <FullWidthAndHeightContainer>
+      <Formik
+        enableReinitialize
+        initialValues={{
+          description: activeTemplate?.emailContent?.description || '',
+          body: activeTemplate?.emailContent?.body || '',
+          cc: activeTemplate?.emailContent?.cc || '',
+          subject: activeTemplate?.emailContent?.subject || '',
+          ccEditors: activeTemplate?.emailContent?.ccEditors || false,
+        }}
+        onSubmit={async values =>
+          isNewEmailTemplate ? createNewPage(values) : handleUpdate(values)
+        }
+        validate={values => {
+          const errors = {}
+
+          const isDescriptionUpdated =
+            values.description !== activeTemplate?.emailContent?.description
+
+          if (isDescriptionUpdated && values.description) {
+            // Check if a template with the same description already exists
+            const existingTemplate = emailTemplates.find(
+              template =>
+                template.emailContent.description === values.description,
+            )
+
+            if (existingTemplate) {
+              errors.description = t(
+                'emailTemplate.validationMessages.duplicateDescription',
+              )
+            }
+          }
+
+          if (values.cc) {
+            const ccError = validateEmailList(values.cc)
+
+            if (ccError) {
+              errors.cc = ccError
+            }
+          }
+
+          return errors
+        }}
+      >
+        {formikProps => {
+          return (
+            <EmailTemplateEditForm
+              activeTemplate={activeTemplate}
+              autoSaveData={autoSaveData}
+              currentValues={formikProps.values}
+              isNewEmailTemplate={isNewEmailTemplate}
+              onDelete={onDelete}
+              onSubmit={formikProps.handleSubmit}
+              setFieldValue={formikProps.setFieldValue}
+              setTouched={formikProps.setTouched}
+              submitButtonStatus={submitButtonStatus}
+            />
+          )
+        }}
+      </Formik>
+    </FullWidthAndHeightContainer>
   )
 }
 

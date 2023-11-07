@@ -37,7 +37,10 @@ const ContentEditorLayout = readOnly => ({ editor }) => {
           <Menu className="waxmenu">
             <TopBar />
           </Menu>
-          <FullWaxEditorGrid useComments={false}>
+          <FullWaxEditorGrid
+            className="full-wax-editor-grid"
+            useComments={false}
+          >
             <EditorDiv className="wax-surface-scroll panelWrapper" hideComments>
               {editor}
             </EditorDiv>

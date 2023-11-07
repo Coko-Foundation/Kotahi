@@ -108,6 +108,26 @@ export const FormActionDelete = styled(SecondaryButton)`
 export const FullWidthAndHeightContainer = styled.div`
   height: auto;
   width: 100%;
+
+  @media screen and (min-width: 1440px) {
+    .full-wax-editor-grid {
+      height: 500px; /* Double the height when screen width is above 1440 pixels */
+    }
+  }
+`
+
+export const SimpleWaxEditorContainer = styled.div`
+  & * {
+    margin: 0;
+  }
+
+  .wax-surface-scroll {
+    height: 250px;
+
+    @media screen and (min-width: 1440px) {
+      height: 500px; /* Double the height when screen width is above 1440 pixels */
+    }
+  }
 `
 
 export const ControlsContainer = styled.div`

@@ -177,6 +177,23 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
       `    @mention Notification email template already exists in database for "${group.name}". Skipping.`,
     )
   }
+
+  // update the 'emailTemplateType' value to 'taskNotification' for the task notification email template.
+  try {
+    await EmailTemplate.query()
+      .patch({ emailTemplateType: 'taskNotification' })
+      .where({ group_id: group.id })
+      .andWhereRaw("email_content->>'subject' = 'Kotahi | Task notification'")
+
+    console.log(
+      `Updated email_template_type for the task notification email template.`,
+    )
+  } catch (error) {
+    console.error(
+      `Error updating email_template_type for the task notification email template.`,
+      error,
+    )
+  }
 }
 
 const group = async () => {

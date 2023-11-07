@@ -554,11 +554,27 @@ const en = {
         },
       },
     },
-    emailtemplatesPage: {
+    emailTemplate: {
       'Email Templates': 'Email Templates',
-      Subject: 'Subject',
-      CC: 'CC',
-      Body: 'Body',
+      'New Email Template': 'New Email Template',
+      subject: 'Subject',
+      cc: 'CC',
+      ccEditorsCheckboxDescription:
+        'Automatically add manuscript editors in "cc" when sending this email (if applicable)',
+      body: 'Body',
+      description: 'Description',
+      save: 'Save',
+      update: 'Update',
+      addANewEmailTemplate: 'Add a new email template',
+      'Edited on': 'Edited on {{date}}',
+      delete: 'Delete',
+      permanentlyDelete:
+        'Deleting this email template will also delete its assignment from tasks and configuration settings. This action cannot be undone. Are you sure you want to delete?',
+      validationMessages: {
+        invalidEmail: 'Email is invalid',
+        duplicateDescription:
+          'Template with the Same Description Already Exists.',
+      },
     },
     loginPage: {
       kotahiUses:
