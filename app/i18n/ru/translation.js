@@ -444,7 +444,8 @@ const ru = {
       'User Management': 'Управление пользователями',
       userIsAdmin:
         'Всем пользователям назначаются роли администратора и редактора',
-      kotahiApiTokens: 'API-токены',
+      kotahiApis: 'Котахи API',
+      tokens: 'Токены',
       Submit: 'Подтвердить',
       article: 'Статья',
       'peer review': 'Рецензия',

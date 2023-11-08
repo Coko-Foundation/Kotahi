@@ -1463,8 +1463,8 @@ const resolvers = {
 
       const activeConfig = await models.Config.getCached(group.id)
 
-      if (activeConfig.formData.user.kotahiApiTokens) {
-        validateApiToken(token, activeConfig.formData.user.kotahiApiTokens)
+      if (activeConfig.formData.kotahiApis.tokens) {
+        validateApiToken(token, activeConfig.formData.kotahiApis.tokens)
       } else {
         throw new Error('Kotahi api tokens are not configured!')
       }

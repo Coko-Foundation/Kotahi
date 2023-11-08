@@ -57,8 +57,8 @@ const revertHiddenSensitiveInformation = async (
 const stripSensitiveInformation = async configData => {
   const config = configData
 
-  // user - credentials
-  delete config.formData.user.kotahiApiTokens
+  // kotahiApis - tokens
+  delete config.formData.kotahiApis
 
   // publishing - credentials
   delete config.formData.publishing.crossref.login
