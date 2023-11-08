@@ -103,7 +103,6 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'elife',
           user: {
             isAdmin: false,
-            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -127,6 +126,7 @@ const seedConfig = async (group, instanceName, index) => {
           notification,
           eventNotification: {},
           groupIdentity,
+          kotahiApis: {},
         },
         type: 'Config',
       }
@@ -138,7 +138,6 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'ncrc',
           user: {
             isAdmin: false,
-            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -167,6 +166,7 @@ const seedConfig = async (group, instanceName, index) => {
           notification,
           eventNotification: {},
           groupIdentity,
+          kotahiApis: {},
         },
         type: 'Config',
       }
@@ -178,7 +178,6 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'colab',
           user: {
             isAdmin: false,
-            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: true },
@@ -224,6 +223,7 @@ const seedConfig = async (group, instanceName, index) => {
           notification,
           eventNotification: {},
           groupIdentity,
+          kotahiApis: {},
         },
         type: 'Config',
       }
@@ -269,6 +269,7 @@ const seedConfig = async (group, instanceName, index) => {
           notification,
           eventNotification: {},
           groupIdentity,
+          kotahiApis: {},
         },
         type: 'Config',
       }
@@ -280,7 +281,6 @@ const seedConfig = async (group, instanceName, index) => {
           instanceName: 'aperture',
           user: {
             isAdmin: false,
-            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -314,6 +314,7 @@ const seedConfig = async (group, instanceName, index) => {
           notification,
           eventNotification: {},
           groupIdentity,
+          kotahiApis: {},
         },
         type: 'Config',
       }

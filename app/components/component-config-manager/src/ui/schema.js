@@ -955,9 +955,15 @@ const generateSchema = (
                     title: t('configPage.userIsAdmin'),
                     default: false,
                   },
-                  kotahiApiTokens: {
+                },
+              },
+              kotahiApis: {
+                type: 'object',
+                title: t('configPage.kotahiApis'),
+                properties: {
+                  tokens: {
                     type: ['string', 'null'],
-                    description: t('configPage.kotahiApiTokens'),
+                    description: t('configPage.tokens'),
                   },
                 },
               },
@@ -1487,9 +1493,15 @@ const generateSchema = (
                     title: t('configPage.userIsAdmin'),
                     default: false,
                   },
-                  kotahiApiTokens: {
+                },
+              },
+              kotahiApis: {
+                type: 'object',
+                title: t('configPage.kotahiApis'),
+                properties: {
+                  tokens: {
                     type: ['string', 'null'],
-                    description: t('configPage.kotahiApiTokens'),
+                    description: t('configPage.tokens'),
                   },
                 },
               },
@@ -2015,10 +2027,15 @@ const generateSchema = (
                     title: t('configPage.userIsAdmin'),
                     default: false,
                   },
-
-                  kotahiApiTokens: {
+                },
+              },
+              kotahiApis: {
+                type: 'object',
+                title: t('configPage.kotahiApis'),
+                properties: {
+                  tokens: {
                     type: ['string', 'null'],
-                    description: t('configPage.kotahiApiTokens'),
+                    description: t('configPage.tokens'),
                   },
                 },
               },
@@ -2567,9 +2584,15 @@ const generateSchema = (
                     title: t('configPage.userIsAdmin'),
                     default: false,
                   },
-                  kotahiApiTokens: {
+                },
+              },
+              kotahiApis: {
+                type: 'object',
+                title: t('configPage.kotahiApis'),
+                properties: {
+                  tokens: {
                     type: ['string', 'null'],
-                    description: t('configPage.kotahiApiTokens'),
+                    description: t('configPage.tokens'),
                   },
                 },
               },
