@@ -88,6 +88,7 @@ const getXsweet = async url => {
   // 1 pass docx to xsweet
   const form = new FormData()
   form.append('docx', fs.createReadStream(`${docxPath}`))
+  form.append('useMath', 'true')
   // eslint-disable-next-line
   // console.log('DOCX path: ', docxPath)
   return new Promise((resolve, reject) => {
@@ -99,6 +100,7 @@ const getXsweet = async url => {
       // – that's different from what's in the README, which is wrong.
       headers: {
         authorization: `Bearer ${xsweetAccessToken}`,
+        'Content-Type': 'application/json', // This might be important for LaTeX because JSON uses \ as an escape.
         ...form.getHeaders(),
       },
       data: form,
