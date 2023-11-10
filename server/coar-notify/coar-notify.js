@@ -1,5 +1,10 @@
 const models = require('@pubsweet/models')
 const { getCrossrefDataViaDoi } = require('./crossRef')
+const makeAnnouncementOnCOAR = require('./announcement')
+
+const sendAnnouncementNotification = (notification, manuscript) => {
+  return makeAnnouncementOnCOAR(notification, manuscript)
+}
 
 const createNotification = async (payload, groupId) => {
   const notification = await models.CoarNotification.query().upsertGraphAndFetch(
@@ -134,6 +139,7 @@ const processNotification = async (group, payload) => {
 }
 
 module.exports = {
+  sendAnnouncementNotification,
   processNotification,
   validateIPs,
 }
