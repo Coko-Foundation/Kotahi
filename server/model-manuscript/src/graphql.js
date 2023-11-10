@@ -12,6 +12,10 @@ const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 const { rebuildCMSSite } = require('../../flax-site/flax-api')
 
 const {
+  sendAnnouncementNotification,
+} = require('../../coar-notify/coar-notify')
+
+const {
   getPublishableReviewFields,
   getPublishableSubmissionFields,
 } = require('../../publishing/flax/tools')
@@ -356,6 +360,11 @@ const getSupplementaryFiles = async parentId => {
 const publishOnCMS = async (groupId, manuscriptId) => {
   await rebuildCMSSite(groupId, { manuscriptId })
   return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
+}
+
+const sendNotificationToCoar = async (notification, manuscript) => {
+  const response = await sendAnnouncementNotification(notification, manuscript)
+  return response
 }
 
 const getPublishableSubmissionFiles = async manuscript => {
@@ -1096,6 +1105,10 @@ const resolvers = {
         status: 'published',
       })
 
+      const notification = await models.CoarNotification.query().findOne({
+        manuscriptId: manuscript.id,
+      })
+
       const update = { published: newPublishedDate, status: 'published' } // This will also collect any properties we may want to update in the DB
       const steps = []
 
@@ -1203,6 +1216,23 @@ const resolvers = {
           succeeded: false,
           errorMessage: err.message,
         })
+      }
+
+      if (notification) {
+        try {
+          if (await sendNotificationToCoar(notification, manuscript))
+            steps.push({
+              stepLabel: 'COAR Notify review complete announcement sent',
+              succeeded: true,
+            })
+        } catch (err) {
+          console.error(err)
+          steps.push({
+            stepLabel: 'COAR Notify review complete announcement sent',
+            succeeded: false,
+            errorMessage: err.message,
+          })
+        }
       }
 
       let updatedManuscript
