@@ -786,6 +786,7 @@ const en = {
       taskEdit: {
         'Task details': 'Task details',
         'Task title': 'Task title',
+        'Task description': 'Task description',
         Save: 'Save',
         'Give your task a name': 'Give your task a name...',
         Assignee: 'Assignee',

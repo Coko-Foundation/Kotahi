@@ -21,6 +21,7 @@ const query = gql`
       groupId
       title
       assigneeUserId
+      description
       assignee {
         id
         username

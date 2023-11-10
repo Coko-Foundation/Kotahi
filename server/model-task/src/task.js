@@ -84,6 +84,7 @@ class Task extends BaseModel {
         assigneeType: { type: ['string', 'null'] },
         assigneeName: { type: ['string', 'null'] },
         assigneeEmail: { type: ['string', 'null'] },
+        description: { type: ['string', 'null'] },
       },
     }
   }

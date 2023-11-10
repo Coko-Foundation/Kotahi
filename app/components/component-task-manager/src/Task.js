@@ -443,6 +443,7 @@ const Task = ({
                   <TextInput
                     onChange={event => updateTaskTitle(event.target.value)}
                     placeholder={t('taskManager.task.Give your task a name')}
+                    title={taskTitle}
                     value={taskTitle}
                   />
                   <TaskAction ref={taskRef}>

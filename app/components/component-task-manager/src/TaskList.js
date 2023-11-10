@@ -84,6 +84,7 @@ const TaskList = ({
     manuscriptId,
     groupId: config.groupId,
     title: task.title,
+    description: task.description,
     assigneeUserId: task.assignee?.id || null,
     defaultDurationDays: task.defaultDurationDays,
     reminderPeriodDays: task.reminderPeriodDays || 0,

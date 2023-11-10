@@ -806,6 +806,7 @@ const ru = {
       taskEdit: {
         'Task details': 'Детали задачи',
         'Task title': 'Название задачи',
+        'Task description': 'Описание задания',
         Save: 'Сохранить',
         'Give your task a name': 'Дайте название задаче',
         Assignee: 'Исполнитель',
