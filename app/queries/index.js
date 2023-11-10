@@ -287,6 +287,7 @@ created
 updated
 manuscriptId
 groupId
+description
 title
 assigneeUserId
 assignee {

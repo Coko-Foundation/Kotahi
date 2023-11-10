@@ -238,6 +238,7 @@ const typeDefs = `
     manuscriptId: ID
     groupId: ID!
     title: String!
+    description: String
     assigneeUserId: ID
     defaultDurationDays: Int
     dueDate: DateTime
@@ -263,6 +264,7 @@ const typeDefs = `
     title: String!
     assigneeUserId: ID
     assignee: User
+    description: String
     defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int

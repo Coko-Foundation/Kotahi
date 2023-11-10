@@ -110,6 +110,7 @@ const manuscriptFields = `
     created
     updated
     manuscriptId
+    description
     groupId
     title
     assignee {

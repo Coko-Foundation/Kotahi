@@ -809,6 +809,7 @@ const fr = {
       taskEdit: {
         'Task details': 'Détails de la tâche',
         'Task title': 'Titre de la tâche',
+        'Task description': 'Description de la tâche',
         Save: 'Enregistrer',
         'Give your task a name': 'Donnez un nom à votre tâche...',
         Assignee: 'Attributaire',
