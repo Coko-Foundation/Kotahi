@@ -77,6 +77,7 @@ const typeDefs = `
 
   enum ImageSize {
     original
+    full
     medium
     small
   }

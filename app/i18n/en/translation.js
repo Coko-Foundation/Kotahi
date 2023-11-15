@@ -330,7 +330,7 @@ const en = {
       Remove: 'Remove',
     },
     productionPage: {
-      Production: 'Productionn',
+      Production: 'Production',
       'No supported view of the file': 'No supported view of the file',
       Download: 'Download',
     },

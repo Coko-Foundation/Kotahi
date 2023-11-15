@@ -101,7 +101,7 @@ const pdfHandler = async manuscriptId => {
   articleData.meta.source = await replaceImageSrc(
     articleData.meta.source,
     articleData.files,
-    'original',
+    'full',
   )
 
   // TODO: get rid of this if we're doing this in applyTemplate
