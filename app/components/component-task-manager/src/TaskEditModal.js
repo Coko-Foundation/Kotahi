@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import { debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
@@ -41,8 +40,6 @@ const TaskRecipientsContainer = styled.div`
 `
 
 const TaskSectionContainer = styled.div`
-  padding: ${grid(4.5)} 0 ${grid(4.5)} 0;
-
   &:first-child {
     padding-top: 0;
   }
