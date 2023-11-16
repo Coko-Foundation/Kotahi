@@ -890,6 +890,7 @@ const resolvers = {
 
       if (
         manuscript.decision &&
+        manuscript.submitter &&
         config['notification-email'].automated === 'true'
       ) {
         // Automated email evaluationComplete on decision

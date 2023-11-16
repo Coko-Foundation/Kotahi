@@ -1,36 +1,66 @@
-/* eslint-disable global-require, no-console, import/no-dynamic-require, no-await-in-loop, no-continue */
+/* eslint-disable global-require, no-console, import/no-dynamic-require, no-await-in-loop, no-continue, no-plusplus */
+
+const { uuid } = require('@coko/server')
 const models = require('@pubsweet/models')
 const { chunk } = require('lodash')
 
 const importWorkersByGroup = {}
 
-const runImports = async (groupId, submitterId = null) => {
+const flatten = items => {
+  const result = []
+
+  items.forEach(item => {
+    if (Array.isArray(item)) {
+      if (!item.length) return
+      const parentId = uuid()
+      result.push({ ...item[0], id: parentId, parentId: undefined })
+      for (let i = 1; i < item.length; i++)
+        result.push({ ...item[i], id: undefined, parentId })
+    } else if (item)
+      result.push({ ...item, id: undefined, parentId: undefined })
+  })
+  return result
+}
+
+const saveImportedManuscripts = async (
+  allNewManuscripts,
+  groupId,
+  submitterId,
+) => {
+  try {
+    const firstVersions = allNewManuscripts.filter(x => !x.parentId)
+    const laterVersions = allNewManuscripts.filter(x => x.parentId)
+
+    // Save first version manuscripts in chunks of ten; then save the later versions one at a time so creation date preserves sequence
+    const chunks = chunk(firstVersions, 10).concat(laterVersions.map(x => [x]))
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const ch of chunks) {
+      await models.Manuscript.query().upsertGraphAndFetch(ch, {
+        relate: true,
+        insertMissing: true,
+      })
+    }
+  } catch (e) {
+    console.error(e)
+  }
+
+  console.info(
+    `Imported ${allNewManuscripts.length} manuscripts into group ${groupId} using plugins, with ${submitterId} as submitterId.`,
+  )
+}
+
+const runImports = async (
+  groupId,
+  evaluatedStatusString,
+  submitterId = null,
+) => {
   const importType = submitterId ? 'manual' : 'automatic'
   const urisAlreadyImporting = []
   const doisAlreadyImporting = []
   const importWorkers = importWorkersByGroup[groupId] || []
 
-  const saveImportedManuscripts = async allNewManuscripts => {
-    try {
-      const chunks = chunk(allNewManuscripts, 10)
-      await Promise.all(
-        chunks.map(async ch => {
-          await models.Manuscript.query().upsertGraphAndFetch(ch, {
-            relate: true,
-          })
-        }),
-      )
-    } catch (e) {
-      console.error(e)
-    }
-
-    console.info(
-      `Imported ${allNewManuscripts.length} manuscripts into group ${groupId} using plugins, with ${submitterId} as submitterId.`,
-    )
-  }
-
   for (let i = 0; i < importWorkers.length; i += 1) {
-    const allNewManuscripts = []
     const worker = importWorkers[i]
     if (![importType, 'any'].includes(worker.importType)) continue
 
@@ -62,10 +92,10 @@ const runImports = async (groupId, submitterId = null) => {
       continue
     }
 
-    let newManuscripts
+    let newItems
 
     try {
-      newManuscripts = await worker.doImport({
+      newItems = await worker.doImport({
         urisAlreadyImporting: [...urisAlreadyImporting],
         doisAlreadyImporting: [...doisAlreadyImporting],
         lastImportDate: lastImportDate ? new Date(lastImportDate) : null,
@@ -78,37 +108,42 @@ const runImports = async (groupId, submitterId = null) => {
       continue
     }
 
-    if (!Array.isArray(newManuscripts))
+    if (!Array.isArray(newItems))
       throw new Error(
-        `Expected ${worker.name} import function to return an array of manuscripts, but received ${newManuscripts}`,
+        `Expected ${worker.name} import function to return an array of manuscripts, but received ${newItems}`,
       )
     console.info(
-      `Found ${newManuscripts.length} new manuscripts for group ${groupId}.`,
+      `Found ${newItems.length} new manuscripts for group ${groupId}.`,
     )
 
-    newManuscripts.forEach(m => {
-      // TODO check manuscript structure
+    const flattenedItems = flatten(newItems)
+
+    const allNewManuscripts = flattenedItems.map(preprint => {
       const uri =
-        m.submission.link ||
-        m.submission.biorxivURL ||
-        m.submission.url ||
-        m.submission.uri
+        preprint.submission.link ||
+        preprint.submission.biorxivURL ||
+        preprint.submission.url ||
+        preprint.submission.uri
 
-      const { doi } = m
+      if (uri) urisAlreadyImporting.push(uri)
+      if (preprint.doi) doisAlreadyImporting.push(preprint.doi)
 
-      // TODO replace an earlier manuscript if it shares uri or DOI
-
-      // force some fields to be empty; provide defaults for others.
-      allNewManuscripts.push({
+      const result = {
         submission: {},
         meta: { title: '' },
         importSourceServer: null,
-        ...m,
+        ...preprint,
         status: 'new',
         isImported: true,
         importSource,
         submitterId,
-        channels: [
+        files: [],
+        teams: [],
+        groupId,
+      }
+
+      if (!preprint.parentId) {
+        result.channels = [
           {
             topic: 'Manuscript discussion',
             type: 'all',
@@ -117,20 +152,21 @@ const runImports = async (groupId, submitterId = null) => {
             topic: 'Editorial discussion',
             type: 'editorial',
           },
-        ],
-        files: [],
-        reviews: [], // TODO This forces reviews to be empty. This should change if we want to import manuscripts with reviews already attached
-        teams: [],
-        groupId,
-      })
+        ]
+      }
 
-      if (doi) doisAlreadyImporting.push(doi)
-      if (uri) urisAlreadyImporting.push(uri)
+      if (
+        Array.isArray(preprint.reviews) &&
+        preprint.reviews.some(r => r.isDecision)
+      )
+        result.decision = evaluatedStatusString
+
+      return result
     })
 
-    console.log('Total Manuscripts to save in DB => ', allNewManuscripts.length)
+    console.log('Total items to save in DB => ', allNewManuscripts.length)
 
-    saveImportedManuscripts(allNewManuscripts)
+    saveImportedManuscripts(allNewManuscripts, groupId, submitterId)
 
     if (lastImportDate) {
       await models.ArticleImportHistory.query()

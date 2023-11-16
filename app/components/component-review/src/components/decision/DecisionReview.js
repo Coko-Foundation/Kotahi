@@ -118,8 +118,8 @@ const ReviewHeading = ({
         {t('decisionPage.decisionTab.reviewNum', { num: ordinal })}
       </Ordinal>
       &nbsp;
-      <Name>
-        {
+      {review.user && (
+        <Name>
           <UserCombo>
             <UserAvatar
               user={
@@ -141,17 +141,17 @@ const ReviewHeading = ({
               )}
             </UserInfo>
           </UserCombo>
-        }
-        {(currentUserIsEditor ||
-          currentUser.groupRoles.includes('groupManager')) &&
-          canBePublishedPublicly &&
-          config.instanceName === 'colab' && (
-            <>
-              &nbsp;
-              <ShareIcon />
-            </>
-          )}
-      </Name>
+          {(currentUserIsEditor ||
+            currentUser.groupRoles.includes('groupManager')) &&
+            canBePublishedPublicly &&
+            config.instanceName === 'colab' && (
+              <>
+                &nbsp;
+                <ShareIcon />
+              </>
+            )}
+        </Name>
+      )}
       {canHideReviews &&
         (currentUserIsEditor ||
           currentUser.groupRoles.includes('groupManager')) && (
