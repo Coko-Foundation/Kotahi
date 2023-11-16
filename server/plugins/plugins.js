@@ -63,7 +63,7 @@ const registerPlugins = async () => {
                 )
 
               const startPlugin = require(`../../config/plugins/${folderName}`)
-              console.info(`Starting plugin ${name}...`)
+              console.info(`Starting plugin ${name} in ${groupName} group...`)
               startPlugin(getBroker(group.id, name))
             } catch (error) {
               console.error(

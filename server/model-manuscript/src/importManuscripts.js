@@ -9,82 +9,95 @@ const { runImports } = require('../../plugins/imports')
 
 const { getPubsub } = pubsubManager
 
-let isImportInProgress = false
-let isImportingFromSemanticScholarInProgress = false
+const importsInProgress = new Set()
 
 const shouldRunDefaultImportsForColab = [true, 'true'].includes(
   config['import-for-colab'].default_import,
 )
 
 const importManuscripts = async (groupId, ctx) => {
-  if (isImportInProgress) return false
-  isImportInProgress = true
+  const key = `${groupId}-imports`
+  if (importsInProgress.has(key)) return false
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  try {
+    importsInProgress.add(key)
 
-  await runImports(groupId, ctx.user)
-
-  const promises = []
-
-  if (activeConfig.formData.instanceName === 'ncrc') {
-    promises.push(importArticlesFromBiorxiv(groupId, ctx))
-    promises.push(importArticlesFromPubmed(groupId, ctx))
-  } else if (
-    activeConfig.formData.instanceName === 'colab' &&
-    shouldRunDefaultImportsForColab
-  ) {
-    promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
-  }
-
-  if (!promises.length) return false
-
-  Promise.all(promises)
-    .catch(error => console.error(error))
-    .finally(async () => {
-      isImportInProgress = false
-      const pubsub = await getPubsub()
-      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-        manuscriptsImportStatus: true,
-      })
+    const activeConfig = await models.Config.query().findOne({
+      groupId,
+      active: true,
     })
 
-  return true
+    const evaluatedStatusString = ['ncrc', 'elife'].includes(
+      activeConfig.formData.instanceName,
+    )
+      ? 'evaluated'
+      : 'accepted'
+
+    const promises = [runImports(groupId, evaluatedStatusString, ctx.user)]
+
+    if (activeConfig.formData.instanceName === 'ncrc') {
+      promises.push(importArticlesFromBiorxiv(groupId, ctx))
+      promises.push(importArticlesFromPubmed(groupId, ctx))
+    } else if (
+      activeConfig.formData.instanceName === 'colab' &&
+      shouldRunDefaultImportsForColab
+    ) {
+      promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
+    }
+
+    if (!promises.length) return false
+
+    Promise.all(promises)
+      .catch(error => console.error(error))
+      .finally(async () => {
+        const pubsub = await getPubsub()
+        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+          manuscriptsImportStatus: true,
+        })
+      })
+
+    return true
+  } finally {
+    importsInProgress.delete(key)
+  }
 }
 
 const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
-  if (isImportingFromSemanticScholarInProgress) return false
-  isImportingFromSemanticScholarInProgress = true
+  const key = `${groupId}-SemanticScholar`
+  if (importsInProgress.has(key)) return false
 
-  const activeConfig = await models.Config.query().findOne({
-    groupId,
-    active: true,
-  })
+  try {
+    importsInProgress.add(key)
 
-  const promises = []
-
-  if (
-    activeConfig.formData.instanceName === 'colab' &&
-    shouldRunDefaultImportsForColab
-  ) {
-    promises.push(importArticlesFromSemanticScholar(groupId, ctx))
-  }
-
-  if (!promises.length) return false
-
-  Promise.all(promises)
-    .catch(error => console.error(error))
-    .finally(async () => {
-      isImportingFromSemanticScholarInProgress = false
-      const pubsub = await getPubsub()
-      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-        manuscriptsImportStatus: true,
-      })
+    const activeConfig = await models.Config.query().findOne({
+      groupId,
+      active: true,
     })
 
-  return true
+    const promises = []
+
+    if (
+      activeConfig.formData.instanceName === 'colab' &&
+      shouldRunDefaultImportsForColab
+    ) {
+      promises.push(importArticlesFromSemanticScholar(groupId, ctx))
+    }
+
+    if (!promises.length) return false
+
+    Promise.all(promises)
+      .catch(error => console.error(error))
+      .finally(async () => {
+        const pubsub = await getPubsub()
+        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+          manuscriptsImportStatus: true,
+        })
+      })
+
+    return true
+  } finally {
+    importsInProgress.delete(key)
+  }
 }
 
 module.exports = {

@@ -1,6 +1,7 @@
 const models = require('@pubsweet/models')
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 const { importWorkersByGroup } = require('./imports')
+const { DoiExistenceChecker } = require('./doiExistenceChecker')
 
 const assertArgTypes = (args, ...typeSpecs) => {
   for (let i = 0; i < args.length; i += 1) {
@@ -50,6 +51,9 @@ const getBroker = (groupId, workerName) => {
     importWorkersByGroup[groupId] = importWorkers
   }
 
+  const doiChecker = new DoiExistenceChecker(groupId, false)
+  const archivedDoiChecker = new DoiExistenceChecker(groupId, true)
+
   return {
     addManuscriptImporter: (importType, doImport) => {
       assertArgTypes([importType, doImport], 'string', 'function')
@@ -98,8 +102,18 @@ const getBroker = (groupId, workerName) => {
       teams: [],
     }),
     getSubmissionForm: () => getSubmissionForm(groupId),
+    /** Return true if a manuscript with this DOI exists in the group.
+     * Optionally, search among archived manuscripts as well as non-archived ones.
+     * For efficiency, this caches all DOIs in memory, clearing the cache only after
+     * 10 seconds have elapsed without hasManuscriptWithDoi() being called. */
+    hasManuscriptWithDoi: async (doi, includeArchivedManuscripts = false) => {
+      return (
+        (await doiChecker.doiExists(doi)) ||
+        (includeArchivedManuscripts && archivedDoiChecker.doiExists(doi))
+      )
+    },
     groupId,
-    logger: console, // TODO modify console to include group and plugin name identifier
+    logger: console,
   }
 }
 

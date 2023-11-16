@@ -90,7 +90,7 @@ const ReviewDetailsModal = (
   const showRealReviewer = !review?.isHiddenReviewerName || isControlPage
 
   const reviewerName = showRealReviewer
-    ? `${reviewer?.username ?? reviewerTeamMember.invitedPersonName}`
+    ? `${reviewer?.username ?? reviewerTeamMember?.invitedPersonName}`
     : 'Anonymous Reviewer'
 
   const timeString = convertTimestampToDateString(
@@ -137,28 +137,35 @@ const ReviewDetailsModal = (
       subtitle={t(`modals.reviewReport.Last Updated`, {
         dateString: timeString,
       })}
-      title={t('modals.reviewReport.Review Report', { name: reviewerName })}
+      title={t('modals.reviewReport.Review Report', {
+        name:
+          reviewerName && reviewerName !== 'undefined'
+            ? `${reviewerName}'s Review Report`
+            : 'Review Report',
+      })}
     >
-      <UserCombo style={{ marginBottom: '1em' }}>
-        <UserAvatar
-          isClickable
-          showHoverProfile
-          size="48"
-          user={showRealReviewer ? reviewer : null}
-        />
-        <UserInfo>
-          <p>
-            <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
-            {`${reviewerName}`}
-          </p>
-          {showRealReviewer && (
-            <Secondary>
-              {reviewer?.defaultIdentity?.identifier ??
-                reviewerTeamMember.toEmail}
-            </Secondary>
-          )}
-        </UserInfo>
-      </UserCombo>
+      {reviewer && (
+        <UserCombo style={{ marginBottom: '1em' }}>
+          <UserAvatar
+            isClickable
+            showHoverProfile
+            size="48"
+            user={showRealReviewer ? reviewer : null}
+          />
+          <UserInfo>
+            <p>
+              <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
+              {`${reviewerName}`}
+            </p>
+            {showRealReviewer && (
+              <Secondary>
+                {reviewer?.defaultIdentity?.identifier ??
+                  reviewerTeamMember.toEmail}
+              </Secondary>
+            )}
+          </UserInfo>
+        </UserCombo>
+      )}
       <StatusContainer>
         <Header>{t('modals.reviewReport.Status')}</Header>
         <ConfigurableStatus
@@ -250,7 +257,7 @@ const CheckboxActions = ({
       )}
       {config.controlPanel?.sharedReview && (
         <Checkbox
-          checked={reviewerTeamMember.isShared}
+          checked={reviewerTeamMember?.isShared}
           label={t('modals.reviewReport.Shared')}
           onChange={toggleSharedStatus}
         />
