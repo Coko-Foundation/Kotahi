@@ -101,6 +101,8 @@ const getXsweet = async url => {
       headers: {
         authorization: `Bearer ${xsweetAccessToken}`,
         'Content-Type': 'application/json', // This might be important for LaTeX because JSON uses \ as an escape.
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
         ...form.getHeaders(),
       },
       data: form,
