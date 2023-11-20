@@ -11,6 +11,7 @@ const MANUSCRIPTS_OPTIONS_LIST = '[class*=Action__ActionLink]'
 const MANUSCRIPTS_OPTIONS_E = '[class*=Action__ActionLink]'
 const BUTTON = 'button'
 const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
+const EXPAND_CHAT_BUTTON = '[class*=Manuscripts__RoundIconButtonWrapper]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 // const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
@@ -69,6 +70,12 @@ export const ManuscriptsPage = {
   },
   clickRefreshButton() {
     this.getRefreshButton().click()
+  },
+  getExpandChatButton() {
+    return cy.get(EXPAND_CHAT_BUTTON)
+  },
+  clickExpandChatButton() {
+    this.getExpandChatButton().click()
   },
   getLiveChatButton() {
     return cy.get(LIVE_CHAT_BUTTON)

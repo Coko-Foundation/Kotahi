@@ -33,6 +33,8 @@ describe('Email Notification Tests', () => {
 
       cy.contains('Notify').click()
 
+      ControlPage.clickExpandChatButton()
+
       /* Verify Notification in Editorial Discussion Panel */
       ControlPage.clickNthChatTab(1)
 

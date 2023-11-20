@@ -35,6 +35,7 @@ const StyledSelect = styled(Select)`
 
   border: 1px solid ${({ theme }) => theme.color.gray95};
   box-shadow: ${props => props.theme.boxShadow.shades[100]};
+  width: 94%;
 `
 
 const generateLabel = (created, versionNumber, count, manuscriptName, t) => {

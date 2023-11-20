@@ -12,6 +12,7 @@ import {
   Chat,
 } from '../../../shared'
 import MessageContainer from '../../../component-chat/src/MessageContainer'
+import { ChatButton, CollapseButton } from './style'
 
 const DecisionVersions = ({
   allUsers,
@@ -19,6 +20,8 @@ const DecisionVersions = ({
   roles,
   currentUser,
   decisionForm,
+  chatProps,
+  channels,
   form,
   handleChange,
   updateManuscript,
@@ -61,9 +64,9 @@ const DecisionVersions = ({
   createTaskEmailNotificationLog,
   emailTemplates,
 }) => {
+  const { t } = useTranslation()
   const versions = gatherManuscriptVersions(manuscript)
   const firstVersion = versions[versions.length - 1]
-  const { t } = useTranslation()
 
   const initialValue = useMemo(
     () =>
@@ -75,26 +78,28 @@ const DecisionVersions = ({
     [],
   )
 
-  // Protect if channels don't exist for whatever reason
-  let editorialChannel, allChannel
+  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(false)
 
-  if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
-    editorialChannel = manuscript.channels.find(c => c.type === 'editorial')
-    allChannel = manuscript.channels.find(c => c.type === 'all')
+  const toggleDiscussionVisibility = async () => {
+    try {
+      const { channelsData, reloadUnreadMessageCounts } = chatProps || {}
+
+      const dataRefetchPromises = channelsData?.map(async channel => {
+        await channel?.refetchUnreadMessagesCount?.()
+        await channel?.refetchNotificationOptionData?.()
+      })
+
+      if (reloadUnreadMessageCounts) {
+        dataRefetchPromises.push(reloadUnreadMessageCounts())
+      }
+
+      await Promise.all(dataRefetchPromises)
+
+      setIsDiscussionVisible(prevState => !prevState)
+    } catch (error) {
+      console.error('Error toggling discussion visibility:', error)
+    }
   }
-
-  const channels = [
-    {
-      id: allChannel?.id,
-      name: t('chat.Discussion with author'),
-      type: allChannel?.type,
-    },
-    {
-      id: editorialChannel?.id,
-      name: t('chat.Editorial discussion'),
-      type: editorialChannel?.type,
-    },
-  ]
 
   const manuscriptLatestVersionId = versions[0].manuscript.id
 
@@ -172,13 +177,31 @@ const DecisionVersions = ({
           </VersionSwitcher>
         </ErrorBoundary>
       </Manuscript>
-      <Chat>
-        <MessageContainer
-          channels={channels}
-          currentUser={currentUser}
-          manuscriptId={manuscript.id}
+      {isDiscussionVisible && (
+        <Chat>
+          <MessageContainer
+            channels={channels}
+            chatProps={chatProps}
+            currentUser={currentUser}
+            manuscriptId={manuscript.id}
+          />
+          <CollapseButton
+            iconName="ChevronRight"
+            onClick={toggleDiscussionVisibility}
+            title={t('chat.Hide Chat')}
+          />
+        </Chat>
+      )}
+      {!isDiscussionVisible && (
+        <ChatButton
+          iconName="MessageSquare"
+          onClick={toggleDiscussionVisibility}
+          title={t('chat.Show Chat')}
+          unreadMessagesCount={
+            chatProps.unreadMessagesQueryResult?.data?.unreadMessagesCount
+          }
         />
-      </Chat>
+      )}
     </Columns>
   )
 }

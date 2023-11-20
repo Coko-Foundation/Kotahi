@@ -10,7 +10,6 @@ const MESSAGE_DELETED = 'MESSAGE_DELETED'
 const models = require('@pubsweet/models')
 
 const {
-  updateChannelLastViewed,
   getChannelMemberByChannel,
   addUsersToChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
@@ -65,7 +64,6 @@ const resolvers = {
           .first()
       }
 
-      await updateChannelLastViewed({ channelId, userId: context.user })
       return {
         edges: messages,
         pageInfo: {
@@ -75,6 +73,35 @@ const resolvers = {
         unreadMessagesCount: unreadMessagesCount[0].count,
         firstUnreadMessageId: firstUnreadMessage?.id,
       }
+    },
+    // Calculates the total number of unread  messages count from more then one channels for the current user.
+    unreadMessagesCount: async (_, { channelIds }, context) => {
+      const promises = channelIds.map(async channelId => {
+        const channelMember = await getChannelMemberByChannel({
+          channelId,
+          userId: context.user,
+        })
+
+        if (channelMember) {
+          const unreadMessagesCount = await models.Message.query()
+            .where({ channelId })
+            .where('created', '>', channelMember.lastViewed)
+            .count()
+
+          return parseInt(unreadMessagesCount[0].count, 10)
+        }
+
+        return 0
+      })
+
+      const unreadCounts = await Promise.all(promises)
+
+      const totalUnreadMessagesCount = unreadCounts.reduce(
+        (acc, count) => acc + count,
+        0,
+      )
+
+      return totalUnreadMessagesCount
     },
   },
   Mutation: {
@@ -226,13 +253,14 @@ const typeDefs = `
   type MessagesRelay {
     edges: [Message]
     pageInfo: PageInfo
-    unreadMessagesCount: Int
+    unreadMessagesCount: Int!
     firstUnreadMessageId: ID
   }
 
   extend type Query {
     message(messageId: ID): Message
     messages(channelId: ID, first: Int, after: String, before: String): MessagesRelay
+    unreadMessagesCount(channelIds: [ID!]!): Int!
   }
 
   extend type Mutation {

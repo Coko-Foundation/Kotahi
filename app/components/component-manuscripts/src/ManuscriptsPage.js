@@ -3,6 +3,7 @@
 import React, { useState, useContext } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useTranslation } from 'react-i18next'
 import {
   useQuery,
   useMutation,
@@ -30,8 +31,10 @@ import {
   useQueryParams,
 } from '../../../shared/urlParamUtils'
 import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
+import useChat from '../../../hooks/useChat'
 
 const ManuscriptsPage = ({ currentUser, history }) => {
+  const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const { urlFrag } = config
   const chatRoomId = fnv.hash(config.baseUrl).hex()
@@ -175,15 +178,31 @@ const ManuscriptsPage = ({ currentUser, history }) => {
 
   const shouldAllowBulkImport = config?.manuscript?.manualImport
 
+  const groupManagerDiscussionChannel =
+    systemWideDiscussionChannel?.data?.systemWideDiscussionChannel
+
+  const channels = [
+    {
+      id: groupManagerDiscussionChannel?.id,
+      name: t('chat.Group Manager discussion'),
+      type: groupManagerDiscussionChannel?.type,
+    },
+  ]
+
+  const chatProps = useChat(channels)
+
   return (
     <Manuscripts
       applyQueryParams={applyQueryParams}
       archiveManuscriptMutations={archiveManuscriptMutations}
+      channels={channels}
+      chatProps={chatProps}
       chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
       confirmBulkArchive={confirmBulkArchive}
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
+      groupManagerDiscussionChannel={groupManagerDiscussionChannel}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}
       isImporting={isImporting}
@@ -194,7 +213,6 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
-      systemWideDiscussionChannel={systemWideDiscussionChannel}
       uriQueryParams={uriQueryParams}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}

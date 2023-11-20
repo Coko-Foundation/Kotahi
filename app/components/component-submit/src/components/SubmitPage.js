@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { debounce, set } from 'lodash'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
 import query, { fragmentFields } from '../userManuscriptFormQuery'
@@ -20,6 +21,7 @@ import {
   COMPLETE_COMMENT,
   DELETE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
+import useChat from '../../../../hooks/useChat'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -76,6 +78,7 @@ const deleteFileMutation = gql`
 let debouncers = {}
 
 const SubmitPage = ({ currentUser, match, history }) => {
+  const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const { urlFrag } = config
 
@@ -104,6 +107,28 @@ const SubmitPage = ({ currentUser, match, history }) => {
     },
     { refetchOnMount: true },
   )
+
+  let channelId
+
+  let editorialChannel
+
+  if (
+    Array.isArray(data?.manuscript.channels) &&
+    data?.manuscript.channels.length
+  ) {
+    editorialChannel = data?.manuscript.channels.find(c => c.type === 'all')
+    channelId = editorialChannel?.id
+  }
+
+  const channels = [
+    {
+      id: channelId,
+      name: t('chat.Discussion with editor'),
+      type: editorialChannel?.type,
+    },
+  ]
+
+  const chatProps = useChat(channels)
 
   const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)
@@ -250,11 +275,15 @@ const SubmitPage = ({ currentUser, match, history }) => {
 
   return (
     <Submit
+      channelId={channelId}
+      channels={channels}
+      chatProps={chatProps}
       createFile={createFile}
       createNewVersion={createNewVersion}
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      manuscript={manuscript}
       manuscriptLatestVersionId={manuscriptLatestVersionId}
       match={match}
       onChange={handleChange}

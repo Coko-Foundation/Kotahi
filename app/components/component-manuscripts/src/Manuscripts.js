@@ -57,6 +57,10 @@ const FlexRowWithSmallGapAbove = styled(FlexRow)`
   margin-top: 10px;
 `
 
+const RoundIconButtonWrapper = styled(RoundIconButton)`
+  position: sticky;
+`
+
 const Manuscripts = ({ history, ...props }) => {
   const {
     applyQueryParams,
@@ -70,7 +74,6 @@ const Manuscripts = ({ history, ...props }) => {
     queryObject,
     sortDirection,
     sortName,
-    systemWideDiscussionChannel,
     page,
     urlFrag,
     chatRoomId,
@@ -80,16 +83,23 @@ const Manuscripts = ({ history, ...props }) => {
     confirmBulkArchive,
     uriQueryParams,
     currentUser,
+    chatProps,
+    groupManagerDiscussionChannel,
+    channels,
   } = props
 
   const { t } = useTranslation()
 
   const config = useContext(ConfigContext)
 
+  const channelData = chatProps?.channelsData?.find(
+    channel => channel?.channelId === groupManagerDiscussionChannel?.id,
+  )
+
   const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
-  const [isAdminChatOpen, setIsAdminChatOpen] = useState(true)
+  const [isAdminChatOpen, setIsAdminChatOpen] = useState(false)
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
@@ -257,18 +267,22 @@ const Manuscripts = ({ history, ...props }) => {
     displayProps,
   )
 
-  const adminDiscussionChannel =
-    systemWideDiscussionChannel?.data?.systemWideDiscussionChannel
+  const hideChat = async () => {
+    try {
+      setIsAdminChatOpen(false)
 
-  const channels = [
-    {
-      id: adminDiscussionChannel?.id,
-      name: t('chat.Group Manager discussion'),
-      type: adminDiscussionChannel?.type,
-    },
-  ]
+      const { channelsData } = chatProps || {}
 
-  const hideChat = () => setIsAdminChatOpen(false)
+      const dataRefetchPromises = channelsData?.map(async channel => {
+        await channel?.refetchUnreadMessagesCount?.()
+        await channel?.refetchNotificationOptionData?.()
+      })
+
+      await Promise.all(dataRefetchPromises)
+    } catch (error) {
+      console.error('Error hiding chat:', error)
+    }
+  }
 
   const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(config.instanceName)
 
@@ -303,10 +317,11 @@ const Manuscripts = ({ history, ...props }) => {
         currentSearchQuery={currentSearchQuery}
       />
       {!isAdminChatOpen && (
-        <RoundIconButton
+        <RoundIconButtonWrapper
           iconName="MessageSquare"
           onClick={() => setIsAdminChatOpen(true)}
           title={t('chat.Show group manager discussion')}
+          unreadMessagesCount={channelData?.unreadMessagesCount}
         />
       )}
     </ControlsContainer>
@@ -392,10 +407,9 @@ const Manuscripts = ({ history, ...props }) => {
         {/* Group Manager Discussion, Video Chat, Hide Chat, Chat component */}
         {isAdminChatOpen && (
           <MessageContainer
-            channelId={
-              systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id
-            }
+            channelId={groupManagerDiscussionChannel?.id}
             channels={channels}
+            chatProps={chatProps}
             chatRoomId={chatRoomId}
             currentUser={currentUser}
             hideChat={hideChat}

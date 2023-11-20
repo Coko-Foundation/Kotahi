@@ -9,6 +9,7 @@ import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
 import { Columns, Manuscript, Chat, SectionContent } from '../../../../shared'
+import { ChatButton, CollapseButton } from '../style'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
@@ -25,6 +26,7 @@ const ReviewLayout = ({
   onSubmit,
   // isValid,
   status,
+  channels,
   updateReview,
   updateReviewJsonData,
   uploadFile,
@@ -32,10 +34,12 @@ const ReviewLayout = ({
   submissionForm,
   createFile,
   deleteFile,
+  manuscript,
   validateDoi,
   validateSuffix,
   decisionForm,
   threadedDiscussionProps,
+  chatProps,
 }) => {
   const config = useContext(ConfigContext)
   const reviewSections = []
@@ -45,6 +49,10 @@ const ReviewLayout = ({
 
   const decision = latestVersion.reviews.find(r => r.isDecision) || {}
   const { t } = useTranslation()
+
+  const channelData = chatProps?.channelsData?.find(
+    channel => channel?.channelId === channelId,
+  )
 
   const decisionIsComplete = [
     'accepted',
@@ -192,6 +200,25 @@ const ReviewLayout = ({
     })
   }
 
+  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(false)
+
+  const toggleSubmissionDiscussionVisibility = async () => {
+    try {
+      const { channelsData } = chatProps || {}
+
+      const dataRefetchPromises = channelsData?.map(async channel => {
+        await channel?.refetchUnreadMessagesCount?.()
+        await channel?.refetchNotificationOptionData?.()
+      })
+
+      await Promise.all(dataRefetchPromises)
+
+      setIsDiscussionVisible(prevState => !prevState)
+    } catch (error) {
+      console.error('Error toggling submission discussion visibility:', error)
+    }
+  }
+
   return (
     <Columns>
       <Manuscript>
@@ -201,9 +228,29 @@ const ReviewLayout = ({
           title={t('reviewPage.Versions')}
         />
       </Manuscript>
-      <Chat>
-        <MessageContainer channelId={channelId} currentUser={currentUser} />
-      </Chat>
+      {isDiscussionVisible && (
+        <Chat>
+          <MessageContainer
+            channelId={channelId}
+            channels={channels}
+            chatProps={chatProps}
+            currentUser={currentUser}
+          />
+          <CollapseButton
+            iconName="ChevronRight"
+            onClick={toggleSubmissionDiscussionVisibility}
+            title={t('chat.Hide Chat')}
+          />
+        </Chat>
+      )}
+      {!isDiscussionVisible && (
+        <ChatButton
+          iconName="MessageSquare"
+          onClick={toggleSubmissionDiscussionVisibility}
+          title={t('chat.Show Chat')}
+          unreadMessagesCount={channelData?.unreadMessagesCount}
+        />
+      )}
     </Columns>
   )
 }

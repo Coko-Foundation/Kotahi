@@ -5,6 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'
 import { color } from '../../theme'
+import RoundIconButton from './RoundIconButton'
+
+export const CompactChatButton = styled(RoundIconButton)`
+  height: 33px;
+  margin-top: 0;
+  min-width: 0;
+  width: 33px;
+`
 
 export const Tab = styled.div`
   background: ${({ active }) =>
@@ -52,22 +60,6 @@ export const TabContainer = styled.div.attrs(props => ({
 }))`
   align-items: stretch;
   display: flex;
-`
-
-const HideChatButton = styled.button`
-  align-items: center;
-  /* TODO: add a global style for this */
-  background-color: ${color.gray90};
-  border-radius: ${th('borderRadius')};
-  color: ${color.text};
-  display: flex;
-  float: right;
-  font-size: 16px;
-  padding: 6px 12px;
-
-  &:hover {
-    background-color: ${color.gray95};
-  }
 `
 
 const HiddenTabs = ({
@@ -122,9 +114,11 @@ const HiddenTabs = ({
 
         {/* TODO: Hide Chat could be a seperate component */}
         {hideChat && (
-          <HideChatButton onClick={hideChat}>
-            {t('chat.Hide Chat')}
-          </HideChatButton>
+          <CompactChatButton
+            iconName="ChevronRight"
+            onClick={hideChat}
+            title={t('chat.Hide Chat')}
+          />
         )}
       </HiddenTabsContainer>
 

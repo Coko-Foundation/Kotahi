@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
 import { set, debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
 import { CommsErrorBanner, Spinner } from '../../../shared'
@@ -41,6 +42,7 @@ import {
   DELETE_PENDING_COMMENT,
   UPDATE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
+import useChat from '../../../../hooks/useChat'
 
 export const updateManuscriptMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -79,6 +81,7 @@ const deleteFileMutation = gql`
 let debouncers = {}
 
 const DecisionPage = ({ currentUser, match }) => {
+  const { t } = useTranslation()
   // start of code from submit page to handle possible form changes
   const client = useApolloClient()
   const config = useContext(ConfigContext)
@@ -111,6 +114,34 @@ const DecisionPage = ({ currentUser, match }) => {
       groupId: config.groupId,
     },
   })
+
+  let editorialChannel, allChannel
+
+  // Protect if channels don't exist for whatever reason
+  if (
+    Array.isArray(data?.manuscript.channels) &&
+    data?.manuscript.channels.length
+  ) {
+    editorialChannel = data?.manuscript.channels.find(
+      c => c.type === 'editorial',
+    )
+    allChannel = data?.manuscript.channels.find(c => c.type === 'all')
+  }
+
+  const channels = [
+    {
+      id: allChannel?.id,
+      name: t('chat.Discussion with author'),
+      type: allChannel?.type,
+    },
+    {
+      id: editorialChannel?.id,
+      name: t('chat.Editorial discussion'),
+      type: editorialChannel?.type,
+    },
+  ]
+
+  const chatProps = useChat(channels)
 
   const [selectedEmail, setSelectedEmail] = useState('')
   const [externalEmail, setExternalEmail] = useState('')
@@ -385,6 +416,8 @@ const DecisionPage = ({ currentUser, match }) => {
       addReviewer={addReviewer}
       allUsers={users}
       canHideReviews={config?.controlPanel?.hideReview}
+      channels={channels}
+      chatProps={chatProps}
       createFile={createFile}
       createTaskEmailNotificationLog={createTaskEmailNotificationLog}
       createTeam={createTeam}
