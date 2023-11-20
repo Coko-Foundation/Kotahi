@@ -143,7 +143,7 @@ export const Columns = styled.div`
   }
 
   & > *:last-child {
-    flex: 1 2 28em;
+    flex: 1 1.5 28em;
   }
 `
 

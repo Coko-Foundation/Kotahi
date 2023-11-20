@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { useTheme } from 'styled-components'
 import * as icons from 'react-feather'
 import ActionButton from './ActionButton'
+import { color } from '../../theme'
 
 const RoundButton = styled(ActionButton)`
   align-items: center;
@@ -16,6 +17,19 @@ const RoundButton = styled(ActionButton)`
   }
 `
 
+const UnreadMessagesCount = styled.div`
+  background-color: ${color.brand1.base};
+  border-radius: 50%;
+  color: ${color.white};
+  font-size: 12px;
+  height: 19px;
+  line-height: 20px;
+  position: absolute;
+  right: 3px;
+  top: 0;
+  width: 19px;
+`
+
 const RoundIconButton = ({
   className,
   disabled,
@@ -23,6 +37,7 @@ const RoundIconButton = ({
   onClick,
   primary,
   title,
+  unreadMessagesCount,
 }) => {
   const theme = useTheme()
   const Icon = icons[iconName]
@@ -41,6 +56,9 @@ const RoundIconButton = ({
           size={18}
           strokeWidth={3}
         />
+      )}
+      {unreadMessagesCount > 0 && (
+        <UnreadMessagesCount>{unreadMessagesCount}</UnreadMessagesCount>
       )}
     </RoundButton>
   )

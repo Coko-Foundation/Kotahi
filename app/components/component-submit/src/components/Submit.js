@@ -22,6 +22,10 @@ import EditorSection from '../../../component-review/src/components/decision/Edi
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import SubmissionForm from './SubmissionForm'
+import {
+  ChatButton,
+  CollapseButton,
+} from '../../../component-review/src/components/style'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -37,11 +41,14 @@ const Submit = ({
   submissionForm,
   createNewVersion,
   currentUser,
-  parent,
   onChange,
   republish,
   onSubmit,
+  channelId,
+  chatProps,
+  parent,
   match,
+  channels,
   updateManuscript,
   createFile,
   deleteFile,
@@ -52,6 +59,15 @@ const Submit = ({
   validateSuffix,
 }) => {
   const config = useContext(ConfigContext)
+
+  const channelData = chatProps?.channelsData?.find(
+    channel => channel?.channelId === channelId,
+  )
+
+  const [
+    isSubmisionDiscussionVisible,
+    setIsSubmisionDiscussionVisible,
+  ] = React.useState(false)
 
   const allowAuthorsSubmitNewVersion =
     config?.submission?.allowAuthorsSubmitNewVersion
@@ -190,11 +206,22 @@ const Submit = ({
     })
   })
 
-  // Protect if channels don't exist for whatever reason
-  let channelId
+  const toggleSubmisionDiscussionVisibility = async () => {
+    try {
+      await channelData?.refetchUnreadMessagesCount()
+      const firstChannel = chatProps?.channelsData?.[0]
 
-  if (Array.isArray(parent.channels) && parent.channels.length) {
-    channelId = parent.channels.find(c => c.type === 'all').id
+      const refetchNotificationOptionData =
+        firstChannel?.refetchNotificationOptionData
+
+      if (refetchNotificationOptionData) {
+        await refetchNotificationOptionData()
+      }
+
+      setIsSubmisionDiscussionVisible(prevState => !prevState)
+    } catch (error) {
+      console.error('Error toggling submission discussion visibility:', error)
+    }
   }
 
   return (
@@ -207,9 +234,29 @@ const Submit = ({
           />
         </ErrorBoundary>
       </Manuscript>
-      <Chat>
-        <MessageContainer channelId={channelId} currentUser={currentUser} />
-      </Chat>
+      {isSubmisionDiscussionVisible && (
+        <Chat>
+          <MessageContainer
+            channelId={channelId}
+            channels={channels}
+            chatProps={chatProps}
+            currentUser={currentUser}
+          />
+          <CollapseButton
+            iconName="ChevronRight"
+            onClick={toggleSubmisionDiscussionVisibility}
+            title={t('chat.Hide Chat')}
+          />
+        </Chat>
+      )}
+      {!isSubmisionDiscussionVisible && (
+        <ChatButton
+          iconName="MessageSquare"
+          onClick={toggleSubmisionDiscussionVisibility}
+          title={t('chat.Show Chat')}
+          unreadMessagesCount={channelData?.unreadMessagesCount}
+        />
+      )}
     </Columns>
   )
 }

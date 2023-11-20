@@ -46,6 +46,7 @@ const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] img'
 // Chat
 const MESSAGE_CONTAINER = '.General__Chat-sc-1chiust-18'
 const CHAT_TAB = '[class*=General__Chat] [data-test-id=tab-container]'
+const EXPAND_CHAT_BUTTON = '[class*=style__ChatButton]'
 
 // Multiple Elements
 const SUBMIT_BUTTON = 'decision-action-btn' // Also Matches Notify Button
@@ -287,6 +288,12 @@ export const ControlPage = {
   },
   getMessageContainer() {
     return cy.get(MESSAGE_CONTAINER)
+  },
+  getExpandChatButton() {
+    return cy.get(EXPAND_CHAT_BUTTON)
+  },
+  clickExpandChatButton() {
+    this.getExpandChatButton().click()
   },
   getChatTab() {
     return cy.get(CHAT_TAB)

@@ -5,6 +5,7 @@ import { useMutation, useQuery, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { set, debounce } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
@@ -16,6 +17,7 @@ import {
   DELETE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 import { UPDATE_REVIEWER_STATUS_MUTATION } from '../../../../queries/team'
+import useChat from '../../../../hooks/useChat'
 
 const createFileMutation = gql`
   mutation($file: Upload!, $meta: FileMetaInput!) {
@@ -224,6 +226,7 @@ const updateReviewMutationQuery = gql`
 `
 
 const ReviewPage = ({ currentUser, history, match }) => {
+  const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const { urlFrag } = config
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
@@ -252,6 +255,29 @@ const ReviewPage = ({ currentUser, history, match }) => {
     },
     partialRefetch: true,
   })
+
+  let editorialChannelId
+
+  if (
+    Array.isArray(data?.manuscript.channels) &&
+    data?.manuscript.channels.length
+  ) {
+    const editorialChannel = data?.manuscript.channels.find(
+      c => c.type === 'editorial',
+    )
+
+    editorialChannelId = editorialChannel?.id
+  }
+
+  const channels = [
+    {
+      id: editorialChannelId,
+      name: t('chat.Discussion with editorial team'),
+      type: 'editorial',
+    },
+  ]
+
+  const chatProps = useChat(channels)
 
   const updateReviewJsonData = (manuscriptId, review, value, path) => {
     const delta = {} // Only the changed fields
@@ -457,10 +483,13 @@ const ReviewPage = ({ currentUser, history, match }) => {
   return (
     <ReviewLayout
       channelId={channelId}
+      channels={channels}
+      chatProps={chatProps}
       createFile={createFile}
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      manuscript={manuscript}
       onSubmit={handleSubmit}
       review={existingReview}
       reviewForm={reviewForm}

@@ -23,6 +23,7 @@ describe('Manuscripts page tests', () => {
     })
 
     it('check Submit and Video Chat buttons are visible', () => {
+      ManuscriptsPage.clickExpandChatButton()
       ManuscriptsPage.getSubmitButton().should('be.visible')
       ManuscriptsPage.getLiveChatButton().should('be.visible')
     })
