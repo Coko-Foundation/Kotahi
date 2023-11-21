@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { v4 as uuid } from 'uuid'
 import { debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
+import { grid } from '@pubsweet/ui-toolkit'
 import { ActionButton, TextInput } from '../../shared'
 import FormWaxEditor from '../../component-formbuilder/src/components/FormWaxEditor'
 import TaskNotificationDetails from './TaskNotificationDetails'
@@ -40,6 +41,8 @@ const TaskRecipientsContainer = styled.div`
 `
 
 const TaskSectionContainer = styled.div`
+  margin-bottom: ${grid(4)};
+
   &:first-child {
     padding-top: 0;
   }
@@ -79,7 +82,11 @@ const AssigneeFieldContainer = styled(BaseFieldContainer)`
 `
 
 const DescriptionFieldContainer = styled(BaseFieldContainer)`
-  margin-top: 40px;
+  margin-top: ${grid(5)};
+
+  & .wax-surface-scroll {
+    height: 100px;
+  }
 `
 
 const DueDateFieldContainer = styled(BaseFieldContainer)`
