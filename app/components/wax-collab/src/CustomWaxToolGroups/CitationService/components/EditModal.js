@@ -16,9 +16,11 @@ const EditModal = ({
   closeModal,
   styleReference,
 }) => {
+  // console.log('Coming in: ', citationData, formattedCitation)
   const [currentText, setCurrentText] = useState(formattedCitation)
   const [reRender, setReRender] = useState(-1)
   const [currentCitation, setCurrentCitation] = useState({})
+  const [initialCitation, setIntitialCitation] = useState({})
 
   const sendToCiteProc = async csl => {
     // console.log('going to citeproc: ', csl)
@@ -29,8 +31,17 @@ const EditModal = ({
   const formatCurrentCitation = async () => {
     // console.log('Formatting current citation!')
     // maybe this is an effect loop?
+
     const newCitation = currentCitation
-    newCitation.formattedCitation = await sendToCiteProc(currentCitation)
+
+    // If the citation has not changed, don't send it through Citeproc
+    // Previously if you clicked "Edit" on a plaintext citation, this would turn into an empty citation
+    // which is not correct. This should only happen if the content of the CSL has changed.
+    newCitation.formattedCitation =
+      JSON.stringify(newCitation) === JSON.stringify(initialCitation)
+        ? formattedCitation
+        : await sendToCiteProc(currentCitation)
+
     setCurrentText(currentCitation.formattedCitation)
     setCurrentCitation(newCitation)
   }
@@ -60,6 +71,7 @@ const EditModal = ({
       ...(citationData === '{}' ? {} : citationData),
     }
 
+    setIntitialCitation(newCitation)
     setCurrentCitation(newCitation)
   }, [citationData])
   // console.log('Re-rendering:', currentCitation)
