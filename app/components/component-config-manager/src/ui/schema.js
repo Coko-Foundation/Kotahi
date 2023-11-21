@@ -825,32 +825,6 @@ const generateSchema = (
                         title: t('configPage.useSandbox'),
                         default: false,
                       },
-                      crossrefRetrievalEmail: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefRetrievalEmail'),
-                        default: '',
-                      },
-                      crossrefSearchResultCount: {
-                        type: 'number',
-                        description: t('configPage.crossrefSearchResultCount'),
-                        default: 3,
-                      },
-                      styleName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefStyleName'),
-                        enum: [
-                          'apa',
-                          'chicago-note-bibliogrpahy',
-                          'counctil-of-science-editors-alphabetical',
-                        ],
-                        default: 'apa',
-                      },
-                      localeName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefLocaleName'),
-                        enum: ['en-US', 'en-GB'],
-                        default: 'en-US',
-                      },
                     },
                   },
                   webhook: {
@@ -1363,32 +1337,6 @@ const generateSchema = (
                         title: t('configPage.useSandbox'),
                         default: false,
                       },
-                      crossrefRetrievalEmail: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefRetrievalEmail'),
-                        default: '',
-                      },
-                      crossrefSearchResultCount: {
-                        type: 'number',
-                        description: t('configPage.crossrefSearchResultCount'),
-                        default: 3,
-                      },
-                      styleName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefStyleName'),
-                        enum: [
-                          'apa',
-                          'chicago-note-bibliogrpahy',
-                          'counctil-of-science-editors-alphabetical',
-                        ],
-                        default: 'apa',
-                      },
-                      localeName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefLocaleName'),
-                        enum: ['en-US', 'en-GB'],
-                        default: 'en-US',
-                      },
                     },
                   },
                   webhook: {
@@ -1896,32 +1844,6 @@ const generateSchema = (
                         type: 'boolean',
                         title: t('configPage.useSandbox'),
                         default: false,
-                      },
-                      crossrefRetrievalEmail: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefRetrievalEmail'),
-                        default: '',
-                      },
-                      crossrefSearchResultCount: {
-                        type: 'number',
-                        description: t('configPage.crossrefSearchResultCount'),
-                        default: 3,
-                      },
-                      styleName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefStyleName'),
-                        enum: [
-                          'apa',
-                          'chicago-note-bibliogrpahy',
-                          'counctil-of-science-editors-alphabetical',
-                        ],
-                        default: 'apa',
-                      },
-                      localeName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefLocaleName'),
-                        enum: ['en-US', 'en-GB'],
-                        default: 'en-US',
                       },
                     },
                   },
@@ -2431,32 +2353,6 @@ const generateSchema = (
                         type: 'boolean',
                         title: t('configPage.useSandbox'),
                         default: false,
-                      },
-                      crossrefRetrievalEmail: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefRetrievalEmail'),
-                        default: '',
-                      },
-                      crossrefSearchResultCount: {
-                        type: 'number',
-                        description: t('configPage.crossrefSearchResultCount'),
-                        default: 3,
-                      },
-                      styleName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefStyleName'),
-                        enum: [
-                          'apa',
-                          'chicago-note-bibliogrpahy',
-                          'counctil-of-science-editors-alphabetical',
-                        ],
-                        default: 'apa',
-                      },
-                      localeName: {
-                        type: ['string', 'null'],
-                        description: t('configPage.crossrefLocaleName'),
-                        enum: ['en-US', 'en-GB'],
-                        default: 'en-US',
                       },
                     },
                   },
