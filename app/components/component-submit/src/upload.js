@@ -169,16 +169,18 @@ const doubleBackSlashReplace = groups => {
 }
 
 const cleanMath = file => {
-  // We are getting back math-display in the form <p><math-display>[equation]</math-display></p>
+  // We are getting back math-display in the form <[block-tag]><math-display>[equation]</math-display></>
   // Wax sees math-display as a block-level node; if it is nested in a paragraph, we get <p>[equotion]</p>
   // This looks for math-display inside of a paragraph and replaces it with <math-display>[equation]</math-display>
   const $ = cheerio.load(file)
-  $('p math-display').each((index, el) => {
-    const interior = $(el).html()
-    $($(el)[0].parentNode).replaceWith(
-      String.raw`<math-display class="math-node">${interior}</math-display>`,
-    ) // String.raw is to make sure there are no escapes
-  })
+  $('p math-display, h2 math-display, h3 math-display, h4 math-display').each(
+    (index, el) => {
+      const interior = $(el).html()
+      $($(el)[0].parentNode).replaceWith(
+        String.raw`<math-display class="math-node">${interior}</math-display>`,
+      ) // String.raw is to make sure there are no escapes
+    },
+  )
   return $.html()
 }
 
