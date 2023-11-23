@@ -1,8 +1,21 @@
 const { BaseModel } = require('@coko/server')
+const { debounce } = require('lodash')
+const { sendAutomatedNotifications } = require('../../utils/jobUtils')
+
+const debounceSendAutomatedNotifications = debounce(
+  sendAutomatedNotifications,
+  5000,
+)
 
 class NotificationDigest extends BaseModel {
   static get tableName() {
     return 'notification_digest'
+  }
+
+  async $afterInsert(queryContext) {
+    await super.$afterInsert(queryContext)
+
+    await debounceSendAutomatedNotifications(this.groupId)
   }
 
   static get relationMappings() {
