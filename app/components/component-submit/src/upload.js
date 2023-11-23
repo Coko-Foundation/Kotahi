@@ -18,6 +18,69 @@ const stripTags = file => {
   return file.match(reg)[1]
 }
 
+const cleanOutInlineImages = file => {
+  // If we have content like this: <p>[text]<figure />[text]</p> we want to output
+  // <p>[text]</p>
+  // <figure />
+  // <p>[text]</p>
+  // where the <p>...</p> is the original tag – effectively we're splitting at figures
+  const $ = cheerio.load(file)
+
+  const getOuterHtml = element => {
+    let out = ''
+    $(element).each((index, elem) => {
+      const $this = $(elem)
+      out += $.html($this)
+    })
+    return out
+  }
+
+  const wrappedFigureTags = $(
+    'p figure, h1 figure, h2 figure, h3 figure, h4 figure, h5 figure, h6 figure',
+  )
+
+  $(wrappedFigureTags).each((index, el) => {
+    const parent = $(el)[0].parentNode
+    // This function is being used because the block tags are coming in with attributes; I want to keep them.
+    const parentOuterHtml = getOuterHtml(parent) // This is the parent (<p />, <h2 />, etc.) outerhtml
+
+    const [parentStartTag, parentEndTag] = parentOuterHtml
+      .replace($(parent).html(), '@@@')
+      .split('@@@')
+
+    let remainingFigureHtml = $(parent).html() // this is the inner html of the parent
+    let outHtml = ''
+
+    while (remainingFigureHtml.length) {
+      const [paragraphText, ...figurePlus] = remainingFigureHtml.split(
+        '<figure',
+      )
+
+      const stringFigurePlus = [...figurePlus].join('<figure')
+
+      // If there is text before a figure, send it with parent tag
+      if (paragraphText.length) {
+        outHtml += `\n${parentStartTag}${paragraphText}${parentEndTag}`
+      }
+
+      if (stringFigurePlus.length) {
+        // figure out the figure html and what's after it
+        const [figureHtml, ...remnant] = stringFigurePlus.split('</figure')
+        const stringRemnant = [...remnant].join('</figure')
+        outHtml += `\n<figure${figureHtml}</figure>`
+        // if there's anything left, keep going
+        remainingFigureHtml = stringRemnant.substring(1, stringRemnant.length) // snip off leftover ">"
+      } else {
+        remainingFigureHtml = ''
+      }
+    }
+
+    $(el).replaceWith(outHtml) // Replace original parent with generated html
+  })
+
+  return $.html()
+}
+
 const cleanOutWmfs = file => {
   const wmfRegex = /"data:image\/[ew]mf;base64,[0-9a-zA-Z/+=]*"/g
 
@@ -530,10 +593,12 @@ export default ({
         uploadResponse = await DocxToHTMLPromise(file, data, client)
         // console.log('uploadResponse before cleaning: ', uploadResponse.response)
 
-        uploadResponse.response = cleanOutWmfs(
-          cleanMath(
-            stripTags(
-              stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
+        uploadResponse.response = cleanOutInlineImages(
+          cleanOutWmfs(
+            cleanMath(
+              stripTags(
+                stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
+              ),
             ),
           ),
         )
