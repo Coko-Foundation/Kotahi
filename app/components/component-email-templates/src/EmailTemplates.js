@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
+// eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
 import { RoundIconButton } from '../../shared'
 import EmailTemplateContent from './EmailTemplateContent'
@@ -55,7 +56,7 @@ const EmailTemplates = ({
           title={t('emailTemplate.addANewEmailTemplate')}
         />
       </EditPageLeft>
-      <EditPageRight>
+      <EditPageRight key={activeTemplate?.id}>
         <PageHeader
           leftSideOnly
           mainHeading={
