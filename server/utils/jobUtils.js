@@ -26,7 +26,7 @@ const getJobs = async (activeConfig, groupId) => {
   if (activeConfig.formData.manuscript.autoImportHourUtc) {
     // Job 1: Importing and archiving Manuscripts
     jobs.push({
-      name: 'Importing and archiving Manuscripts',
+      name: `Importing and archiving Manuscripts - ${groupId}`,
       rule: {
         tz: 'Etc/UTC',
         rule: `00 ${activeConfig.formData.manuscript.autoImportHourUtc} * * *`,
@@ -53,7 +53,7 @@ const getJobs = async (activeConfig, groupId) => {
   jobs.push(
     // Job 2: Tracking overdue tasks
     {
-      name: 'Tracking overdue tasks',
+      name: `Tracking overdue tasks - ${groupId}`,
       rule: {
         tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
         rule: `00 00 * * *`,
@@ -73,7 +73,7 @@ const getJobs = async (activeConfig, groupId) => {
     },
     // Job 3: Sending task email notifications
     {
-      name: 'Sending task email notifications',
+      name: `Sending task email notifications - ${groupId}`,
       rule: {
         tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
         rule: `00 00 * * *`,
@@ -91,14 +91,74 @@ const getJobs = async (activeConfig, groupId) => {
         }
       },
     },
-    // Job 4: Sending automated alerts
+    // Job 4: Delete actioned entries from notification digest
     {
-      name: 'Sending automated alerts',
+      name: `Delete actioned entries from notification digest - ${groupId}`,
       rule: {
         tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
-        rule: `* * * * *`,
+        rule: `0 0 * * *`,
       },
       fn: async () => {
+        // eslint-disable-next-line no-console
+        console.info(
+          `Deleting actioned entries from notification digest ${new Date().toISOString()}`,
+        )
+
+        try {
+          await deleteActionedEntries(groupId)
+          await sendAutomatedNotifications(groupId)
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    },
+    // Other new jobs..
+  )
+
+  return jobs
+}
+
+const sendAutomatedNotifications = async groupId => {
+  try {
+    const upcomingNotificationDigest = await models.NotificationDigest.query()
+      .select('maxNotificationTime')
+      .from(
+        models.NotificationDigest.query()
+          .distinctOn(['userId', 'pathString'])
+          .where({ groupId })
+          .orderBy([
+            'userId',
+            'pathString',
+            { column: 'maxNotificationTime', order: 'asc' },
+          ])
+          .as('subquery'),
+      )
+      .where({ actioned: false })
+      .orderBy('maxNotificationTime', 'asc')
+      .first()
+
+    const upcomingNotificationTime =
+      upcomingNotificationDigest?.maxNotificationTime
+
+    if (!upcomingNotificationTime) {
+      // eslint-disable-next-line no-console
+      console.info('No upcoming notifications found.')
+      return
+    }
+
+    const currentDate = new Date()
+
+    const notificationTime =
+      upcomingNotificationTime <= currentDate
+        ? new Date(currentDate.getTime() + 10000)
+        : upcomingNotificationTime
+
+    const schedule = new ScheduleManager()
+
+    schedule.start(
+      `Sending automated alerts - ${groupId}`,
+      notificationTime,
+      async () => {
         const disableSendNotificationsScheduler =
           process.env.DISABLE_EVENT_NOTIFICATIONS === 'true'
 
@@ -113,35 +173,15 @@ const getJobs = async (activeConfig, groupId) => {
 
         try {
           await sendNotifications(groupId)
+          await sendAutomatedNotifications(groupId)
         } catch (error) {
           console.error(error)
         }
       },
-    },
-    // Job 5: Delete actioned entries from notification digest
-    {
-      name: 'Delete actioned entries from notification digest',
-      rule: {
-        tz: `${activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC'}`,
-        rule: `0 0 * * *`,
-      },
-      fn: async () => {
-        // eslint-disable-next-line no-console
-        console.info(
-          `Deleting actioned entries from notification digest ${new Date().toISOString()}`,
-        )
-
-        try {
-          await deleteActionedEntries(groupId)
-        } catch (error) {
-          console.error(error)
-        }
-      },
-    },
-    // Other new jobs..
-  )
-
-  return jobs
+    )
+  } catch (error) {
+    console.error('Error scheduling job:', error)
+  }
 }
 
 const initiateJobSchedules = async () => {
@@ -152,15 +192,17 @@ const initiateJobSchedules = async () => {
     const jobs = await getJobs(activeConfig, group.id)
 
     // eslint-disable-next-line no-console
-    console.info(`Schedule Jobs for group "${group.name}"`)
+    console.info(`Schedule Jobs for group "${group.name}" - ${group.id}`)
     jobs.forEach(job => {
       const schedule = new ScheduleManager()
       schedule.start(job.name, job.rule, job.fn)
     })
+    await sendAutomatedNotifications(group.id)
   })
 }
 
 module.exports = {
   getJobs,
   initiateJobSchedules,
+  sendAutomatedNotifications,
 }

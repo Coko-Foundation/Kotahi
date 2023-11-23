@@ -7,7 +7,13 @@ class ScheduleManager {
   }
 
   start(name, rule, func) {
-    const job = schedule.scheduleJob(rule, func)
+    const existingJob = schedule.scheduledJobs[name]
+
+    if (existingJob) {
+      existingJob.cancel()
+    }
+
+    const job = schedule.scheduleJob(name, rule, func)
     logger.info(`Schedule ${name} started`)
     this.jobs.push(job)
     return job
