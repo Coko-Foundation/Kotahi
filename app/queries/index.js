@@ -416,6 +416,7 @@ export const GET_EMAIL_TEMPLATES = gql`
         description
         ccEditors
       }
+      groupId
     }
   }
 `

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Formik } from 'formik'
+// eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
 import { FullWidthAndHeightContainer } from '../../component-cms-manager/src/style'
 import EmailTemplateEditForm from './EmailTemplateEditForm'
@@ -66,7 +67,7 @@ const EmailTemplateContent = ({
     setSubmitButtonStatus('success')
   }
 
-  const createNewPage = async formData => {
+  const createNewTemplate = async formData => {
     const inputData = {
       emailContent: {
         subject: formData?.subject,
@@ -117,7 +118,7 @@ const EmailTemplateContent = ({
           ccEditors: activeTemplate?.emailContent?.ccEditors || false,
         }}
         onSubmit={async values =>
-          isNewEmailTemplate ? createNewPage(values) : handleUpdate(values)
+          isNewEmailTemplate ? createNewTemplate(values) : handleUpdate(values)
         }
         validate={values => {
           const errors = {}

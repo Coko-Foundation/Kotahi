@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ValidatedFieldFormik } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
 import { debounce, camelCase } from 'lodash'
+// eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
 import { emailTemplateInputFields } from '../../component-cms-manager/src/FormSettings'
 import { ConfirmationModal } from '../../component-modal/src/ConfirmationModal'
@@ -31,7 +32,25 @@ const EmailTemplateEditForm = ({
   const { t } = useTranslation()
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const autoSave = useCallback(debounce(autoSaveData ?? (() => {}), 1000), [])
-  useEffect(() => autoSave.flush, [])
+  useEffect(() => {
+    return () => {
+      autoSave.flush()
+    }
+  }, [])
+
+  const onDataChanged = (itemKey, value) => {
+    const { created, updated, ...rest } = activeTemplate
+
+    const data = {
+      ...rest,
+      emailContent: {
+        ...activeTemplate.emailContent,
+        [itemKey]: value,
+      },
+    }
+
+    autoSave(rest.id, data)
+  }
 
   const getInputFieldSpecificProps = item => {
     let props = {}
@@ -63,6 +82,7 @@ const EmailTemplateEditForm = ({
       case 'SimpleWaxEditor':
         props.onChange = value => {
           setFieldValue(item.name, value)
+          onDataChanged(item.name, value)
         }
 
         break
