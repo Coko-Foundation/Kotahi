@@ -2,10 +2,28 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 const { difference, map } = require('lodash')
-const { Channel, Group, Team, EmailTemplate } = require('@pubsweet/models')
+const path = require('path')
+const fs = require('fs-extra').promises
+
+const {
+  Channel,
+  Group,
+  Team,
+  EmailTemplate,
+  ArticleTemplate,
+} = require('@pubsweet/models')
+
 const seedConfig = require('./seedConfig')
 const seedForms = require('./seedForms')
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')
+const { generateCss } = require('../server/pdfexport/applyTemplate')
+
+const defaultTemplatePath = path.resolve(
+  __dirname,
+  '../server/pdfexport/pdfTemplates',
+)
+
+const userTemplatePath = path.resolve(__dirname, '../config/journal/export')
 
 const createGroupAndRelatedData = async (groupName, instanceName, index) => {
   const groupExists = await Group.query().findOne({ name: groupName })
@@ -107,6 +125,44 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
   } else {
     console.log(
       `    ${groupManagerTeamExists.name} team already exists in database for "${group.name}". Skipping.`,
+    )
+  }
+
+  // Seed Group Templates and link it to the created group
+  const existingArticleTemplate = await ArticleTemplate.query().where({
+    groupId: group.id,
+  })
+
+  if (existingArticleTemplate.length === 0) {
+    const cssTemplate = await generateCss()
+    let articleTemplate = ''
+
+    try {
+      const userTemplateBuffer = await fs.readFile(
+        `${userTemplatePath}/article.njk`,
+      )
+
+      articleTemplate += userTemplateBuffer.toString()
+    } catch {
+      console.error('No user PagedJS stylesheet found')
+
+      const defaultTemplateBuffer = await fs.readFile(
+        `${defaultTemplatePath}/article.njk`,
+      )
+
+      articleTemplate += defaultTemplateBuffer
+    }
+
+    await ArticleTemplate.query().insertGraph({
+      article: articleTemplate,
+      css: cssTemplate,
+      groupId: group.id,
+    })
+
+    console.log(`Added default group template for "${group.name}".`)
+  } else {
+    console.log(
+      `    ${existingArticleTemplate.length} group templates already exists in database for "${group.name}". Skipping.`,
     )
   }
 

@@ -852,6 +852,10 @@ const en = {
         'Some targets failed to publish': 'Some targets failed to publish.',
         'Publishing error': 'Publishing error',
       },
+      deleteFile: {
+        'Are you sure you want to delete this file?':
+          'Are you sure you want to delete this file?',
+      },
     },
 
     newSubmission: {

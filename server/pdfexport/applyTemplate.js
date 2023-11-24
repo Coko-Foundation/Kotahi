@@ -84,20 +84,25 @@ const userTemplateEnv = nunjucks.configure(userTemplatePath, {
   cache: false,
 })
 
-let template = {}
-
-try {
-  // If there is a user template, use that instead
-  template = userTemplateEnv.getTemplate('article.njk')
-} catch (e) {
-  console.error('No user template found, using default')
-  template = defaultTemplateEnv.getTemplate('article.njk')
-}
-
-const applyTemplate = async (articleData, includeFontLinks) => {
+const applyTemplate = async ({ articleData, groupData }, includeFontLinks) => {
   if (!articleData) {
     // Error handling: if there's no manuscript.meta.source, what should we return?
     return ''
+  }
+
+  let template = {}
+
+  try {
+    // if there is a group template use that
+    if (groupData.article) {
+      template.tmplStr = groupData.article.toString()
+    } else {
+      // If there is a user template, use that instead
+      template = userTemplateEnv.getTemplate('article.njk')
+    }
+  } catch (e) {
+    console.error('No user template found, using default')
+    template = defaultTemplateEnv.getTemplate('article.njk')
   }
 
   const thisArticle = articleData
@@ -110,6 +115,7 @@ const applyTemplate = async (articleData, includeFontLinks) => {
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.articleMetadata = articleMetadata(thisArticle)
   // console.log('thisArticle.articleMetadata: ', thisArticle.articleMetadata)
+
   let renderedHtml = nunjucks.renderString(template.tmplStr, {
     article: thisArticle,
   })

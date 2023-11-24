@@ -51,6 +51,8 @@ services:
     command:
       [
         'node_modules/.bin/nodemon',
+        '--ignore',
+        'tmp/',
         'startServer.js',
         '--',
         'server',
@@ -162,7 +164,7 @@ services:
   pagedjs:
     depends_on:
       - db-pagedjs
-    image: cokoapps/pagedjs:1.4.0
+    image: cokoapps/pagedjs:1.6.9
     ports:
       - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
     environment:

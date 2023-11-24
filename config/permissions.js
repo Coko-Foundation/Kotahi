@@ -156,6 +156,12 @@ const isCMSFile = rule({ cache: 'contextual' })(
   },
 )
 
+const isExportTemplatingFile = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return parent.tags && parent.tags.includes('templateGroupAsset')
+  },
+)
+
 const isPublicReviewFromPublishedManuscript = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     if (parent.isHiddenFromAuthor || !parent.manuscriptId) return false
@@ -628,6 +634,7 @@ const permissions = {
   PaginatedManuscripts: allow,
   Manuscript: allow,
   File: or(
+    isExportTemplatingFile,
     isCMSFile,
     isPublicFileFromPublishedManuscript,
     userIsAuthorOfTheManuscriptOfTheFile,

@@ -873,6 +873,10 @@ const ru = {
           'Не удалось опубликовать некоторые цели.',
         'Publishing error': 'Ошибка публикации',
       },
+      deleteFile: {
+        'Are you sure you want to delete this file?':
+          'Вы уверены, что хотите удалить этот файл?',
+      },
     },
     newSubmission: {
       'New submission': 'Загрузить новую статью',
