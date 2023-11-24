@@ -878,6 +878,10 @@ const fr = {
           'Échec de la publication de certaines cibles.',
         'Publishing error': 'Erreur de publication',
       },
+      deleteFile: {
+        'Are you sure you want to delete this file?':
+          'Êtes-vous sûr de vouloir supprimer ce fichier ?',
+      },
     },
 
     newSubmission: {

@@ -878,6 +878,10 @@ const esLa = {
           'Algunos objetivos no pudieron publicarse.',
         'Publishing error': 'Error de publicación',
       },
+      deleteFile: {
+        'Are you sure you want to delete this file?':
+          '¿Estás seguro/a de que deseas eliminar este archivo?',
+      },
     },
     newSubmission: {
       'New submission': 'Nueva presentación',

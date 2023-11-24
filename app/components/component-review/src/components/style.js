@@ -92,7 +92,7 @@ export const Heading = styled.span`
 `
 
 export const Cell = styled.span`
-  grid-column: span 2 / span 2;
+  grid-column: span 1 / span 1;
   padding: 0;
 `
 
