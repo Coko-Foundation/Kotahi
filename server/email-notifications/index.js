@@ -50,10 +50,6 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     loginLink: `<a href="${data.appUrl}/login" target="_blank">${data.appUrl}/login</a>`,
   })
 
-  if (config['notification-email'].cc_enabled === 'false') {
-    mailOptions.cc = ''
-  }
-
   mailOptions.from = activeConfig.formData.notification.gmailSenderEmail
 
   // Override recipient(s) if not running in production.
