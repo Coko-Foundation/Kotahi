@@ -6,7 +6,7 @@ import { TextInput, Heading, ActionButton } from '../../shared'
 import { SecondaryButton } from '../../component-modal/src/Modal'
 
 export const Section = styled.div`
-  margin: 16px 16px 0px 0px;
+  margin: 8px 8px 0px 0px;
   ${props =>
     props.flexGrow &&
     css`
@@ -47,7 +47,7 @@ export const Heading2 = styled(Heading)`
 `
 
 export const SidebarPageRow = styled.div`
-  align-items: center;
+  align-items: start;
   border-bottom: 1px solid #dedede;
   display: flex;
   justify-content: space-between;
@@ -67,17 +67,23 @@ export const ColorInput = styled(TextInput)`
 
 export const EditPageContainer = styled.div`
   display: flex;
-  overflow: scroll;
+  overflow: auto;
 `
 
 export const EditPageLeft = styled.div`
-  min-width: 10rem;
+  min-width: 250px;
+  overflow-y: scroll;
+  padding-bottom: 16px;
   padding-top: 16px;
+  width: 250px;
 `
 
 export const EditPageRight = styled.div`
   background-color: #f4f5f7;
   flex-grow: 1;
+  overflow-y: scroll;
+  padding-bottom: 16px;
+
   padding-left: 16px;
   padding-top: 16px;
 `
@@ -111,7 +117,7 @@ export const FullWidthAndHeightContainer = styled.div`
 
   @media screen and (min-width: 1440px) {
     .full-wax-editor-grid {
-      height: 500px; /* Double the height when screen width is above 1440 pixels */
+      min-height: 250px; /* Double the height when screen width is above 1440 pixels */
     }
   }
 `
@@ -122,10 +128,10 @@ export const SimpleWaxEditorContainer = styled.div`
   }
 
   .wax-surface-scroll {
-    height: 250px;
+    min-height: 250px;
 
     @media screen and (min-width: 1440px) {
-      height: 500px; /* Double the height when screen width is above 1440 pixels */
+      min-height: 250px; /* Double the height when screen width is above 1440 pixels */
     }
   }
 `
@@ -192,6 +198,8 @@ export const LayoutSecondaryHeading = styled(Heading)`
 `
 export const RightArrow = styled(ChevronRight)`
   height: ${grid(2)};
+  margin-bottom: 12px;
+  margin-top: 12px;
   stroke: ${th('colorPrimary')};
   stroke-width: 4px;
   width: ${grid(2)};
