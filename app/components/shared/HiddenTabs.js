@@ -32,6 +32,7 @@ export const Tab = styled.div`
   padding: calc(${th('gridUnit')} - 1px) 1em;
   padding-bottom: 0;
   position: relative;
+  z-index: 1;
 
   div {
     border-bottom: 3px solid

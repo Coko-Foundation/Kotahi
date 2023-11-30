@@ -64,6 +64,7 @@ const Tab = styled.div`
 
   &:hover {
     background: ${color.gray90};
+
     & svg {
       fill: ${color.gray30};
     }
@@ -71,7 +72,6 @@ const Tab = styled.div`
 `
 
 const Content = styled.div`
-  background: ${color.backgroundA};
   border-right: 1px solid ${color.gray60};
   border-top: 1px solid ${color.gray60};
   border-top-right-radius: 4px;

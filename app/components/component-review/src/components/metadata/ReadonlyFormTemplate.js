@@ -22,7 +22,7 @@ const ReadonlyFormTemplate = ({
       navigator.clipboard.writeText(
         `<span>{{ article.${name.replace(
           'submission.',
-          'articleMetadata.',
+          'articleMetadata.submission.',
         )} | safe }}</span>`,
       )
   }

@@ -10,7 +10,7 @@ export const Grid = styled.div`
   grid-template-areas: 'menu' 'editor';
   grid-template-columns: 100%;
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
-  ${props => props.production && 'min-height: calc(100vh - 108px);'}
+  ${props => props.production && 'min-height: calc(100vh - 142px);'}
   position: relative;
   /* :focus-within {
     z-index: 10000;
@@ -296,6 +296,9 @@ export const SimpleInfoContainer = styled.div`
 // this is for ProductionWaxEditor //
 
 export const ProductionEditorDiv = styled.div`
+  background-color: ${color.backgroundA};
+  border-bottom-left-radius: 6px;
+  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
   display: flex;
   flex-grow: 1;
 
@@ -308,14 +311,14 @@ export const ProductionEditorDiv = styled.div`
 `
 export const EditorArea = styled.div`
   flex-grow: 1;
-  height: calc(100vh - 108px);
+  height: calc(100vh - 182px);
   overflow-y: scroll;
 `
 
 export const SideMenu = styled.div`
   background: ${th('colorBackgroundToolBar')}; /* TODO is this color defined? */
   border-right: ${th('borderWidth')} ${th('borderStyle')} ${color.gray60};
-  height: calc(100% - 16px);
+  height: 100%;
   min-width: 200px; /* We can shrink this now if we want! */
 `
 export const WaxSurfaceScroll = styled.div`

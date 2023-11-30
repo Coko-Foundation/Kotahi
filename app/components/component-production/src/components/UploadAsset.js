@@ -34,7 +34,7 @@ const Message = styled.div`
 const UploadAssetContainer = styled(Container)`
   display: flex;
   flex-direction: column;
-  height: 850px;
+  height: 100%;
   justify-content: space-between;
   overflow: auto;
   padding: calc(8px * 2) calc(8px * 3);
@@ -85,7 +85,7 @@ export const FilesHeading = styled.div`
 const UploadAsset = ({ files, groupTemplateId }) => {
   const { t } = useTranslation()
   const [showSpinner, setShowSpinner] = useState(false)
-  const [isDeletingFile, setIsDeletingFile] = useState(false)
+  const [fileBeingDeletedId, setFileBeingDeletedId] = useState(null)
   const [filesState, setFilesState] = useState(files)
 
   const uploadAssetsFn = useCallback(async acceptedFiles => {
@@ -244,20 +244,7 @@ const UploadAsset = ({ files, groupTemplateId }) => {
       title: 'Delete',
       component: ({ file }) => (
         <>
-          <Action onClick={() => setIsDeletingFile(true)}>Delete</Action>
-          <ConfirmationModal
-            closeModal={() => setIsDeletingFile(false)}
-            confirmationAction={onDelete(file.id)}
-            confirmationButtonText={t('chat.delete')}
-            isOpen={isDeletingFile}
-            message={
-              <>
-                {t(
-                  'modals.deleteFile.Are you sure you want to delete this file?',
-                )}
-              </>
-            }
-          />
+          <Action onClick={() => setFileBeingDeletedId(file.id)}>Delete</Action>
         </>
       ),
     },
@@ -306,6 +293,17 @@ const UploadAsset = ({ files, groupTemplateId }) => {
           </FileTableStyled>
         </SectionRow>
       </SectionContent>
+      <ConfirmationModal
+        closeModal={() => setFileBeingDeletedId(null)}
+        confirmationAction={onDelete(fileBeingDeletedId)}
+        confirmationButtonText={t('chat.delete')}
+        isOpen={!!fileBeingDeletedId}
+        message={
+          <>
+            {t('modals.deleteFile.Are you sure you want to delete this file?')}
+          </>
+        }
+      />
     </UploadAssetContainer>
   )
 }
