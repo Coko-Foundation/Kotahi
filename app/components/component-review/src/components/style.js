@@ -93,6 +93,7 @@ export const Heading = styled.span`
 
 export const Cell = styled.span`
   grid-column: span 1 / span 1;
+  overflow-wrap: break-word;
   padding: 0;
 `
 
