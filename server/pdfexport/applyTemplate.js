@@ -21,7 +21,7 @@ const makeSvgsFromLatex = require('../jatsexport/makeSvgsFromLatex')
 
 //  Sort out all the different CSSes and make sure that they are being applied correctly
 //    ./pdfTemplates/styles.css: this is from Julien & Harshna, used for PDF export
-//    /app/components/wax-collab/src/layout/EditorElements.js: this exports styles used inside of Wax; some of this should be overwritten.
+//    /app/components/wax-collab/src/layout/EditorElements.js: this exports styles
 //			split this into base styles & editor styles
 //        for wax: import base styles, then editor styles
 //        for production: import base styles, then pagedjs styles
@@ -84,7 +84,10 @@ const userTemplateEnv = nunjucks.configure(userTemplatePath, {
   cache: false,
 })
 
-const applyTemplate = async ({ articleData, groupData }, includeFontLinks) => {
+const applyTemplate = async (
+  { articleData, groupData, activeConfig },
+  includeFontLinks,
+) => {
   if (!articleData) {
     // Error handling: if there's no manuscript.meta.source, what should we return?
     return ''
@@ -109,6 +112,20 @@ const applyTemplate = async ({ articleData, groupData }, includeFontLinks) => {
   // const htmlWithFixedMath = fixMathTags(articleData.meta.source)
   // If we're using non-PagedJS MathJax, don't fix math tags, run the code through makeSvgsFromLatex is in pdfExport
   const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
+
+  // add the metadata coming from the config of Kotahi
+  // console.log("this config", activeConfig.crossref)
+  thisArticle.config = {
+    groupIdentity: activeConfig.formData.groupIdentity,
+    publishing: {
+      journalName: activeConfig.formData.publishing.crossref.journalName,
+      journalAbbreviatedName:
+        activeConfig.formData.publishing.crossref.journalAbbreviatedName,
+      journalHomepage:
+        activeConfig.formData.publishing.crossref.journalHomepage,
+      licenseUrl: activeConfig.formData.publishing.crossref.licenseUrl,
+    },
+  }
 
   thisArticle.meta.source = svgedSource
 

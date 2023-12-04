@@ -99,6 +99,7 @@ const pdfHandler = async manuscriptId => {
 
   const articleData = await getManuscriptById(manuscriptId)
   const groupData = await getGroupAssets(articleData.groupId)
+  const activeConfig = await models.Config.getCached(articleData.groupId)
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
@@ -118,7 +119,9 @@ const pdfHandler = async manuscriptId => {
 
   // articleData.meta.source = svgedSource
 
-  const outHtml = await applyTemplate({ articleData, groupData })
+  // get the config from kotahi
+
+  const outHtml = await applyTemplate({ articleData, groupData, activeConfig })
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
 
