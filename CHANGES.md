@@ -1,5 +1,9 @@
 ## Changes
 
+### 2023-12-05: Version 2.2.0
+
+- `NOTIFICATION_EMAIL_CC_ENABLED=` variable to enable/disable carbon copies (CC) has been __deprecated__. Group Managers can manually add a CC from the Emails>Email template>CC field
+
 ### 2023-09-28: Version 2.1.0
 
 #### Citation manager
@@ -162,3 +166,4 @@ HYPOTHESIS_ALLOW_TAGGING=true
 For dev instances, remove the old `minio/minio` image and container:
 `docker image rm -f minio/minio`
 Then rebuild containers.
+
