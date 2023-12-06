@@ -5,6 +5,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
+// eslint-disable-next-line jest/no-disabled-tests
 describe.skip('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
@@ -20,28 +21,28 @@ describe.skip('form builder tests', () => {
 
     it('check form entries are correct', () => {
       cy.fixture('form_option').then(data => {
-        FormsPage.getFormTitleTab(0).should('contain', data.ncrc.title)
+        FormsPage.getFormTitleTab(0).should('contain', data.preprint2.title)
 
         const dataArray = [
-          data.ncrc.articleUrl,
-          data.ncrc.description,
+          data.preprint2.articleUrl,
+          data.preprint2.description,
           data.common.ourTake,
-          data.ncrc.studyDesign,
-          data.ncrc.mainFindings,
+          data.preprint2.studyDesign,
+          data.preprint2.mainFindings,
           data.common.studyStrengths,
           data.common.limitations,
-          data.ncrc.valueAdded,
+          data.preprint2.valueAdded,
           data.common.labels,
-          data.ncrc.subTopics,
+          data.preprint2.subTopics,
           data.common.topics,
           data.common.abstract,
           data.common.firstAuthor,
           data.common.datePublished,
-          data.ncrc.studyPopulation,
+          data.preprint2.studyPopulation,
           data.common.journal,
-          data.ncrc.reviewer,
+          data.preprint2.reviewer,
           data.common.editDate,
-          data.ncrc.compendiumFeature,
+          data.preprint2.compendiumFeature,
           data.common.reviewCreator,
         ]
 
@@ -54,19 +55,19 @@ describe.skip('form builder tests', () => {
     it('check form field type & assert field is mandatory', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        FormsPage.clickFormOptionWithText(data.ncrc.articleUrl)
+        FormsPage.clickFormOptionWithText(data.preprint2.articleUrl)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.description)
+        FormsPage.clickFormOptionWithText(data.preprint2.description)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.ourTake)
         FormsPage.getComponentType().should('contain', 'Rich text')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.studyDesign)
+        FormsPage.clickFormOptionWithText(data.preprint2.studyDesign)
         FormsPage.getComponentType().should('contain', 'Select')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.mainFindings)
+        FormsPage.clickFormOptionWithText(data.preprint2.mainFindings)
         FormsPage.getComponentType().should('contain', 'Rich text')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.studyStrengths)
@@ -75,13 +76,13 @@ describe.skip('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.common.limitations)
         FormsPage.getComponentType().should('contain', 'Rich text')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.valueAdded)
+        FormsPage.clickFormOptionWithText(data.preprint2.valueAdded)
         FormsPage.getComponentType().should('contain', 'Rich text')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.labels)
         FormsPage.getComponentType().should('contain', 'Select')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.subTopics)
+        FormsPage.clickFormOptionWithText(data.preprint2.subTopics)
         FormsPage.getComponentType().should('contain', 'Checkboxes')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
         FormsPage.clickFormOption(10)
@@ -96,19 +97,19 @@ describe.skip('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.common.datePublished)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.studyPopulation)
+        FormsPage.clickFormOptionWithText(data.preprint2.studyPopulation)
         FormsPage.getComponentType().should('contain', 'Rich text')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.journal)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.reviewer)
+        FormsPage.clickFormOptionWithText(data.preprint2.reviewer)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.editDate)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.compendiumFeature)
+        FormsPage.clickFormOptionWithText(data.preprint2.compendiumFeature)
         FormsPage.getComponentType().should('contain', 'Select')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.reviewCreator)
@@ -135,25 +136,25 @@ describe.skip('form builder tests', () => {
     it('check submission form contains the same fields', () => {
       cy.fixture('form_option').then(data => {
         const dataArray = [
-          data.ncrc.articleUrl,
-          data.ncrc.description,
+          data.preprint2.articleUrl,
+          data.preprint2.description,
           data.common.ourTake,
-          data.ncrc.studyDesign,
-          data.ncrc.mainFindings,
+          data.preprint2.studyDesign,
+          data.preprint2.mainFindings,
           data.common.studyStrengths,
           data.common.limitations,
-          data.ncrc.valueAdded,
+          data.preprint2.valueAdded,
           data.common.labels,
-          data.ncrc.subTopics,
+          data.preprint2.subTopics,
           data.common.topics,
           data.common.abstract,
           data.common.firstAuthor,
           data.common.datePublished,
-          data.ncrc.studyPopulation,
+          data.preprint2.studyPopulation,
           data.common.journal,
-          data.ncrc.reviewer,
+          data.preprint2.reviewer,
           data.common.editDate,
-          data.ncrc.compendiumFeature,
+          data.preprint2.compendiumFeature,
           data.common.reviewCreator,
         ]
 
@@ -198,16 +199,16 @@ describe.skip('form builder tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         const dataArray = [
-          data.ncrc.studyDesignTypes.caseSeries,
-          data.ncrc.studyDesignTypes.crossSectional,
-          data.ncrc.studyDesignTypes.prospectiveCohort,
-          data.ncrc.studyDesignTypes.retrospectiveCohort,
-          data.ncrc.studyDesignTypes.ecological,
-          data.ncrc.studyDesignTypes.randomizedControlTrial,
-          data.ncrc.studyDesignTypes.modelingSimulation,
-          data.ncrc.studyDesignTypes.other,
-          data.ncrc.studyDesignTypes.nonRandomizedTrial,
-          data.ncrc.studyDesignTypes.caseControl,
+          data.preprint2.studyDesignTypes.caseSeries,
+          data.preprint2.studyDesignTypes.crossSectional,
+          data.preprint2.studyDesignTypes.prospectiveCohort,
+          data.preprint2.studyDesignTypes.retrospectiveCohort,
+          data.preprint2.studyDesignTypes.ecological,
+          data.preprint2.studyDesignTypes.randomizedControlTrial,
+          data.preprint2.studyDesignTypes.modelingSimulation,
+          data.preprint2.studyDesignTypes.other,
+          data.preprint2.studyDesignTypes.nonRandomizedTrial,
+          data.preprint2.studyDesignTypes.caseControl,
         ]
 
         SubmissionFormPage.clickElementFromFormOptionList(3)
@@ -225,58 +226,59 @@ describe.skip('form builder tests', () => {
     it('check subtopic checkboxes options', () => {
       cy.fixture('form_option').then(data => {
         const subTopics = [
-          data.ncrc.subTopicTypes.epidemiologyPopulationsMostVulnerable,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.epidemiologyPopulationsMostVulnerable,
+          data.preprint2.subTopicTypes
             .epidemiologyIncubationPeriodSignsAndSymptomsAndViralShedding,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .epidemiologyPopulationBasedPrevalenceAndBurdenOfDisease,
-          data.ncrc.subTopicTypes.epidemiologyTransmission,
-          data.ncrc.subTopicTypes.epidemiologyRiskForInfection,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.epidemiologyTransmission,
+          data.preprint2.subTopicTypes.epidemiologyRiskForInfection,
+          data.preprint2.subTopicTypes
             .epidemiologyVirusMutationsTrackingSpreadAndEvolutionInPeople,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .ecologySpilloverEvolutionaryOriginAndZoonoticSpilloverOfSarsCov2,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .ecologySpilloverSarsCov2InfectionInDomesticAnimals,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .nonPharmaceuticalInterventionsTestingAndContactTracing,
-          data.ncrc.subTopicTypes.nonPharmaceuticalInterventionsMasks,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.nonPharmaceuticalInterventionsMasks,
+          data.preprint2.subTopicTypes
             .nonPharmaceuticalInterventionsSchoolAndBusinessClosures,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .nonPharmaceuticalInterventionsSymptomScreening,
-          data.ncrc.subTopicTypes.vaccinesTrialResults,
-          data.ncrc.subTopicTypes.vaccinesOtherVaccineAndVirologyRelatedTopics,
-          data.ncrc.subTopicTypes.vaccinesTrialProtocol,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.vaccinesTrialResults,
+          data.preprint2.subTopicTypes
+            .vaccinesOtherVaccineAndVirologyRelatedTopics,
+          data.preprint2.subTopicTypes.vaccinesTrialProtocol,
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsAceInhibitors,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsCoagulopathy,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsNonRespiratoryPresentation,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsLongTermSequelae,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsImmuneResponse,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsPediatrics,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsPregnancy,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsPrognosticTools,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .modelingCovid19MortalityMorbidityAndDemandForHealthcareServices,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes
             .modelingImpactOnHealthcareServicesForNonRespiratoryDiseases,
-          data.ncrc.subTopicTypes.modelingMasks,
-          data.ncrc.subTopicTypes.modelingSchoolAndBusinessClosures,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.modelingMasks,
+          data.preprint2.subTopicTypes.modelingSchoolAndBusinessClosures,
+          data.preprint2.subTopicTypes
             .modelingStayAtHomeOrdersAndMobilityRestrictions,
-          data.ncrc.subTopicTypes.modelingTestingAndContactTracing,
-          data.ncrc.subTopicTypes.modelingTransmissionDynamics,
-          data.ncrc.subTopicTypes.modelingSymptomScreening,
-          data.ncrc.subTopicTypes.modelingVaccines,
-          data.ncrc.subTopicTypes
+          data.preprint2.subTopicTypes.modelingTestingAndContactTracing,
+          data.preprint2.subTopicTypes.modelingTransmissionDynamics,
+          data.preprint2.subTopicTypes.modelingSymptomScreening,
+          data.preprint2.subTopicTypes.modelingVaccines,
+          data.preprint2.subTopicTypes
             .nonPharmaceuticalInterventionsStayAtHomeOrdersAndMobilityRestrictions,
         ]
 
@@ -292,11 +294,11 @@ describe.skip('form builder tests', () => {
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.getDropdownOption(0).should(
           'contain',
-          data.ncrc.compendiumFeatureTypes.mediumLow,
+          data.preprint2.compendiumFeatureTypes.mediumLow,
         )
         SubmissionFormPage.getDropdownOption(1).should(
           'contain',
-          data.ncrc.compendiumFeatureTypes.high,
+          data.preprint2.compendiumFeatureTypes.high,
         )
       })
     })
@@ -326,14 +328,14 @@ describe.skip('form builder tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         const valueArray = [
-          data.ncrc.topicTypes.ecologyAndSpillover,
-          data.ncrc.topicTypes.vaccines,
-          data.ncrc.topicTypes.nonPharmaceuticalInterventions,
-          data.ncrc.topicTypes.epidemiology,
-          data.ncrc.topicTypes.diagnostics,
-          data.ncrc.topicTypes.modeling,
-          data.ncrc.topicTypes.clinicalPresentation,
-          data.ncrc.topicTypes.pharmaceuticalInterventions,
+          data.preprint2.topicTypes.ecologyAndSpillover,
+          data.preprint2.topicTypes.vaccines,
+          data.preprint2.topicTypes.nonPharmaceuticalInterventions,
+          data.preprint2.topicTypes.epidemiology,
+          data.preprint2.topicTypes.diagnostics,
+          data.preprint2.topicTypes.modeling,
+          data.preprint2.topicTypes.clinicalPresentation,
+          data.preprint2.topicTypes.pharmaceuticalInterventions,
         ]
 
         // eslint-disable-next-line no-plusplus

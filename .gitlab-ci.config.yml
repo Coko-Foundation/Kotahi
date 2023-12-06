@@ -1,7 +1,7 @@
 variables:
   IMAGE_ORG: kotahi
-  IMAGE_NAME: kotahi-elife
-  INSTANCE_GROUPS: journal:aperture,prc:colab,single_form:elife
+  IMAGE_NAME: kotahi-preprint1
+  INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1
   POSTGRES_HOST_AUTH_METHOD: trust
   POSTGRES_HOST: postgres
   POSTGRES_PORT: 5432

@@ -190,7 +190,7 @@
       ]
     },
     {
-      "options" : [
+      "options": [
         {
           "label": "epidemiology_populations-most-vulnerable",
           "value": "epidemiology_populations-most-vulnerable",
@@ -361,8 +361,7 @@
       "id": "73ca76d0-eae3-11eb-9a03-0242ac130003",
       "component": "CheckboxGroup",
       "name": "submission.subTopics",
-      "validate": [
-      ]
+      "validate": []
     },
     {
       "options": [

@@ -1,7 +1,7 @@
 {
   "required": "Required",
   "formTitle": "Research Object Submission Form",
-  "elife": {
+  "preprint1": {
     "articleId": "Article ID",
     "articleUrl": "Article URL",
     "bioRxivArticleUrl": "bioRxiv article URL",
@@ -22,7 +22,7 @@
     "summaryDate": "Summary date",
     "creator": "Creator"
   },
-  "ncrc": {
+  "preprint2": {
     "title": "NCRC Submission Form",
     "articleUrl": "Article URL",
     "description": "Article Description",
@@ -123,7 +123,7 @@
       "prognosticRiskFactors": "prognosticRiskFactors"
     }
   },
-  "colab": {
+  "prc": {
     "title": "Title",
     "doi": "DOI",
     "link": "Link",

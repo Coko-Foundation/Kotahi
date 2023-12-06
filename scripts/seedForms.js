@@ -6,10 +6,10 @@ const { Form } = require('@pubsweet/models')
 
 // TODO: come up with predefined generic forms based on workflows
 const SUBMISSION_FORM_PATHS = {
-  aperture: '../app/storage/forms-aperture/submit.json',
-  colab: '../app/storage/forms-colab/submit.json',
-  elife: '../app/storage/forms/submit.json',
-  ncrc: '../app/storage/forms-ncrc/submit.json',
+  journal: '../app/storage/forms-journal/submit.json',
+  prc: '../app/storage/forms-prc/submit.json',
+  preprint1: '../app/storage/forms/submit.json',
+  preprint2: '../app/storage/forms-preprint2/submit.json',
 }
 
 const REVIEW_FORM_PATH = '../app/storage/forms/review.json'

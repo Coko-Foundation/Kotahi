@@ -234,7 +234,7 @@ const DecisionVersion = ({
       content: (
         <>
           {isCurrentVersion &&
-            ['aperture', 'colab'].includes(config.instanceName) && (
+            ['journal', 'prc'].includes(config.instanceName) && (
               <EmailNotifications
                 allUsers={allUsers}
                 currentUser={currentUser}

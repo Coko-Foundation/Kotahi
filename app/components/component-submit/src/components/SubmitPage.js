@@ -225,9 +225,9 @@ const SubmitPage = ({ currentUser, match, history }) => {
 
     if (result?.steps?.some(step => !step.succeeded)) return result
 
-    if (['aperture', 'colab'].includes(config.instanceName)) {
+    if (['journal', 'prc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
-    } else if (['elife', 'ncrc'].includes(config.instanceName)) {
+    } else if (['preprint1', 'preprint2'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
 
@@ -248,11 +248,11 @@ const SubmitPage = ({ currentUser, match, history }) => {
       },
     })
 
-    if (['aperture', 'colab'].includes(config.instanceName)) {
+    if (['journal', 'prc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
     }
 
-    if (['elife', 'ncrc'].includes(config.instanceName)) {
+    if (['preprint1', 'preprint2'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
   }

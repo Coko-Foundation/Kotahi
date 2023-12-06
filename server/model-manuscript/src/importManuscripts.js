@@ -12,7 +12,7 @@ const { getPubsub } = pubsubManager
 const importsInProgress = new Set()
 
 const shouldRunDefaultImportsForColab = [true, 'true'].includes(
-  config['import-for-colab'].default_import,
+  config['import-for-prc'].default_import,
 )
 
 const importManuscripts = async (groupId, ctx) => {
@@ -27,7 +27,7 @@ const importManuscripts = async (groupId, ctx) => {
       active: true,
     })
 
-    const evaluatedStatusString = ['ncrc', 'elife'].includes(
+    const evaluatedStatusString = ['preprint2', 'preprint1'].includes(
       activeConfig.formData.instanceName,
     )
       ? 'evaluated'
@@ -35,11 +35,11 @@ const importManuscripts = async (groupId, ctx) => {
 
     const promises = [runImports(groupId, evaluatedStatusString, ctx.user)]
 
-    if (activeConfig.formData.instanceName === 'ncrc') {
+    if (activeConfig.formData.instanceName === 'preprint2') {
       promises.push(importArticlesFromBiorxiv(groupId, ctx))
       promises.push(importArticlesFromPubmed(groupId, ctx))
     } else if (
-      activeConfig.formData.instanceName === 'colab' &&
+      activeConfig.formData.instanceName === 'prc' &&
       shouldRunDefaultImportsForColab
     ) {
       promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
@@ -77,7 +77,7 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
     const promises = []
 
     if (
-      activeConfig.formData.instanceName === 'colab' &&
+      activeConfig.formData.instanceName === 'prc' &&
       shouldRunDefaultImportsForColab
     ) {
       promises.push(importArticlesFromSemanticScholar(groupId, ctx))

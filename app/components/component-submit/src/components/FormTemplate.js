@@ -378,7 +378,7 @@ const FormTemplate = ({
           submissionButtonText &&
           (isSubmission
             ? !['submitted', 'revise'].includes(values.status) ||
-              (['elife', 'ncrc'].includes(config.instanceName) &&
+              (['preprint1', 'preprint2'].includes(config.instanceName) &&
                 values.status === 'submitted')
             : true)
 

@@ -370,18 +370,18 @@ We’re looking at fixing this.
 
 `INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Each group has its own data, workflow, branding and other settings. You can use multiple groups to run different journals or publishing teams within a single instance of Kotahi, or to experiment with different workflows.
 
-The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:aperture`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and `_` characters. The _group type_ (after the colon) must be either 'aperture', 'colab', 'elife' or 'ncrc'. (These _group types_ will be given more descriptive and generic names in future.)
+The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:journal`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and `_` characters. The _group type_ (after the colon) must be either 'journal', 'prc', 'preprint1' or 'preprint2'. (These _group types_ will be given more descriptive and generic names in future.)
 
 Example setting for running a single group only:
 
 ```
-INSTANCE_GROUPS=kotahi:aperture
+INSTANCE_GROUPS=kotahi:journal
 ```
 
 Example setting for running multiple groups:
 
 ```
-INSTANCE_GROUPS=myjournal:aperture,mypreprints:colab,trial_workflow:colab
+INSTANCE_GROUPS=myjournal:journal,mypreprints:prc,trial_workflow:prc
 ```
 
 ### URLs determined by _group name_

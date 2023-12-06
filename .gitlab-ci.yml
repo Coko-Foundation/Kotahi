@@ -9,16 +9,16 @@ test-pipeline:
     include:
       - local: .gitlab-ci.config.yml
     strategy: depend
-# elife-pipeline:
+# preprint1-pipeline:
 #   except:
 #     - schedules
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.elife.yml
+#       - local: .gitlab-ci.preprint1.yml
 #     strategy: depend
 
-# elife-test-firefox:
+# preprint1-test-firefox:
 #   only:
 #     refs:
 #       - schedules
@@ -27,10 +27,10 @@ test-pipeline:
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.elife-test-firefox.yml
+#       - local: .gitlab-ci.preprint1-test-firefox.yml
 #     strategy: depend
 
-# ncrc-test-firefox:
+# preprint2-test-firefox:
 #   only:
 #     refs:
 #       - schedules
@@ -39,10 +39,10 @@ test-pipeline:
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.ncrc-test-firefox.yml
+#       - local: .gitlab-ci.preprint2-test-firefox.yml
 #     strategy: depend
 
-# ncrc-pipeline:
+# preprint2-pipeline:
 #   except:
 #     - schedules
 #   only:
@@ -51,10 +51,10 @@ test-pipeline:
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.ncrc.yml
+#       - local: .gitlab-ci.preprint2.yml
 #     strategy: depend
 
-# colab-test-firefox:
+# prc-test-firefox:
 #   only:
 #     refs:
 #       - schedules
@@ -63,22 +63,22 @@ test-pipeline:
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.colab-test-firefox.yml
+#       - local: .gitlab-ci.prc-test-firefox.yml
 #     strategy: depend
-# colab-pipeline:
+# prc-pipeline:
 #   except:
 #     - schedules
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.colab.yml
+#       - local: .gitlab-ci.prc.yml
 #     strategy: depend
 
-# aperture-pipeline:
+# journal-pipeline:
 #   except:
 #     - schedules
 #   stage: run-pipeline
 #   trigger:
 #     include:
-#       - local: .gitlab-ci.aperture.yml
+#       - local: .gitlab-ci.journal.yml
 #     strategy: depend

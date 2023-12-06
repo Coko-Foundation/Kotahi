@@ -30,10 +30,10 @@ const SUBMISSION_FORM_INPUT_BOX = 'ProseMirror'
 const WORD_COUNT_INFO = 'Counter Info'
 const EDITOR_CLASS = '.wax-surface-scroll >  div .ProseMirror'
 
-// specific to aperture
+// specific to journal
 const TYPE_OF_RESEARCH_OBJECT = '.css-1f7humo-control'
 
-// specific to elife
+// specific to preprint1
 const FORM_OPTION_LIST = '[class*=style__Section]'
 const FORM_OPTION_VALUE = 'singleValue'
 const ARTICLE_ID_FIELD = 'submission.articleId'
@@ -49,7 +49,7 @@ const REVIEW_2_CREATOR_FIELD = 'submission.review2creator'
 const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
 const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
-// specific to ncrc
+// specific to preprint2
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
 const DATE_PUBLISHED_FIELD = 'submission.datePublished'
@@ -62,7 +62,7 @@ const SUB_TOPICS_CHECKBOX_LIST = 'submission.subTopics'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
-// specific to colab
+// specific to prc
 const DOI_FIELD = 'submission.DOI'
 const LINK_FIELD = 'submission.link'
 const DOI_FILED_C = 'submission.doi'

@@ -1,5 +1,5 @@
 module.exports = {
-  instanceName: 'aperture',
+  instanceName: 'journal',
   user: { isAdmin: false, kotahiApiTokens: 'test:123456' },
   report: { showInMenu: true },
   review: { showSummary: false },

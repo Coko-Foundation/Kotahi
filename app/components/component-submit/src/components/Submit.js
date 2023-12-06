@@ -180,7 +180,7 @@ const Submit = ({
     decisionSections.push({
       content: (
         <>
-          {['ncrc'].includes(config.instanceName) && (
+          {['preprint2'].includes(config.instanceName) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
               manuscript={version}

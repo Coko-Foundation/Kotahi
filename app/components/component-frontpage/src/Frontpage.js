@@ -118,7 +118,7 @@ const Frontpage = () => {
       {publishedManuscripts.length > 0 ? (
         publishedManuscripts.map(manuscript => {
           const title =
-            config.instanceName === 'elife'
+            config.instanceName === 'preprint1'
               ? manuscript.submission.description
               : manuscript.meta.title
 

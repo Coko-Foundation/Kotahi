@@ -297,7 +297,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   // If this manuscript is getting its label set for the first time,
   // we will populate its task list from the template tasks
-  const isSettingFirstLabels = ['colab'].includes(
+  const isSettingFirstLabels = ['prc'].includes(
     activeConfig.formData.instanceName,
   )
     ? !ms.submission.labels &&
@@ -316,7 +316,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.submittedDate = new Date()
   }
 
-  if (['ncrc', 'colab'].includes(activeConfig.formData.instanceName)) {
+  if (['preprint2', 'prc'].includes(activeConfig.formData.instanceName)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
 
@@ -469,7 +469,7 @@ const resolvers = {
         groupId: group.id,
       }
 
-      if (['ncrc', 'colab'].includes(activeConfig.formData.instanceName)) {
+      if (['preprint2', 'prc'].includes(activeConfig.formData.instanceName)) {
         emptyManuscript.submission.editDate = new Date()
           .toISOString()
           .split('T')[0]
@@ -710,7 +710,7 @@ const resolvers = {
         let instance
 
         if (config['notification-email'].use_colab === 'true') {
-          instance = 'colab'
+          instance = 'prc'
         } else {
           instance = 'generic'
         }
@@ -871,13 +871,13 @@ const resolvers = {
           break
 
         default:
-          if (
-            ['colab', 'aperture'].includes(activeConfig.formData.instanceName)
-          ) {
+          if (['prc', 'journal'].includes(activeConfig.formData.instanceName)) {
             manuscript.decision = 'accepted'
             manuscript.status = 'accepted'
           } else if (
-            ['elife', 'ncrc'].includes(activeConfig.formData.instanceName)
+            ['preprint1', 'preprint2'].includes(
+              activeConfig.formData.instanceName,
+            )
           ) {
             manuscript.decision = 'evaluated'
             manuscript.status = 'evaluated'

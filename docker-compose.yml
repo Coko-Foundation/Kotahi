@@ -153,7 +153,7 @@ services:
       - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL:-http://client:4000}
       - FLAX_SITE_URL=${FLAX_SITE_URL:-false}
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
-      - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:aperture}
+      - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
 
     volumes:
