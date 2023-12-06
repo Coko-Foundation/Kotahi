@@ -20,7 +20,7 @@ const ShortId = styled.div`
 
 export default ({ version, shouldShowShortId, instanceName }) => {
   const title =
-    instanceName === 'ncrc'
+    instanceName === 'preprint2'
       ? JSON.parse(version.submission).articleDescription
       : get(version, 'meta.title') || 'Untitled'
 

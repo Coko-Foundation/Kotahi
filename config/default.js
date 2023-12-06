@@ -51,10 +51,10 @@ module.exports = {
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
     // path: deferConfig(cfg => {
     //   const formTemplatePath = {
-    //     elife: '../app/storage/forms',
-    //     aperture: '../app/storage/forms-aperture',
-    //     ncrc: '../app/storage/forms-ncrc',
-    //     colab: '../app/storage/forms-colab',
+    //     preprint1: '../app/storage/forms',
+    //     journal: '../app/storage/forms-journal',
+    //     preprint2: '../app/storage/forms-preprint2',
+    //     prc: '../app/storage/forms-prc',
     //   }
     //   const pathToFormTemplateFolder =
     //     formTemplatePath[String(process.env.INSTANCE_NAME)]
@@ -210,7 +210,7 @@ module.exports = {
     host: '',
     protocol: '',
   },
-  'import-for-colab': {
+  'import-for-prc': {
     default_import: 'false',
   },
 }

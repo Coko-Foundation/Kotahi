@@ -69,14 +69,14 @@ exports.up = async knex => {
           : '/assets/logo-kotahi.png',
       }
 
-      // Only applicable to existing client instances which use INSTANCE_NAME with single instance type one of "elife, ncrc, colab, aperture"
+      // Only applicable to existing client instances which use INSTANCE_NAME with single instance type one of "preprint1, preprint2, prc, journal"
       if (configs.length === 0 && process.env.INSTANCE_NAME) {
         switch (process.env.INSTANCE_NAME) {
-          case 'elife':
+          case 'preprint1':
             config = {
               active: true,
               formData: {
-                instanceName: 'elife',
+                instanceName: 'preprint1',
                 user: {
                   isAdmin: false,
                   kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
@@ -106,11 +106,11 @@ exports.up = async knex => {
               type: 'Config',
             }
             break
-          case 'ncrc':
+          case 'preprint2':
             config = {
               active: true,
               formData: {
-                instanceName: 'ncrc',
+                instanceName: 'preprint2',
                 user: {
                   isAdmin: false,
                   kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
@@ -145,11 +145,11 @@ exports.up = async knex => {
               type: 'Config',
             }
             break
-          case 'colab':
+          case 'prc':
             config = {
               active: true,
               formData: {
-                instanceName: 'colab',
+                instanceName: 'prc',
                 user: {
                   isAdmin: false,
                   kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,
@@ -204,11 +204,11 @@ exports.up = async knex => {
               type: 'Config',
             }
             break
-          case 'aperture':
+          case 'journal':
             config = {
               active: true,
               formData: {
-                instanceName: 'aperture',
+                instanceName: 'journal',
                 user: {
                   isAdmin: false,
                   kotahiApiTokens: process.env.KOTAHI_API_TOKENS || null,

@@ -31,7 +31,7 @@ const Actions = ({
   const { t } = useTranslation()
   return (
     <Container>
-      {['elife', 'ncrc'].includes(config.instanceName) &&
+      {['preprint1', 'preprint2'].includes(config.instanceName) &&
         [
           articleStatuses.submitted,
           articleStatuses.evaluated,
@@ -42,7 +42,7 @@ const Actions = ({
             {t('manuscriptsTable.actions.Evaluation')}
           </LinkAction>
         )}
-      {['aperture', 'colab'].includes(config.instanceName) && (
+      {['journal', 'prc'].includes(config.instanceName) && (
         <LinkAction to={`${urlFrag}/versions/${manuscript.id}/decision`}>
           {t('manuscriptsTable.actions.Control')}
         </LinkAction>
@@ -56,7 +56,7 @@ const Actions = ({
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
         {t('manuscriptsTable.actions.Production')}
       </LinkAction>
-      {['elife', 'ncrc'].includes(config.instanceName) &&
+      {['preprint1', 'preprint2'].includes(config.instanceName) &&
         manuscript.status === articleStatuses.evaluated && (
           <Action
             onActionCompleted={result => {

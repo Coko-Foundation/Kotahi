@@ -144,7 +144,7 @@ const ReviewHeading = ({
           {(currentUserIsEditor ||
             currentUser.groupRoles.includes('groupManager')) &&
             canBePublishedPublicly &&
-            config.instanceName === 'colab' && (
+            config.instanceName === 'prc' && (
               <>
                 &nbsp;
                 <ShareIcon />

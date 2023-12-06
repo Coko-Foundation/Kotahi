@@ -4,8 +4,6 @@ const config = require('config')
 // eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
 
-// const createMailOptions = require('./createMailOptions')
-
 const renderTemplate = async (templateContent, data) => {
   // Compile the template
   const compiledTemplate = await Handlebars.compile(templateContent)

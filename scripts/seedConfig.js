@@ -94,13 +94,13 @@ const seedConfig = async (group, instanceName, index) => {
   const kotahiApiTokens =
     index === 0 ? process.env.KOTAHI_API_TOKENS || null : null
 
-  // Creates a config based on instance type one of "elife, ncrc, colab, aperture" and "aperture" being default
+  // Creates a config based on instance type one of "preprint1, preprint2, prc, journal" and "journal" being default
   switch (instanceName) {
-    case 'elife':
+    case 'preprint1':
       config = {
         active: true,
         formData: {
-          instanceName: 'elife',
+          instanceName: 'preprint1',
           user: {
             isAdmin: false,
           },
@@ -131,11 +131,11 @@ const seedConfig = async (group, instanceName, index) => {
         type: 'Config',
       }
       break
-    case 'ncrc':
+    case 'preprint2':
       config = {
         active: true,
         formData: {
-          instanceName: 'ncrc',
+          instanceName: 'preprint2',
           user: {
             isAdmin: false,
           },
@@ -171,11 +171,11 @@ const seedConfig = async (group, instanceName, index) => {
         type: 'Config',
       }
       break
-    case 'colab':
+    case 'prc':
       config = {
         active: true,
         formData: {
-          instanceName: 'colab',
+          instanceName: 'prc',
           user: {
             isAdmin: false,
           },
@@ -228,11 +228,11 @@ const seedConfig = async (group, instanceName, index) => {
         type: 'Config',
       }
       break
-    case 'aperture':
+    case 'journal':
       config = {
         active: true,
         formData: {
-          instanceName: 'aperture',
+          instanceName: 'journal',
           user: {
             isAdmin: false,
             kotahiApiTokens,
@@ -278,7 +278,7 @@ const seedConfig = async (group, instanceName, index) => {
       config = {
         active: true,
         formData: {
-          instanceName: 'aperture',
+          instanceName: 'journal',
           user: {
             isAdmin: false,
           },

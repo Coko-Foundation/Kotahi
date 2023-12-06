@@ -19,22 +19,22 @@ describe('Form builder', () => {
     it('check elements from form builder', () => {
       cy.fixture('form_option').then(data => {
         const formElements = [
-          data.elife.articleId,
-          data.elife.articleUrl,
-          data.elife.bioRxivArticleUrl,
-          data.elife.description,
-          data.elife.review1,
-          data.elife.review1Creator,
-          data.elife.review1Date,
-          data.elife.review2,
-          data.elife.review2Creator,
-          data.elife.review2Date,
-          data.elife.review3,
-          data.elife.review3Creator,
-          data.elife.review3Date,
-          data.elife.summary,
-          data.elife.summaryCreator,
-          data.elife.summaryDate,
+          data.preprint1.articleId,
+          data.preprint1.articleUrl,
+          data.preprint1.bioRxivArticleUrl,
+          data.preprint1.description,
+          data.preprint1.review1,
+          data.preprint1.review1Creator,
+          data.preprint1.review1Date,
+          data.preprint1.review2,
+          data.preprint1.review2Creator,
+          data.preprint1.review2Date,
+          data.preprint1.review3,
+          data.preprint1.review3Creator,
+          data.preprint1.review3Date,
+          data.preprint1.summary,
+          data.preprint1.summaryCreator,
+          data.preprint1.summaryDate,
         ]
 
         // eslint-disable-next-line no-plusplus

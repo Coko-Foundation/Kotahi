@@ -551,7 +551,9 @@ const redirectPromise = (
 
   // redirect after a new submission path
   const route = `${urlFrag}/versions/${data.createManuscript.id}/${
-    ['elife', 'ncrc'].includes(config.instanceName) ? 'evaluation' : 'submit'
+    ['preprint1', 'preprint2'].includes(config.instanceName)
+      ? 'evaluation'
+      : 'submit'
   }`
 
   // redirect after a short delay

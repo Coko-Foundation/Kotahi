@@ -124,7 +124,7 @@ module.exports = {
     host: 'FLAX_EXPRESS_HOST',
     protocol: 'FLAX_EXPRESS_PROTOCOL',
   },
-  'import-for-colab': {
+  'import-for-prc': {
     default_import: 'USE_COLAB_BIOPHYSICS_IMPORT',
   },
 }

@@ -230,7 +230,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   let instance
 
   if (config['notification-email'].use_colab === 'true') {
-    instance = 'colab'
+    instance = 'prc'
   } else {
     instance = 'generic'
   }

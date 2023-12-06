@@ -73,7 +73,7 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
     },
     status: {
       title: i18next.t('manuscriptsTable.Status'),
-      filterOptions: ['aperture', 'colab'].includes(config?.instanceName)
+      filterOptions: ['journal', 'prc'].includes(config?.instanceName)
         ? [
             { label: i18next.t('msStatus.new'), value: 'new' },
             { label: i18next.t('msStatus.submitted'), value: 'submitted' },
@@ -190,14 +190,14 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
     'submission.journal': { flex: '0.2 1 12em' },
     'submission.articleDescription': {
       component:
-        config?.instanceName === 'ncrc'
+        config?.instanceName === 'preprint2'
           ? TitleWithAbstractAsTooltip
           : DefaultField,
     },
     'meta.title': {
       title: i18next.t('manuscriptsTable.Title'),
       component:
-        config?.instanceName === 'colab'
+        config?.instanceName === 'prc'
           ? TitleWithAbstractAsTooltip
           : DefaultField,
     },
