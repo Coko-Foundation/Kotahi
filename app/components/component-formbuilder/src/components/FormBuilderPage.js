@@ -200,9 +200,13 @@ const FormBuilderPage = ({ category }) => {
   }
 
   const dragField = form => {
-    const forms = pruneEmpty(data.formsByCategory)[0]
+    const forms = pruneEmpty(data.formsByCategory)
 
-    const fields = forms.structure.children
+    const activeForm = forms?.filter(
+      formData => formData.id === activeFormId,
+    )[0]
+
+    const fields = activeForm.structure.children
 
     const fromIndex = form.source.index
 
@@ -212,23 +216,28 @@ const FormBuilderPage = ({ category }) => {
     const newFields = [...fields]
     newFields.splice(fromIndex, 1)
     newFields.splice(toIndex, 0, draggedField)
-    setFormFeilds([
-      { ...forms, structure: { ...forms.structure, children: newFields } },
-    ])
+
+    const updatedForm = {
+      ...activeForm,
+      structure: { ...activeForm.structure, children: newFields },
+    }
+
+    const updatedForms = forms.map(formData =>
+      formData.id === activeForm.id ? updatedForm : formData,
+    )
+
+    setFormFeilds(updatedForms)
 
     updateForm({
       variables: {
-        form: prepareForSubmit({
-          ...forms,
-          structure: { ...forms.structure, children: newFields },
-        }),
+        form: prepareForSubmit(updatedForm),
       },
       optimisticResponse: {
         __typename: 'Mutation',
         updateForm: {
           id: forms.id,
           __typename: 'FormStructure',
-          structure: { ...forms.structure, children: newFields },
+          structure: { ...activeForm.structure, children: newFields },
         },
       },
     })
