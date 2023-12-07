@@ -24,6 +24,8 @@ export const ColorBadge = styled.div`
 
 /** Displays the label as a badge colored according to props.color, with small all-caps font */
 export const LabelBadge = styled(ColorBadge)`
+  align-items: center;
+  display: flex;
   font-size: ${th('fontSizeBaseSmall')};
   font-variant: all-small-caps;
   line-height: 1.1em;

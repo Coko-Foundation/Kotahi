@@ -23,6 +23,7 @@ const MANUSCRIPTS_TABLE_HEAD = '[class*=style__ManuscriptsHeaderRow]'
 const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_ID = '[name="submission.articleId"]'
 const ARTICLE_LABEL = '[name="submission.labels"]'
+const DROPDOWN_LABEL = '[class*=LabelDropdown__BaseDropdown]'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = '[class*=style__ManuscriptsRow]'
 const TABLE_CELL = 'Table__Cell'
@@ -232,6 +233,9 @@ export const ManuscriptsPage = {
   },
   getConfirmButton() {
     return cy.getByContainsClass(BULKBUTTON).contains('Archive')
+  },
+  getLabelDropdown() {
+    return cy.get(DROPDOWN_LABEL).eq(0)
   },
   clickConfirm() {
     this.getConfirmButton().click()

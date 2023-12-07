@@ -32,9 +32,11 @@ import {
 } from '../../../shared/urlParamUtils'
 import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
 import useChat from '../../../hooks/useChat'
+import { updateManuscriptMutation } from '../../component-review/src/components/DecisionPage'
 
 const ManuscriptsPage = ({ currentUser, history }) => {
   const { t } = useTranslation()
+  const [doUpdateManuscript] = useMutation(updateManuscriptMutation)
   const config = useContext(ConfigContext)
   const { urlFrag } = config
   const chatRoomId = fnv.hash(config.baseUrl).hex()
@@ -202,6 +204,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       confirmBulkArchive={confirmBulkArchive}
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
+      doUpdateManuscript={doUpdateManuscript}
       groupManagerDiscussionChannel={groupManagerDiscussionChannel}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}

@@ -25,7 +25,12 @@ import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilter
  * @param {object} specialComponentValues values needed for specific components
  * @returns {object} The built special components
  */
-const buildSpecialColumnProps = (specialComponentValues, config) => {
+const buildSpecialColumnProps = (
+  specialComponentValues,
+  config,
+  fieldDefinitions,
+  doUpdateManuscript,
+) => {
   const {
     deleteManuscript,
     tryPublishManuscript,
@@ -183,7 +188,12 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
       flex: '0 1 10em',
       extraProps: { setReadyToEvaluateLabel },
       component: config?.manuscript?.labelColumn
-        ? LabelsOrSelectButton
+        ? props =>
+            LabelsOrSelectButton({
+              ...props,
+              options: fieldDefinitions['submission.labels']?.options,
+              doUpdateManuscript,
+            })
         : DefaultField,
     },
     'submission.label': { flex: '0.2 1 10em' },
