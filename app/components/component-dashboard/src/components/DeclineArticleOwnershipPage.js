@@ -100,7 +100,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
           <InvitationContent>
             <img
               alt={config?.groupIdentity?.brandName}
-              src={config?.groupIdentity?.logoPath}
+              src={
+                config?.logo?.storedObjects[0].url ||
+                config?.groupIdentity?.logoPath
+              }
             />
             <ThankYouString>{t('declineReviewPage.thanks')}</ThankYouString>
           </InvitationContent>
@@ -116,7 +119,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
           <InvitationContent>
             <img
               alt={config?.groupIdentity?.brandName}
-              src={config?.groupIdentity?.logoPath}
+              src={
+                config?.logo?.storedObjects[0].url ||
+                config?.groupIdentity?.logoPath
+              }
             />
             <FeedbackForm>
               <DeclinedInfoString>

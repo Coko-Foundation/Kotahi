@@ -1,8 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
+import BrandLogo from './brandLogo'
 
 const generateSchema = (
   emailNotificationOptions,
+  setLogoId,
+  deleteFile,
+  createFile,
+  config,
   defaultReviewerInvitationEmail,
   t,
 ) => {
@@ -466,10 +471,14 @@ const generateSchema = (
                     description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
+                  // Default logo
                   logoPath: {
-                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
+                  },
+                  logoId: {
+                    description: t('configPage.Logo'),
+                    type: ['string', 'null'],
                   },
                 },
               },
@@ -977,10 +986,14 @@ const generateSchema = (
                     description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
+                  // Default logo
                   logoPath: {
-                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
+                  },
+                  logoId: {
+                    description: t('configPage.Logo'),
+                    type: ['string', 'null'],
                   },
                 },
               },
@@ -1489,10 +1502,14 @@ const generateSchema = (
                     description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
+                  // Default logo
                   logoPath: {
-                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
+                  },
+                  logoId: {
+                    description: t('configPage.Logo'),
+                    type: ['string', 'null'],
                   },
                 },
               },
@@ -1997,10 +2014,14 @@ const generateSchema = (
                     description: t('configPage.Brand secondary colour'),
                     default: '#9e9e9e',
                   },
+                  // Default logo
                   logoPath: {
-                    description: t('configPage.Logo'),
                     type: 'string',
                     default: '/assets/logo-kotahi.png',
+                  },
+                  logoId: {
+                    description: t('configPage.Logo'),
+                    type: ['string', 'null'],
                   },
                 },
               },
@@ -2546,6 +2567,26 @@ const generateSchema = (
               value={props.value}
             />
           )
+        },
+      },
+      // Default logo
+      logoPath: {
+        'ui:widget': 'hidden',
+      },
+      logoId: {
+        'ui:widget': props => {
+          return (
+            <BrandLogo
+              config={config}
+              createFile={createFile}
+              deleteFile={deleteFile}
+              inputProps={props}
+              setLogoId={setLogoId}
+            />
+          )
+        },
+        'ui:options': {
+          accept: 'image/*',
         },
       },
     },

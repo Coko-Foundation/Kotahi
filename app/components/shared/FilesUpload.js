@@ -43,6 +43,7 @@ const DropzoneAndList = ({
   remove,
   createFile,
   deleteFile,
+  persistentFileLabel,
   fileType,
   fieldName,
   acceptMultiple,
@@ -87,35 +88,37 @@ const DropzoneAndList = ({
 
   return (
     <>
-      <Dropzone
-        accept={mimeTypesToAccept}
-        disabled={disabled}
-        multiple={acceptMultiple}
-        onDrop={async dropFiles => {
-          Array.from(dropFiles).forEach(async file => {
-            const data = await createFile(file)
-            push(data.createFile)
-          })
-        }}
-      >
-        {({ getRootProps, getInputProps }) => (
-          <Root {...getRootProps()} data-testid="dropzone">
-            <input {...getInputProps()} />
-            <Message disabled={disabled}>
-              {disabled ? (
-                t('dragndrop.Your file has been uploaded')
-              ) : (
-                <>
-                  {t('dragndrop.Drag and drop your files here')}
-                  <Icon color={color.brand1.base()} inline>
-                    file-plus
-                  </Icon>
-                </>
-              )}
-            </Message>
-          </Root>
-        )}
-      </Dropzone>
+      {disabled && !persistentFileLabel ? null : (
+        <Dropzone
+          accept={mimeTypesToAccept}
+          disabled={disabled}
+          multiple={acceptMultiple}
+          onDrop={async dropFiles => {
+            Array.from(dropFiles).forEach(async file => {
+              const data = await createFile(file)
+              push(data.createFile)
+            })
+          }}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <Root {...getRootProps()} data-testid="dropzone">
+              <input {...getInputProps()} />
+              <Message disabled={disabled}>
+                {disabled ? (
+                  t('dragndrop.Your file has been uploaded')
+                ) : (
+                  <>
+                    {t('dragndrop.Drag and drop your files here')}
+                    <Icon color={color.brand1.base()} inline>
+                      file-plus
+                    </Icon>
+                  </>
+                )}
+              </Message>
+            </Root>
+          )}
+        </Dropzone>
+      )}
 
       {renderFileList
         ? renderFileList(files, { remove, deleteFile })
@@ -151,6 +154,7 @@ DropzoneAndList.defaultProps = {
 const FilesUpload = ({
   fileType,
   fieldName,
+  persistentFileLabel,
   manuscriptId,
   reviewId,
   initializeReview,
@@ -203,11 +207,11 @@ const FilesUpload = ({
         currFile => currFile !== file.id,
       )
 
-      if (onFileRemoved) onFileRemoved(file)
-
       // Update the new array with the file deleted
       onChange(filteredFiles, fieldName)
     }
+
+    if (onFileRemoved) onFileRemoved(file)
 
     return data
   }
@@ -223,6 +227,7 @@ const FilesUpload = ({
           deleteFile={deleteFile}
           fieldName={fieldName}
           fileType={fileType}
+          persistentFileLabel={persistentFileLabel}
           mimeTypesToAccept={mimeTypesToAccept}
           renderFileList={renderFileList}
           {...formikProps}
@@ -250,6 +255,9 @@ FilesUpload.propTypes = {
   initializeReview: PropTypes.func,
   /** Allow multiple drag/drop or multiple selection in file dialog */
   acceptMultiple: PropTypes.bool,
+  /** Keep showing the file label in case of single file selection */
+  persistentFileLabel: PropTypes.bool,
+
   mimeTypesToAccept: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string.isRequired),
@@ -262,6 +270,7 @@ FilesUpload.defaultProps = {
   acceptMultiple: true,
   onChange: null,
   mimeTypesToAccept: undefined,
+  persistentFileLabel: false,
 }
 
 // eslint-disable-next-line import/prefer-default-export
