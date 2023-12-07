@@ -55,25 +55,32 @@ const Manuscript = ({
   history,
   // updateManuscript,
   channel,
-}) => (
-  <Columns>
-    {file &&
-    file.storedObjects[0].mimetype ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-      <ManuscriptContainer>
-        {content ? (
-          <FullWaxEditor readonly user={currentUser} value={content} />
-        ) : (
-          <Spinner />
-        )}
-      </ManuscriptContainer>
-    ) : (
-      <Info>No supported view of the file</Info>
-    )}
-    <Chat>
-      <MessageContainer channelId={channel.id} currentUser={currentUser} />
-    </Chat>
-  </Columns>
-)
+  chatProps,
+}) => {
+  return (
+    <Columns>
+      {file &&
+      file.storedObjects[0].mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+        <ManuscriptContainer>
+          {content ? (
+            <FullWaxEditor readonly user={currentUser} value={content} />
+          ) : (
+            <Spinner />
+          )}
+        </ManuscriptContainer>
+      ) : (
+        <Info>No supported view of the file</Info>
+      )}
+      <Chat>
+        <MessageContainer
+          channelId={channel.id}
+          chatProps={chatProps}
+          currentUser={currentUser}
+        />
+      </Chat>
+    </Columns>
+  )
+}
 
 export default withRouter(Manuscript)
