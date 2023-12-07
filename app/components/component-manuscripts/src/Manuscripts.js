@@ -87,6 +87,7 @@ const Manuscripts = ({ history, ...props }) => {
     chatProps,
     groupManagerDiscussionChannel,
     channels,
+    doUpdateManuscript,
   } = props
 
   const { t } = useTranslation()
@@ -266,6 +267,7 @@ const Manuscripts = ({ history, ...props }) => {
     fieldDefinitions,
     specialComponentValues,
     displayProps,
+    doUpdateManuscript,
   )
 
   const hideChat = async () => {

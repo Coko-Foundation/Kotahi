@@ -29,7 +29,7 @@ describe('manuscripts page tests', () => {
       DashboardPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.get('[aria-label="Labels"]')
+      cy.getByContainsAriaLabel('Labels')
         .clear()
         .focus()
         .type('Ready to evaluate{enter}', { delay: 20 })
@@ -42,7 +42,7 @@ describe('manuscripts page tests', () => {
       cy.contains('Labels').scrollIntoView()
       // SubmissionFormPage.clickLabelsDropdown()
       // SubmissionFormPage.selectDropdownOption(1)
-      cy.get('[aria-label="Labels"]')
+      cy.getByContainsAriaLabel('Labels')
         .clear()
         .focus()
         .type('Evaluated{enter}', { delay: 20 })
@@ -53,7 +53,7 @@ describe('manuscripts page tests', () => {
       cy.contains('Labels').scrollIntoView()
       // SubmissionFormPage.clickLabelsDropdown()
       // SubmissionFormPage.selectDropdownOption(0)
-      cy.get('[aria-label="Labels"]')
+      cy.getByContainsAriaLabel('Labels')
         .clear()
         .focus()
         .type('Ready to evaluate{enter}', { delay: 20 })
@@ -63,24 +63,37 @@ describe('manuscripts page tests', () => {
     it('filter article after label and url contain that label', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
-      ManuscriptsPage.clickArticleLabel(-1)
+      ManuscriptsPage.clickArticleLabel(0)
+      // Selects the last child div element within the container with the name "submission.labels"
+      cy.get('[name="submission.labels"] > div:last-child')
+        .contains('Ready to evaluate')
+        .click()
       ManuscriptsPage.getTableRowsCount().should('eq', 3)
       cy.url().should('contain', 'readyToEvaluate')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
+      ManuscriptsPage.getLabelRow(2).should('contain', 'Ready to evaluate')
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.clickArticleLabel(2)
+      ManuscriptsPage.clickArticleLabel(0)
+      // Selects the last child div element within the container with the name "submission.labels"
+      cy.get('[name="submission.labels"] > div:last-child')
+        .contains('Evaluated')
+        .click()
       ManuscriptsPage.getTableRowsCount().should('eq', 2)
       cy.url().should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Evaluated')
+      ManuscriptsPage.getLabelRow(1).should('contain', 'Evaluated')
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.clickArticleLabel(1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
-      cy.url().should('contain', 'readyToEvaluate')
-      ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
-      ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
+      // Selects the last child div element within the container with the name "submission.labels"
+      ManuscriptsPage.clickArticleLabel(0)
+      cy.get('[name="submission.labels"] > div:last-child')
+        .contains('Ready to publish')
+        .click()
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      cy.url().should('contain', 'readyToPublish')
+      ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to publish')
     })
-    it('combined filtering after status and label, link content that combination', () => {
+    it('combined filtering after status, link content that combination', () => {
       Menu.clickDashboardAndVerifyPageLoaded()
       DashboardPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -110,12 +123,6 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getTableRowsCount().should('eq', 4)
       ManuscriptsPage.getStatus(0).should('contain', 'Unsubmitted')
       cy.url().should('contain', 'new')
-      ManuscriptsPage.clickArticleLabel(-1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
-      cy.url().should(
-        'contain',
-        'status=new&pagenum=1&submission.labels=readyToEvaluate',
-      )
     })
   })
   context('select button from Label column', () => {

@@ -1,15 +1,23 @@
 import React from 'react'
-import DefaultField from './DefaultField'
 import { StyledButton } from '../style'
+import LabelDropdown from './LabelDropdown'
 
 const LabelsOrSelectButton = ({
   values,
-  applyFilter,
   manuscript,
   setReadyToEvaluateLabel,
+  options,
+  doUpdateManuscript,
 }) => {
   if (values?.length)
-    return <DefaultField applyFilter={applyFilter} values={values} />
+    return (
+      <LabelDropdown
+        doUpdateManuscript={doUpdateManuscript}
+        manuscript={manuscript}
+        options={options}
+        values={values}
+      />
+    )
 
   return (
     <StyledButton
