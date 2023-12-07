@@ -3,8 +3,24 @@ import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { ConfigContext } from '../../config/src'
 import { UPDATE_CONFIG } from '../../../queries'
+import {
+  createFileMutation,
+  deleteFileMutation,
+} from '../../component-cms-manager/src/queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import ConfigManagerForm from './ConfigManagerForm'
+
+const fileFields = `
+  id
+  name
+  tags
+  storedObjects {
+    mimetype
+    key
+    url
+    type
+  }
+`
 
 const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
   query GetConfigAndEmailTemplates($id: ID!) {
@@ -12,6 +28,9 @@ const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
       id
       formData
       active
+      logo {
+        ${fileFields}
+      }
       groupId
     }
     emailTemplates {
@@ -32,6 +51,8 @@ const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
 const ConfigManagerPage = ({ match, ...props }) => {
   const config = useContext(ConfigContext)
   const [update] = useMutation(UPDATE_CONFIG)
+  const [createFile] = useMutation(createFileMutation)
+  const [deleteFile] = useMutation(deleteFileMutation)
   const [updateConfigStatus, setUpdateConfigStatus] = useState(null)
 
   const { loading, error, data } = useQuery(GET_CONFIG_AND_EMAIL_TEMPLATES, {
@@ -63,7 +84,10 @@ const ConfigManagerPage = ({ match, ...props }) => {
 
   return (
     <ConfigManagerForm
+      config={data.config}
       configId={data.config.id}
+      createFile={createFile}
+      deleteFile={deleteFile}
       disabled={!data.config.active}
       emailTemplates={data.emailTemplates}
       formData={JSON.parse(data.config.formData)}

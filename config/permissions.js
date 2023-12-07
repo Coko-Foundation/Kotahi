@@ -156,6 +156,12 @@ const isCMSFile = rule({ cache: 'contextual' })(
   },
 )
 
+const isLogoFile = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return parent.tags && parent.tags.includes('brandLogo')
+  },
+)
+
 const isExportTemplatingFile = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     return parent.tags && parent.tags.includes('templateGroupAsset')
@@ -636,6 +642,7 @@ const permissions = {
   File: or(
     isExportTemplatingFile,
     isCMSFile,
+    isLogoFile,
     isPublicFileFromPublishedManuscript,
     userIsAuthorOfTheManuscriptOfTheFile,
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,

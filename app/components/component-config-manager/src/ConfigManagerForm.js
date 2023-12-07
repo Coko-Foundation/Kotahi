@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useState } from 'react'
 /* eslint-disable import/no-unresolved */
 import Form from '@rjsf/core'
 import { useTranslation } from 'react-i18next'
@@ -29,6 +29,9 @@ const ConfigManagerForm = ({
   configId,
   disabled,
   formData,
+  deleteFile,
+  createFile,
+  config,
   liveValidate = true,
   omitExtraData = true,
   updateConfig,
@@ -36,6 +39,8 @@ const ConfigManagerForm = ({
   emailTemplates,
 }) => {
   const { t } = useTranslation()
+
+  const [logoId, setLogoId] = useState(null)
 
   const emailNotificationOptions = emailTemplates.map(template => {
     const emailOption = {
@@ -59,9 +64,19 @@ const ConfigManagerForm = ({
 
   const { schema, uiSchema } = generateSchema(
     emailNotificationOptions,
+    setLogoId,
+    deleteFile,
+    createFile,
+    config,
     defaultReviewerInvitationTemplate,
     t,
   )
+
+  const updateConfigData = formDataToUpdate => {
+    const updatedFormData = formDataToUpdate
+    updatedFormData.groupIdentity.logoId = logoId
+    updateConfig(configId, updatedFormData)
+  }
 
   return (
     <>
@@ -85,7 +100,7 @@ const ConfigManagerForm = ({
                 liveValidate={liveValidate}
                 noHtml5Validate
                 omitExtraData={omitExtraData}
-                onSubmit={values => updateConfig(configId, values.formData)}
+                onSubmit={values => updateConfigData(values.formData)}
                 schema={schema}
                 uiSchema={uiSchema}
               >

@@ -87,7 +87,9 @@ const Pages = () => {
     id: activeConfig?.id,
     groupId: currentGroup?.id,
     groupName: currentGroup?.name,
+    formData: activeConfig?.formData,
     urlFrag: `/${currentGroup?.name}`,
+    logo: activeConfig?.logo,
     ...oldConfig,
     ...JSON.parse(activeConfig?.formData || '{}'),
   }

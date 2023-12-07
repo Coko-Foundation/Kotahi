@@ -160,6 +160,18 @@ const getFileWithUrl = async file => {
   return file
 }
 
+/* Set Url for file */
+const setFileUrls = storedObjects => {
+  const updatedStoredObjects = []
+  /* eslint-disable no-await-in-loop */
+  Object.keys(storedObjects).forEach(async key => {
+    const storedObject = storedObjects[key]
+    storedObject.url = await fileStorage.getURL(storedObject.key)
+    updatedStoredObjects.push(storedObject)
+  })
+  return updatedStoredObjects
+}
+
 /** Replace file URLs in source html with regenerated URLs to files of specified size */
 const replaceImageSrc = async (source, files, size) => {
   const $ = cheerio.load(source)
@@ -353,5 +365,6 @@ module.exports = {
   replaceImageSrcResponsive,
   uploadImage,
   imageFinder,
+  setFileUrls,
   Blob,
 }

@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+const File = require('@coko/server/src/models/file/file.model')
 const { getConfigJsonString } = require('./configObject')
 
 const {
@@ -7,12 +8,15 @@ const {
   rescheduleJobsOnChange,
 } = require('../../utils/configUtils')
 
+const { setFileUrls } = require('../../utils/fileStorageUtils')
+
 const resolvers = {
   Query: {
     config: async (_, { id }, ctx) => {
       let config = await models.Config.query().findById(id)
       config = await hideSensitiveInformation(config)
       config.formData = JSON.stringify(config.formData)
+
       return config
     },
     oldConfig: async () => getConfigJsonString(),
@@ -42,6 +46,24 @@ const resolvers = {
       return config
     },
   },
+
+  Config: {
+    async logo(parent) {
+      try {
+        const { groupIdentity } = JSON.parse(parent.formData)
+
+        if (!groupIdentity.logoId) return null
+        const logoFile = await File.find(groupIdentity.logoId)
+
+        const updatedStoredObjects = setFileUrls(logoFile.storedObjects)
+
+        logoFile.storedObjects = updatedStoredObjects
+        return logoFile
+      } catch (error) {
+        return null
+      }
+    },
+  },
 }
 
 const typeDefs = `
@@ -60,6 +82,7 @@ const typeDefs = `
     updated: DateTime
     formData: String!
     active: Boolean!
+    logo: File
     groupId: ID!
   }
 

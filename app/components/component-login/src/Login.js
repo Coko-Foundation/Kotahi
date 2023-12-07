@@ -140,7 +140,10 @@ const Login = ({ logo = null, ...props }) => {
         <Content>
           <img
             alt={config?.groupIdentity?.brandName}
-            src={config?.groupIdentity?.logoPath}
+            src={
+              config?.logo?.storedObjects[0].url ||
+              config?.groupIdentity?.logoPath
+            }
           />
           <RegisterInfoString>
             <Trans

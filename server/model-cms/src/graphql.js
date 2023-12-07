@@ -1,12 +1,11 @@
 const models = require('@pubsweet/models')
 
-const { fileStorage } = require('@coko/server')
-
 const File = require('@coko/server/src/models/file/file.model')
 
 const {
   replaceImageSrc,
   getFilesWithUrl,
+  setFileUrls,
 } = require('../../utils/fileStorageUtils')
 
 const setInitialLayout = async groupId => {
@@ -43,18 +42,6 @@ const getFlaxPageConfig = async (configKey, groupId) => {
       if (page1.sequenceIndex > page2.sequenceIndex) return 1
       return 0
     })
-}
-
-const setFileUrls = storedObjects => {
-  const updatedStoredObjects = []
-  /* eslint-disable no-await-in-loop */
-  Object.keys(storedObjects).forEach(async key => {
-    const storedObject = storedObjects[key]
-    storedObject.url = await fileStorage.getURL(storedObject.key)
-    updatedStoredObjects.push(storedObject)
-  })
-
-  return updatedStoredObjects
 }
 
 const addSlashes = inputString => {
