@@ -24,7 +24,7 @@ const Info = styled.span`
 const Columns = styled.div`
   display: grid;
   grid-template-areas: 'manuscript chat';
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: ${({ chatProps }) => (chatProps ? '3fr 2fr' : '3fr')};
   height: 100vh;
   justify-content: center;
   overflow: hidden;
@@ -72,13 +72,15 @@ const Manuscript = ({
       ) : (
         <Info>No supported view of the file</Info>
       )}
-      <Chat>
-        <MessageContainer
-          channelId={channel.id}
-          chatProps={chatProps}
-          currentUser={currentUser}
-        />
-      </Chat>
+      {chatProps && (
+        <Chat>
+          <MessageContainer
+            channelId={channel.id}
+            chatProps={chatProps}
+            currentUser={currentUser}
+          />
+        </Chat>
+      )}
     </Columns>
   )
 }
