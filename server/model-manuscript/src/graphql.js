@@ -1978,6 +1978,7 @@ const typeDefs = `
 
   enum ImageSizeInput {
     original
+    full
     medium
     small
   }

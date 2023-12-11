@@ -1881,10 +1881,10 @@
     stylelint-order "^4.1.0"
     stylelint-processor-styled-components "^1.10.0"
 
-"@coko/server@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.3.0.tgz#de1b0f2d09c1e7af3b21eb707cf7748f88c6f8ac"
-  integrity sha512-V1dFNvt8yeIRejNhDUk/yto/IlSYIUz2VxTNuoEXDgR+xVkXOFWSg8KbwdHmQdQ3y7EeNdwa8gMgzU2BvbzdpQ==
+"@coko/server@2.5.2":
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.5.2.tgz#f9e356cf0bb316033f33d28eacf8160fdbfe53a8"
+  integrity sha512-FYPnhC9Ob/wBXGNXGJnCvfyrOLjfAoju1Wx6vMpzXnWbb2BJUj8VOF356laOtblBs9wY1Nck1+BCzTOcCf2QEA==
   dependencies:
     "@pubsweet/base-model" "^4.0.10"
     "@pubsweet/component-send-email" "^0.4.13"
@@ -1895,6 +1895,7 @@
     apollo-server-express "^2.11.0"
     aws-sdk "^2.1046.0"
     axios "^0.24.0"
+    bcrypt "^5.1.1"
     body-parser "^1.19.0"
     command-exists "^1.2.9"
     config "^3.3.2"
@@ -6253,7 +6254,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bcrypt@3.0.8, bcrypt@^3.0.6:
+bcrypt@3.0.8, bcrypt@^3.0.6, bcrypt@^5.1.1:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-3.0.8.tgz#fe437b7569faffc1105c3c3f6e7d2913e3d3bea5"
   integrity sha512-jKV6RvLhI36TQnPDvUFqBEnGX9c8dRRygKxCZu7E+MgLfKZbmmXL8a7/SFFOyHoPNX9nV81cKRC5tbQfvEQtpw==
