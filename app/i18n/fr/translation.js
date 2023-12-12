@@ -354,6 +354,7 @@ const fr = {
       'Brand primary colour': 'Couleur principale de la marque',
       'Brand secondary colour': 'Couleur secondaire de la marque',
       Logo: 'Logo',
+      Favicon: 'Icône de favori',
       Dashboard: 'Tableau de bord',
       landingPage:
         "Page d'accueil pour les utilisateurs du gestionnaire de groupe après la connexion",

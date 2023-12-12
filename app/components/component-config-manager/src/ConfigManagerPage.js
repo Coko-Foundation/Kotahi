@@ -31,6 +31,10 @@ const GET_CONFIG_AND_EMAIL_TEMPLATES = gql`
       logo {
         ${fileFields}
       }
+      
+      icon {
+        ${fileFields}
+      }
       groupId
     }
     emailTemplates {

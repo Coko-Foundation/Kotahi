@@ -57,7 +57,7 @@
       "clinicalPresentationPrognosticRiskFactorsPrognosticTools": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
       "modelingCovid19MortalityMorbidityAndDemandForHealthcareServices": "modeling_covid-19-mortality-morbidity-and-demand-for-healthcare-services",
       "modelingImpactOnHealthcareServicesForNonRespiratoryDiseases": "modeling_impact-on-healthcare-services-for-non-respiratory-diseases",
-        "modelingMasks": "modeling_masks",
+      "modelingMasks": "modeling_masks",
       "modelingSchoolAndBusinessClosures": "modeling_school-and-business-closures",
       "modelingStayAtHomeOrdersAndMobilityRestrictions": "modeling_stay-at-home-orders-and-mobility-restrictions",
       "modelingTestingAndContactTracing": "modeling_testing-and-contact-tracing",

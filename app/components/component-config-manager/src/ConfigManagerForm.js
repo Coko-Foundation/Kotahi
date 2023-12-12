@@ -39,8 +39,8 @@ const ConfigManagerForm = ({
   emailTemplates,
 }) => {
   const { t } = useTranslation()
-
   const [logoId, setLogoId] = useState(null)
+  const [favicon, setFavicon] = useState(null)
 
   const emailNotificationOptions = emailTemplates.map(template => {
     const emailOption = {
@@ -65,6 +65,7 @@ const ConfigManagerForm = ({
   const { schema, uiSchema } = generateSchema(
     emailNotificationOptions,
     setLogoId,
+    setFavicon,
     deleteFile,
     createFile,
     config,
@@ -75,6 +76,7 @@ const ConfigManagerForm = ({
   const updateConfigData = formDataToUpdate => {
     const updatedFormData = formDataToUpdate
     updatedFormData.groupIdentity.logoId = logoId
+    updatedFormData.groupIdentity.favicon = favicon
     updateConfig(configId, updatedFormData)
   }
 

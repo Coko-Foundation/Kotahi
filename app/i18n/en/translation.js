@@ -350,6 +350,7 @@ const en = {
       'Brand primary colour': 'Brand primary colour',
       'Brand secondary colour': 'Brand secondary colour',
       Logo: 'Logo',
+      Favicon: 'Favicon',
       Dashboard: 'Dashboard',
       landingPage: 'Landing page for Group Manager users upon login',
       'Dashboard Page': 'Dashboard Page',

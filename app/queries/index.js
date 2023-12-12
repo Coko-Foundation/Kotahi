@@ -400,10 +400,14 @@ export const GET_CONFIG = gql`
       formData
       active
       groupId
-      logoId
       logo {
         ${fileFields}
       }
+      icon {
+        ${fileFields}
+      }
+
+      logoId
     }
   }
 `
@@ -465,6 +469,9 @@ export const GET_GROUPS = gql`
         formData
         active
         logo {
+          ${fileFields}
+        }
+        icon {
           ${fileFields}
         }
       }
