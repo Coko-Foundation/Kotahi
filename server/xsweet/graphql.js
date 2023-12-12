@@ -98,11 +98,11 @@ const getXsweet = async url => {
       // NOTE THAT THERE ARE OTHER WAYS TO DO THIS!
       // See https://gitlab.coko.foundation/cokoapps/xsweet/-/blob/master/server/api/api.js
       // – that's different from what's in the README, which is wrong.
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
       headers: {
         authorization: `Bearer ${xsweetAccessToken}`,
         'Content-Type': 'application/json', // This might be important for LaTeX because JSON uses \ as an escape.
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
         ...form.getHeaders(),
       },
       data: form,
