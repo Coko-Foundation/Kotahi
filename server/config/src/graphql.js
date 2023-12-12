@@ -10,6 +10,20 @@ const {
 
 const { setFileUrls } = require('../../utils/fileStorageUtils')
 
+const getFile = async (config, fieldName) => {
+  try {
+    const { groupIdentity } = JSON.parse(config.formData)
+    const file = await File.find(groupIdentity[fieldName])
+
+    const updatedStoredObjects = setFileUrls(file.storedObjects)
+
+    file.storedObjects = updatedStoredObjects
+    return file
+  } catch (error) {
+    return null
+  }
+}
+
 const resolvers = {
   Query: {
     config: async (_, { id }, ctx) => {
@@ -49,19 +63,12 @@ const resolvers = {
 
   Config: {
     async logo(parent) {
-      try {
-        const { groupIdentity } = JSON.parse(parent.formData)
-
-        if (!groupIdentity.logoId) return null
-        const logoFile = await File.find(groupIdentity.logoId)
-
-        const updatedStoredObjects = setFileUrls(logoFile.storedObjects)
-
-        logoFile.storedObjects = updatedStoredObjects
-        return logoFile
-      } catch (error) {
-        return null
-      }
+      const logo = getFile(parent, 'logoId')
+      return logo
+    },
+    async icon(parent) {
+      const icon = getFile(parent, 'favicon')
+      return icon
     },
   },
 }
@@ -83,6 +90,7 @@ const typeDefs = `
     formData: String!
     active: Boolean!
     logo: File
+    icon: File
     groupId: ID!
   }
 

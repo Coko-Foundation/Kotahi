@@ -227,8 +227,8 @@ const FilesUpload = ({
           deleteFile={deleteFile}
           fieldName={fieldName}
           fileType={fileType}
-          persistentFileLabel={persistentFileLabel}
           mimeTypesToAccept={mimeTypesToAccept}
+          persistentFileLabel={persistentFileLabel}
           renderFileList={renderFileList}
           {...formikProps}
         />

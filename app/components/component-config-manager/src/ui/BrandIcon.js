@@ -4,48 +4,58 @@ import { Formik } from 'formik'
 import { FilesUpload } from '../../../shared'
 import { CompactSection } from '../../../component-cms-manager/src/style'
 
-const setInitialValues = (existingConfig, selectedFile) => {
+const setInitialValues = (
+  existingConfig,
+  selectedFile,
+  fieldName,
+  setFileId,
+) => {
   const initialData = { ...existingConfig }
 
-  if (Array.isArray(selectedFile) && selectedFile.length === 0) {
-    initialData.logo = [initialData.logo]
+  if (selectedFile?.length < 1) {
+    initialData[fieldName] = [initialData[fieldName]]
+    setFileId(initialData[fieldName][0]?.id)
   } else {
-    initialData.logo = selectedFile || [initialData.logo]
+    initialData[fieldName] = selectedFile
+    setFileId(selectedFile?.id)
   }
 
   return initialData
 }
 
-const FilesUploadWithOnChange = ({ handleFileChange, ...otherProps }) => {
-  return (
-    <CompactSection>
-      <FilesUpload
-        {...otherProps}
-        onFileAdded={file => {
-          handleFileChange(file)
-        }}
-        onFileRemoved={file => {
-          handleFileChange(null)
-        }}
-      />
-    </CompactSection>
-  )
-}
+const FilesUploadWithOnChange = ({ handleFileChange, ...otherProps }) => (
+  <CompactSection>
+    <FilesUpload
+      {...otherProps}
+      onFileAdded={file => handleFileChange(file)}
+      onFileRemoved={() => handleFileChange(null)}
+    />
+  </CompactSection>
+)
 
-const BrandLogo = ({
+const BrandIcon = ({
   config,
-  setLogoId,
+  setFileId,
   createFile,
+  fieldName,
+  fileType,
   deleteFile,
+  mimeTypesToAccept,
   ...restProps
 }) => {
   const [selectedFile, setSelectedFile] = useState([])
-  const initialData = setInitialValues(config, selectedFile)
 
   const handleFileChange = file => {
-    setLogoId(file?.id)
+    setFileId(file?.id)
     setSelectedFile(file)
   }
+
+  const initialData = setInitialValues(
+    config,
+    selectedFile,
+    fieldName,
+    setFileId,
+  )
 
   return (
     <Formik
@@ -59,16 +69,15 @@ const BrandLogo = ({
         confirmBeforeDelete
         createFile={createFile}
         deleteFile={deleteFile}
-        fieldName="logo"
-        fileType="brandLogo"
+        fieldName={fieldName}
+        fileType={fileType}
         handleFileChange={handleFileChange}
         manuscriptId={config?.id}
-        mimeTypesToAccept="image/*"
-        setLogoId={setLogoId}
+        mimeTypesToAccept={mimeTypesToAccept}
         {...restProps}
       />
     </Formik>
   )
 }
 
-export default BrandLogo
+export default BrandIcon

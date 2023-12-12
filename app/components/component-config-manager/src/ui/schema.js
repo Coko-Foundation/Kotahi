@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
-import BrandLogo from './brandLogo'
+import BrandIcon from './BrandIcon'
 
 const generateSchema = (
   emailNotificationOptions,
   setLogoId,
+  setFavicon,
   deleteFile,
   createFile,
   config,
@@ -439,8 +440,8 @@ const generateSchema = (
     properties: {
       instanceName: {
         type: 'string',
-        enum: ['preprint1', 'preprint2', 'prc', 'journal'],
-        default: 'journal',
+        enum: ['elife', 'ncrc', 'colab', 'aperture'],
+        default: 'aperture',
       },
     },
     required: ['instanceName'],
@@ -450,7 +451,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['preprint1'],
+                enum: ['elife'],
               },
               groupIdentity: {
                 type: 'object',
@@ -478,6 +479,11 @@ const generateSchema = (
                   },
                   logoId: {
                     description: t('configPage.Logo'),
+                    type: ['string', 'null'],
+                  },
+
+                  favicon: {
+                    description: t('configPage.Favicon'),
                     type: ['string', 'null'],
                   },
                 },
@@ -965,7 +971,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['preprint2'],
+                enum: ['ncrc'],
               },
               groupIdentity: {
                 type: 'object',
@@ -993,6 +999,10 @@ const generateSchema = (
                   },
                   logoId: {
                     description: t('configPage.Logo'),
+                    type: ['string', 'null'],
+                  },
+                  favicon: {
+                    description: t('configPage.Favicon'),
                     type: ['string', 'null'],
                   },
                 },
@@ -1481,7 +1491,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['prc'],
+                enum: ['colab'],
               },
               groupIdentity: {
                 type: 'object',
@@ -1509,6 +1519,10 @@ const generateSchema = (
                   },
                   logoId: {
                     description: t('configPage.Logo'),
+                    type: ['string', 'null'],
+                  },
+                  favicon: {
+                    description: t('configPage.Favicon'),
                     type: ['string', 'null'],
                   },
                 },
@@ -1993,7 +2007,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['journal'],
+                enum: ['aperture'],
               },
               groupIdentity: {
                 type: 'object',
@@ -2021,6 +2035,10 @@ const generateSchema = (
                   },
                   logoId: {
                     description: t('configPage.Logo'),
+                    type: ['string', 'null'],
+                  },
+                  favicon: {
+                    description: t('configPage.Favicon'),
                     type: ['string', 'null'],
                   },
                 },
@@ -2576,17 +2594,39 @@ const generateSchema = (
       logoId: {
         'ui:widget': props => {
           return (
-            <BrandLogo
+            <BrandIcon
               config={config}
               createFile={createFile}
               deleteFile={deleteFile}
+              fieldName="logo"
+              fileType="brandLogo"
               inputProps={props}
-              setLogoId={setLogoId}
+              mimeTypesToAccept={'image/*'}
+              setFileId={setLogoId}
             />
           )
         },
         'ui:options': {
           accept: 'image/*',
+        },
+      },
+      favicon: {
+        'ui:widget': props => {
+          return (
+            <BrandIcon
+              config={config}
+              createFile={createFile}
+              deleteFile={deleteFile}
+              fieldName="icon"
+              fileType="favicon"
+              inputProps={props}
+              mimeTypesToAccept="image/png,image/gif"
+              setFileId={setFavicon}
+            />
+          )
+        },
+        'ui:options': {
+          accept: 'image/png,image/gif',
         },
       },
     },

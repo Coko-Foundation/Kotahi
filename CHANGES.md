@@ -11,7 +11,7 @@
 
 Prior upgrading Kotahi, please ensure the instance archetypes have been renamed in the .env file.
 
-- `NOTIFICATION_EMAIL_CC_ENABLED=` variable to enable/disable carbon copies (CC) has been __deprecated__. Group Managers can manually add a CC from the Emails>Email template>CC field
+- `NOTIFICATION_EMAIL_CC_ENABLED=` variable to enable/disable carbon copies (CC) has been **deprecated**. Group Managers can manually add a CC from the Emails>Email template>CC field
 
 ### 2023-09-28: Version 2.1.0
 

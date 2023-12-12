@@ -355,6 +355,7 @@ const esLa = {
       'Brand primary colour': 'Color Primario de la Marca',
       'Brand secondary colour': 'Color Secundario de la Marca',
       Logo: 'Logotipo',
+      Favicon: 'Favicon',
       Dashboard: 'Panel de Control',
       landingPage:
         'Página de Inicio para Usuarios del Gerente de Grupo al Iniciar Sesión',
