@@ -270,6 +270,14 @@ const esLa = {
       noFileLoaded: 'No se ha cargado ningún archivo de manuscrito',
       noSupportedView: 'No hay vista admitida del archivo',
     },
+    reviewDecisionSection: {
+      noDecisionUpdated:
+        'Aún no se ha actualizado ninguna decisión para este manuscrito',
+    },
+    otherReviewsSection: {
+      noSharedReviews:
+        'No hay revisiones colaborativas disponibles para este manuscrito todavía',
+    },
     cmsPage: {
       pages: {
         addNew: 'Agregar una nueva página',
