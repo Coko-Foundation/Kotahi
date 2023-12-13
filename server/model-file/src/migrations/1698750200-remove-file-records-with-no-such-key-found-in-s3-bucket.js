@@ -13,20 +13,16 @@ exports.up = async knex => {
 
     const s3FileObjects = await fileStorage.list()
 
-    const s3FilteredFileObjectKeys = s3FileObjects.Contents.map(
-      content => content.Key,
+    const s3FilteredFileObjectKeys = new Set(
+      s3FileObjects.Contents.map(content => content.Key),
     )
 
     const filesWithNoSuchKeyFound = files.filter(file => {
       const { key } = file.storedObjects.find(
-        async storedObject => storedObject.type === 'original',
+        storedObject => storedObject.type === 'original',
       )
 
-      if (!s3FilteredFileObjectKeys.includes(key)) {
-        return true
-      }
-
-      return false
+      return !s3FilteredFileObjectKeys.has(key)
     })
 
     logger.info(
