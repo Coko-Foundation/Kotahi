@@ -1,14 +1,23 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import moment from 'moment'
-import { Tabs } from '@pubsweet/ui'
-
 import { useTranslation } from 'react-i18next'
+import { v4 as uuid } from 'uuid'
+import { set, debounce } from 'lodash'
+import { gql } from '@apollo/client'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
-import { Columns, Manuscript, Chat, SectionContent } from '../../../../shared'
+import {
+  Columns,
+  Manuscript,
+  Chat,
+  SectionContent,
+  HiddenTabs,
+  ErrorBoundary,
+  VersionSwitcher,
+} from '../../../../shared'
 import { ChatButton, CollapseButton } from '../style'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
@@ -21,14 +30,10 @@ const hasManuscriptFile = manuscript =>
 const ReviewLayout = ({
   currentUser,
   versions,
-  review,
   reviewForm,
   onSubmit,
   // isValid,
-  status,
   channels,
-  updateReview,
-  updateReviewJsonData,
   uploadFile,
   channelId,
   submissionForm,
@@ -40,36 +45,29 @@ const ReviewLayout = ({
   decisionForm,
   threadedDiscussionProps,
   chatProps,
+  updateReviewMutation,
+  history,
+  updateReviewerStatus,
 }) => {
-  const config = useContext(ConfigContext)
+  const config = useContext(ConfigContext) || {}
+  const { urlFrag } = config
   const reviewSections = []
   const latestVersion = versions[0]
   const priorVersions = versions.slice(1)
   priorVersions.reverse() // Convert to chronological order (was reverse-chron)
 
-  const decision = latestVersion.reviews.find(r => r.isDecision) || {}
   const { t } = useTranslation()
 
   const channelData = chatProps?.channelsData?.find(
     channel => channel?.channelId === channelId,
   )
 
-  const decisionIsComplete = [
-    'accepted',
-    'revise',
-    'rejected',
-    'evaluated',
-    'published',
-  ].includes(latestVersion.status)
-
-  const redactedDecisionForm = decisionIsComplete
-    ? decisionForm
-    : {
-        ...decisionForm,
-        children: decisionForm.children.filter(
-          x => x.component === 'ThreadedDiscussion',
-        ),
-      }
+  const sharedReviews = manuscript.reviews.filter(
+    r =>
+      r.isSharedWithCurrentUser &&
+      r.user?.id !== currentUser.id &&
+      !r.isDecision,
+  )
 
   priorVersions.forEach(msVersion => {
     if (msVersion.reviews?.some(r => !r.user))
@@ -106,6 +104,7 @@ const ReviewLayout = ({
             manuscript={msVersion}
             reviewerId={currentUser.id}
             reviewForm={reviewForm}
+            sharedReviews={sharedReviews}
             threadedDiscussionsProps={threadedDiscussionProps}
           />
           <Review
@@ -120,45 +119,151 @@ const ReviewLayout = ({
     })
   }, [])
 
-  if (latestVersion.status !== 'revising') {
-    const reviewForCurrentUser = latestVersion.reviews?.find(
-      r => r.user?.id === currentUser.id && !r.isDecision,
-    )
+  let reviewTabs = []
 
-    const reviewData = reviewForCurrentUser?.jsonData || {}
-
-    const label = moment().format('YYYY-MM-DD')
-
-    reviewSections.push({
-      content: (
-        <div key={latestVersion.id}>
-          {hasManuscriptFile(latestVersion) && (
-            <EditorSection
-              currentUser={currentUser}
-              manuscript={latestVersion}
-              readonly
-            />
-          )}
-          <ReadonlyFormTemplate // Display manuscript metadata
+  if (!(latestVersion?.manuscript?.status === 'rivising')) {
+    const createMetaDataSection = latestManuscript => {
+      return (
+        <div key={latestManuscript.id}>
+          <ReadonlyFormTemplate
             form={submissionForm}
             formData={{
-              ...latestVersion,
-              submission: JSON.parse(latestVersion.submission),
+              ...latestManuscript,
+              submission: JSON.parse(latestManuscript.submission),
             }}
-            manuscript={latestVersion}
+            manuscript={latestManuscript}
             showEditorOnlyFields={false}
             threadedDiscussionProps={threadedDiscussionProps}
           />
-          <SharedReviewerGroupReviews
-            manuscript={latestVersion}
-            reviewerId={currentUser.id}
-            reviewForm={reviewForm}
-            threadedDiscussionProps={threadedDiscussionProps}
+        </div>
+      )
+    }
+
+    const createEditorSection = latestManuscript => {
+      return (
+        <div key={latestManuscript.id}>
+          <EditorSection
+            currentUser={currentUser}
+            manuscript={latestManuscript}
+            readonly
           />
-          {status === 'completed' ? (
+        </div>
+      )
+    }
+
+    const createReviewsSection = latestManuscript => {
+      const sharedReviewsData = latestManuscript.reviews.filter(
+        r =>
+          r.isSharedWithCurrentUser &&
+          r.user?.id !== currentUser.id &&
+          !r.isDecision,
+      )
+
+      const reviewForCurrentUserData = latestManuscript.reviews?.find(
+        r => r.user?.id === currentUser.id && !r.isDecision,
+      )
+
+      const reviewData = reviewForCurrentUserData?.jsonData || {}
+
+      const reviewersTeam = latestManuscript.teams.find(
+        team => team.role === 'reviewer',
+      ) || { members: [] }
+
+      const reviewerStatus = reviewersTeam.members.find(
+        member => member.user.id === currentUser?.id,
+      )?.status
+
+      const existingReview = latestManuscript.reviews.find(
+        review => review.user?.id === currentUser.id && !review.isDecision,
+      ) || {
+        id: uuid(),
+        isDecision: false,
+        isHiddenReviewerName: true,
+        jsonData: {},
+        manuscriptId: latestManuscript?.id,
+        userId: currentUser.id,
+      }
+
+      const updateReviewJsonData = (manuscriptId, review, value, path) => {
+        const delta = {} // Only the changed fields
+        // E.g. if path is 'foo.bar' and value is 'Baz' this gives { foo: { bar: 'Baz' } }
+        //   set(delta, path, value)
+        set(delta, path, value)
+
+        const reviewPayload = {
+          jsonData: JSON.stringify(delta),
+          // TODO The following fields ought to be left out. They are needed only
+          // because we are currently catering for unexplained scenarios where there
+          // is no pre-existing review object by the time we arrive at this page.
+          // Thus we are potentially adding a new entry to the DB and need to supply
+          // the relevant values.
+          // We should instead ensure that a review object is always created prior to
+          // the reviewer visiting this page, then we don't need this.
+          isDecision: false,
+          manuscriptId,
+          userId: review.userId,
+          isHiddenReviewerName: review.isHiddenReviewerName,
+          isHiddenFromAuthor: review.isHiddenFromAuthor,
+        }
+
+        return updateReviewMutation({
+          variables: { id: review.id, input: reviewPayload },
+          update: (cache, { data: { updateReview: updateReviewTemp } }) => {
+            cache.modify({
+              id: cache.identify(latestManuscript.id),
+              fields: {
+                reviews(existingReviewRefs = [], { readField }) {
+                  const newReviewRef = cache.writeFragment({
+                    data: updateReviewTemp,
+                    fragment: gql`
+                      fragment NewReview on Review {
+                        id
+                      }
+                    `,
+                  })
+
+                  if (
+                    existingReviewRefs.some(
+                      ref => readField('id', ref) === updateReviewTemp.id,
+                    )
+                  ) {
+                    return existingReviewRefs
+                  }
+
+                  return [...existingReviewRefs, newReviewRef]
+                },
+              },
+            })
+          },
+        })
+      }
+
+      const debouncedUpdateReviewJsonData = useCallback(
+        debounce(updateReviewJsonData ?? (() => {}), 500),
+        [],
+      )
+
+      useEffect(() => debouncedUpdateReviewJsonData.flush, [])
+
+      const handleSubmit = async () => {
+        await updateReviewerStatus({
+          variables: {
+            status: 'completed',
+            manuscriptId: latestManuscript.id,
+          },
+        })
+
+        history.push(`${urlFrag}/dashboard`)
+      }
+
+      return (
+        <div key={latestManuscript.id}>
+          {reviewerStatus === 'completed' ? (
             <Review
-              review={review}
+              isReview
+              review={existingReview}
               reviewForm={reviewForm}
+              sharedReviews={sharedReviewsData}
               threadedDiscussionProps={threadedDiscussionProps}
             />
           ) : (
@@ -168,11 +273,18 @@ const ReviewLayout = ({
                 deleteFile={deleteFile}
                 form={reviewForm}
                 initialValues={reviewData}
-                manuscriptId={latestVersion.id}
-                manuscriptShortId={latestVersion.shortId}
-                manuscriptStatus={latestVersion.status}
-                onChange={updateReviewJsonData}
-                onSubmit={onSubmit}
+                manuscriptId={latestManuscript.id}
+                manuscriptShortId={latestManuscript.shortId}
+                manuscriptStatus={latestManuscript.status}
+                onChange={(value, path) =>
+                  debouncedUpdateReviewJsonData(
+                    latestManuscript.id,
+                    existingReview,
+                    value,
+                    path,
+                  )
+                }
+                onSubmit={handleSubmit}
                 shouldStoreFilesInForm
                 showEditorOnlyFields={false}
                 submissionButtonText={t('reviewPage.Submit')}
@@ -183,20 +295,120 @@ const ReviewLayout = ({
               />
             </SectionContent>
           )}
-          {config?.review?.showSummary && (
-            <ReadonlyFormTemplate
-              form={redactedDecisionForm}
-              formData={decision.jsonData || {}}
-              hideSpecialInstructions
-              manuscript={latestVersion}
-              threadedDiscussionProps={threadedDiscussionProps}
-              title={decisionForm.name}
-            />
-          )}
         </div>
-      ),
-      key: latestVersion.id,
-      label,
+      )
+    }
+
+    const createOtherReviewsSection = latestManuscript => {
+      return (
+        <div key={latestManuscript.id}>
+          <SharedReviewerGroupReviews
+            manuscript={latestManuscript}
+            reviewerId={currentUser.id}
+            reviewForm={reviewForm}
+            threadedDiscussionProps={threadedDiscussionProps}
+          />
+        </div>
+      )
+    }
+
+    const createDecisionDataSection = latestManuscript => {
+      const decision = latestManuscript.reviews.find(r => r.isDecision) || {}
+
+      const decisionIsCompleteData = [
+        'accepted',
+        'revise',
+        'rejected',
+        'evaluated',
+        'published',
+      ].includes(latestManuscript.status)
+
+      const redactedDecisionFormData = decisionIsCompleteData
+        ? decisionForm
+        : {
+            ...decisionForm,
+            children: decisionForm.children.filter(
+              x => x.component === 'ThreadedDiscussion',
+            ),
+          }
+
+      let formData = {}
+
+      try {
+        formData = JSON.parse(decision.jsonData || '{}')
+      } catch (error) {
+        console.error('Error parsing decision jsonData:', error)
+      }
+
+      return (
+        <ReadonlyFormTemplate
+          form={redactedDecisionFormData}
+          formData={formData}
+          hideSpecialInstructions
+          manuscript={latestManuscript}
+          threadedDiscussionProps={threadedDiscussionProps}
+          title={decisionForm.name}
+        />
+      )
+    }
+
+    reviewTabs = versions.map(({ manuscript: version, label }, index) => {
+      const sharedReviewsForManuscriptVersion = version.reviews.filter(
+        r =>
+          r.isSharedWithCurrentUser &&
+          r.user?.id !== currentUser.id &&
+          !r.isDecision,
+      )
+
+      const reviewSectionsData = [
+        {
+          content: createMetaDataSection(version),
+          key: 'metadata',
+          label: 'Metadata',
+        },
+        {
+          content: createEditorSection(version),
+          key: 'editor',
+          label: 'Manuscript',
+        },
+        {
+          content: createReviewsSection(version),
+          key: 'review',
+          label: 'Review',
+        },
+        ...(sharedReviewsForManuscriptVersion?.length > 0
+          ? [
+              {
+                content: createOtherReviewsSection(version),
+                key: 'other-reviews',
+                label: 'Other Reviews',
+              },
+            ]
+          : []),
+        ...(config?.review?.showSummary
+          ? [
+              {
+                content: createDecisionDataSection(version),
+                key: 'decision-data',
+                label: decisionForm.name,
+              },
+            ]
+          : []),
+      ]
+
+      reviewSections.push(reviewSectionsData)
+
+      // eslint-disable-next-line consistent-return
+      return {
+        key: version.id,
+        label,
+        content: (
+          <HiddenTabs
+            defaultActiveKey={reviewSectionsData[0]?.key}
+            sections={reviewSectionsData}
+          />
+        ),
+      }
     })
   }
 
@@ -222,11 +434,9 @@ const ReviewLayout = ({
   return (
     <Columns>
       <Manuscript>
-        <Tabs
-          activeKey={reviewSections[reviewSections.length - 1].key}
-          sections={reviewSections}
-          title={t('reviewPage.Versions')}
-        />
+        <ErrorBoundary>
+          <VersionSwitcher key={reviewTabs.length} versions={reviewTabs} />
+        </ErrorBoundary>
       </Manuscript>
       {isDiscussionVisible && (
         <Chat>
@@ -276,7 +486,6 @@ ReviewLayout.propTypes = {
   review: PropTypes.shape({}),
   onSubmit: PropTypes.func,
   status: PropTypes.string,
-  updateReview: PropTypes.func.isRequired,
   uploadFile: PropTypes.func,
   channelId: PropTypes.string.isRequired,
   submissionForm: PropTypes.shape({

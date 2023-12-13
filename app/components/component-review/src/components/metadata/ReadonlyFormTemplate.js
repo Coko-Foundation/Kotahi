@@ -1,9 +1,23 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import ReadonlyFieldData from './ReadonlyFieldData'
 import { color } from '../../../../../theme'
-import { Title, SectionHeader, SectionRowGrid, Heading, Cell } from '../style'
+import {
+  Title,
+  SectionHeader,
+  SectionRowGrid,
+  Heading,
+  Cell,
+  Info,
+} from '../style'
 import { SectionContent, Action, Icon } from '../../../../shared'
+
+const StyledSectionContent = styled(SectionContent)`
+  margin-top: ${({ isReview }) => (isReview ? 0 : 'inherit')};
+`
 
 const ReadonlyFormTemplate = ({
   form,
@@ -17,6 +31,10 @@ const ReadonlyFormTemplate = ({
   allowAuthorsSubmitNewVersion,
   copyHandleBarsCode,
 }) => {
+  const { t } = useTranslation()
+
+  const isChildrenEmpty = form.children.length === 0
+
   const onCopyHandleBarsCode = name => {
     return () =>
       navigator.clipboard.writeText(
@@ -28,12 +46,12 @@ const ReadonlyFormTemplate = ({
   }
 
   return (
-    <SectionContent>
-      {title ? (
-        <SectionHeader>
-          <Title>{title}</Title>
-        </SectionHeader>
-      ) : null}
+    <StyledSectionContent>
+      {!isChildrenEmpty ? (
+        <SectionHeader>{title ? <Title>{title}</Title> : null}</SectionHeader>
+      ) : (
+        <Info>{t('reviewDecisionSection.noDecisionUpdated')}</Info>
+      )}
 
       {displayShortIdAsIdentifier &&
         manuscript && ( // TODO The shortId shouldn't be rendered as part of this component. Split out!
@@ -75,7 +93,7 @@ const ReadonlyFormTemplate = ({
             )}
           </SectionRowGrid>
         ))}
-    </SectionContent>
+    </StyledSectionContent>
   )
 }
 

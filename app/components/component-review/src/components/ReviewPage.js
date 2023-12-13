@@ -1,10 +1,8 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { v4 as uuid } from 'uuid'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import ReviewLayout from './review/ReviewLayout'
@@ -279,70 +277,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
 
   const chatProps = useChat(channels)
 
-  const updateReviewJsonData = (manuscriptId, review, value, path) => {
-    const delta = {} // Only the changed fields
-    // E.g. if path is 'foo.bar' and value is 'Baz' this gives { foo: { bar: 'Baz' } }
-    set(delta, path, value)
-
-    const reviewPayload = {
-      jsonData: JSON.stringify(delta),
-      // TODO The following fields ought to be left out. They are needed only
-      // because we are currently catering for unexplained scenarios where there
-      // is no pre-existing review object by the time we arrive at this page.
-      // Thus we are potentially adding a new entry to the DB and need to supply
-      // the relevant values.
-      // We should instead ensure that a review object is always created prior to
-      // the reviewer visiting this page, then we don't need this.
-      isDecision: false,
-      manuscriptId,
-      userId: review.userId,
-      isHiddenReviewerName: review.isHiddenReviewerName,
-      isHiddenFromAuthor: review.isHiddenFromAuthor,
-    }
-
-    return updateReviewMutation({
-      variables: { id: review.id, input: reviewPayload },
-      // TODO If the mutation returned the manuscript, we wouldn't need the following cache update logic
-      update: (cache, { data: { updateReview: updateReviewTemp } }) => {
-        cache.modify({
-          id: cache.identify({
-            __typename: 'Manuscript',
-            id: manuscriptId,
-          }),
-          fields: {
-            reviews(existingReviewRefs = [], { readField }) {
-              const newReviewRef = cache.writeFragment({
-                data: updateReviewTemp,
-                fragment: gql`
-                  fragment NewReview on Review {
-                    id
-                  }
-                `,
-              })
-
-              if (
-                existingReviewRefs.some(
-                  ref => readField('id', ref) === updateReviewTemp.id,
-                )
-              ) {
-                return existingReviewRefs
-              }
-
-              return [...existingReviewRefs, newReviewRef]
-            },
-          },
-        })
-      },
-    })
-  }
-
-  const debouncedUpdateReviewJsonData = useCallback(
-    debounce(updateReviewJsonData ?? (() => {}), 1000),
-    [],
-  )
-
-  useEffect(() => debouncedUpdateReviewJsonData.flush, [])
-
   if (loading || currentUser === null) return <Spinner />
 
   if (error) {
@@ -359,30 +293,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
   if (manuscript.parentId)
     return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
 
-  const versions = manuscriptVersions(manuscript).map(v => ({
-    ...v.manuscript,
-    reviews: v.manuscript.reviews.map(r => ({
-      ...r,
-      jsonData: JSON.parse(r.jsonData),
-    })),
-  }))
-
-  const latestVersion = versions[0]
-
-  const existingReview = latestVersion.reviews.find(
-    review => review.user?.id === currentUser.id && !review.isDecision,
-  ) || {
-    // Usually a blank review is created when the user accepts the review invite.
-    // Creating a new review object here is a fallback for unknown error situations
-    // when the blank review was not created in advance for some reason.
-    // TODO can we get rid of this fallback? It complicates the logic and could lead to bugs
-    id: uuid(),
-    isDecision: false,
-    isHiddenReviewerName: true,
-    jsonData: {},
-    manuscriptId: latestVersion?.id,
-    userId: currentUser.id,
-  }
+  const versions = manuscriptVersions(manuscript)
 
   const submissionForm = data.submissionForm?.structure ?? {
     name: '',
@@ -412,64 +323,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
       manuscript.channels,
     )
 
-  const reviewersTeam = latestVersion.teams.find(
-    team => team.role === 'reviewer',
-  ) || { members: [] }
-
-  const reviewerStatus = reviewersTeam.members.find(
-    member => member.user.id === currentUser?.id,
-  )?.status
-
-  const updateReview = review => {
-    const reviewData = {
-      manuscriptId: latestVersion.id,
-      canBePublishedPublicly: review.canBePublishedPublicly,
-      jsonData: JSON.stringify(review.jsonData),
-    }
-
-    return updateReviewMutation({
-      variables: { id: existingReview.id, input: reviewData },
-      update: (cache, { data: { updateReviewTemp } }) => {
-        cache.modify({
-          id: cache.identify(latestVersion.id),
-          fields: {
-            reviews(existingReviewRefs = [], { readField }) {
-              const newReviewRef = cache.writeFragment({
-                data: updateReviewTemp,
-                fragment: gql`
-                  fragment NewReview on Review {
-                    id
-                  }
-                `,
-              })
-
-              if (
-                existingReviewRefs.some(
-                  ref => readField('id', ref) === updateReviewTemp.id,
-                )
-              ) {
-                return existingReviewRefs
-              }
-
-              return [...existingReviewRefs, newReviewRef]
-            },
-          },
-        })
-      },
-    })
-  }
-
-  const handleSubmit = async () => {
-    await updateReviewerStatus({
-      variables: {
-        status: 'completed',
-        manuscriptId: latestVersion.id,
-      },
-    })
-
-    history.push(`${urlFrag}/dashboard`)
-  }
-
   const threadedDiscussionProps = {
     threadedDiscussions,
     updatePendingComment,
@@ -489,22 +342,13 @@ const ReviewPage = ({ currentUser, history, match }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      history={history}
       manuscript={manuscript}
-      onSubmit={handleSubmit}
-      review={existingReview}
       reviewForm={reviewForm}
-      status={reviewerStatus}
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
-      updateReview={updateReview}
-      updateReviewJsonData={(value, path) =>
-        debouncedUpdateReviewJsonData(
-          latestVersion.id,
-          existingReview,
-          value,
-          path,
-        )
-      }
+      updateReviewerStatus={updateReviewerStatus}
+      updateReviewMutation={updateReviewMutation}
       versions={versions}
     />
   )
