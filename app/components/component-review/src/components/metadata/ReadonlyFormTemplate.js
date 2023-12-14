@@ -16,7 +16,7 @@ import {
 import { SectionContent, Action, Icon } from '../../../../shared'
 
 const StyledSectionContent = styled(SectionContent)`
-  margin-top: ${({ isReview }) => (isReview ? 0 : 'inherit')};
+  margin-top: 0;
 `
 
 const ReadonlyFormTemplate = ({
@@ -35,6 +35,20 @@ const ReadonlyFormTemplate = ({
 
   const isChildrenEmpty = form.children.length === 0
 
+  const renderHeader = () => {
+    const headerContent = isChildrenEmpty ? (
+      <Info>{t('reviewDecisionSection.noDecisionUpdated')}</Info>
+    ) : (
+      title && (
+        <SectionHeader>
+          <Title>{title}</Title>
+        </SectionHeader>
+      )
+    )
+
+    return headerContent || null
+  }
+
   const onCopyHandleBarsCode = name => {
     return () =>
       navigator.clipboard.writeText(
@@ -47,11 +61,7 @@ const ReadonlyFormTemplate = ({
 
   return (
     <StyledSectionContent>
-      {!isChildrenEmpty ? (
-        <SectionHeader>{title ? <Title>{title}</Title> : null}</SectionHeader>
-      ) : (
-        <Info>{t('reviewDecisionSection.noDecisionUpdated')}</Info>
-      )}
+      {renderHeader()}
 
       {displayShortIdAsIdentifier &&
         manuscript && ( // TODO The shortId shouldn't be rendered as part of this component. Split out!
