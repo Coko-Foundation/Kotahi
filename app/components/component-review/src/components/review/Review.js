@@ -7,6 +7,7 @@ import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import { SectionHeader, Title } from '../style'
 import { SectionContent } from '../../../../shared'
+import { color } from '../../../../../theme'
 
 const Heading = styled.h4``
 
@@ -17,7 +18,7 @@ const Container = styled.div`
 `
 
 const StyledStrong = styled.strong`
-  color: #545454;
+  color: ${color.gray40};
 `
 
 // Due to migration to new Data Model
