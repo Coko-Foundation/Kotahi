@@ -5,7 +5,6 @@ import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import styled from 'styled-components'
 import { WaxContext, ToolGroup } from 'wax-prosemirror-core'
-// import { ToolGroup } from 'wax-prosemirror-services'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
@@ -37,44 +36,31 @@ const DropdownStyled = styled(Dropdown)`
 
 class KotahiBlockDropDown extends ToolGroup {
   tools = []
+  /* stylelint-disable */
 
   constructor(
     @inject('Title') title,
-    @inject('Author') author,
-    @inject('SubTitle') subtitle,
-    @inject('EpigraphProse') epigraphprose,
-    @inject('EpigraphPoetry') epigraphpoetry,
     @inject('Heading2') heading2,
     @inject('Heading3') heading3,
     @inject('Heading4') heading4,
-    @inject('Paragraph') paragraph,
-    @inject('ParagraphContinued') paragraphContinued,
-    @inject('ExtractProse') extractProse,
-    @inject('ExtractPoetry') extractPoetry,
-    @inject('SourceNote') sourceNote,
-    @inject('BlockQuote') blockQuote,
     @inject('Heading5') heading5,
     @inject('Heading6') heading6,
+    @inject('Paragraph') paragraph,
+    @inject('BlockQuote') blockQuote,
   ) {
+    /* stylelint-enable */
+
     super()
 
     this.tools = [
       title,
-      author,
-      subtitle,
-      epigraphprose,
-      epigraphpoetry,
       heading2,
       heading3,
       heading4,
-      paragraph,
-      paragraphContinued,
-      extractProse,
-      extractPoetry,
-      sourceNote,
-      blockQuote,
       heading5,
       heading6,
+      paragraph,
+      blockQuote,
     ]
   }
 
@@ -87,14 +73,14 @@ class KotahiBlockDropDown extends ToolGroup {
 
     /* eslint-disable no-underscore-dangle */
     const dropDownOptions = [
-      { label: 'Title', value: '0', item: this._tools[0] },
-      { label: 'Heading 2', value: '5', item: this._tools[5] },
-      { label: 'Heading 3', value: '6', item: this._tools[6] },
-      { label: 'Heading 4', value: '7', item: this._tools[7] },
-      { label: 'Heading 5', value: '14', item: this._tools[14] },
-      { label: 'Heading 6', value: '15', item: this._tools[15] },
-      { label: 'Paragraph', value: '8', item: this._tools[8] },
-      { label: 'Block quote', value: '13', item: this._tools[13] },
+      { label: 'Title', value: 0, item: this._tools[0] },
+      { label: 'Heading 2', value: 1, item: this._tools[1] },
+      { label: 'Heading 3', value: 2, item: this._tools[2] },
+      { label: 'Heading 4', value: 3, item: this._tools[3] },
+      { label: 'Heading 5', value: 4, item: this._tools[4] },
+      { label: 'Heading 6', value: 5, item: this._tools[5] },
+      { label: 'Paragraph', value: 6, item: this._tools[6] },
+      { label: 'Block quote', value: 7, item: this._tools[7] },
     ]
     /* eslint-enable no-underscore-dangle */
 

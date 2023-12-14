@@ -106,7 +106,7 @@ describe.skip('manuscripts page tests', () => {
       SubmissionFormPage.getWordCountInfo()
         .eq(0)
         .should('contain', '3')
-        .and('contain', 'words')
+        .and('contain', 'Words')
     })
 
     it('unsubmitted article is evaluated', () => {
