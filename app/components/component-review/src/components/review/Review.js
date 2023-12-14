@@ -70,18 +70,27 @@ const Review = ({
     />
   )
 
+  const renderReviewerInfo = () => (
+    <div>
+      <Heading>
+        <strong>{review.user.username}</strong>
+      </Heading>
+      {review.user.defaultIdentity.identifier}
+    </div>
+  )
+
+  const renderAnonymousReviewer = () => (
+    <Title>{t('reviewPage.Anonymous Reviewer')}</Title>
+  )
+
   return (
     <>
       {!sharedReviews ? (
         <Container>
-          {review && !review?.isHiddenReviewerName && showUserInfo && (
-            <div>
-              <Heading>
-                <strong>{review.user.username}</strong>
-              </Heading>
-              {review.user.defaultIdentity.identifier}
-            </div>
-          )}
+          {review &&
+            !review?.isHiddenReviewerName &&
+            showUserInfo &&
+            renderReviewerInfo()}
 
           <div
             style={{
@@ -111,7 +120,9 @@ const Review = ({
       ) : (
         <SectionContent>
           <SectionHeader>
-            <Title>{t('reviewPage.Anonymous Reviewer')}</Title>
+            {review && !review?.isHiddenReviewerName && showUserInfo
+              ? renderReviewerInfo()
+              : renderAnonymousReviewer()}
           </SectionHeader>
 
           {open && renderContent()}
