@@ -440,8 +440,8 @@ const generateSchema = (
     properties: {
       instanceName: {
         type: 'string',
-        enum: ['elife', 'ncrc', 'colab', 'aperture'],
-        default: 'aperture',
+        enum: ['preprint1', 'preprint2', 'prc', 'journal'],
+        default: 'journal',
       },
     },
     required: ['instanceName'],
@@ -451,7 +451,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['elife'],
+                enum: ['preprint1'],
               },
               groupIdentity: {
                 type: 'object',
@@ -971,7 +971,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['ncrc'],
+                enum: ['preprint2'],
               },
               groupIdentity: {
                 type: 'object',
@@ -1491,7 +1491,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['colab'],
+                enum: ['prc'],
               },
               groupIdentity: {
                 type: 'object',
@@ -2007,7 +2007,7 @@ const generateSchema = (
           {
             properties: {
               instanceName: {
-                enum: ['aperture'],
+                enum: ['journal'],
               },
               groupIdentity: {
                 type: 'object',
