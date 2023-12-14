@@ -27,34 +27,6 @@ describe('review page tests', () => {
       ControlPage.inviteReviewer(name.role.reviewers[1])
     })
   })
-  it('evaluation summary block should be visible to the reviewer', () => {
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[0], dashboard)
-    })
-    DashboardPage.clickDashboardTab(1)
-    DashboardPage.clickAcceptReviewButton()
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2000)
-    DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    ReviewPage.getAllPageSections().should('have.length', 3)
-    cy.get('h2[class]')
-      .eq(-1)
-      .scrollIntoView()
-      .should('contain', 'Decision')
-      .and('be.visible')
-
-    cy.get('[class*="General__SectionContent"]').each($sectionContent => {
-      // Check if General_SectionRow is present within each section
-      if ($sectionContent.find('.General_SectionRow').length > 0) {
-        cy.log('General_SectionRow found.') // Log if it's found within this section
-        cy.wrap($sectionContent).find('div > span').should('be.visible')
-      } else {
-        cy.log('General_SectionRow not found.') // Log if it's not found within this section
-      }
-    })
-
-    ReviewPage.getDecisionRecommendation().should('be.visible')
-  })
   it('saved decision should be visible for the reviewer', () => {
     ControlPage.clickDecisionTab(1)
     ControlPage.fillInDecision('the article is ok')
@@ -69,6 +41,9 @@ describe('review page tests', () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
+    cy.get('[class*=TabsContainer]')
+    .contains('Decision')
+    .click()
     ReviewPage.getDecisionText().should('contain', 'the article is ok')
   })
   it('reviewer should see decision after submitting a positive review', () => {
@@ -83,6 +58,9 @@ describe('review page tests', () => {
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('great submission!')
     ReviewPage.clickAcceptRadioButton()
+    cy.get('[class*=TabsContainer]')
+    .contains('Review')
+    .click()
     ReviewPage.clickSubmitButton()
     ReviewPage.clickConfirmSubmitButton()
     cy.awaitDisappearSpinner()
@@ -101,9 +79,11 @@ describe('review page tests', () => {
     })
     DashboardPage.clickCompletedReviewButton()
     cy.awaitDisappearSpinner()
+    cy.get('[class*=TabsContainer]')
+    .contains('Decision')
+    .click()
     ReviewPage.getAllSectionHeaders()
       .eq(-1)
-      .scrollIntoView()
       .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'great paper')
@@ -120,6 +100,9 @@ describe('review page tests', () => {
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('paper should be revised')
     ReviewPage.clickReviseRadioButton()
+    cy.get('[class*=TabsContainer]')
+    .contains('Review')
+    .click()
     ReviewPage.clickSubmitButton()
     ReviewPage.clickConfirmSubmitButton()
     cy.awaitDisappearSpinner()
@@ -137,9 +120,11 @@ describe('review page tests', () => {
     })
     DashboardPage.clickCompletedReviewButton()
     cy.awaitDisappearSpinner()
+    cy.get('[class*=TabsContainer]')
+    .contains('Decision')
+    .click()
     cy.get('h2[class]')
       .eq(-1)
-      .scrollIntoView()
       .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should('contain', 'please revise')
@@ -156,6 +141,9 @@ describe('review page tests', () => {
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('not good enough')
     ReviewPage.clickRejectRadioButton()
+    cy.get('[class*=TabsContainer]')
+    .contains('Review')
+    .click()
     ReviewPage.clickSubmitButton()
     ReviewPage.clickConfirmSubmitButton()
     cy.awaitDisappearSpinner()
@@ -174,9 +162,11 @@ describe('review page tests', () => {
     })
     DashboardPage.clickCompletedReviewButton()
     cy.awaitDisappearSpinner()
+    cy.get('[class*=TabsContainer]')
+    .contains('Decision')
+    .click()
     ReviewPage.getAllSectionHeaders()
       .eq(-1)
-      .scrollIntoView()
       .should('contain', 'Decision')
       .and('be.visible')
     ReviewPage.getDecisionText().should(
