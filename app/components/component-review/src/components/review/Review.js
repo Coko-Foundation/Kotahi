@@ -80,7 +80,11 @@ const Review = ({
   )
 
   const renderAnonymousReviewer = () => (
-    <Title>{t('reviewPage.Anonymous Reviewer')}</Title>
+    <div>
+      <Heading>
+        <Title>{t('reviewPage.Anonymous Reviewer')}</Title>
+      </Heading>
+    </div>
   )
 
   return (
