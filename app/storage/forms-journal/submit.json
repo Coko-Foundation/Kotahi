@@ -38,7 +38,7 @@
       "title": "Title",
       "id": "47fd802f-ed30-460d-9617-c8a9b9025e95",
       "component": "TextField",
-      "name": "meta.title",
+      "name": "submission.$title",
       "placeholder": "Enter the manuscript's title",
       "hideFromReviewers": "false"
     },
@@ -77,7 +77,7 @@
       "title": "DOI",
       "id": "1c2e9325-3fa8-41f3-8607-180eb8a25aa3",
       "component": "TextField",
-      "name": "submission.DOI",
+      "name": "submission.$doi",
       "doiValidation": "true",
       "placeholder": "Enter the manuscript's DOI",
       "hideFromReviewers": "false"
@@ -87,7 +87,7 @@
       "shortDescription": "Abstract",
       "id": "d80b2c88-6144-4003-b671-63990b9b2793",
       "component": "AbstractEditor",
-      "name": "submission.abstract",
+      "name": "submission.$abstract",
       "description": "<p>Please provide a short summary of your submission</p>",
       "placeholder": "Input your abstract...",
       "hideFromReviewers": "false"

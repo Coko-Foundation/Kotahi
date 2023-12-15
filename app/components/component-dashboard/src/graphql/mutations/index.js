@@ -75,7 +75,6 @@ export default {
         }
         meta {
           manuscriptId
-          title
           history {
             type
             date

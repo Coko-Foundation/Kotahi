@@ -3,6 +3,7 @@ import { get } from 'lodash'
 import { validateFormField } from './formValidation'
 import { convertTimestampToRelativeDateString } from './dateUtils'
 import { StatusBadge } from '../components/shared'
+import TitleWithAbstractAsTooltip from '../components/component-manuscripts-table/src/cell-components/TitleWithAbstractAsTooltip'
 
 /** Validate just manuscript.submission, based on the supplied array of field definitions */
 export const validateManuscriptSubmission = async (
@@ -75,6 +76,13 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
       {
         value: manuscript.manuscriptVersions,
         displayValue: `${manuscript.numVersions}`,
+      },
+    ]
+  if (column.name === 'titleAndAbstract')
+    return [
+      {
+        value: manuscript.submission.$title || '',
+        displayValue: <TitleWithAbstractAsTooltip manuscript={manuscript} />,
       },
     ]
   // if (column.name === 'shortId')

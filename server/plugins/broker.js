@@ -64,24 +64,19 @@ const getBroker = (groupId, workerName) => {
       })
     },
     findManuscriptWithDoi: async doi =>
-      doi ? models.Manuscript.query().findOne({ doi, groupId }) : null,
-
-    findManuscriptWithUri: async uri => {
-      if (uri) {
-        return models.Manuscript.query()
-          .where({ groupId })
-          .findOne(builder =>
-            builder
-              .whereRaw("submission->>'link' = ?", [uri])
-              .orWhereRaw("submission->>'biorxivURL' = ?", [uri])
-              .orWhereRaw("submission->>'url' = ?", [uri])
-              .orWhereRaw("submission->>'uri' = ?", [uri]),
-          )
-      }
-
-      return null
-    },
-
+      doi
+        ? models.Manuscript.query()
+            .where({ groupId })
+            .whereRaw("submission->>'$doi' = ?", [doi])
+            .first()
+        : null,
+    findManuscriptWithUri: async uri =>
+      uri
+        ? models.Manuscript.query()
+            .where({ groupId })
+            .whereRaw("submission->>'$sourceUri' = ?", [uri])
+            .first()
+        : null,
     getStubManuscriptObject: async () => ({
       status: 'new',
       isImported: false,

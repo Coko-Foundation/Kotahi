@@ -24,10 +24,10 @@ import {
   TablesService,
   /* tableEditing, */ columnResizing,
 } from 'wax-table-service'
+import 'wax-table-service/dist/index.css'
 import { KotahiBlockDropDownToolGroupService } from '../../../../wax-collab/src/CustomWaxToolGroups'
 import CharactersList from '../../../../wax-collab/src/config/CharactersList'
 import KotahiSchema from '../../../../wax-collab/src/config/KotahiSchema'
-import 'wax-table-service/dist/index.css'
 
 const fullWaxEditorConfig = handleAssetManager => ({
   SchemaService: KotahiSchema,

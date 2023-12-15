@@ -11,6 +11,14 @@ const getPdfQuery = gql`
   }
 `
 
+const getSimplifiedTitle = title => {
+  if (!title) return 'title'
+  const noHtml = (title || '').replace(/<[^>]*>/g, '')
+  const safeStr = noHtml.replace(/[^a-zA-Z0-9\-_. ]/g, '_')
+  const trimmed = safeStr.trim()
+  return trimmed || 'title'
+}
+
 const useHtml = false
 
 // If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
@@ -45,7 +53,9 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
         // if popups are blocked, try downloading it instead.
         const link = document.createElement('a')
         link.href = `${pdfUrl}`
-        link.download = `${manuscript.meta.title || 'title'}.pdf`
+        link.download = `${getSimplifiedTitle(
+          manuscript.submission.$title,
+        )}.pdf`
         link.target = '_blank'
         link.click()
       }
@@ -53,7 +63,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 
       // const link = document.createElement('a')
       // link.href = `/${pdfUrl}`
-      // link.download = `${manuscript.meta.title || 'title'}.pdf`
+      // link.download = `${manuscript.submission.$title || 'title'}.pdf`
       // link.click()
 
       // console.log(`Downloading ${link.download}`)

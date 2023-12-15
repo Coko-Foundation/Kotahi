@@ -4,7 +4,7 @@ Journals may want to display their manuscript tables with different columns
 const editorColumns = [
   'shortId',
   'overdueTooltip',
-  'meta.title',
+  'submission.$title',
   'status',
   'manuscriptVersions',
   'statusCounts',
@@ -14,7 +14,7 @@ const editorColumns = [
 
 const ownerColumns = [
   'shortId',
-  'meta.title',
+  'submission.$title',
   'status',
   'created',
   'updated',
@@ -23,7 +23,7 @@ const ownerColumns = [
 
 const reviewerColumns = [
   'shortId',
-  'meta.title',
+  'submission.$title',
   'reviewerStatusBadge',
   'reviewerLinks',
 ]

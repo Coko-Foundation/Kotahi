@@ -1,4 +1,4 @@
-/* stylelint-disable selector-type-no-unknown */
+/* stylelint-disable selector-type-no-unknown, no-descending-specificity */
 import { css } from 'styled-components'
 import { color } from '../../../../../theme'
 

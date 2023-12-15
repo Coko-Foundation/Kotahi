@@ -39,4 +39,9 @@ export const NewSubmissionPage = {
   getSubmissionMessage() {
     return cy.get(SUBMISSION_MESSAGE).invoke('text')
   },
+  setCustomStatusField(statusLabel) {
+    cy.getByDataTestId('submission.$customStatus').scrollIntoView()
+    cy.getByDataTestId('submission.$customStatus').click()
+    cy.get('[class*="MenuList"]').contains(statusLabel).click()
+  },
 }

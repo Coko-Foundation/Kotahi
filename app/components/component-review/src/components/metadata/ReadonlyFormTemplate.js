@@ -92,7 +92,7 @@ ReadonlyFormTemplate.propTypes = {
     ).isRequired,
   }).isRequired,
   manuscript: PropTypes.shape({
-    meta: PropTypes.shape({}).isRequired,
+    meta: PropTypes.shape({ source: PropTypes.string }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,

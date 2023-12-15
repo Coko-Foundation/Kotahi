@@ -21,10 +21,10 @@ describe('Email Notification Tests', () => {
 
       /* Existing User */
       // Choose Recievers Dropdown
-      ControlPage.getEmailNotificationDropdowns()
-        .eq(0)
-        .type('Emily{enter}', { delay: 200 })
-      // cy.contains('Emily Clay').click()
+      cy.getByDataTestId('choose-receiver').click()
+      cy.get('input[aria-label="Choose receiver"]').type('Emily{enter}', {
+        force: true,
+      })
 
       // Choose Invitation Template Dropdown
       ControlPage.getEmailNotificationDropdowns()

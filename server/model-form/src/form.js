@@ -95,6 +95,7 @@ class Form extends BaseModel {
                       minSize: { type: ['string', 'null'] },
                     },
                   },
+                  readonly: { type: ['boolean', 'null'] },
                 },
               },
               type: 'array',

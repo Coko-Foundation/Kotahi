@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import { Select } from './Select'
+import PlainOrRichText from './PlainOrRichText'
 
 const Container = styled.div`
   margin-top: ${props => grid(props.top)};
@@ -41,7 +42,9 @@ const StyledSelect = styled(Select)`
 const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
   return (
     <VerisonLabelWrapper>
-      <Title>{manuscriptName}</Title>
+      <Title>
+        <PlainOrRichText value={manuscriptName} />
+      </Title>
       <VersionIndicator>
         {versionNumber >= count
           ? `— ${t('decisionPage.Current version')} (${versionNumber})`
@@ -98,7 +101,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
               d.props.version.created,
               normalizedVersions.length - i,
               normalizedVersions.length,
-              d.props.version.meta.title,
+              d.props.version.submission.$title,
               t,
             ),
         }))}

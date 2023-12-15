@@ -16,7 +16,7 @@ const ColumnsProps = [
     component: DefaultField,
   },
   {
-    name: 'meta.title',
+    name: 'submission.$title',
     title: 'Title',
     defaultSortDirection: 'ASC',
     flex: '1 0.5 16em',
@@ -120,7 +120,6 @@ Base.args = {
     meta: {
       __typename: 'ManuscriptMeta',
       manuscriptId: '297574d0-686c-4b1e-9cbc-3f3d8d86f8e2',
-      title: 'New submission 1/7/2022, 12:13:19 AM',
     },
     submission: {
       irb: 'yes',
@@ -128,12 +127,12 @@ Base.args = {
       cover:
         '<p class="paragraph"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>',
       links: [],
-      title: '',
+      $title: 'New submission 1/7/2022, 12:13:19 AM',
       ethics:
         '<p class="paragraph"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>',
       contact: 'shanthitestemail@mailinator.com',
       methods: ['PET', 'Diffusion MRI', 'Behavior'],
-      abstract:
+      $abstract:
         '<p class="paragraph"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>',
       datacode:
         '<p class="paragraph"><strong>Lorem Ipsum</strong>&nbsp;is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>',

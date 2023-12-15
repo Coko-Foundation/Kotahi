@@ -146,17 +146,16 @@ const getData = async (groupId, ctx) => {
           importSourceServer: server.toLowerCase(),
           submission: {
             ...emptySubmission,
+            $title: title,
             firstAuthor: authors,
-            abstract,
+            $abstract: abstract,
             datePublished: datePublished.replace(/-/g, '/'),
             journal: server,
 
-            link: `https://${server.toLowerCase()}.org/content/${doi}v${version}`,
-            doi: `https://doi.org/${doi}`,
+            $sourceUri: `https://${server.toLowerCase()}.org/content/${doi}v${version}`,
+            $doi: doi,
           },
-          meta: {
-            title,
-          },
+          meta: {},
           submitterId: ctx.user,
           channels: [
             {

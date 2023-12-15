@@ -16,7 +16,6 @@ const fragmentFields = `
     }
   }
   meta {
-    title
     source
     manuscriptId
   }

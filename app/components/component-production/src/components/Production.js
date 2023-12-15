@@ -182,10 +182,7 @@ const Production = ({
             copyHandleBarsCode
             displayShortIdAsIdentifier={displayShortIdAsIdentifier}
             form={form}
-            formData={{
-              ...manuscript,
-              submission: JSON.parse(manuscript.submission),
-            }}
+            formData={manuscript}
             manuscript={manuscript}
             // threadedDiscussionProps={threadedDiscussionExtendedProps}
             showEditorOnlyFields

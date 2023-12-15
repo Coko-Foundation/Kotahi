@@ -1,11 +1,62 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { cloneDeep, omitBy } from 'lodash'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { ConfigContext } from '../../../config/src'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import pruneEmpty from '../../../../shared/pruneEmpty'
+
+const formFieldsSegment = `
+id
+created
+updated
+purpose
+category
+groupId
+structure {
+  name
+  description
+  haspopup
+  popuptitle
+  popupdescription
+  children {
+    title
+    shortDescription
+    id
+    component
+    name
+    description
+    doiValidation
+    doiUniqueSuffixValidation
+    placeholder
+    inline
+    sectioncss
+    parse
+    format
+    options {
+      id
+      label
+      labelColor
+      value
+    }
+    validate {
+      id
+      label
+      value
+    }
+    validateValue {
+      minChars
+      maxChars
+      minSize
+    }
+    hideFromReviewers
+    hideFromAuthors
+    permitPublishing
+    publishingTag
+    readonly
+  }
+}
+`
 
 const createFormMutation = gql`
   mutation($form: CreateFormInput!) {
@@ -18,13 +69,13 @@ const createFormMutation = gql`
 const updateFormMutation = gql`
   mutation($form: FormInput!) {
     updateForm(form: $form) {
-      id
+      ${formFieldsSegment}
     }
   }
 `
 
 const updateFormElementMutation = gql`
-  mutation($element: FormElementInput!, $formId: String!) {
+  mutation($element: FormElementInput!, $formId: ID!) {
     updateFormElement(element: $element, formId: $formId) {
       id
     }
@@ -54,54 +105,7 @@ const deleteFormMutation = gql`
 const query = gql`
   query GET_FORM($category: String!, $groupId: ID) {
     formsByCategory(category: $category, groupId: $groupId) {
-      id
-      created
-      updated
-      purpose
-      category
-      groupId
-      structure {
-        name
-        description
-        haspopup
-        popuptitle
-        popupdescription
-        children {
-          title
-          shortDescription
-          id
-          component
-          name
-          description
-          doiValidation
-          doiUniqueSuffixValidation
-          placeholder
-          inline
-          sectioncss
-          parse
-          format
-          options {
-            id
-            label
-            labelColor
-            value
-          }
-          validate {
-            id
-            label
-            value
-          }
-          validateValue {
-            minChars
-            maxChars
-            minSize
-          }
-          hideFromReviewers
-          hideFromAuthors
-          permitPublishing
-          publishingTag
-        }
-      }
+      ${formFieldsSegment}
     }
   }
 `
@@ -151,12 +155,12 @@ const FormBuilderPage = ({ category }) => {
     ],
   })
 
-  const [activeFormId, setActiveFormId] = useState()
-  const [activeFieldId, setActiveFieldId] = useState()
-  const [formFeilds, setFormFeilds] = useState(cleanedForms)
+  const [selectedFormId, setSelectedFormId] = useState()
+  const [selectedFieldId, setSelectedFieldId] = useState()
+  const [forms, setForms] = useState(cleanedForms)
 
   useEffect(() => {
-    setFormFeilds(cleanedForms)
+    setForms(cleanedForms)
   }, [data?.formsByCategory])
 
   const moveFieldUp = (form, fieldId) => {
@@ -199,93 +203,87 @@ const FormBuilderPage = ({ category }) => {
     })
   }
 
-  const dragField = form => {
-    const forms = pruneEmpty(data.formsByCategory)
+  const dragField = event => {
+    const form = pruneEmpty(
+      data.formsByCategory.find(f => f.id === selectedFormId),
+    )
 
-    const activeForm = forms?.filter(
-      formData => formData.id === activeFormId,
-    )[0]
-
-    const fields = activeForm.structure.children
-
-    const fromIndex = form.source.index
-
-    const toIndex = form.destination.index
-
+    const fields = form.structure.children
+    const fromIndex = event.source.index
+    const toIndex = event.destination.index
     const draggedField = fields[fromIndex]
     const newFields = [...fields]
     newFields.splice(fromIndex, 1)
     newFields.splice(toIndex, 0, draggedField)
-
-    const updatedForm = {
-      ...activeForm,
-      structure: { ...activeForm.structure, children: newFields },
-    }
-
-    const updatedForms = forms.map(formData =>
-      formData.id === activeForm.id ? updatedForm : formData,
+    setForms(existingForms =>
+      existingForms.map(f =>
+        f.id === form.id
+          ? { ...form, structure: { ...form.structure, children: newFields } }
+          : f,
+      ),
     )
-
-    setFormFeilds(updatedForms)
 
     updateForm({
       variables: {
-        form: prepareForSubmit(updatedForm),
+        form: prepareForSubmit({
+          ...form,
+          structure: { ...form.structure, children: newFields },
+        }),
       },
       optimisticResponse: {
         __typename: 'Mutation',
         updateForm: {
-          id: forms.id,
+          id: form.id,
           __typename: 'FormStructure',
-          structure: { ...activeForm.structure, children: newFields },
+          structure: { ...form.structure, children: newFields },
         },
       },
     })
   }
 
   useEffect(() => {
-    if (!loading && data) {
-      if (data.formsByCategory.length) {
-        setActiveFormId(prevFormId => prevFormId ?? data.formsByCategory[0].id)
-      } else {
-        setActiveFormId('new')
-      }
+    if (data?.formsByCategory?.length) {
+      setSelectedFormId(
+        prevFormId =>
+          prevFormId ??
+          data.formsByCategory.find(
+            f =>
+              f.purpose ===
+              (f.category === 'submission' ? 'submit' : f.category),
+          ).id ??
+          data.formsByCategory[0].id,
+      )
+    } else {
+      setSelectedFormId(null)
     }
-  }, [loading, data])
+  }, [data])
 
-  if (loading || !activeFormId) return <Spinner />
+  if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
   return (
-    <div style={{ overflowY: 'scroll', height: '100vh' }}>
-      <DragDropContext onDragEnd={dragField}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              <FormBuilderLayout
-                activeFieldId={activeFieldId}
-                activeFormId={activeFormId}
-                category={category}
-                createForm={createForm}
-                deleteField={deleteFormElement}
-                deleteForm={deleteForm}
-                forms={formFeilds}
-                moveFieldDown={moveFieldDown}
-                moveFieldUp={moveFieldUp}
-                setActiveFieldId={setActiveFieldId}
-                setActiveFormId={setActiveFormId}
-                shouldAllowHypothesisTagging={
-                  config?.publishing?.hypothesis?.shouldAllowTagging
-                }
-                updateField={updateFormElement}
-                updateForm={updateForm}
-              />
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+    <FormBuilderLayout
+      category={category}
+      createForm={async payload => {
+        const result = await createForm(payload)
+        setSelectedFormId(result.data.createForm.id)
+      }}
+      deleteField={deleteFormElement}
+      deleteForm={deleteForm}
+      dragField={dragField}
+      forms={forms}
+      moveFieldDown={moveFieldDown}
+      moveFieldUp={moveFieldUp}
+      selectedFieldId={selectedFieldId}
+      selectedFormId={selectedFormId}
+      setSelectedFieldId={setSelectedFieldId}
+      setSelectedFormId={setSelectedFormId}
+      shouldAllowHypothesisTagging={
+        config?.publishing?.hypothesis?.shouldAllowTagging
+      }
+      updateField={updateFormElement}
+      updateForm={updateForm}
+    />
   )
 }
 

@@ -164,11 +164,7 @@ const tryPublishDocMaps = async manuscript => {
         inputs: [
           {
             doi,
-            url:
-              manuscript.submission.link ||
-              manuscript.submission.biorxivURL ||
-              manuscript.submission.url ||
-              manuscript.submission.uri,
+            url: manuscript.submission.$sourceUri,
           },
         ],
         actions: fragment,

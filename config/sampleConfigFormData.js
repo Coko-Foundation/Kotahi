@@ -10,7 +10,7 @@ module.exports = {
   manuscript: {
     labelColumn: false,
     tableColumns:
-      'shortId, meta.title, created, updated, status, submission.labels, author',
+      'shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author',
     manualImport: false,
     newSubmission: false,
     autoImportHourUtc: 21,

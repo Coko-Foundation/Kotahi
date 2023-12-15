@@ -24,7 +24,7 @@
     },
     {
       "id": "7423ad09-d01b-49bc-8c2e-807829b86653",
-      "name": "verdict",
+      "name": "$verdict",
       "title": "Decision Status",
       "inline": "true",
       "options": [

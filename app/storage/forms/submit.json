@@ -17,8 +17,8 @@
     },
     {
       "id": "5a22ec26-3885-432c-8c80-b207a62a7b04",
-      "name": "submission.articleURL",
-      "title": "Article URL",
+      "name": "submission.$doi",
+      "title": "Article DOI",
       "options": [],
       "validate": [
         {
@@ -32,7 +32,7 @@
     },
     {
       "id": "b100e6a0-b00e-413c-823b-862351e9690f",
-      "name": "submission.biorxivURL",
+      "name": "submission.$sourceUri",
       "title": "bioRxiv article URL",
       "options": [],
       "validate": [
@@ -46,7 +46,7 @@
     },
     {
       "id": "ec5e5f89-282c-42e9-bde2-d35816152362",
-      "name": "submission.description",
+      "name": "submission.$title",
       "title": "Description",
       "options": [],
       "validate": [

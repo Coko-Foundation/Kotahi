@@ -1,6 +1,6 @@
 ## Changes
 
-### 2023-12-05: Version 2.2.0
+### 2023-12-07: Version 2.3.0
 
 - The following instance archtypes used in the codebase have been renamed
 
@@ -9,7 +9,7 @@
 3. elife -> preprint1
 4. ncrc -> preprint2
 
-Prior upgrading Kotahi, please ensure the instance archetypes have been renamed in the .env file.
+Prior upgrading Kotahi, please ensure the instance archetypes have been renamed in `INSTANCE_GROUPS` in the .env file.
 
 - `NOTIFICATION_EMAIL_CC_ENABLED=` variable to enable/disable carbon copies (CC) has been **deprecated**. Group Managers can manually add a CC from the Emails>Email template>CC field
 

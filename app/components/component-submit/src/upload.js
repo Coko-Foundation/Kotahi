@@ -317,7 +317,6 @@ const createManuscriptMutation = gql`
       meta {
         source
         manuscriptId
-        title
         history {
           type
           date
@@ -507,10 +506,8 @@ const createManuscriptPromise = (
 
   const manuscript = {
     files,
-    meta: {
-      title,
-      source,
-    },
+    meta: { source },
+    submission: JSON.stringify({ $title: title }),
     groupId: config.groupId,
   }
 

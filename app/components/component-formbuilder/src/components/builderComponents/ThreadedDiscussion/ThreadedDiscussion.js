@@ -71,7 +71,7 @@ const getExistingOrInitialComments = (
   )
     result.push({
       id: uuid(),
-      comment: '<p class="paragraph></p>',
+      comment: '<p class="paragraph"></p>',
       isEditing: true,
       author: currentUser,
     })

@@ -4,30 +4,26 @@ import { Button } from '@pubsweet/ui'
 import { color } from '../../../../theme'
 
 export const Section = styled.div`
-  margin: calc(${th('gridUnit')} * 6) 0;
+  margin: ${grid(4)} 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+`
+
+export const Subsection = styled.div`
+  margin: 0 50% ${grid(4)} ${grid(4)};
 `
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
   font-weight: 600;
-  margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
 `
 
-const Columns = styled.div`
-  display: grid;
-  grid-column-gap: 2em;
-  grid-template-areas: 'form details';
-  grid-template-columns: 1fr 1fr;
-  justify-content: center;
-`
-
-const Form = styled.div`
-  grid-area: form;
-`
-
-const Details = styled.div`
-  grid-area: details;
-  margin-top: 48px;
+const ErrorMessageWrapper = styled.div`
+  color: ${color.error.base};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
 `
 
 const Page = styled.div`
@@ -202,9 +198,6 @@ const CommentContainer = styled.div`
 `
 
 export {
-  Columns,
-  Form,
-  Details,
   Page,
   Heading,
   UploadContainer,
@@ -221,4 +214,5 @@ export {
   Collapse,
   CancelButton,
   CommentContainer,
+  ErrorMessageWrapper,
 }

@@ -63,7 +63,7 @@ describe('checking manuscript version', () => {
         SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
-        SubmissionFormPage.fillInLink(data.doi)
+        SubmissionFormPage.fillInPreprintUri(data.doi)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)

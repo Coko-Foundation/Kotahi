@@ -27,5 +27,6 @@ const StyledInput = styled.input`
 
 // eslint-disable-next-line import/prefer-default-export
 export const TextInput = props => {
-  return <StyledInput type="text" {...props} />
+  const { readonly, value } = props
+  return readonly ? <div>{value}</div> : <StyledInput type="text" {...props} />
 }

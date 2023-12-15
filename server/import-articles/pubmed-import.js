@@ -37,12 +37,12 @@ const pubmedQueries = {
     '("Drug Therapy"[Mesh] OR "drug therapy"[tiab] OR "drug treatment"[tiab] OR "drug target"[tiab] OR "drug targets"[tiab] OR "drug trial" OR "drug trials" OR "pharmaceutical"[tiab] OR "drug repurposing" OR "antiviral"[tiab] OR "antivirals"[tiab] OR "agents"[tiab] OR "corticosteroid" OR "corticosteroids" OR "Angiotensin receptor blocker" OR "angiotensin receptor blockers" OR "statin" OR "statins" OR "hydroxychloroquine" OR "chloroquine" OR "oseltamivir" OR "arbidol" OR "remdesivir" OR "favipiravir" OR "angiotensin-converting enzyme inhibitors"[mh] OR "angiotensin-converting enzyme inhibitor" OR "angiotensin-converting enzyme inhibitors" OR "ACE inhibitor" OR "ACE inhibitors" OR "immunoglobulins"[mh] OR "immunoglobulin" OR "immunoglobulins" OR "IVIG" OR "arbidol"[nm] OR "arbidol" OR "umifenovir" OR "azithromycin"[mh] OR "azithromycin" OR "carrimycin" OR "danoprevir"[nm] OR "danoprevir" OR "interferons"[mh] OR "interferon" OR "interferons" OR "IFN" OR "darunavir"[mh] OR "darunavir" OR "prezista" OR "cobicistat"[mh] OR "cobicistat" OR "tybost" OR "Recombinant human interferon α2β" OR "recombinant human interferon alpha 2 beta" OR "thalidomide"[mh] OR "thalidomide" OR "sedoval" OR "thalomid" OR "methylprednisolone"[mh] OR "methylprednisolone" OR "metipred" OR "urbason" OR "Medrol" OR "pirfenidone"[nm] OR "pirfenidone" OR "Esbriet" OR "deskar" OR "bevacizumab"[mh] OR "bevacizumab" OR "mvasi" OR "avastin" OR "fingolimod hydrochloride"[mh] OR "fingolimod" OR "gilenya" OR "gilenia" OR "bromhexine"[mh] OR "bromhexine" OR "Clevudine"[nm] OR "clevudine" OR "Povidone-iodine"[mh] OR "povidone-iodine" OR "betadine" OR "minidyne" OR "Ruxolitinib" OR "INCB018424"[nm] OR "Acalabrutinib"[nm] OR "acalabrutinib" OR "calquence" OR "Vazegepant" OR "Eculizumab"[nm] OR "eculizumab" OR "soliris" OR "Lopinavir"[mh] OR "lopinavir" OR "Ritonavir"[mh] OR "ritonavir" OR "norvir" OR "Imatinib mesylate"[mh] OR "imatinib" OR "gleevec" OR "Baricitinib"[nm] OR "baricitinib" OR "olumiant" OR "dexamethasone"[mh] OR "dexamethasone" OR "decadron" OR "Leronlimab"[nm] OR "leronlimab" OR "Dalargin" OR "Mefloquin"[mh] OR "mefloquin" OR "mephloquine" OR "lariam" OR "Spironolactone"[mh] OR "spironolactone" OR "aldactone" OR "carospir" OR "Tocilizumab"[nm] OR "tocilizumab" OR "Clazakizumab"[nm] OR "clazakizumab" OR "Pyridostigmine bromide"[mh] OR "pyridostigmine" OR "mestinon" OR "indomethacin"[mh] OR "indomethacin" OR "indomethacine" OR "Indocin" OR "tivorbex" OR "Azithromycin"[mh] OR "azithromycin" OR "Zithromax" OR "Danoprevir"[nm] OR "danoprevir" OR "Tinzaparin"[mh] OR "tinzaparin" OR "innohep" OR "heparin"[mh] OR "Heparin" OR "Nitazoxanide"[nm] OR "nitazoxanide" OR "Ivermectin"[mh] OR "Ivermectin" OR "Niclosamide"[mh] OR "niclosamide" OR "Sarilumab"[nm] OR "sarilumab" OR "kevzara" OR "camostat"[nm] OR "Camostat" OR "tretinoin"[mh] OR "tretinoin" OR "Retinoic acid" OR "isotrentinoin" OR "vitamin a"[mh] OR "vitamin a" OR "methotrexate"[mh] OR "methotrexate" OR "Nafamostat"[nm] OR "nafamostat" OR "melatonin"[mh] OR "melatonin") AND ("COVID-19"[tw] OR "COVID 19"[tw] OR "COVID19"[tw] OR "COVID2019"[tw] OR "COVID 2019"[tw] OR "COVID-2019"[tw] OR "novel coronavirus"[tw] OR "new coronavirus"[tw] OR "novel corona virus"[tw] OR "new corona virus"[tw] OR "SARS-CoV-2"[tw] OR "SARSCoV2"[tw] OR "SARS-CoV2"[tw] OR "2019nCoV"[tw] OR "2019-nCoV"[tw] OR "2019 coronavirus"[tw] OR "2019 corona virus"[tw] OR "coronavirus disease 2019"[tw] OR "severe acute respiratory syndrome coronavirus 2"[nm] OR "severe acute respiratory syndrome coronavirus 2"[tw] OR "sars-coronavirus-2"[tw] OR "coronavirus disease 2019"[tw] OR "corona virus disease 2019"[tw]) NOT ("letter"[pt] OR "comment"[pt] OR "editorial"[pt] OR "review"[pt] OR "letter"[ti] OR "comment"[ti] OR "editorial"[ti] OR "brief communication"[ti] OR "review"[ti])',
 }
 
+/** This is used as a quick hack to partly mitigate issue #628, which causes some abstracts to be imported as arrays */
+const joinToStringIfArray = x => (Array.isArray(x) ? x.join(' ') : x)
+
 const getData = async (groupId, ctx) => {
   const manuscripts = await models.Manuscript.query().where({ groupId })
-
-  const currentArticleURLs = manuscripts.map(({ submission }) => {
-    return submission.articleURL
-  })
+  const currentArticleURLs = manuscripts.map(m => m.submission.$sourceUri)
 
   const dateTwoWeeksAgoFormatted = new Date(Date.now() - 12096e5)
     .toISOString()
@@ -299,6 +299,27 @@ const getData = async (groupId, ctx) => {
 
           const articleTitle = flattedArticleTitle[titlePropName]
 
+          let abstract = ''
+
+          if (Abstract?.AbstractText) {
+            if (Abstract.AbstractText.length) {
+              abstract = Abstract.AbstractText.map(
+                textWithAttributes =>
+                  `<p><b>${
+                    textWithAttributes._attributes
+                      ? textWithAttributes._attributes.Label
+                      : ''
+                  }</b> <br/> ${joinToStringIfArray(
+                    textWithAttributes._text,
+                  )}</p>`,
+              )
+                .join('')
+                .replace(/\n/gi, '')
+            } else {
+              abstract = joinToStringIfArray(Abstract.AbstractText._text)
+            }
+          }
+
           return publishedDate
             ? {
                 status: 'new',
@@ -328,29 +349,14 @@ const getData = async (groupId, ctx) => {
                         ]
                     : [],
                   datePublished: publishedDate,
-                  articleURL: `https://doi.org/${pubmedDOI(MedlineCitation)}`,
-                  articleDescription: articleTitle,
-                  abstract: Abstract
-                    ? Abstract.AbstractText.length
-                      ? Abstract.AbstractText.map(
-                          textWithAttributes =>
-                            `<p><b>${
-                              textWithAttributes._attributes
-                                ? textWithAttributes._attributes.Label
-                                : ''
-                            }</b> <br/> ${textWithAttributes._text}</p>`,
-                        )
-                          .join('')
-                          .replace(/\n/gi, '')
-                      : Abstract.AbstractText._text
-                    : '',
+                  $sourceUri: `https://doi.org/${pubmedDOI(MedlineCitation)}`,
+                  $title: articleTitle,
+                  $abstract: abstract,
                   topics,
                   initialTopicsOnImport: topics,
                   journal: Journal.Title._text,
                 },
-                meta: {
-                  title: '',
-                },
+                meta: {},
                 submitterId: ctx.user,
                 channels: [
                   {

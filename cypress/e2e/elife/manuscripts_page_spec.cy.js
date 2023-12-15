@@ -89,8 +89,8 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.clickEvaluation()
       cy.url().should('contain', 'evaluation')
 
-      SubmissionFormPage.getArticleUrl().should('have.value', '')
-      SubmissionFormPage.getDescription().should('have.value', '')
+      SubmissionFormPage.getDoi().should('have.value', '')
+      // SubmissionFormPage.getTitleField().should('have.value', '') // Actually contains "New submission <date>"
       SubmissionFormPage.getReview1().find('p').should('contain', '')
       SubmissionFormPage.getReview1Creator().should('have.value', '')
       SubmissionFormPage.getReview1Date().should('have.value', '')
@@ -107,9 +107,9 @@ describe('Manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
-        SubmissionFormPage.fillInDescription(data.description)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInPreprintUri(data.articleId)
+        SubmissionFormPage.fillInTitle(data.description)
         SubmissionFormPage.fillInReview1(data.review1)
         SubmissionFormPage.fillInReview1Creator(data.creator)
         SubmissionFormPage.fillInReview1Date(data.review1Date)
@@ -173,9 +173,9 @@ describe('Manuscripts page tests', () => {
         // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('submission_form_data').then(data => {
           SubmissionFormPage.fillInArticleld(data.articleId)
-          SubmissionFormPage.fillInArticleUrl(data.doi)
-          SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
-          SubmissionFormPage.fillInDescription(data.description)
+          SubmissionFormPage.fillInDoi(data.doi)
+          SubmissionFormPage.fillInPreprintUri(data.articleId)
+          SubmissionFormPage.fillInTitle(data.description)
           SubmissionFormPage.fillInReview1(data.review1)
           SubmissionFormPage.fillInReview1Creator(data.creator)
           SubmissionFormPage.fillInReview1Date(data.review1Date)
@@ -209,9 +209,12 @@ describe('Manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.getArticleld().should('have.value', data.articleId)
-        SubmissionFormPage.getArticleUrl().should('have.value', data.doi)
+        SubmissionFormPage.getDoi().should(
+          'have.value',
+          data.doi.split('https://doi.org/')[1],
+        )
         // eslint-disable-next-line
-        SubmissionFormPage.getDescription().should(
+        SubmissionFormPage.getTitleField().should(
           'have.value',
           data.description,
         )
@@ -271,10 +274,10 @@ describe('Manuscripts page tests', () => {
         })
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInArticleld('123 - Evaluated')
-        SubmissionFormPage.fillInArticleUrl(
+        SubmissionFormPage.fillInDoi(
           'https://doi.org/10.1101/2020.12.22.423946',
         )
-        SubmissionFormPage.fillInDescription('new description')
+        SubmissionFormPage.fillInTitle('new description')
         SubmissionFormPage.fillInReview1('review 1 is completed')
         SubmissionFormPage.fillInReview1Creator('test.test')
         SubmissionFormPage.fillInReview1Date('10/03/2050')
@@ -297,9 +300,12 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.articleId,
         )
-        SubmissionFormPage.getArticleUrl().should('not.have.value', data.doi)
+        SubmissionFormPage.getDoi().should(
+          'not.have.value',
+          data.doi.split('https://doi.org/')[1],
+        )
         // eslint-disable-next-line
-        SubmissionFormPage.getDescription().should(
+        SubmissionFormPage.getTitleField().should(
           'not.have.value',
           data.description,
         )

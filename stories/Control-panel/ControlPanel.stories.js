@@ -47,7 +47,7 @@ const props = {
         shortDescription: 'Abstract',
         id: 'd80b2c88-6144-4003-b671-63990b9b2793',
         component: 'AbstractEditor',
-        name: 'submission.abstract',
+        name: 'submission.$abstract',
         description: '<p>Please provide a short summary of your submission</p>',
         placeholder: 'Input your abstract...',
       },
@@ -90,7 +90,7 @@ const props = {
         title: 'Title',
         id: '47fd802f-ed30-460d-9617-c8a9b9025e95',
         component: 'TextField',
-        name: 'meta.title',
+        name: 'submission.$title',
         description: '<p></p>',
         placeholder: "Enter the manuscript's title",
       },
@@ -586,7 +586,7 @@ const props = {
       },
       {
         id: '7423ad09-d01b-49bc-8c2e-807829b86653',
-        name: 'verdict',
+        name: '$verdict',
         title: 'Decision Status',
         inline: 'true',
         options: [
@@ -697,10 +697,9 @@ const props = {
     meta: {
       __typename: 'ManuscriptMeta',
       manuscriptId: '2f920e7f-066a-496b-a9b8-e207ff7326d3',
-      title: 'New submission 2/11/2022, 8:47:05 AM',
     },
     submission:
-      '{"irb":"","name":"","test":"","cover":"","links":[],"title":"","ethics":"","contact":"","methods":[],"abstract":"","datacode":"","editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
+      '{"irb":"","name":"","test":"","cover":"","links":[],"$title":"New submission 2/11/2022, 8:47:05 AM","ethics":"","contact":"","methods":[],"$abstract":"","datacode":"","$editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
     manuscriptVersions: [],
     channels: [
       {
@@ -787,10 +786,9 @@ const props = {
     meta: {
       __typename: 'ManuscriptMeta',
       manuscriptId: '2f920e7f-066a-496b-a9b8-e207ff7326d3',
-      title: 'New submission 2/11/2022, 8:47:05 AM',
     },
     submission:
-      '{"irb":"","name":"","test":"","cover":"","links":[],"title":"","ethics":"","contact":"","methods":[],"abstract":"","datacode":"","editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
+      '{"irb":"","name":"","test":"","cover":"","links":[],"$title":"New submission 2/11/2022, 8:47:05 AM","ethics":"","contact":"","methods":[],"$abstract":"","datacode":"","$editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
     manuscriptVersions: [],
     channels: [
       {
@@ -975,10 +973,9 @@ const props = {
             meta: {
               __typename: 'ManuscriptMeta',
               manuscriptId: '130fed3c-f436-4075-9080-b7a51652a8fb',
-              title: 'New submission 1/26/2022, 1:50:57 AM',
             },
             submission:
-              '{"irb":"","name":"","cover":"","links":[],"title":"","ethics":"","contact":"","methods":[],"abstract":"","datacode":"","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
+              '{"irb":"","name":"","cover":"","links":[],"$title":"New submission 1/26/2022, 1:50:57 AM","ethics":"","contact":"","methods":[],"$abstract":"","datacode":"","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
             created: '2022-01-25T20:20:57.340Z',
             updated: '2022-01-25T20:20:57.340Z',
             status: 'new',
@@ -1035,7 +1032,7 @@ const props = {
               __typename: 'FormElement',
               id: '47fd802f-ed30-460d-9617-c8a9b9025e95',
               component: 'TextField',
-              name: 'meta.title',
+              name: 'submission.$title',
               title: 'Title',
             },
             {
@@ -1486,7 +1483,7 @@ const props = {
               __typename: 'FormElement',
               id: 'd80b2c88-6144-4003-b671-63990b9b2793',
               component: 'AbstractEditor',
-              name: 'submission.abstract',
+              name: 'submission.$abstract',
               title: 'Abstract',
               shortDescription: 'Abstract',
             },
@@ -1497,7 +1494,7 @@ const props = {
   },
   configuredColumnNames: [
     'shortId',
-    'meta.title',
+    'submission.$title',
     'created',
     'updated',
     'status',

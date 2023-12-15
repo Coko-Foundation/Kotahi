@@ -104,8 +104,9 @@ const makeArticleMeta = (
   // --doi: doi
   // --title: title
   // --submission: submission form PARSED BEFORE IT GETS HERE
-  //   --abstract: html
-  //   --authors: array
+  //   --$title
+  //   --$abstract: html
+  //   --$authors: array
   //     --id: '3dcc3f77-647e-48b5-86d9-aa3540375f60',
   //     --email: string
   //     --lastName: string

@@ -77,13 +77,21 @@ LinkAction.defaultProps = { isDisabled: false }
  * which can do other jobs like displaying the results. If onActionCompleted
  * returns "success" or "failure", appropriate icons will be shown.
  */
-const Action = ({ children, isDisabled, onActionCompleted, onClick }) => {
+const Action = ({
+  children,
+  className,
+  isDisabled,
+  onActionCompleted,
+  onClick,
+  title,
+}) => {
   const [resultStatus, setResultStatus] = useState(null)
   const [isInProgress, setIsInProgress] = useState(false)
 
   return (
     <>
       <ActionLink
+        className={className}
         disabled={isInProgress || isDisabled || typeof onClick !== 'function'}
         onClick={async () => {
           setIsInProgress(true)
@@ -92,6 +100,7 @@ const Action = ({ children, isDisabled, onActionCompleted, onClick }) => {
             setResultStatus(await onActionCompleted(result))
           setIsInProgress(false)
         }}
+        title={title}
         type="button"
       >
         {children}

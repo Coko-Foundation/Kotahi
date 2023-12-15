@@ -42,7 +42,7 @@ const EditMessageModal = ({ close, onConfirm, message }) => {
       rightActions={
         <LooseRow>
           <ActionButton disabled={saveIsDisabled} onClick={handleSave} primary>
-            {t('modals.editMessage.save')}
+            {t('common.Save')}
           </ActionButton>
           <ActionButton onClick={close}>
             {t('modals.editMessage.cancel')}

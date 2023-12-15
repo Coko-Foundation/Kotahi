@@ -12,8 +12,6 @@ const fragmentFields = `
   status
   meta {
     manuscriptId
-    title
-    abstract
   }
   submission
   files {
@@ -90,7 +88,10 @@ const ReviewPreviewPage = ({ match, currentUser }) => {
 
   return (
     <ReviewPreview
-      manuscript={manuscript}
+      manuscript={{
+        ...manuscript,
+        submission: JSON.parse(manuscript.submission),
+      }}
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionDummyProps}
     />

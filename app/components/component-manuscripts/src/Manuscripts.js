@@ -5,7 +5,6 @@ import { Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-// eslint-disable-next-line import/no-unresolved
 import { Trans, useTranslation } from 'react-i18next'
 import { articleStatuses } from '../../../globals'
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
@@ -115,7 +114,7 @@ const Manuscripts = ({ history, ...props }) => {
     const newManuscriptsFromCurrentPage = manuscripts.filter(
       manuscript =>
         manuscript.status === articleStatuses.new &&
-        !manuscript.submission.labels,
+        !manuscript.submission.$customStatus,
     )
 
     const newManuscriptsFromCurrentPageIds = newManuscriptsFromCurrentPage.map(
@@ -140,7 +139,7 @@ const Manuscripts = ({ history, ...props }) => {
                 .filter(
                   manuscript =>
                     manuscript.status === articleStatuses.new &&
-                    !manuscript.submission.labels,
+                    !manuscript.submission.$customStatus,
                 )
                 .map(manuscript => manuscript.id),
             ]),
@@ -359,7 +358,7 @@ const Manuscripts = ({ history, ...props }) => {
                     manuscripts.filter(
                       manuscript =>
                         manuscript.status === articleStatuses.new &&
-                        !manuscript.submission.labels,
+                        !manuscript.submission.$customStatus,
                     ).length ===
                       manuscripts.filter(manuscript =>
                         selectedNewManuscripts.includes(manuscript.id),

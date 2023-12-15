@@ -91,16 +91,7 @@ const {
 
 const { getPubsub } = pubsubManager
 
-/** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
-const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
-  if (oldMetaAbstract && ms.meta && !ms.meta.abstract)
-    throw new Error(
-      `Deleting meta.abstract in manuscript ${
-        ms.id
-      }, replacing value ${oldMetaAbstract} with ${typeof ms.meta
-        .abstract}, is illegal!`,
-    )
-
+const updateAndRepackageForGraphql = async ms => {
   return models.Manuscript.query().updateAndFetchById(ms.id, ms)
 }
 
@@ -285,6 +276,10 @@ const uploadAndConvertBase64ImagesInManuscript = async manuscript => {
 const commonUpdateManuscript = async (id, input, ctx) => {
   // ms = manuscript
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
+  if (msDelta.submission?.$doi?.startsWith('https://doi.org/'))
+    msDelta.submission.$doi = msDelta.submission.$doi.split(
+      'https://doi.org/',
+    )[1]
 
   const ms = await models.Manuscript.query()
     .findById(id)
@@ -292,17 +287,12 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   const activeConfig = await models.Config.getCached(ms.groupId)
 
-  /** Crude hack to circumvent and help diagnose bug 1193 */
-  const oldMetaAbstract = ms && ms.meta ? ms.meta.abstract : null
-
   // If this manuscript is getting its label set for the first time,
   // we will populate its task list from the template tasks
   const isSettingFirstLabels = ['prc'].includes(
     activeConfig.formData.instanceName,
   )
-    ? !ms.submission.labels &&
-      !!msDelta.submission &&
-      !!msDelta.submission.labels
+    ? !ms.submission.$customStatus && !!msDelta.submission?.$customStatus
     : false
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
@@ -316,15 +306,21 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.submittedDate = new Date()
   }
 
-  if (['preprint2', 'prc'].includes(activeConfig.formData.instanceName)) {
-    updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
-  }
+  // TODO manuscript.doi was added only to allow efficient queries in postgres.
+  // We should scrap it, as it prevents single source of truth, and we can directly index the JSON field:
+  // CREATE INDEX idx_manuscripts_submission_doi_gin ON manuscripts USING GIN ((submission->>'$doi'));
+  // or even
+  // CREATE INDEX idx_manuscripts_submission_gin ON manuscripts USING GIN (submission);
+  // The latter will help with queries against other submission fields.
+  if (msDelta.submission?.$doi) updatedMs.doi = msDelta.submission.$doi
+
+  updatedMs.submission.$editDate = new Date().toISOString().split('T')[0]
 
   if (isSettingFirstLabels && !updatedMs.tasks.length)
     await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
-  return updateAndRepackageForGraphql(updatedMs, oldMetaAbstract)
+  return updateAndRepackageForGraphql(updatedMs)
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
@@ -401,7 +397,6 @@ const resolvers = {
       const { meta, files, groupId } = vars.input
       const group = await models.Group.query().findById(groupId)
       const submissionForm = await getSubmissionForm(group.id)
-      const activeConfig = await models.Config.getCached(group.id)
 
       const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
@@ -469,11 +464,9 @@ const resolvers = {
         groupId: group.id,
       }
 
-      if (['preprint2', 'prc'].includes(activeConfig.formData.instanceName)) {
-        emptyManuscript.submission.editDate = new Date()
-          .toISOString()
-          .split('T')[0]
-      }
+      emptyManuscript.submission.$editDate = new Date()
+        .toISOString()
+        .split('T')[0]
 
       const manuscript = await models.Manuscript.query().upsertGraphAndFetch(
         emptyManuscript,
@@ -716,7 +709,7 @@ const resolvers = {
         }
 
         const data = {
-          articleTitle: manuscript.meta.title,
+          articleTitle: manuscript.submission.$title,
           authorName:
             manuscript.submitter.username ||
             manuscript.submitter.defaultIdentity.name ||
@@ -796,7 +789,7 @@ const resolvers = {
         }
 
         const data = {
-          articleTitle: manuscript.meta.title,
+          articleTitle: manuscript.submission.$title,
           authorName:
             manuscript.submitter.username ||
             manuscript.submitter.defaultIdentity.name ||
@@ -852,10 +845,6 @@ const resolvers = {
 
       const activeConfig = await models.Config.getCached(manuscript.groupId)
 
-      /** Crude hack to circumvent and help diagnose bug 1193 */
-      const oldMetaAbstract =
-        manuscript && manuscript.meta ? manuscript.meta.abstract : null
-
       switch (decisionString) {
         case 'accept':
           manuscript.decision = 'accepted'
@@ -910,7 +899,7 @@ const resolvers = {
 
         if (emailValidationResult && receiverName) {
           const data = {
-            articleTitle: manuscript.meta.title,
+            articleTitle: manuscript.submission.$title,
             authorName:
               manuscript.submitter.username ||
               manuscript.submitter.defaultIdentity.name ||
@@ -965,7 +954,7 @@ const resolvers = {
         }
       }
 
-      return updateAndRepackageForGraphql(manuscript, oldMetaAbstract)
+      return updateAndRepackageForGraphql(manuscript)
     },
     async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
@@ -1148,7 +1137,7 @@ const resolvers = {
           await publishToGoogleSpreadSheet(manuscript)
           update.submission = {
             ...manuscript.submission,
-            editDate: new Date().toISOString().split('T')[0],
+            $editDate: new Date().toISOString().split('T')[0],
           }
           succeeded = true
         } catch (e) {
@@ -1502,22 +1491,16 @@ const resolvers = {
 
       const manuscripts = await models.Manuscript.query()
         .where({ status: 'new', groupId: group.id })
-        .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
+        .whereRaw(`submission->>'$customStatus' = 'readyToEvaluate'`)
 
       return manuscripts.map(m => ({
         id: m.id,
         shortId: m.shortId,
-        title: m.meta.title || m.submission.title || m.submission.description,
-        abstract: m.meta.abstract || m.submission.abstract,
-        authors: m.submission.authors || m.authors || [],
-        doi: m.submission.doi.startsWith('https://doi.org/') // TODO We should strip this at time of import
-          ? m.submission.doi.substr(16)
-          : m.submission.doi,
-        uri:
-          m.submission.link ||
-          m.submission.biorxivURL ||
-          m.submission.url ||
-          m.submission.uri,
+        title: m.submission.$title,
+        abstract: m.submission.$abstract,
+        authors: m.submission.$authors || [],
+        doi: m.submission.$doi,
+        uri: m.submission.$sourceUri,
       }))
     },
     async doisToRegister(_, { id }, ctx) {
@@ -1538,7 +1521,7 @@ const resolvers = {
       ) {
         try {
           const manuscriptDOI = await getDoi(
-            getReviewOrSubmissionField(manuscript, 'doiSuffix') ||
+            getReviewOrSubmissionField(manuscript, '$doiSuffix') ||
               manuscript.id,
             activeConfig,
           )
@@ -1939,7 +1922,6 @@ const typeDefs = `
   }
 
   input ManuscriptMetaInput {
-    title: String
     source: String
   }
 
@@ -1991,7 +1973,7 @@ const typeDefs = `
   }
 
   type ManuscriptMeta {
-    title: String!
+    title: String
     source: String
     abstract: String
     subjects: [String]

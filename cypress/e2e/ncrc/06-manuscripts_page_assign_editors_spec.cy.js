@@ -19,7 +19,7 @@ describe.skip('manuscripts page assign editors tests', () => {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-    SubmissionFormPage.fillInArticleDescription('123')
+    SubmissionFormPage.fillInTitle('123')
     SubmissionFormPage.waitThreeSec()
     Menu.clickManuscriptsAndAssertPageLoad()
   })
