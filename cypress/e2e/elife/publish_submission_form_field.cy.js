@@ -41,9 +41,9 @@ describe.skip('Update the submission form field', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInArticleld(data.articleId)
-      SubmissionFormPage.fillInArticleUrl(data.doi)
-      SubmissionFormPage.fillInBioRxivArticleUrl(bioRxivArticleUrl)
-      SubmissionFormPage.fillInDescription(data.description)
+      SubmissionFormPage.fillInDoi(data.doi)
+      SubmissionFormPage.fillInPreprintUri(bioRxivArticleUrl)
+      SubmissionFormPage.fillInTitle(data.description)
       SubmissionFormPage.waitThreeSec()
       SubmissionFormPage.clickSubmitResearch()
       cy.awaitDisappearSpinner()

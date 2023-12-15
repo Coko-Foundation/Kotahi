@@ -146,9 +146,7 @@ const EmailTemplateEditForm = ({
               status={!isNewEmailTemplate ? submitButtonStatus : null}
               type="button"
             >
-              {isNewEmailTemplate
-                ? t('emailTemplate.save')
-                : t('emailTemplate.update')}
+              {isNewEmailTemplate ? t('common.Save') : t('common.Update')}
             </FormActionButton>
             {!isNewEmailTemplate && !isDeleteButtonHidden && (
               <FormActionDelete

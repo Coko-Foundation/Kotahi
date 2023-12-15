@@ -33,10 +33,6 @@ class Manuscript extends BaseModel {
             const fieldName = sortName.split(':')[1]
             const result = `LOWER(manuscripts.submission->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
             query.orderByRaw(result)
-          } else if (sortName.includes('meta:')) {
-            const fieldName = sortName.split(':')[1]
-            const result = `LOWER(manuscripts.meta->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
-            query.orderByRaw(result)
           } else {
             const result = `${sortName} ${sortDirection}, id ${sortDirection}`
             query.orderByRaw(result)
@@ -387,8 +383,8 @@ class Manuscript extends BaseModel {
         meta: {
           type: 'object',
           properties: {
-            title: { type: 'string' },
-            abstract: { type: ['string', 'null'] },
+            title: { type: 'string' }, // TODO DEPRECATED. Remove once we clean up old migrations.
+            abstract: { type: ['string', 'null'] }, // TODO DEPRECATED. Remove once we clean up old migrations.
             source: { type: 'string' },
             history: {
               items: { type: 'object' },

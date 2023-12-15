@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { LabelBadge } from '../../../shared'
+import { LabelBadge, PlainOrRichText } from '../../../shared'
 
 const CellItem = styled.div`
   display: inline-block;
@@ -31,9 +31,11 @@ const DefaultField = ({ values, applyFilter }) =>
     return (
       <CellItem key={v.value} onClick={clickAction}>
         {v.color ? (
-          <LabelBadge color={v.color}>{v.displayValue}</LabelBadge>
+          <LabelBadge color={v.color}>
+            <PlainOrRichText value={v.displayValue} />
+          </LabelBadge>
         ) : (
-          v.displayValue
+          <PlainOrRichText value={v.displayValue} />
         )}
       </CellItem>
     )

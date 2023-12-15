@@ -4,7 +4,12 @@ import { Checkbox } from './Checkbox'
 /* import theme from '../../theme' */
 
 // eslint-disable-next-line import/prefer-default-export
-export const CheckboxGroup = ({ options, value: values, ...props }) => {
+export const CheckboxGroup = ({
+  options,
+  value: values,
+  'data-testid': dataTestid,
+  ...props
+}) => {
   const handleChange = event => {
     const { name } = event.target
 
@@ -17,7 +22,7 @@ export const CheckboxGroup = ({ options, value: values, ...props }) => {
   }
 
   return (
-    <>
+    <div data-testid={dataTestid}>
       {options.map(option => (
         <Checkbox
           {...option}
@@ -26,6 +31,6 @@ export const CheckboxGroup = ({ options, value: values, ...props }) => {
           key={option.id}
         />
       ))}
-    </>
+    </div>
   )
 }

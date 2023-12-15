@@ -43,7 +43,7 @@ const getData = async (groupId, ctx) => {
     .orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
-    manuscript => manuscript.submission.labels,
+    manuscript => manuscript.submission.$customStatus,
   )
 
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
@@ -121,12 +121,7 @@ const getData = async (groupId, ctx) => {
       manuscripts.map(({ submission }) => submission.doi),
     )
 
-    const currentURLs = new Set(
-      manuscripts.map(
-        ({ submission }) =>
-          submission.articleURL || submission.link || submission.biorxivURL,
-      ),
-    )
+    const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
 
     const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
       preprints =>
@@ -157,25 +152,21 @@ const getData = async (groupId, ctx) => {
         importSourceServer: 'semantic-scholar',
         submission: {
           ...emptySubmission,
+          $title: title,
           firstAuthor: authors[0] ? authors[0].name : '',
-          authors: authors.map(index => ({
+          $authors: authors.map(index => ({
             firstName: index.name.split(' ').slice(0, -1).join(' '),
             lastName: index.name.split(' ').slice(-1).join(' '),
           })),
-          abstract: rawAbstractToSafeHtml(abstract),
+          $abstract: rawAbstractToSafeHtml(abstract),
           datePublished: firstPublicationDate,
           journal: venue,
-          link: url,
-          doi:
-            externalIds && externalIds.DOI
-              ? `https://doi.org/${externalIds.DOI}`
-              : '',
+          $sourceUri: url,
+          $doi: externalIds?.DOI || '',
         },
-        // separate DOI field for better indexing, not including DOI prefix here
-        doi: externalIds && externalIds.DOI ? externalIds.DOI : '',
-        meta: {
-          title,
-        },
+        // separate DOI field for better indexing
+        doi: externalIds?.DOI || '',
+        meta: {},
         submitterId: ctx.user,
         channels: [
           {

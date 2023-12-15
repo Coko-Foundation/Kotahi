@@ -13,6 +13,7 @@ const FormWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
+  'data-testid': dataTestid,
   ...rest
 }) => {
   return (
@@ -21,7 +22,7 @@ const FormWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        layout={SimpleWaxEditorLayout(readonly)}
+        layout={SimpleWaxEditorLayout(readonly, dataTestid)}
         onBlur={val => {
           onChange && onChange(val)
           onBlur && onBlur(val)

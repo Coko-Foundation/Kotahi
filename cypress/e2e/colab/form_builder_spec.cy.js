@@ -25,21 +25,15 @@ describe('Form builder', () => {
       'Research Object Submission Form',
     )
     FormsPage.clickFormOption(1)
-    FormsPage.getFieldValidate()
-    cy.get(':nth-child(8) > .style__Legend-sc-1npdrat-1')
-    cy.get(
-      ':nth-child(8) > :nth-child(2) > .css-3x5r4n-container > .react-select__control > .react-select__value-container',
-    ).click()
-    cy.get('.react-select__option').eq(0).click()
-    cy.contains('Update Field').click()
+    FormsPage.getFieldValidate().scrollIntoView().click()
+    cy.get('[class*="MenuList"] > div').eq(0).click()
+    cy.contains('Save').click()
+
     // adding a field in submission form
-    cy.contains('Add Field').click({ force: true })
-    cy.contains('Choose in the list').click()
-    cy.get('button')
-    cy.contains('Single image attachment').click()
-    cy.contains('Name (internal field name)').click()
-    cy.get('[name=name]').type('submission.visualAbstract')
-    cy.contains('Update Field').click()
+    cy.get('[title="Add a field..."]').click()
+    cy.getByDataTestId('fieldType').click()
+    cy.contains('Single image attachment').scrollIntoView().click()
+    cy.contains('Save').click()
 
     // for review field
     cy.contains('Review').click()
@@ -47,16 +41,18 @@ describe('Form builder', () => {
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
     cy.get('[name=name]').type('files')
-    cy.contains('Update Field').click()
+    cy.contains('Save').click()
 
     // adding a field in review form
-    cy.contains('Add Field').click({ force: true })
-    cy.contains('Choose in the list').click()
-    cy.get('button')
-    cy.contains('Single image attachment').click()
-    cy.contains('Name (internal field name)').click()
-    cy.get('[name=name]').type('visualAbstract')
-    cy.contains('Update Field').click()
+    cy.get('[title="Add a field..."]').click()
+    cy.getByDataTestId('fieldType').click()
+    cy.get('[class*="MenuList"]')
+      .contains('Attachments')
+      .scrollIntoView()
+      .click()
+    cy.getByDataTestId('title').click().type('More attachments')
+    cy.get('[name=name]').click().type('moreAttachments')
+    cy.contains('Save').click()
 
     // for decision field
     cy.contains('Decision').click()
@@ -64,15 +60,12 @@ describe('Form builder', () => {
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
     cy.get('[name=name]').type('files')
-    cy.contains('Update Field').click()
+    cy.contains('Save').click()
 
     // adding a field in decision form
-    cy.contains('Add Field').click({ force: true })
-    cy.contains('Choose in the list').click()
-    cy.get('button')
-    cy.contains('Single image attachment').click()
-    cy.contains('Name (internal field name)').click()
-    cy.get('[name=name]').type('visualAbstract')
-    cy.contains('Update Field').click()
+    cy.get('[title="Add a field..."]').click()
+    cy.getByDataTestId('fieldType').click()
+    cy.contains('DOI suffix').click()
+    cy.contains('Save').click()
   })
 })

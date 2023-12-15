@@ -22,9 +22,11 @@ describe('checking manuscript version', () => {
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
       /* Assign Editor */
-      ControlPage.getAssignSeniorEditorDropdown()
-        .click({ force: true })
-        .type(`${name.role.seniorEditor}{enter}`)
+      ControlPage.getAssignSeniorEditorDropdown().click({ force: true })
+      ControlPage.getAssignSeniorEditorDropdown().type(
+        `${name.role.seniorEditor}{enter}`,
+        { force: true },
+      )
 
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
@@ -54,9 +56,11 @@ describe('checking manuscript version', () => {
       DashboardPage.getDecisionField(2).should('contain', 'Revise')
       /* Create new manuscript version */
       DashboardPage.clickCreateNewVersionButton()
-      SubmissionFormPage.getTypeOfResearchObject()
-        .click()
-        .type('Dataset{enter}')
+      SubmissionFormPage.fillInField(
+        'submission.$abstract',
+        'New abstract',
+        true,
+      )
       SubmissionFormPage.clickSubmitResearch()
       SubmissionFormPage.clickSubmitYourManuscript()
       /* Verify new submission got created */

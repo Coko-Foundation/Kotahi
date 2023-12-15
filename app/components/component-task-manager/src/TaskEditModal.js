@@ -285,7 +285,7 @@ const TaskEditModal = ({
       onClose={() => onCancel(false)}
       rightActions={
         <ActionButton onClick={() => onSave(false)} primary>
-          {t('modals.taskEdit.Save')}
+          {t('common.Save')}
         </ActionButton>
       }
       title={t('modals.taskEdit.Task details')}

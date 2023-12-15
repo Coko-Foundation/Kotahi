@@ -3,7 +3,7 @@
   "formTitle": "Research Object Submission Form",
   "preprint1": {
     "articleId": "Article ID",
-    "articleUrl": "Article URL",
+    "articleDoi": "Article DOI",
     "bioRxivArticleUrl": "bioRxiv article URL",
     "description": "Description",
 

@@ -76,18 +76,14 @@ const getData = async (groupId, ctx) => {
   }
 
   const date = lastImportDate.length ? lastImportDate[0].date : dateTwoWeeksAgo
-
   const importedManuscripts = await requests(0, date, [])
 
   const manuscripts = await models.Manuscript.query()
-
-  const currentDOIs = manuscripts.map(({ submission }) => {
-    return submission.articleURL
-  })
+  const currentUris = manuscripts.map(m => m.submission.$sourceUri)
 
   const withoutDuplicates = importedManuscripts.filter(
     ({ rel_doi, version, rel_site }) =>
-      !currentDOIs.includes(
+      !currentUris.includes(
         `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
       ),
   )
@@ -157,16 +153,14 @@ const getData = async (groupId, ctx) => {
               ? rel_authors.map(({ author_name }) => author_name).join(', ')
               : [],
             datePublished: rel_date,
-            articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
-            articleDescription: rel_title,
-            abstract: rel_abs,
+            $sourceUri: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
+            $title: rel_title,
+            $abstract: rel_abs,
             journal: rel_site,
             topics,
             initialTopicsOnImport: topics,
           },
-          meta: {
-            title: '',
-          },
+          meta: {},
           submitterId: ctx.user,
           channels: [
             {

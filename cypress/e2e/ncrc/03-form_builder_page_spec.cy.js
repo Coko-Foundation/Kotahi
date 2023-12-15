@@ -24,7 +24,7 @@ describe.skip('form builder tests', () => {
         FormsPage.getFormTitleTab(0).should('contain', data.preprint2.title)
 
         const dataArray = [
-          data.preprint2.articleUrl,
+          data.preprint2.articleDoi,
           data.preprint2.description,
           data.common.ourTake,
           data.preprint2.studyDesign,
@@ -55,7 +55,7 @@ describe.skip('form builder tests', () => {
     it('check form field type & assert field is mandatory', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        FormsPage.clickFormOptionWithText(data.preprint2.articleUrl)
+        FormsPage.clickFormOptionWithText(data.preprint2.articleDoi)
         FormsPage.getComponentType().should('contain', 'Text')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.preprint2.description)
@@ -136,7 +136,7 @@ describe.skip('form builder tests', () => {
     it('check submission form contains the same fields', () => {
       cy.fixture('form_option').then(data => {
         const dataArray = [
-          data.preprint2.articleUrl,
+          data.preprint2.articleDoi,
           data.preprint2.description,
           data.common.ourTake,
           data.preprint2.studyDesign,
@@ -188,8 +188,8 @@ describe.skip('form builder tests', () => {
     })
 
     it('message for DOI invalid should not exist ', () => {
-      SubmissionFormPage.fillInArticleUrl('google.com')
-      SubmissionFormPage.fillInArticleDescription('2')
+      SubmissionFormPage.fillInDoi('google.com')
+      SubmissionFormPage.fillInTitle('2')
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(
         'not.exist',
       )

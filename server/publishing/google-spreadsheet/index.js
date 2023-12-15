@@ -43,12 +43,12 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 
   return {
     uuid: manuscript.id,
-    title_journal: `${submission.articleDescription} ${importSourceServer}`,
-    Title: submission.articleDescription || '',
+    title_journal: `${submission.$title} ${importSourceServer}`,
+    Title: submission.$title || '',
     Topic: topics.join(';') || '',
     'First Author': submission.firstAuthor || '',
     'Date Published': submission.datePublished || '',
-    link: submission.articleURL || '',
+    link: submission.$sourceUri || '',
     'Our Take': String(convert(submission.ourTake || '', { wordwrap: false })),
     value_added: String(
       convert(submission.valueAdded || '', { wordwrap: false }),
@@ -76,7 +76,7 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
       wordwrap: false,
     }),
     keywords: 'NA',
-    final_take_wordcount: '5',
+    final_take_wordcount: '5', // TODO Is this correct?
   }
 }
 

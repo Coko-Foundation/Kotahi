@@ -4,6 +4,7 @@ import Tooltip from 'rc-tooltip'
 import { InfoIcon } from '../style'
 import { stripHtml } from '../../../component-review/src/components/review/util'
 import { SemanticScholarIcon, CoarIcon } from '../../../shared/Icons'
+import { PlainOrRichText } from '../../../shared'
 
 const FloatingIcon = styled.div`
   float: right;
@@ -21,30 +22,25 @@ const IsImportSemanticScholar = styled(SemanticScholarIcon)`
   width: 20px;
 `
 
-const getAbstractAsPlainText = manuscript => {
-  const abstract = manuscript.meta.abstract ?? manuscript.submission.abstract
-  // Some abstracts are incorrectly imported from Pubmed as an array of strings. Even once we fix this bug #628 we'll have to handle historic data containing arrays.
-  return stripHtml(Array.isArray(abstract) ? abstract.join(' ') : abstract)
-}
+const getAbstractAsPlainText = manuscript =>
+  stripHtml(manuscript.submission.$abstract || '')
 
 /** Render the title;
- * if manuscript.submission.articleURL exists, the title will be hyperlinked to this;
- * if abstract exists, a floating info icon will show the abstract on hover. */
+ * if abstract exists, a floating info icon will show the abstract on hover.
+ * If submission.$sourceUri exists, the title will be hyperlinked to this;
+ * failing that, if submission.$doi exists, the title will be hyperlinked to a DOI link.
+ * */
 const TitleWithAbstractAsTooltip = ({ manuscript }) => {
-  const title =
-    manuscript.meta.title || manuscript.submission.articleDescription || ''
+  const title = <PlainOrRichText value={manuscript.submission.$title} />
 
-  const isManuscriptFromSemanticScholar = !!(
-    manuscript.importSourceServer &&
+  const isManuscriptFromSemanticScholar =
     manuscript.importSourceServer === 'semantic-scholar'
-  )
 
-  const isManuscriptFromCoarNotify = !!(
-    manuscript.importSourceServer && manuscript.importSourceServer === 'COAR'
-  )
+  const isManuscriptFromCoarNotify = manuscript.importSourceServer === 'COAR'
 
-  let url = manuscript.submission.articleURL
-  if (url === 'https://doi.org/') url = null // For some reason, some URLs come in as this generic address, which is useless to the user.
+  let url = manuscript.submission.$sourceUri
+  if (!url && manuscript.submission.$doi)
+    url = `https://doi.org/${manuscript.submission.$doi}`
 
   const abstract = getAbstractAsPlainText(manuscript)
 

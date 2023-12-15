@@ -96,13 +96,8 @@ const DecisionPage = ({ currentUser, match }) => {
 
   const handleChange = (value, path, versionId) => {
     const manuscriptDelta = {} // Only the changed fields
-
-    // Takes the $PATH (meta.title) and $VALUE (meta.title) -> { meta: { title: '$VALUE' } }
-    // String to Object conversion happens here
     set(manuscriptDelta, path, value)
-
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
-
     return debouncers[path](versionId, manuscriptDelta)
   }
 
@@ -388,7 +383,7 @@ const DecisionPage = ({ currentUser, match }) => {
   /** This will only send the modified field, not the entire review object */
   const updateReviewJsonData = (reviewId, value, path, manuscriptVersionId) => {
     const reviewDelta = {} // Only the changed fields
-    // E.g. if path is 'meta.title' and value is 'Foo' this gives { meta: { title: 'Foo' } }
+    // E.g. if path is 'submission.$title' and value is 'Foo' this gives { submission: { $title: 'Foo' } }
     set(reviewDelta, path, value)
 
     const reviewPayload = {

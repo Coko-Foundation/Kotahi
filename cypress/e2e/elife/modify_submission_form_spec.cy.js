@@ -20,13 +20,12 @@ describe('validating doi field in submission form', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
     })
 
-    // check if the form contain all the columns
-    it('check if the form contain all the columns', () => {
+    it('check if the form contain all the fields', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         const formElements = [
           data.preprint1.articleId,
-          data.preprint1.articleUrl,
+          data.preprint1.articleDoi,
           data.preprint1.bioRxivArticleUrl,
           data.preprint1.description,
           data.preprint1.review1,
@@ -43,8 +42,7 @@ describe('validating doi field in submission form', () => {
           data.preprint1.summaryDate,
         ]
 
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < formElements.length; i += 1) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             formElements[i],
@@ -55,15 +53,14 @@ describe('validating doi field in submission form', () => {
 
     // check if it is displayed the required message
     it('check required message', () => {
-      SubmissionFormPage.clickSubmitResearch()
+      SubmissionFormPage.clickElifeSubmitResearch()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 4; i++) {
-          SubmissionFormPage.getFormOptionList(i).should(
-            'contain',
-            data.required,
-          )
+          SubmissionFormPage.getFormOptionList(i)
+            .get('[class*="MessageWrapper"]')
+            .should('contain', data.required)
         }
       })
     })
@@ -85,14 +82,17 @@ describe('validating doi field in submission form', () => {
           Menu.clickManuscripts()
           ManuscriptsPage.getOptionsElifeText('Evaluation').click()
           SubmissionFormPage.fillInArticleld(data.articleId)
-          SubmissionFormPage.fillInArticleUrl(data.doi)
-          SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
-          SubmissionFormPage.fillInDescription(data.description)
-          SubmissionFormPage.clickSubmitResearch()
+          SubmissionFormPage.fillInDoi(data.doi)
+          SubmissionFormPage.fillInPreprintUri(data.articleId)
+          SubmissionFormPage.fillInTitle(data.description)
+          SubmissionFormPage.clickElifeSubmitResearch()
 
           // check for the submission form contains doi
           ManuscriptsPage.getOptionsElifeText('Evaluation').click()
-          SubmissionFormPage.getArticleUrl().should('have.value', data.doi)
+          SubmissionFormPage.getDoi().should(
+            'have.value',
+            data.doi.split('https://doi.org/')[1],
+          )
         })
       })
     })
@@ -110,8 +110,8 @@ describe('validating doi field in submission form', () => {
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
         ManuscriptsPage.getOptionsElifeText('Evaluation').click()
-        SubmissionFormPage.fillInArticleUrl(invalidDoiLnk)
-        SubmissionFormPage.clickSubmitResearch()
+        SubmissionFormPage.fillInDoi(invalidDoiLnk)
+        SubmissionFormPage.clickElifeSubmitResearch()
         SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
       })
     })

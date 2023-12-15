@@ -8,14 +8,12 @@ export const manuscriptWithoutTeams = {
   status: 'accepted',
   meta: {
     manuscriptId: 'd75dd479-8658-418a-91b6-4bee523d25b1',
-    title: 'New submission 06/04/2022, 18:01:21',
     source: null,
-    abstract: null,
     history: null,
     __typename: 'ManuscriptMeta',
   },
   submission:
-    '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"software","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
+    '{"$doi":"","cover":"","$title":"New submission 06/04/2022, 18:01:21","topics":[],"Funding":"","$abstract":"","datacode":"","objectType":"software","references":"","$authors":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
   published: '2022-04-08T07:58:54.517Z',
   manuscriptVersions: [],
   channels: [

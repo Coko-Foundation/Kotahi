@@ -119,7 +119,7 @@ const Submit = ({
     }
 
     if (userCanEditManuscriptAndFormData) {
-      Object.assign(submissionValues, JSON.parse(version.submission))
+      Object.assign(submissionValues, version.submission)
 
       const versionValues = {
         ...version,
@@ -161,10 +161,7 @@ const Submit = ({
             />
             <ReadonlyFormTemplate
               form={submissionForm}
-              formData={{
-                ...version,
-                submission: JSON.parse(version.submission),
-              }}
+              formData={version}
               manuscript={version}
               showEditorOnlyFields={false}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
@@ -280,6 +277,7 @@ const formPropTypes = PropTypes.shape({
           PropTypes.number.isRequired,
         ]).isRequired,
       ),
+      readonly: PropTypes.bool,
     }).isRequired,
   ).isRequired,
   popuptitle: PropTypes.string,

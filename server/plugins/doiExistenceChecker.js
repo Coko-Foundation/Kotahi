@@ -19,9 +19,9 @@ class DoiExistenceChecker {
         this.doiSet = 'wait' // Any other tasks trying to access simultaneously must wait until this becomes a proper Set with data loaded
 
         const dois = await models.Manuscript.query()
-          .select(raw("submission->>'doi'").as('doi'))
-          .whereRaw("submission->>'doi' IS NOT null")
-          .whereRaw("submission->>'doi' <> ''")
+          .select(raw("submission->>'$doi'").as('doi'))
+          .whereRaw("submission->>'$doi' IS NOT null")
+          .whereRaw("submission->>'$doi' <> ''")
           .where({ groupId: this.groupId, isHidden: this.archiveStatus })
 
         this.doiSet = new Set()

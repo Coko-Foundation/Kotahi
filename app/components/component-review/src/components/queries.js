@@ -91,9 +91,7 @@ const manuscriptFields = `
   status
   meta {
     manuscriptId
-    title
     source
-    abstract
     history {
       type
       date
@@ -194,6 +192,7 @@ const formFields = `
         maxChars
         minSize
       }
+      readonly
     }
   }
 `

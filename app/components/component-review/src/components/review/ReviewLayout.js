@@ -141,10 +141,7 @@ const ReviewLayout = ({
           )}
           <ReadonlyFormTemplate // Display manuscript metadata
             form={submissionForm}
-            formData={{
-              ...latestVersion,
-              submission: JSON.parse(latestVersion.submission),
-            }}
+            formData={latestVersion}
             manuscript={latestVersion}
             showEditorOnlyFields={false}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -264,7 +261,7 @@ ReviewLayout.propTypes = {
       id: PropTypes.string.isRequired,
       reviews: PropTypes.arrayOf(PropTypes.shape({})),
       status: PropTypes.string.isRequired,
-      meta: PropTypes.shape({}).isRequired,
+      meta: PropTypes.shape({ source: PropTypes.string }).isRequired,
       files: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string.isRequired,

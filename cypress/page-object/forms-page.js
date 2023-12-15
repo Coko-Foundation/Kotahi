@@ -5,9 +5,9 @@
  */
 const FORM_TITLE_TAB = '[data-test-id="tab-container"] > div'
 const FORM_OPTION_LIST = '[class*=FormBuilder__Element] > button:nth-child(1)'
-const NAME_FIELD = 'name'
+const NAME_FIELD = '[data-testid="name"]'
 const COMPONENT_TYPE = '[role=listbox]'
-const FIELD_VALIDATE = '[class*=react-select__value-container]'
+const FIELD_VALIDATE = '[data-testid="validate"]'
 const DOI_VALIDATION = '[class*=RadioBox__RadioGroup]'
 const UPDATE_FORM_BUTTON = '[type=submit]'
 
@@ -35,7 +35,7 @@ export const FormsPage = {
     return cy.get(FORM_OPTION_LIST).eq(nth)
   },
   getNameField() {
-    return cy.getByName(NAME_FIELD)
+    return cy.get(NAME_FIELD)
   },
   getComponentType() {
     return cy.get(COMPONENT_TYPE)

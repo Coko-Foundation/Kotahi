@@ -182,7 +182,11 @@ const resolvers = {
   CMSPage: {
     async meta(parent) {
       if (parent.meta) {
-        return JSON.stringify(parent.meta)
+        return JSON.stringify({
+          ...parent.meta,
+          title: parent.submission.$title,
+          abstract: parent.submission.$abstract,
+        }) // TODO update flax so we can remove these bogus title and abstract fields
       }
 
       return null

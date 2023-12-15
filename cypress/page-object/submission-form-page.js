@@ -11,19 +11,22 @@ import { evaluate, submit } from '../support/routes'
 const PAGE_TITLE = '[class*=style__Heading]'
 const ADD_A_LINK_BUTTON = 'li > button'
 const ENTER_URL_FIELD = 'submission.'
-const TITLE_FIELD = 'meta.title'
+const TITLE_FIELD = 'submission.$title'
 const NAME_FIELD = 'submission.name'
-const ABSTRACT_FIELD = 'submission.abstract'
+const ABSTRACT_FIELD = 'submission.$abstract'
+const DOI_FIELD = 'submission.$doi'
+const SOURCE_URI_FIELD = 'submission.$sourceUri'
 // const OUR_TAKE = 'submission.ourTake'
 const MAIN_FINDINGS = 'submission.mainFindings'
 const STUDY_STRENGTHS = 'submission.studyStrengths'
 const LIMITATIONS_FIELD = 'submission.limitations'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 const KEYWORDS_FIELD = 'submission.keywords'
-const LABELS_DROPDOWN = 'Labels'
+const CUSTOM_STATUS_DROPDOWN = 'Labels'
 const REFERENCES_FIELD = 'submission.references'
-const SUBMIT_RESEARCH_BUTTON = 'form > div > button'
-const SUBMIT_YOUR_MANUSCRIPT_BUTTON = 'button[type=submit]'
+const SUBMIT_RESEARCH_BUTTON = 'research-object-submission-form-action-btn'
+const ELIFE_SUBMIT_RESEARCH_BUTTON = 'elife-submission-form-action-btn'
+const SUBMIT_YOUR_MANUSCRIPT_BUTTON = 'confirm-submit'
 const VALIDATION_ERROR_MESSAGE = 'FormTemplate__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 const SUBMISSION_FORM_INPUT_BOX = 'ProseMirror'
@@ -37,9 +40,6 @@ const TYPE_OF_RESEARCH_OBJECT = '.css-1f7humo-control'
 const FORM_OPTION_LIST = '[class*=style__Section]'
 const FORM_OPTION_VALUE = 'singleValue'
 const ARTICLE_ID_FIELD = 'submission.articleId'
-const ARTICLE_URL_FIELD = 'submission.articleURL'
-const DESCRIPTION_FIELD = 'submission.description'
-const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
 const REVIEW_1_DATE_FEILD = 'submission.review1date'
 const REVIEW_2_DATE_FEILD = 'submission.review2date'
 const REVIEW_3_DATE_FEILD = 'submission.review3date'
@@ -50,22 +50,16 @@ const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
 const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to preprint2
-const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
 const DATE_PUBLISHED_FIELD = 'submission.datePublished'
 const JOURNAL_FIELD = 'submission.journal'
 const REVIEWER_FIELD = 'submission.reviewer'
-const EDIT_DATE_FIELD = 'submission.editDate'
+const EDIT_DATE_FIELD = 'submission.$editDate'
 const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
 // const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
 const SUB_TOPICS_CHECKBOX_LIST = 'submission.subTopics'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
-
-// specific to prc
-const DOI_FIELD = 'submission.DOI'
-const LINK_FIELD = 'submission.link'
-const DOI_FILED_C = 'submission.doi'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -76,6 +70,29 @@ export const SubmissionFormPage = {
   },
   clickAddLink() {
     this.getAddLinkButton().click()
+  },
+  fillInField(dataTestId, text, shouldClearExisting = false) {
+    if (shouldClearExisting)
+      cy.get(
+        `input[data-testid="${dataTestId}"], select[data-testid="${dataTestId}"], textarea[data-testid="${dataTestId}"], [data-testid="${dataTestId}"] [contenteditable]`,
+      )
+        .scrollIntoView()
+        .click({ force: true })
+        .clear()
+        .type(text)
+    else
+      cy.get(
+        `input[data-testid="${dataTestId}"], select[data-testid="${dataTestId}"], textarea[data-testid="${dataTestId}"], [data-testid="${dataTestId}"] [contenteditable]`,
+      )
+        .scrollIntoView()
+        .click({ force: true })
+        .type(text)
+  },
+  checkBox(dataTestId, checkboxLabel) {
+    cy.getByDataTestId(dataTestId)
+      .contains(checkboxLabel)
+      .scrollIntoView()
+      .click()
   },
   getEnterUrlField(nth) {
     return cy.getByContainsName(ENTER_URL_FIELD).eq(nth)
@@ -126,11 +143,11 @@ export const SubmissionFormPage = {
   fillInLimitations(limitations) {
     this.getWaxField(4).fillInput(limitations)
   },
-  getLabelsDropdown() {
-    return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
+  getCustomStatusDropdown() {
+    return cy.getByContainsAriaLabel(CUSTOM_STATUS_DROPDOWN)
   },
-  clickLabelsDropdown() {
-    this.getLabelsDropdown().click({ force: true })
+  clickCustomStatusDropdown() {
+    this.getCustomStatusDropdown().click({ force: true })
   },
   selectDropdownOption(nth) {
     return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
@@ -164,10 +181,16 @@ export const SubmissionFormPage = {
   },
 
   getSubmitResearchButton() {
-    return cy.get(SUBMIT_RESEARCH_BUTTON)
+    return cy.getByDataTestId(SUBMIT_RESEARCH_BUTTON)
   },
   clickSubmitResearch() {
-    this.getSubmitResearchButton().click()
+    this.getSubmitResearchButton().scrollIntoView().click()
+  },
+  getElifeSubmitResearchButton() {
+    return cy.getByDataTestId(ELIFE_SUBMIT_RESEARCH_BUTTON)
+  },
+  clickElifeSubmitResearch() {
+    this.getElifeSubmitResearchButton().scrollIntoView().click()
   },
   clickSubmitResearchAndWaitPageLoad() {
     this.clickSubmitResearch()
@@ -176,13 +199,13 @@ export const SubmissionFormPage = {
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   clickSubmitResearchAndWaitPageLoadElife() {
-    this.clickSubmitResearch()
+    this.clickElifeSubmitResearch()
     cy.url().should('not.contain', submit).and('not.contain', evaluate)
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHead().should('be.visible')
   },
   getSubmitManuscriptButton() {
-    return cy.get(SUBMIT_YOUR_MANUSCRIPT_BUTTON)
+    return cy.getByDataTestId(SUBMIT_YOUR_MANUSCRIPT_BUTTON)
   },
   clickSubmitYourManuscript() {
     this.getSubmitManuscriptButton().click()
@@ -222,23 +245,17 @@ export const SubmissionFormPage = {
   fillInArticleld(articleId) {
     this.getArticleld().fillInput(articleId)
   },
-  getArticleUrl() {
-    return cy.getByDataTestId(ARTICLE_URL_FIELD)
+  getDoi() {
+    return cy.getByDataTestId(DOI_FIELD)
   },
-  fillInArticleUrl(articleUrl) {
-    this.getArticleUrl().fillInput(articleUrl)
+  fillInDoi(doi) {
+    this.getDoi().fillInput(doi)
   },
-  getBioRxivArticleUrl() {
-    return cy.getByDataTestId(BIORXIV_ARTICLE_URL_FIELD)
+  getPreprintUri() {
+    return cy.getByDataTestId(SOURCE_URI_FIELD)
   },
-  fillInBioRxivArticleUrl(bioRxivArticleUrl) {
-    this.getBioRxivArticleUrl().fillInput(bioRxivArticleUrl)
-  },
-  getDescription() {
-    return cy.getByDataTestId(DESCRIPTION_FIELD)
-  },
-  fillInDescription(description) {
-    this.getDescription().fillInput(description)
+  fillInPreprintUri(sourceUri) {
+    this.getPreprintUri().fillInput(sourceUri)
   },
   getReview1Date() {
     return cy.getByDataTestId(REVIEW_1_DATE_FEILD)
@@ -314,12 +331,6 @@ export const SubmissionFormPage = {
   },
   fillInSummaryDate(summaryDate) {
     this.getSummaryDate().fillInput(summaryDate)
-  },
-  getArticleDescriptionField() {
-    return cy.getByName(ARTICLE_DESCRIPTION_FIELD)
-  },
-  fillInArticleDescription(description) {
-    this.getArticleDescriptionField().fillInput(description)
   },
   getStudySettingField() {
     return this.getWaxInputBox(1)
@@ -450,24 +461,6 @@ export const SubmissionFormPage = {
 
   getWordCountInfo() {
     return cy.getByTitle(WORD_COUNT_INFO)
-  },
-  getDoiFiled() {
-    return cy.getByDataTestId(DOI_FIELD)
-  },
-  fillInDoi(doi) {
-    this.getDoiFiled().fillInput(doi)
-  },
-  getDoiFieldColab() {
-    return cy.getByDataTestId(DOI_FILED_C)
-  },
-  fillInDoiColab(doi) {
-    this.getDoiFieldColab().fillInput(doi)
-  },
-  getLinkFiled() {
-    return cy.getByDataTestId(LINK_FIELD)
-  },
-  fillInLink(link) {
-    this.getLinkFiled().fillInput(link)
   },
 }
 export default SubmissionFormPage

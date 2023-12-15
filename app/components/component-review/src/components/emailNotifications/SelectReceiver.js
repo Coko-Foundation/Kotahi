@@ -47,6 +47,7 @@ const SelectReceiver = ({
       ) : (
         <Select
           aria-label="Choose receiver"
+          data-testid="choose-receiver"
           label={t('decisionPage.tasksTab.Choose receiver')}
           onChange={selected => {
             onChangeReceiver(selected.value)

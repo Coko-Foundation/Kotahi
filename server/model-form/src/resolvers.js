@@ -28,7 +28,21 @@ const resolvers = {
       return Form.query().insertAndFetch(form)
     },
     updateForm: async (_, { form }) => {
-      return Form.query().patchAndFetchById(form.id, form)
+      const result = await Form.query().patchAndFetchById(form.id, form)
+      let purposeIndicatingActiveForm = form.category
+      if (form.category === 'submission') purposeIndicatingActiveForm = 'submit'
+      const thisFormIsActive = form.purpose === purposeIndicatingActiveForm
+
+      if (thisFormIsActive) {
+        // Ensure all other forms in this category are inactive
+        await Form.query()
+          .patch({ purpose: 'other' })
+          .where({ purpose: purposeIndicatingActiveForm })
+          .where({ category: form.category })
+          .whereNot({ id: form.id })
+      }
+
+      return result
     },
     updateFormElement: async (_, { element, formId }) => {
       const form = await Form.find(formId)

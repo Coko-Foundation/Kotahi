@@ -454,7 +454,7 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
     return {
       shortId: m.shortId.toString(),
       entryDate: getIsoDateString(m.created),
-      title: lastVer.meta.title,
+      title: lastVer.submission.$title,
       authors: getTeamUsers(m, 'Author'),
       editors: getTeamUsers(m, editorTeams),
       reviewers: getReviewersAndLatestStatuses(m),
@@ -549,7 +549,7 @@ const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
         const reviewJsonData = ensureJsonIsParsed(review.jsonData)
 
         // eslint-disable-next-line no-param-reassign
-        reviewer.recommendation = reviewJsonData.verdict // TODO this expects the field to be named 'verdict'. Could be more robust.
+        reviewer.recommendation = reviewJsonData.$verdict
         // eslint-disable-next-line no-param-reassign
         reviewer.duration = review.updated - reviewer.inviteDate
 

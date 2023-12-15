@@ -42,7 +42,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   const chatRoomId = fnv.hash(config.baseUrl).hex()
 
   /** Returns an array of column names, e.g.
-   *  ['shortId', 'created', 'meta.title', 'submission.topic', 'status'] */
+   *  ['shortId', 'created', 'titleAndAbstract', 'submission.topic', 'status'] */
   const configuredColumnNames = (config?.manuscript?.tableColumns || '')
     .split(',')
     .map(columnName => columnName.trim())
@@ -99,9 +99,10 @@ const ManuscriptsPage = ({ currentUser, history }) => {
 
   const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
 
-  const importManuscriptsAndRefetch = () => {
+  const importManuscriptsAndRefetch = async () => {
     setIsImporting(true)
-    importManuscripts({
+
+    await importManuscripts({
       variables: {
         groupId: config.groupId,
       },
@@ -155,7 +156,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
         id,
         input: JSON.stringify({
           submission: {
-            labels: 'readyToEvaluate',
+            $customStatus: 'readyToEvaluate',
           },
         }),
       },

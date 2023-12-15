@@ -5,7 +5,7 @@ import { sanitize } from 'isomorphic-dompurify'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import { color, space } from '../../../theme'
-import { Spinner, CommsErrorBanner } from '../../shared'
+import { Spinner, CommsErrorBanner, PlainOrRichText } from '../../shared'
 import query from './artifactQuery'
 
 const Page = styled.div`
@@ -61,9 +61,7 @@ const ArticleArtifactPage = ({ match }) => {
   }
 
   const relatedDocumentTitle =
-    manuscript.meta.title ||
-    manuscript.submission.title ||
-    manuscript.submission.description ||
+    <PlainOrRichText value={manuscript.submission.$title} /> ||
     (artifact.relatedDocumentUri
       ? `Click to view the related ${
           artifact.relatedDocumentType || 'document'

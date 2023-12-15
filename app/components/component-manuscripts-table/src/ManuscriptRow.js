@@ -80,9 +80,6 @@ const ManuscriptRow = ({
 ManuscriptRow.propTypes = {
   manuscript: PropTypes.shape({
     teams: PropTypes.arrayOf(PropTypes.object),
-    meta: PropTypes.shape({
-      title: PropTypes.string.isRequired,
-    }).isRequired,
     created: PropTypes.string.isRequired,
     id: PropTypes.string,
     updated: PropTypes.string,
@@ -93,7 +90,7 @@ ManuscriptRow.propTypes = {
   }).isRequired,
   columnDefinitions: PropTypes.arrayOf(
     PropTypes.shape({
-      /** The column name, corresponding either to a field name e.g. 'meta.title' or to a special built-in column type */
+      /** The column name, corresponding either to a field name e.g. 'submission.$abstract' or to a special built-in column type */
       name: PropTypes.string.isRequired,
       /** Title to display in column heading */
       title: PropTypes.string.isRequired,

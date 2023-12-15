@@ -54,16 +54,8 @@ const publishToHypothesis = async manuscript => {
 
   const turndownService = prepareTurndownService()
 
-  const uri =
-    manuscript.submission.biorxivURL ||
-    manuscript.submission.link ||
-    manuscript.submission.url ||
-    manuscript.submission.uri
-
-  const title =
-    manuscript.meta.title ||
-    manuscript.submission.title ||
-    manuscript.submission.description
+  const uri = manuscript.submission.$sourceUri
+  const title = manuscript.submission.$title
 
   const publishableFieldData = getPublishableFields(
     manuscript,
@@ -74,9 +66,7 @@ const publishToHypothesis = async manuscript => {
   const fields = await Promise.all(
     publishableFieldData.map(async d => {
       if (['create', 'update'].includes(d.action) && !uri)
-        throw new Error(
-          'Missing field submission.biorxivURL or submission.link',
-        )
+        throw new Error('Missing field submission.$sourceUri')
 
       if (
         d.action === 'update' &&
@@ -90,9 +80,7 @@ const publishToHypothesis = async manuscript => {
         return { ...d, action: null }
 
       if (d.action === null && !uri)
-        throw new Error(
-          'Missing field submission.biorxivURL or submission.link',
-        )
+        throw new Error('Missing field submission.$sourceUri')
 
       return d
     }),

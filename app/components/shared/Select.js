@@ -1,8 +1,8 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import ReactSelect from 'react-select'
-import { ThemeContext } from 'styled-components'
+import ReactSelect, { components } from 'react-select'
+import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
 
@@ -58,6 +58,23 @@ const styles = th => ({
   }),
 })
 
+const ValueWrapper = styled.div`
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  overflow: hidden;
+  position: relative;
+`
+
+const getValueContainer = dataTestid => ({ children, ...props }) => {
+  return (
+    <components.ValueContainer {...props}>
+      <ValueWrapper data-testid={dataTestid}>{children}</ValueWrapper>
+    </components.ValueContainer>
+  )
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export const Select = ({
   value,
@@ -65,6 +82,7 @@ export const Select = ({
   options,
   customStyles,
   hasGroupedOptions = false,
+  'data-testid': dataTestid,
   ...otherProps
 }) => {
   const th = useContext(ThemeContext)
@@ -93,10 +111,12 @@ export const Select = ({
 
   return (
     <ReactSelect
+      components={{ ValueContainer: getValueContainer(dataTestid) }}
       isMulti={isMulti}
       options={options}
       {...otherProps}
       menuPlacement="auto"
+      menuPortalTarget={document.querySelector('body')}
       noOptionsMessage={() => t('common.noOption')}
       styles={myStyles}
       value={selectedOption}

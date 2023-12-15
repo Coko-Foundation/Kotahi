@@ -1,5 +1,5 @@
 import React from 'react'
-import { FastField, useFormikContext } from 'formik'
+import { Field, FastField, useFormikContext } from 'formik'
 import { get } from 'lodash'
 
 // Based on https://github.com/jaredpalmer/formik/issues/146#issuecomment-474775723
@@ -30,13 +30,23 @@ const useFocusOnError = ({ fieldRef, name }) => {
   }, [formik.submitCount, formik.isValid, firstErrorKey])
 }
 
-const ValidatedField = ({ component: Component, ...props }) => {
+/** Creates a field within a Formik form, that can perform validation.
+ * If you want to be able to change the field props on the fly, set
+ * shouldAllowFieldSpecChanges to true.
+ */
+const ValidatedField = ({
+  component: Component,
+  shouldAllowFieldSpecChanges,
+  ...props
+}) => {
   const fieldRef = React.useRef()
   const { name } = props
   useFocusOnError({ fieldRef, name })
 
+  const FormikComponent = shouldAllowFieldSpecChanges ? Field : FastField
+
   return (
-    <FastField {...props}>
+    <FormikComponent {...props}>
       {({ form: { errors, touched }, field, meta }) => {
         let validationStatus
         if (get(touched, name)) validationStatus = 'success'
@@ -51,7 +61,7 @@ const ValidatedField = ({ component: Component, ...props }) => {
           </div>
         )
       }}
-    </FastField>
+    </FormikComponent>
   )
 }
 
