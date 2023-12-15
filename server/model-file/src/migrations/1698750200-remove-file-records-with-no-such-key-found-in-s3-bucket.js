@@ -1,3 +1,5 @@
+const fs = require('fs-extra')
+const path = require('path')
 const { fileStorage, File, logger, useTransaction } = require('@coko/server')
 
 const {
@@ -11,28 +13,41 @@ exports.up = async knex => {
 
     logger.info(`Total file records in table: ${files.length}`)
 
-    const s3FileObjects = await fileStorage.list()
+    const tempDir = path.join(__dirname, '..', 'temp')
+    await fs.ensureDir(tempDir)
 
-    const s3FilteredFileObjectKeys = new Set(
-      s3FileObjects.Contents.map(content => content.Key),
-    )
+    const filesWithNoSuchKeyFound = []
 
-    const filesWithNoSuchKeyFound = files.filter(file => {
-      const { key } = file.storedObjects.find(
-        storedObject => storedObject.type === 'original',
+    await Promise.all(
+      files.map(async file => {
+        const { key } = file.storedObjects.find(
+          storedObject => storedObject.type === 'original',
+        )
+
+        const tempPath = path.join(tempDir, key)
+
+        try {
+          await fileStorage.download(key, tempPath)
+        } catch (error) {
+          if (error.message === 'The specified key does not exist.') {
+            filesWithNoSuchKeyFound.push(file)
+          } else logger.info(error.message, key)
+        }
+
+        fs.unlinkSync(tempPath)
+      }),
+    ).then(async res => {
+      logger.info(
+        `Number of file records to be removed: ${filesWithNoSuchKeyFound.length}`,
       )
 
-      return !s3FilteredFileObjectKeys.has(key)
+      const affectedRows = await Promise.all(
+        filesWithNoSuchKeyFound.map(async f =>
+          File.query(trx).deleteById(f.id),
+        ),
+      )
+
+      logger.info(`Number of removed file records: ${affectedRows.length}`)
     })
-
-    logger.info(
-      `Number of file records to be removed: ${filesWithNoSuchKeyFound.length}`,
-    )
-
-    const affectedRows = await Promise.all(
-      filesWithNoSuchKeyFound.map(async f => File.query(trx).deleteById(f.id)),
-    )
-
-    logger.info(`Number of removed file records: ${affectedRows.length}`)
   })
 }
