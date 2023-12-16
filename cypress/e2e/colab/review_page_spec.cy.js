@@ -53,7 +53,9 @@ describe('review page tests', () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    cy.get('[class*=HiddenTabs__Tab]').contains('Review').click()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500)
+    cy.get('[class*=HiddenTabs__Tab]').contains('Review').invoke('click')
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('great submission!')
     ReviewPage.clickAcceptRadioButton()
@@ -91,7 +93,9 @@ describe('review page tests', () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    cy.get('[class*=HiddenTabs__Tab]').contains('Review').click()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500)
+    cy.get('[class*=HiddenTabs__Tab]').contains('Review').invoke('click')
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('paper should be revised')
     ReviewPage.clickReviseRadioButton()
@@ -125,7 +129,9 @@ describe('review page tests', () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    cy.get('[class*=HiddenTabs__Tab]').contains('Review').click()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500)
+    cy.get('[class*=HiddenTabs__Tab]').contains('Review').invoke('click')
     ReviewPage.fillInReviewComment('everything is ok')
     ReviewPage.fillInConfidentialComment('not good enough')
     ReviewPage.clickRejectRadioButton()
