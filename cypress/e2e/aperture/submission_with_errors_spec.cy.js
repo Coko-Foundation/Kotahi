@@ -29,13 +29,9 @@ describe('Submission with errors test', () => {
         'Research Object Submission Form',
       )
       FormsPage.clickFormOption(1)
-      FormsPage.getFieldValidate()
-      cy.get(':nth-child(8) > .style__Legend-sc-1npdrat-1')
-      cy.get(
-        ':nth-child(8) > :nth-child(2) > .css-3x5r4n-container > .react-select__control > .react-select__value-container',
-      ).click()
-      cy.get('.react-select__option').eq(0).click()
-      cy.contains('Update Field').click()
+      FormsPage.getFieldValidate().scrollIntoView().click()
+      cy.get('[class*="MenuList"] > div').eq(0).click()
+      cy.contains('Save').click()
     })
 
     it('can upload manuscript and some metadata', () => {
@@ -52,15 +48,15 @@ describe('Submission with errors test', () => {
         cy.get('input[type=file]').selectFile('cypress/fixtures/test-pdf.pdf', {
           force: true,
         })
-        cy.get('[data-testid="meta.title"]').clear()
-        cy.get('[data-testid="meta.title"]').should('have.length', 1)
+        cy.get('[data-testid="submission.$title"]').clear()
+        cy.get('[data-testid="submission.$title"]').should('have.length', 1)
         SubmissionFormPage.clickSubmitResearch()
       })
 
       // Change the title so that we can look for it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInTitle(data.newTitle)
+        SubmissionFormPage.fillInField('submission.$title', data.newTitle)
         SubmissionFormPage.clickSubmitResearch()
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()

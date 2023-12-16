@@ -57,12 +57,12 @@ const LabelDropdown = ({ values, options, manuscript, doUpdateManuscript }) => {
       },
     })
 
-  const handleDropdownItemClick = cuurentLabel => {
+  const handleDropdownItemClick = newStatus => {
     setIsDropdownOpen(false)
 
     const manuscriptDelta = {
       submission: {
-        labels: cuurentLabel,
+        $customStatus: newStatus,
       },
     }
 

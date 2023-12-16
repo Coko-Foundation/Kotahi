@@ -16,9 +16,10 @@ const Svg = styled.svg.attrs(() => ({
   height: 24px;
   vertical-align: top;
   width: 24px;
+
   &.active {
     background: ${color.gray90};
-    // fill: ${color.gray30};
+    /* fill: ${color.gray30}; */
   }
 `
 

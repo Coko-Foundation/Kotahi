@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { StyledButton } from '../style'
 import LabelDropdown from './LabelDropdown'
 
@@ -9,6 +10,8 @@ const LabelsOrSelectButton = ({
   options,
   doUpdateManuscript,
 }) => {
+  const { t } = useTranslation()
+
   if (values?.length)
     return (
       <LabelDropdown
@@ -24,7 +27,7 @@ const LabelsOrSelectButton = ({
       onClick={() => setReadyToEvaluateLabel(manuscript.id)}
       primary
     >
-      Select
+      {t('manuscriptsPage.Select')}
     </StyledButton>
   )
 }

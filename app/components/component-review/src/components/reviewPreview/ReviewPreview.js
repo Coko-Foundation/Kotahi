@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
-import { Heading, Title, Icon } from '../../../../shared'
+import { Heading, Title, Icon, PlainOrRichText } from '../../../../shared'
 import { color } from '../../../../../theme'
 
 const Page = styled.div`
@@ -35,13 +35,12 @@ const ReviewPreview = ({
   return (
     <Page>
       <Heading>{t('reviewPreviewPage.Summary')}</Heading>
-      <Title>{manuscript.meta.title}</Title>
+      <Title>
+        <PlainOrRichText value={manuscript.submission.$title} />
+      </Title>
       <ReadonlyFormTemplate
         form={submissionForm}
-        formData={{
-          ...manuscript,
-          submission: JSON.parse(manuscript.submission),
-        }}
+        formData={manuscript}
         hideSpecialInstructions
         manuscript={manuscript}
         showEditorOnlyFields={false}
@@ -61,8 +60,8 @@ ReviewPreview.propTypes = {
   manuscript: PropTypes.shape({
     id: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
-    meta: PropTypes.shape({
-      title: PropTypes.string.isRequired,
+    submission: PropTypes.shape({
+      $title: PropTypes.string,
     }).isRequired,
   }).isRequired,
   submissionForm: PropTypes.shape({

@@ -86,11 +86,8 @@ describe.skip('refresh button tests', () => {
     it('check imported article has data', () => {
       const randomArticle = Math.floor(Math.random() * 10)
       ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleUrl().should('not.have.value', '')
-      SubmissionFormPage.getArticleDescriptionField().should(
-        'not.have.value',
-        '',
-      )
+      SubmissionFormPage.getDoi().should('not.have.value', '')
+      SubmissionFormPage.getTitleField().should('not.have.value', '')
       SubmissionFormPage.getCheckedTopics().should('exist')
       SubmissionFormPage.getCheckedTopicsCount().should('be.gte', 1)
       SubmissionFormPage.getAbstractContent().should('not.be.eq', '')
@@ -141,7 +138,7 @@ describe.skip('refresh button tests', () => {
     it('check imported article can be evaluated', () => {
       const randomArticle = Math.floor(Math.random() * 10)
       ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleDescriptionField()
+      SubmissionFormPage.getTitleField()
         .invoke('val')
         .then(title => {
           cy.fixture('submission_form_data').then(data => {
@@ -152,7 +149,7 @@ describe.skip('refresh button tests', () => {
             SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
             SubmissionFormPage.fillInLimitations(data.limitations)
             SubmissionFormPage.fillInValueAdded(data.valueAdded)
-            SubmissionFormPage.clickLabelsDropdown()
+            SubmissionFormPage.clickCustomStatusDropdown()
             SubmissionFormPage.selectDropdownOption(0)
             SubmissionFormPage.fillInFirstAuthor(data.creator)
             SubmissionFormPage.fillInDatePublished(data.date)
@@ -173,7 +170,7 @@ describe.skip('refresh button tests', () => {
     it('reviewer should see article description on dashboard page', () => {
       const randomArticle = Math.floor(Math.random() * 10)
       ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleDescriptionField()
+      SubmissionFormPage.getTitleField()
         .invoke('val')
         .then(title => {
           cy.fixture('role_names').then(name => {

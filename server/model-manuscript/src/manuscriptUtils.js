@@ -12,8 +12,6 @@ const {
   compactStringToDate,
 } = require('../../utils/dateUtils')
 
-const SUBMISSION_FIELD_PREFIX = 'submission'
-const META_FIELD_PREFIX = 'meta'
 const URI_SEARCH_PARAM = 'search'
 
 /** This returns a modified array of reviews, omitting fields or entire reviews marked as
@@ -123,16 +121,12 @@ const hasElifeStyleEvaluations = manuscript => {
 }
 
 /** Checks if the field exists in the form and is validly named (not causing risk of sql injection),
- * and if so returns the groupName ('meta' or 'submission') and the field name.
+ * and if so returns the field name.
  * Also returns valuesAreKeyedObjects, which indicates whether values for this field
  * are key-value pairs as opposed to strings.
  */
 const getSafelyNamedJsonbFieldInfo = (fieldName, submissionForm) => {
-  const groupName = [SUBMISSION_FIELD_PREFIX, META_FIELD_PREFIX].find(x =>
-    fieldName.startsWith(`${x}.`),
-  )
-
-  if (!groupName) return null
+  if (!fieldName.startsWith('submission.')) return null
 
   const field =
     submissionForm &&
@@ -143,14 +137,17 @@ const getSafelyNamedJsonbFieldInfo = (fieldName, submissionForm) => {
     return null
   }
 
-  const name = fieldName.substring(groupName.length + 1)
+  const name = fieldName.split('submission.')[1]
 
-  if (!/^[a-zA-Z]\w*$/.test(name)) {
+  if (!/^\$?[a-zA-Z]\w*$/.test(name)) {
     console.warn(`Ignoring unsupported field "${fieldName}"`)
     return null
   }
 
-  return { groupName, name, valuesAreKeyedObjects: !!field.options }
+  return {
+    name,
+    valuesAreKeyedObjects: !!field.options,
+  }
 }
 
 /** Check that the field exists and is not dangerously named (to avoid sql injection) */
@@ -190,8 +187,8 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
   const jsonbField = getSafelyNamedJsonbFieldInfo(field, submissionForm)
 
   if (jsonbField) {
-    const { groupName: jsonGroup, name: jsonName } = jsonbField
-    addOrder(`LOWER(m.${jsonGroup}->>?)${sortDirection}`, jsonName)
+    const { name: jsonName } = jsonbField
+    addOrder(`LOWER(m.submission->>?)${sortDirection}`, jsonName)
   } else if (isValidNonJsonbField(field, submissionForm)) {
     // eslint-disable-next-line no-param-reassign
 
@@ -269,16 +266,12 @@ const applyFilters = (
       )
 
       if (jsonbField) {
-        const {
-          groupName: jsonGroup,
-          name: jsonName,
-          valuesAreKeyedObjects: isKeyed,
-        } = jsonbField
+        const { name: jsonName, valuesAreKeyedObjects: isKeyed } = jsonbField
 
         if (isKeyed) {
-          addWhere(`(m.${jsonGroup}->?)::jsonb \\? ?`, jsonName, filter.value)
+          addWhere(`(m.submission->?)::jsonb \\? ?`, jsonName, filter.value)
         } else {
-          addWhere(`m.${jsonGroup}->>? = ?`, jsonName, filter.value)
+          addWhere(`m.submission->>? = ?`, jsonName, filter.value)
         }
       } else if (filter.field === 'status') {
         addWhere('m.status = ?', filter.value)
@@ -438,28 +431,9 @@ const addAllFieldsToTemplatingMap = (
   })
 }
 
-/** There's no standard way to store DOIs, so we have to look in various places.
- * Note that the actual DOI does not include 'https://doi.org/'
- */
-const getDoi = manuscript => {
-  const doi =
-    manuscript.doi ||
-    manuscript.submission.DOI ||
-    manuscript.submission.doi ||
-    manuscript.submission.articleURL
-
-  if (typeof doi !== 'string') return null
-  if (doi.startsWith('https://doi.org/')) return doi.substring(16)
-  return doi
-}
-
-/** There's no standard way to store preprint URIs, so we have to look in various places. */
+/** Resolve inconsistencies in URI representations */
 const getPreprintUri = manuscript => {
-  let uri =
-    manuscript.submission.biorxivURL ||
-    manuscript.submission.link ||
-    manuscript.submission.url ||
-    manuscript.submission.uri
+  let uri = manuscript.submission.$sourceUri
 
   if (typeof uri !== 'string') return null
   // Hypothesis autoredirects the following URIs, which is a pain:
@@ -467,12 +441,6 @@ const getPreprintUri = manuscript => {
     uri = uri.replace('https://biorxiv.org/', 'https://www.biorxiv.org/')
   return uri
 }
-
-/** There's no single place to store manuscript title, so we check in various places */
-const getTitle = manuscript =>
-  manuscript.meta.title ||
-  manuscript.submission.title ||
-  manuscript.submission.description
 
 /** Create a nested object with keys and values for all fields (and ThreadedDiscussion comments)
  * of the given manuscript, its reviews and decisions. This object is constructed as a lookup
@@ -485,8 +453,8 @@ const getFieldsMapForTemplating = (
   decisionForm,
 ) => {
   // TODO Currently we have different code using two different styles:
-  // '362521f6-4e57-4102-9c36-3f74f31ebef1.submission.authors', and
-  // 'submission.authors'.
+  // '362521f6-4e57-4102-9c36-3f74f31ebef1.submission.$authors', and
+  // 'submission.$authors'.
   // We should simplify, so we only use the object IDs when referring to reviews
   // (since there may be multiple reviews).
 
@@ -494,12 +462,12 @@ const getFieldsMapForTemplating = (
     shortId: manuscript.shortId,
     status: manuscript.status,
     meta: {
-      title: manuscript.meta.title || '',
-      abstract: manuscript.meta.abstract || '',
+      title: manuscript.submission.$title || '', // TODO remove once we've migrated all templates
+      abstract: manuscript.submission.$abstract || '', // TODO remove once we've migrated all templates
     },
-    doi: getDoi(manuscript) || '',
+    doi: manuscript.submission.$doi || '',
     uri: getPreprintUri(manuscript) || '',
-    title: getTitle(manuscript) || '',
+    title: manuscript.submission.$title || '',
   }
 
   // Duplicate these entries with keys containing id, e.g. '362521f6-4e57-4102-9c36-3f74f31ebef1.shortId'
@@ -507,7 +475,7 @@ const getFieldsMapForTemplating = (
     fieldsMap[`${manuscript.id}.${key}`] = val
   })
 
-  // Add all submission fields referenced as e.g. '362521f6-4e57-4102-9c36-3f74f31ebef1.submission.authors'
+  // Add all submission fields referenced as e.g. '362521f6-4e57-4102-9c36-3f74f31ebef1.submission.$authors'
   addAllFieldsToTemplatingMap(
     fieldsMap,
     manuscript.id,
@@ -515,7 +483,7 @@ const getFieldsMapForTemplating = (
     submissionForm,
     manuscript.threadedDiscussions,
   )
-  // Add all submission fields referenced as e.g. 'submission.authors'
+  // Add all submission fields referenced as e.g. 'submission.$authors'
   addAllFieldsToTemplatingMap(
     fieldsMap,
     null,

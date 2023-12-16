@@ -33,7 +33,7 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInTitle(data.articleId)
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEvaluationButton()
@@ -47,7 +47,7 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.clickTopicsCheckboxWithText('Epidemiology')
@@ -69,7 +69,7 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInTitle(data.articleId)
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTableHead(-2)
@@ -106,17 +106,17 @@ describe.skip('manuscripts page tests', () => {
       SubmissionFormPage.getWordCountInfo()
         .eq(0)
         .should('contain', '3')
-        .and('contain', 'words')
+        .and('contain', 'Words')
     })
 
     it('unsubmitted article is evaluated', () => {
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleDescription(data.title)
+        SubmissionFormPage.fillInTitle(data.title)
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickEvaluation()
       cy.url().should('contain', 'evaluation')
-      SubmissionFormPage.getArticleUrl().should('have.value', '')
+      SubmissionFormPage.getDoi().should('have.value', '')
       SubmissionFormPage.getOurTakeContent().should('be.eq', '')
       SubmissionFormPage.getStudyDesignDropdown().should('have.value', '')
       SubmissionFormPage.getStudySettingContent().should('have.value', '')
@@ -124,11 +124,11 @@ describe.skip('manuscripts page tests', () => {
       SubmissionFormPage.getStudyStrengthsContent().should('have.value', '')
       SubmissionFormPage.getLimitationsContent().should('have.value', '')
       SubmissionFormPage.getValueAddedContent().should('have.value', '')
-      SubmissionFormPage.getLabelsDropdown().should('have.value', '')
+      SubmissionFormPage.getCustomStatusDropdown().should('have.value', '')
       SubmissionFormPage.checkEditDateIsUpdated()
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
@@ -136,7 +136,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -163,8 +163,8 @@ describe.skip('manuscripts page tests', () => {
     })
     it('article URL should be visible in the table', () => {
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.getTableRowsCount().should('eq', 1)
         ManuscriptsPage.getArticleTitleByRow(0)
@@ -180,8 +180,8 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
@@ -189,7 +189,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -264,7 +264,7 @@ describe.skip('manuscripts page tests', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       cy.fixture('form_option').then(data => {
-        SubmissionFormPage.fillInArticleDescription('123')
+        SubmissionFormPage.fillInTitle('123')
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -274,7 +274,7 @@ describe.skip('manuscripts page tests', () => {
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-        SubmissionFormPage.fillInArticleDescription('abc')
+        SubmissionFormPage.fillInTitle('abc')
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -287,7 +287,7 @@ describe.skip('manuscripts page tests', () => {
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-        SubmissionFormPage.fillInArticleDescription('def')
+        SubmissionFormPage.fillInTitle('def')
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -437,8 +437,8 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
@@ -446,7 +446,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -476,8 +476,8 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
@@ -485,7 +485,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -512,8 +512,8 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(5)
@@ -521,7 +521,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -555,8 +555,8 @@ describe.skip('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInTitle(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(5)
@@ -564,7 +564,7 @@ describe.skip('manuscripts page tests', () => {
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.clickCustomStatusDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -618,11 +618,11 @@ describe.skip('manuscripts page tests', () => {
       cy.awaitDisappearSpinner()
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-      SubmissionFormPage.fillInArticleDescription('123')
+      SubmissionFormPage.fillInTitle('123')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-      SubmissionFormPage.fillInArticleDescription('abc')
+      SubmissionFormPage.fillInTitle('abc')
       Menu.clickManuscriptsAndAssertPageLoad()
     })
     it('select button is visible', () => {

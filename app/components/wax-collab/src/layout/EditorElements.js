@@ -1,5 +1,4 @@
-/* stylelint-disable selector-type-no-unknown */
-/* stylelint-disable no-descending-specificity */
+/* stylelint-disable selector-type-no-unknown, no-descending-specificity */
 import { css } from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'

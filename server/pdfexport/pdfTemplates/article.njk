@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{{ article.articleMetadata.title }}</title>
+        <title>{{ article.submission.$title }}</title>
     </head>
     <body>
         <main>
@@ -55,7 +55,7 @@
             <header>
                
                 {# the title of the article. #}
-                <h1>{{ article.meta.title | safe }}</h1>
+                <h1>{{ article.submission.$title | safe }}</h1>
                 {# the author list is a custom build #}
                 <section class="authors-and-affiliation">
                     {{ article.articleMetadata.formattedAuthors | safe }}
@@ -99,7 +99,7 @@
                     </p>
                     {% endif %}
                     <div class="logos">
-                        <a class="doi" href="{{ article.submission.DOI }}"><span>{{ article.submission.DOI }}</span></a>
+                        <a class="doi" href="{{ article.submission.$doi }}"><span>{{ article.submission.$doi }}</span></a>
                     </div>
                     <!-- </div> -->
                 </aside>
@@ -107,7 +107,7 @@
             <article>
                 <div id="abstract-wrapper">
                     <h2>Abstract</h2>
-                    {{ article.articleMetadata.abstract | safe }}
+                    {{ article.submission.$abstract | safe }}
                     {% if article.articleMetadata.keywords %}
                         <p class="keywords">
                             <span class="title">Keywords:</span>{{ article.articleMetadata.keywords }}

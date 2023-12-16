@@ -184,32 +184,23 @@ const buildSpecialColumnProps = (
       extraProps: { selectedNewManuscripts, toggleNewManuscriptCheck },
     },
     'submission.topics': { flex: '0 1 10em' },
-    'submission.labels': {
+    'submission.$customStatus': {
       flex: '0 1 10em',
       extraProps: { setReadyToEvaluateLabel },
       component: config?.manuscript?.labelColumn
         ? props =>
             LabelsOrSelectButton({
               ...props,
-              options: fieldDefinitions['submission.labels']?.options,
+              options: fieldDefinitions['submission.$customStatus']?.options,
               doUpdateManuscript,
             })
         : DefaultField,
     },
     'submission.label': { flex: '0.2 1 10em' },
     'submission.journal': { flex: '0.2 1 12em' },
-    'submission.articleDescription': {
-      component:
-        config?.instanceName === 'preprint2'
-          ? TitleWithAbstractAsTooltip
-          : DefaultField,
-    },
-    'meta.title': {
+    titleAndAbstract: {
+      component: TitleWithAbstractAsTooltip,
       title: i18next.t('manuscriptsTable.Title'),
-      component:
-        config?.instanceName === 'prc'
-          ? TitleWithAbstractAsTooltip
-          : DefaultField,
     },
   }
 

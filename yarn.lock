@@ -1594,6 +1594,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.18.3":
+  version "7.23.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.5.tgz#11edb98f8aeec529b82b211028177679144242db"
+  integrity sha512-NdUTHcPe4C99WxPub+K9l9tK5/lV4UXIoaHSYgzco9BCyjKAAwzdBI+wWtYqHt7LJdbo74ZjRPJgzVweq1sz0w==
+  dependencies:
+    regenerator-runtime "^0.14.0"
+
 "@babel/runtime@^7.18.6":
   version "7.23.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
@@ -18030,17 +18037,10 @@ prosemirror-state@1.4.2, prosemirror-state@^1.0.0, prosemirror-state@^1.2.2, pro
     prosemirror-transform "^1.0.0"
     prosemirror-view "^1.27.0"
 
-prosemirror-transform@1.7.1, prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0:
+prosemirror-transform@1.7.1, prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.7.3:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.7.1.tgz#b516e818c3add0bdf960f4ca8ccb9d057a3ba21b"
   integrity sha512-VteoifAfpt46z0yEt6Fc73A5OID9t/y2QIeR5MgxEwTuitadEunD/V0c9jQW8ziT8pbFM54uTzRLJ/nLuQjMxg==
-  dependencies:
-    prosemirror-model "^1.0.0"
-
-prosemirror-transform@^1.7.3:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.8.0.tgz#a47c64a3c373c1bd0ff46e95be3210c8dda0cd11"
-  integrity sha512-BaSBsIMv52F1BVVMvOmp1yzD3u65uC3HTzCBQV1WDPqJRQ2LuHKcyfn0jwqodo8sR9vVzMzZyI+Dal5W9E6a9A==
   dependencies:
     prosemirror-model "^1.0.0"
 
@@ -18431,6 +18431,15 @@ rc-motion@^2.0.0:
     classnames "^2.2.1"
     rc-util "^5.2.1"
 
+rc-switch@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/rc-switch/-/rc-switch-3.2.2.tgz#d001f77f12664d52595b4f6fb425dd9e66fba8e8"
+  integrity sha512-+gUJClsZZzvAHGy1vZfnwySxj+MjLlGRyXKXScrtCTcmiYNPzxDFOxdQ/3pK1Kt/0POvwJ/6ALOR8gwdXGhs+A==
+  dependencies:
+    "@babel/runtime" "^7.10.1"
+    classnames "^2.2.1"
+    rc-util "^5.0.1"
+
 rc-tooltip@5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/rc-tooltip/-/rc-tooltip-5.1.1.tgz#94178ed162d0252bc4993b725f5dc2ac0fccf154"
@@ -18449,6 +18458,14 @@ rc-trigger@^5.0.0:
     rc-align "^4.0.0"
     rc-motion "^2.0.0"
     rc-util "^5.5.0"
+
+rc-util@^5.0.1:
+  version "5.38.1"
+  resolved "https://registry.yarnpkg.com/rc-util/-/rc-util-5.38.1.tgz#4915503b89855f5c5cd9afd4c72a7a17568777bb"
+  integrity sha512-e4ZMs7q9XqwTuhIK7zBIVFltUtMSjphuPPQXHoHlzRzNdOwUxDejo0Zls5HYaJfRKNURcsS/ceKVULlhjBrxng==
+  dependencies:
+    "@babel/runtime" "^7.18.3"
+    react-is "^18.2.0"
 
 rc-util@^5.2.1, rc-util@^5.3.0, rc-util@^5.5.0:
   version "5.14.0"
@@ -18743,6 +18760,14 @@ react-i18next@^13.0.3:
     "@babel/runtime" "^7.22.5"
     html-parse-stringify "^3.0.1"
 
+react-i18next@^13.3.1:
+  version "13.5.0"
+  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-13.5.0.tgz#44198f747628267a115c565f0c736a50a76b1ab0"
+  integrity sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==
+  dependencies:
+    "@babel/runtime" "^7.22.5"
+    html-parse-stringify "^3.0.1"
+
 react-image@4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-image/-/react-image-4.0.3.tgz#6fa722877660b67295298a914bff1ed87ad2cf83"
@@ -18788,6 +18813,11 @@ react-is@^17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-is@^18.2.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
+  integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
 react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -22646,10 +22676,10 @@ watchpack@^1.7.4:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
 
-wax-prosemirror-core@^0.8.10:
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.8.10.tgz#c55b5cece38a58dc79c53e24c90021143bb5ab9c"
-  integrity sha512-G112vU+/7o+ThB32Q9TW2Ljk5aU0/AWFlC1xDx9N+EsECvcogeUth4IAMeXOZKnrGtohOlUCpJQm+Dh8j/kx0A==
+wax-prosemirror-core@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.9.3.tgz#e222b73f709724c97f7d60dcf7e8c465bcdc86d0"
+  integrity sha512-I1lzP7pUPi7cGfYtw75nEYxI7bsrWqREFc5Kn6jYyX97i3ssiBeGoNEOrNVtS/dxHMAfGTWrmMYPHg+3qST1sw==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     deepmerge "^4.2.2"
@@ -22669,13 +22699,14 @@ wax-prosemirror-core@^0.8.10:
     prosemirror-state "1.4.2"
     prosemirror-transform "1.7.1"
     prosemirror-view "1.30.2"
+    react-i18next "^13.3.1"
     reflect-metadata "^0.1.13"
     uuid "^7.0.3"
 
-wax-prosemirror-services@^0.8.10:
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.8.10.tgz#a3bddc0070cae18b68e5f4a9961f905ad3dc5a22"
-  integrity sha512-cpXLkqjsqImNDNc0gFtrLFYB9mJdFgAXOwhbIsTWo94HbOowEMJcUT+Zh0uIunYZQvidm5WdTIfEBNLq7rEXrg==
+wax-prosemirror-services@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.9.3.tgz#7c692abb2b8fb9ebb080b58383fe5ae4343cb384"
+  integrity sha512-zxL9PAppT2vAVJMPOZYyEskkwaxFDmVc5ZqPeYixkEH72ppBWSxp1ROrqqxkzF/UTmqIXM3HNtZYXtLLBAUMgQ==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     highlight.js "^10.1.1"
@@ -22694,20 +22725,22 @@ wax-prosemirror-services@^0.8.10:
     prosemirror-state "1.4.2"
     prosemirror-transform "1.7.1"
     prosemirror-view "1.30.2"
+    rc-switch "^3.2.2"
     react-dropdown "^1.6.2"
+    react-i18next "^13.3.1"
     use-deep-compare-effect "^1.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.8.10"
+    wax-prosemirror-core "^0.9.3"
     y-prosemirror "1.2.0"
     y-protocols "1.0.5"
     y-webrtc "10.2.0"
     y-websocket "1.4.5"
     yjs "13.5.38"
 
-wax-table-service@^0.8.10:
-  version "0.8.10"
-  resolved "https://registry.yarnpkg.com/wax-table-service/-/wax-table-service-0.8.10.tgz#b5a2b6f7751e98b2e41a50e1779f018d3cd11e88"
-  integrity sha512-9XgwD5L+pP2Qc/xdk1kHp2t8eZWaomRttXwmQ8sPV/49ToDxv9D6vSSQW2rm41FW/CwI3IPhlGNMOQUZP1eNMA==
+wax-table-service@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/wax-table-service/-/wax-table-service-0.9.3.tgz#7aa608bf32f76aa1aeb677111043a99035a1f644"
+  integrity sha512-x1BYrTGyHCqg5kalAbvmKUhvkIFVvhoI4BgBZf6ixRhlx8GRUwC9WtQxBWNeV+iVkbKhS7aj75bA+gsz/TY7WA==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     inversify "^5.0.1"
@@ -22716,9 +22749,9 @@ wax-table-service@^0.8.10:
     prosemirror-state "1.4.2"
     prosemirror-transform "1.7.1"
     prosemirror-view "1.30.2"
+    react-i18next "^13.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.8.10"
-    wax-prosemirror-services "^0.8.10"
+    wax-prosemirror-core "^0.9.3"
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"

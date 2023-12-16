@@ -1,6 +1,5 @@
 /// <reference types="Cypress" />
 import { DashboardPage } from '../dashboard-page'
-import { FormsPage } from '../forms-page'
 import { UsersPage } from '../users-page'
 
 /**
@@ -40,7 +39,7 @@ export const Menu = {
     this.getFormsButton().click()
     cy.contains('Submission').click()
     cy.awaitDisappearSpinner()
-    FormsPage.getNameField().should('be.visible')
+    cy.contains('Submission Form Builder').should('be.visible')
   },
   getUsersButton() {
     return this.getMenuContainer().contains('Users')

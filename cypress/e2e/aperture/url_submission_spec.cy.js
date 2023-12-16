@@ -24,7 +24,7 @@ describe('Upload manuscript test', () => {
 
     // complete the submission form
     cy.fixture('submission_form_data').then(data => {
-      SubmissionFormPage.fillInTitle(data.title1)
+      SubmissionFormPage.fillInField('submission.$title', data.newTitle, true)
       SubmissionFormPage.clickSubmitResearch()
 
       // Submit your form
@@ -35,7 +35,7 @@ describe('Upload manuscript test', () => {
       // the following line is added so that it gives enough time for the dom to update the title of the submission in dashboard. Only a switch between tabs.
       DashboardPage.clickDashboardTab(1)
       DashboardPage.clickDashboardTab(0)
-      DashboardPage.getSubmissionTitle().should('contain', data.title1)
+      DashboardPage.getSubmissionTitle().should('contain', data.newTitle)
     })
   })
 })

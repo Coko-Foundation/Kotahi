@@ -68,9 +68,11 @@ export const validateFormField = (
           ? ''
           : value
 
-      return validatorFn === 'required'
-        ? validators[validatorFn](valueFormatted)
-        : validators[validatorFn](valueField[validatorFn])(valueFormatted)
+      if (validatorFn === 'required')
+        return validators[validatorFn](valueFormatted)
+
+      if (!valueField) return null
+      return validators[validatorFn](valueField[validatorFn])(valueFormatted)
     })
     .filter(Boolean)
 

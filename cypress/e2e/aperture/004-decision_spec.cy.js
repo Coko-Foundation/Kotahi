@@ -21,9 +21,8 @@ describe('Completing a review', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.selectOptionWithText('Control')
-      ControlPage.getAssignSeniorEditorDropdown()
-        .click({ force: true })
-        .type(`${name.role.seniorEditor}{enter}`) // Assign Editor
+      ControlPage.getAssignSeniorEditorDropdown().click({ force: true })
+      cy.contains(name.role.seniorEditor).click({ force: true })
 
       /* Editor submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
@@ -51,9 +50,15 @@ describe('Completing a review', () => {
       DashboardPage.getDecisionField(1).should('contain', decisionFileName)
       DashboardPage.getDecisionField(2).should('contain', 'Revise')
       DashboardPage.clickCreateNewVersionButton() // Create new manuscript version
-      SubmissionFormPage.getTypeOfResearchObject()
-        .click()
-        .type('Dataset{enter}')
+
+      cy.getByDataTestId('submission.objectType').click()
+      cy.contains('Dataset').click({ force: true })
+
+      SubmissionFormPage.fillInField(
+        'submission.$abstract',
+        'New abstract...',
+        true,
+      )
       SubmissionFormPage.clickSubmitResearch()
       SubmissionFormPage.clickSubmitYourManuscript()
       DashboardPage.getSubmittedManuscript()

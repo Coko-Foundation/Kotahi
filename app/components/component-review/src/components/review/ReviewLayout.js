@@ -471,7 +471,7 @@ ReviewLayout.propTypes = {
       id: PropTypes.string.isRequired,
       reviews: PropTypes.arrayOf(PropTypes.shape({})),
       status: PropTypes.string.isRequired,
-      meta: PropTypes.shape({}).isRequired,
+      meta: PropTypes.shape({ source: PropTypes.string }).isRequired,
       files: PropTypes.arrayOf(
         PropTypes.shape({
           name: PropTypes.string.isRequired,

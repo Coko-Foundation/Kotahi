@@ -6,7 +6,6 @@ export default gql`
       id
       meta {
         manuscriptId
-        title
       }
       submission
       publishedArtifacts {

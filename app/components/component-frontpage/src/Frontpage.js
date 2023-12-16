@@ -3,7 +3,6 @@ import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { sanitize } from 'isomorphic-dompurify'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../config/src'
 import queries from './queries'
@@ -19,6 +18,7 @@ import {
   HeadingWithAction,
   Pagination,
   CommsErrorBanner,
+  PlainOrRichText,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
 import PublishedArtifactWithLink from './PublishedArtifactWithLink'
@@ -117,15 +117,12 @@ const Frontpage = () => {
 
       {publishedManuscripts.length > 0 ? (
         publishedManuscripts.map(manuscript => {
-          const title =
-            config.instanceName === 'preprint1'
-              ? manuscript.submission.description
-              : manuscript.meta.title
-
           return (
             <SectionContent key={`manuscript-${manuscript.id}`}>
               <SectionHeader>
-                <Title>{title}</Title>
+                <Title>
+                  <PlainOrRichText value={manuscript.submission.$title} />
+                </Title>
               </SectionHeader>
               <SectionRow>
                 {[...manuscript.publishedArtifacts]
@@ -136,16 +133,14 @@ const Frontpage = () => {
                       key={artifact.id}
                     />
                   ))}
-                {manuscript.submission?.abstract && (
+                {manuscript.submission?.$abstract && (
                   <>
                     <Subheading>Abstract:</Subheading>
-                    <Abstract
-                      dangerouslySetInnerHTML={(() => {
-                        return {
-                          __html: sanitize(manuscript.submission?.abstract),
-                        }
-                      })()}
-                    />
+                    <Abstract>
+                      <PlainOrRichText
+                        value={manuscript.submission?.$abstract}
+                      />
+                    </Abstract>
                   </>
                 )}
                 {manuscript.visualAbstract && (

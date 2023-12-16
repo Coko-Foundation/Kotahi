@@ -52,7 +52,12 @@ const Confirm = ({ toggleConfirming, form, submit, errors }) => {
             <Paragraph
               dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
             />
-            <Button onClick={submit} primary type="submit">
+            <Button
+              data-testid="confirm-submit"
+              onClick={submit}
+              primary
+              type="submit"
+            >
               {t('manuscriptSubmit.Submit')}
             </Button>
             <Divider> {t('manuscriptSubmit.or')} </Divider>

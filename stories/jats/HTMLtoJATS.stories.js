@@ -12,7 +12,7 @@ const articleMetadata = {
   title: 'This is the title',
   pubDate: new Date(),
   submission: {
-    authors: [
+    $authors: [
       {
         id: '3dcc3f77-647e-48b5-86d9-aa3540375f60',
         email: 'john@Quinlan.com',
@@ -47,7 +47,7 @@ const articleMetadata = {
       'Social Neuroscience, Emotion, and Motivation',
       'NIRS',
     ],
-    abstract: `<p class="paragraph">Agriculturally important commercially managed pollinators including honey bees (<em>Apis mellifera</em> L., 1758) and bumble bees (<em>Bombus impatiens</em> Cresson, 1863) rely on the surrounding landscape to fulfill their dietary needs. A previous study in Europe demonstrated that managed honey bee foragers and unmanaged native bumble bee foragers are associated with different land uses. However, it is unclear how response to land use compares between managed honey bees and a managed native bumble bee species in the United States, where honey bees are an imported species. Furthermore, to our knowledge, no such direct comparisons of bee responses to land use have been made at the colony level. To better understand how two different social bees respond to variation in land use, we monitored the weights of <em>A</em>. <em>mellifera</em> and <em>B</em>. <em>impatiens</em> colonies placed in 12 apiaries across a range of land use in Michigan, United States in 2017. <em>Bombus impatiens</em> colonies gained more weight and produced more drones when surrounded by diverse agricultural land (i.e., non-corn/soybean cropland such as tree fruits and grapes), while honey bee colonies gained more weight when surrounded by more grassland/pasture land. These findings add to our understanding of how different bee species respond to agricultural landscapes, highlighting the need for further species-specific land use studies to inform tailored land management.</p>`,
+    $abstract: `<p class="paragraph">Agriculturally important commercially managed pollinators including honey bees (<em>Apis mellifera</em> L., 1758) and bumble bees (<em>Bombus impatiens</em> Cresson, 1863) rely on the surrounding landscape to fulfill their dietary needs. A previous study in Europe demonstrated that managed honey bee foragers and unmanaged native bumble bee foragers are associated with different land uses. However, it is unclear how response to land use compares between managed honey bees and a managed native bumble bee species in the United States, where honey bees are an imported species. Furthermore, to our knowledge, no such direct comparisons of bee responses to land use have been made at the colony level. To better understand how two different social bees respond to variation in land use, we monitored the weights of <em>A</em>. <em>mellifera</em> and <em>B</em>. <em>impatiens</em> colonies placed in 12 apiaries across a range of land use in Michigan, United States in 2017. <em>Bombus impatiens</em> colonies gained more weight and produced more drones when surrounded by diverse agricultural land (i.e., non-corn/soybean cropland such as tree fruits and grapes), while honey bee colonies gained more weight when surrounded by more grassland/pasture land. These findings add to our understanding of how different bee species respond to agricultural landscapes, highlighting the need for further species-specific land use studies to inform tailored land management.</p>`,
     issueNumber: '2',
     volumeNumber: '2021',
   },

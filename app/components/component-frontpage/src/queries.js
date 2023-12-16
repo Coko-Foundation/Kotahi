@@ -29,7 +29,6 @@ export default {
           }
           meta {
             manuscriptId
-            title
             source
           }
           published

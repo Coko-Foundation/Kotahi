@@ -119,18 +119,14 @@ const runImports = async (
     const flattenedItems = flatten(newItems)
 
     const allNewManuscripts = flattenedItems.map(preprint => {
-      const uri =
-        preprint.submission.link ||
-        preprint.submission.biorxivURL ||
-        preprint.submission.url ||
-        preprint.submission.uri
+      const uri = preprint.submission.$sourceUri
+      const doi = preprint.submission.$doi
 
       if (uri) urisAlreadyImporting.push(uri)
-      if (preprint.doi) doisAlreadyImporting.push(preprint.doi)
+      if (doi) doisAlreadyImporting.push(doi)
 
       const result = {
         submission: {},
-        meta: { title: '' },
         importSourceServer: null,
         ...preprint,
         status: 'new',

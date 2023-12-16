@@ -198,38 +198,36 @@ const Modal = ({
   }
 
   return (
-    isOpen && (
-      <ReactModal
-        isOpen={isOpen}
-        onRequestClose={onClose}
-        style={{
-          overlay: { ...styles.overlay, ...overlayStyles },
-          content: { ...styles.content, ...contentStyles },
-        }}
-        {...props}
-      >
-        {title && (
-          <MainHeader>
-            <MediumColumn>
-              <Title>{title}</Title>
-              {subtitle && <Subtitle>{subtitle}</Subtitle>}
-            </MediumColumn>
-            <CloseButton alignSelf="flex-end" onClick={onClose}>
-              <Icon>x</Icon>
-            </CloseButton>
-          </MainHeader>
-        )}
+    <ReactModal
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      style={{
+        overlay: { ...styles.overlay, ...overlayStyles },
+        content: { ...styles.content, ...contentStyles },
+      }}
+      {...props}
+    >
+      {title && (
+        <MainHeader>
+          <MediumColumn>
+            <Title>{title}</Title>
+            {subtitle && <Subtitle>{subtitle}</Subtitle>}
+          </MediumColumn>
+          <CloseButton alignSelf="flex-end" onClick={onClose}>
+            <Icon>x</Icon>
+          </CloseButton>
+        </MainHeader>
+      )}
 
-        <ModalContainer>{children}</ModalContainer>
+      <ModalContainer>{children}</ModalContainer>
 
-        {(leftActions || rightActions) && (
-          <ButtonPanel>
-            <ButtonContainer>{leftActions}</ButtonContainer>
-            <ButtonContainer>{rightActions}</ButtonContainer>
-          </ButtonPanel>
-        )}
-      </ReactModal>
-    )
+      {(leftActions || rightActions) && (
+        <ButtonPanel>
+          <ButtonContainer>{leftActions}</ButtonContainer>
+          <ButtonContainer>{rightActions}</ButtonContainer>
+        </ButtonPanel>
+      )}
+    </ReactModal>
   )
 }
 

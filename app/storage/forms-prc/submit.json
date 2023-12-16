@@ -5,7 +5,7 @@
       "title": "Title",
       "id": "8afe555d-30e5-4bc8-9826-6a9dc5d34760",
       "component": "TextField",
-      "name": "meta.title",
+      "name": "submission.$title",
       "placeholder": "Enter the manuscript's title",
       "description": "<p></p>",
       "validate": [
@@ -20,7 +20,7 @@
       "title": "DOI",
       "id": "29512053-bad0-43cd-ad4f-1ec689c72a63",
       "component": "TextField",
-      "name": "submission.doi",
+      "name": "submission.$doi",
       "description": "<p></p>",
       "doiValidation": "false",
       "validate": []
@@ -29,7 +29,7 @@
       "title": "Abstract",
       "id": "e93b5e84-a049-4a0f-9a7a-b573aea4f905",
       "component": "AbstractEditor",
-      "name": "submission.abstract",
+      "name": "submission.$abstract",
       "description": "<p></p>",
       "doiValidation": "false",
       "validate": [
@@ -70,7 +70,7 @@
       "title": "Link",
       "id": "f3228a30-e87c-11eb-9a03-0242ac130003",
       "component": "TextField",
-      "name": "submission.link",
+      "name": "submission.$sourceUri",
       "description": "<p></p>",
       "doiValidation": "false",
       "validate": [
@@ -206,7 +206,7 @@
       "title": "Edit date",
       "id": "f60c6272-bd21-466b-9943-2837f7b2fcf5",
       "component": "TextField",
-      "name": "submission.editDate"
+      "name": "submission.$editDate"
     },
     {
       "options": [
@@ -229,7 +229,7 @@
       "title": "Labels",
       "id": "a94dd0b8-99a0-4555-9e59-0895fafa464e",
       "component": "Select",
-      "name": "submission.labels",
+      "name": "submission.$customStatus",
       "validate": []
     },
     {

@@ -65,13 +65,7 @@ const getData = async (groupId, ctx) => {
 
   // TODO retrieving all manuscripts to check URLs is inefficient!
   const manuscripts = await models.Manuscript.query().where({ groupId })
-
-  const currentURLs = new Set(
-    manuscripts.map(
-      ({ submission }) =>
-        submission.articleURL || submission.link || submission.biorxivURL,
-    ),
-  )
+  const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
 
   const withoutDuplicates = withoutBiorxivDuplicates.filter(
     ({ url }) => !currentURLs.has(url),
@@ -103,8 +97,9 @@ const getData = async (groupId, ctx) => {
       importSourceServer: serverName.toLowerCase(),
       submission: {
         ...emptySubmission,
+        $title: title,
         firstAuthor: author_corresponding,
-        authors: authors
+        $authors: authors
           .map(({ family, given, collab }, index) => ({
             firstName: given,
             lastName: family,
@@ -112,16 +107,14 @@ const getData = async (groupId, ctx) => {
               index === 0 ? author_corresponding_institution : undefined,
           }))
           .filter(x => x.firstName || x.lastName),
-        abstract,
+        $abstract: abstract,
         datePublished: datePublished ? datePublished.replace(/-/g, '/') : null,
         journal: serverName,
 
-        link: url,
-        doi: `https://doi.org/${doi}`,
+        $sourceUri: url,
+        $doi: doi,
       },
-      meta: {
-        title,
-      },
+      meta: {},
       submitterId: ctx.user,
       channels: [
         {

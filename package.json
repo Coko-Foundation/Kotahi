@@ -1,6 +1,6 @@
 {
   "name": "kotahi",
-  "version": "2.2.0",
+  "version": "2.1.0",
   "private": true,
   "description": "Kotahi - open journals",
   "repository": {
@@ -29,7 +29,8 @@
     "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
     "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
     "test:chrome": "cypress run --browser chrome --spec 'cypress/e2e/**/**.js'",
-    "test:firefox": "cypress run --browser firefox --headless --spec 'cypress/e2e/**/**.js'"
+    "test:firefox": "cypress run --browser firefox --headless --spec 'cypress/e2e/**/**.js'",
+    "test": "dotenv cypress open"
   },
   "husky": {
     "hooks": {
@@ -50,19 +51,17 @@
     "graphql": "15.5.0",
     "pg": "8.4.0",
     "prettier": "2.2.1",
+		"prosemirror-transform": "1.7.1",
     "react": "16.14.0",
-    "prosemirror-inputrules": "1.2.0",
-    "prosemirror-state": "1.4.2",
-    "prosemirror-view": "1.30.2",
     "styled-components": "5.2.1"
   },
   "dependencies": {
     "@apollo/client": "3.2.2",
     "@apollo/react-testing": "3.1.4",
     "@babel/core": "7.11.6",
-    "@coko/server": "2.5.2",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
+    "@coko/server": "2.5.2",
     "@fontsource/roboto": "^4.5.8",
     "@pubsweet/db-manager": "^3.1.24",
     "@pubsweet/errors": "^2.0.40",
@@ -165,9 +164,9 @@
     "supertest": "3.4.2",
     "turndown": "^7.0.0",
     "uuid": "^8.3.2",
-    "wax-prosemirror-core": "^0.8.10",
-    "wax-prosemirror-services": "^0.8.10",
-    "wax-table-service": "^0.8.10",
+    "wax-prosemirror-core": "^0.9.3",
+    "wax-prosemirror-services": "^0.9.3",
+    "wax-table-service": "^0.9.3",
     "winston": "2.4.5",
     "xml-js": "^1.6.11",
     "xml2js": "^0.4.23",

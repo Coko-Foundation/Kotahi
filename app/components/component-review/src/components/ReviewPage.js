@@ -100,9 +100,7 @@ const fragmentFields = `
   status
   meta {
     manuscriptId
-    title
     source
-    abstract
     history {
       type
       date
@@ -147,6 +145,7 @@ const formStructure = `
         minSize
       }
       hideFromReviewers
+      readonly
     }
   }
 `

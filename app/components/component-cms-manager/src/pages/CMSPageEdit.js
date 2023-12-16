@@ -142,7 +142,7 @@ const CMSPageEdit = ({
                 setFieldValue={formikProps.setFieldValue}
                 setTouched={formikProps.setTouched}
                 submitButtonText={
-                  isNewPage ? t('cmsPage.pages.Save') : submitButtonState.text
+                  isNewPage ? t('common.Save') : submitButtonState.text
                 }
               />
             )

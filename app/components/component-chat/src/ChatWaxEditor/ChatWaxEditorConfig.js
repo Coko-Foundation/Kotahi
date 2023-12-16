@@ -1,20 +1,14 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-core'
 import {
-  AnnotationToolGroupService,
   BottomInfoService,
-  DisplayToolGroupService,
-  EditorInfoToolGroupServices,
   InlineAnnotationsService,
   LinkService,
   ListsService,
-  ListToolGroupService,
   MathService,
-  NoteToolGroupService,
+  NoteService,
   SpecialCharactersService,
-  SpecialCharactersToolGroupService,
   TextBlockLevelService,
-  TextToolGroupService,
   DisplayBlockLevelService,
   EnterService,
 } from 'wax-prosemirror-services'
@@ -76,22 +70,16 @@ const chatWaxEditorConfig = ({ onEnterPress, autoCompleteReducer }) => {
     services: [
       new EnterService(),
       new MentionService(),
-      new AnnotationToolGroupService(),
       new BottomInfoService(),
-      new DisplayToolGroupService(),
-      new EditorInfoToolGroupServices(),
       new InlineAnnotationsService(),
       new LinkService(),
       new ListsService(),
-      new ListToolGroupService(),
       new MathService(),
-      new NoteToolGroupService(),
+      new NoteService(),
       new SpecialCharactersService(),
-      new SpecialCharactersToolGroupService(),
       new TextBlockLevelService(),
-      new TextToolGroupService(),
-      new KotahiBlockDropDownToolGroupService(),
       new DisplayBlockLevelService(),
+      new KotahiBlockDropDownToolGroupService(),
     ],
   }
 }

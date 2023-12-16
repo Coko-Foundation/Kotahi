@@ -158,16 +158,16 @@ If a submission to Crossref fails basic schema validation (e.g. if required fiel
 #### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
-| Field name | Field type | Purpose |
+| Field type | Internal field name | Purpose |
 | --------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `meta.title` | TextField | Article title |
-| `submission.authors` | AuthorsInput | Ordered list of authors |
-| `meta.abstract` | AbstractEditor | Article abstract |
-| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs |
-| `submission.volumeNumber` | TextField | (Optional) Journal volume number |
-| `submission.issueNumber` | TextField | (Optional) Journal issue number |
-| `submission.issueYear` | TextField | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
-|`submission.doiSuffix` | TextField | (Optional) The custom DOI suffix for the article |
+| Title | `submission.$title` | Article title |
+| Authors | `submission.$authors` | Ordered list of authors |
+| Abstract | `submission.$abstract` | Article abstract |
+| Rich text | `submission.references` | Citations in separate paragraphs |
+| Text | `submission.volumeNumber` | (Optional) Journal volume number |
+| Text | `submission.issueNumber` | (Optional) Journal issue number |
+| Text | `submission.issueYear` | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| DOI suffix | `submission.$doiSuffix` | (Optional) The custom DOI suffix for the article |
 
 #### Registering article evaluations via Crossref
 
@@ -186,22 +186,22 @@ DOI_PREFIX=12.34567
 
 And the following form fields are required:
 
-| Field name                                                                                                                                                                                                       | Field type     | Purpose                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------- |
-| `submission.articleURL`                                                                                                                                                                                          | TextField      | The DOI link to the article under review                 |
-| `submission.review1`                                                                                                                                                                                             | AbstractEditor | Review number 1                                          |
-| `submission.review1date`                                                                                                                                                                                         | TextField      | Review 1 date, formatted as yyyy-mm-dd or mm/dd/yyyy     |
-| `submission.review1creator`                                                                                                                                                                                      | TextField      | Review 1 author, formatted as Firstname Lastname         |
-| `submission.review1suffix`                                                                                                                                                                                       | TextField      | (Optional) Review 1 custom DOI sufix                     |
-| `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review2suffix`, `submission.review3`, `submission.review3date`, `submission.review3creator`, `submission.review3suffix` | As above       | (Optional) Fields for second and third reviews.          |
-| `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                                                          | As above       | (Optional) Fields for a summary of the reviews.          |
-| `submission.description`                                                                                                                                                                                         | TextField      | Title of the article under review, possibly abbreviated. |
+| Field type | Field name                                                                                                                                                                                                       | Purpose                                                  |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| DOI        | `submission.$doi`                                                                                                                                                                                                | The DOI link to the article under review                 |
+| Rich text  | `submission.review1`                                                                                                                                                                                             | Review number 1                                          |
+| Text       | `submission.review1date`                                                                                                                                                                                         | Review 1 date, formatted as yyyy-mm-dd or mm/dd/yyyy     |
+| Text       | `submission.review1creator`                                                                                                                                                                                      | Review 1 author, formatted as Firstname Lastname         |
+| Text       | `submission.review1suffix`                                                                                                                                                                                       | (Optional) Review 1 custom DOI sufix                     |
+| (As above) | `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review2suffix`, `submission.review3`, `submission.review3date`, `submission.review3creator`, `submission.review3suffix` | (Optional) Fields for second and third reviews.          |
+| (As above) | `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                                                          | (Optional) Fields for a summary of the reviews.          |
+| Title      | `submission.$title`                                                                                                                                                                                              | Title of the article under review, possibly abbreviated. |
 
 ### Hypothesis
 
-[Hypothes.is](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles or other data to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing most form data as Hypothesis annotations.
+[Hypothesis](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles or other data to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing most form data as Hypothesis annotations.
 
-To enable this, you will need to first [generate a personal API token](https://h.readthedocs.io/en/latest/api/authorization/#access-tokens) for Hypothes.is, and a [group key](https://web.hypothes.is/blog/introducing-groups/) (e.g. `g4JPqbk5` if your group URL is `https://hypothes.is/groups/g4JPqbk5/my-journal-group`).
+To enable this, you will need to first [generate a personal API token](https://h.readthedocs.io/en/latest/api/authorization/#access-tokens) for Hypothesis, and a [group key](https://web.hypothes.is/blog/introducing-groups/) (e.g. `g4JPqbk5` if your group URL is `https://hypothes.is/groups/g4JPqbk5/my-journal-group`).
 
 Using these keys, set the following `.env` variables:
 
@@ -211,13 +211,13 @@ HYPOTHESIS_GROUP=<group key here>
 HYPOTHESIS_ALLOW_TAGGING=true
 ```
 
-Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
+Your submission form must also contain a 'Manuscript source URI' field (internal name `submission.$sourceUri`), which should contain the URL of the page to be annotated.
 
 Once these preliminaries are in place, there are two approaches to publishing to Hypothesis. Both can be used at the same time:
 
 #### Selecting individual fields to publish to Hypothesis
 
-In the form-builder, you can choose fields of the submission and decision forms to be published to Hypothesis, by setting the "Include when sharing or publishing" option for those fields to "Always" (currently unavailable for SupplementaryFiles and VisualAbstract field types). This will cause each of those fields to be published as Hypothesis annotations when a manuscript is published. If you want Hypothesis to apply a tag to the annotation, this can be specified in the "Hypothes.is tag" text box.
+In the form-builder, you can choose fields of the submission and decision forms to be published to Hypothesis, by setting the "Include when sharing or publishing" option for those fields to "Always" (currently unavailable for SupplementaryFiles and VisualAbstract field types). This will cause each of those fields to be published as Hypothesis annotations when a manuscript is published. If you want Hypothesis to apply a tag to the annotation, this can be specified in the "Hypothesis tag" text box.
 
 Alternatively, you may choose the "Ad hoc" option for a field, which will cause a "Publish" checkbox to appear next to that field in the Control page (in ThreadedDiscussion fields, each comment has its own separate checkbox). For any given manuscript, an editor must manually select that field (or comment) in order for it to publish to Hypothesis. They should select those they wish to publish, then hit the "Publish" button.
 
@@ -243,14 +243,12 @@ Three special directives (with double-underscore prefix) may be present in each 
 - `__content`: a template string specifying the content (typically a data field or fields) to publish.
 - `__tag` (optional): a tag (string) to apply to the annotation in Hypothesis.
 
-[Handlebars](https://handlebarsjs.com/guide/) templates can be included in any string value in the `docmaps_scheme.json` file, to allow insertion of manuscript data. All fields from submission and decision forms can be referenced by their internal name, e.g. `{{submission.authors}}` or `{{decision.verdict}}`. Other supported fields are:
+[Handlebars](https://handlebarsjs.com/guide/) templates can be included in any string value in the `docmaps_scheme.json` file, to allow insertion of manuscript data. All fields from submission and decision forms can be referenced by their internal name, e.g. `{{submission.$authors}}` or `{{decision.$verdict}}`. Other supported fields are:
 
-- `{{title}}`: The manuscript title, taken from one of several possible fields commonly used to store the title
-- `{{uri}}`: The preprint location, taken from one of several possible fields commonly used to store this location
-- `{{doi}}`: The preprint's DOI, taken from one of several possible fields commonly used to store DOI
-- `{{meta.title}}`,
-- `{{meta.abstract}}`,
-- `{{status}}`
+- `{{title}}`: The manuscript title, an alias for `{{submission.$title}}`
+- `{{uri}}`: The preprint location, either taken from `submission.$sourceUri` or failing that, a DOI link derived from `submission.$doi`
+- `{{doi}}`: The preprint's DOI, an alias for `{{submission.$doi}}`
+- `{{status}}`: The manuscript status
 
 A typical use-case is a follows:
 
@@ -315,11 +313,11 @@ Bob's token would then be `"Bob J0m7j4JfSxOtZ2"`.
 
 The `unreviewedPreprints` query returns an `id` and `shortId`, and the following fields if they are present in your submission form:
 
-- `meta.title` or `submission.title` or `submission.description`
-- `meta.abstract` or `submission.abstract`
-- `submission.authors` (as an AuthorsInput field)
-- `submission.doi`
-- `submission.url` or `submission.uri` or `submission.link` or `submission.biorxivURL`
+- `submission.$title` ('Title' field)
+- `submission.$abstract` ('Abstract' field)
+- `submission.$authors` ('Authors' field)
+- `submission.$doi` ('DOI' field)
+- `submission.$sourceUri` ('Manuscript source URI' field)
 
 ## Going further
 
@@ -370,7 +368,7 @@ We’re looking at fixing this.
 
 `INSTANCE_GROUPS` is a required setting, which determines what multitenanted "groups" should run within a single instance of Kotahi. Each group has its own data, workflow, branding and other settings. You can use multiple groups to run different journals or publishing teams within a single instance of Kotahi, or to experiment with different workflows.
 
-The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:journal`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and `_` characters. The _group type_ (after the colon) must be either 'journal', 'prc', 'preprint1' or 'preprint2'. (These _group types_ will be given more descriptive and generic names in future.)
+The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _group specifications_ separated by commas. Each _group specification_ consists of a _group name_ followed by a colon followed by a _group type_, e.g. `ourjournal:journal`. The _group name_ (before the colon) may only contain lowercase `a`-`z`, `0`-`9` and `_` characters. The _group type_ (after the colon) must be either 'journal', 'prc', 'preprint1' or 'preprint2'.
 
 Example setting for running a single group only:
 
@@ -399,3 +397,33 @@ To archive a group you no longer wish to have active, stop all containers, remov
 ### Upgrading from old versions
 
 When upgrading from an earlier version of Kotahi prior to 2.0, it is recommended to specify only a single group, with the _group name_ "kotahi" and the same _group type_ as previously specified for the `INSTANCE_NAME` setting. This will keep existing settings and page URLs unchanged. See [CHANGES.md](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/CHANGES.md#2023-07-07) for instructions. You can later change or add groups as you wish.
+
+### Configuring the Manuscripts table for your group
+
+The columns displayed in the Manuscripts table (viewable by Group Managers only) are determined in the Config Manager, by the setting "List columns to display on the Manuscripts page". Here you should enter a comma-separated list consisting of field-names and/or special column names. E.g.:
+
+```
+titleAndAbstract, created, updated, status, submission.$customStatus, author
+```
+
+Field names for your particular group can be viewed in the submission form builder (Forms > Submission), by clicking on each field and locating its "Internal field name". If the field in question is a dropdown selection or radio buttons, the resulting column will allow you to filter manuscripts by values in that field.
+
+Some commonly used fields include:
+
+- `submission.$title`: manuscript title.
+- `submission.$abstract`: manuscript abstract.
+- `submission.$authors`: list of authors.
+- `submission.$customStatus`: a status from your own custom-defined workflow. You can filter manuscripts by this status.
+
+You can also include special columns:
+
+- `titleAndAbstract`: This compactly displays the manuscript title (`submission.$title`) plus an information icon you can hover over to see the abstract (`submission.$abstract`) if there is one. If a source URL is recorded for the manuscript, clicking the title will take you to that URL. You can also sort manuscripts based on the titles in this column.
+- `shortId`: A human-friendly serial number by which manuscripts can be uniquely identified within your group.
+- `created`: The date and time the manuscript was first entered into Kotahi.
+- `updated`: The date and time the manuscript was last updated in Kotahi.
+- `lastUpdated`: The date and time of the most recent update by a _reviewer_ of the manuscript.
+- `status`: The status of the manuscript.
+- `manuscriptVersions`: A count of how many versions of the manuscript there are in Kotahi.
+- `submitter`: Details of the user who submitted the manuscript.
+- `editor`: Details of all users who are editors of the manuscript (including handling editors and senior editors).
+- `actions`: Usually included as the last column, this provides links allowing you to view manuscript details, view the production page, publish the manuscript or archive it. The set of actions available depends on other configuration options, as well as manuscript status.

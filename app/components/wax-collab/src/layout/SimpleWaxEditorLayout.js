@@ -14,11 +14,14 @@ const TopBar = ComponentPlugin('topBar')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
-const SimpleWaxEditorLayout = readonly => ({ editor }) => (
+const SimpleWaxEditorLayout = (readonly, dataTestid = null) => ({ editor }) => (
   <div>
     <SimpleGrid readonly={readonly}>
       {readonly ? (
-        <ReadOnlySimpleEditorDiv className="wax-surface-scroll">
+        <ReadOnlySimpleEditorDiv
+          className="wax-surface-scroll"
+          data-testid={dataTestid}
+        >
           {editor}
         </ReadOnlySimpleEditorDiv>
       ) : (
@@ -26,7 +29,10 @@ const SimpleWaxEditorLayout = readonly => ({ editor }) => (
           <SimpleMenu>
             <TopBar />
           </SimpleMenu>
-          <SimpleEditorDiv className="wax-surface-scroll">
+          <SimpleEditorDiv
+            className="wax-surface-scroll"
+            data-testid={dataTestid}
+          >
             {editor}
           </SimpleEditorDiv>
         </>

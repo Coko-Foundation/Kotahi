@@ -9,7 +9,7 @@
       "title": "Title",
       "id": "47fd802f-ed30-460d-9617-c8a9b9025e95",
       "component": "TextField",
-      "name": "meta.title",
+      "name": "submission.$title",
       "description": "<p class=\"paragraph\">Please enter the title of your Research Object as you would like it to appear once published. PLEASE DO NOT USE ALL CAPS. Use the example below as a guide: \"An fMRI Study on Word Recognition\". Please do not use Subscript, Superscript, boldface and/or italics in your Title</p>",
       "placeholder": "Enter the manuscript's title",
       "validate": [
@@ -91,7 +91,7 @@
       "shortDescription": "Abstract",
       "id": "d80b2c88-6144-4003-b671-63990b9b2793",
       "component": "AbstractEditor",
-      "name": "meta.abstract",
+      "name": "submission.$abstract",
       "description": "<p class=\"paragraph\">Please provide a short summary of your submission. </p>",
       "placeholder": "Input your abstract...",
       "validate": [
@@ -491,7 +491,7 @@
       "shortDescription": "Submission Label",
       "id": "b92ff5dc-d205-48ad-b112-8bfdce28a5c0",
       "component": "Select",
-      "name": "submission.label",
+      "name": "submission.$customStatus",
       "description": "<p class=\"paragraph\">Use the following labels to indicate the status of the submission.</p>",
       "options": [
         {

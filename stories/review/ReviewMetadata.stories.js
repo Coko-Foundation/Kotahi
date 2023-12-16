@@ -97,7 +97,7 @@ const baseProps = {
         shortDescription: null,
         id: '47fd802f-ed30-460d-9617-c8a9b9025e95',
         component: 'TextField',
-        name: 'meta.title',
+        name: 'submission.$title',
         description: null,
         doiValidation: null,
         placeholder: "Enter the manuscript's title",
@@ -164,7 +164,7 @@ const baseProps = {
         shortDescription: null,
         id: '1c2e9325-3fa8-41f3-8607-180eb8a25aa3',
         component: 'TextField',
-        name: 'submission.DOI',
+        name: 'submission.$doi',
         description: null,
         doiValidation: 'true',
         placeholder: "Enter the manuscript's DOI",
@@ -180,7 +180,7 @@ const baseProps = {
         shortDescription: 'Abstract',
         id: 'd80b2c88-6144-4003-b671-63990b9b2793',
         component: 'AbstractEditor',
-        name: 'submission.abstract',
+        name: 'submission.$abstract',
         description: '<p>Please provide a short summary of your submission</p>',
         doiValidation: null,
         placeholder: 'Input your abstract...',
@@ -627,13 +627,11 @@ const baseProps = {
     meta: {
       __typename: 'ManuscriptMeta',
       manuscriptId: 'aef08123-c009-4cd1-b9e0-9dbac8c50528',
-      title: 'New submission 15/04/2022, 16:58:24',
       source: null,
-      abstract: null,
       history: null,
     },
     submission:
-      '{"DOI":"TESTDOI","cover":"<p class=\\"paragraph\\">Test letter</p>","title":"","topics":["Neuropsychology "],"Funding":"Test entry","abstract":"<p class=\\"paragraph\\">This is test abstract</p>","datacode":"<p class=\\"paragraph\\">Test statement</p>","objectType":"figure","references":"<p class=\\"paragraph\\">Test entry</p>","authorNames":[{"id":"80000945-232b-4662-991a-b92d695113c7","email":"","lastName":"User","firstName":"PK","affiliation":""}],"dateAccepted":"07.01.2021","dateReceived":"07.01.2021","copyrightYear":"Test copyright","datePublished":"07.01.2021","DecisionLetter":"<p class=\\"paragraph\\">Test entry</p>","copyrightHolder":"Test entry","reviewingEditor":"","EditorsEvaluation":"Test evaluation","competingInterests":"<p class=\\"paragraph\\">Test entry</p>","copyrightStatement":"Test entry","authorContributions":"Test contribution","AuthorCorrespondence":"Test entry"}',
+      '{"$doi":"TESTDOI","cover":"<p class=\\"paragraph\\">Test letter</p>","$title":"New submission 15/04/2022, 16:58:24","topics":["Neuropsychology "],"Funding":"Test entry","$abstract":"<p class=\\"paragraph\\">This is test abstract</p>","datacode":"<p class=\\"paragraph\\">Test statement</p>","objectType":"figure","references":"<p class=\\"paragraph\\">Test entry</p>","$authors":[{"id":"80000945-232b-4662-991a-b92d695113c7","email":"","lastName":"User","firstName":"PK","affiliation":""}],"dateAccepted":"07.01.2021","dateReceived":"07.01.2021","copyrightYear":"Test copyright","datePublished":"07.01.2021","DecisionLetter":"<p class=\\"paragraph\\">Test entry</p>","copyrightHolder":"Test entry","reviewingEditor":"","EditorsEvaluation":"Test evaluation","competingInterests":"<p class=\\"paragraph\\">Test entry</p>","copyrightStatement":"Test entry","authorContributions":"Test contribution","AuthorCorrespondence":"Test entry"}',
     manuscriptVersions: [],
     channels: [
       {
@@ -722,7 +720,7 @@ const emptyFormProps = {
         shortDescription: null,
         id: '47fd802f-ed30-460d-9617-c8a9b9025e95',
         component: 'TextField',
-        name: 'meta.title',
+        name: 'submission.$title',
         description: null,
         doiValidation: null,
         placeholder: "Enter the manuscript's title",
@@ -789,7 +787,7 @@ const emptyFormProps = {
         shortDescription: null,
         id: '1c2e9325-3fa8-41f3-8607-180eb8a25aa3',
         component: 'TextField',
-        name: 'submission.DOI',
+        name: 'submission.$doi',
         description: null,
         doiValidation: 'true',
         placeholder: "Enter the manuscript's DOI",
@@ -805,7 +803,7 @@ const emptyFormProps = {
         shortDescription: 'Abstract',
         id: 'd80b2c88-6144-4003-b671-63990b9b2793',
         component: 'AbstractEditor',
-        name: 'submission.abstract',
+        name: 'submission.$abstract',
         description: '<p>Please provide a short summary of your submission</p>',
         doiValidation: null,
         placeholder: 'Input your abstract...',
@@ -1202,13 +1200,11 @@ const emptyFormProps = {
     meta: {
       __typename: 'ManuscriptMeta',
       manuscriptId: 'ce9e279e-aaa8-405e-8d78-f438622f430b',
-      title: 'New submission 18/04/2022, 23:37:22',
       source: null,
-      abstract: null,
       history: null,
     },
     submission:
-      '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
+      '{"$doi":"","cover":"","$title":"New submission 18/04/2022, 23:37:22","topics":[],"Funding":"","$abstract":"","datacode":"","objectType":"","references":"","$authors":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
     manuscriptVersions: [],
     channels: [
       {

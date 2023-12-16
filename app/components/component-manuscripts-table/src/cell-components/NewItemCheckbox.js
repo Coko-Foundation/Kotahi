@@ -14,7 +14,10 @@ const NewItemCheckbox = ({
   selectedNewManuscripts,
   toggleNewManuscriptCheck,
 }) => {
-  if (manuscript.status !== articleStatuses.new || manuscript.submission.labels)
+  if (
+    manuscript.status !== articleStatuses.new ||
+    manuscript.submission.$customStatus
+  )
     return null
 
   return (

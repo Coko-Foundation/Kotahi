@@ -157,7 +157,7 @@ const DecisionVersion = ({
       ? createBlankSubmissionBasedOnForm(form)
       : {}
 
-    Object.assign(submissionValues, JSON.parse(version.submission))
+    Object.assign(submissionValues, version.submission)
 
     const versionValues = {
       ...version,
@@ -173,10 +173,7 @@ const DecisionVersion = ({
             <ReadonlyFormTemplate
               displayShortIdAsIdentifier={displayShortIdAsIdentifier}
               form={form}
-              formData={{
-                ...version,
-                submission: JSON.parse(version.submission),
-              }}
+              formData={version}
               manuscript={version}
               showEditorOnlyFields
               threadedDiscussionProps={threadedDiscussionExtendedProps}
@@ -416,7 +413,7 @@ const DecisionVersion = ({
                   initialValues={
                     currentDecisionData?.jsonData
                       ? JSON.parse(currentDecisionData?.jsonData)
-                      : { comment: '', verdict: '', discussion: '' } // TODO this should just be {}, but needs testing.
+                      : { comment: '', $verdict: '', discussion: '' } // TODO this should just be {}, but needs testing.
                   }
                   isSubmission={false}
                   manuscriptId={version.id}
@@ -427,7 +424,7 @@ const DecisionVersion = ({
                     await makeDecision({
                       variables: {
                         id: version.id,
-                        decision: values.verdict,
+                        decision: values.$verdict,
                       },
                     })
                     actions.setSubmitting(false)
@@ -543,7 +540,7 @@ DecisionVersion.propTypes = {
   isCurrentVersion: PropTypes.bool.isRequired,
   version: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    meta: PropTypes.shape({}).isRequired,
+    meta: PropTypes.shape({ source: PropTypes.string }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,

@@ -45,7 +45,7 @@
     },
     {
       "id": "257d6be0-0832-41fc-b6d2-b1f096342bc2",
-      "name": "verdict",
+      "name": "$verdict",
       "title": "Recommendation",
       "inline": "true",
       "options": [

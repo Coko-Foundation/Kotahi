@@ -151,7 +151,7 @@ const AdminPage = () => {
   journal.textStyles = data?.builtCss.css
   const hasAlert = data?.userHasTaskAlerts
 
-  if (currentUser.preferredLanguage) {
+  if (currentUser?.preferredLanguage) {
     i18next.changeLanguage(currentUser.preferredLanguage)
   }
 

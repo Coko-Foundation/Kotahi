@@ -99,7 +99,7 @@ const ProfilePage = ({ currentUser, match }) => {
   const { id } = match.params
 
   const { loading, error, data, client, refetch } = useQuery(GET_USER, {
-    variables: { id: id || currentUser.id },
+    variables: { id: id || currentUser?.id },
     fetchPolicy: 'network-only',
   })
 
