@@ -127,10 +127,7 @@ const ReviewLayout = ({
         <div key={latestManuscript.id}>
           <ReadonlyFormTemplate
             form={submissionForm}
-            formData={{
-              ...latestManuscript,
-              submission: JSON.parse(latestManuscript.submission),
-            }}
+            formData={latestManuscript}
             manuscript={latestManuscript}
             showEditorOnlyFields={false}
             threadedDiscussionProps={threadedDiscussionProps}
