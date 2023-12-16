@@ -138,8 +138,6 @@ describe('review page tests', () => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2000)
     cy.get('[class*=TabsContainer]')
     .contains('Review')
     .click()
