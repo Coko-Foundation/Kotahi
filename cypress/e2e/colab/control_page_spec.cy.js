@@ -295,7 +295,7 @@ describe('control page tests', () => {
       })
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[name="meta.title"]:last').click()
+        cy.get('[name="submission.$title"]:last').click()
         cy.get('[class*=TabsContainer]').contains('Review').click()
         ControlPage.getReviewerName().should('contain', name.role.reviewers[1])
       })
@@ -313,7 +313,7 @@ describe('control page tests', () => {
       ControlPage.clickHideReviewerNameToAuthor()
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[name="meta.title"]:last').click()
+        cy.get('[name="submission.$title"]:last').click()
         cy.get('[class*=TabsContainer]').contains('Review').click()
         ControlPage.getReviewerName().should(
           'not.contain',
