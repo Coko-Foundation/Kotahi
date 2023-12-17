@@ -276,7 +276,9 @@ describe('control page tests', () => {
         cy.wait(2000)
         DashboardPage.clickDoReview()
         cy.fixture('submission_form_data').then(data => {
-          cy.get('[class*=TabsContainer]').contains('Review').click()
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(500)
+          cy.get('[class*=HiddenTabs__Tab]').contains('Review').invoke('click')
           ReviewPage.fillInReviewComment(data.review1)
           ReviewPage.clickAcceptRadioButton()
           ReviewPage.clickSubmitButton()
