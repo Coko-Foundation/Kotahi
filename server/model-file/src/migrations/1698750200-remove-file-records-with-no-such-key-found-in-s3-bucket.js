@@ -31,7 +31,10 @@ exports.up = async knex => {
         } catch (error) {
           if (error.message === 'The specified key does not exist.') {
             filesWithNoSuchKeyFound.push(file)
-          } else logger.info(error.message, key)
+          } else {
+            logger.info(error.message, key)
+            throw new Error(error)
+          }
         }
 
         fs.unlinkSync(tempPath)
