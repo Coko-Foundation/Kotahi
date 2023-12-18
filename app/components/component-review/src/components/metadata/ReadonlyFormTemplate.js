@@ -1,9 +1,23 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import ReadonlyFieldData from './ReadonlyFieldData'
 import { color } from '../../../../../theme'
-import { Title, SectionHeader, SectionRowGrid, Heading, Cell } from '../style'
+import {
+  Title,
+  SectionHeader,
+  SectionRowGrid,
+  Heading,
+  Cell,
+  Info,
+} from '../style'
 import { SectionContent, Action, Icon } from '../../../../shared'
+
+const StyledSectionContent = styled(SectionContent)`
+  margin-top: 0;
+`
 
 const ReadonlyFormTemplate = ({
   form,
@@ -17,6 +31,24 @@ const ReadonlyFormTemplate = ({
   allowAuthorsSubmitNewVersion,
   copyHandleBarsCode,
 }) => {
+  const { t } = useTranslation()
+
+  const isChildrenEmpty = form.children.length === 0
+
+  const renderHeader = () => {
+    const headerContent = isChildrenEmpty ? (
+      <Info>{t('reviewDecisionSection.noDecisionUpdated')}</Info>
+    ) : (
+      title && (
+        <SectionHeader>
+          <Title>{title}</Title>
+        </SectionHeader>
+      )
+    )
+
+    return headerContent || null
+  }
+
   const onCopyHandleBarsCode = name => {
     return () =>
       navigator.clipboard.writeText(
@@ -28,12 +60,8 @@ const ReadonlyFormTemplate = ({
   }
 
   return (
-    <SectionContent>
-      {title ? (
-        <SectionHeader>
-          <Title>{title}</Title>
-        </SectionHeader>
-      ) : null}
+    <StyledSectionContent>
+      {renderHeader()}
 
       {displayShortIdAsIdentifier &&
         manuscript && ( // TODO The shortId shouldn't be rendered as part of this component. Split out!
@@ -75,7 +103,7 @@ const ReadonlyFormTemplate = ({
             )}
           </SectionRowGrid>
         ))}
-    </SectionContent>
+    </StyledSectionContent>
   )
 }
 

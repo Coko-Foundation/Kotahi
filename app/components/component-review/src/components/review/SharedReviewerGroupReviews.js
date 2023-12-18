@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import Review from './Review'
-import { Title, SectionHeader, SectionRow } from '../style'
+import { Title, SectionHeader, SectionRow, Info } from '../style'
 import { SectionContent } from '../../../../shared'
 
 /** Some reviewers may be marked as 'shared', meaning they can see each other's reviews. Non-'shared' reviewers cannot see or be seen by this group.
@@ -14,11 +14,14 @@ const SharedReviewerGroupReviews = ({
   reviewForm,
   threadedDiscussionProps,
 }) => {
+  const { t } = useTranslation()
+
   const thisReviewIsShared = manuscript.reviews?.find(
     r => r.user?.id === reviewerId && !r.isDecision,
   )?.isSharedWithCurrentUser
 
-  if (!thisReviewIsShared) return null
+  if (!thisReviewIsShared)
+    return <Info>{t('otherReviewsSection.noSharedReviews')}</Info>
 
   const sharedReviews = manuscript.reviews.filter(
     r =>
@@ -26,7 +29,6 @@ const SharedReviewerGroupReviews = ({
   )
 
   if (!sharedReviews.length) return null
-  const { t } = useTranslation()
   return (
     <SectionContent>
       <SectionHeader>

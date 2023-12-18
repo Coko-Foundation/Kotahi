@@ -79,6 +79,7 @@ function doReview(name, reviewData) {
       cy.awaitDisappearSpinner()
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000)
+      cy.get('[class*=TabsContainer]').contains('Review').click()
       ReviewPage.getReviewCommentField().focus().type('comment', { delay: 200 })
       ReviewPage.getReviewCommentField().fillInput(reviewData.comment)
       if (reviewData.radioButton === 'accept')

@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '@pubsweet/ui/dist/atoms'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
+import { SectionHeader, Title } from '../style'
+import { SectionContent } from '../../../../shared'
+import { color } from '../../../../../theme'
 
 const Heading = styled.h4``
 
@@ -11,6 +15,10 @@ const Container = styled.div`
   & > div {
     margin-bottom: 12px;
   }
+`
+
+const StyledStrong = styled.strong`
+  color: ${color.gray40};
 `
 
 // Due to migration to new Data Model
@@ -40,41 +48,91 @@ const Review = ({
   showEditorOnlyFields,
   showUserInfo = true,
   threadedDiscussionProps,
+  sharedReviews,
+  isReview = false,
 }) => {
   const { t } = useTranslation()
   let localizedData
   if (review) localizedData = localizeReviewRecommendations(review?.jsonData, t)
+
+  const [open, setOpen] = useState(true)
+
+  const renderContent = () => (
+    <ReadonlyFormTemplate
+      form={reviewForm}
+      formData={ensureJsonIsParsed(localizedData) ?? {}}
+      hideSpecialInstructions
+      isReview={isReview}
+      showEditorOnlyFields={
+        showEditorOnlyFields || user.groupRoles.includes('groupManager')
+      }
+      threadedDiscussionProps={threadedDiscussionProps}
+    />
+  )
+
+  const renderReviewerInfo = () => (
+    <div>
+      <Heading>
+        <strong>{review.user.username}</strong>
+      </Heading>
+      {review.user.defaultIdentity.identifier}
+    </div>
+  )
+
+  const renderAnonymousReviewer = () => (
+    <div>
+      <Heading>
+        <Title>{t('reviewPage.Anonymous Reviewer')}</Title>
+      </Heading>
+    </div>
+  )
+
   return (
-    <Container>
-      {review && !review?.isHiddenReviewerName && showUserInfo && (
-        <div>
-          <Heading>
-            <strong>{review.user.username}</strong>
-          </Heading>
-          {review.user.defaultIdentity.identifier}
-        </div>
-      )}
+    <>
+      {!sharedReviews ? (
+        <Container>
+          {review &&
+            !review?.isHiddenReviewerName &&
+            showUserInfo &&
+            renderReviewerInfo()}
 
-      {review?.isHiddenReviewerName && showUserInfo && (
-        <div>
-          <Heading>
-            <strong style={{ color: '#545454' }}>
-              {t('reviewPage.Anonymous Reviewer')}
-            </strong>
-          </Heading>
-        </div>
-      )}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginLeft: '-6px',
+            }}
+          >
+            <Icon
+              color="#9e9e9e"
+              onClick={() => setOpen(prevOpen => !prevOpen)}
+            >
+              {open ? 'chevron-up' : 'chevron-down'}
+            </Icon>
 
-      <ReadonlyFormTemplate
-        form={reviewForm}
-        formData={ensureJsonIsParsed(localizedData) ?? {}}
-        hideSpecialInstructions
-        showEditorOnlyFields={
-          showEditorOnlyFields || user.groupRoles.includes('groupManager')
-        }
-        threadedDiscussionProps={threadedDiscussionProps}
-      />
-    </Container>
+            {review?.isHiddenReviewerName && showUserInfo && (
+              <section>
+                <StyledStrong>
+                  {t('reviewPage.Anonymous Reviewer')}
+                </StyledStrong>
+              </section>
+            )}
+          </div>
+
+          {open && renderContent()}
+        </Container>
+      ) : (
+        <SectionContent>
+          <SectionHeader>
+            {review && !review?.isHiddenReviewerName && showUserInfo
+              ? renderReviewerInfo()
+              : renderAnonymousReviewer()}
+          </SectionHeader>
+
+          {open && renderContent()}
+        </SectionContent>
+      )}
+    </>
   )
 }
 

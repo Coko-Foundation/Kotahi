@@ -276,6 +276,14 @@ const fr = {
       noFileLoaded: 'Aucun fichier de manuscrit chargé',
       noSupportedView: 'Aucune vue supportée du fichier',
     },
+    reviewDecisionSection: {
+      noDecisionUpdated:
+        "Aucune décision n'a encore été mise à jour pour ce manuscrit",
+    },
+    otherReviewsSection: {
+      noSharedReviews:
+        "Aucune évaluation collaborative n'est disponible pour ce manuscrit pour le moment",
+    },
     cmsPage: {
       pages: {
         addNew: 'Ajouter une nouvelle page',

@@ -276,6 +276,9 @@ describe('control page tests', () => {
         cy.wait(2000)
         DashboardPage.clickDoReview()
         cy.fixture('submission_form_data').then(data => {
+          // eslint-disable-next-line cypress/no-unnecessary-waiting
+          cy.wait(500)
+          cy.get('[class*=HiddenTabs__Tab]').contains('Review').invoke('click')
           ReviewPage.fillInReviewComment(data.review1)
           ReviewPage.clickAcceptRadioButton()
           ReviewPage.clickSubmitButton()
@@ -295,6 +298,7 @@ describe('control page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
         cy.get('[name="submission.$title"]:last').click()
+        cy.get('[class*=TabsContainer]').contains('Review').click()
         ControlPage.getReviewerName().should('contain', name.role.reviewers[1])
       })
     })
@@ -312,6 +316,7 @@ describe('control page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
         cy.get('[name="submission.$title"]:last').click()
+        cy.get('[class*=TabsContainer]').contains('Review').click()
         ControlPage.getReviewerName().should(
           'not.contain',
           name.role.reviewers[1],

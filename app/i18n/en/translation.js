@@ -272,6 +272,13 @@ const en = {
       noFileLoaded: 'No manuscript file loaded',
       noSupportedView: 'No supported view of the file',
     },
+    reviewDecisionSection: {
+      noDecisionUpdated: 'No decision has been updated for this manuscript yet',
+    },
+    otherReviewsSection: {
+      noSharedReviews:
+        'No collaborative reviews are available for this manuscript yet',
+    },
     cmsPage: {
       pages: {
         addNew: 'Add a new page',

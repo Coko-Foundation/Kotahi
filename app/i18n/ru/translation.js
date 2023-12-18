@@ -279,6 +279,13 @@ const ru = {
       noFileLoaded: 'Файл рукописи не загружен',
       noSupportedView: 'Файл не поддерживается для отображения',
     },
+    reviewDecisionSection: {
+      noDecisionUpdated: 'Решение по этому рукописи пока не обновлено',
+    },
+    otherReviewsSection: {
+      noSharedReviews:
+        'Нет доступных совместных обзоров для этого рукописи на данный момент',
+    },
     cmsPage: {
       pages: {
         addNew: 'Добавить новую страницу',
