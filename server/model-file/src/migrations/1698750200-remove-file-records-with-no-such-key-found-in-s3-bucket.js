@@ -24,7 +24,7 @@ exports.up = async knex => {
           storedObject => storedObject.type === 'original',
         )
 
-        const tempPath = path.join(tempDir, key)
+        const tempPath = path.join(tempDir, `${file.id}_${key}`)
 
         try {
           await fileStorage.download(key, tempPath)
