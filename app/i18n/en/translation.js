@@ -314,6 +314,10 @@ const en = {
         useCheckbox:
           'Use checkbox to show and hide the page in the menu. Click and Drag to order them.',
         Footer: 'Footer',
+        Status: 'Status',
+        MakeFlaxSitePrivate:
+          'Your publishing website will only be visible to those who have access to the Draft link',
+        DraftCheckbox: 'Draft',
         Partners: 'Partners',
         'Footer Text': 'Footer Text',
         'Footer Page links': 'Footer Page links',

@@ -7,9 +7,11 @@ import PublishStatus from '../components/PublishStatus'
 import Header from './Header'
 import Branding from './Branding'
 import Footer from './Footer'
+import SiteStatus from './SiteStatus'
 
 const LayoutForm = ({
   formikProps,
+  flaxSiteUrlForGroup,
   cmsLayout,
   submitButtonText,
   onHeaderPageOrderChanged,
@@ -18,6 +20,20 @@ const LayoutForm = ({
   deleteFile,
   triggerAutoSave,
 }) => {
+  const renderPrivateOption = () => {
+    return (
+      <SectionContent>
+        <PaddedContent>
+          <SiteStatus
+            cmsLayout={cmsLayout}
+            flaxSiteUrlForGroup={flaxSiteUrlForGroup}
+            triggerAutoSave={triggerAutoSave}
+          />
+        </PaddedContent>
+      </SectionContent>
+    )
+  }
+
   const renderBranding = () => {
     return (
       <SectionContent>
@@ -69,6 +85,7 @@ const LayoutForm = ({
       {renderBranding()}
       {renderHeader()}
       {renderFooter()}
+      {renderPrivateOption()}
       <ActionButtonContainer>
         <div>
           <FormActionButton
