@@ -324,6 +324,10 @@ const ru = {
         Partners: 'Партнеры',
         'Footer Text': 'Тест подвала',
         'Footer Page links': 'Ссылки страниц',
+        Status: 'Положение дел',
+        MakeFlaxSitePrivate:
+          'Ваш веб-сайт публикации будет виден только тем, у кого есть доступ к ссылке на черновик.',
+        DraftCheckbox: 'Черновик',
       },
     },
     authorsInput: {

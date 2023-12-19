@@ -38,6 +38,8 @@ class CMSLayout extends BaseModel {
     return {
       properties: {
         active: { type: ['boolean'] },
+        isPrivate: { type: ['boolean'] },
+        hexCode: { type: ['string', 'null'] },
         primaryColor: { type: 'string' },
         secondaryColor: { type: 'string' },
         logoId: { type: ['string', 'null'], format: 'uuid' },

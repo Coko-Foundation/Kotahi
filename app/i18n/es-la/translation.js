@@ -323,6 +323,10 @@ const esLa = {
         Partners: 'Socios',
         'Footer Text': 'Texto del Pie de Página',
         'Footer Page links': 'Enlaces de Páginas en el Pie de Página',
+        Status: 'Estado',
+        MakeFlaxSitePrivate:
+          'Su sitio web de publicación solo será visible para quienes tengan acceso al enlace Borrador.',
+        DraftCheckbox: 'Borrador',
       },
     },
     authorsInput: {

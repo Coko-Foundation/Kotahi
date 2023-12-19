@@ -45,6 +45,8 @@ const cmsLayoutFields = `
     footerText
     published
     edited
+    isPrivate
+    hexCode
     flaxHeaderConfig {
       ${flaxPageConfigFields}
     }

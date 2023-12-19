@@ -314,6 +314,8 @@ const typeDefs = `
     logo: File
     partners: [StoredPartner!]
     footerText: String
+    isPrivate:Boolean
+    hexCode: String
     published: DateTime
     edited: DateTime!
     created: DateTime!
@@ -359,6 +361,8 @@ const typeDefs = `
     primaryColor: String
     secondaryColor: String
     logoId: String
+    isPrivate: Boolean
+    hexCode: String
     partners: [StoredPartnerInput]
     footerText: String
     published: DateTime
