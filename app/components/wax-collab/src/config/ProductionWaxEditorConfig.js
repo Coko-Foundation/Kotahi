@@ -9,7 +9,6 @@ import {
   TextBlockLevelService,
   NoteService,
   TrackChangeService,
-  // TrackOptionsService,
   CommentsService,
   MathService,
   FindAndReplaceService,
@@ -22,6 +21,7 @@ import {
   TablesService,
   /* tableEditing, */ columnResizing,
 } from 'wax-table-service'
+// import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
 import {
   KotahiBlockDropDownToolGroupService,
@@ -68,7 +68,10 @@ const productionWaxEditorConfig = (
     },
   },
   SchemaService: KotahiSchema,
-  CommentsService: { readOnly: readOnlyComments || false }, // this should make it work though this is not yet in Wax
+  CommentsService: {
+    showTitle: true,
+    readOnly: readOnlyComments || false, // this should make it work though this is not yet in Wax
+  },
   MenuService: [
     {
       templateArea: 'topBar',

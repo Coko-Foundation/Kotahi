@@ -61,7 +61,10 @@ const fullWaxEditorConfig = handleAssetManager => ({
   },
 
   SchemaService: KotahiSchema,
-  CommentsService: { readOnly: false },
+  CommentsService: {
+    showTitle: true,
+    readOnly: false,
+  },
   MenuService: [
     {
       templateArea: 'topBar',
