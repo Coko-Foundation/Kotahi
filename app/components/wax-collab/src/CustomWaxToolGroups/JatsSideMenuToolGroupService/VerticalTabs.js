@@ -11,6 +11,8 @@ import { color } from '../../../../../theme'
 const useCircles = true // turn this on if you want colors next to annotations
 const showHideCitations = false // turn this on if you want show/hide functionality for citations
 
+const showWaxButton = false // true // This allows Wax debugging
+
 const TabWrapper = styled.div`
   border-right: 1px solid white;
   display: flex;
@@ -235,7 +237,6 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
 
 const BlockElementGroup = ({ groupName, items, view }) => {
   const [showCitations, setShowCitations] = useState(true) // if you want this false by default, add "hide-citation-spans" to the classList of the editorArea
-
   // maybe this should be generalized if we're going to use something similar elsewhere?
   React.useEffect(() => {
     if (showHideCitations && groupName === 'Citations') {
@@ -286,19 +287,35 @@ const BlockElementGroup = ({ groupName, items, view }) => {
   )
 }
 
-export const BlockLevelTools = ({ groups, view }) => (
-  <BlockLevelToolsWrapper>
-    {groups &&
-      groups.map(group => (
-        <BlockElementGroup
-          groupName={group.groupName}
-          items={group.items}
-          key={group.groupName}
-          view={view}
-        />
-      ))}
-  </BlockLevelToolsWrapper>
-)
+export const BlockLevelTools = ({ groups, view }) => {
+  const context = useContext(WaxContext)
+
+  return (
+    <BlockLevelToolsWrapper>
+      {groups &&
+        groups.map(group => (
+          <BlockElementGroup
+            groupName={group.groupName}
+            items={group.items}
+            key={group.groupName}
+            view={view}
+          />
+        ))}
+      {showWaxButton && (
+        <button
+          onClick={() => {
+            /* eslint-disable-next-line no-console */
+            console.log(context)
+          }}
+          style={{ marginTop: '2rem' }}
+          type="button"
+        >
+          Show context
+        </button>
+      )}
+    </BlockLevelToolsWrapper>
+  )
+}
 
 BlockLevelTools.propTypes = {
   groups: PropTypes.arrayOf(
