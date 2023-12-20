@@ -131,23 +131,7 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
   )
 
   manuscript.reviews
-    .filter(r => r.isDecision)
-    .forEach(r =>
-      result.push(
-        ...getPublishableFieldsForObject(
-          manuscript.formFieldsToPublish.find(ff => ff.objectId === r.id),
-          r.jsonData,
-          forms.decisionForm,
-          threadedDiscussions,
-          r.id,
-          manuscript.publishedArtifacts,
-          null,
-        ),
-      ),
-    )
-
-  manuscript.reviews
-    .sort((a, b) => a.created - b.created)
+    .sort((a, b) => b.created - a.created)
     .filter(r => !r.isDecision)
     .forEach(r =>
       result.push(
@@ -159,6 +143,22 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
           r.id,
           manuscript.publishedArtifacts,
           r.updated,
+        ),
+      ),
+    )
+
+  manuscript.reviews
+    .filter(r => r.isDecision)
+    .forEach(r =>
+      result.push(
+        ...getPublishableFieldsForObject(
+          manuscript.formFieldsToPublish.find(ff => ff.objectId === r.id),
+          r.jsonData,
+          forms.decisionForm,
+          threadedDiscussions,
+          r.id,
+          manuscript.publishedArtifacts,
+          null,
         ),
       ),
     )

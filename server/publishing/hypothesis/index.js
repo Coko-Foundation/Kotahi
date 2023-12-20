@@ -88,12 +88,22 @@ const publishToHypothesis = async manuscript => {
 
   if (activeConfig.formData.publishing.hypothesis.reverseFieldOrder)
     fields.reverse()
-  // Some fields have dates (e.g. review fields; ThreadedDiscussion comments) and should be published in date order.
-  const datedFields = fields.filter(f => f.date).sort((a, b) => a.date - b.date)
-  const fieldsWithoutDates = fields.filter(f => !f.date)
-  const orderedFields = datedFields.concat(fieldsWithoutDates)
 
-  for (const f of orderedFields) {
+  // Some fields have dates (e.g. review fields; ThreadedDiscussion comments) and should be published in date order.
+  const threadedDiscussionFields = fields
+    .filter(f => f.field.component === 'ThreadedDiscussion')
+    .sort((a, b) => a.date - b.date)
+
+  const fieldsWithoutThreadedDiscussion = fields.filter(
+    f => f.field.component !== 'ThreadedDiscussion',
+  )
+
+  const fieldsToPublish = [
+    ...fieldsWithoutThreadedDiscussion,
+    ...threadedDiscussionFields,
+  ]
+
+  for (const f of fieldsToPublish) {
     const artifact = {
       title: `${f.publishingTag || f.fieldTitle}: ${title}`,
       // Using a template for content means it's an invariant identifier.
