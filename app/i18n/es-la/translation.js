@@ -22,6 +22,8 @@ const esLa = {
       unanswered: 'Sin Respuesta',
     },
     common: {
+      cms: 'CMS',
+      pdf: 'PDF',
       OK: 'OK',
       Cancel: 'Cancelar',
       Yes: 'Sí',
@@ -99,6 +101,7 @@ const esLa = {
       Pages: 'Páginas',
       Layout: 'Diseño',
       'Go to your profile': 'Ir a tu perfil',
+      Article: 'Plantilla de Artículo',
     },
 
     profilePage: {
@@ -286,6 +289,9 @@ const esLa = {
         'No hay revisiones colaborativas disponibles para este manuscrito todavía',
     },
     cmsPage: {
+      article: {
+        title: 'Plantilla de Artículo',
+      },
       pages: {
         addNew: 'Agregar una nueva página',
         'New Page': 'Nueva Página',
@@ -349,6 +355,8 @@ const esLa = {
     },
     dragndrop: {
       'Drag and drop your files here': 'Arrastra y suelta tus archivos aquí',
+      'Drag and drop files': 'Arrastra y suelta tus archivos {{fileType}} aquí',
+      'Drag and drop other files here': 'Arrastra y suelta otros archivos aquí',
       'Your file has been uploaded': 'Tu archivo ha sido cargado.',
       Remove: 'Eliminar',
     },
@@ -356,6 +364,11 @@ const esLa = {
       Production: 'Producción',
       'No supported view of the file': 'No hay una vista admitida del archivo',
       Download: 'Descargar',
+      Editor: 'Editor',
+      'PDF CSS': 'CSS del PDF',
+      'PDF template': 'Plantilla PDF',
+      'PDF assets': 'Recursos del PDF',
+      'PDF metadata': 'Metadatos del PDF',
     },
     invitationResults: {
       author: 'autor',

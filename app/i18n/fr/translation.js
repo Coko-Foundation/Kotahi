@@ -21,6 +21,8 @@ const fr = {
       unanswered: 'Sans réponse',
     },
     common: {
+      cms: 'CMS',
+      pdf: 'PDF',
       OK: 'Ok',
       Cancel: 'Annuler',
       Yes: 'Oui',
@@ -97,6 +99,7 @@ const fr = {
       CMS: 'CMS',
       Pages: 'Pages',
       Layout: 'Mise en page',
+      Article: "Modèle d' Article",
       'Go to your profile': 'Accéder à votre profil',
     },
 
@@ -285,6 +288,9 @@ const fr = {
         "Aucune évaluation collaborative n'est disponible pour ce manuscrit pour le moment",
     },
     cmsPage: {
+      article: {
+        title: "Modèle d' Article",
+      },
       pages: {
         addNew: 'Ajouter une nouvelle page',
         'New Page': 'Nouvelle Page',
@@ -348,6 +354,8 @@ const fr = {
     },
     dragndrop: {
       'Drag and drop your files here': 'Glissez et déposez vos fichiers ici',
+      'Drag and drop files': 'Glissez-déposez les fichiers {{fileType}} ici',
+      'Drag and drop other files here': "Glissez-déposez d'autres fichiers ici",
       'Your file has been uploaded': 'Votre fichier a été téléchargé.',
       Remove: 'Retirer',
     },
@@ -355,6 +363,11 @@ const fr = {
       Production: 'Production',
       'No supported view of the file': 'Aucune vue supportée du fichier',
       Download: 'Télécharger',
+      Editor: 'Éditeur',
+      'PDF CSS': 'CSS du PDF',
+      'PDF template': 'Modèle PDF',
+      'PDF assets': 'Ressources PDF',
+      'PDF metadata': 'Métadonnées du PDF',
     },
     invitationResults: {
       author: 'auteur',

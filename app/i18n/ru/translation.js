@@ -21,6 +21,8 @@ const ru = {
       unanswered: 'Без ответа',
     },
     common: {
+      cms: 'CMS',
+      pdf: 'PDF',
       Ok: 'OK',
       Cancel: 'Отменить',
       Yes: 'Да',
@@ -99,6 +101,7 @@ const ru = {
       CMS: 'Система управления контентом',
       Pages: 'Страницы',
       Layout: 'Макет',
+      Article: 'Шаблон Статьи',
       'Go to your profile': 'Перейти в ваш профиль',
     },
     profilePage: {
@@ -287,6 +290,9 @@ const ru = {
         'Нет доступных совместных обзоров для этого рукописи на данный момент',
     },
     cmsPage: {
+      article: {
+        title: 'Шаблон Статьи',
+      },
       pages: {
         addNew: 'Добавить новую страницу',
         'New Page': 'Новая страница',
@@ -350,6 +356,8 @@ const ru = {
     },
     dragndrop: {
       'Drag and drop your files here': 'Перетащите файлы сюда',
+      'Drag and drop files': 'Перетащите сюда файлы {{fileType}}',
+      'Drag and drop other files here': 'Перетащите сюда другие файлы',
       'Your file has been uploaded': 'Ваши файлы были загружены',
       Remove: 'Удалить',
     },
@@ -358,6 +366,11 @@ const ru = {
       'No supported view of the file':
         'Нет поддерживаемого представления файла',
       Download: 'Загрузить',
+      Editor: 'Редактор',
+      'PDF CSS': 'CSS для PDF',
+      'PDF template': 'Шаблон PDF',
+      'PDF assets': 'Ресурсы PDF',
+      'PDF metadata': 'Метаданные PDF',
     },
     invitationResults: {
       author: 'автор',

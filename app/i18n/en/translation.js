@@ -21,6 +21,8 @@ const en = {
       unanswered: 'Unanswered',
     },
     common: {
+      cms: 'CMS',
+      pdf: 'PDF',
       OK: 'OK',
       Cancel: 'Cancel',
       Yes: 'Yes',
@@ -97,6 +99,7 @@ const en = {
       CMS: 'CMS',
       Pages: 'Pages',
       Layout: 'Layout',
+      Article: 'Article Template',
       'Go to your profile': 'Go to your profile',
     },
 
@@ -280,6 +283,9 @@ const en = {
         'No collaborative reviews are available for this manuscript yet',
     },
     cmsPage: {
+      article: {
+        title: 'Article Template',
+      },
       pages: {
         addNew: 'Add a new page',
         'New Page': 'New Page',
@@ -343,6 +349,8 @@ const en = {
     },
     dragndrop: {
       'Drag and drop your files here': 'Drag and drop your files here',
+      'Drag and drop files': 'Drag and drop {{fileType}} files here',
+      'Drag and drop other files here': 'Drag and drop other files here',
       'Your file has been uploaded': 'Your file has been uploaded.',
       Remove: 'Remove',
     },
@@ -350,6 +358,11 @@ const en = {
       Production: 'Production',
       'No supported view of the file': 'No supported view of the file',
       Download: 'Download',
+      Editor: 'Editor',
+      'PDF CSS': 'PDF CSS',
+      'PDF template': 'PDF template',
+      'PDF assets': 'PDF assets',
+      'PDF metadata': 'PDF metadata',
     },
     invitationResults: {
       author: 'author',

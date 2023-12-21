@@ -14,6 +14,7 @@ const typeDefs = `
     deleteFile(id: ID!): ID
     deleteFiles(ids: [ID!]!): [ID]!
     updateFile(input: UpdateFileInput!): File!
+    updateTagsFile(input: UpdateTagsFileInput!): File!
   }
 
   input EntityFilesInput {
@@ -42,6 +43,12 @@ const typeDefs = `
     id: ID!
     name: String
     alt: String
+  }
+
+  input UpdateTagsFileInput {
+    id: ID!
+    removeTags: [String!]
+    addTags: [String!]
   }
 
   type File {

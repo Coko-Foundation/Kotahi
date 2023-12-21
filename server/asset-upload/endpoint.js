@@ -35,16 +35,37 @@ module.exports = app => {
     authBearer,
     upload.array('files'),
     async (req, res, next) => {
+      const tags = ['templateGroupAsset']
+
+      if (req.body.isCms === 'true') tags.push('isCms')
+      if (req.body.isPdf === 'true') tags.push('isPdf')
+
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < req.files.length; i++) {
-        await createFile(
+        const insertedFile = await createFile(
           fs.createReadStream(`${req.files[i].path}`),
           req.files[i].originalname,
           null,
           null,
-          ['templateGroupAsset'],
+          tags,
           req.body.groupTemplateId,
         )
+
+        if (req.body.fileType === 'javascript' || req.body.fileType === 'css') {
+          const file = await File.query().findOne({ id: insertedFile.id })
+
+          if (file.storedObjects) {
+            const storedObjects = file.storedObjects.map(storedObject => {
+              // eslint-disable-next-line no-param-reassign
+              storedObject.mimetype = `text/${req.body.fileType}`
+              return storedObject
+            })
+
+            await File.query().patchAndFetchById(insertedFile.id, {
+              storedObjects,
+            })
+          }
+        }
       }
 
       return res.send(
