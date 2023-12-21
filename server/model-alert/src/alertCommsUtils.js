@@ -16,33 +16,35 @@ const sendAlerts = async () => {
     )
     .withGraphJoined('user')
 
-  channelMembers.forEach(async channelMember => {
-    // Check if notification preference is true for the user
-    if (!channelMember.user.eventNotificationsOptIn) {
-      return
-    }
+  await Promise.all(
+    channelMembers.map(async channelMember => {
+      // Check if notification preference is true for the user
+      if (!channelMember.user.eventNotificationsOptIn) {
+        return
+      }
 
-    // check if there are messages in the channel that have a larger timestamp than channelMemberlastviewed
-    const earliestUnreadMessage = await models.Message.query()
-      .where({ channelId: channelMember.channelId })
-      .where('created', '>', channelMember.lastViewed)
-      .orderBy('created')
-      .first()
+      // check if there are messages in the channel that have a larger timestamp than channelMemberlastviewed
+      const earliestUnreadMessage = await models.Message.query()
+        .where({ channelId: channelMember.channelId })
+        .where('created', '>', channelMember.lastViewed)
+        .orderBy('created')
+        .first()
 
-    if (!earliestUnreadMessage) {
-      return
-    }
+      if (!earliestUnreadMessage) {
+        return
+      }
 
-    // await sendAlertForMessage({
-    //   user: channelMember.user,
-    //   messageId: earliestUnreadMessage.id,
-    //   title: 'Unread messages in channel',
-    // })
+      await sendAlertForMessage({
+        user: channelMember.user,
+        messageId: earliestUnreadMessage.id,
+        title: 'Unread messages in channel',
+      })
 
-    await models.ChannelMember.query().updateAndFetchById(channelMember.id, {
-      lastAlertTriggeredTime: new Date(),
-    })
-  })
+      await models.ChannelMember.query().updateAndFetchById(channelMember.id, {
+        lastAlertTriggeredTime: new Date(),
+      })
+    }),
+  )
 }
 
 const sendAlertForMessage = async ({
@@ -106,7 +108,7 @@ const sendAlertForMessage = async ({
   } else {
     // eslint-disable-next-line no-console
     console.info(
-      'No email template is configured for notifying of unread message. Skipping sendig email.',
+      'No email template is configured for notifying of unread message. Skipping sending email.',
     )
   }
 

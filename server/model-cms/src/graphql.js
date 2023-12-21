@@ -216,7 +216,7 @@ const resolvers = {
         .for(parent.id)
         .first()
 
-      const updatedStoredObjects = setFileUrls(logoFile.storedObjects)
+      const updatedStoredObjects = await setFileUrls(logoFile.storedObjects)
 
       logoFile.storedObjects = updatedStoredObjects
       return logoFile
@@ -243,7 +243,7 @@ const resolvers = {
     async file(parent) {
       try {
         const file = await File.find(parent.id)
-        const updatedStoredObjects = setFileUrls(file.storedObjects)
+        const updatedStoredObjects = await setFileUrls(file.storedObjects)
         file.storedObjects = updatedStoredObjects
         return file
       } catch (err) {

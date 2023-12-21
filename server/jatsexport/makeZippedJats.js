@@ -159,10 +159,12 @@ const makeZipFile = async (manuscriptId, jats) => {
 
     if (svgList.length) {
       // go through the list of SVGs, make files from them in the images directory
-      svgList.forEach(async svg => {
-        await fsPromised.appendFile(`${imageDirName}/${svg.name}`, svg.svg)
-        console.error(`Attached formual ${svg.name}`)
-      })
+      await Promise.all(
+        svgList.map(async svg => {
+          await fsPromised.appendFile(`${imageDirName}/${svg.name}`, svg.svg)
+          console.error(`Attached formual ${svg.name}`)
+        }),
+      )
     }
   }
 

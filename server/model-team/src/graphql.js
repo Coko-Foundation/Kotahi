@@ -34,18 +34,20 @@ const resolvers = {
         eager: '[members.[user.teams, alias]]',
       }
 
-      input.members.forEach(async member => {
-        await addUserToManuscriptChatChannel({
-          manuscriptId: input.objectId,
-          userId: member.user.id,
-          type: 'all',
-        })
-        await addUserToManuscriptChatChannel({
-          manuscriptId: input.objectId,
-          userId: member.user.id,
-          type: 'editorial',
-        })
-      })
+      await Promise.all(
+        input.members.map(async member => {
+          await addUserToManuscriptChatChannel({
+            manuscriptId: input.objectId,
+            userId: member.user.id,
+            type: 'all',
+          })
+          await addUserToManuscriptChatChannel({
+            manuscriptId: input.objectId,
+            userId: member.user.id,
+            type: 'editorial',
+          })
+        }),
+      )
 
       return models.Team.query().insertGraphAndFetch(input, options)
     },
@@ -80,47 +82,51 @@ const resolvers = {
           objectId,
         )
 
-        membersRemoved.forEach(async userId => {
-          // Check if the user has any messages in the channels before removing them from the channelMember
-          const hasPostedToChannel = await models.Message.query()
-            .where({ userId })
-            .whereIn(
-              'channelId',
-              channels.map(channel => channel.id),
-            )
-            .first()
+        await Promise.all(
+          membersRemoved.map(async userId => {
+            // Check if the user has any messages in the channels before removing them from the channelMember
+            const hasPostedToChannel = await models.Message.query()
+              .where({ userId })
+              .whereIn(
+                'channelId',
+                channels.map(channel => channel.id),
+              )
+              .first()
 
-          if (!hasPostedToChannel) {
-            await removeUserFromManuscriptChatChannel({
+            if (!hasPostedToChannel) {
+              await removeUserFromManuscriptChatChannel({
+                manuscriptId: objectId,
+                userId,
+                type: 'all',
+              })
+              await removeUserFromManuscriptChatChannel({
+                manuscriptId: objectId,
+                userId,
+                type: 'editorial',
+              })
+              const pathStrings = channels.map(channel => `chat/${channel.id}`)
+              await models.NotificationDigest.query()
+                .delete()
+                .where({ user_id: userId })
+                .whereIn('path_string', pathStrings)
+            }
+          }),
+        )
+
+        await Promise.all(
+          input.members.map(async member => {
+            await addUserToManuscriptChatChannel({
               manuscriptId: objectId,
-              userId,
+              userId: member.user.id,
               type: 'all',
             })
-            await removeUserFromManuscriptChatChannel({
+            await addUserToManuscriptChatChannel({
               manuscriptId: objectId,
-              userId,
+              userId: member.user.id,
               type: 'editorial',
             })
-            const pathStrings = channels.map(channel => `chat/${channel.id}`)
-            await models.NotificationDigest.query()
-              .delete()
-              .where({ user_id: userId })
-              .whereIn('path_string', pathStrings)
-          }
-        })
-
-        input.members.forEach(async member => {
-          await addUserToManuscriptChatChannel({
-            manuscriptId: objectId,
-            userId: member.user.id,
-            type: 'all',
-          })
-          await addUserToManuscriptChatChannel({
-            manuscriptId: objectId,
-            userId: member.user.id,
-            type: 'editorial',
-          })
-        })
+          }),
+        )
       }
 
       return models.Team.query().upsertGraphAndFetch(

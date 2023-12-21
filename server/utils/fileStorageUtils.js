@@ -161,14 +161,15 @@ const getFileWithUrl = async file => {
 }
 
 /* Set Url for file */
-const setFileUrls = storedObjects => {
-  const updatedStoredObjects = []
-  /* eslint-disable no-await-in-loop */
-  Object.keys(storedObjects).forEach(async key => {
-    const storedObject = storedObjects[key]
-    storedObject.url = await fileStorage.getURL(storedObject.key)
-    updatedStoredObjects.push(storedObject)
-  })
+const setFileUrls = async storedObjects => {
+  const updatedStoredObjects = await Promise.all(
+    Object.keys(storedObjects).map(async key => {
+      const storedObject = storedObjects[key]
+      storedObject.url = await fileStorage.getURL(storedObject.key)
+      return storedObject
+    }),
+  )
+
   return updatedStoredObjects
 }
 
