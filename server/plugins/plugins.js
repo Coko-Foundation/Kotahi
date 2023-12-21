@@ -1,4 +1,4 @@
-/* eslint-disable global-require, no-console, import/no-dynamic-require, no-await-in-loop, no-continue */
+/* eslint-disable global-require, no-console, import/no-dynamic-require */
 const models = require('@pubsweet/models')
 const { getBroker } = require('./broker')
 // const { }

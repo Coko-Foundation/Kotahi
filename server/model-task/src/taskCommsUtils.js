@@ -330,7 +330,7 @@ const sendNotification = async n => {
 
   const { manuscript } = n.task
 
-  // eslint-disable-next-line no-await-in-loop
+  // eslint-disable-next-line
   const editor = await manuscript.getManuscriptEditor()
   const currentUser = editor ? editor.username : ''
 

@@ -15,7 +15,7 @@ const getFile = async (config, fieldName) => {
     const { groupIdentity } = JSON.parse(config.formData)
     const file = await File.find(groupIdentity[fieldName])
 
-    const updatedStoredObjects = setFileUrls(file.storedObjects)
+    const updatedStoredObjects = await setFileUrls(file.storedObjects)
 
     file.storedObjects = updatedStoredObjects
     return file
