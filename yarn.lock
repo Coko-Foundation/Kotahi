@@ -1888,10 +1888,10 @@
     stylelint-order "^4.1.0"
     stylelint-processor-styled-components "^1.10.0"
 
-"@coko/server@2.5.2":
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.5.2.tgz#f9e356cf0bb316033f33d28eacf8160fdbfe53a8"
-  integrity sha512-FYPnhC9Ob/wBXGNXGJnCvfyrOLjfAoju1Wx6vMpzXnWbb2BJUj8VOF356laOtblBs9wY1Nck1+BCzTOcCf2QEA==
+"@coko/server@2.5.3":
+  version "2.5.3"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.5.3.tgz#263243fc7d96c36892b7b558d1c0939c19754ecb"
+  integrity sha512-h393zdjdaHh/ItCZf0kJr/s9JSrrOrBCAluOPv7ewTocOe2rM3+1PSf5gX9m8cPI2cCyZDqZ4I0J673seszq5A==
   dependencies:
     "@pubsweet/base-model" "^4.0.10"
     "@pubsweet/component-send-email" "^0.4.13"

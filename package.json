@@ -61,7 +61,7 @@
     "@babel/core": "7.11.6",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
-    "@coko/server": "2.5.2",
+    "@coko/server": "2.5.3",
     "@fontsource/roboto": "^4.5.8",
     "@pubsweet/db-manager": "^3.1.24",
     "@pubsweet/errors": "^2.0.40",
