@@ -7,20 +7,17 @@ import { useTranslation } from 'react-i18next'
 import CodeMirror from '@uiw/react-codemirror'
 import { html } from '@codemirror/lang-html'
 import { css } from '@codemirror/lang-css'
-import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
-import { DownloadDropdown } from './DownloadDropdown'
+
 import {
   Heading,
   HeadingWithAction,
   HiddenTabs,
   Manuscript,
   ErrorBoundary,
-  SectionContent,
-  Spinner,
 } from '../../../shared'
-import { Info } from './styles'
-import { ControlsContainer } from '../../../component-manuscripts/src/style'
-import UploadAsset from './uploadManager/UploadAsset'
+
+import { FormActionButton } from '../style'
+import UploadAsset from '../../../component-production/src/components/uploadManager/UploadAsset'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 import { color } from '../../../../theme'
 
@@ -52,27 +49,15 @@ const ScrollableTabContent = styled.section`
   width: calc(100vw - 232px);
 `
 
-const Production = ({
-  client,
-  file,
+const Article = ({
   articleTemplate,
   displayShortIdAsIdentifier,
   form,
+  onPublish,
   manuscript,
-  currentUser,
-  makePdf,
-  makeJats,
-  updateManuscript,
+  submitButtonText,
   updateTemplate,
-  onAssetManager,
 }) => {
-  const debouncedSave = useCallback(
-    debounce(source => {
-      updateManuscript(manuscript.id, { meta: { source } })
-    }, 2000),
-    [],
-  )
-
   const [cssValue, setCssValue] = useState(articleTemplate.css)
 
   const [htmlValue, setHtmlValue] = useState(articleTemplate.article)
@@ -95,45 +80,27 @@ const Production = ({
     [],
   )
 
-  useEffect(() => {
-    debouncedSave.flush()
-    onChangeCss.flush()
-    onChangeHtml.flush()
-  }, [])
+  useEffect(
+    () => () => {
+      onChangeCss.flush()
+      onChangeHtml.flush()
+    },
+    [],
+  )
 
   const { t } = useTranslation()
 
-  const editorSection = {
-    content:
-      // eslint-disable-next-line no-nested-ternary
-      file &&
-      file.storedObjects[0].mimetype ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-        manuscript ? (
-          <ProductionWaxEditor
-            // onBlur={source => {
-            //   updateManuscript(manuscript.id, { meta: { source } })
-            // }}
-            client={client}
-            manuscriptId={manuscript.id}
-            onAssetManager={onAssetManager}
-            saveSource={debouncedSave}
-            user={currentUser}
-            value={manuscript.meta.source}
-          />
-        ) : (
-          <Spinner />
-        )
-      ) : (
-        <SectionContent>
-          <Info>{t('productionPage.No supported view of the file')}</Info>
-        </SectionContent>
-      ),
-    key: 'editor',
-    label: t('productionPage.Editor'),
+  const onCopyAsImage = file => {
+    return () => {
+      const imageTag = `<img data-name="${file.name}" data-id="${file.id}" src="${file.storedObjects[0].url}" alt="${file.name}" />`
+
+      const copiedStr = `{{ '${imageTag}' | imagesHandler(article.shortId, 'articles', config.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}`
+
+      return navigator.clipboard.writeText(copiedStr)
+    }
   }
 
-  const cssPagedJS = {
+  const cssArticle = {
     content: (
       <ScrollableTabContent>
         <CodeMirror
@@ -143,8 +110,8 @@ const Production = ({
         />
       </ScrollableTabContent>
     ),
-    key: 'cssPagedJs',
-    label: t('productionPage.PDF CSS'),
+    key: 'article-css',
+    label: 'Article Css',
   }
 
   const htmlTemplate = {
@@ -157,8 +124,8 @@ const Production = ({
         />
       </ScrollableTabContent>
     ),
-    key: 'html-template',
-    label: t('productionPage.PDF template'),
+    key: 'article-template',
+    label: 'Article Template',
   }
 
   const uploadAssets = {
@@ -167,12 +134,13 @@ const Production = ({
         <UploadAsset
           files={articleTemplate.files}
           groupTemplateId={articleTemplate.groupId}
-          tag="isPdf"
+          onCopyAsImage={onCopyAsImage}
+          tag="isCms"
         />
       </ScrollableTabContent>
     ),
     key: 'template-assets',
-    label: t('productionPage.PDF assets'),
+    label: 'Template Assets',
   }
 
   const manuscriptMetadata = {
@@ -183,8 +151,8 @@ const Production = ({
             copyHandleBarsCode
             displayShortIdAsIdentifier={displayShortIdAsIdentifier}
             form={form}
-            formData={manuscript}
-            manuscript={manuscript}
+            formData={{}}
+            manuscript={{}}
             // threadedDiscussionProps={threadedDiscussionExtendedProps}
             showEditorOnlyFields
           />
@@ -192,38 +160,34 @@ const Production = ({
       </ScrollableTabContent>
     ),
     key: 'manuscript-metadata',
-    label: t('productionPage.PDF metadata'),
+    label: 'Article Metadata',
   }
 
   return (
-    <StyledManuscript>
-      <HeadingWithAction>
-        <FlexRow>
-          <Heading>{t('productionPage.Production')}</Heading>
-          <ControlsContainer>
-            <DownloadDropdown
-              makeJats={makeJats}
-              makePdf={makePdf}
-              manuscriptId={manuscript.id}
-              manuscriptSource={manuscript.meta.source}
-            />
-          </ControlsContainer>
-        </FlexRow>
-      </HeadingWithAction>
-      <ErrorBoundary>
-        <HiddenTabs
-          defaultActiveKey="editor"
-          sections={[
-            editorSection,
-            htmlTemplate,
-            cssPagedJS,
-            uploadAssets,
-            manuscriptMetadata,
-          ]}
-        />
-      </ErrorBoundary>
-    </StyledManuscript>
+    <div>
+      <StyledManuscript>
+        <HeadingWithAction>
+          <FlexRow>
+            <Heading>{t('cmsPage.article.title')}</Heading>
+            <FormActionButton onClick={onPublish} primary type="button">
+              {submitButtonText}
+            </FormActionButton>
+          </FlexRow>
+        </HeadingWithAction>
+        <ErrorBoundary>
+          <HiddenTabs
+            defaultActiveKey="article-template"
+            sections={[
+              cssArticle,
+              htmlTemplate,
+              uploadAssets,
+              manuscriptMetadata,
+            ]}
+          />
+        </ErrorBoundary>
+      </StyledManuscript>
+    </div>
   )
 }
 
-export default withRouter(Production)
+export default withRouter(Article)

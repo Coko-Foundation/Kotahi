@@ -131,6 +131,7 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
   // Seed Group Templates and link it to the created group
   const existingArticleTemplate = await ArticleTemplate.query().where({
     groupId: group.id,
+    isCms: false,
   })
 
   if (existingArticleTemplate.length === 0) {
@@ -157,6 +158,7 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
       article: articleTemplate,
       css: cssTemplate,
       groupId: group.id,
+      isCms: false,
     })
 
     console.log(`Added default group template for "${group.name}".`)
@@ -164,6 +166,21 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
     console.log(
       `    ${existingArticleTemplate.length} group templates already exists in database for "${group.name}". Skipping.`,
     )
+  }
+
+  // Seed Group Templates and link it to the created group for cms
+  const existingCmsArticleTemplate = await ArticleTemplate.query().where({
+    groupId: group.id,
+    isCms: true,
+  })
+
+  if (existingCmsArticleTemplate.length === 0) {
+    await ArticleTemplate.query().insertGraph({
+      article: '',
+      css: '',
+      groupId: group.id,
+      isCms: true,
+    })
   }
 
   // Seed email templates and link it to the created group

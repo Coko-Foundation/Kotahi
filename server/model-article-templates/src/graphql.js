@@ -4,9 +4,9 @@ const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 
 const resolvers = {
   Query: {
-    articleTemplate: async (_, { groupId }) => {
+    articleTemplate: async (_, { groupId, isCms = false }) => {
       return models.ArticleTemplate.query()
-        .findOne({ groupId })
+        .findOne({ groupId, isCms })
         .throwIfNotFound()
     },
   },
@@ -20,9 +20,7 @@ const resolvers = {
   ArticleTemplate: {
     async files(articleTemplate) {
       return getFilesWithUrl(
-        await models.ArticleTemplate.relatedQuery('files').for(
-          articleTemplate.id,
-        ),
+        await models.File.query().where({ objectId: articleTemplate.groupId }),
       )
     },
   },
@@ -30,7 +28,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Query {
-    articleTemplate(groupId: ID!): ArticleTemplate!
+    articleTemplate(groupId: ID!, isCms: Boolean!): ArticleTemplate!
   }
 
   extend type Mutation {

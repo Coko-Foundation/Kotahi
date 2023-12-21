@@ -15,6 +15,8 @@ const {
   File,
 } = require('@coko/server')
 
+const { uniq } = require('lodash')
+
 const {
   getFileWithUrl,
   getFilesWithUrl,
@@ -227,6 +229,26 @@ const resolvers = {
       pubsub.publish(FILE_UPDATED, {
         fileUpdated: updatedFile,
       })
+      return updatedFile
+    },
+    async updateTagsFile(_, { input }, ctx) {
+      const { removeTags, addTags, id } = input
+
+      const file = await File.query().findById(id)
+      let updatedTags = file.tags
+
+      if (removeTags) {
+        updatedTags = updatedTags.filter(tag => !removeTags.includes(tag))
+      }
+
+      if (addTags) {
+        updatedTags = uniq(updatedTags.concat(addTags))
+      }
+
+      const updatedFile = await File.query().patchAndFetchById(id, {
+        tags: updatedTags,
+      })
+
       return updatedFile
     },
   },

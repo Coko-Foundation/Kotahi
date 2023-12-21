@@ -241,6 +241,24 @@ const resolvers = {
         licenseUrl: formData.publishing.crossref.licenseUrl,
       })
     },
+
+    async article(parent) {
+      const { article } = await models.ArticleTemplate.query().findOne({
+        groupId: parent.groupId,
+        isCms: true,
+      })
+
+      return article
+    },
+
+    async css(parent) {
+      const { css } = await models.ArticleTemplate.query().findOne({
+        groupId: parent.groupId,
+        isCms: true,
+      })
+
+      return css
+    },
   },
 
   StoredPartner: {
@@ -323,6 +341,8 @@ const typeDefs = `
     flaxHeaderConfig: [FlaxPageHeaderConfig!]
     flaxFooterConfig: [FlaxPageFooterConfig!]
     publishConfig: String!
+    article: String!
+    css: String!
   }
 
   type FlaxPageHeaderConfig {

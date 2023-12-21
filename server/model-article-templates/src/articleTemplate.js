@@ -43,6 +43,7 @@ class ArticleTemplate extends BaseModel {
         article: { type: ['string', 'null'] },
         css: { type: ['string', 'null'] },
         groupId: { type: ['string', 'null'], format: 'uuid' },
+        isCms: { type: 'boolean' },
       },
     }
   }
