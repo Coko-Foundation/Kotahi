@@ -269,7 +269,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const channels = [
     {
       id: editorialChannelId,
-      name: t('chat.Discussion with editorial team'),
+      name: t('chat.Discussion with curatorial team'),
       type: 'editorial',
     },
   ]

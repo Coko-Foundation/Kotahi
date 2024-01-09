@@ -68,9 +68,9 @@ const en = {
       },
       teams: {
         assign: 'Assign {{teamLabel}}...',
-        'Senior Editor': 'Senior Editor',
+        'Senior Editor': 'Advisory Curator',
         'Handling Editor': 'Handling Editor',
-        Editor: 'Editor',
+        Editor: 'Handling Curator',
       },
       kanban: {
         'Last updated': 'Last updated',
@@ -169,7 +169,7 @@ const en = {
       'New Alerts': 'New Alerts',
       'My Submissions': 'My Submissions',
       'To Review': 'To Review',
-      "Manuscripts I'm Editor of": 'Manuscripts I’m Editor of',
+      "Manuscripts I'm Curator of": 'Manuscripts I’m Curator of',
       mySubmissions: {
         'My Submissions': 'My Submissions',
       },
@@ -177,7 +177,7 @@ const en = {
         'To Review': 'To Review',
       },
       edit: {
-        "Manuscripts I'm editor of": 'Manuscripts I’m editor of',
+        "Manuscripts I'm curator of": 'Manuscripts I’m curator of',
       },
     },
     reviewPage: {
@@ -709,12 +709,12 @@ const en = {
       'Group Manager discussion': 'Group Manager discussion',
       'Show admin discussion': 'Show admin discussion',
       'Show group manager discussion': 'Show group manager discussion',
-      'Discussion with editorial team': 'Discussion with editorial team',
-      'Discussion with editor': 'Discussion with editor',
+      'Discussion with curatorial team': 'Discussion with curatorial team',
+      'Discussion with curator': 'Discussion with curator',
       'Show Chat': 'Show Chat',
       'Hide Chat': 'Hide Chat',
       'Discussion with author': 'Discussion with author',
-      'Editorial discussion': 'Editorial discussion',
+      'Curatorial discussion': 'Curatorial discussion',
       edit: 'Edit',
       delete: 'Delete',
       Edited: 'Edited',
@@ -735,7 +735,7 @@ const en = {
         'Registered Users': 'Registered Users',
         userRoles: {
           Reviewer: 'Reviewer',
-          Editor: 'Editor',
+          Editor: 'Curator',
           Author: 'Author',
         },
       },

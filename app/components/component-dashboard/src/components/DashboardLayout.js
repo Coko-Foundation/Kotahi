@@ -63,7 +63,7 @@ const DashboardLayout = ({
   if (config.dashboard?.showSections?.includes('editor'))
     dashboardPages.push({
       href: '/dashboard/edits',
-      label: t("dashboardPage.Manuscripts I'm Editor of"),
+      label: t("dashboardPage.Manuscripts I'm Curator of"),
     })
 
   return (
