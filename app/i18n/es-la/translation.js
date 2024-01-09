@@ -67,9 +67,9 @@ const esLa = {
       },
       teams: {
         assign: 'Asignar {{teamLabel}}...',
-        'Senior Editor': 'Editor Senior',
+        'Senior Editor': 'Curador Asesor',
         'Handling Editor': 'Editor de Tratamiento',
-        Editor: 'Editor',
+        Editor: 'Curador de manejo',
       },
       kanban: {
         'Last updated': 'Última actualización',
@@ -168,7 +168,7 @@ const esLa = {
       'New Alerts': 'Nuevas Alertas',
       'My Submissions': 'Mis Presentaciones',
       'To Review': 'Para Revisión',
-      "Manuscripts I'm Editor of": 'Manuscritos en los que soy Editor',
+      "Manuscripts I'm Curator of": 'Manuscritos soy curador de',
       mySubmissions: {
         'My Submissions': 'Mis Presentaciones',
       },
@@ -176,7 +176,7 @@ const esLa = {
         'To Review': 'Para Revisión',
       },
       edit: {
-        "Manuscripts I'm editor of": 'Manuscritos en los que soy editor',
+        "Manuscripts I'm curator of": 'Manuscritos soy curador de',
       },
     },
     reviewPage: {
@@ -714,12 +714,12 @@ const esLa = {
       'Group Manager discussion': 'Discusión de Gerente de Grupo',
       'Show admin discussion': 'Mostrar discusión de Administrador',
       'Show group manager discussion': 'Mostrar discusión de Gerente de Grupo',
-      'Discussion with editorial team': 'Discusión con el equipo editorial',
+      'Discussion with curatorial team': 'Discusión con el equipo curatorial',
       'Discussion with editor': 'Discusión con el editor',
       'Show Chat': 'Mostrar Chat',
       'Hide Chat': 'Ocultar Chat',
       'Discussion with author': 'Discusión con el autor',
-      'Editorial discussion': 'Discusión Editorial',
+      'Curatorial discussion': 'Discusión curatorial',
       edit: 'Editar',
       delete: 'Eliminar',
       Edited: 'Editado',
@@ -740,7 +740,7 @@ const esLa = {
         'Registered Users': 'Usuarios Registrados',
         userRoles: {
           Reviewer: 'Revisor',
-          Editor: 'Editor',
+          Editor: 'Curador',
           Author: 'Autor',
         },
       },

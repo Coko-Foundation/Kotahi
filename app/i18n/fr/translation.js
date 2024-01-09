@@ -66,9 +66,9 @@ const fr = {
       },
       teams: {
         assign: 'Attribuer à {{teamLabel}}...',
-        'Senior Editor': 'Éditeur en chef',
+        'Senior Editor': 'Conservateur-conseil',
         'Handling Editor': 'Éditeur responsable',
-        Editor: 'Éditeur',
+        Editor: 'Conservateur de manutention',
       },
       kanban: {
         'Last updated': 'Dernière mise à jour',
@@ -167,7 +167,7 @@ const fr = {
       'New Alerts': 'Nouvelles alertes',
       'My Submissions': 'Mes soumissions',
       'To Review': 'À réviser',
-      "Manuscripts I'm Editor of": 'Manuscrits dont je suis éditeur',
+      "Manuscripts I'm Curator of": 'Manuscrits dont je suis conservateur',
       mySubmissions: {
         'My Submissions': 'Mes soumissions',
       },
@@ -175,7 +175,7 @@ const fr = {
         'To Review': 'À réviser',
       },
       edit: {
-        "Manuscripts I'm editor of": 'Manuscrits dont je suis éditeur',
+        "Manuscripts I'm curator of": '',
       },
     },
     reviewPage: {
@@ -718,9 +718,10 @@ const fr = {
         'Afficher la discussion du gestionnaire de groupe',
       'Hide Chat': 'Masquer le chat',
       'Discussion with author': "Discussion avec l'auteur",
-      'Editorial discussion': 'Discussion éditoriale',
-      'Discussion with editorial team': "Discussion avec l'équipe éditoriale",
-      'Discussion with editor': "Discussion avec l'éditeur",
+      'Curatorial discussion': 'Discussion curatoriale',
+      'Discussion with curatorial team':
+        "Discussion avec l'équipe de conservation",
+      'Discussion with curator': 'Discussion avec le conservateur',
       'Show Chat': 'Afficher le chat',
       edit: 'Modifier',
       delete: 'Supprimer',
@@ -742,7 +743,7 @@ const fr = {
         'Registered Users': 'Utilisateurs enregistrés',
         userRoles: {
           Reviewer: 'Évaluateur',
-          Editor: 'Éditeur',
+          Editor: 'Conservateur',
           Author: 'Auteur',
         },
       },

@@ -67,9 +67,9 @@ const ru = {
       },
       teams: {
         assign: '{{teamLabel}}',
-        'Senior Editor': 'Главный редактор',
+        'Senior Editor': 'Консультативный куратор',
         'Handling Editor': 'Выпускающий редактор',
-        Editor: 'Литературный редактор',
+        Editor: 'Обращение с куратором',
       },
       kanban: {
         'Last updated': 'Последнее обновление',
@@ -169,7 +169,7 @@ const ru = {
       'New Alerts': 'Новые оповещения',
       'My Submissions': 'Мои статьи',
       'To Review': 'Статьи для рецензирования',
-      "Manuscripts I'm Editor of": 'Статьи для редактирования',
+      "Manuscripts I'm Curator of": 'Рукописи, куратором которых я являюсь',
       mySubmissions: {
         'My Submissions': 'Мои статьи',
       },
@@ -177,7 +177,7 @@ const ru = {
         'To Review': 'Статьи для рецензирования',
       },
       edit: {
-        "Manuscripts I'm editor of": 'Статьи для редактирования',
+        "Manuscripts I'm curator of": 'Рукописи, куратором которых я являюсь',
       },
     },
     reviewPage: {
@@ -714,9 +714,9 @@ const ru = {
       'Show group manager discussion': 'Показать обсуждение',
       'Hide Chat': 'Скрыть чат',
       'Discussion with author': 'Чат с Автором',
-      'Editorial discussion': 'Чат редакции',
-      'Discussion with editorial team': 'Обсуждение с редакцией',
-      'Discussion with editor': 'Обсуждение с редактором',
+      'Curatorial discussion': 'Кураторская дискуссия',
+      'Discussion with curatorial team': 'Обсуждение с кураторской командой',
+      'Discussion with curator': 'Обсуждение с куратором',
       'Show Chat': 'Показать чат',
       edit: 'Редактировать',
       delete: 'Удалить',
