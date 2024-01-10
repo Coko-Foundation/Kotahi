@@ -85,7 +85,7 @@ const getManuscriptById = async id => {
 
 const getGroupAssets = async groupId => {
   return models.ArticleTemplate.query()
-    .where({ groupId })
+    .where({ groupId, isCms: false })
     .withGraphFetched('[files]')
     .first()
 }
