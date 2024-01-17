@@ -63,7 +63,10 @@ const fieldNameMap = {
 }
 
 const getNewFieldName = (fieldName, instanceType) => {
-  if (instanceType === 'elife' && fieldName === 'submission.articleURL')
+  if (
+    (instanceType === 'preprint1' || instanceType === 'elife') && // 'elife' is the old name and should no longer be used, but checking for paranoia
+    fieldName === 'submission.articleURL'
+  )
     return 'submission.$doi'
   return fieldNameMap[fieldName] || fieldName
 }
