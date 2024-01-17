@@ -52,7 +52,7 @@ export const manuscriptWithTeams = {
       isDecision: true,
       isHiddenFromAuthor: null,
       isHiddenReviewerName: null,
-      canBePublishedPublicly: null,
+      canBePublishedPublicly: false,
       recommendation: 'accepted',
       user: {
         id: '1fe868b5-da3a-4d19-958f-2e73eb753ffd',

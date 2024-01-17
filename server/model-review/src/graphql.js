@@ -144,7 +144,7 @@ const typeDefs = `
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
-    canBePublishedPublicly: Boolean
+    canBePublishedPublicly: Boolean!
     jsonData: String
     userId: String
     files: [File]
