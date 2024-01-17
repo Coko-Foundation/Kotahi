@@ -45,7 +45,7 @@ class Review extends BaseModel {
         manuscriptId: { type: 'string', format: 'uuid' },
         userId: { type: ['string', null], format: 'uuid' },
         user: { type: ['object', 'null'] },
-        isDecision: { type: ['boolean', 'false'] },
+        isDecision: { type: 'boolean' },
         isHiddenFromAuthor: { type: 'boolean' },
         isHiddenReviewerName: { type: 'boolean' },
         canBePublishedPublicly: { type: 'boolean' },

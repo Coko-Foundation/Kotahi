@@ -561,7 +561,7 @@ const baseProps = {
         isDecision: false,
         isHiddenReviewerName: true,
         recommendation: 'revise',
-        canBePublishedPublicly: null,
+        canBePublishedPublicly: false,
         user: {
           __typename: 'User',
           id: '68963a51-f520-4f8d-9bfe-ada35d36eb6e',
@@ -1111,7 +1111,7 @@ const emptyFormProps = {
         isDecision: false,
         isHiddenReviewerName: true,
         recommendation: '',
-        canBePublishedPublicly: null,
+        canBePublishedPublicly: false,
         user: {
           __typename: 'User',
           id: '68963a51-f520-4f8d-9bfe-ada35d36eb6e',
