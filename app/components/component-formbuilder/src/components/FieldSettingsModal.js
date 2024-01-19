@@ -308,7 +308,6 @@ const FieldSettingsModal = ({
                             val.target ? val.target.value : val,
                           )
                         }}
-                        required={key === 'name' || key === 'title'}
                         {...{
                           ...value.props,
                           label: undefined,
