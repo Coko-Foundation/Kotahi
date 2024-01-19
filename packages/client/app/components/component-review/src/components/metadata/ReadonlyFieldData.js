@@ -118,7 +118,10 @@ const ReadonlyFieldData = ({
       ))
   }
 
-  if (data && fieldDefinition?.component === 'AbstractEditor')
+  if (
+    data &&
+    ['AbstractEditor', 'FullWaxField'].includes(fieldDefinition?.component)
+  )
     return <SimpleWaxEditor readonly value={data} />
 
   if (fieldDefinition?.options) {

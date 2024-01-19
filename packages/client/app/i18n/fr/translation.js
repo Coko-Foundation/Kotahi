@@ -1149,6 +1149,7 @@ const fr = {
         links: 'Liste de liens (URL)',
         verdict: 'Verdict',
         discussion: 'Discussion',
+        fullWax: 'Éditeur de texte complet',
       },
       typeOptions: {
         Select: 'Sélection',
