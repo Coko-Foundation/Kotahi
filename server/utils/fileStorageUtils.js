@@ -209,6 +209,44 @@ const replaceImageSrc = async (source, files, size) => {
   return $.html()
 }
 
+/** Replace file URLs in source html with regenerated URLs to files of specified size */
+const updateSrcUrl = async (source, files, size) => {
+  const $ = cheerio.load(source)
+
+  $('script[data-fileid], img[data-fileid], link[data-fileid]').each(
+    (i, elem) => {
+      const $elem = $(elem)
+      const fileId = $elem.attr('data-fileid')
+
+      const correspondingFile = find(files, { id: fileId })
+
+      if (correspondingFile) {
+        const { url } =
+          correspondingFile.storedObjects.find(
+            storedObject =>
+              storedObject.type === size &&
+              storedObject.mimetype.includes('image/'),
+          ) || correspondingFile.storedObjects[0]
+
+        if ($elem.is('script, img')) {
+          $elem.attr('src', url)
+        }
+
+        // Update the 'href' attribute for link tags
+        if ($elem.is('link')) {
+          $elem.attr('href', url)
+        }
+
+        if (correspondingFile.alt) {
+          $elem.attr('alt', correspondingFile.alt)
+        }
+      }
+    },
+  )
+
+  return $.html()
+}
+
 /** Replace file URLs in source html with regenerated URLs to files of specified size,
  * plus attributes data-low-def, data-standard-def and data-hi-def with URIs of other
  * sized files.
@@ -363,6 +401,7 @@ module.exports = {
   getFilesWithUrl,
   getFileWithUrl,
   replaceImageSrc,
+  updateSrcUrl,
   replaceImageSrcResponsive,
   uploadImage,
   imageFinder,

@@ -5,6 +5,7 @@ const nunjucks = require('nunjucks')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 const articleMetadata = require('./pdfTemplates/articleMetadata')
 const makeSvgsFromLatex = require('../jatsexport/makeSvgsFromLatex')
+const { updateSrcUrl } = require('../utils/fileStorageUtils')
 
 // const fixMathTags = html => {
 //   const $ = cheerio.load(html)
@@ -98,7 +99,11 @@ const applyTemplate = async (
   try {
     // if there is a group template use that
     if (groupData.article) {
-      template.tmplStr = groupData.article.toString()
+      template.tmplStr = await updateSrcUrl(
+        groupData.article.toString(),
+        groupData.files,
+        'full',
+      )
     } else {
       // If there is a user template, use that instead
       template = userTemplateEnv.getTemplate('article.njk')

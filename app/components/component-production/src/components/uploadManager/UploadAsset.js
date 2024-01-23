@@ -171,21 +171,21 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
   const onCopyAsScriptLink = file => {
     return () =>
       navigator.clipboard.writeText(
-        `<script data-name="${file.name}" data-id="${file.id}" src="${file.storedObjects[0].url}"></script>`,
+        `<script data-name="${file.name}" data-fileid="${file.id}" src="${file.storedObjects[0].url}"></script>`,
       )
   }
 
   const onCopyAsCssLink = file => {
     return () =>
       navigator.clipboard.writeText(
-        `<link data-name="${file.name}" data-id="${file.id}" rel="stylesheet" href="${file.storedObjects[0].url}" />`,
+        `<link data-name="${file.name}" data-fileid="${file.id}" rel="stylesheet" href="${file.storedObjects[0].url}" />`,
       )
   }
 
   const onCopyAsFont = file => {
     return () =>
       navigator.clipboard.writeText(
-        `<link data-name="${file.name}" data-id="${file.id}" rel="preload" as="font" href="${file.storedObjects[0].url}" />`,
+        `<link data-name="${file.name}" data-fileid="${file.id}" rel="preload" as="font" href="${file.storedObjects[0].url}" />`,
       )
   }
 
@@ -367,7 +367,7 @@ UploadAsset.defaultProps = {
   onCopyAsImage: file => {
     return () =>
       navigator.clipboard.writeText(
-        `<img data-name="${file.name}" data-id="${file.id}" src="${file.storedObjects[0].url}" />`,
+        `<img data-name="${file.name}" data-fileid="${file.id}" src="${file.storedObjects[0].url}" />`,
       )
   },
 }
