@@ -29,17 +29,20 @@ const resolvers = {
     },
     updateForm: async (_, { form }) => {
       const result = await Form.query().patchAndFetchById(form.id, form)
-      let purposeIndicatingActiveForm = form.category
-      if (form.category === 'submission') purposeIndicatingActiveForm = 'submit'
-      const thisFormIsActive = form.purpose === purposeIndicatingActiveForm
+      if (!result) throw new Error('Attempt to update non-existent form')
+
+      const purposeIndicatingActiveForm =
+        result.category === 'submission' ? 'submit' : result.category
+
+      const thisFormIsActive = result.purpose === purposeIndicatingActiveForm
 
       if (thisFormIsActive) {
         // Ensure all other forms in this category are inactive
         await Form.query()
           .patch({ purpose: 'other' })
-          .where({ purpose: purposeIndicatingActiveForm })
-          .where({ category: form.category })
-          .whereNot({ id: form.id })
+          .whereNot({ purpose: 'other' })
+          .where({ category: result.category, groupId: result.groupId })
+          .whereNot({ id: result.id })
       }
 
       return result

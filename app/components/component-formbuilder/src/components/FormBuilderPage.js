@@ -250,7 +250,7 @@ const FormBuilderPage = ({ category }) => {
             f =>
               f.purpose ===
               (f.category === 'submission' ? 'submit' : f.category),
-          ).id ??
+          )?.id ??
           data.formsByCategory[0].id,
       )
     } else {
