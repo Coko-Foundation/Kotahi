@@ -45,6 +45,7 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     declineInviteLink: `<a href="${data.appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
     manuscriptTitleLink: `<a href="${data.submissionLink}">${data.manuscriptTitle}</a>`,
     manuscriptLink: `<a href="${data.manuscriptLink}" target="_blank">${data.manuscriptLink}</a>`,
+    manuscriptProductionLink: `<a href="${data.manuscriptProductionLink}" target="_blank">${data.manuscriptProductionLink}</a>`,
     loginLink: `<a href="${data.appUrl}/login" target="_blank">${data.appUrl}/login</a>`,
   })
 

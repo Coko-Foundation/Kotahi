@@ -78,6 +78,8 @@ module.exports = {
   },
   eventNotification: {
     reviewerInvitationPrimaryEmailTemplate: null,
+    authorProofingInvitationEmailTemplate: null,
+    authorProofingSubmittedEmailTemplate: null,
   },
   groupIdentity: {
     brandName: 'Kotahi',

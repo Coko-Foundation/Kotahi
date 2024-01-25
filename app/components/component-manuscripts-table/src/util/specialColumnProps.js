@@ -17,6 +17,7 @@ import {
   ReviewerStatusBadge,
 } from '../cell-components'
 import reviewFilterOptions from '../../../../../config/journal/review-status'
+import AuthorProofingLink from '../cell-components/AuthorProofingLink'
 
 import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 
@@ -43,6 +44,7 @@ const buildSpecialColumnProps = (
     getMainActionLink,
     currentUser,
     updateReviewerStatus,
+    updateManuscript,
   } = specialComponentValues
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
@@ -62,14 +64,14 @@ const buildSpecialColumnProps = (
       canSort: true,
       canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
-      flex: '0.25 1 7em',
+      flex: '0.25 1 8em',
     },
     updated: {
       title: i18next.t('manuscriptsTable.Updated'),
       canSort: true,
       canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
-      flex: '0.25 1 7em',
+      flex: '0.25 1 8em',
     },
     lastUpdated: {
       title: i18next.t('manuscriptsTable.Last Status Update'),
@@ -87,14 +89,38 @@ const buildSpecialColumnProps = (
             { label: i18next.t('msStatus.revise'), value: 'revise' },
             { label: i18next.t('msStatus.revising'), value: 'revising' },
             { label: i18next.t('msStatus.published'), value: 'published' },
+            {
+              label: i18next.t('msStatus.assigned'),
+              value: 'assigned',
+            },
+            {
+              label: i18next.t('msStatus.inProgress'),
+              value: 'inProgress',
+            },
+            {
+              label: i18next.t('msStatus.completed'),
+              value: 'completed',
+            },
           ]
         : [
             { label: i18next.t('msStatus.new'), value: 'new' },
             { label: i18next.t('msStatus.submitted'), value: 'submitted' },
             { label: i18next.t('msStatus.evaluated'), value: 'evaluated' },
             { label: i18next.t('msStatus.published'), value: 'published' },
+            {
+              label: i18next.t('msStatus.assigned'),
+              value: 'assigned',
+            },
+            {
+              label: i18next.t('msStatus.inProgress'),
+              value: 'inProgress',
+            },
+            {
+              label: i18next.t('msStatus.completed'),
+              value: 'completed',
+            },
           ],
-      flex: '0.25 1 10em',
+      flex: '0.25 1 21em',
       component: FilterableStatusBadge,
       centered: true,
     },
@@ -160,6 +186,16 @@ const buildSpecialColumnProps = (
       component: EditorItemLinks,
       extraProps: {
         urlFrag,
+      },
+    },
+    authorProofingLink: {
+      title: 'Actions',
+      flex: '0 1 10em',
+      component: AuthorProofingLink,
+      extraProps: {
+        urlFrag,
+        currentUser,
+        updateManuscript,
       },
     },
     reviewerLinks: {

@@ -30,9 +30,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 const LeftSideBar = ComponentPlugin('leftSideBar')
 // const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 
-const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
-  editor,
-}) => {
+const ProductionWaxEditorNoCommentsLayout = readOnly => ({ editor }) => {
   const getNotes = main => {
     const notes = DocumentHelpers.findChildrenByType(
       main.state.doc,
@@ -85,7 +83,7 @@ const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
 
   return (
     <div style={fullScreenStyles}>
-      <Grid production readonly={readOnly} readOnlyComments={readOnlyComments}>
+      <Grid production readonly={readOnly}>
         {readOnly ? (
           <ReadOnlyEditorDiv className="wax-surface-scroll">
             {editor}

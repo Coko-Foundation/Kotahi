@@ -4,7 +4,7 @@ import {
   BottomInfoService,
   InlineAnnotationsService,
   LinkService,
-  ListsService,
+  // ListsService,
   MathService,
   NoteService,
   SpecialCharactersService,
@@ -13,6 +13,7 @@ import {
   EnterService,
 } from 'wax-prosemirror-services'
 import autocomplete from 'prosemirror-autocomplete'
+import ListsService from '../../../wax-collab/src/CustomWaxToolGroups/ListsService/ListsService'
 import { KotahiBlockDropDownToolGroupService } from '../../../wax-collab/src/CustomWaxToolGroups'
 import CharactersList from '../../../wax-collab/src/config/CharactersList'
 import MentionService from '../../../wax-collab/src/config/MentionService'

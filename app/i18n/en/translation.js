@@ -9,6 +9,9 @@ const en = {
       revise: 'Revise',
       revising: 'Revising',
       published: 'Published',
+      assigned: 'Author proof assigned',
+      inProgress: 'Author proofing in progress',
+      completed: 'Author proof completed',
       unknown: 'Unknown',
     },
     reviewerStatus: {
@@ -228,6 +231,12 @@ const en = {
       declinedInvitation: 'Declined {{dateString}}',
       'Invited via email': 'Invited via email',
       'View Details': 'View Details',
+      'Assign Author for Proofing': 'Assign Author for Proofing',
+      'Submit for author proofing': 'Submit for author proofing',
+      authorRequired: 'Requires an author to be invited!',
+      hideAssignedAuthors: 'Hide all authors assigned',
+      showAssignedAuthors: 'Show all authors assigned',
+      assignedOn: '{{assigneeName}} assigned on {{date}}',
       decisionTab: {
         'Archived version': 'Archived version',
         notCurrentVersion:
@@ -356,6 +365,14 @@ const en = {
     },
     productionPage: {
       Production: 'Production',
+      AuthorProofing: 'Author Proofing',
+      Feedback: 'Feedback',
+      Attachments: 'Attachments',
+      Submitted: 'Submitted',
+      Submit: 'Submit',
+      'Edited on': 'Edited on {{date}}',
+      submittedOn: '{{submitterName}} submitted on {{date}}',
+      'read-only': ' (read-only)',
       'No supported view of the file': 'No supported view of the file',
       Download: 'Download',
       Editor: 'Editor',
@@ -455,6 +472,9 @@ const en = {
       evaluationCompleteEmailTemplate: 'Submitted review',
       submissionConfirmationEmailTemplate: 'Submitted manuscript',
       alertUnreadMessageDigestTemplate: 'Unread discussion message',
+      authorProofingInvitationEmailTemplate: 'Author proof assigned invitation',
+      authorProofingSubmittedEmailTemplate:
+        'Author proof completed and submitted feedback',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',

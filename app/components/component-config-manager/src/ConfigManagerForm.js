@@ -62,6 +62,30 @@ const ConfigManagerForm = ({
     title: defaultReviewerInvitationEmail.emailContent.description,
   }
 
+  // This will return first email template found of author proofing invitation type
+  const defaultAuthorProofingInvitationEmail = emailTemplates.find(
+    emailTemplate =>
+      emailTemplate.emailTemplateType === 'authorProofingInvitation',
+  )
+
+  // modifying the default author proofing invitation template into react json schema form structure
+  const defaultAuthorProofingInvitationTemplate = {
+    const: defaultAuthorProofingInvitationEmail.id,
+    title: defaultAuthorProofingInvitationEmail.emailContent.description,
+  }
+
+  // This will return first email template found of author proofing submitted type
+  const defaultAuthorProofingSubmittedEmail = emailTemplates.find(
+    emailTemplate =>
+      emailTemplate.emailTemplateType === 'authorProofingSubmitted',
+  )
+
+  // modifying the default author proofing submitted template into react json schema form structure
+  const defaultAuthorProofingSubmittedTemplate = {
+    const: defaultAuthorProofingSubmittedEmail.id,
+    title: defaultAuthorProofingSubmittedEmail.emailContent.description,
+  }
+
   const { schema, uiSchema } = generateSchema(
     emailNotificationOptions,
     setLogoId,
@@ -70,6 +94,8 @@ const ConfigManagerForm = ({
     createFile,
     config,
     defaultReviewerInvitationTemplate,
+    defaultAuthorProofingInvitationTemplate,
+    defaultAuthorProofingSubmittedTemplate,
     t,
   )
 

@@ -7,6 +7,7 @@ import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 import MessageContainer from '../../../component-chat/src/MessageContainer'
+import AuthorFeedbackForm from '../../../component-author-feedback/src/components/AuthorFeedbackForm'
 
 import {
   VersionSwitcher,
@@ -15,6 +16,7 @@ import {
   Chat,
   Manuscript,
   ErrorBoundary,
+  SectionContent,
 } from '../../../shared'
 
 // TODO: Improve the import, perhaps a shared component?
@@ -174,6 +176,28 @@ const Submit = ({
       }
     }
 
+    const feedbackSection = {
+      content: (
+        <SectionContent>
+          <AuthorFeedbackForm
+            currentUser={currentUser}
+            isReadOnlyVersion
+            manuscript={version}
+          />
+        </SectionContent>
+      ),
+      key: `feedback-${version.id}`,
+      label: 'Feedback',
+    }
+
+    const tabSections = []
+
+    if (version.authorFeedback.submitted) {
+      tabSections.push(decisionSection, editorSection, feedbackSection)
+    } else {
+      tabSections.push(decisionSection, editorSection)
+    }
+
     decisionSections.push({
       content: (
         <>
@@ -192,10 +216,7 @@ const Submit = ({
                 manuscript={version}
               />
             )}
-          <HiddenTabs
-            defaultActiveKey={version.id}
-            sections={[decisionSection, editorSection]}
-          />
+          <HiddenTabs defaultActiveKey={version.id} sections={tabSections} />
         </>
       ),
       key: version.id,

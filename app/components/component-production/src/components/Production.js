@@ -20,6 +20,7 @@ import {
 } from '../../../shared'
 import { Info } from './styles'
 import { ControlsContainer } from '../../../component-manuscripts/src/style'
+import AuthorFeedbackForm from '../../../component-author-feedback/src/components/AuthorFeedbackForm'
 import UploadAsset from './uploadManager/UploadAsset'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 import { color } from '../../../../theme'
@@ -62,10 +63,17 @@ const Production = ({
   currentUser,
   makePdf,
   makeJats,
+  submitAuthorProofingFeedback,
   updateManuscript,
   updateTemplate,
   onAssetManager,
+  isAuthorProofingVersion,
+  isReadOnlyVersion,
+  hideEditorSection,
+  setHideEditorSection,
 }) => {
+  const { authorFeedback } = manuscript
+
   const debouncedSave = useCallback(
     debounce(source => {
       updateManuscript(manuscript.id, { meta: { source } })
@@ -104,33 +112,57 @@ const Production = ({
   const { t } = useTranslation()
 
   const editorSection = {
-    content:
-      // eslint-disable-next-line no-nested-ternary
-      file &&
-      file.storedObjects[0].mimetype ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-        manuscript ? (
-          <ProductionWaxEditor
-            // onBlur={source => {
-            //   updateManuscript(manuscript.id, { meta: { source } })
-            // }}
-            client={client}
-            manuscriptId={manuscript.id}
-            onAssetManager={onAssetManager}
-            saveSource={debouncedSave}
-            user={currentUser}
-            value={manuscript.meta.source}
-          />
+    content: (
+      <>
+        {file &&
+        file.storedObjects[0].mimetype ===
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+          <SectionContent>
+            {manuscript ? (
+              <ProductionWaxEditor
+                // onBlur={source => {
+                //   updateManuscript(manuscript.id, { meta: { source } })
+                // }}
+                client={client}
+                isAuthorProofingVersion={isAuthorProofingVersion}
+                manuscriptId={manuscript.id}
+                onAssetManager={onAssetManager}
+                readonly={isReadOnlyVersion || false}
+                saveSource={debouncedSave}
+                user={currentUser}
+                value={manuscript.meta.source}
+              />
+            ) : (
+              <Spinner />
+            )}
+          </SectionContent>
         ) : (
-          <Spinner />
-        )
-      ) : (
-        <SectionContent>
-          <Info>{t('productionPage.No supported view of the file')}</Info>
-        </SectionContent>
-      ),
+          <SectionContent>
+            <Info>{t('productionPage.No supported view of the file')}</Info>
+          </SectionContent>
+        )}
+      </>
+    ),
     key: 'editor',
-    label: t('productionPage.Editor'),
+    label: `${t('productionPage.Editor')} ${
+      isReadOnlyVersion ? t('productionPage.read-only') : ''
+    }`,
+  }
+
+  const feedbackSection = {
+    content: (
+      <SectionContent>
+        <AuthorFeedbackForm
+          currentUser={currentUser}
+          isReadOnlyVersion={isReadOnlyVersion}
+          manuscript={manuscript}
+          setHideEditorSection={setHideEditorSection}
+          submitAuthorProofingFeedback={submitAuthorProofingFeedback}
+        />
+      </SectionContent>
+    ),
+    key: 'feedback',
+    label: t('productionPage.Feedback'),
   }
 
   const cssPagedJS = {
@@ -195,13 +227,39 @@ const Production = ({
     label: t('productionPage.PDF metadata'),
   }
 
+  const tabSections = []
+
+  if (isAuthorProofingVersion) {
+    // While switching from editing mode to readonly mode the editorSection throws 'Too much recursion' below check avoids the page crash
+    if (hideEditorSection) {
+      tabSections.push(feedbackSection)
+    } else {
+      tabSections.push(editorSection, feedbackSection)
+    }
+  } else {
+    tabSections.push(
+      editorSection,
+      htmlTemplate,
+      cssPagedJS,
+      uploadAssets,
+      manuscriptMetadata,
+    )
+
+    if (authorFeedback.submitted) tabSections.push(feedbackSection)
+  }
+
   return (
     <StyledManuscript>
       <HeadingWithAction>
         <FlexRow>
-          <Heading>{t('productionPage.Production')}</Heading>
+          <Heading>
+            {isAuthorProofingVersion
+              ? t('productionPage.AuthorProofing')
+              : t('productionPage.Production')}
+          </Heading>
           <ControlsContainer>
             <DownloadDropdown
+              isAuthorProofingVersion={isAuthorProofingVersion}
               makeJats={makeJats}
               makePdf={makePdf}
               manuscriptId={manuscript.id}
@@ -211,16 +269,7 @@ const Production = ({
         </FlexRow>
       </HeadingWithAction>
       <ErrorBoundary>
-        <HiddenTabs
-          defaultActiveKey="editor"
-          sections={[
-            editorSection,
-            htmlTemplate,
-            cssPagedJS,
-            uploadAssets,
-            manuscriptMetadata,
-          ]}
-        />
+        <HiddenTabs defaultActiveKey="editor" sections={tabSections} />
       </ErrorBoundary>
     </StyledManuscript>
   )

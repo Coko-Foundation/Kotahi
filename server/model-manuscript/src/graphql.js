@@ -462,6 +462,7 @@ const resolvers = {
           },
         ],
         groupId: group.id,
+        authorFeedback: {},
       }
 
       emptyManuscript.submission.$editDate = new Date()
@@ -530,6 +531,114 @@ const resolvers = {
         .orWhere('parentId', firstVersionId)
 
       return archivedManuscript[0].id
+    },
+    async assignAuthoForProofingManuscript(_, { id }, ctx) {
+      const manuscript = await models.Manuscript.query()
+        .findById(id)
+        .withGraphFetched('[channels]')
+
+      const author = await manuscript.getManuscriptAuthor()
+
+      const authorName = author ? author.username : ''
+
+      if (manuscript.authorFeedback.submitted) {
+        delete manuscript.authorFeedback.submitted
+      }
+
+      let assignedAuthors = []
+
+      if (
+        manuscript.authorFeedback.assignedAuthors &&
+        manuscript.authorFeedback.assignedAuthors.length > 0
+      ) {
+        assignedAuthors = [...manuscript.authorFeedback.assignedAuthors]
+      }
+
+      assignedAuthors.push({
+        authorId: author.id,
+        authorName,
+        assignedOnDate: new Date(),
+      })
+
+      const updated = await models.Manuscript.query().patchAndFetchById(
+        manuscript.id,
+        {
+          status: 'assigned',
+          authorFeedback: {
+            ...manuscript.authorFeedback,
+            assignedAuthors,
+          },
+        },
+      )
+
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
+
+      const receiverEmail = author.email
+      /* eslint-disable-next-line */
+      const receiverName = authorName
+
+      const selectedTemplate =
+        activeConfig.formData.eventNotification
+          ?.authorProofingInvitationEmailTemplate
+
+      const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+      const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+      if (!emailValidationResult || !receiverName) {
+        return updated
+      }
+
+      const group = await models.Group.query().findById(manuscript.groupId)
+
+      const appUrl = config['pubsweet-client'].baseUrl
+      const urlFrag = `/${group.name}`
+      const baseUrl = appUrl + urlFrag
+      const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
+
+      const data = {
+        manuscriptTitle: manuscript.submission.$title,
+        authorName,
+        receiverName,
+        recipientName: receiverName,
+        shortId: manuscript.shortId,
+        manuscriptProductionLink: manuscriptProductionPageUrl,
+      }
+
+      if (selectedTemplate) {
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
+        try {
+          await sendEmailNotification(
+            receiverEmail,
+            selectedEmailTemplate,
+            data,
+            manuscript.groupId,
+          )
+
+          // Get channel ID
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          models.Message.createMessage({
+            content: `Author proof assigned Email sent by Kotahi to ${author.username}`,
+            channelId,
+            userId: ctx.user,
+          })
+        } catch (e) {
+          /* eslint-disable-next-line */
+          console.log('email was not sent', e)
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.info(
+          'No email template configured for notifying of author proof assigned. Email not sent.',
+        )
+      }
+
+      return updated
     },
 
     async deleteManuscripts(_, { ids }, ctx) {
@@ -646,10 +755,7 @@ const resolvers = {
         await new ReviewModel(review).save()
       }
 
-      if (
-        action === 'rejected' &&
-        config['notification-email'].automated === 'true'
-      ) {
+      if (action === 'rejected') {
         // Automated email reviewReject on rejection
         const reviewer = await models.User.query()
           .findById(context.user)
@@ -675,6 +781,12 @@ const resolvers = {
           handlingEditorTeam && !!handlingEditorTeam.members.length
             ? handlingEditorTeam.members[0]
             : null
+
+        if (!handlingEditor) {
+          // eslint-disable-next-line no-console
+          console.info('No handling editor assigned. Email not sent.')
+          return team
+        }
 
         const receiverEmail = handlingEditor.user.email
         /* eslint-disable-next-line */
@@ -715,6 +827,7 @@ const resolvers = {
             manuscript.submitter.defaultIdentity.name ||
             '',
           receiverName,
+          recipientName: receiverName,
           reviewerName,
           instance,
           shortId: manuscript.shortId,
@@ -756,46 +869,67 @@ const resolvers = {
     async updateManuscript(_, { id, input }, ctx) {
       return commonUpdateManuscript(id, input, ctx)
     },
+    async submitAuthorProofingFeedback(_, { id, input }, ctx) {
+      const updated = await commonUpdateManuscript(id, input, ctx)
 
-    async createNewVersion(_, { id }, ctx) {
-      const manuscript = await models.Manuscript.query().findById(id)
-      return manuscript.createNewVersion()
-    },
-    async submitManuscript(_, { id, input }, ctx) {
-      if (config['notification-email'].automated === 'true') {
-        // Automated email submissionConfirmation on submission
+      if (updated.status === 'completed') {
         const manuscript = await models.Manuscript.query()
           .findById(id)
-          .withGraphFetched('[submitter.[defaultIdentity], channels]')
+          .withGraphFetched(
+            '[teams.[members.[user.[defaultIdentity]]], channels]',
+          )
+
+        const author = await models.User.query().findById(ctx.user)
 
         const activeConfig = await models.Config.getCached(manuscript.groupId)
 
-        const receiverEmail = manuscript.submitter.email
+        const handlingEditorTeam =
+          manuscript.teams &&
+          !!manuscript.teams.length &&
+          manuscript.teams.find(manuscriptTeam => {
+            return manuscriptTeam.role.includes('handlingEditor')
+          })
+
+        const handlingEditor =
+          handlingEditorTeam && !!handlingEditorTeam.members.length
+            ? handlingEditorTeam.members[0]
+            : null
+
+        if (!handlingEditor) {
+          // eslint-disable-next-line no-console
+          console.info('No handling editor assigned. Email not sent.')
+          return updated
+        }
+
+        const receiverEmail = handlingEditor.user.email
         /* eslint-disable-next-line */
-        const receiverName =
-          manuscript.submitter.username ||
-          manuscript.submitter.defaultIdentity.name ||
-          ''
+        const receiverName = handlingEditor.user.username
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
-            ?.submissionConfirmationEmailTemplate
+            ?.authorProofingSubmittedEmailTemplate
 
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
         if (!emailValidationResult || !receiverName) {
-          return commonUpdateManuscript(id, input, ctx)
+          return updated
         }
 
+        const group = await models.Group.query().findById(manuscript.groupId)
+
+        const appUrl = config['pubsweet-client'].baseUrl
+        const urlFrag = `/${group.name}`
+        const baseUrl = appUrl + urlFrag
+        const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
+
         const data = {
-          articleTitle: manuscript.submission.$title,
-          authorName:
-            manuscript.submitter.username ||
-            manuscript.submitter.defaultIdentity.name ||
-            '',
+          manuscriptTitle: manuscript.submission.$title,
           receiverName,
+          currentUser: author.username,
+          recipientName: receiverName,
           shortId: manuscript.shortId,
+          manuscriptProductionLink: manuscriptProductionPageUrl,
         }
 
         if (selectedTemplate) {
@@ -817,9 +951,9 @@ const resolvers = {
             ).id
 
             models.Message.createMessage({
-              content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+              content: `Author proof completed Email sent by Kotahi to ${handlingEditor.user.username}`,
               channelId,
-              userId: manuscript.submitterId,
+              userId: handlingEditor.user.id,
             })
           } catch (e) {
             /* eslint-disable-next-line */
@@ -828,9 +962,86 @@ const resolvers = {
         } else {
           // eslint-disable-next-line no-console
           console.info(
-            'No email template configured for notifying of submission confirmation. Email not sent.',
+            'No email template configured for notifying of author proof completed. Email not sent.',
           )
         }
+      }
+
+      return updated
+    },
+    async createNewVersion(_, { id }, ctx) {
+      const manuscript = await models.Manuscript.query().findById(id)
+      return manuscript.createNewVersion()
+    },
+    async submitManuscript(_, { id, input }, ctx) {
+      // Automated email submissionConfirmation on submission
+      const manuscript = await models.Manuscript.query()
+        .findById(id)
+        .withGraphFetched('[submitter.[defaultIdentity], channels]')
+
+      const activeConfig = await models.Config.getCached(manuscript.groupId)
+
+      const receiverEmail = manuscript.submitter.email
+      /* eslint-disable-next-line */
+      const receiverName =
+        manuscript.submitter.username ||
+        manuscript.submitter.defaultIdentity.name ||
+        ''
+
+      const selectedTemplate =
+        activeConfig.formData.eventNotification
+          ?.submissionConfirmationEmailTemplate
+
+      const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+      const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+      if (!emailValidationResult || !receiverName) {
+        return commonUpdateManuscript(id, input, ctx)
+      }
+
+      const data = {
+        articleTitle: manuscript.submission.$title,
+        authorName:
+          manuscript.submitter.username ||
+          manuscript.submitter.defaultIdentity.name ||
+          '',
+        receiverName,
+        recipientName: receiverName,
+        shortId: manuscript.shortId,
+      }
+
+      if (selectedTemplate) {
+        const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+          selectedTemplate,
+        )
+
+        try {
+          await sendEmailNotification(
+            receiverEmail,
+            selectedEmailTemplate,
+            data,
+            manuscript.groupId,
+          )
+
+          // Get channel ID
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          models.Message.createMessage({
+            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+            channelId,
+            userId: manuscript.submitterId,
+          })
+        } catch (e) {
+          /* eslint-disable-next-line */
+          console.log('email was not sent', e)
+        }
+      } else {
+        // eslint-disable-next-line no-console
+        console.info(
+          'No email template configured for notifying of submission confirmation. Email not sent.',
+        )
       }
 
       return commonUpdateManuscript(id, input, ctx)
@@ -877,11 +1088,7 @@ const resolvers = {
           }
       }
 
-      if (
-        manuscript.decision &&
-        manuscript.submitter &&
-        config['notification-email'].automated === 'true'
-      ) {
+      if (manuscript.decision && manuscript.submitter) {
         // Automated email evaluationComplete on decision
         const receiverEmail = manuscript.submitter.email
 
@@ -897,6 +1104,11 @@ const resolvers = {
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
+        const group = await models.Group.query().findById(manuscript.groupId)
+
+        const urlFrag = `/${group.name}`
+        const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
+
         if (emailValidationResult && receiverName) {
           const data = {
             articleTitle: manuscript.submission.$title,
@@ -905,6 +1117,8 @@ const resolvers = {
               manuscript.submitter.defaultIdentity.name ||
               '',
             receiverName,
+            recipientName: receiverName,
+            appUrl: baseUrl,
             shortId: manuscript.shortId,
           }
 
@@ -1654,6 +1868,20 @@ const resolvers = {
 
       return createdDate.created
     },
+    async authorFeedback(parent) {
+      if (parent.authorFeedback && parent.authorFeedback.submitterId) {
+        const submitter = await models.User.query().findById(
+          parent.authorFeedback.submitterId,
+        )
+
+        return {
+          ...parent.authorFeedback,
+          submitter,
+        }
+      }
+
+      return parent.authorFeedback || {}
+    },
   },
   PublishedManuscript: {
     ...manuscriptAndPublishedManuscriptSharedResolvers,
@@ -1869,6 +2097,7 @@ const typeDefs = `
     createManuscript(input: ManuscriptInput): Manuscript!
     updateManuscript(id: ID!, input: String): Manuscript!
     submitManuscript(id: ID!, input: String): Manuscript!
+    submitAuthorProofingFeedback(id: ID!, input: String): Manuscript!
     makeDecision(id: ID!, decision: String): Manuscript!
     deleteManuscript(id: ID!): ID!
     deleteManuscripts(ids: [ID]!): [ID]!
@@ -1882,6 +2111,7 @@ const typeDefs = `
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
     archiveManuscript(id: ID!): ID!
     archiveManuscripts(ids: [ID]!): [ID!]!
+    assignAuthoForProofingManuscript(id: ID!): Manuscript!
   }
 
   type Manuscript {
@@ -1912,6 +2142,7 @@ const typeDefs = `
     tasks: [Task!]
     hasOverdueTasksForUser: Boolean
     invitations: [Invitation]
+    authorFeedback: ManuscriptAuthorFeeback
   }
 
   input ManuscriptInput {
@@ -1979,6 +2210,21 @@ const typeDefs = `
     subjects: [String]
     history: [MetaDate]
     manuscriptId: ID
+  }
+
+  type ManuscriptAuthorFeeback {
+    text: String
+    fileIds: [String]
+    submitter: User
+    edited: DateTime
+    submitted: DateTime
+    assignedAuthors: [AssignedAuthor]
+  }
+
+  type AssignedAuthor {
+    authorId: ID
+    authorName: String
+    assignedOnDate: DateTime
   }
 
   type Preprint {

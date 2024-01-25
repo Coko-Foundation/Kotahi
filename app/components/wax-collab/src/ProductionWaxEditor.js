@@ -10,6 +10,9 @@ import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
+import authorProofingWaxEditorConfig from './config/AuthorProofingWaxEditorConfig'
+import AuthorProofingWaxEditorLayout from './layout/AuthorProofingWaxEditorLayout'
+
 const getAnystyleCslQuery = gql`
   query($textReferences: String!) {
     buildCitationsCSL(textReferences: $textReferences) {
@@ -72,12 +75,12 @@ const ProductionWaxEditor = ({
   autoFocus,
   saveSource,
   placeholder,
-  readOnlyComments,
   fileUpload,
   useComments,
   user,
   manuscriptId,
   onAssetManager,
+  isAuthorProofingVersion,
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
@@ -199,24 +202,36 @@ const ProductionWaxEditor = ({
       })
   }
 
+  // eslint-disable-next-line no-nested-ternary
+  const productionLayout = isAuthorProofingVersion
+    ? AuthorProofingWaxEditorLayout(readonly)
+    : useComments // TODO: Check if we actually ever use useComments in production mode?
+    ? ProductionWaxEditorLayout(readonly)
+    : ProductionWaxEditorNoCommentsLayout(readonly)
+
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
-          config={productionWaxEditorConfig(
-            readOnlyComments,
-            handleAssetManager,
-            updateAnystyle,
-            updateCrossRef,
-            updateCiteProc,
-          )}
-          fileUpload={file => renderImage(file)}
-          layout={
-            useComments
-              ? ProductionWaxEditorLayout(readonly)
-              : ProductionWaxEditorNoCommentsLayout(readonly)
+          config={
+            isAuthorProofingVersion
+              ? authorProofingWaxEditorConfig(
+                  handleAssetManager,
+                  updateAnystyle,
+                  updateCrossRef,
+                  updateCiteProc,
+                )
+              : productionWaxEditorConfig(
+                  handleAssetManager,
+                  updateAnystyle,
+                  updateCrossRef,
+                  updateCiteProc,
+                  readonly,
+                )
           }
+          fileUpload={file => renderImage(file)}
+          layout={productionLayout}
           onChange={source => {
             saveSource(source)
           }}
@@ -238,9 +253,9 @@ ProductionWaxEditor.propTypes = {
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
   saveSource: PropTypes.func,
+  isAuthorProofingVersion: PropTypes.bool,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
-  readOnlyComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
     userId: PropTypes.string,
@@ -258,7 +273,7 @@ ProductionWaxEditor.defaultProps = {
   readonly: false,
   autoFocus: false,
   placeholder: '',
-  readOnlyComments: false,
+  isAuthorProofingVersion: false,
   fileUpload: () => {},
   saveSource: () => {},
   useComments: true,

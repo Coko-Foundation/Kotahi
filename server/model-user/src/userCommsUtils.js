@@ -138,6 +138,8 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     roles = await getUserRolesInManuscript(userReceiver.id, manuscript.id)
   }
 
+  const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
+
   if (roles.groupManager || roles.anyEditor) {
     manuscriptPageUrl += '/decision?tab=decision'
   } else if (roles.reviewer) {
@@ -260,6 +262,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
         senderId,
         appUrl: baseUrl,
         manuscriptLink: manuscriptPageUrl,
+        manuscriptProductionLink: manuscriptProductionPageUrl,
       },
       manuscriptObject.groupId,
     )

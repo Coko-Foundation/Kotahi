@@ -7,7 +7,7 @@ import {
   // EditorInfoToolGroupServices,
   InlineAnnotationsService,
   LinkService,
-  ListsService,
+  // ListsService,
   // ListToolGroupService,
   MathService,
   NoteService,
@@ -18,6 +18,7 @@ import {
   // TextToolGroupService,
   DisplayBlockLevelService,
 } from 'wax-prosemirror-services'
+import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import CharactersList from './CharactersList'
 

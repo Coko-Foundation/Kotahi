@@ -161,6 +161,15 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
             },
           },
         },
+        File: {
+          fields: {
+            roles: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
       },
     }),
   }

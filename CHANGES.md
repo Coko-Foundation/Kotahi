@@ -1,6 +1,6 @@
 ## Changes
 
-### 2023-12-07: Version 2.3.0
+### 2024-01-25: Version 3.0.0
 
 - The following instance archtypes used in the codebase have been renamed
 
@@ -12,6 +12,7 @@
 Prior upgrading Kotahi, please ensure the instance archetypes have been renamed in `INSTANCE_GROUPS` in the .env file.
 
 - `NOTIFICATION_EMAIL_CC_ENABLED=` variable to enable/disable carbon copies (CC) has been **deprecated**. Group Managers can manually add a CC from the Emails>Email template>CC field
+- `NOTIFICATION_EMAIL_AUTOMATED=` variable to enable/disable automated notification has been **deprecated**. Group Managers can manually select email templates from 'Event Notifications' from configuration manager
 
 ### 2023-09-28: Version 2.1.0
 

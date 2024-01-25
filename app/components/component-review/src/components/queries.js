@@ -85,10 +85,28 @@ const manuscriptFields = `
       }
       status
       isShared
+      created
       updated
     }
   }
   status
+  authorFeedback {
+    text
+    fileIds
+    edited
+    submitted
+    submitter {
+      username
+      defaultIdentity {
+        name
+      }
+      id
+    }
+    assignedAuthors {
+      authorName
+      assignedOnDate
+    }
+  }
   meta {
     manuscriptId
     source
