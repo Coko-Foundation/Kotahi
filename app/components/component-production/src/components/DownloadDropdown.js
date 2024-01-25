@@ -9,6 +9,7 @@ export const DownloadDropdown = ({
   manuscriptId,
   makePdf,
   makeJats,
+  isAuthorProofingVersion,
 }) => {
   const { t } = useTranslation()
 
@@ -53,7 +54,10 @@ export const DownloadDropdown = ({
   ]
 
   return manuscriptSource ? (
-    <Dropdown itemsList={options} primary>
+    <Dropdown
+      itemsList={isAuthorProofingVersion ? [options[0], options[1]] : options}
+      primary
+    >
       {t('productionPage.Download')}
     </Dropdown>
   ) : null

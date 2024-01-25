@@ -442,6 +442,13 @@ const AdminPage = () => {
               </Switch>
             </DashboardLayout>
           </Route>,
+          <PrivateRoute
+            component={ProductionPage}
+            currentUser={currentUser}
+            key="production"
+            path={`${urlFrag}/versions/:version/production`}
+            redirectLink={redirectLink}
+          />,
         ]}
         {(isGroupManager || isAdmin) && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
@@ -552,13 +559,6 @@ const AdminPage = () => {
             currentUser={currentUser}
             key="reports"
             path={reportsLink}
-            redirectLink={redirectLink}
-          />,
-          <PrivateRoute
-            component={ProductionPage}
-            currentUser={currentUser}
-            key="production"
-            path={`${urlFrag}/versions/:version/production`}
             redirectLink={redirectLink}
           />,
         ]}

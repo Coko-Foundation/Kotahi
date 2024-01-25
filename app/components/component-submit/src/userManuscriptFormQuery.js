@@ -100,6 +100,23 @@ export const fragmentFields = `
   }
   decision
   status
+  authorFeedback {
+    text
+    fileIds
+    edited
+    submitted
+    submitter {
+      username
+      defaultIdentity {
+        name
+      }
+      id
+    }
+    assignedAuthors {
+      authorName
+      assignedOnDate
+    }
+  }
   meta {
     manuscriptId
     source

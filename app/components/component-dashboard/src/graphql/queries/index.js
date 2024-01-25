@@ -14,6 +14,7 @@ teams {
       username
     }
     status
+    created
     updated
   }
 }

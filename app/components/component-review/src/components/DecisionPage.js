@@ -29,6 +29,7 @@ import {
   UPDATE_TASK_NOTIFICATION,
   DELETE_TASK_NOTIFICATION,
   CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
+  ASSIGN_AUTHOR_FOR_PROOFING,
 } from '../../../../queries'
 import {
   CREATE_TEAM_MUTATION,
@@ -169,6 +170,21 @@ const DecisionPage = ({ currentUser, match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+
+  const [assignAuthorForProofing] = useMutation(ASSIGN_AUTHOR_FOR_PROOFING, {
+    update: (cache, { data: { assignAuthoForProofingManuscript } }) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Manuscript',
+          id: assignAuthoForProofingManuscript.id,
+        }),
+        fields: {
+          status: () => assignAuthoForProofingManuscript.status,
+          authorFeedback: () => assignAuthoForProofingManuscript.authorFeedback,
+        },
+      })
+    },
+  })
 
   const [updateSharedStatusForInvitedReviewer] = useMutation(
     UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION,
@@ -410,6 +426,7 @@ const DecisionPage = ({ currentUser, match }) => {
     <DecisionVersions
       addReviewer={addReviewer}
       allUsers={users}
+      assignAuthorForProofing={assignAuthorForProofing}
       canHideReviews={config?.controlPanel?.hideReview}
       channels={channels}
       chatProps={chatProps}

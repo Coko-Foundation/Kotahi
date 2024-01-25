@@ -121,11 +121,38 @@ const fragmentFields = `
   id
   created
   status
+	teams {
+		role
+		members {
+			user {
+				id
+				created
+			}
+      created
+		}
+	}
   ${fileFragment}
 	submission
   meta {
     source
     manuscriptId
+  }
+  authorFeedback {
+    text
+    fileIds
+    edited
+    submitted
+    submitter {
+      username
+      defaultIdentity {
+        name
+      }
+      id
+    }
+    assignedAuthors {
+      authorName
+      assignedOnDate
+    }
   }
 `
 
@@ -162,6 +189,39 @@ export const updateMutation = gql`
   }
 `
 
+const submitAuthorProofingFeedbackMutation = gql`
+  mutation($id: ID!, $input: String) {
+    submitAuthorProofingFeedback(id: $id, input: $input) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
+
+const showAuthorProofingMode = (manuscript, currentUser, updateManuscript) => {
+  const authorTeam = manuscript.teams.find(team => team.role === 'author')
+
+  const sortedAuthors = authorTeam?.members
+    .slice()
+    .sort(
+      (a, b) =>
+        Date.parse(new Date(b.created)) - Date.parse(new Date(a.created)),
+    )
+
+  const isAuthorProofingAssignedToAuthor =
+    manuscript.status === 'assigned' &&
+    sortedAuthors[0]?.user?.id === currentUser.id
+
+  if (isAuthorProofingAssignedToAuthor) {
+    updateManuscript(manuscript.id, { status: 'inProgress' })
+  }
+
+  return (
+    ['assigned', 'inProgress', 'completed'].includes(manuscript.status) &&
+    sortedAuthors[0]?.user?.id === currentUser.id
+  )
+}
+
 export const updateTemplateMutation = gql`
   mutation($id: ID!, $input: UpdateTemplateInput!) {
     updateTemplate(id: $id, input: $input) {
@@ -180,6 +240,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
   const client = useApolloClient()
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
+  const [hideEditorSection, setHideEditorSection] = React.useState(false)
   // const [saving, setSaving] = React.useState(false)
   // const [downloading, setDownloading] = React.useState(false)
 
@@ -189,6 +250,11 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
   // })
 
   const [update] = useMutation(updateMutation)
+
+  const [submitAuthorProofingFeedback] = useMutation(
+    submitAuthorProofingFeedbackMutation,
+  )
+
   const [updateTempl] = useMutation(updateTemplateMutation)
 
   const updateManuscript = async (versionId, manuscriptDelta) => {
@@ -222,6 +288,20 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
   }
 
   const { submissionForm, articleTemplate } = data
+
+  const isAuthorProofingMode = showAuthorProofingMode(
+    manuscript,
+    currentUser,
+    updateManuscript,
+  ) // If true, we are in author proofing mode
+
+  const isReadOnlyMode =
+    (isAuthorProofingMode && ['completed'].includes(manuscript.status)) ||
+    (['assigned', 'inProgress'].includes(manuscript.status) &&
+      !isAuthorProofingMode) // If author proofing is enabled, but we are not the author or author has completed author proofing, we go read-only
+
+  // console.log('Author proofing mode: ', isAuthorProofingMode)
+  // console.log('Read only mode: ', isReadOnlyMode)
 
   const form = submissionForm?.structure ?? {
     name: '',
@@ -273,11 +353,17 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
               file.tags.includes('manuscript'),
             )}
             form={form}
+            hideEditorSection={hideEditorSection}
+            isAuthorProofingVersion={isAuthorProofingMode}
+            isReadOnlyVersion={isReadOnlyMode}
             makeJats={setMakingJats}
             makePdf={setMakingPdf}
             manuscript={manuscript}
             onAssetManager={onAssetManager}
+            setHideEditorSection={setHideEditorSection}
+            submitAuthorProofingFeedback={submitAuthorProofingFeedback}
             updateManuscript={(a, b) => {
+              // TODO: This might need to be different based on value of isAuthorProofingMode?
               // eslint-disable-next-line
               // console.log('in update manuscript!')
               updateManuscript(a, b)

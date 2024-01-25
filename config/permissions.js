@@ -592,6 +592,7 @@ const permissions = {
     setGroupRole: userIsGmOrAdmin,
     setShouldPublishField: or(userIsEditor, userIsGmOrAdmin),
     submitManuscript: or(userIsAuthor, userIsEditor, userIsGmOrAdmin),
+    submitAuthorProofingFeedback: or(userIsAuthor),
     updateEmail: or(userIsCurrentUser, userIsGmOrAdmin),
     updateConfig: userIsGmOrAdmin,
     updateUsername: or(userIsCurrentUser, userIsGmOrAdmin),

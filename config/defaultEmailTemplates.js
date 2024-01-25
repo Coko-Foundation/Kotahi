@@ -71,4 +71,43 @@ module.exports = [
           Kotahi team
         </p>`,
   },
+  {
+    emailTemplateKey: 'authorProofingInvitationEmailTemplate',
+    description: 'Author proofing invitation',
+    subject: 'Kotahi | You’ve been assigned to proof {{ manuscriptTitle }}',
+    ccEditors: false,
+    type: 'authorProofingInvitation',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              You have been assigned to participate in a round of author proofing. Click here to access the manuscript and feedback form;
+          </p>
+          <p>{{{ manuscriptProductionLink }}}</p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
+  {
+    emailTemplateKey: 'authorProofingSubmittedEmailTemplate',
+    description: 'Author proofing submitted',
+    subject:
+      'Kotahi | {{ currentUser }} has completed proofing {{ manuscriptTitle }}',
+    ccEditors: false,
+    type: 'authorProofingSubmitted',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              An author you have assigned has completed a round of author proofing. Click here to access the manuscript and feedback form;
+          </p>
+          <p>{{{ manuscriptProductionLink }}}</p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
 ]

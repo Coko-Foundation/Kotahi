@@ -5,19 +5,13 @@ import {
   DocumentHelpers,
 } from 'wax-prosemirror-core'
 
-import {
-  NotesAreaContainer,
-  ReadOnlyNotesAreaContainer,
-  NotesHeading,
-  NotesContainer,
-} from './NotesStyles'
+import { NotesAreaContainer, NotesHeading, NotesContainer } from './NotesStyles'
 import {
   Grid,
   Menu,
   ProductionEditorDiv,
   EditorContainer,
   InfoContainer,
-  ReadOnlyEditorDiv,
   SideMenu,
   EditorArea,
   WaxSurfaceScroll,
@@ -50,9 +44,7 @@ const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 const LeftSideBar = ComponentPlugin('leftSideBar')
 const CitationArea = ComponentPlugin('citationArea')
 
-const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
-  editor,
-}) => {
+const ProductionWaxEditorLayout = readOnly => ({ editor }) => {
   const {
     pmViews: { main },
     options,
@@ -105,14 +97,41 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
 
   return (
     <div style={fullScreenStyles}>
-      <Grid production readonly={readOnly} readOnlyComments={readOnlyComments}>
+      <Grid production readonly={readOnly}>
         {readOnly ? (
-          <ReadOnlyEditorDiv
-            className="wax-surface-scroll"
-            style={{ gridArea: 'editor' }}
-          >
-            {editor}
-          </ReadOnlyEditorDiv>
+          <ProductionEditorDiv>
+            <SideMenu />
+
+            <EditorArea className="editorArea production">
+              <div>
+                <WaxSurfaceScroll className="panelWrapper">
+                  <EditorContainer>{editor}</EditorContainer>
+                  <CitationArea />
+                  <CommentsContainer>
+                    <CommentTrackToolsContainer>
+                      <CommentTrackTools>
+                        {commentsTracksCount + trackBlockNodesCount} COMMENTS
+                        AND SUGGESTIONS
+                        <CommentTrackOptions />
+                      </CommentTrackTools>
+                    </CommentTrackToolsContainer>
+                    <RightArea area="main" />
+                  </CommentsContainer>
+                </WaxSurfaceScroll>
+                {hasNotes && (
+                  <NotesAreaContainer className="productionnotes panelWrapper">
+                    <NotesContainer id="notes-container">
+                      <NotesHeading>Notes</NotesHeading>
+                      <NotesArea view={main} />
+                    </NotesContainer>
+                    <CommentsContainerNotes>
+                      <RightArea area="notes" />
+                    </CommentsContainerNotes>
+                  </NotesAreaContainer>
+                )}
+              </div>
+            </EditorArea>
+          </ProductionEditorDiv>
         ) : (
           <>
             <Menu className="waxmenu">
@@ -123,7 +142,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                 <LeftSideBar />
               </SideMenu>
 
-              <EditorArea className="editorArea">
+              <EditorArea className="editorArea production">
                 <div>
                   <WaxSurfaceScroll className="panelWrapper">
                     <EditorContainer>{editor}</EditorContainer>
@@ -158,14 +177,6 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
           </>
         )}
       </Grid>
-      {readOnly && notes.length > 0 && (
-        <ReadOnlyNotesAreaContainer>
-          <NotesHeading>Notes</NotesHeading>
-          <NotesContainer id="notes-container">
-            <NotesArea view={main} />
-          </NotesContainer>
-        </ReadOnlyNotesAreaContainer>
-      )}
       <InfoContainer>
         <CounterInfo />
       </InfoContainer>

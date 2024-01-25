@@ -88,7 +88,11 @@ export const StatusBadge = ({
   clickable,
   styles,
 }) => {
-  if (status === 'accepted' || status === 'published') {
+  if (
+    status === 'accepted' ||
+    status === 'published' ||
+    status === 'completed'
+  ) {
     return (
       <SuccessStatus clickable={clickable} minimal={minimal} style={styles}>
         {label(status, published)}

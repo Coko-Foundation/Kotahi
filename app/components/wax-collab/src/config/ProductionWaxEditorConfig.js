@@ -3,13 +3,13 @@ import {
   InlineAnnotationsService,
   ImageService,
   LinkService,
-  ListsService,
+  // ListsService,
   BaseService,
   DisplayBlockLevelService,
   TextBlockLevelService,
   NoteService,
   TrackChangeService,
-  CommentsService,
+  // CommentsService,
   MathService,
   FindAndReplaceService,
   FullScreenService,
@@ -21,7 +21,8 @@ import {
   TablesService,
   /* tableEditing, */ columnResizing,
 } from 'wax-table-service'
-// import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
+import CommentsService from '../extensions/CommentsService/CommentsService'
+import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
 import {
   KotahiBlockDropDownToolGroupService,
@@ -40,11 +41,11 @@ const updateTitle = title => {
 }
 
 const productionWaxEditorConfig = (
-  readOnlyComments,
   handleAssetManager,
   updateAnystyle,
   updateCrossRef,
   styleReference,
+  isReadOnly,
 ) => ({
   EnableTrackChangeService: {
     enabled: false,
@@ -68,10 +69,10 @@ const productionWaxEditorConfig = (
     },
   },
   SchemaService: KotahiSchema,
-  CommentsService: {
-    showTitle: true,
-    readOnly: readOnlyComments || false, // this should make it work though this is not yet in Wax
-  },
+  // If we are in read-only mode, readOnly is set to true. This makes it so that the user cannot add more comments.
+  // A little vexingly, however, the interface for adding (or replying to) comments is shown. Maybe this should be
+  // changed in CommentsService in the future.
+  CommentsService: { showTitle: true, readOnly: isReadOnly || false },
   MenuService: [
     {
       templateArea: 'topBar',
@@ -115,7 +116,7 @@ const productionWaxEditorConfig = (
     },
   ],
 
-  PmPlugins: [columnResizing() /* tableEditing() */],
+  PmPlugins: [columnResizing() /* tableEditing() */ /* WaxSelectionPlugin */],
 
   RulesService: [emDash, ellipsis],
 

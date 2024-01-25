@@ -9,7 +9,9 @@ const generateSchema = (
   deleteFile,
   createFile,
   config,
-  defaultReviewerInvitationEmail,
+  defaultReviewerInvitationTemplate,
+  defaultAuthorProofingInvitationTemplate,
+  defaultAuthorProofingSubmittedTemplate,
   t,
 ) => {
   const schema = {
@@ -905,7 +907,25 @@ const generateSchema = (
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
-                    default: defaultReviewerInvitationEmail.const,
+                    default: defaultReviewerInvitationTemplate.const,
+                  },
+                  authorProofingInvitationEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingInvitationEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingInvitationTemplate.const,
+                  },
+                  authorProofingSubmittedEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingSubmittedEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingSubmittedTemplate.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description: t(
@@ -1425,7 +1445,25 @@ const generateSchema = (
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
-                    default: defaultReviewerInvitationEmail.const,
+                    default: defaultReviewerInvitationTemplate.const,
+                  },
+                  authorProofingInvitationEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingInvitationEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingInvitationTemplate.const,
+                  },
+                  authorProofingSubmittedEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingSubmittedEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingSubmittedTemplate.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description: t(
@@ -1941,7 +1979,25 @@ const generateSchema = (
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
-                    default: defaultReviewerInvitationEmail.const,
+                    default: defaultReviewerInvitationTemplate.const,
+                  },
+                  authorProofingInvitationEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingInvitationEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingInvitationTemplate.const,
+                  },
+                  authorProofingSubmittedEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingSubmittedEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingSubmittedTemplate.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description: t(
@@ -2464,7 +2520,7 @@ const generateSchema = (
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
-                    default: defaultReviewerInvitationEmail.const,
+                    default: defaultReviewerInvitationTemplate.const,
                   },
                   evaluationCompleteEmailTemplate: {
                     description: t(
@@ -2481,6 +2537,24 @@ const generateSchema = (
                     type: ['string', 'null'],
                     oneOf: emailNotificationOptions,
                     uniqueItems: true,
+                  },
+                  authorProofingInvitationEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingInvitationEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingInvitationTemplate.const,
+                  },
+                  authorProofingSubmittedEmailTemplate: {
+                    description: t(
+                      'configPage.authorProofingSubmittedEmailTemplate',
+                    ),
+                    type: ['string', 'null'],
+                    oneOf: emailNotificationOptions,
+                    uniqueItems: true,
+                    default: defaultAuthorProofingSubmittedTemplate.const,
                   },
                   alertUnreadMessageDigestTemplate: {
                     description: t(

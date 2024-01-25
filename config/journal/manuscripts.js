@@ -18,6 +18,7 @@ const ownerColumns = [
   'status',
   'created',
   'updated',
+  'authorProofingLink',
   'submitChevron',
 ]
 

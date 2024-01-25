@@ -10,6 +10,9 @@ const esLa = {
       revise: 'Revisar',
       revising: 'Revisando',
       published: 'Publicado',
+      assigned: 'Prueba de autor asignada',
+      inProgress: 'Revisión del autor en curso',
+      completed: 'Prueba de autor completada',
       unknown: 'Desconocido',
     },
     reviewerStatus: {
@@ -231,6 +234,12 @@ const esLa = {
       declinedInvitation: 'Rechazado el {{dateString}}',
       'Invited via email': 'Invitado vía correo electrónico',
       'View Details': 'Ver Detalles',
+      'Assign Author for Proofing': 'Asignar autor para revisión',
+      'Submit for author proofing': 'Enviar para revisión del autor',
+      authorRequired: '¡Requiere que se invite a un autor!',
+      hideAssignedAuthors: 'Ocultar todos los autores asignados',
+      showAssignedAuthors: 'Mostrar todos los autores asignados',
+      assignedOn: '{{assigneeName}} asignado el {{date}}',
       decisionTab: {
         'Archived version': 'Versión Archivada',
         notCurrentVersion:
@@ -362,6 +371,14 @@ const esLa = {
     },
     productionPage: {
       Production: 'Producción',
+      AuthorProofing: 'Revisión del autor',
+      Feedback: 'Comentario',
+      Attachments: 'Archivos adjuntos',
+      Submitted: 'Enviada',
+      Submit: 'Entregar',
+      'Edited on': 'Editado el {{date}}',
+      submittedOn: '{{submitterName}} presentado el {{date}}',
+      'read-only': ' (solo lectura)',
       'No supported view of the file': 'No hay una vista admitida del archivo',
       Download: 'Descargar',
       Editor: 'Editor',
@@ -471,6 +488,10 @@ const esLa = {
       evaluationCompleteEmailTemplate: 'Revisión enviada',
       submissionConfirmationEmailTemplate: 'Manuscrito enviado',
       alertUnreadMessageDigestTemplate: 'Mensaje de discusión no leído',
+      authorProofingInvitationEmailTemplate:
+        'Prueba de autor invitación asignada',
+      authorProofingSubmittedEmailTemplate:
+        'Prueba del autor completada y comentarios enviados.',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',

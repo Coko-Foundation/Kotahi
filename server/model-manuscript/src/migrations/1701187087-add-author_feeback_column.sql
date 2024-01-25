@@ -1,0 +1,1 @@
+ALTER TABLE manuscripts ADD COLUMN author_feedback JSONB;

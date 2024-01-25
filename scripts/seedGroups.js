@@ -215,6 +215,7 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
     )
   }
 
+  // TODO: below @mention notification addition can be moved to default templates and should be done via migration for clean code
   // Check if an email template for @mention notification already exists
   const existingEmailTemplateForMentionNotification = await EmailTemplate.query()
     .where({

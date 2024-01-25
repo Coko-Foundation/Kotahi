@@ -18,9 +18,11 @@ import {
 } from '../../../../shared'
 
 const SubmissionsTable = ({
+  currentUser,
   manuscriptsUserHasCurrentRoleIn,
   submissionForm,
   applyQueryParams,
+  updateManuscript,
   uriQueryParams,
 }) => {
   const config = useContext(ConfigContext)
@@ -47,6 +49,8 @@ const SubmissionsTable = ({
 
   const specialComponentValues = {
     urlFrag,
+    currentUser,
+    updateManuscript,
   }
 
   const displayProps = {

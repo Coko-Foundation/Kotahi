@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
-import { color } from '../../../../theme'
+import theme, { color } from '../../../../theme'
 import { RoundIconButton } from '../../../shared'
 
 export const AdminSection = styled.div`
@@ -125,6 +125,35 @@ export const CollapseButton = styled(RoundIconButton)`
   position: absolute;
   right: 0;
   width: 33px;
+`
+
+export const AssignedAuthorForProofingLogsContainer = styled.div`
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+`
+
+export const AssignedAuthorForProofingLogsToggle = styled.button`
+  background-color: transparent;
+  border: none;
+  color: ${color.brand1.base};
+  font-size: ${theme.fontSizeBaseSmall};
+  padding: 10px 10px;
+  text-decoration: underline;
+`
+
+export const AssignedAuthorForProofingLogs = styled.div`
+  color: ${color.text};
+  font-size: ${theme.fontSizeBaseSmall};
+  margin: 10px 10px;
+  text-align: right;
+`
+
+export const AssignedAuthorForProofingInfo = styled.div`
+  color: ${color.text};
+  font-size: ${theme.fontSizeBaseSmall};
+  margin: 8px 0px;
 `
 
 export {
