@@ -123,7 +123,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const channels = [
     {
       id: channelId,
-      name: t('chat.Discussion with editor'),
+      name: t('chat.Discussion with editorial team'),
       type: editorialChannel?.type,
     },
   ]

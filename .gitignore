@@ -16,6 +16,7 @@ config/local*.*
 .vscode/launch.json
 .DS_Store
 config/*.env
+config/translationOverrides.js
 !config/plugins
 config/plugins/*
 !config/plugins/example_plugins_manifest.json

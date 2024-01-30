@@ -1,14 +1,28 @@
+import { merge, cloneDeep } from 'lodash'
 import en from './en/translation'
 import esLa from './es-la/translation'
 import fr from './fr/translation'
 import ru from './ru/translation'
 
-const resources = {
+let translationOverrides
+
+try {
+  // eslint-disable-next-line global-require, import/no-unresolved
+  translationOverrides = require('../../config/translationOverrides').default
+} catch (error) {
+  // ignore
+}
+
+const baseTranslations = {
   en,
   'es-LA': esLa,
   fr,
   'ru-RU': ru,
 }
+
+const resources = translationOverrides
+  ? merge(cloneDeep(baseTranslations), translationOverrides.resources)
+  : baseTranslations
 
 const languagesLabels = [
   { value: 'en', label: 'English' },
@@ -63,6 +77,7 @@ const languagesLabels = [
       },
     },
   },
+  ...(translationOverrides?.languagesLabels ?? []),
 ]
 
 export { resources, languagesLabels }
