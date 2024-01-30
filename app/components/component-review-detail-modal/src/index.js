@@ -137,12 +137,11 @@ const ReviewDetailsModal = (
       subtitle={t(`modals.reviewReport.Last Updated`, {
         dateString: timeString,
       })}
-      title={t('modals.reviewReport.Review Report', {
-        name:
-          reviewerName && reviewerName !== 'undefined'
-            ? `${reviewerName}'s Review Report`
-            : 'Review Report',
-      })}
+      title={
+        reviewerName
+          ? t('modals.reviewReport.reviewReport', { name: reviewerName })
+          : t('modals.reviewReport.anonymousReviewReport')
+      }
     >
       {reviewer && (
         <UserCombo style={{ marginBottom: '1em' }}>

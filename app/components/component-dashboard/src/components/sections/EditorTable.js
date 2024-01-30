@@ -71,7 +71,7 @@ const EditorTable = ({
     <>
       <SectionContent>
         <SectionHeader>
-          <Title>{t("dashboardPage.edit.Manuscripts I'm editor of")}</Title>
+          <Title>{t("dashboardPage.Manuscripts I'm editor of")}</Title>
         </SectionHeader>
         <ManuscriptsTable
           applyQueryParams={applyQueryParams}

@@ -72,9 +72,9 @@ const esLa = {
       },
       teams: {
         assign: 'Asignar {{teamLabel}}...',
-        'Senior Editor': 'Curador Asesor',
-        'Handling Editor': 'Editor de Tratamiento',
-        Editor: 'Curador de manejo',
+        'Senior Editor': 'editor senior',
+        'Handling Editor': 'editor de tratamiento',
+        Editor: 'editor',
       },
       kanban: {
         'Last updated': 'Última actualización',
@@ -174,15 +174,12 @@ const esLa = {
       'New Alerts': 'Nuevas Alertas',
       'My Submissions': 'Mis Presentaciones',
       'To Review': 'Para Revisión',
-      "Manuscripts I'm Curator of": 'Manuscritos soy curador de',
+      "Manuscripts I'm editor of": 'Manuscritos en los que soy editor',
       mySubmissions: {
         'My Submissions': 'Mis Presentaciones',
       },
       toReview: {
         'To Review': 'Para Revisión',
-      },
-      edit: {
-        "Manuscripts I'm curator of": 'Manuscritos soy curador de',
       },
     },
     reviewPage: {
@@ -752,12 +749,11 @@ const esLa = {
       'Group Manager discussion': 'Discusión de Gerente de Grupo',
       'Show admin discussion': 'Mostrar discusión de Administrador',
       'Show group manager discussion': 'Mostrar discusión de Gerente de Grupo',
-      'Discussion with curatorial team': 'Discusión con el equipo curatorial',
-      'Discussion with editor': 'Discusión con el editor',
+      'Discussion with editorial team': 'Discusión con el equipo editorial',
       'Show Chat': 'Mostrar Chat',
       'Hide Chat': 'Ocultar Chat',
       'Discussion with author': 'Discusión con el autor',
-      'Curatorial discussion': 'Discusión curatorial',
+      'Editorial discussion': 'Discusión editorial',
       edit: 'Editar',
       delete: 'Eliminar',
       Edited: 'Editado',
@@ -778,7 +774,7 @@ const esLa = {
         'Registered Users': 'Usuarios Registrados',
         userRoles: {
           Reviewer: 'Revisor',
-          Editor: 'Curador',
+          Editor: 'Editor',
           Author: 'Autor',
         },
       },
@@ -829,7 +825,8 @@ const esLa = {
         'No reason provided': 'No se proporcionó motivo.',
       },
       reviewReport: {
-        'Review Report': 'Informe de Revisión de {{name}}',
+        reviewReport: 'Informe de revisión de {{name}}',
+        anonymousReviewReport: 'Informe de revisión',
         'Last Updated': 'Última Actualización: {{dateString}}',
         Reviewer: 'Revisor:',
         Status: 'Estado',

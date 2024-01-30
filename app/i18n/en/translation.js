@@ -71,9 +71,9 @@ const en = {
       },
       teams: {
         assign: 'Assign {{teamLabel}}...',
-        'Senior Editor': 'Advisory Curator',
-        'Handling Editor': 'Handling Editor',
-        Editor: 'Handling Curator',
+        'Senior Editor': 'senior editor',
+        'Handling Editor': 'handling editor',
+        Editor: 'editor',
       },
       kanban: {
         'Last updated': 'Last updated',
@@ -172,15 +172,12 @@ const en = {
       'New Alerts': 'New Alerts',
       'My Submissions': 'My Submissions',
       'To Review': 'To Review',
-      "Manuscripts I'm Curator of": 'Manuscripts I’m Curator of',
+      "Manuscripts I'm editor of": 'Manuscripts I’m editor of',
       mySubmissions: {
         'My Submissions': 'My Submissions',
       },
       toReview: {
         'To Review': 'To Review',
-      },
-      edit: {
-        "Manuscripts I'm curator of": 'Manuscripts I’m curator of',
       },
     },
     reviewPage: {
@@ -729,12 +726,11 @@ const en = {
       'Group Manager discussion': 'Group Manager discussion',
       'Show admin discussion': 'Show admin discussion',
       'Show group manager discussion': 'Show group manager discussion',
-      'Discussion with curatorial team': 'Discussion with curatorial team',
-      'Discussion with curator': 'Discussion with curator',
+      'Discussion with editorial team': 'Discussion with editorial team',
       'Show Chat': 'Show Chat',
       'Hide Chat': 'Hide Chat',
       'Discussion with author': 'Discussion with author',
-      'Curatorial discussion': 'Curatorial discussion',
+      'Editorial discussion': 'Editorial discussion',
       edit: 'Edit',
       delete: 'Delete',
       Edited: 'Edited',
@@ -755,7 +751,7 @@ const en = {
         'Registered Users': 'Registered Users',
         userRoles: {
           Reviewer: 'Reviewer',
-          Editor: 'Curator',
+          Editor: 'Editor',
           Author: 'Author',
         },
       },
@@ -806,7 +802,8 @@ const en = {
         'No reason provided': 'No reason provided.',
       },
       reviewReport: {
-        'Review Report': '{{name}}’s Review Report',
+        reviewReport: '{{name}}’s review report',
+        anonymousReviewReport: 'Review report',
         'Last Updated': 'Last Updated: {{dateString}}',
         Reviewer: 'Reviewer:',
         Status: 'Status',

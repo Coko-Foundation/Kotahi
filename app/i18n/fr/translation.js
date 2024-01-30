@@ -71,9 +71,9 @@ const fr = {
       },
       teams: {
         assign: 'Attribuer à {{teamLabel}}...',
-        'Senior Editor': 'Conservateur-conseil',
+        'Senior Editor': 'Éditeur en chef',
         'Handling Editor': 'Éditeur responsable',
-        Editor: 'Conservateur de manutention',
+        Editor: 'Éditeur',
       },
       kanban: {
         'Last updated': 'Dernière mise à jour',
@@ -173,15 +173,12 @@ const fr = {
       'New Alerts': 'Nouvelles alertes',
       'My Submissions': 'Mes soumissions',
       'To Review': 'À réviser',
-      "Manuscripts I'm Curator of": 'Manuscrits dont je suis conservateur',
+      "Manuscripts I'm editor of": 'Manuscrits dont je suis éditeur',
       mySubmissions: {
         'My Submissions': 'Mes soumissions',
       },
       toReview: {
         'To Review': 'À réviser',
-      },
-      edit: {
-        "Manuscripts I'm curator of": '',
       },
     },
     reviewPage: {
@@ -757,10 +754,8 @@ const fr = {
         'Afficher la discussion du gestionnaire de groupe',
       'Hide Chat': 'Masquer le chat',
       'Discussion with author': "Discussion avec l'auteur",
-      'Curatorial discussion': 'Discussion curatoriale',
-      'Discussion with curatorial team':
-        "Discussion avec l'équipe de conservation",
-      'Discussion with curator': 'Discussion avec le conservateur',
+      'Discussion with editorial team': "Discussion avec l'équipe éditoriale",
+      'Editorial discussion': 'Discussion éditoriale',
       'Show Chat': 'Afficher le chat',
       edit: 'Modifier',
       delete: 'Supprimer',
@@ -782,7 +777,7 @@ const fr = {
         'Registered Users': 'Utilisateurs enregistrés',
         userRoles: {
           Reviewer: 'Évaluateur',
-          Editor: 'Conservateur',
+          Editor: 'Éditeur',
           Author: 'Auteur',
         },
       },
@@ -833,7 +828,8 @@ const fr = {
         'No reason provided': 'Aucune raison fournie.',
       },
       reviewReport: {
-        'Review Report': "Rapport d'évaluation de {{name}}",
+        reviewReport: "Rapport d'évaluation de {{name}}",
+        anonymousReviewReport: "Rapport d'évaluation",
         'Last Updated': 'Dernière mise à jour : {{dateString}}',
         Reviewer: 'Évaluateur :',
         Status: 'Statut',

@@ -71,10 +71,10 @@ const ru = {
         Reject: 'Отклонить',
       },
       teams: {
-        assign: '{{teamLabel}}',
-        'Senior Editor': 'Консультативный куратор',
-        'Handling Editor': 'Выпускающий редактор',
-        Editor: 'Обращение с куратором',
+        assign: 'Назначить {{teamLabel}}...',
+        'Senior Editor': 'главный редактор',
+        'Handling Editor': 'выпускающий редактор',
+        Editor: 'литературный редактор',
       },
       kanban: {
         'Last updated': 'Последнее обновление',
@@ -175,15 +175,12 @@ const ru = {
       'New Alerts': 'Новые оповещения',
       'My Submissions': 'Мои статьи',
       'To Review': 'Статьи для рецензирования',
-      "Manuscripts I'm Curator of": 'Рукописи, куратором которых я являюсь',
+      "Manuscripts I'm editor of": 'Статьи для редактирования',
       mySubmissions: {
         'My Submissions': 'Мои статьи',
       },
       toReview: {
         'To Review': 'Статьи для рецензирования',
-      },
-      edit: {
-        "Manuscripts I'm curator of": 'Рукописи, куратором которых я являюсь',
       },
     },
     reviewPage: {
@@ -752,9 +749,8 @@ const ru = {
       'Show group manager discussion': 'Показать обсуждение',
       'Hide Chat': 'Скрыть чат',
       'Discussion with author': 'Чат с Автором',
-      'Curatorial discussion': 'Кураторская дискуссия',
-      'Discussion with curatorial team': 'Обсуждение с кураторской командой',
-      'Discussion with curator': 'Обсуждение с куратором',
+      'Discussion with editorial team': 'Обсуждение с редакцией',
+      'Editorial discussion': 'Чат редакции',
       'Show Chat': 'Показать чат',
       edit: 'Редактировать',
       delete: 'Удалить',
@@ -827,7 +823,8 @@ const ru = {
         'No reason provided': 'Причина не указана.',
       },
       reviewReport: {
-        'Review Report': `Отчет о рецензировании от {{name}}`,
+        reviewReport: 'Отчет о рецензировании от {{name}}',
+        anonymousReviewReport: 'Отчет о рецензировании',
         'Last Updated': 'Последнее обновление: {{dateString}}',
         Reviewer: 'Рецензент:',
         Status: 'Статус',
