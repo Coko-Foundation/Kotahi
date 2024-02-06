@@ -38,7 +38,7 @@ const FormSummary = ({ form, isActive, openFormSettingsDialog }) => {
           onClick={openFormSettingsDialog}
           title={t('formBuilder.Edit form settings')}
         >
-          <Icon noPadding>edit</Icon>
+          <Icon noPadding>settings</Icon>
         </Action>
       </RightLooseRow>
       <h2>{form.structure.name}</h2>
