@@ -9,6 +9,8 @@ const {
   getGroupAndGlobalRoles,
 } = require('./userCommsUtils')
 
+const { cachedGet, evictFromCacheByPrefix } = require('../../querycache')
+
 const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
   if (!user) return
   const groupId = ctx.req.headers['group-id']
@@ -17,6 +19,8 @@ const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
 
 const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
   if (!team) return // We won't create a new team: this is only intended for existing teams
+  evictFromCacheByPrefix('userIs')
+  evictFromCacheByPrefix('membersOfTeam')
   const groupId = ctx.req.headers['group-id']
   const teamId = team.id
 
@@ -436,11 +440,8 @@ const resolvers = {
       )
     },
     async defaultIdentity(parent, args, ctx) {
-      const identity = await models.Identity.query()
-        .where({ userId: parent.id, isDefault: true })
-        .first()
-
-      return identity
+      const userId = parent.id
+      return cachedGet(`defaultIdentityOfUser:${userId}`)
     },
     async identities(parent, args, ctx) {
       const identities = await models.Identity.query().where({
@@ -450,16 +451,11 @@ const resolvers = {
       return identities
     },
     async profilePicture(parent, args, ctx) {
-      const user = await models.User.query()
-        .findById(parent.id)
-        .withGraphFetched('[file]')
+      let { id: userId, profilePicture } = parent
+      const file = await cachedGet(`profilePicFileOfUser:${userId}`)
 
-      const avatarPlaceholder = '/profiles/default_avatar.svg'
-
-      let { profilePicture } = user
-
-      if (user.file) {
-        const params = new Proxy(new URLSearchParams(user.profilePicture), {
+      if (file) {
+        const params = new Proxy(new URLSearchParams(profilePicture), {
           get: (searchParams, prop) => searchParams.get(prop),
         })
 
@@ -471,21 +467,25 @@ const resolvers = {
 
         // Re-generate URL only if the previous generated URL expired
         if (isExpired) {
-          const objectKey = user.file.storedObjects.find(
+          const objectKey = file.storedObjects.find(
             storedObject => storedObject.type === 'small',
           ).key
 
           profilePicture = await fileStorage.getURL(objectKey)
 
-          await models.User.query().patchAndFetchById(user.id, {
+          await models.User.query().patchAndFetchById(userId, {
             profilePicture,
           })
         }
-      } else if (profilePicture !== avatarPlaceholder) {
+
+        return profilePicture
+      }
+
+      const avatarPlaceholder = '/profiles/default_avatar.svg'
+
+      if (profilePicture !== avatarPlaceholder) {
         profilePicture = avatarPlaceholder
-        await models.User.query().patchAndFetchById(user.id, {
-          profilePicture,
-        })
+        await models.User.query().patchAndFetchById(userId, { profilePicture })
       }
 
       return profilePicture

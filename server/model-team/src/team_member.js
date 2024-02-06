@@ -1,4 +1,5 @@
 const { BaseModel } = require('@coko/server')
+const { evictFromCacheByPrefix } = require('../../querycache')
 
 class TeamMember extends BaseModel {
   static get tableName() {
@@ -43,6 +44,13 @@ class TeamMember extends BaseModel {
         },
       },
     }
+  }
+
+  // TODO add $beforeDelete once https://gitlab.coko.foundation/cokoapps/server/-/issues/43 is resolved
+  async $beforeInsert(queryContext) {
+    await super.$beforeInsert(queryContext)
+    evictFromCacheByPrefix('userIs')
+    evictFromCacheByPrefix('membersOfTeam')
   }
 
   static get schema() {

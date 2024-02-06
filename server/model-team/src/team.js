@@ -1,4 +1,5 @@
 const { BaseModel } = require('@coko/server')
+const { evictFromCache } = require('../../querycache')
 
 class Team extends BaseModel {
   constructor(properties) {
@@ -70,6 +71,12 @@ class Team extends BaseModel {
         },
       },
     }
+  }
+
+  // TODO add $beforeDelete once https://gitlab.coko.foundation/cokoapps/server/-/issues/43 is resolved
+  async $beforeInsert(queryContext) {
+    await super.$beforeInsert(queryContext)
+    evictFromCache(`teamsForObject:${this.objectId}`)
   }
 
   static get schema() {

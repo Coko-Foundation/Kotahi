@@ -29,10 +29,15 @@ module.exports = defineConfig({
         restore: async name => {
           // eslint-disable-next-line no-console
           console.log(name, 'name')
-          return resetDbAndApplyDump(
+
+          const result = resetDbAndApplyDump(
             readFileSync(dumpFile(name), 'utf-8'),
             name,
           )
+
+          // Wait long enough for server-side cache to clear
+          await new Promise(resolve => setTimeout(resolve, 10500))
+          return result
         },
         seed: async name => {
           // eslint-disable-next-line no-console

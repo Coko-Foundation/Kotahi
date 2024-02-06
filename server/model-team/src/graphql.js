@@ -1,4 +1,3 @@
-const fetchedObjects = '[members.[user, alias]]'
 const models = require('@pubsweet/models')
 
 const {
@@ -10,19 +9,20 @@ const {
   removeUserFromManuscriptChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
+const { evictFromCacheByPrefix, cachedGet } = require('../../querycache')
+
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return models.Team.query().findById(id).withGraphFetched(fetchedObjects)
+      return models.Team.query().findById(id)
     },
     teams(_, { where }, ctx) {
-      return models.Team.query()
-        .where(where || {})
-        .withGraphFetched(fetchedObjects)
+      return models.Team.query().where(where || {})
     },
   },
   Mutation: {
     async deleteTeam(_, { id }, ctx) {
+      evictFromCacheByPrefix('userIs')
       return models.Team.query().deleteById(id)
     },
     async createTeam(_, { input }, ctx) {
@@ -52,6 +52,8 @@ const resolvers = {
       return models.Team.query().insertGraphAndFetch(input, options)
     },
     async updateTeam(_, { id, input }, ctx) {
+      evictFromCacheByPrefix('userIs')
+      evictFromCacheByPrefix('membersOfTeam')
       const existing = await models.Team.query().select('role').findById(id)
 
       if (
@@ -147,8 +149,7 @@ const resolvers = {
   },
   Team: {
     async members(team, { where }, ctx) {
-      const t = await models.Team.query().findById(team.id)
-      return t.$relatedQuery('members')
+      return team.members ?? cachedGet(`membersOfTeam:${team.id}`)
     },
     object(team, vars, ctx) {
       const { objectId, objectType } = team
@@ -157,8 +158,7 @@ const resolvers = {
   },
   TeamMember: {
     async user(teamMember, vars, ctx) {
-      const member = await models.TeamMember.query().findById(teamMember.id)
-      return member ? member.$relatedQuery('user') : null
+      return teamMember.user ?? cachedGet(`userForTeamMember:${teamMember.id}`)
     },
     async alias(teamMember, vars, ctx) {
       const member = await models.TeamMember.query().findById(teamMember.id)

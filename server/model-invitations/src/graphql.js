@@ -34,7 +34,7 @@ const resolvers = {
         .where({
           manuscriptId: id,
         })
-        .withGraphFetched('[user]')
+        .withGraphJoined('user')
 
       return invitations
     },

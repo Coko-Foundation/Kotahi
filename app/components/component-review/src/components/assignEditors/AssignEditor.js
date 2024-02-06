@@ -46,7 +46,7 @@ const AssignEditor = ({
 
   const options = (allUsers || []).map(user => editorOption(user))
 
-  const onChangeEditor = currentSelectedEditor => {
+  const onChangeEditor = async currentSelectedEditor => {
     let updatedMembers = []
 
     if (currentSelectedEditor) {
@@ -54,7 +54,7 @@ const AssignEditor = ({
     }
 
     if (team) {
-      updateTeam({
+      await updateTeam({
         variables: { id: team.id, input: { members: updatedMembers } },
       })
       setSelectedEditor(currentSelectedEditor)
@@ -72,7 +72,7 @@ const AssignEditor = ({
       members: updatedMembers,
     }
 
-    createTeam({ variables: { input } }).then(({ data }) => {
+    await createTeam({ variables: { input } }).then(({ data }) => {
       setTeams([
         ...teams,
         {

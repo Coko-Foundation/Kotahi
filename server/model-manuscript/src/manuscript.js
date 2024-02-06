@@ -1,12 +1,14 @@
 const { BaseModel } = require('@coko/server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
-const sortBy = require('lodash/sortBy')
+const { raw } = require('objection')
 const { getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
 
 const {
   deleteAlertsForManuscript,
 } = require('../../model-task/src/taskCommsUtils')
+
+const { evictFromCache } = require('../../querycache')
 
 class Manuscript extends BaseModel {
   static get tableName() {
@@ -76,38 +78,6 @@ class Manuscript extends BaseModel {
     return manuscriptReviews
   }
 
-  /** Returns an array of all versions other than this version */
-  async getManuscriptVersions() {
-    // const { File } = require('@pubsweet/models')
-
-    const id = this.parentId || this.id
-
-    const manuscripts = await Manuscript.query()
-      .where('parent_id', id)
-      .withGraphFetched(
-        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
-      )
-
-    const firstManuscript = await Manuscript.query()
-      .findById(id)
-      .withGraphFetched(
-        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
-      )
-
-    manuscripts.push(firstManuscript)
-
-    const manuscriptVersionsArray = manuscripts.filter(
-      manuscript => this.id !== manuscript.id,
-    )
-
-    const manuscriptVersions = sortBy(
-      manuscriptVersionsArray,
-      manuscript => -manuscript.created,
-    )
-
-    return manuscriptVersions
-  }
-
   async getManuscriptAuthor() {
     if (!this.id) {
       return null
@@ -115,9 +85,7 @@ class Manuscript extends BaseModel {
 
     const manuscriptWithAuthors = await Manuscript.query()
       .findById(this.id)
-      .withGraphFetched(
-        '[teams(onlyAuthors).[members(orderByCreatedDesc).[user]]]',
-      )
+      .withGraphFetched('teams(onlyAuthors).members(orderByCreatedDesc).user')
 
     if (
       !manuscriptWithAuthors.teams.length ||
@@ -220,6 +188,7 @@ class Manuscript extends BaseModel {
     newVersion.parentId = this.parentId || this.id
 
     newVersion.authorFeedback = {}
+    evictFromCache(`subVersionsOfMs:${newVersion.parentId}`)
 
     const manuscript = await Manuscript.query().insertGraphAndFetch(
       omit(cloneDeep(newVersion), ['id', 'created', 'updated', 'decision']),
@@ -228,6 +197,26 @@ class Manuscript extends BaseModel {
     await deleteAlertsForManuscript(this.id)
 
     return manuscript
+  }
+
+  /** Find all manuscripts (any version) for which the user serves in any role as a
+   * team-member, and return the IDs of the first versions of those manuscripts.
+   * E.g. If the given user was invited as a reviewer of the second version of a
+   * manuscript, the first version of that manuscript will be included in the results.
+   */
+  static async getFirstVersionIdsOfManuscriptsUserHasARoleIn(userId, groupId) {
+    const records = await Manuscript.query()
+      .select(
+        raw('coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id'),
+      )
+      .join('teams', 'manuscripts.id', '=', 'teams.object_id')
+      .join('team_members', 'teams.id', '=', 'team_members.team_id')
+      .where('team_members.user_id', userId)
+      .where('is_hidden', false)
+      .where('group_id', groupId)
+      .distinct()
+
+    return records.map(r => r.topLevelId)
   }
 
   static get relationMappings() {

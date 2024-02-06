@@ -8,25 +8,32 @@ const {
   deny,
 } = require('@coko/server/authorization')
 
-/** If manuscriptId is supplied, this tests whether the user is an editor of that manuscript.
- * If manuscriptId is not supplied, it tests whether the user is an editor of any manuscript whatsoever.
- * TODO: The latter case seems of dubious value and is in many cases used inappropriately. Perhaps it's never appropriate?
- */
-const userIsEditorQuery = async (ctx, manuscriptId) => {
-  if (!ctx.user) return false
+const { cachedGet } = require('../server/querycache')
 
-  let innerQuery = ctx.connectors.Team.model
-    .query()
-    .whereIn('role', ['seniorEditor', 'handlingEditor', 'editor'])
-  if (manuscriptId) innerQuery = innerQuery.where({ objectId: manuscriptId })
+const userIsEditor = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  const manuscriptId = parent?.manuscriptId ?? args?.id
+  if (!manuscriptId) throw new Error('No manuscriptId for userIsEditor!')
+  return cachedGet(`userIsEditor:${ctx.user}:${manuscriptId}`)
+})
 
-  const editorRecord = await ctx.connectors.Team.model
-    .relatedQuery('members')
-    .for(innerQuery)
-    .findOne({ userId: ctx.user })
+// TODO Is this actually needed anywhere? Can it be replaced with userIsEditor?
+const userIsEditorOfAnyManuscript = rule({
+  cache: 'contextual',
+})(async (parent, args, ctx, info) =>
+  cachedGet(`userIsEditorOfAnyManuscript:${ctx.user}`),
+)
 
-  return !!editorRecord
-}
+const userIsGm = rule({
+  cache: 'contextual',
+})(async (parent, args, ctx, info) =>
+  cachedGet(`userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`),
+)
+
+const userIsAdmin = rule({
+  cache: 'contextual',
+})(async (parent, args, ctx, info) => cachedGet(`userIsAdmin:${ctx.user}`))
 
 const userOwnsMessage = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
@@ -40,29 +47,8 @@ const userOwnsMessage = rule({ cache: 'contextual' })(
   },
 )
 
-const getManuscriptOfFile = async (file, ctx) => {
-  if (!file || !file.objectId) {
-    console.error('File without objectId encountered:', file)
-    return null
-  }
-
-  // The file may belong to a review or directly to a manuscript
-  const review = await ctx.connectors.Review.model
-    .query()
-    .findById(file.objectId)
-
-  const manuscript = await ctx.connectors.Manuscript.model
-    .query()
-    .findById(review ? review.manuscriptId : file.objectId)
-
-  if (!manuscript)
-    console.error('File without owner manuscript encountered:', file)
-
-  return manuscript
-}
-
 const getLatestVersionOfManuscriptOfFile = async (file, ctx) => {
-  const manuscript = await getManuscriptOfFile(file, ctx)
+  const manuscript = await cachedGet(`msOfFile:${file.id}`)
 
   if (!manuscript) return null
 
@@ -84,11 +70,6 @@ const getLatestVersionOfManuscript = async (ctx, manuscriptVersionId) => {
   return latestVersion[0]
 }
 
-// TODO This rule is widely used inappropriately. Are there ANY appropriate uses for it?
-const userIsEditorOfAnyManuscript = rule({
-  cache: 'contextual',
-})(async (parent, args, ctx, info) => userIsEditorQuery(ctx))
-
 const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   if (!user) return false
 
@@ -101,75 +82,37 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   return !!rows
 }
 
-const userIsGroupManagerQuery = async ctx => {
-  if (!ctx.user) return false
-
-  const groupId = ctx.req.headers['group-id']
-
-  const groupManagerRecord = await ctx.connectors.Team.model
-    .query()
-    .withGraphJoined('members')
-    .findOne({ role: 'groupManager', objectId: groupId, userId: ctx.user })
-
-  return !!groupManagerRecord
-}
-
-const userIsAdminQuery = async ctx => {
-  if (!ctx.user) return false
-
-  const adminRecord = await ctx.connectors.Team.model
-    .query()
-    .withGraphJoined('members')
-    .findOne({ role: 'admin', global: true, userId: ctx.user })
-
-  return !!adminRecord
-}
-
-/** Is the current user a Group Manager of the current group or an Admin? */
-const userIsGmOrAdmin = rule({
-  cache: 'contextual',
-})(
-  async (parent, args, ctx, info) =>
-    (await userIsGroupManagerQuery(ctx)) || userIsAdminQuery(ctx),
-)
-
-const userIsAdmin = rule({
-  cache: 'contextual',
-})(async (parent, args, ctx, info) => userIsAdminQuery(ctx))
-
-const isPublicFileFromPublishedManuscript = rule({ cache: 'contextual' })(
+const isPublicFileFromPublishedManuscript = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (parent.tags && parent.tags.includes('confidential')) return false
-    const manuscript = await getManuscriptOfFile(parent, ctx)
-    return !!(manuscript && manuscript.published)
+    const manuscript = await cachedGet(`msOfFile:${parent.id}`)
+    return !!manuscript?.published
   },
 )
 
-const isCMSFile = rule({ cache: 'contextual' })(
-  async (parent, args, ctx, info) => {
-    return parent.tags && parent.tags.includes('cms')
-  },
-)
+const isCMSFile = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
+  return parent.tags && parent.tags.includes('cms')
+})
 
-const isLogoFile = rule({ cache: 'contextual' })(
+const isLogoFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     return parent.tags && parent.tags.includes('brandLogo')
   },
 )
 
-const isFaviconFile = rule({ cache: 'contextual' })(
+const isFaviconFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     return parent.tags && parent.tags.includes('favicon')
   },
 )
 
-const isExportTemplatingFile = rule({ cache: 'contextual' })(
+const isExportTemplatingFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     return parent.tags && parent.tags.includes('templateGroupAsset')
   },
 )
 
-const isPublicReviewFromPublishedManuscript = rule({ cache: 'contextual' })(
+const isPublicReviewFromPublishedManuscript = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (parent.isHiddenFromAuthor || !parent.manuscriptId) return false
 
@@ -210,8 +153,14 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
 
-    if ((await userIsGroupManagerQuery(ctx)) || (await userIsAdminQuery(ctx)))
-      return true
+    const isUserGM = await cachedGet(
+      `userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`,
+    )
+
+    if (isUserGM) return true
+
+    const isUserAdmin = await cachedGet(`userIsAdmin:${ctx.user}`)
+    if (isUserAdmin) return true
 
     const user = await ctx.connectors.User.model.query().findById(ctx.user)
 
@@ -242,7 +191,9 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       'reviewer',
     )
 
-    const isEditor = await userIsEditorQuery(ctx, manuscript.id)
+    const isEditor = await cachedGet(
+      `userIsEditor:${ctx.user}:${manuscript.id}`,
+    )
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
@@ -310,18 +261,12 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   }
 
   // updateReview DecisionForm fallback
-  if (!manuscriptId && args.input && args.input.manuscriptId) {
+  if (!manuscriptId && args.input?.manuscriptId) {
     manuscriptId = args.input.manuscriptId
   }
 
-  return userIsEditorQuery(ctx, manuscriptId)
-})
-
-const userIsEditorOfTheManuscript = rule({
-  cache: 'strict',
-})(async (parent, args, ctx, info) => {
-  if (!args.id) return false
-  return userIsEditorQuery(ctx, args.id)
+  // eslint-disable-next-line no-return-await
+  return cachedGet(`userIsEditor:${ctx.user}:${manuscriptId}`)
 })
 
 const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
@@ -354,13 +299,6 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
 
     return !!member
   },
-)
-
-const userIsGmAndAdmin = rule({
-  cache: 'contextual',
-})(
-  async (parent, args, ctx, info) =>
-    (await userIsGroupManagerQuery(ctx)) && userIsAdminQuery(ctx),
 )
 
 const userHasAcceptedInvitation = rule({ cache: 'strict' })(
@@ -407,7 +345,7 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   } else if (args.id) {
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
-    const manuscript = await getManuscriptOfFile(file, ctx)
+    const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
     manuscriptId = manuscript && manuscript.id
   }
 
@@ -435,7 +373,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
     if (parent.storedObjects && !parent.id) return true // only on uploading manuscript docx this will be validated
 
     const file = await ctx.connectors.File.model.query().findById(parent.id)
-    const manuscript = await getManuscriptOfFile(file, ctx)
+    const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
     if (!manuscript) return false
 
     const team = await ctx.connectors.Team.model
@@ -496,7 +434,7 @@ const manuscriptIsPublished = rule({
   return !!manuscript.published
 })
 
-const userIsCurrentUser = rule({ cache: 'contextual' })(
+const userIsCurrentUser = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user || !args.id) return false
     return ctx.user === args.id
@@ -505,28 +443,33 @@ const userIsCurrentUser = rule({ cache: 'contextual' })(
 
 const permissions = {
   Query: {
-    authorsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    authorsActivity: or(userIsGm, userIsAdmin),
     builtCss: isAuthenticated,
     channels: deny, // Never used
     channelsByTeamName: deny, // Never used
     config: isAuthenticated,
-    convertToJats: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    convertToPdf: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    convertToJats: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    convertToPdf: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     currentUser: isAuthenticated,
     docmap: allow,
-    editorsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    editorsActivity: or(userIsGm, userIsAdmin),
     file: deny, // Never used
     files: deny, // Never used
     findByDOI: deny, // Never used
     form: isAuthenticated,
     formForPurposeAndCategory: allow,
     forms: allow,
-    formsByCategory: userIsGmOrAdmin,
-    getBlacklistInformation: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    formsByCategory: or(userIsGm, userIsAdmin),
+    getBlacklistInformation: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsAdmin,
+    ),
     getEntityFiles: isAuthenticated,
     getInvitationsForManuscript: or(
       userIsEditorOfAnyManuscript,
-      userIsGmOrAdmin,
+      userIsGm,
+      userIsAdmin,
     ),
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
@@ -535,33 +478,31 @@ const permissions = {
     invitationManuscriptId: isAuthenticated,
     invitationStatus: allow,
     manuscript: or(
-      userIsGmOrAdmin,
+      userIsGm,
+      userIsAdmin,
       manuscriptIsPublished,
-      userIsEditorOfTheManuscript,
+      userIsEditor,
       userIsAuthorOfManuscript,
       userIsReviewerOrInvitedReviewerOfTheManuscript,
     ),
     manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
-    manuscriptsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    manuscriptsActivity: or(userIsGm, userIsAdmin),
     manuscriptsPublishedSinceDate: allow,
     manuscriptsUserHasCurrentRoleIn: isAuthenticated,
     message: deny, // Never used
     messages: isAuthenticated,
-    paginatedManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    paginatedUsers: userIsGmOrAdmin,
+    paginatedManuscripts: or(userIsGm, userIsAdmin),
+    paginatedUsers: or(userIsGm, userIsAdmin),
     publishedArtifacts: allow,
     publishedManuscript: allow,
     publishedManuscripts: allow,
-    reviewersActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    reviewersActivity: or(userIsGm, userIsAdmin),
     searchOnCrossref: deny, // Never used
     searchUsers: isAuthenticated,
-    summaryActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    systemWideDiscussionChannel: or(
-      userIsEditorOfAnyManuscript,
-      userIsGmOrAdmin,
-    ),
-    tasks: userIsGmOrAdmin,
+    summaryActivity: or(userIsGm, userIsAdmin),
+    systemWideDiscussionChannel: or(userIsGm, userIsAdmin),
+    tasks: or(userIsGm, userIsAdmin),
     team: deny, // Never used
     teamByName: deny, // Never used
     teams: deny, // Never used
@@ -569,15 +510,15 @@ const permissions = {
     unreviewedPreprints: allow, // This has its own token-based authentication.
     user: isAuthenticated,
     userHasTaskAlerts: isAuthenticated,
-    users: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    users: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     validateDOI: isAuthenticated,
     validateSuffix: isAuthenticated,
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
     addReviewer: isAuthenticated,
-    archiveManuscript: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    archiveManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    archiveManuscript: or(userIsGm, userIsAdmin),
+    archiveManuscripts: or(userIsGm, userIsAdmin),
     assignTeamEditor: deny, // Never used
     assignUserAsAuthor: isAuthenticated, // TODO require the invitation ID to be sent in this mutation
     changeTopic: deny, // Never used
@@ -587,84 +528,96 @@ const permissions = {
     createChannelFromDOI: deny, // Never used
     // createDocxToHTMLJob seems to be exposed from xsweet???
     createFile: isAuthenticated,
-    createForm: userIsGmOrAdmin,
+    createForm: or(userIsGm, userIsAdmin),
     createManuscript: isAuthenticated,
     createMessage: userIsAllowedToChat,
-    createNewTaskAlerts: userIsGmOrAdmin, // Only used when test code is enabled
+    createNewTaskAlerts: or(userIsGm, userIsAdmin), // Only used when test code is enabled
     createNewVersion: or(
       userIsAuthorOfManuscript,
-      userIsEditorOfAnyManuscript,
-      userIsGmOrAdmin,
+      userIsEditor,
+      userIsGm,
+      userIsAdmin,
     ),
-    createTeam: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
+    createTeam: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
     createUser: deny, // Never used
     deleteFile: isAuthenticated,
     deleteFiles: isAuthenticated,
-    deleteForm: userIsGmOrAdmin,
-    deleteFormElement: userIsGmOrAdmin,
+    deleteForm: or(userIsGm, userIsAdmin),
+    deleteFormElement: or(userIsGm, userIsAdmin),
     deleteManuscript: deny, // Never used
     deleteManuscripts: deny, // Never used
     deletePendingComment: isAuthenticated,
     deleteTeam: deny, // Never used
-    deleteUser: userIsGmOrAdmin,
-    deleteMessage: or(userOwnsMessage, userIsGmAndAdmin),
-    importManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    deleteUser: or(userIsGm, userIsAdmin),
+    deleteMessage: or(userOwnsMessage, and(userIsGm, userIsAdmin)),
+    importManuscripts: or(userIsGm, userIsAdmin),
     loginUser: deny, // Never used
-    makeDecision: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    publishManuscript: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    removeReviewer: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    makeDecision: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    publishManuscript: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    removeReviewer: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     removeTaskAlertsForCurrentUser: isAuthenticated,
     reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
-    sendEmail: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    sendEmail: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     setGlobalRole: userIsAdmin,
-    setGroupRole: userIsGmOrAdmin,
-    setShouldPublishField: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    setGroupRole: or(userIsGm, userIsAdmin),
+    setShouldPublishField: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsAdmin,
+    ),
     submitManuscript: or(
       userIsAuthorOfManuscript,
-      userIsEditorOfAnyManuscript,
-      userIsGmOrAdmin,
+      userIsEditor,
+      userIsGm,
+      userIsAdmin,
     ),
     submitAuthorProofingFeedback: userIsAuthorOfManuscript,
-    updateEmail: or(userIsCurrentUser, userIsGmOrAdmin),
-    updateConfig: userIsGmOrAdmin,
-    updateUsername: or(userIsCurrentUser, userIsGmOrAdmin),
+    updateEmail: or(userIsCurrentUser, userIsGm, userIsAdmin),
+    updateConfig: or(userIsGm, userIsAdmin),
+    updateUsername: or(userIsCurrentUser, userIsGm, userIsAdmin),
     updateFile: isAuthenticated,
-    updateForm: userIsGmOrAdmin,
-    updateFormElement: userIsGmOrAdmin,
+    updateForm: or(userIsGm, userIsAdmin),
+    updateFormElement: or(userIsGm, userIsAdmin),
     updateInvitationResponse: allow,
     updateInvitationStatus: allow,
     updateManuscript: or(
       userIsAuthorOfManuscript,
-      userIsEditorOfAnyManuscript,
-      userIsGmOrAdmin,
+      userIsEditor,
+      userIsGm,
+      userIsAdmin,
     ),
     updatePendingComment: isAuthenticated,
     updateReview: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
       userIsEditorOfAnyManuscript, // Probably not needed, but just in case
-      userIsGmOrAdmin,
+      userIsGm,
+      userIsAdmin,
     ),
-    updateTask: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    updateTasks: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    updateTaskNotification: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    updateTeam: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
-    updateTeamMember: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    updateTask: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    updateTasks: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    updateTaskNotification: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsAdmin,
+    ),
+    updateTeam: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    updateTeamMember: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     updateReviewerTeamMemberStatus: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
-    updateUser: userIsGmOrAdmin,
+    updateUser: or(userIsGm, userIsAdmin),
     upload: isAuthenticated,
     uploadFile: isAuthenticated,
     uploadFiles: isAuthenticated,
     updateTaskStatus: isAuthenticated,
-    updateCMSPage: userIsGmOrAdmin,
-    createCMSPage: userIsGmOrAdmin,
-    deleteCMSPage: userIsGmOrAdmin,
-    updateCMSLayout: userIsGmOrAdmin,
-    rebuildFlaxSite: userIsGmOrAdmin,
-    updateMessage: or(userOwnsMessage, userIsGmAndAdmin),
+    updateCMSPage: or(userIsGm, userIsAdmin),
+    createCMSPage: or(userIsGm, userIsAdmin),
+    deleteCMSPage: or(userIsGm, userIsAdmin),
+    updateCMSLayout: or(userIsGm, userIsAdmin),
+    rebuildFlaxSite: or(userIsGm, userIsAdmin),
+    updateMessage: or(userOwnsMessage, userIsGm, userIsAdmin),
   },
   Subscription: {
     fileUpdated: isAuthenticated,
@@ -692,8 +645,10 @@ const permissions = {
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
     userIsEditorOfAnyManuscript,
     reviewIsByUser,
-    userIsGmOrAdmin,
+    userIsGm,
+    userIsAdmin,
   ),
+  FileNotInDb: allow,
   Form: allow,
   FormStructure: allow,
   FormElement: allow,
@@ -704,7 +659,8 @@ const permissions = {
     isPublicReviewFromPublishedManuscript,
     reviewIsByUser,
     userIsEditorOfAnyManuscript,
-    userIsGmOrAdmin,
+    userIsGm,
+    userIsAdmin,
   ),
   Channel: isAuthenticated,
   Message: isAuthenticated,
