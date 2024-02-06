@@ -146,7 +146,7 @@ const Profile = ({
 
   return (
     <ProfileContainer>
-      <Modal isOpen={canEditProfile && !user.email}>
+      <Modal isOpen={isCurrentUsersOwnProfile && !user.email}>
         <EnterEmail updateUserEmail={updateUserEmail} user={user} />
       </Modal>
       <div>
@@ -172,7 +172,7 @@ const Profile = ({
         <SectionContent>
           <SectionRow key="profilepicture">
             <div>
-              {canEditProfile && isCurrentUsersOwnProfile ? (
+              {isCurrentUsersOwnProfile ? (
                 <ProfileDropzone
                   profilePicture={user.profilePicture}
                   replaceAvatarImage={replaceAvatarImage}

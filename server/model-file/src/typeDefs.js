@@ -8,7 +8,7 @@ const typeDefs = `
 
   extend type Mutation {
     # Using a separate variable because the Upload type hides other data
-    uploadFile(file: Upload!): File!
+    uploadFile(file: Upload!): FileNotInDb!
     createFile(file: Upload!, meta: FileMetaInput!): File!
     uploadFiles(files: [Upload]!, fileType: String, entityId: ID): [File]!
     deleteFile(id: ID!): ID
@@ -63,6 +63,11 @@ const typeDefs = `
     inUse: Boolean
     updated: DateTime!
     created: DateTime!
+  }
+
+  type FileNotInDb {
+    name:String!
+    storedObjects:[StoredObject!]!
   }
 
   type ImageMetadata {

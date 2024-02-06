@@ -19,17 +19,6 @@ const QUERY = gql`
         id
       }
       isOnline
-      teams {
-        id
-        objectId
-        objectType
-        members {
-          status
-          user {
-            id
-          }
-        }
-      }
     }
     builtCss {
       css

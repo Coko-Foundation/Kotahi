@@ -188,9 +188,6 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId, groupId })
         .orderBy('sequenceIndex')
-        .withGraphFetched(
-          '[assignee, notificationLogs(orderByCreatedDesc), emailNotifications(orderByCreated).recipientUser]',
-        )
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (

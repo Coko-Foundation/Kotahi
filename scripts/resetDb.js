@@ -16,7 +16,7 @@ const waitForDbToSettle = async () => {
       ready = !!users
     } catch (e) {
       console.error(e)
-      await setTimeout(1000)
+      await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }
 }
@@ -25,7 +25,7 @@ const waitForDbToSettle = async () => {
 /** Clears all objects from the public schema and reruns all the migrations. */
 const resetDb = async () => {
   logger.info('Resetting database')
-  await db.raw('DROP SCHEMA public CASCADE')
+  await db.raw('DROP SCHEMA IF EXISTS public CASCADE')
   await db.raw('CREATE SCHEMA public')
   logger.info("Dropped and recreated 'public' schema.")
   await migrate({ logger })

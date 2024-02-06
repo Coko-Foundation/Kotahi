@@ -34,13 +34,6 @@ export default {
       }
     }
   `,
-  uploadManuscriptMutation: gql`
-    mutation($file: Upload!) {
-      upload(file: $file) {
-        url
-      }
-    }
-  `,
   createManuscriptMutation: gql`
     mutation($input: ManuscriptInput) {
       createManuscript(input: $input) {

@@ -308,9 +308,7 @@ const isAdminOrGroupManager = async (userId, groupId) => {
 
 const getEditorEmails = async manuscriptId => {
   const userIds = await getEditorIdsForManuscript(manuscriptId)
-
   const users = await models.User.query().whereIn('id', userIds)
-
   return users.map(user => user.email)
 }
 

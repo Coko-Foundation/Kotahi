@@ -7,6 +7,7 @@ const path = require('path')
 const config = require('config')
 const { createFile, deleteFiles, fileStorage } = require('@coko/server')
 const { promisify } = require('util')
+const { evictFromCache } = require('../querycache')
 
 const randomBytes = promisify(crypto.randomBytes)
 
@@ -61,6 +62,8 @@ module.exports = app => {
       const objectKey = createdProfilePicture.storedObjects.find(
         storedObject => storedObject.type === 'small',
       ).key
+
+      evictFromCache(`profilePicFileOfUser:${req.user}`)
 
       user.profilePicture = await fileStorage.getURL(objectKey)
       await user.save()

@@ -6,6 +6,18 @@ DECLARE
   user_team_id UUID;
   channel_id UUID;
 BEGIN
+  -- Check that correct groups for tests are present
+  IF NOT EXISTS (SELECT 1 FROM configs, groups WHERE name = 'journal' AND group_id = groups.id AND form_data->>'instanceName' = 'journal') THEN
+    RAISE EXCEPTION 'No group named ''journal'' with instanceName ''journal'' found. For cypress tests ensure your .env has INSTANCE_GROUPS=journal:journal,prc:prc,single_form:preprint1';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM configs, groups WHERE name = 'prc' AND group_id = groups.id AND form_data->>'instanceName' = 'prc') THEN
+    RAISE EXCEPTION 'No group named ''prc'' with instanceName ''prc'' found. For cypress tests ensure your .env has INSTANCE_GROUPS=journal:journal,prc:prc,single_form:preprint1';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM configs, groups WHERE name = 'single_form' AND group_id = groups.id AND form_data->>'instanceName' = 'preprint1') THEN
+    RAISE EXCEPTION 'No group named ''single_form'' with instanceName ''preprint1'' found. For cypress tests ensure your .env has INSTANCE_GROUPS=journal:journal,prc:prc,single_form:preprint1';
+  END IF;
+
+
 SELECT id INTO g_id FROM groups WHERE name='journal' LIMIT 1;
 SELECT id INTO admin_team_id FROM teams
   WHERE global IS TRUE AND role='admin' LIMIT 1;

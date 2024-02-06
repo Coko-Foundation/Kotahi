@@ -81,7 +81,7 @@ const resolvers = {
     async updateReviewerTeamMemberStatus(_, { manuscriptId, status }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(manuscriptId)
-        .withGraphFetched('[submitter.[defaultIdentity], channels.members]')
+        .withGraphFetched('[submitter.defaultIdentity, channels.members]')
 
       const team = await manuscript
         .$relatedQuery('teams')
