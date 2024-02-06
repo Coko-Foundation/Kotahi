@@ -23,7 +23,7 @@ exports.up = async knex => {
 
         if (newFields.length !== fields.length) {
           await Form.query(trx).patchAndFetchById(form.id, {
-            structure: { children: newFields },
+            structure: { ...form.structure, children: newFields },
           })
           updatedFormsCount += 1
         }

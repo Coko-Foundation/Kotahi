@@ -8,30 +8,24 @@ const {
   deny,
 } = require('@coko/server/authorization')
 
+/** If manuscriptId is supplied, this tests whether the user is an editor of that manuscript.
+ * If manuscriptId is not supplied, it tests whether the user is an editor of any manuscript whatsoever.
+ * TODO: The latter case seems of dubious value and is in many cases used inappropriately. Perhaps it's never appropriate?
+ */
 const userIsEditorQuery = async (ctx, manuscriptId) => {
   if (!ctx.user) return false
-  const user = await ctx.connectors.User.model.query().findById(ctx.user)
 
-  if (!user) {
-    return false
-  }
+  let innerQuery = ctx.connectors.Team.model
+    .query()
+    .whereIn('role', ['seniorEditor', 'handlingEditor', 'editor'])
+  if (manuscriptId) innerQuery = innerQuery.where({ objectId: manuscriptId })
 
-  let query = user
-    .$relatedQuery('teams')
-    .where(builder =>
-      builder
-        .where({ role: 'seniorEditor' })
-        .orWhere({ role: 'handlingEditor' })
-        .orWhere({ role: 'editor' }),
-    )
+  const editorRecord = await ctx.connectors.Team.model
+    .relatedQuery('members')
+    .for(innerQuery)
+    .findOne({ userId: ctx.user })
 
-  // Manuscript is optional...
-  if (manuscriptId) {
-    query = query.where({ objectId: manuscriptId })
-  }
-
-  const rows = await query.resultSize()
-  return !!rows
+  return !!editorRecord
 }
 
 const userOwnsMessage = rule({ cache: 'contextual' })(
@@ -90,7 +84,8 @@ const getLatestVersionOfManuscript = async (ctx, manuscriptVersionId) => {
   return latestVersion[0]
 }
 
-const userIsEditor = rule({
+// TODO This rule is widely used inappropriately. Are there ANY appropriate uses for it?
+const userIsEditorOfAnyManuscript = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => userIsEditorQuery(ctx))
 
@@ -322,6 +317,31 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   return userIsEditorQuery(ctx, manuscriptId)
 })
 
+const userIsEditorOfTheManuscript = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  if (!args.id) return false
+  return userIsEditorQuery(ctx, args.id)
+})
+
+const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user || !args.id) return false
+
+  const reviewerRecord = await ctx.connectors.Team.model
+    .relatedQuery('members')
+    .for(
+      ctx.connectors.Team.model.query().where({
+        objectId: args.id,
+        role: 'reviewer',
+      }),
+    )
+    .findOne({ userId: ctx.user })
+
+  return !!reviewerRecord
+})
+
 const userIsInvitedReviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
@@ -357,28 +377,20 @@ const userHasAcceptedInvitation = rule({ cache: 'strict' })(
   },
 )
 
-const userIsAuthor = rule({ cache: 'strict' })(
+const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
+    if (!ctx.user || !args.id) return false
 
-    const team = await ctx.connectors.Team.model
-      .query()
-      .where({
-        objectId: args.id,
-        role: 'author',
-      })
-      .first()
+    const authorRecord = await ctx.connectors.Team.model
+      .relatedQuery('members')
+      .for(
+        ctx.connectors.Team.model
+          .query()
+          .where({ objectId: args.id, role: 'author' }),
+      )
+      .findOne({ userId: ctx.user })
 
-    if (team) {
-      const author = team
-        .$relatedQuery('members')
-        .where({ userId: ctx.user })
-        .first()
-
-      return !!author
-    }
-
-    return false
+    return !!authorRecord
   },
 )
 
@@ -493,16 +505,16 @@ const userIsCurrentUser = rule({ cache: 'contextual' })(
 
 const permissions = {
   Query: {
-    authorsActivity: or(userIsEditor, userIsGmOrAdmin),
+    authorsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     builtCss: isAuthenticated,
     channels: deny, // Never used
     channelsByTeamName: deny, // Never used
     config: isAuthenticated,
-    convertToJats: or(userIsEditor, userIsGmOrAdmin),
-    convertToPdf: or(userIsEditor, userIsGmOrAdmin),
+    convertToJats: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    convertToPdf: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     currentUser: isAuthenticated,
     docmap: allow,
-    editorsActivity: or(userIsEditor, userIsGmOrAdmin),
+    editorsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     file: deny, // Never used
     files: deny, // Never used
     findByDOI: deny, // Never used
@@ -510,33 +522,45 @@ const permissions = {
     formForPurposeAndCategory: allow,
     forms: allow,
     formsByCategory: userIsGmOrAdmin,
-    getBlacklistInformation: or(userIsEditor, userIsGmOrAdmin),
+    getBlacklistInformation: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     getEntityFiles: isAuthenticated,
-    getInvitationsForManuscript: or(userIsEditor, userIsGmOrAdmin),
+    getInvitationsForManuscript: or(
+      userIsEditorOfAnyManuscript,
+      userIsGmOrAdmin,
+    ),
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
     group: allow,
     groups: allow,
     invitationManuscriptId: isAuthenticated,
     invitationStatus: allow,
-    manuscript: or(isAuthenticated, manuscriptIsPublished),
+    manuscript: or(
+      userIsGmOrAdmin,
+      manuscriptIsPublished,
+      userIsEditorOfTheManuscript,
+      userIsAuthorOfManuscript,
+      userIsReviewerOrInvitedReviewerOfTheManuscript,
+    ),
     manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
-    manuscriptsActivity: or(userIsEditor, userIsGmOrAdmin),
+    manuscriptsActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     manuscriptsPublishedSinceDate: allow,
     manuscriptsUserHasCurrentRoleIn: isAuthenticated,
     message: deny, // Never used
     messages: isAuthenticated,
-    paginatedManuscripts: or(userIsEditor, userIsGmOrAdmin),
+    paginatedManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     paginatedUsers: userIsGmOrAdmin,
     publishedArtifacts: allow,
     publishedManuscript: allow,
     publishedManuscripts: allow,
-    reviewersActivity: or(userIsEditor, userIsGmOrAdmin),
+    reviewersActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     searchOnCrossref: deny, // Never used
     searchUsers: isAuthenticated,
-    summaryActivity: or(userIsEditor, userIsGmOrAdmin),
-    systemWideDiscussionChannel: or(userIsEditor, userIsGmOrAdmin),
+    summaryActivity: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    systemWideDiscussionChannel: or(
+      userIsEditorOfAnyManuscript,
+      userIsGmOrAdmin,
+    ),
     tasks: userIsGmOrAdmin,
     team: deny, // Never used
     teamByName: deny, // Never used
@@ -545,15 +569,15 @@ const permissions = {
     unreviewedPreprints: allow, // This has its own token-based authentication.
     user: isAuthenticated,
     userHasTaskAlerts: isAuthenticated,
-    users: or(userIsEditor, userIsGmOrAdmin),
+    users: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     validateDOI: isAuthenticated,
     validateSuffix: isAuthenticated,
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
     addReviewer: isAuthenticated,
-    archiveManuscript: or(userIsEditor, userIsGmOrAdmin),
-    archiveManuscripts: or(userIsEditor, userIsGmOrAdmin),
+    archiveManuscript: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    archiveManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     assignTeamEditor: deny, // Never used
     assignUserAsAuthor: isAuthenticated, // TODO require the invitation ID to be sent in this mutation
     changeTopic: deny, // Never used
@@ -567,8 +591,12 @@ const permissions = {
     createManuscript: isAuthenticated,
     createMessage: userIsAllowedToChat,
     createNewTaskAlerts: userIsGmOrAdmin, // Only used when test code is enabled
-    createNewVersion: or(userIsAuthor, userIsEditor, userIsGmOrAdmin),
-    createTeam: or(userIsEditor, userIsGmOrAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
+    createNewVersion: or(
+      userIsAuthorOfManuscript,
+      userIsEditorOfAnyManuscript,
+      userIsGmOrAdmin,
+    ),
+    createTeam: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
     createUser: deny, // Never used
     deleteFile: isAuthenticated,
     deleteFiles: isAuthenticated,
@@ -580,19 +608,23 @@ const permissions = {
     deleteTeam: deny, // Never used
     deleteUser: userIsGmOrAdmin,
     deleteMessage: or(userOwnsMessage, userIsGmAndAdmin),
-    importManuscripts: or(userIsEditor, userIsGmOrAdmin),
+    importManuscripts: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     loginUser: deny, // Never used
-    makeDecision: or(userIsEditor, userIsGmOrAdmin),
-    publishManuscript: or(userIsEditor, userIsGmOrAdmin),
-    removeReviewer: or(userIsEditor, userIsGmOrAdmin),
+    makeDecision: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    publishManuscript: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    removeReviewer: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     removeTaskAlertsForCurrentUser: isAuthenticated,
     reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
-    sendEmail: or(userIsEditor, userIsGmOrAdmin),
+    sendEmail: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     setGlobalRole: userIsAdmin,
     setGroupRole: userIsGmOrAdmin,
-    setShouldPublishField: or(userIsEditor, userIsGmOrAdmin),
-    submitManuscript: or(userIsAuthor, userIsEditor, userIsGmOrAdmin),
-    submitAuthorProofingFeedback: or(userIsAuthor),
+    setShouldPublishField: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    submitManuscript: or(
+      userIsAuthorOfManuscript,
+      userIsEditorOfAnyManuscript,
+      userIsGmOrAdmin,
+    ),
+    submitAuthorProofingFeedback: userIsAuthorOfManuscript,
     updateEmail: or(userIsCurrentUser, userIsGmOrAdmin),
     updateConfig: userIsGmOrAdmin,
     updateUsername: or(userIsCurrentUser, userIsGmOrAdmin),
@@ -601,19 +633,23 @@ const permissions = {
     updateFormElement: userIsGmOrAdmin,
     updateInvitationResponse: allow,
     updateInvitationStatus: allow,
-    updateManuscript: or(userIsAuthor, userIsEditor, userIsGmOrAdmin),
+    updateManuscript: or(
+      userIsAuthorOfManuscript,
+      userIsEditorOfAnyManuscript,
+      userIsGmOrAdmin,
+    ),
     updatePendingComment: isAuthenticated,
     updateReview: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
-      userIsEditor, // Probably not needed, but just in case
+      userIsEditorOfAnyManuscript, // Probably not needed, but just in case
       userIsGmOrAdmin,
     ),
-    updateTask: or(userIsEditor, userIsGmOrAdmin),
-    updateTasks: or(userIsEditor, userIsGmOrAdmin),
-    updateTaskNotification: or(userIsEditor, userIsGmOrAdmin),
-    updateTeam: or(userIsEditor, userIsGmOrAdmin),
-    updateTeamMember: or(userIsEditor, userIsGmOrAdmin),
+    updateTask: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    updateTasks: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    updateTaskNotification: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    updateTeam: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
+    updateTeamMember: or(userIsEditorOfAnyManuscript, userIsGmOrAdmin),
     updateReviewerTeamMemberStatus: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
@@ -654,7 +690,7 @@ const permissions = {
     isPublicFileFromPublishedManuscript,
     userIsAuthorOfTheManuscriptOfTheFile,
     userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
-    userIsEditor,
+    userIsEditorOfAnyManuscript,
     reviewIsByUser,
     userIsGmOrAdmin,
   ),
@@ -667,7 +703,7 @@ const permissions = {
   Review: or(
     isPublicReviewFromPublishedManuscript,
     reviewIsByUser,
-    userIsEditor,
+    userIsEditorOfAnyManuscript,
     userIsGmOrAdmin,
   ),
   Channel: isAuthenticated,
