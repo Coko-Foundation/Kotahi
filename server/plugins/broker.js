@@ -67,14 +67,24 @@ const getBroker = (groupId, workerName) => {
       doi
         ? models.Manuscript.query()
             .where({ groupId })
-            .whereRaw("submission->>'$doi' = ?", [doi])
+            // eslint-disable-next-line func-names
+            .where(function () {
+              this.whereRaw("submission->>'$doi' = ?", [
+                doi,
+              ]).orWhereRaw("submission->>'doi' = ?", [doi])
+            })
             .first()
         : null,
     findManuscriptWithUri: async uri =>
       uri
         ? models.Manuscript.query()
             .where({ groupId })
-            .whereRaw("submission->>'$sourceUri' = ?", [uri])
+            // eslint-disable-next-line func-names
+            .where(function () {
+              this.whereRaw("submission->>'$sourceUri' = ?", [
+                uri,
+              ]).orWhereRaw("submission->>'link' = ?", [uri])
+            })
             .first()
         : null,
     getStubManuscriptObject: async () => ({
