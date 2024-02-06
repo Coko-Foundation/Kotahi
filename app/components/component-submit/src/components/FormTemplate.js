@@ -281,7 +281,7 @@ const FormTemplate = ({
             <div>
               <ActionButton
                 dataTestid={`${form.name
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .replace(/ /g, '-')
                   .replace(/[^\w-]+/g, '')}-action-btn`}
                 onClick={async () => {
