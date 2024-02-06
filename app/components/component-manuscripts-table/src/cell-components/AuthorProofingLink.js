@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
 import { Action, ActionGroup } from '@pubsweet/ui'
 import { Edit } from 'react-feather'
 import styled from 'styled-components'
+import { ConfigContext } from '../../../config/src'
 
 const StyledActionGroup = styled(ActionGroup)`
   text-align: left;
@@ -21,6 +22,8 @@ const AuthorProofingLink = ({
   currentUser,
   updateManuscript,
 }) => {
+  const config = useContext(ConfigContext)
+  const authorProofingEnabled = config.controlPanel?.authorProofingEnabled // let's set this based on the config
   const history = useHistory()
   const authorTeam = manuscript.teams.find(team => team.role === 'author')
 
@@ -35,7 +38,7 @@ const AuthorProofingLink = ({
     ['assigned', 'inProgress'].includes(manuscript.status) &&
     sortedAuthors[0]?.user?.id === currentUser.id
   ) {
-    return (
+    return authorProofingEnabled ? (
       <StyledActionGroup>
         <StyledAction
           data-testid="control-panel-decision"
@@ -55,7 +58,7 @@ const AuthorProofingLink = ({
           <Edit />
         </StyledAction>
       </StyledActionGroup>
-    )
+    ) : null
   }
 
   return <></>

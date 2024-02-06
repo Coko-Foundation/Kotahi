@@ -424,6 +424,8 @@ const en = {
         'Import manuscripts manually using the ‘Refresh’ action',
       'Control panel': 'Control panel',
       'Display manuscript short id': 'Display manuscript short id',
+      'Author proofing enabled':
+        'Allow authors to particpate in proofreading rounds',
       'Reviewers can see submitted reviews':
         'Reviewers can see submitted reviews',
       'Authors can see individual peer reviews':
