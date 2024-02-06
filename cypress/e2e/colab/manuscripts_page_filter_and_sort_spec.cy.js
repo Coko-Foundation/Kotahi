@@ -85,7 +85,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')
+      // ManuscriptsPage.getAllArticleCheckboxes().should('not.exist') // It was written to confirm, if checkboxes are present across only submitted manuscripts, while after download to json update, we need checkbox across all of them
 
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
@@ -127,7 +127,7 @@ describe('manuscripts page tests', () => {
       cy.wait(3000)
       ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getSelectAllCheckbox().click()
-      ManuscriptsPage.getSelectedArticlesCount().should('contain', 1)
+      ManuscriptsPage.getSelectedArticlesCount().should('contain', 2)
     })
     it('check label field after bulk delete', () => {
       ManuscriptsPage.clickArticleCheckbox(1)

@@ -201,6 +201,8 @@ const en = {
       'Select All': 'Select All',
       selectedArticles: '{{count}} articles selected',
       Archive: 'Archive',
+      takeAction: 'Action',
+      exportAsJson: 'Download JSON',
     },
     decisionPage: {
       'Current version': 'Current version',

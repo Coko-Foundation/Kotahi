@@ -10,6 +10,7 @@ import { evaluate } from '../support/routes'
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=Action__ActionLink]'
 const MANUSCRIPTS_OPTIONS_E = '[class*=Action__ActionLink]'
 const BUTTON = 'button'
+const ACTIONBUTTON = 'Manuscripts__DropdownContainer'
 const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
 const EXPAND_CHAT_BUTTON = '[class*=Manuscripts__RoundIconButtonWrapper]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
@@ -31,7 +32,7 @@ const LABEL = '[name="submission.$customStatus"]'
 const BULKBUTTON = 'style__BulkActionModalButton'
 
 const ARTICLE_CHECKBOX =
-  '[class*=NewItemCheckbox__StyledCheckboxTable]label > [type*=checkbox]'
+  '[class*=RowItemCheckbox__StyledCheckboxTable]label > [type*=checkbox]'
 
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
@@ -238,11 +239,11 @@ export const ManuscriptsPage = {
   getSelectedArticlesCount() {
     return cy.getByContainsClass(NUMBER_OF_ARTICLES_SELECTED).invoke('text')
   },
-  getDeleteButton() {
-    return cy.get(BUTTON).contains('Archive')
+  getActionDropdown() {
+    return cy.getByContainsClass(ACTIONBUTTON).click()
   },
   clickDelete() {
-    this.getDeleteButton().click()
+    this.getActionDropdown().contains('Archive').click()
   },
   getConfirmButton() {
     return cy.getByContainsClass(BULKBUTTON).contains('Archive')

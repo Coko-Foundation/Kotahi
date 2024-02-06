@@ -77,37 +77,39 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
     })
   })
-  context('submitted manuscripts checkbox tests', () => {
-    it('checkbox should not be visible for submitted manuscripts', () => {
-      cy.task('restore', 'commons/colab_bootstrap')
-      // login as admin
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin, dashboard)
-      })
-      cy.awaitDisappearSpinner()
-      DashboardPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInDoi(data.doi)
-        SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
-        SubmissionFormPage.fillInFirstAuthor(data.creator)
-        SubmissionFormPage.fillInDatePublished(data.date)
-        SubmissionFormPage.fillInPreprintUri(data.doi)
-        SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.fillInMainFindings(data.mainFindings)
-        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-        SubmissionFormPage.fillInLimitations(data.limitations)
-        SubmissionFormPage.fillInKeywords(data.keywords)
-        SubmissionFormPage.clickCustomStatusDropdown()
-        SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInReviewCreator(data.creator)
-        SubmissionFormPage.clickSubmitResearch()
-        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
-      })
-      Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')
-    })
-  })
+  // This case was not required after download as json update, since we need checkboxes across all the manuscripts.
+  // context('submitted manuscripts checkbox tests', () => {
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // it('checkbox should not be visible for submitted manuscripts', () => {
+  //   cy.task('restore', 'commons/colab_bootstrap')
+  // login as admin
+  // eslint-disable-next-line jest/valid-expect-in-promise
+  // cy.fixture('role_names').then(name => {
+  //   cy.login(name.role.admin, dashboard)
+  // })
+  // cy.awaitDisappearSpinner()
+  // DashboardPage.clickSubmit()
+  // NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+  // eslint-disable-next-line jest/valid-expect-in-promise
+  //   cy.fixture('submission_form_data').then(data => {
+  //     SubmissionFormPage.fillInDoi(data.doi)
+  //     SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
+  //     SubmissionFormPage.fillInFirstAuthor(data.creator)
+  //     SubmissionFormPage.fillInDatePublished(data.date)
+  //     SubmissionFormPage.fillInPreprintUri(data.doi)
+  //     SubmissionFormPage.fillInOurTake(data.ourTake)
+  //     SubmissionFormPage.fillInMainFindings(data.mainFindings)
+  //     SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+  //     SubmissionFormPage.fillInLimitations(data.limitations)
+  //     SubmissionFormPage.fillInKeywords(data.keywords)
+  //     SubmissionFormPage.clickCustomStatusDropdown()
+  //     SubmissionFormPage.selectDropdownOption(0)
+  //     SubmissionFormPage.fillInReviewCreator(data.creator)
+  //     SubmissionFormPage.clickSubmitResearch()
+  //     SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
+  //   })
+  //   Menu.clickManuscriptsAndAssertPageLoad()
+  //   ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')
+  // })
+  // })
 })

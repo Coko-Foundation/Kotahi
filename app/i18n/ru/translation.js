@@ -206,6 +206,8 @@ const ru = {
       selectedArticles_few: '{{count}} статьи выбрано',
       selectedArticles_many: '{{count}} статей выбрано',
       Archive: 'Архивировать',
+      takeAction: 'действие',
+      exportAsJson: 'Скачать JSON',
     },
     decisionPage: {
       'Current version': 'Текущая версия',

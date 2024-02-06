@@ -1,7 +1,7 @@
 import i18next from 'i18next'
 import {
   DefaultField,
-  NewItemCheckbox,
+  RowItemCheckbox,
   TitleWithAbstractAsTooltip,
   FilterableStatusBadge,
   LabelsOrSelectButton,
@@ -214,9 +214,9 @@ const buildSpecialColumnProps = (
       padding: '0',
       component: OverdueTooltip,
     },
-    newItemCheckbox: {
+    rowItemCheckbox: {
       flex: '0 1 2em',
-      component: NewItemCheckbox,
+      component: RowItemCheckbox,
       extraProps: { selectedNewManuscripts, toggleNewManuscriptCheck },
     },
     'submission.topics': { flex: '0 1 10em' },

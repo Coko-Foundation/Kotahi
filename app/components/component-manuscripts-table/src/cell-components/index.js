@@ -1,5 +1,5 @@
 export { default as DefaultField } from './DefaultField'
-export { default as NewItemCheckbox } from './NewItemCheckbox'
+export { default as RowItemCheckbox } from './RowItemCheckbox'
 export { default as TitleWithAbstractAsTooltip } from './TitleWithAbstractAsTooltip'
 export { default as FilterableStatusBadge } from './FilterableStatusBadge'
 export { default as LabelsOrSelectButton } from './LabelsOrSelectButton'

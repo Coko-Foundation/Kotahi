@@ -195,6 +195,8 @@ const typeDefs = `
     members: [TeamMember!]
     owners: [User]
     global: Boolean
+    created: DateTime
+    updated: DateTime
   }
 
   input TeamMemberInput {
