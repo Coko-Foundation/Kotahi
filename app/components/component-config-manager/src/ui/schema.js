@@ -606,6 +606,11 @@ const generateSchema = (
                     ),
                     default: false,
                   },
+                  authorProofingEnabled: {
+                    type: 'boolean',
+                    title: t('configPage.Author proofing enabled'),
+                    default: false,
+                  },
                   showTabs: {
                     type: 'array',
                     description: t(
@@ -1143,6 +1148,11 @@ const generateSchema = (
                     title: t(
                       'configPage.Authors can see individual peer reviews',
                     ),
+                    default: false,
+                  },
+                  authorProofingEnabled: {
+                    type: 'boolean',
+                    title: t('configPage.Author proofing enabled'),
                     default: false,
                   },
                   showTabs: {
@@ -1683,6 +1693,11 @@ const generateSchema = (
                     ),
                     default: false,
                   },
+                  authorProofingEnabled: {
+                    type: 'boolean',
+                    title: t('configPage.Author proofing enabled'),
+                    default: false,
+                  },
                   showTabs: {
                     type: 'array',
                     description: t(
@@ -2217,6 +2232,12 @@ const generateSchema = (
                     ),
                     default: false,
                   },
+                  authorProofingEnabled: {
+                    type: 'boolean',
+                    title: t('configPage.Author proofing enabled'),
+                    default: true,
+                  },
+
                   showTabs: {
                     type: 'array',
                     description: t(

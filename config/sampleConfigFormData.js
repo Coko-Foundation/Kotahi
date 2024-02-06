@@ -70,6 +70,7 @@ module.exports = {
     sharedReview: false,
     // showFeatures: ['Assign Editors', 'Reviews', 'Decision', 'Publish'],
     displayManuscriptShortId: true,
+    authorProofingEnabled: true,
   },
   notification: {
     gmailAuthEmail: 'test@coko.foundation',

@@ -433,6 +433,8 @@ const fr = {
       'Control panel': 'Panneau de contrôle',
       'Display manuscript short id':
         "Afficher l'identifiant court du manuscrit",
+      'Author proofing enabled':
+        'Autoriser les auteurs à participer aux cycles de relecture',
       'Reviewers can see submitted reviews':
         'Les évaluateurs peuvent voir les évaluations soumises',
       'Authors can see individual peer reviews':

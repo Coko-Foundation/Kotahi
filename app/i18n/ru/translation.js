@@ -432,6 +432,8 @@ const ru = {
         'Импортировать рукописи вручную с помощью функции "Обновить"',
       'Control panel': 'Панель управления',
       'Display manuscript short id': 'Показывать краткий ID статей',
+      'Author proofing enabled':
+        'Разрешить авторам участвовать в раундах корректуры',
       'Reviewers can see submitted reviews':
         'Рецензентам доступен просмотр отправленных рецензий',
       'Authors can see individual peer reviews':
