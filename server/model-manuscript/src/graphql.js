@@ -100,6 +100,33 @@ const getCss = async () => {
   return css
 }
 
+// Helper function to extract review and decision data
+const extractReviewData = (reviews, isDecision) =>
+  reviews
+    .filter(review => review.isDecision === isDecision)
+    .map(review => ({
+      created: review.created,
+      updated: review.updated,
+      isDecision: review.isDecision,
+      isHiddenReviewerName: review.isHiddenReviewerName,
+      isHiddenFromAuthor: review.isHiddenFromAuthor,
+      canBePublishedPublicly: review.canBePublishedPublicly,
+      username: review.user ? review.user.username : null,
+      jsonData: JSON.stringify(review.jsonData),
+    }))
+
+// Helper function to extract common manuscript or version data
+const extractCommonData = item => ({
+  created: item.created,
+  updated: item.updated,
+  status: item.status,
+  decision: item.decision,
+  submission: JSON.stringify(item.submission),
+  importSourceServer: item.importSourceServer,
+  shortId: item.shortId,
+  teams: item.teams.map(team => ({ ...team })),
+})
+
 /** Get reviews from the manuscript if present, or from DB. Generate full file info for
  * all files attached to reviews, and stringify JSON data in preparation for serving to client.
  * Note: 'reviews' include the decision object.
@@ -1816,6 +1843,37 @@ const resolvers = {
       const doi = getDoi(suffix, activeConfig)
       return { isDOIValid: await doiIsAvailable(doi) }
     },
+
+    async getManuscriptsData(_, { selectedManuscripts }, ctx) {
+      const manuscripts = await models.Manuscript.query()
+        .findByIds(selectedManuscripts)
+        .withGraphFetched('[reviews.[user], teams.[members]]')
+
+      const exportData = []
+
+      // eslint-disable-next-line no-restricted-syntax
+      for (const manuscript of manuscripts) {
+        // eslint-disable-next-line no-await-in-loop
+        const manuscriptVersions = await manuscript.getManuscriptVersions()
+
+        const manuscriptData = {
+          versionIdentifier: manuscriptVersions.length + 1,
+          ...extractCommonData(manuscript),
+          reviews: extractReviewData(manuscript.reviews, false),
+          decisions: extractReviewData(manuscript.reviews, true),
+          manuscriptVersions: manuscriptVersions.map((version, index) => ({
+            versionIdentifier: manuscriptVersions.length - index,
+            ...extractCommonData(version),
+            reviews: extractReviewData(version.reviews, false),
+            decisions: extractReviewData(version.reviews, true),
+          })),
+        }
+
+        exportData.push(manuscriptData)
+      }
+
+      return exportData
+    },
   },
   Manuscript: {
     ...manuscriptAndPublishedManuscriptSharedResolvers,
@@ -2068,6 +2126,7 @@ const typeDefs = `
     publishedManuscript(id: ID!): PublishedManuscript
     unreviewedPreprints(token: String!, groupName: String): [Preprint!]!
     doisToRegister(id: ID!): [String]
+    getManuscriptsData(selectedManuscripts: [ID!]!): [ManuscriptExport!]!
   }
 
   input ManuscriptsFilter {
@@ -2143,6 +2202,32 @@ const typeDefs = `
     hasOverdueTasksForUser: Boolean
     invitations: [Invitation]
     authorFeedback: ManuscriptAuthorFeeback
+  }
+
+  type ReviewExport {
+    created: DateTime!
+    updated: DateTime
+    username: String
+    isDecision: Boolean
+    isHiddenReviewerName: Boolean
+    isHiddenFromAuthor: Boolean
+    jsonData: String
+  }
+
+  type ManuscriptExport {
+    versionIdentifier: Int!
+    created: DateTime!
+    updated: DateTime
+    manuscriptVersions: [ManuscriptExport]
+    shortId: Int!
+    teams: [Team]
+    reviews: [ReviewExport]
+    decisions: [ReviewExport]
+    status: String
+    decision: String
+    authors: [Author]
+    submission: String
+    importSourceServer: String
   }
 
   input ManuscriptInput {

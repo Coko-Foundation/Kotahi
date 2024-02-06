@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Checkbox } from '@pubsweet/ui'
-import { articleStatuses } from '../../../../globals'
 
 const StyledCheckboxTable = styled(Checkbox)`
   height: 16px;
@@ -9,17 +8,11 @@ const StyledCheckboxTable = styled(Checkbox)`
   width: 18px;
 `
 
-const NewItemCheckbox = ({
+const RowItemCheckbox = ({
   manuscript,
   selectedNewManuscripts,
   toggleNewManuscriptCheck,
 }) => {
-  if (
-    manuscript.status !== articleStatuses.new ||
-    manuscript.submission.$customStatus
-  )
-    return null
-
   return (
     <StyledCheckboxTable
       checked={selectedNewManuscripts.includes(manuscript.id)}
@@ -28,4 +21,4 @@ const NewItemCheckbox = ({
   )
 }
 
-export default NewItemCheckbox
+export default RowItemCheckbox

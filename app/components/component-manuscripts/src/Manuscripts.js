@@ -1,12 +1,13 @@
 /* eslint-disable no-shadow */
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { Checkbox } from '@pubsweet/ui'
+import { Checkbox, Dropdown } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Trans, useTranslation } from 'react-i18next'
-import { articleStatuses } from '../../../globals'
+import { color } from '../../../theme'
+
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 import {
   URI_PAGENUM_PARAM,
@@ -61,6 +62,38 @@ const RoundIconButtonWrapper = styled(RoundIconButton)`
   position: sticky;
 `
 
+const DropdownContainer = styled.div`
+  width: 100px;
+
+  button {
+    background: ${props => (props.disabled ? color.gray90 : color.brand1.base)};
+    color: ${props => (props.disabled ? color.gray60 : color.white)};
+    line-height: calc(8px * 2);
+    min-width: calc(8px * 10);
+    padding: 5px 4px;
+
+    span {
+      float: none;
+      font-size: 14px;
+    }
+  }
+
+  ul {
+    width: 90px;
+
+    li {
+      font-size: 14px;
+    }
+  }
+
+  svg {
+    height: calc(3 * 6px);
+    margin-top: -3px;
+    stroke: ${props => (props.disabled ? color.gray60 : color.white)};
+    width: calc(3 * 6px);
+  }
+`
+
 const Manuscripts = ({ history, ...props }) => {
   const {
     applyQueryParams,
@@ -87,6 +120,7 @@ const Manuscripts = ({ history, ...props }) => {
     groupManagerDiscussionChannel,
     channels,
     doUpdateManuscript,
+    exportManuscriptsToJson,
   } = props
 
   const { t } = useTranslation()
@@ -104,29 +138,25 @@ const Manuscripts = ({ history, ...props }) => {
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
-      return selectedNewManuscripts.includes(id)
+      const result = selectedNewManuscripts.includes(id)
         ? s.filter(manuscriptId => manuscriptId !== id)
         : [...s, id]
+
+      return result
     })
   }
 
   const toggleAllNewManuscriptsCheck = () => {
-    const newManuscriptsFromCurrentPage = manuscripts.filter(
-      manuscript =>
-        manuscript.status === articleStatuses.new &&
-        !manuscript.submission.$customStatus,
-    )
-
-    const newManuscriptsFromCurrentPageIds = newManuscriptsFromCurrentPage.map(
+    const newManuscriptsFromCurrentPageIds = manuscripts.map(
       manuscript => manuscript.id,
     )
 
-    const isEveryNewManuscriptIsSelectedFromCurrentPage = newManuscriptsFromCurrentPage.every(
+    const isEveryNewManuscriptIsSelectedFromCurrentPage = manuscripts.every(
       manuscript => selectedNewManuscripts.includes(manuscript.id),
     )
 
     setSelectedNewManuscripts(currentSelectedManuscripts => {
-      return isEveryNewManuscriptIsSelectedFromCurrentPage
+      const result = isEveryNewManuscriptIsSelectedFromCurrentPage
         ? currentSelectedManuscripts.filter(selectedManuscript => {
             if (newManuscriptsFromCurrentPageIds.includes(selectedManuscript))
               return false
@@ -135,15 +165,11 @@ const Manuscripts = ({ history, ...props }) => {
         : [
             ...new Set([
               ...currentSelectedManuscripts,
-              ...manuscripts
-                .filter(
-                  manuscript =>
-                    manuscript.status === articleStatuses.new &&
-                    !manuscript.submission.$customStatus,
-                )
-                .map(manuscript => manuscript.id),
+              ...manuscripts.map(manuscript => manuscript.id),
             ]),
           ]
+
+      return result
     })
   }
 
@@ -256,8 +282,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   const adjustedColumnNames = [...configuredColumnNames]
   adjustedColumnNames.push('actions')
-  if (['preprint2', 'prc'].includes(config.instanceName))
-    adjustedColumnNames.splice(0, 0, 'newItemCheckbox')
+  adjustedColumnNames.splice(0, 0, 'rowItemCheckbox')
 
   // Source of truth for columns
   const columnsProps = buildColumnDefinitions(
@@ -285,10 +310,6 @@ const Manuscripts = ({ history, ...props }) => {
       console.error('Error hiding chat:', error)
     }
   }
-
-  const shouldAllowBulkDelete = ['preprint2', 'prc'].includes(
-    config.instanceName,
-  )
 
   const topRightControls = (
     <ControlsContainer>
@@ -331,6 +352,23 @@ const Manuscripts = ({ history, ...props }) => {
     </ControlsContainer>
   )
 
+  const actionDropDownOptions = [
+    {
+      id: 1,
+      onClick: () => {
+        openModalBulkArchiveConfirmation()
+      },
+      title: t('manuscriptsPage.Archive'),
+    },
+    {
+      id: 2,
+      onClick: () => {
+        exportManuscriptsToJson(selectedNewManuscripts)
+      },
+      title: t('manuscriptsPage.exportAsJson'),
+    },
+  ]
+
   return (
     <OuterContainer>
       <ToastContainer
@@ -350,41 +388,30 @@ const Manuscripts = ({ history, ...props }) => {
             <Heading>{t('manuscriptsPage.Manuscripts')}</Heading>
             {topRightControls}
           </FlexRow>
-          {shouldAllowBulkDelete && (
-            <FlexRowWithSmallGapAbove>
-              <SelectAllField>
-                <Checkbox
-                  checked={
-                    manuscripts.filter(
-                      manuscript =>
-                        manuscript.status === articleStatuses.new &&
-                        !manuscript.submission.$customStatus,
-                    ).length ===
-                      manuscripts.filter(manuscript =>
-                        selectedNewManuscripts.includes(manuscript.id),
-                      ).length && selectedNewManuscripts.length !== 0
-                  }
-                  label={t('manuscriptsPage.Select All')}
-                  onChange={toggleAllNewManuscriptsCheck}
+
+          <FlexRowWithSmallGapAbove>
+            <SelectAllField>
+              <Checkbox
+                checked={manuscripts.every(manuscript =>
+                  selectedNewManuscripts.includes(manuscript.id),
+                )}
+                label={t('manuscriptsPage.Select All')}
+                onChange={toggleAllNewManuscriptsCheck}
+              />
+              <SelectedManuscriptsNumber>
+                <Trans
+                  count={selectedNewManuscripts.length}
+                  i18nKey="manuscriptsPage.selectedArticles"
+                  values={{ count: selectedNewManuscripts.length }}
                 />
-                <SelectedManuscriptsNumber>
-                  <Trans
-                    count={selectedNewManuscripts.length}
-                    i18nKey="manuscriptsPage.selectedArticles"
-                    values={{ count: selectedNewManuscripts.length }}
-                  />
-                </SelectedManuscriptsNumber>
-                <ActionButton
-                  disabled={selectedNewManuscripts.length === 0}
-                  isCompact
-                  onClick={openModalBulkArchiveConfirmation}
-                  primary={selectedNewManuscripts.length > 0}
-                >
-                  {t('manuscriptsPage.Archive')}
-                </ActionButton>
-              </SelectAllField>
-            </FlexRowWithSmallGapAbove>
-          )}
+              </SelectedManuscriptsNumber>
+              <DropdownContainer disabled={selectedNewManuscripts.length === 0}>
+                <Dropdown itemsList={actionDropDownOptions} primary>
+                  {t('manuscriptsPage.takeAction')}
+                </Dropdown>
+              </DropdownContainer>
+            </SelectAllField>
+          </FlexRowWithSmallGapAbove>
 
           <div>
             <ScrollableContent>
@@ -420,17 +447,15 @@ const Manuscripts = ({ history, ...props }) => {
           />
         )}
       </Columns>
-      {['preprint2', 'prc'].includes(config.instanceName) && (
-        <Modal
-          isOpen={isOpenBulkArchiveModal}
-          onRequestClose={closeModalBulkArchiveConfirmation}
-        >
-          <BulkArchiveModal
-            closeModal={closeModalBulkArchiveConfirmation}
-            confirmBulkArchive={doConfirmBulkArchive}
-          />
-        </Modal>
-      )}
+      <Modal
+        isOpen={isOpenBulkArchiveModal}
+        onRequestClose={closeModalBulkArchiveConfirmation}
+      >
+        <BulkArchiveModal
+          closeModal={closeModalBulkArchiveConfirmation}
+          confirmBulkArchive={doConfirmBulkArchive}
+        />
+      </Modal>
     </OuterContainer>
   )
 }

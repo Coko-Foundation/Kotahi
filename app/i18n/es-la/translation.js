@@ -203,6 +203,8 @@ const esLa = {
       'Select All': 'Seleccionar Todo',
       selectedArticles: '{{count}} artículos seleccionados',
       Archive: 'Archivo',
+      takeAction: 'Acción',
+      exportAsJson: 'Descargar JSON',
     },
     decisionPage: {
       'Current version': 'Versión Actual',

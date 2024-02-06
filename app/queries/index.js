@@ -278,6 +278,57 @@ export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
   }
 `
 
+const exportFields = `
+  versionIdentifier
+  created
+  updated
+  status
+  decision
+  submission
+  importSourceServer
+  shortId
+  reviews {
+    created
+    updated
+    username
+    isDecision
+    isHiddenReviewerName
+    isHiddenFromAuthor
+    jsonData
+  }
+  decisions {
+    created
+    updated
+    username
+    isDecision
+    isHiddenReviewerName
+    isHiddenFromAuthor
+    jsonData
+  }
+  teams {
+    created
+    updated
+    role
+    name
+    members {
+      user {
+        username
+      }
+    }
+  }
+`
+
+export const GET_MANUSCRIPTS_DATA = gql`
+  query getManuscriptsData($selectedManuscripts: [ID!]!) {
+    getManuscriptsData(selectedManuscripts: $selectedManuscripts) {
+      ${exportFields}
+      manuscriptVersions {
+        ${exportFields}
+      }
+    }
+  }
+`
+
 const fileFields = `
     id
     name

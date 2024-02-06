@@ -22,12 +22,12 @@ const AssignEditor = ({
   const [members, setMembers] = useState([])
 
   useEffect(() => {
-    setTeam((manuscript.teams || []).find(t => t.role === teamRole) || {})
+    setTeam((manuscript.teams || []).find(t => t.role === teamRole) ?? null)
     setTeams(manuscript.teams || [])
   }, [manuscript])
 
   useEffect(() => {
-    setTeam(teams.find(t => t.role === teamRole) || null)
+    setTeam(teams.find(t => t.role === teamRole) ?? null)
   }, [teams])
 
   useEffect(() => {

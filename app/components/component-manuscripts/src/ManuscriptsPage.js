@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from 'react-i18next'
@@ -9,8 +9,10 @@ import {
   useMutation,
   useSubscription,
   useApolloClient,
+  useLazyQuery,
 } from '@apollo/client'
 import fnv from 'fnv-plus'
+import { saveAs } from 'file-saver'
 import { ConfigContext } from '../../config/src'
 import {
   GET_MANUSCRIPTS_AND_FORM,
@@ -20,6 +22,7 @@ import {
   GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
   ARCHIVE_MANUSCRIPT,
   ARCHIVE_MANUSCRIPTS,
+  GET_MANUSCRIPTS_DATA,
 } from '../../../queries'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
@@ -107,6 +110,61 @@ const ManuscriptsPage = ({ currentUser, history }) => {
         groupId: config.groupId,
       },
     })
+  }
+
+  // Used Lazy Query, as it's fetching data upon a particular trigger
+  const [getManuscriptsData, { loading, error, data, refetch }] = useLazyQuery(
+    GET_MANUSCRIPTS_DATA,
+  )
+
+  const selectedNewManuscriptsRef = useRef([])
+
+  // Once export action is selected, the following block would trigger query to fetch data from the backend.
+  const exportManuscriptsToJson = async selectedNewManuscripts => {
+    try {
+      selectedNewManuscriptsRef.current = selectedNewManuscripts
+
+      if (selectedNewManuscripts) {
+        if (refetch) {
+          const refetchData = await refetch({
+            selectedManuscripts: selectedNewManuscripts,
+          })
+
+          const extractedData = refetchData.data.getManuscriptsData.map(
+            ({ __typename, ...rest }) => rest,
+          )
+
+          downloadJSON(extractedData, 'exportedData.json')
+        } else {
+          // If refetch is not available, execute the query again
+          getManuscriptsData({
+            variables: { selectedManuscripts: selectedNewManuscripts },
+          })
+        }
+      }
+    } catch (error) {
+      console.error('Error exporting manuscripts:', error)
+    }
+  }
+
+  // To respond to the JSON data fetched when export is selected as action
+  useEffect(() => {
+    if (!loading && !error && data) {
+      const extractedData = data.getManuscriptsData.map(
+        ({ __typename, ...rest }) => rest,
+      )
+
+      downloadJSON(extractedData, 'exportedData.json')
+    }
+  }, [loading, error, data])
+
+  // Function to download the JSON data
+  const downloadJSON = (data, fileName) => {
+    const jsonBlob = new Blob([JSON.stringify(data)], {
+      type: 'application/json',
+    })
+
+    saveAs(jsonBlob, fileName)
   }
 
   const [archiveManuscriptMutation] = useMutation(ARCHIVE_MANUSCRIPT, {
@@ -206,6 +264,8 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
       doUpdateManuscript={doUpdateManuscript}
+      exportManuscriptsToJson={exportManuscriptsToJson}
+      getManuscriptsData={getManuscriptsData}
       groupManagerDiscussionChannel={groupManagerDiscussionChannel}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}
