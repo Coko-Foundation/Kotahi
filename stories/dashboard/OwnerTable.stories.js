@@ -370,7 +370,7 @@ const props = {
           __typename: 'FormElement',
           id: 'd76e5b3c-eeaa-4168-9318-95d43a31e3e4',
           component: 'AuthorsInput',
-          name: 'submission.authorNames',
+          name: 'submission.$authors',
           title: 'Author names',
           shortDescription: null,
           validate: null,

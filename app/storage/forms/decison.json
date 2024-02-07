@@ -7,6 +7,7 @@
       "title": "Decision",
       "component": "AbstractEditor",
       "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below.",
+      "permitPublishing": "false",
       "validate": [
         {
           "id": "39796769-23a9-4788-b1f3-78d08b59f97e",
@@ -20,6 +21,7 @@
       "name": "files",
       "title": " ",
       "component": "SupplementaryFiles",
+      "permitPublishing": "false",
       "shortDescription": "Files"
     },
     {
@@ -27,6 +29,7 @@
       "name": "$verdict",
       "title": "Decision Status",
       "inline": "true",
+      "permitPublishing": "false",
       "options": [
         {
           "id": "78653e7a-32b3-4283-9a9e-36e79876da28",

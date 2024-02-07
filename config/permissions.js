@@ -13,6 +13,7 @@ const { cachedGet } = require('../server/querycache')
 const userIsEditor = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
   const manuscriptId = parent?.manuscriptId ?? args?.id
   if (!manuscriptId) throw new Error('No manuscriptId for userIsEditor!')
   return cachedGet(`userIsEditor:${ctx.user}:${manuscriptId}`)
@@ -21,19 +22,24 @@ const userIsEditor = rule({
 // TODO Is this actually needed anywhere? Can it be replaced with userIsEditor?
 const userIsEditorOfAnyManuscript = rule({
   cache: 'contextual',
-})(async (parent, args, ctx, info) =>
-  cachedGet(`userIsEditorOfAnyManuscript:${ctx.user}`),
-)
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
+  return cachedGet(`userIsEditorOfAnyManuscript:${ctx.user}`)
+})
 
 const userIsGm = rule({
   cache: 'contextual',
-})(async (parent, args, ctx, info) =>
-  cachedGet(`userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`),
-)
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
+  return cachedGet(`userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`)
+})
 
 const userIsAdmin = rule({
   cache: 'contextual',
-})(async (parent, args, ctx, info) => cachedGet(`userIsAdmin:${ctx.user}`))
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
+  return cachedGet(`userIsAdmin:${ctx.user}`)
+})
 
 const userOwnsMessage = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
@@ -249,6 +255,7 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 const userIsEditorOfTheManuscriptOfTheReview = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
   let manuscriptId
 
   // updateReviewerTeamMemberStatus
