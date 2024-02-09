@@ -225,6 +225,25 @@ const resolvers = {
       logoFile.storedObjects = updatedStoredObjects
       return logoFile
     },
+    async favicon(parent, _, ctx) {
+      try {
+        const { groupId } = parent
+
+        const activeConfig = await models.Config.query().findOne({
+          groupId,
+          active: true,
+        })
+
+        const file = await File.find(
+          activeConfig.formData.groupIdentity.favicon,
+        )
+
+        file.storedObjects = await setFileUrls(file.storedObjects)
+        return file
+      } catch (error) {
+        return null
+      }
+    },
 
     async flaxHeaderConfig(parent) {
       return getFlaxPageConfig('flaxHeaderConfig', parent.groupId)
@@ -330,6 +349,7 @@ const typeDefs = `
     primaryColor: String!
     secondaryColor: String!
     logo: File
+    favicon: File
     partners: [StoredPartner!]
     footerText: String
     isPrivate:Boolean

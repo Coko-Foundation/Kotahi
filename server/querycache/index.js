@@ -34,9 +34,6 @@ const queryFunctions = {
       review ? review.manuscriptId : file.objectId,
     )
 
-    if (!manuscript)
-      console.error('File without owner manuscript encountered:', file)
-
     return manuscript
   },
   userIsAdmin: async userId => {
