@@ -6,6 +6,7 @@
       "component": "TextField",
       "name": "submission.$sourceUri",
       "doiValidation": "false",
+      "permitPublishing": "always",
       "validate": [
         {
           "value": "required",
@@ -20,6 +21,7 @@
       "component": "TextField",
       "name": "submission.$title",
       "doiValidation": "false",
+      "permitPublishing": "always",
       "validate": [
         {
           "value": "required",
@@ -33,6 +35,7 @@
       "id": "13e673b4-0a25-4a02-92e6-e2a3a8b59daf",
       "component": "AbstractEditor",
       "name": "submission.ourTake",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -98,6 +101,7 @@
       "id": "5f00b2cc-3adb-4671-bfdf-67b2679e58a9",
       "component": "Select",
       "name": "submission.studyDesign",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -111,6 +115,7 @@
       "id": "421aab67-569f-4539-8bc6-97376c64538f",
       "component": "AbstractEditor",
       "name": "submission.summaryOfMainFindings",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -124,6 +129,7 @@
       "id": "4209cfa4-95de-48d4-ae3f-c98b29a9a847",
       "component": "AbstractEditor",
       "name": "submission.studyStrengths",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -137,6 +143,7 @@
       "id": "6531975d-1e8e-4bf1-831e-61e7b52a912e",
       "component": "AbstractEditor",
       "name": "submission.limitations",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -150,6 +157,7 @@
       "id": "dd57894d-ef5e-4c36-aa17-d9daed83a116",
       "component": "AbstractEditor",
       "name": "submission.valueAdded",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -180,6 +188,7 @@
       "id": "a94dd0b8-99a0-4555-9e59-0895fafa464e",
       "component": "Select",
       "name": "submission.$customStatus",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -360,6 +369,7 @@
       "id": "73ca76d0-eae3-11eb-9a03-0242ac130003",
       "component": "CheckboxGroup",
       "name": "submission.subTopics",
+      "permitPublishing": "false",
       "validate": []
     },
     {
@@ -409,6 +419,7 @@
       "id": "fef9af15-9d7b-4164-bb5b-9277b6f96704",
       "component": "CheckboxGroup",
       "name": "submission.topics",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -423,6 +434,7 @@
       "component": "AbstractEditor",
       "name": "submission.$abstract",
       "doiValidation": "false",
+      "permitPublishing": "always",
       "validate": []
     },
     {
@@ -430,6 +442,7 @@
       "id": "49a42019-748a-4fd1-a0e3-210a43ce8225",
       "component": "TextField",
       "name": "submission.firstAuthor",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -443,6 +456,7 @@
       "id": "43fcd173-40fd-411c-a89c-6bdd958bed70",
       "component": "TextField",
       "name": "submission.datePublished",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -455,6 +469,7 @@
       "title": "Study population setting",
       "id": "8e502920-62bd-4841-8e00-927171908766",
       "component": "AbstractEditor",
+      "permitPublishing": "false",
       "name": "submission.studyPopulationSetting"
     },
     {
@@ -462,6 +477,7 @@
       "id": "150d401e-0e1c-4122-a661-26516a8e6838",
       "component": "TextField",
       "name": "submission.journal",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -475,6 +491,7 @@
       "id": "2552df53-765b-489a-9626-01a4f8ccdd5c",
       "component": "TextField",
       "name": "submission.reviewer",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",
@@ -488,6 +505,7 @@
       "id": "f60c6272-bd21-466b-9943-2837f7b2fcf5",
       "component": "TextField",
       "name": "submission.$editDate",
+      "permitPublishing": "false",
       "readonly": true
     },
     {
@@ -495,6 +513,7 @@
       "id": "3d21cd7c-5264-48a5-b19a-792f9191bb99",
       "component": "Select",
       "name": "submission.compendiumFeature",
+      "permitPublishing": "false",
       "options": [
         {
           "label": "Yes, Medium/Low Impact Article",
@@ -513,6 +532,7 @@
       "id": "12a0d30b-e91a-434d-9985-01820f48fdc4",
       "component": "TextField",
       "name": "submission.reviewCreator",
+      "permitPublishing": "false",
       "validate": [
         {
           "value": "required",

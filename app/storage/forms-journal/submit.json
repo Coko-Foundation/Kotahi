@@ -6,6 +6,7 @@
       "id": "fa0c39ca-0486-4e29-ba24-f86f7d375c3f",
       "component": "Select",
       "name": "submission.objectType",
+      "permitPublishing": "false",
       "options": [
         {
           "id": "df5fc212-b055-4cba-9d0e-e85222e3d4f2",
@@ -40,13 +41,15 @@
       "component": "TextField",
       "name": "submission.$title",
       "placeholder": "Enter the manuscript's title",
+      "permitPublishing": "always",
       "hideFromReviewers": "false"
     },
     {
       "title": "Author names",
       "id": "d76e5b3c-eeaa-4168-9318-95d43a31e3e4",
       "component": "AuthorsInput",
-      "name": "submission.authorNames",
+      "name": "submission.$authors",
+      "permitPublishing": "always",
       "hideFromReviewers": "false"
     },
     {
@@ -55,6 +58,7 @@
       "component": "CheckboxGroup",
       "name": "submission.topics",
       "hideFromReviewers": "false",
+      "permitPublishing": "false",
       "options": [
         {
           "id": "2323b6d1-8223-45e8-a0fc-1044a1e39d37",
@@ -80,6 +84,7 @@
       "name": "submission.$doi",
       "doiValidation": "true",
       "placeholder": "Enter the manuscript's DOI",
+      "permitPublishing": "always",
       "hideFromReviewers": "false"
     },
     {
@@ -90,12 +95,14 @@
       "name": "submission.$abstract",
       "description": "<p>Please provide a short summary of your submission</p>",
       "placeholder": "Input your abstract...",
+      "permitPublishing": "always",
       "hideFromReviewers": "false"
     },
     {
       "title": "Author correspondence ",
       "id": "7f5aa395-3486-4067-b636-ae204d472c16",
       "component": "TextField",
+      "permitPublishing": "false",
       "name": "submission.AuthorCorrespondence"
     },
     {
@@ -104,12 +111,14 @@
       "component": "AbstractEditor",
       "name": "submission.cover",
       "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
+      "permitPublishing": "false",
       "placeholder": "Enter your cover letter"
     },
     {
       "title": "Editors evaluation ",
       "id": "14b8da7d-5924-4098-8d1f-e528c7c440b9",
       "component": "TextField",
+      "permitPublishing": "false",
       "name": "submission.EditorsEvaluation"
     },
     {
@@ -117,6 +126,7 @@
       "id": "bf2f9b4a-377b-4303-8f51-70d836eb1456",
       "component": "AbstractEditor",
       "name": "submission.datacode",
+      "permitPublishing": "false",
       "placeholder": "Enter your data and code availability statement"
     },
     {
@@ -124,30 +134,35 @@
       "id": "fa5e5b75-4b6f-4a2d-9113-c2b4db73ef8a",
       "component": "AbstractEditor",
       "name": "submission.competingInterests",
+      "permitPublishing": "false",
       "hideFromReviewers": "false"
     },
     {
       "title": "Funding",
       "id": "6bfdc237-814d-4af8-b0f0-064099d679ba",
       "component": "TextField",
+      "permitPublishing": "false",
       "name": "submission.Funding"
     },
     {
       "title": "Upload supplementary materials",
       "id": "b769b4d5-f9b3-48d3-a6d5-77bb6a9e95b0",
       "component": "SupplementaryFiles",
+      "permitPublishing": "false",
       "name": "fileName"
     },
     {
       "title": "Author contributions ",
       "id": "b127ecb1-4862-4662-a958-3266eb284353",
       "component": "TextField",
+      "permitPublishing": "false",
       "name": "submission.authorContributions"
     },
     {
       "title": "Decision letter and author response",
       "id": "6342cff7-c57a-4fd9-b91d-c4cf77b4c309",
       "component": "AbstractEditor",
+      "permitPublishing": "false",
       "name": "submission.DecisionLetter"
     },
     {
@@ -155,12 +170,14 @@
       "id": "e8af0c63-e46f-46a8-bc90-5023fe50a541",
       "component": "AbstractEditor",
       "name": "submission.references",
+      "permitPublishing": "false",
       "hideFromReviewers": "false"
     },
     {
       "title": "Reviewing editors name ",
       "id": "ebe75cec-0ba8-4f00-9024-20e77ed94f1c",
       "component": "AuthorsInput",
+      "permitPublishing": "false",
       "name": "submission.reviewingEditor"
     },
     {
@@ -168,6 +185,7 @@
       "id": "6871680a-2278-40b3-80c6-7de06f21aafb",
       "component": "TextField",
       "name": "submission.copyrightHolder",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">e.g. British Medical Journal </p>"
     },
     {
@@ -175,6 +193,7 @@
       "id": "1e9ff636-f850-4d20-b079-36af49fa4ad1",
       "component": "TextField",
       "name": "submission.copyrightStatement",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">e.g. This article is distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use and redistribution provided that the original author and source are credited.</p>"
     },
     {
@@ -182,6 +201,7 @@
       "id": "7617c919-4413-4306-b709-ef78c3110c3f",
       "component": "TextField",
       "name": "submission.copyrightYear",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">e.g. 2022</p>"
     },
     {
@@ -189,6 +209,7 @@
       "id": "6deaacc6-759a-4a68-b494-c38c664bb665",
       "component": "TextField",
       "name": "submission.dateReceived",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
     },
     {
@@ -196,6 +217,7 @@
       "id": "8b858adc-5f65-4385-9f79-5c5af1f67bd5",
       "component": "TextField",
       "name": "submission.dateAccepted",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
     },
     {
@@ -203,12 +225,14 @@
       "id": "f6e46890-4b96-4c90-ab48-b4fc5abb9b40",
       "component": "TextField",
       "name": "submission.datePublished",
+      "permitPublishing": "false",
       "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
     },
     {
       "title": "Manuscript File",
       "id": "66469976-314f-4949-b2ff-702039b262c0",
       "component": "ManuscriptFile",
+      "permitPublishing": "false",
       "name": "manuscriptFile"
     }
   ],

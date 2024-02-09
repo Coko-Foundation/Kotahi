@@ -6,6 +6,7 @@
       "name": "submission.articleId",
       "title": "Article ID",
       "options": [],
+      "permitPublishing": "false",
       "validate": [
         {
           "id": "48179c76-55b3-41b8-b330-6115dcbd9b2a",
@@ -20,6 +21,7 @@
       "name": "submission.$doi",
       "title": "Article DOI",
       "options": [],
+      "permitPublishing": "always",
       "validate": [
         {
           "id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a",
@@ -35,6 +37,7 @@
       "name": "submission.$sourceUri",
       "title": "bioRxiv article URL",
       "options": [],
+      "permitPublishing": "always",
       "validate": [
         {
           "id": "20708da4-7999-49c0-9881-d28f2ce9f825",
@@ -49,6 +52,7 @@
       "name": "submission.$title",
       "title": "Description",
       "options": [],
+      "permitPublishing": "always",
       "validate": [
         {
           "id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2",
@@ -64,6 +68,7 @@
       "title": "Review 1",
       "component": "AbstractEditor",
       "placeholder": "Review 1",
+      "permitPublishing": "true",
       "doiValidation": "false"
     },
     {
@@ -71,6 +76,7 @@
       "name": "submission.review1creator",
       "title": "Review 1 creator",
       "component": "TextField",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -79,6 +85,7 @@
       "title": "Review 1 date",
       "component": "TextField",
       "placeholder": "review 1 date",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -87,6 +94,7 @@
       "title": "Review 2",
       "component": "AbstractEditor",
       "placeholder": "Review 2",
+      "permitPublishing": "true",
       "doiValidation": "false"
     },
     {
@@ -94,6 +102,7 @@
       "name": "submission.review2creator",
       "title": "Review 2 creator",
       "component": "TextField",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -102,6 +111,7 @@
       "title": "Review 2 date",
       "component": "TextField",
       "placeholder": "review 2 date",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -109,6 +119,7 @@
       "name": "submission.review3",
       "title": "Review 3",
       "component": "AbstractEditor",
+      "permitPublishing": "true",
       "doiValidation": "false"
     },
     {
@@ -116,6 +127,7 @@
       "name": "submission.review3creator",
       "title": "Review 3 creator",
       "component": "TextField",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -124,6 +136,7 @@
       "title": "Review 3 date",
       "component": "TextField",
       "placeholder": "review 3 date",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -131,6 +144,7 @@
       "name": "submission.summary",
       "title": "Summary",
       "component": "AbstractEditor",
+      "permitPublishing": "true",
       "doiValidation": "false"
     },
     {
@@ -138,6 +152,7 @@
       "name": "submission.summarycreator",
       "title": "Summary creator",
       "component": "TextField",
+      "permitPublishing": "false",
       "doiValidation": "false"
     },
     {
@@ -146,6 +161,7 @@
       "title": "Summary date",
       "component": "TextField",
       "placeholder": "summary date",
+      "permitPublishing": "false",
       "doiValidation": "false"
     }
   ],

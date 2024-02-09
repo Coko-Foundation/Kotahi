@@ -12,7 +12,7 @@ const getPublishableTextFromComment = commentObject => {
 }
 
 const getPublishableFieldsForFlax = (
-  formFieldsToPublish,
+  adHocFieldsToPublish,
   data,
   form,
   threadedDiscussions,
@@ -21,8 +21,6 @@ const getPublishableFieldsForFlax = (
   formType,
 ) => {
   if (!form) return []
-
-  const fieldsToPublish = formFieldsToPublish?.fieldsToPublish || []
 
   const {
     structure: { children: fields },
@@ -52,7 +50,7 @@ const getPublishableFieldsForFlax = (
             const shouldPublish =
               text &&
               (field.permitPublishing === 'always' ||
-                fieldsToPublish.includes(expandedFieldName))
+                adHocFieldsToPublish.includes(expandedFieldName))
 
             return {
               field,
@@ -72,7 +70,7 @@ const getPublishableFieldsForFlax = (
       const shouldPublish =
         text &&
         (field.permitPublishing === 'always' ||
-          fieldsToPublish.includes(field.name))
+          adHocFieldsToPublish.includes(field.name))
 
       return {
         field,
@@ -105,8 +103,12 @@ const getPublishableReviewFields = (
   resultReviews.map(review => {
     const resultReview = review
 
+    const adHocFieldsToPublish =
+      manuscript.formFieldsToPublish.find(ff => ff.objectId === review.id)
+        ?.fieldsToPublish ?? []
+
     const modifiedJsonData = getPublishableFieldsForFlax(
-      manuscript.formFieldsToPublish.find(ff => ff.objectId === review.id),
+      adHocFieldsToPublish,
       JSON.parse(review.jsonData),
       form,
       threadedDiscussions,
@@ -124,15 +126,14 @@ const getPublishableReviewFields = (
 
 const getPublishableSubmissionFields = (form, manuscript) => {
   let submissionWithFields = {}
-  let manuscriptData = manuscript.submission
-  const metaTitle = manuscript.meta.title
-  const submissionTitle = manuscript.submission.title
-  const title = metaTitle || submissionTitle
+  const manuscriptData = manuscript.submission
 
-  manuscriptData = { ...manuscriptData, title }
+  const adHocFieldsToPublish =
+    manuscript.formFieldsToPublish.find(f => f.objectId === manuscript.id)
+      ?.fieldsToPublish ?? []
 
   const modifiedJsonData = getPublishableFieldsForFlax(
-    manuscript.formFieldsToPublish.find(ff => ff.objectId === manuscript.id),
+    adHocFieldsToPublish,
     manuscriptData,
     form,
     null,
