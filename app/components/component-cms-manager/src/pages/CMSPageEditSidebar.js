@@ -27,7 +27,9 @@ const CMSPageEditSidebar = ({
           <Heading2 onClick={() => onItemClick(cmsPage)}>
             {cmsPage.title}
           </Heading2>
-          {cmsPage.id === currentCMSPage.id ? <RightArrow /> : null}
+          {currentCMSPage && cmsPage.id === currentCMSPage.id ? (
+            <RightArrow />
+          ) : null}
         </SidebarPageRow>
       ))}
 

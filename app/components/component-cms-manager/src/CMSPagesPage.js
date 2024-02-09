@@ -57,6 +57,9 @@ const CMSPagesPage = ({ match, history }) => {
       return
     }
 
+    const newPageLink = `${urlFrag}/admin/cms/pages/`
+    history.push(newPageLink)
+
     setIsNewPage(true)
   }
 

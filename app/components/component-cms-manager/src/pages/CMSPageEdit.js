@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-
+import React, { useState, useRef } from 'react'
 import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import CMSPageEditForm from './CMSPageEditForm'
@@ -24,7 +23,19 @@ const CMSPageEdit = ({
     text: t('cmsPage.pages.Publish'),
   })
 
+  const formikRef = useRef()
+
+  const autoSubmit = () => {
+    if (formikRef.current) {
+      formikRef.current.handleSubmit()
+    }
+  }
+
   const autoSaveData = async (id, data) => {
+    if (isNewPage && data.content && data.content !== '') {
+      autoSubmit() // Auto submitting form as asset manager needs ID!
+    }
+
     if (isNewPage) {
       return
     }
@@ -123,6 +134,7 @@ const CMSPageEdit = ({
             content: cmsPage.content || '',
             url: cmsPage.url || '',
           }}
+          innerRef={formikRef}
           onSubmit={async values =>
             isNewPage ? createNewPage(values) : publish(values)
           }
@@ -131,6 +143,7 @@ const CMSPageEdit = ({
             return (
               <CMSPageEditForm
                 autoSaveData={autoSaveData}
+                autoSubmit={autoSubmit}
                 cmsPage={cmsPage}
                 currentValues={formikProps.values}
                 customFormErrors={customFormErrors}
