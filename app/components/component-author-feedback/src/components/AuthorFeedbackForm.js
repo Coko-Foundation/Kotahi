@@ -42,7 +42,6 @@ const FileInputComponent = ({ entityId, disabled, ...restProps }) => {
       fieldName="files"
       fileType="authorFeedback"
       manuscriptId={entityId}
-      mimeTypesToAccept="image/*"
       {...restProps}
       onChange={() => {}}
     />

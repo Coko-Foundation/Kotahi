@@ -44,7 +44,7 @@ exports.up = async knex => {
       await EmailTemplate.query(trx).insertGraph(allEmailTemplatesData)
 
       logger.info(
-        `Added authorProofingInvitation and authorProofingSubmitted templates for all configs.`,
+        `Added authorProofingInvitation and authorProofingSubmitted templates.`,
       )
     }
   })

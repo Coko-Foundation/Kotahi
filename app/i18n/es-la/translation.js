@@ -177,6 +177,7 @@ const esLa = {
       "Manuscripts I'm editor of": 'Manuscritos en los que soy editor',
       mySubmissions: {
         'My Submissions': 'Mis Presentaciones',
+        'Author proofing editor': 'Editor de pruebas de autor',
       },
       toReview: {
         'To Review': 'Para Revisión',

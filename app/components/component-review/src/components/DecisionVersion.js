@@ -353,10 +353,11 @@ const DecisionVersion = ({
               />
             </AdminSection>
           )}
-          {isCurrentVersion && authorProofingEnabled && (
+          {authorProofingEnabled && (
             <AdminSection>
               <AssignAuthorForProofing
                 assignAuthorForProofing={assignAuthorForProofing}
+                isCurrentVersion={isCurrentVersion}
                 manuscript={version}
               />
             </AdminSection>

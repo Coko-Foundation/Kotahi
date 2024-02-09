@@ -12,7 +12,11 @@ import {
 import { ActionButton, SectionContent } from '../../../../shared'
 import { convertTimestampToDateTimeString } from '../../../../../shared/dateUtils'
 
-const AssignAuthorForProofing = ({ assignAuthorForProofing, manuscript }) => {
+const AssignAuthorForProofing = ({
+  assignAuthorForProofing,
+  isCurrentVersion,
+  manuscript,
+}) => {
   const [isToggled, setToggled] = useState(false)
 
   const isAuthorProofingEnabled = ['assigned', 'inProgress'].includes(
@@ -35,7 +39,11 @@ const AssignAuthorForProofing = ({ assignAuthorForProofing, manuscript }) => {
       <SectionRowGrid>
         <ActionButton
           dataTestid="submit-author-proofing"
-          disabled={authorTeam?.members.length === 0 || isAuthorProofingEnabled}
+          disabled={
+            authorTeam?.members.length === 0 ||
+            isAuthorProofingEnabled ||
+            !isCurrentVersion
+          }
           onClick={async () => {
             setSubmitAuthorProofingStatus('pending')
 
@@ -56,7 +64,8 @@ const AssignAuthorForProofing = ({ assignAuthorForProofing, manuscript }) => {
           {authorTeam?.members.length === 0 && t('decisionPage.authorRequired')}
         </AssignedAuthorForProofingInfo>
       </SectionRowGrid>
-      {isAuthorProofingEnabled ? (
+      {manuscript?.authorFeedback?.assignedAuthors &&
+      manuscript?.authorFeedback?.assignedAuthors.length > 0 ? (
         <AssignedAuthorForProofingLogsContainer>
           <AssignedAuthorForProofingLogsToggle
             onClick={() => setToggled(!isToggled)}
@@ -67,20 +76,17 @@ const AssignAuthorForProofing = ({ assignAuthorForProofing, manuscript }) => {
           </AssignedAuthorForProofingLogsToggle>
           {isToggled && (
             <AssignedAuthorForProofingLogs>
-              {manuscript?.authorFeedback?.assignedAuthors &&
-                manuscript?.authorFeedback?.assignedAuthors.map(a => (
-                  <>
-                    <span>
-                      {t('decisionPage.assignedOn', {
-                        assigneeName: a.authorName,
-                        date: convertTimestampToDateTimeString(
-                          a.assignedOnDate,
-                        ),
-                      })}
-                    </span>
-                    <br />
-                  </>
-                ))}
+              {manuscript?.authorFeedback?.assignedAuthors.map(a => (
+                <>
+                  <span>
+                    {t('decisionPage.assignedOn', {
+                      assigneeName: a.authorName,
+                      date: convertTimestampToDateTimeString(a.assignedOnDate),
+                    })}
+                  </span>
+                  <br />
+                </>
+              ))}
             </AssignedAuthorForProofingLogs>
           )}
         </AssignedAuthorForProofingLogsContainer>

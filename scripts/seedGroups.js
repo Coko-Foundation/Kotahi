@@ -11,6 +11,7 @@ const {
   Team,
   EmailTemplate,
   ArticleTemplate,
+  Config,
 } = require('@pubsweet/models')
 
 const seedConfig = require('./seedConfig')
@@ -208,6 +209,38 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
 
     console.log(
       `    Added ${insertedEmailTemplates.length} number of default email templates for "${group.name}".`,
+    )
+
+    // Map default templates to config Event Notification for reviewerInvitation, authorProofingInvitation, authorProofingSubmitted
+    const reviewerInvitationEmailTemplate = insertedEmailTemplates.find(
+      e =>
+        e.groupId === group.id && e.emailTemplateType === 'reviewerInvitation',
+    )
+
+    const authorProofingInvitationTemplate = insertedEmailTemplates.find(
+      e =>
+        e.groupId === group.id &&
+        e.emailTemplateType === 'authorProofingInvitation',
+    )
+
+    const authorProofingSubmittedTemplate = insertedEmailTemplates.find(
+      e =>
+        e.groupId === group.id &&
+        e.emailTemplateType === 'authorProofingSubmitted',
+    )
+
+    const newConfig = config
+    newConfig.formData.eventNotification.reviewerInvitationPrimaryEmailTemplate =
+      reviewerInvitationEmailTemplate.id
+    newConfig.formData.eventNotification.authorProofingInvitationEmailTemplate =
+      authorProofingInvitationTemplate.id
+    newConfig.formData.eventNotification.authorProofingSubmittedEmailTemplate =
+      authorProofingSubmittedTemplate.id
+
+    await Config.query().updateAndFetchById(config.id, newConfig)
+
+    console.log(
+      `    Mapped default email templates in config formdata event notifications.`,
     )
   } else {
     console.log(

@@ -178,6 +178,7 @@ const ru = {
       "Manuscripts I'm editor of": 'Статьи для редактирования',
       mySubmissions: {
         'My Submissions': 'Мои статьи',
+        'Author proofing editor': 'Редактор авторских корректур',
       },
       toReview: {
         'To Review': 'Статьи для рецензирования',
