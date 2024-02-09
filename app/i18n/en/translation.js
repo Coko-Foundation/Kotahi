@@ -175,6 +175,7 @@ const en = {
       "Manuscripts I'm editor of": 'Manuscripts I’m editor of',
       mySubmissions: {
         'My Submissions': 'My Submissions',
+        'Author proofing editor': 'Author proofing editor',
       },
       toReview: {
         'To Review': 'To Review',

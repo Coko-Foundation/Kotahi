@@ -176,6 +176,7 @@ const fr = {
       "Manuscripts I'm editor of": 'Manuscrits dont je suis éditeur',
       mySubmissions: {
         'My Submissions': 'Mes soumissions',
+        'Author proofing editor': "Éditeur de correction d'auteur",
       },
       toReview: {
         'To Review': 'À réviser',
