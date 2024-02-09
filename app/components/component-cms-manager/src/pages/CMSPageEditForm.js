@@ -31,7 +31,7 @@ const mapper = {
 }
 
 const mapProps = args => ({
-  onAssetManager: manuscriptId => {
+  onAssetManager: cmsPageId => {
     return new Promise((resolve, reject) => {
       const {
         withModal: { showModal, hideModal },
@@ -65,11 +65,15 @@ const mapProps = args => ({
         resolve(alteredFiles)
       }
 
-      showModal('assetManagerEditor', {
-        manuscriptId,
-        withImport: true,
-        handleImport,
-      })
+      if (!cmsPageId || cmsPageId === '') {
+        reject(new Error('Invalid object ID!'))
+      } else {
+        showModal('assetManagerEditor', {
+          manuscriptId: cmsPageId,
+          withImport: true,
+          handleImport,
+        })
+      }
     })
   },
 })
@@ -86,6 +90,7 @@ const CMSPageEditForm = ({
   submitButtonText,
   cmsPage,
   autoSaveData,
+  autoSubmit,
   customFormErrors,
   resetCustomErrors,
   currentValues,
@@ -146,7 +151,15 @@ const CMSPageEditForm = ({
           onDataChanged(item.name, value)
         }
 
-        props.onAssetManager = () => onAssetManager(cmsPage.id)
+        props.onAssetManager = () => {
+          if (cmsPage.id) {
+            return onAssetManager(cmsPage.id)
+          }
+
+          autoSubmit() // Auto submitting form as asset manager needs ID!
+          return onAssetManager()
+        }
+
         break
 
       default:
