@@ -2,6 +2,7 @@ const { BaseModel } = require('@coko/server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const { raw } = require('objection')
+const sortBy = require('lodash/sortBy')
 const { getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
 
 const {
@@ -197,6 +198,37 @@ class Manuscript extends BaseModel {
     await deleteAlertsForManuscript(this.id)
 
     return manuscript
+  }
+
+  async getManuscriptVersions() {
+    // const { File } = require('@pubsweet/models')
+
+    const id = this.parentId || this.id
+
+    const manuscripts = await Manuscript.query()
+      .where('parent_id', id)
+      .withGraphFetched(
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+      )
+
+    const firstManuscript = await Manuscript.query()
+      .findById(id)
+      .withGraphFetched(
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+      )
+
+    manuscripts.push(firstManuscript)
+
+    const manuscriptVersionsArray = manuscripts.filter(
+      manuscript => this.id !== manuscript.id,
+    )
+
+    const manuscriptVersions = sortBy(
+      manuscriptVersionsArray,
+      manuscript => -manuscript.created,
+    )
+
+    return manuscriptVersions
   }
 
   /** Find all manuscripts (any version) for which the user serves in any role as a
