@@ -86,8 +86,7 @@ lint style:
 .test_script: &run_test_script
   - cd ${HOME}
   - sh ./scripts/setupProdServer.sh &&
-  - node ./startServer.js &
-  - sleep 10 &&
+  - sh ./scripts/wait-for-it.sh 127.0.0.1:3000 --timeout=60 &&
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 test-chrome:
