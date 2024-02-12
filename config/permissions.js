@@ -458,6 +458,7 @@ const permissions = {
     convertToJats: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     convertToPdf: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     currentUser: isAuthenticated,
+    currentUserIsReviewerOfManuscript: allow,
     docmap: allow,
     editorsActivity: or(userIsGm, userIsAdmin),
     file: deny, // Never used

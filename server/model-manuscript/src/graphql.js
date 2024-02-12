@@ -1859,6 +1859,13 @@ const resolvers = {
 
       return exportData
     },
+    async currentUserIsReviewerOfManuscript(_, { manuscriptId }, ctx) {
+      const team = await models.User.relatedQuery('teams')
+        .for(ctx.user)
+        .findOne({ role: 'reviewer', objectId: manuscriptId })
+
+      return !!team
+    },
   },
   Manuscript: {
     ...manuscriptAndPublishedManuscriptSharedResolvers,
@@ -2112,6 +2119,7 @@ const typeDefs = `
     unreviewedPreprints(token: String!, groupName: String): [Preprint!]!
     doisToRegister(id: ID!): [String]
     getManuscriptsData(selectedManuscripts: [ID!]!): [ManuscriptExport!]!
+    currentUserIsReviewerOfManuscript(manuscriptId: ID!): Boolean!
   }
 
   input ManuscriptsFilter {

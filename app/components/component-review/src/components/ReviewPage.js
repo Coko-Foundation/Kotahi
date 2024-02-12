@@ -165,6 +165,8 @@ const query = gql`
       }
     }
 
+    currentUserIsReviewerOfManuscript(manuscriptId: $id)
+
     threadedDiscussions(manuscriptId: $id) {
       id
       created
@@ -291,6 +293,13 @@ const ReviewPage = ({ currentUser, history, match }) => {
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
   if (manuscript.parentId)
     return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
+
+  if (!data.currentUserIsReviewerOfManuscript)
+    return (
+      <Page>
+        <Heading>This review is not accessible.</Heading>
+      </Page>
+    )
 
   const versions = manuscriptVersions(manuscript)
 
