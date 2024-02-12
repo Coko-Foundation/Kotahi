@@ -24,6 +24,7 @@ export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
   const [isActive, setIsActive] = useState(false)
   const { state, dispatch } = activeView
   const [disableForSelf, setDisableForSelf] = useState('!!!')
+  const [disableForOthers, setDisableForOthers] = useState(false)
 
   const viewId = trackChange.attrs
     ? trackChange.attrs.viewid
@@ -87,9 +88,14 @@ export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
     const rejectConfig = app.config.get('config.RejectTrackChangeService')
     const acceptSelf = acceptConfig.own.accept
     const rejectSelf = rejectConfig.own.reject
+    const acceptOthers = acceptConfig.others.accept
+    const rejectOthers = rejectConfig.others.reject
 
     // If the config says not to accept/reject own changes, set the disableForSelf state to the username of the user
     setDisableForSelf(!acceptSelf && !rejectSelf ? user.username : '!!!')
+
+    // If the config says not to accept/reject other changes, set the disableForOthers state to `true`
+    setDisableForOthers(!acceptOthers && !rejectOthers)
   }, [activeTrackChange])
 
   const onClickAccept = () => {
@@ -113,6 +119,7 @@ export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
       >
         <TrackChangesBox
           active={isActive}
+          disableForOthers={disableForOthers}
           disableForSelf={disableForSelf}
           key={trackChangeId}
           onClickAccept={onClickAccept}
@@ -121,6 +128,7 @@ export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
           recalculateTops={recalculateTops}
           trackChangeId={trackChangeId}
           trackData={trackChange}
+          user={user}
         />
       </ConnectedTrackChangeStyled>
     ),

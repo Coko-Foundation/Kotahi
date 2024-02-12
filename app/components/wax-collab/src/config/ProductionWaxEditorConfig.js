@@ -54,18 +54,18 @@ const productionWaxEditorConfig = (
   },
   AcceptTrackChangeService: {
     own: {
-      accept: true,
+      accept: !isReadOnly,
     },
     others: {
-      accept: true,
+      accept: !isReadOnly,
     },
   },
   RejectTrackChangeService: {
     own: {
-      reject: true,
+      reject: !isReadOnly,
     },
     others: {
-      reject: true,
+      reject: !isReadOnly,
     },
   },
   SchemaService: KotahiSchema,

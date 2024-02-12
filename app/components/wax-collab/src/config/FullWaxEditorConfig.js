@@ -43,22 +43,22 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const fullWaxEditorConfig = handleAssetManager => ({
+const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
   EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
   AcceptTrackChangeService: {
     own: {
-      accept: true,
+      accept: !isReadOnly,
     },
     others: {
-      accept: true,
+      accept: !isReadOnly,
     },
   },
   RejectTrackChangeService: {
     own: {
-      reject: true,
+      reject: !isReadOnly,
     },
     others: {
-      reject: true,
+      reject: !isReadOnly,
     },
   },
 

@@ -106,7 +106,9 @@ const TrackChangesBox = props => {
     onClickAccept,
     onClickReject,
     trackData,
+    disableForOthers,
     disableForSelf,
+    user,
   } = props
 
   const onClickTrackBox = () => {
@@ -118,6 +120,15 @@ const TrackChangesBox = props => {
     : trackData.node.attrs.track[0].username
 
   const selfEditingNotTurnedOff = !(disableForSelf === username)
+
+  const othersEditingNotTurnedOff = !(
+    disableForSelf !== username && disableForOthers
+  )
+
+  const enableAcceptReject =
+    user.username === username
+      ? selfEditingNotTurnedOff
+      : othersEditingNotTurnedOff
 
   const date = trackData.attrs
     ? trackData.attrs.date
@@ -177,7 +188,7 @@ const TrackChangesBox = props => {
             </DateParser>
           </Timestamp>
         </Info>
-        {active && selfEditingNotTurnedOff && (
+        {active && enableAcceptReject && (
           <Tools>
             <IconButton name="checkTrack" onClick={onClickAccept} />
             <IconButton name="reject" onClick={onClickReject} />
