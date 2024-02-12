@@ -67,7 +67,7 @@ const FullWaxEditor = ({
       <div className={validationStatus} style={{ width: '100%' }}>
         <Wax
           autoFocus={autoFocus}
-          config={fullWaxEditorConfig(handleAssetManager)}
+          config={fullWaxEditorConfig(handleAssetManager, readonly)}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
