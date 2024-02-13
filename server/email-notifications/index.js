@@ -21,7 +21,7 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
 
   // If the template requires sending emails to the editors, then append
   // data.ccEmails which would be an array of editor emails
-  if (template.emailContent?.ccEditors) {
+  if (template.emailContent?.ccEditors && data.ccEmails) {
     ccEmails += `,${data.ccEmails.join(',')}`
   }
 
