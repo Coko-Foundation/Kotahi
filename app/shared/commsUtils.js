@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 const VALIDATE_DOI = gql`
-  query validateDOI($articleURL: String) {
-    validateDOI(articleURL: $articleURL) {
+  query validateDOI($doiOrUrl: String) {
+    validateDOI(doiOrUrl: $doiOrUrl) {
       isDOIValid
     }
   }
@@ -20,7 +20,7 @@ export const validateDoi = client => async value => {
     .query({
       query: VALIDATE_DOI,
       variables: {
-        articleURL: value,
+        doiOrUrl: value,
       },
     })
     .then(result => {
