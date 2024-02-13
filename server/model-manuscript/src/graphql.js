@@ -1815,8 +1815,11 @@ const resolvers = {
       return DOIs
     },
     /** Return true if the DOI exists (is found in Crossref) */
-    async validateDOI(_, { articleURL }, ctx) {
-      const doi = encodeURI(articleURL.split('.org/')[1])
+    async validateDOI(_, { doiOrUrl }, ctx) {
+      const doi = doiOrUrl.startsWith('https://doi.org/')
+        ? encodeURI(doiOrUrl.split('.org/')[1])
+        : doiOrUrl
+
       return { isDOIValid: await doiExists(doi) }
     },
     /** Return true if a DOI formed from this suffix has not already been assigned (i.e. not found in Crossref) */
@@ -2109,7 +2112,7 @@ const typeDefs = `
     paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
     manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int, groupId: ID!): PaginatedManuscripts
-    validateDOI(articleURL: String): validateDOIResponse
+    validateDOI(doiOrUrl: String): validateDOIResponse
     validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
