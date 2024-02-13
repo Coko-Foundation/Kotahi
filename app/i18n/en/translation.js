@@ -257,7 +257,7 @@ const en = {
         Publish: 'Publish',
         Republish: 'Republish',
         publishedOn: 'This submission was published on {{date}}',
-        doisToBeRegistered: 'DOIs to be registered: {{dois}}',
+        doisToBeRegistered: 'DOIs to be registered: {{- dois}}',
         noDoisToBeRegistered:
           'No DOIs will be registered at time of publishing.',
       },

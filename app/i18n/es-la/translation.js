@@ -261,7 +261,7 @@ const esLa = {
         Publish: 'Publicar',
         Republish: 'Volver a Publicar',
         publishedOn: 'Esta presentación se publicó el {{date}}',
-        doisToBeRegistered: 'DOIs a registrar: {{dois}}',
+        doisToBeRegistered: 'DOIs a registrar: {{- dois}}',
         noDoisToBeRegistered:
           'No se registrarán DOIs al momento de la publicación.',
       },

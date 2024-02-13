@@ -261,7 +261,7 @@ const fr = {
         Publish: 'Publier',
         Republish: 'Republier',
         publishedOn: 'Cette soumission a été publiée le {{date}}',
-        doisToBeRegistered: 'DOIs à enregistrer : {{dois}}',
+        doisToBeRegistered: 'DOIs à enregistrer : {{- dois}}',
         noDoisToBeRegistered:
           'Aucun DOI ne sera enregistré au moment de la publication.',
       },
