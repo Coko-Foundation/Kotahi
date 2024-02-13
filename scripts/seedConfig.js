@@ -267,7 +267,7 @@ const seedConfig = async (group, instanceName, index) => {
             hideReview: process.env.REVIEW_HIDE === 'true',
             sharedReview: process.env.REVIEW_SHARED === 'true',
             displayManuscriptShortId: true,
-            authorProofingEnabled: false,
+            authorProofingEnabled: true,
           },
           notification,
           eventNotification: {},

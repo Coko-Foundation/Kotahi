@@ -906,27 +906,27 @@ const resolvers = {
 
         const activeConfig = await models.Config.getCached(manuscript.groupId)
 
-        const handlingEditorTeam =
+        const editorTeam =
           manuscript.teams &&
           !!manuscript.teams.length &&
           manuscript.teams.find(manuscriptTeam => {
-            return manuscriptTeam.role.includes('handlingEditor')
+            return manuscriptTeam.role.includes('editor')
           })
 
-        const handlingEditor =
-          handlingEditorTeam && !!handlingEditorTeam.members.length
-            ? handlingEditorTeam.members[0]
+        const editor =
+          editorTeam && !!editorTeam.members.length
+            ? editorTeam.members[0]
             : null
 
-        if (!handlingEditor) {
+        if (!editor) {
           // eslint-disable-next-line no-console
-          console.info('No handling editor assigned. Email not sent.')
+          console.info('No editor assigned. Email not sent.')
           return updated
         }
 
-        const receiverEmail = handlingEditor.user.email
+        const receiverEmail = editor.user.email
         /* eslint-disable-next-line */
-        const receiverName = handlingEditor.user.username
+        const receiverName = editor.user.username
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
@@ -974,9 +974,9 @@ const resolvers = {
             ).id
 
             models.Message.createMessage({
-              content: `Author proof completed Email sent by Kotahi to ${handlingEditor.user.username}`,
+              content: `Author proof completed Email sent by Kotahi to ${editor.user.username}`,
               channelId,
-              userId: handlingEditor.user.id,
+              userId: editor.user.id,
             })
           } catch (e) {
             /* eslint-disable-next-line */
