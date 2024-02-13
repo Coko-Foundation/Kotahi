@@ -152,8 +152,6 @@ const Article = ({
             displayShortIdAsIdentifier={displayShortIdAsIdentifier}
             form={form}
             formData={{}}
-            manuscript={{}}
-            // threadedDiscussionProps={threadedDiscussionExtendedProps}
             showEditorOnlyFields
           />
         </FormTemplateStyled>
