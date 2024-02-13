@@ -264,7 +264,7 @@ const ru = {
         Publish: 'Опубликовать',
         Republish: 'Опубликовать заново',
         publishedOn: 'Опубликовано {{date}}',
-        doisToBeRegistered: 'Будут зарегестрированы DOI: {{dois}}',
+        doisToBeRegistered: 'Будут зарегестрированы DOI: {{- dois}}',
         noDoisToBeRegistered: 'Нет DOI для регистрации при публикации.',
       },
       metadataTab: {
