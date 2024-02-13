@@ -33,9 +33,11 @@ RUN wget --no-verbose /usr/src/libappindicator3-1_0.4.92-7_amd64.deb "http://ftp
   apt-get install -f -y && \
   rm -f /usr/src/libappindicator3-1_0.4.92-7_amd64.deb
 
+RUN ls
+
 # install Chrome browser
 RUN node -p "process.arch === 'arm64' ? 'Not downloading Chrome since we are on arm64: https://crbug.com/677140' : process.exit(1)" || \
-  (wget --no-verbose -O /usr/src/google-chrome-stable_current_amd64.deb "http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_107.0.5304.68-1_amd64.deb" && \
+  (wget --no-verbose -O /usr/src/google-chrome-stable_current_amd64.deb "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" && \
   dpkg -i /usr/src/google-chrome-stable_current_amd64.deb ; \
   apt-get install -f -y && \
   rm -f /usr/src/google-chrome-stable_current_amd64.deb)
