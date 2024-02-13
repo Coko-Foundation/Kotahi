@@ -353,7 +353,7 @@ UploadAsset.propTypes = {
   files: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
       component: PropTypes.string,
     }).isRequired,
   ),

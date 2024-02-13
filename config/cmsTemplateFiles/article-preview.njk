@@ -1,0 +1,151 @@
+{% extends '../layouts/base.njk' %}
+{% set currentPage = article %}
+{% set title = article.headerInfo.title %}
+{% block content %}
+    <main>
+        <div class="article-preview-header">
+            <span class="topics">
+                {{ article.headerInfo.topics }}
+            </span>
+            <span class="article-title">
+                {{ article.headerInfo.title }}</span>
+            <ul class="authors metadata">
+                {% for author in article.headerInfo.authorNames %}
+                    <li class="author metadata">
+                        <span class="author-name">{{- author.firstName -}}&nbsp;{{- author.lastName -}}</span>
+                        {% if author.email %}
+                            <a class="email" href="mailto:{{ author.email }}">{% include "_partials/icon-email.njk" %}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="authors">
+                <li class="author metadata">
+                    <span class="author-affiliation">{{- article.headerInfo.authorNames | arrayToString('affiliation', 'trim') -}}</span>
+                </li>
+            </ul>
+
+            <span class="header-doi-and-licenses">
+                <a href="{{ article.headerInfo.DOI }}">
+                    {{ article.headerInfo.DOI }}
+                </a>
+                {% if cmsLayout.publishConfig.licenseUrl %}
+                    <a href="{{cmsLayout.publishConfig.licenseUrl}}">
+                        {{cmsLayout.publishConfig.licenseUrl}}
+                    </a>
+                {% endif %}
+            </span>
+
+            {% if article.headerInfo.publishedOn %}
+                <p class="published-date">
+                    Published on <time datetime="article.headerInfo.publishedOn">{{ article.headerInfo.publishedOn | replace('Z','') | postDate }}</time>
+                </p>
+            {% endif %}
+        </div>
+        <div class="horizontal-line">
+            <hr/>
+        </div>
+        <div class="article-content">
+            <div class="meta-data">
+                <aside class="toc-wrapper">
+                    <h3>Table of contents</h3>
+                    {{ article.meta.source | addIDtoTitles | toc({"tags":["h2","h3", "figure"]}) | safe }}
+                    {% if article.supplementaryFiles.length >= 1 %}
+                        <li>
+                            <a href="#supplementary">Supplementary Files</a>
+                        </li>
+                    {% endif %}
+                    {% if article.editors.length > 0 %}
+                        <li>
+                            <a href="#editors">Editors</a>
+                        </li>
+                    {% endif %}
+                    {% if article.reviews.length > 0 %}
+                        <li>
+                            <a href="#reviews">Reviews</a>
+                        </li>
+                    {% endif %}
+                    {% if article.decisions.length > 0 %}
+                        <li>
+                            <a href="#decisions">Summary</a>
+                        </li>
+                    {% endif %}
+                    {% if article.metaData.length > 0 %}
+                        <li>
+                            <a href="#metaData">Metadata</a>
+                        </li>
+                    {% endif %}
+                </aside>
+            </div>
+            <article>
+                <section class="manuscript">
+                    {% if article.meta.source %}
+                        <section id="article" class="article">
+                            {{ article.meta.source | addIDtoTitles | imagesHandler(article.shortId, 'articles', config.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}
+                        </section>
+                    {% endif %}
+                    {% if article.supplementaryFiles.length >= 1 %}
+                        <section>
+                            <h3 id="supplementary">Supplementary Files</h3>
+                            {% for item in article.supplementaryFiles %}
+                                <ol>
+                                    <div class="attachment">
+                                        <svg class="svg-container" viewBox="0 0 509.371 509.371" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M452.758,36.265c-48.354-48.354-127.045-48.354-175.399,0L62.657,250.967c-6.777,6.778-6.777,17.764,0,24.541 c6.786,6.777,17.764,6.777,24.541,0L301.9,60.815c34.825-34.816,91.492-34.816,126.316,0 c16.879,16.87,26.164,39.302,26.164,63.158c0,23.864-9.285,46.288-26.164,63.158L158.392,456.956 c-23.621,23.63-62.073,23.63-85.695,0c-23.621-23.639-23.63-62.074,0-85.704l217.591-217.591 c12.427-12.418,32.638-12.435,45.091,0c12.427,12.418,12.427,32.647,0,45.082L172.902,361.212c-6.777,6.777-6.777,17.764,0,24.541 c6.786,6.778,17.764,6.778,24.55,0l162.469-162.469c25.956-25.964,25.956-68.209,0-94.165c-25.964-25.982-68.209-25.964-94.173,0 l-217.6,217.591c-37.159,37.15-37.159,97.618,0,134.786c18.588,18.588,42.991,27.874,67.402,27.874s48.814-9.294,67.393-27.874 l269.815-269.824c23.439-23.422,36.335-54.567,36.335-87.7C489.092,90.841,476.197,59.696,452.758,36.265z"/>
+                                        </svg>
+                                        <a href="../../assets/supplementary-files/{{item.name}}" download>{{item.name}}</a>
+                                    </div>
+                                </ol>
+                            {% endfor %}
+                        </section>
+                    {% endif %}
+                    {% if article.editors.length > 0 %}
+                        <h3 id="editors">Editors</h3>
+                        {% for editor in article.editors %}
+                            <section class="content">
+                                {# <p class="editor-role">{{ editor.role }}</p> #}
+                                <p class="user-name">{{ editor.name }}</p>
+                            </section>
+                        {% endfor %}
+                    {% endif %}
+                    {% if article.reviews.length > 0 %}
+                        <h3 id="reviews">Reviews</h3>
+                        {% for review in article.reviews %}
+                            <section class="content">
+                                <p class="user-name">{{ review.user.username }}</p>
+                                {% for reviewData in review.jsonData%}
+                                    <div class="review-field">
+                                        {{ reviewData.text |safe }}
+                                    </div>
+                                {% endfor %}
+                            </section>
+                        {% endfor %}
+                    {% endif %}
+                    {% if article.decisions.length > 0 %}
+                        <h3 id="decisions">Summary</h3>
+                        {% for decision in article.decisions %}
+                            <section class="content">
+                                <p class="user-name">{{ decision.user.username }}</p>
+                                {% for decisionData in decision.jsonData%}
+                                    <div class="review-field">
+                                        {{ decisionData.text |safe }}
+                                    </div>
+                                {% endfor %}
+                            </section>
+                        {% endfor %}
+                    {% endif %}
+                    {% if article.metaData.length > 0 %}
+                        <h3 id="metaData">Metadata</h3>
+                        <section class="content">
+                            {% for data in article.metaData %}
+                                <div class="review-field">
+                                    {{ data.text |safe }}
+                                </div>
+                            {% endfor %}
+                        </section>
+                    {% endif %}
+                </section>
+            </article>
+        </div>
+    </main>
+{% endblock %}
