@@ -79,10 +79,27 @@ const queryFunctions = {
   profilePicFileOfUser: async userId => {
     return models.User.relatedQuery('file').for(userId).first()
   },
+  // TODO: rename this otherVersionsOfMs
   subVersionsOfMs: async manuscriptId => {
-    return models.Manuscript.relatedQuery('manuscriptVersions')
-      .for(manuscriptId)
+    const thisMs = await models.Manuscript.query()
+      .findById(manuscriptId)
+      .select('parentId')
+
+    if (!thisMs.parentId)
+      return models.Manuscript.relatedQuery('manuscriptVersions')
+        .for(manuscriptId)
+        .modify('orderByCreatedDesc')
+
+    // The manuscript this request was made for is NOT a first version manuscript.
+    // Find all OTHER versions than this one.
+
+    const parent = await models.Manuscript.query().findById(thisMs.parentId)
+
+    const children = await models.Manuscript.relatedQuery('manuscriptVersions')
+      .for(parent.id)
       .modify('orderByCreatedDesc')
+
+    return [...children.filter(v => v.id !== manuscriptId), parent]
   },
   teamsForObject: async objectId => {
     return models.Team.query().where({ objectId })
