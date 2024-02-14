@@ -100,6 +100,16 @@ const Article = ({
     }
   }
 
+  // Don't let users copy handlebars code for fields such as 'manuscriptFile' or 'visualAbstract',
+  // as these aren't actually stored in the submission or even the manuscript object.
+  // TODO: Provide a way for users to insert such fields into the template.
+  const formWithSubmissionFieldsOnly = {
+    ...form,
+    children: form.children.filter(field =>
+      field.name.startsWith('submission.'),
+    ),
+  }
+
   const cssArticle = {
     content: (
       <ScrollableTabContent>
@@ -150,7 +160,7 @@ const Article = ({
           <ReadonlyFormTemplate
             copyHandleBarsCode
             displayShortIdAsIdentifier={displayShortIdAsIdentifier}
-            form={form}
+            form={formWithSubmissionFieldsOnly}
             formData={{}}
             showEditorOnlyFields
           />
