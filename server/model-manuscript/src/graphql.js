@@ -236,9 +236,7 @@ const manuscriptAndPublishedManuscriptSharedResolvers = {
   async files(parent, _, ctx) {
     const files = (
       parent.files ||
-      (await (
-        await models.Manuscript.query().findById(parent.id)
-      ).$relatedQuery('files'))
+      (await models.Manuscript.relatedQuery('files').for(parent.id))
     ).map(f => ({
       ...f,
       tags: f.tags || [],
@@ -1905,11 +1903,6 @@ const resolvers = {
     },
     async submitter(parent) {
       return parent.submitter ?? cachedGet(`submitterOfMs:${parent.id}`)
-    },
-    async files(parent) {
-      return (
-        parent.files ?? models.Manuscript.relatedQuery('files').for(parent.id)
-      )
     },
     async firstVersionCreated(parent) {
       if (parent.created && !parent.parentId) return parent.created
