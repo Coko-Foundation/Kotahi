@@ -89,7 +89,7 @@ const resolvers = {
         .first()
 
       if (!layout) {
-        layout = await setInitialLayout(groupId)
+        layout = await setInitialLayout(groupId) // TODO move this to seedArticleTemplate.js or similar
       }
 
       return layout
@@ -262,21 +262,25 @@ const resolvers = {
     },
 
     async article(parent) {
+      if (parent.article || parent.article === '') return parent.article
+
       const { article } = await models.ArticleTemplate.query().findOne({
         groupId: parent.groupId,
         isCms: true,
       })
 
-      return article
+      return article ?? ''
     },
 
     async css(parent) {
+      if (parent.css || parent.css === '') return parent.css
+
       const { css } = await models.ArticleTemplate.query().findOne({
         groupId: parent.groupId,
         isCms: true,
       })
 
-      return css
+      return css ?? ''
     },
   },
 
