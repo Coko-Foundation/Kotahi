@@ -26,9 +26,11 @@
             </ul>
 
             <span class="header-doi-and-licenses">
-                <a href="{{ article.headerInfo.DOI }}">
-                    {{ article.headerInfo.DOI }}
-                </a>
+                {% if article.headerInfo.DOI %}
+                    <a href="https://doi.org/{{ article.headerInfo.DOI }}">
+                        https://doi.org/{{ article.headerInfo.DOI }}
+                    </a>
+                {% endif %}
                 {% if cmsLayout.publishConfig.licenseUrl %}
                     <a href="{{cmsLayout.publishConfig.licenseUrl}}">
                         {{cmsLayout.publishConfig.licenseUrl}}
