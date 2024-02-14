@@ -18,6 +18,7 @@ const seedConfig = require('./seedConfig')
 const seedForms = require('./seedForms')
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')
 const { generateCss } = require('../server/pdfexport/applyTemplate')
+const seedArticleTemplate = require('./seedArticleTemplate')
 
 const defaultTemplatePath = path.resolve(
   __dirname,
@@ -59,6 +60,8 @@ const createGroupAndRelatedData = async (groupName, instanceName, index) => {
 
   // Seed forms and link it to the created group
   await seedForms(group, config)
+
+  await seedArticleTemplate(group)
 
   // Seed System-wide discussion channel and link it to the created group
   const channelExists = await Channel.query().findOne({
