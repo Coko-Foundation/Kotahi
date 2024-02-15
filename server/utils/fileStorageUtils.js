@@ -209,6 +209,27 @@ const replaceImageSrc = async (source, files, size) => {
   return $.html()
 }
 
+const replaceImageFromNunjucksTemplate = (source, files, size) => {
+  // const imageRegex = /<img[^>]*\bsrc\s*=\s*["']([^"']+)["'][^>]*\bdata-id\s*=\s*["']([^"']+)["'][^>]*>/g
+
+  const imageRegex = /<img[^>]+data-id=["']([^"']+)["'][^>]*>/g
+
+  // Replace src attribute of each image tag with new src based on data-id property
+  return source.replace(imageRegex, (match, dataId) => {
+    const correspondingFile = find(files, { id: dataId })
+
+    if (correspondingFile) {
+      const { url } = correspondingFile.storedObjects.find(
+        storedObject => storedObject.type === size,
+      )
+
+      return match.replace(/src=["'][^"']*["']/, `src="${url}"`)
+    }
+
+    return match
+  })
+}
+
 /** Replace file URLs in source html with regenerated URLs to files of specified size */
 const updateSrcUrl = async (source, files, size) => {
   const $ = cheerio.load(source)
@@ -403,6 +424,7 @@ module.exports = {
   replaceImageSrc,
   updateSrcUrl,
   replaceImageSrcResponsive,
+  replaceImageFromNunjucksTemplate,
   uploadImage,
   imageFinder,
   setFileUrls,
