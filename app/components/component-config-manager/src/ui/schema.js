@@ -2235,9 +2235,8 @@ const generateSchema = (
                   authorProofingEnabled: {
                     type: 'boolean',
                     title: t('configPage.Author proofing enabled'),
-                    default: true,
+                    default: false,
                   },
-
                   showTabs: {
                     type: 'array',
                     description: t(

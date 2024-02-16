@@ -434,7 +434,7 @@ const esLa = {
       'Control panel': 'Panel de Control',
       'Display manuscript short id': 'Mostrar ID corto del manuscrito',
       'Author proofing enabled':
-        'Permitir a las autoras participar en rondas de corrección de pruebas',
+        'Permitir a los autores participar en rondas de corrección de pruebas',
       'Reviewers can see submitted reviews':
         'Los revisores pueden ver revisiones enviadas',
       'Authors can see individual peer reviews':
