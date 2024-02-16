@@ -434,7 +434,7 @@ const ru = {
       'Control panel': 'Панель управления',
       'Display manuscript short id': 'Показывать краткий ID статей',
       'Author proofing enabled':
-        'Разрешить авторам участвовать в раундах корректуры',
+        'Разрешить авторам участвовать в циклах корректуры',
       'Reviewers can see submitted reviews':
         'Рецензентам доступен просмотр отправленных рецензий',
       'Authors can see individual peer reviews':

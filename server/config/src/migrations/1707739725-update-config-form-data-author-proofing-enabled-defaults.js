@@ -11,14 +11,15 @@ exports.up = async knex => {
     logger.info(`Existing Configs count: ${configs.length}`)
 
     if (configs.length > 0) {
-      configs.forEach(async config => {
-        const newConfig = config
+      await Promise.all(
+        configs.map(async config => {
+          const newConfig = config
 
-        newConfig.formData.controlPanel.authorProofingEnabled =
-          newConfig.formData.instanceName === 'journal'
+          newConfig.formData.controlPanel.authorProofingEnabled = false
 
-        await Config.query().updateAndFetchById(config.id, newConfig)
-      })
+          await Config.query().updateAndFetchById(config.id, newConfig)
+        }),
+      )
     }
 
     logger.info(

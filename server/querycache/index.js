@@ -74,7 +74,7 @@ const queryFunctions = {
     return isEditor
   },
   defaultIdentityOfUser: async userId => {
-    return models.User.relatedQuery('defaultIdentity').for(userId)
+    return models.User.relatedQuery('defaultIdentity').for(userId).first()
   },
   profilePicFileOfUser: async userId => {
     return models.User.relatedQuery('file').for(userId).first()
