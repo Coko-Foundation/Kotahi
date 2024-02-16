@@ -4,6 +4,7 @@ const File = require('@coko/server/src/models/file/file.model')
 
 const {
   replaceImageSrc,
+  replaceImageFromNunjucksTemplate,
   getFilesWithUrl,
   setFileUrls,
 } = require('../../utils/fileStorageUtils')
@@ -269,7 +270,10 @@ const resolvers = {
         isCms: true,
       })
 
-      return article ?? ''
+      let files = await models.File.query().where({ objectId: parent.groupId })
+      files = await getFilesWithUrl(files)
+
+      return replaceImageFromNunjucksTemplate(article, files, 'medium') ?? ''
     },
 
     async css(parent) {
