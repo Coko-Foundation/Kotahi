@@ -49,10 +49,9 @@ const getData = async (groupId, ctx) => {
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
 
   if (latestLimitedSelectedManuscripts.length > 0) {
-    const importDOIParams = []
-    latestLimitedSelectedManuscripts.map(manuscript => {
-      const DOI = encodeURI(manuscript.submission.doi.split('.org/')[1])
-      return importDOIParams.push(`DOI:${DOI}`)
+    const importDOIParams = latestLimitedSelectedManuscripts.map(manuscript => {
+      const DOI = encodeURI(manuscript.submission.$doi)
+      return `DOI:${DOI}`
     })
 
     const importParameters = JSON.stringify({
@@ -118,14 +117,13 @@ const getData = async (groupId, ctx) => {
     )
 
     const currentDOIs = new Set(
-      manuscripts.map(({ submission }) => submission.doi),
+      manuscripts.map(({ submission }) => submission.$doi),
     )
 
     const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
 
     const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
-      preprints =>
-        !currentDOIs.has(`https://doi.org/${preprints.externalIds.DOI}`),
+      preprints => !currentDOIs.has(preprints.externalIds.DOI),
     )
 
     const withoutUrlDuplicates = withoutDOIDuplicates.filter(

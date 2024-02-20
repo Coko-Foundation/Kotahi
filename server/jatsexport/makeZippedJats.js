@@ -160,9 +160,9 @@ const makeZipFile = async (manuscriptId, jats) => {
     if (svgList.length) {
       // go through the list of SVGs, make files from them in the images directory
       await Promise.all(
-        svgList.map(async svg => {
+        svgList.filter(Boolean).map(async svg => {
           await fsPromised.appendFile(`${imageDirName}/${svg.name}`, svg.svg)
-          console.error(`Attached formual ${svg.name}`)
+          console.error(`Attached formula ${svg?.name}`)
         }),
       )
     }
