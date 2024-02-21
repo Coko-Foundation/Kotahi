@@ -2,6 +2,8 @@
 import { ManuscriptsPage } from './manuscripts-page'
 import { evaluate, submit } from '../support/routes'
 
+/* eslint-disable cypress/unsafe-to-chain-command */
+
 /**
  * Page object representing the form which has
  * to be completed to correctly submit a research paper.

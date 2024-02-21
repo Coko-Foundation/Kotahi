@@ -62,9 +62,7 @@ const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 const DECISION_TEXT_INPUT =
   ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
 
-const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
-const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+const DECISION_RADIO_BUTTON = '[class*=FormTemplate__SafeRadioGroup]'
 const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
 const DECISION_FILE_INPUT = 'input[type=file]'
 
@@ -153,19 +151,19 @@ export const ControlPage = {
   },
 
   getAcceptRadioButton() {
-    return cy.get(ACCEPT_RADIO_BUTTON)
+    return cy.get(DECISION_RADIO_BUTTON).eq(0)
   },
   clickAccept() {
     this.getAcceptRadioButton().click()
   },
   getReviseRadioButton() {
-    return cy.get(REVISE_RADIO_BUTTON)
+    return cy.get(DECISION_RADIO_BUTTON).eq(1)
   },
   clickRevise() {
     this.getReviseRadioButton().click()
   },
   getRejectRadioButton() {
-    return cy.get(REJECT_RADIO_BUTTON)
+    return cy.get(DECISION_RADIO_BUTTON).eq(2)
   },
   clickReject() {
     this.getRejectRadioButton().click()

@@ -96,11 +96,17 @@ ENV FLAX_SITE_URL $flax_site_url
 RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
 
-# Only copy things needed for the yarn install
 COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-# We do a development install because react-styleguidist is a dev dependency and we want to run tests
-RUN [ "yarn", "install", "--frozen-lockfile" ]
+RUN mkdir -p ./packages/server
+RUN mkdir -p ./packages/client
+
+COPY ./packages/server/package.json ./packages/server/yarn.lock ./packages/server
+RUN cd packages/server && yarn install --frozen-lockfile
+
+COPY ./packages/client/package.json ./packages/client/yarn.lock ./packages/client
+RUN cd packages/client && yarn install --frozen-lockfile
 
 ENV NODE_ENV ${NODE_ENV}
 
