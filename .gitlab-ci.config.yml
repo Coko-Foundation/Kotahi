@@ -84,9 +84,10 @@ lint style:
   - ./mc admin policy attach cokoServer/ readwrite --user=$S3_ACCESS_KEY_ID
 
 .test_script: &run_test_script
-  - cd ${HOME}
+  - cd ${HOME}/packages/server
   - sh ./scripts/setupProdServer.sh &&
   - sh ./scripts/wait-for-it.sh 127.0.0.1:3000 --timeout=60 &&
+  - cd ${HOME}
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 test-chrome:

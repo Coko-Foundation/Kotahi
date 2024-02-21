@@ -3,7 +3,7 @@ version: '3'
 services:
   client:
     build:
-      context: .
+      context: ./packages/client
       dockerfile: ./Dockerfile-development
     depends_on:
       - server
@@ -27,19 +27,19 @@ services:
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
       - FLAX_SITE_URL=${FLAX_SITE_URL:-http://localhost:8081}
-
     volumes:
-      - ./app:/home/node/app/app
-      - ./config:/home/node/app/config
-      - ./certs:/home/node/app/certs
+      - ./packages/client/app:/home/node/app/app
+      - ./packages/client/certs:/home/node/app/certs
+      - ./packages/client/config/translationOverrides.js:/home/node/app/config/translationOverrides.js
 
   server:
     build:
-      context: .
+      context: ./packages/server
       dockerfile: ./Dockerfile-development
     depends_on:
       - db
       - xsweet
+      - fileHosting
     entrypoint:
       [
         'node_modules/.bin/wait-for-it',
@@ -58,6 +58,8 @@ services:
         'server',
         '--',
         'config',
+        '--',
+        'scripts',
         '--ext',
         'js,graphql',
       ]
@@ -155,11 +157,10 @@ services:
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
-
     volumes:
-      - ./config:/home/node/app/config
-      - ./server:/home/node/app/server
-      - ./uploads:/home/node/app/uploads
+      - ./packages/server/config:/home/node/app/config
+      - ./packages/server/scripts:/home/node/app/scripts
+      - ./packages/server/server:/home/node/app/server
 
   pagedjs:
     depends_on:
@@ -284,15 +285,16 @@ services:
     command: server --console-address ":${MINIO_CONSOLE_PORT:-9001}" /data
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
-      interval: 30s
+      interval: 0.5s
       timeout: 20s
-      retries: 3
+      retries: 30
 
   # Create non-root user and bucket that we'll connect to
   createbucket:
     image: minio/mc:RELEASE.2023-05-04T18-10-16Z
     depends_on:
-      - fileHosting
+      fileHosting:
+        condition: service_healthy
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add cokoServer http://fileHosting:${S3_PORT:-9000} ${MINIO_ROOT_USER:-admin} ${MINIO_ROOT_PASSWORD:-superSecretAdminPassword};
@@ -320,7 +322,6 @@ services:
       - POSTGRES_DB=anystyle_dev
       - POSTGRES_PORT=5432
       - NODE_ENV=development
-
     security_opt:
       - seccomp:unconfined
     entrypoint:

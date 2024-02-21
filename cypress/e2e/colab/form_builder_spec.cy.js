@@ -1,4 +1,4 @@
-/* eslint-disable jest/expect-expect */
+/* eslint-disable jest/expect-expect, cypress/unsafe-to-chain-command */
 import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes1'
