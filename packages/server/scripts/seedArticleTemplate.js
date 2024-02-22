@@ -8,7 +8,7 @@ const fs = require('fs-extra').promises
 const ARTICLE_TEMPLATE_PATH = './config/cmsTemplateFiles/article-preview.njk'
 
 const seed = async (group, options = {}) => {
-  useTransaction(
+  return useTransaction(
     async trx => {
       const groupId = group.id
 

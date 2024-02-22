@@ -71,8 +71,6 @@ const createGroupAndRelatedData = async (
 
   await seedArticleTemplate(group, { trx })
 
-  await seedArticleTemplate(group)
-
   // Seed System-wide discussion channel and link it to the created group
   const channelExists = await Channel.query(trx).findOne({
     topic: 'System-wide discussion',
