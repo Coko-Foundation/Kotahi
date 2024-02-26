@@ -67,6 +67,7 @@ services:
       ]
     ports:
       - ${SERVER_PORT:-3000}:3000
+      - ${WS_YJS_SERVER_PORT:-5010}:${WS_YJS_SERVER_PORT:-5010}
     environment:
       - NODE_ENV=development
       - POSTGRES_USER=${POSTGRES_USER:-dev}
@@ -159,6 +160,8 @@ services:
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
+      - WS_YJS_SERVER_PORT=${WS_YJS_SERVER_PORT:-5010}
+
     volumes:
       - ./packages/server/config:/home/node/app/config
       - ./packages/server/models:/home/node/app/models

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import { debounce } from 'lodash'
+import yjsConfig from './config/yjsConfig'
 import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
 import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
 
@@ -14,17 +15,21 @@ const SimpleWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
+  yjsProvider,
+  ydoc,
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   useEffect(() => debounceChange.flush, [])
+
+  const config = yjsConfig(simpleWaxEditorConfig(), { yjsProvider, ydoc })
 
   return (
     <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
-        config={simpleWaxEditorConfig()}
+        config={config}
         key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {

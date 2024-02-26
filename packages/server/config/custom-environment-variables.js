@@ -29,6 +29,7 @@ module.exports = {
     },
     tempFolderPath: 'TEMP_FOLDER_PATH',
     useFileStorage: 'USE_FILE_STORAGE',
+    wsYjsServerPort: 'WS_YJS_SERVER_PORT',
   },
   'client-features': {
     displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',

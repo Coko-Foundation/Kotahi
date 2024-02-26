@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { set } from 'lodash'
 import { adopt } from 'react-adopt'
 import { hasValue } from '../../../../../shared/htmlUtils'
-import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
+import CollaborativeWax from '../../../../wax-collab/src/CollaborativeWax'
 import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
 import withModal from '../../../../asset-manager/src/ui/Modal/withModal'
 import theme, { space, color } from '../../../../../theme'
@@ -84,18 +84,6 @@ const FullWaxField = ({
 
   return (
     <Panel>
-      <FullWaxEditor
-        validationStatus={validationStatus}
-        {...rest}
-        onBlur={() => {
-          setTouched(set({}, rest.name, true))
-        }}
-        onChange={val => {
-          setTouched(set({}, rest.name, true))
-          const cleanedVal = hasValue(val) ? val : ''
-          onChange(cleanedVal)
-        }}
-      />
       <Composed
         currentUser={currentUser}
         isAuthorMode={false}
@@ -105,19 +93,20 @@ const FullWaxField = ({
         readonly={readonly}
         saveSource={saveSource}
       >
-        {({ onAssetManager }) => (
+        {() => (
           <div>
-            <FullWaxEditor
-              authorComments={false}
-              manuscriptId={manuscript.id}
-              // onChange={readonly && !isAuthorMode ? null : onBlur}
-              // onChange={readonly && !isAuthorMode ? null : onChange}
-              onAssetManager={onAssetManager}
-              readonly={readonly}
-              saveSource={saveSource}
-              useComments
-              user={currentUser}
+            <CollaborativeWax
+              editorMode="FullWaxEditor"
+              validationStatus={validationStatus}
               {...rest}
+              onBlur={() => {
+                setTouched(set({}, rest.name, true))
+              }}
+              onChange={val => {
+                setTouched(set({}, rest.name, true))
+                const cleanedVal = hasValue(val) ? val : ''
+                onChange(cleanedVal)
+              }}
             />
           </div>
         )}
