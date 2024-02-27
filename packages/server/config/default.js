@@ -93,8 +93,8 @@ module.exports = {
         cfg['pubsweet-client']
 
       const protocolToUse = publicProtocol || protocol
-      let hostToUse = publicHost || host || 'localhost'
-      if (hostToUse === '0.0.0.0') hostToUse = 'localhost'
+      let hostToUse = publicHost || host || '127.0.0.1'
+      if (hostToUse === '0.0.0.0') hostToUse = '127.0.0.1'
       const portToUse = publicPort || port
       return `${protocolToUse}://${hostToUse}${
         portToUse ? `:${portToUse}` : ''
