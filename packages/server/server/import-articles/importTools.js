@@ -3,26 +3,22 @@ const ArticleImportSources = require('../model-article-import-sources/src/articl
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 
-const getServerId = async (serverLabel, options = {}) => {
-  const { trx } = options.trx
-
-  let [server] = await ArticleImportSources.query(trx).where({
+const getServerId = async serverLabel => {
+  let [server] = await ArticleImportSources.query().where({
     server: serverLabel,
   })
 
   if (server) return server.id
-  await ArticleImportSources.query(trx).insert({ server: serverLabel })
-  ;[server] = await ArticleImportSources.query(trx).where({
+  await ArticleImportSources.query().insert({ server: serverLabel })
+  ;[server] = await ArticleImportSources.query().where({
     server: serverLabel,
   })
   return server.id
 }
 
 /** Return the last import date for this server, or if no imports have been done, return start of epoch */
-const getLastImportDate = async (serverId, groupId, options = {}) => {
-  const { trx } = options
-
-  const results = await ArticleImportHistory.query(trx)
+const getLastImportDate = async (serverId, groupId) => {
+  const results = await ArticleImportHistory.query()
     .select('date')
     .where({ sourceId: serverId, groupId })
 
@@ -30,10 +26,8 @@ const getLastImportDate = async (serverId, groupId, options = {}) => {
   return 0
 }
 
-const getEmptySubmission = async (groupId, options = {}) => {
-  const { trx } = options
-
-  const submissionForm = await getSubmissionForm(groupId, { trx })
+const getEmptySubmission = async groupId => {
+  const submissionForm = await getSubmissionForm(groupId)
 
   const parsedFormStructure = submissionForm.structure.children
     .map(formElement => {

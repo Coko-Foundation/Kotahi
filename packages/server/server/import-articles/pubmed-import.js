@@ -4,7 +4,6 @@ const xml2json = require('xml-js')
 const FormData = require('form-data')
 const fetch = require('node-fetch')
 
-const { useTransaction } = require('@coko/server')
 const models = require('@pubsweet/models')
 
 const flattenObj = require('../utils/flattenObj')
@@ -43,383 +42,372 @@ const pubmedQueries = {
 /** This is used as a quick hack to partly mitigate issue #628, which causes some abstracts to be imported as arrays */
 const joinToStringIfArray = x => (Array.isArray(x) ? x.join(' ') : x)
 
-const getData = async (groupId, ctx, options = {}) => {
-  return useTransaction(
-    async trx => {
-      const manuscripts = await models.Manuscript.query(trx).where({ groupId })
-      const currentArticleURLs = manuscripts.map(m => m.submission.$sourceUri)
+const getData = async (groupId, ctx) => {
+  const manuscripts = await models.Manuscript.query().where({ groupId })
+  const currentArticleURLs = manuscripts.map(m => m.submission.$sourceUri)
 
-      const dateTwoWeeksAgoFormatted = new Date(Date.now() - 12096e5)
-        .toISOString()
-        .split('T')[0]
-        .replace(/-/g, '/')
+  const dateTwoWeeksAgoFormatted = new Date(Date.now() - 12096e5)
+    .toISOString()
+    .split('T')[0]
+    .replace(/-/g, '/')
 
-      const dateTodayFormatted = new Date(Date.now())
-        .toISOString()
-        .split('T')[0]
-        .replace(/-/g, '/')
+  const dateTodayFormatted = new Date(Date.now())
+    .toISOString()
+    .split('T')[0]
+    .replace(/-/g, '/')
 
-      const [checkIfSourceExists] = await models.ArticleImportSources.query(
-        trx,
-      ).where({
-        server: 'pubmed',
-      })
-
-      if (!checkIfSourceExists) {
-        await models.ArticleImportSources.query(trx).insert({
-          server: 'pubmed',
-        })
-      }
-
-      const [pubmedImportSourceId] = await models.ArticleImportSources.query(
-        trx,
-      ).where({
-        server: 'pubmed',
-      })
-
-      const lastImportDate = await models.ArticleImportHistory.query(trx)
-        .select('date')
-        .where({
-          sourceId: pubmedImportSourceId.id,
-          groupId,
-        })
-
-      const minDate = lastImportDate.length
-        ? new Date(lastImportDate[0].date)
-            .toISOString()
-            .split('T')[0]
-            .toString()
-            .replace(/-/g, '/')
-        : dateTwoWeeksAgoFormatted
-
-      const topicsPromises = Object.entries(pubmedQueries).map(
-        async ([topic, query], index) => {
-          await delay(2000 * index)
-
-          const formData = new FormData()
-
-          const eUtilsUrlParameters = {
-            retmax: '100000',
-            retmode: 'json',
-            db: 'pubmed',
-            term: query,
-            usehistory: 'y',
-            mindate: minDate,
-            maxdate: dateTodayFormatted,
-          }
-
-          Object.entries(eUtilsUrlParameters).map(([key, value]) =>
-            formData.append(key, value),
-          )
-
-          try {
-            const { data } = await axios.post(
-              `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi`,
-              formData,
-              {
-                headers: formData.getHeaders(),
-              },
-            )
-
-            return { topic, ids: data.esearchresult.idlist }
-          } catch (err) {
-            console.error(
-              `Failed to retrieve pubmed data for topic ${topic}. Query:\n${query}\n${err.message}`,
-            )
-          }
-        },
-      )
-
-      const topicsIdsResponse = []
-
-      for (const topicIdPromise of topicsPromises) {
-        const topicIdResponse = await topicIdPromise
-        // eslint-disable-next-line no-continue
-        if (!topicIdResponse) continue
-
-        const filteredTopicIdResponse = topicIdResponse.ids
-          .map(id => {
-            if (topicsIdsResponse.length > 0) {
-              const cc = topicsIdsResponse.map(el => {
-                if (!el.ids.includes(id)) {
-                  return id
-                }
-
-                return true
-              })
-
-              return !cc.includes(true) ? cc[0] : null
-            }
-
-            return id
-          })
-          .filter(Boolean)
-
-        topicsIdsResponse.push({
-          topic: topicIdResponse.topic,
-          ids: filteredTopicIdResponse,
-        })
-      }
-
-      const submissionForm = await getSubmissionForm(groupId, { trx })
-
-      const parsedFormStructure = submissionForm.structure.children
-        .map(formElement => {
-          const parsedName = formElement.name && formElement.name.split('.')[1]
-
-          if (parsedName) {
-            return {
-              name: parsedName,
-              component: formElement.component,
-            }
-          }
-
-          return undefined
-        })
-        .filter(x => x !== undefined)
-
-      const emptySubmission = parsedFormStructure.reduce((acc, curr) => {
-        acc[curr.name] =
-          curr.component === 'CheckboxGroup' || curr.component === 'LinksInput'
-            ? []
-            : ''
-        return {
-          ...acc,
-        }
-      }, {})
-
-      const topicsIdsResult = topicsIdsResponse.map(
-        async ({ topic, ids }, index) => {
-          if (!ids.length) {
-            return
-          }
-
-          const formData = new FormData()
-
-          await delay(3000 * index)
-          const idList = ids.join(',')
-
-          const eFetchUrlParameters = {
-            db: 'pubmed',
-            id: idList,
-            tool: 'my_tool',
-            email: 'my_email@example.com',
-            retmode: 'xml',
-          }
-
-          Object.entries(eFetchUrlParameters).map(([key, value]) =>
-            formData.append(key, value),
-          )
-
-          const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi`
-
-          const idsResponse = await fetch(url, {
-            method: 'post',
-            body: formData,
-          }).then(response => response.text())
-
-          const { PubmedArticleSet } = await JSON.parse(
-            xml2json.xml2json(idsResponse, {
-              compact: true,
-              spaces: 2,
-            }),
-          )
-
-          const currentDOIs = currentArticleURLs
-            .map(articleUrl => {
-              if (articleUrl) {
-                if (articleUrl.includes('https://doi.org')) {
-                  return articleUrl.split('doi.org/')[1]
-                }
-
-                if (articleUrl.split('content/')[1]) {
-                  return articleUrl
-                    .split('content/')[1]
-                    .split(selectVersionRegexp)[0]
-                }
-
-                console.log('broken url should be here')
-                console.log(articleUrl)
-                return null
-              }
-
-              return null
-            })
-            .filter(Boolean)
-
-          const singleElocationId = eLocationID =>
-            eLocationID ? eLocationID._text : ''
-
-          const pubmedDOI = MedlineCitation => {
-            return Array.isArray(MedlineCitation.Article.ELocationID)
-              ? MedlineCitation.Article.ELocationID.filter(
-                  ids => ids._attributes.EIdType === 'doi',
-                )[0]._text
-              : singleElocationId(MedlineCitation.Article.ELocationID)
-          }
-
-          const singlePubmedArticles = MedlineCitation =>
-            !currentDOIs.includes(pubmedDOI(MedlineCitation))
-              ? [PubmedArticleSet.PubmedArticle]
-              : []
-
-          const withoutDuplicates = Array.isArray(
-            PubmedArticleSet.PubmedArticle,
-          )
-            ? PubmedArticleSet.PubmedArticle.filter(({ MedlineCitation }) => {
-                return !currentDOIs.includes(pubmedDOI(MedlineCitation))
-              })
-            : singlePubmedArticles(
-                PubmedArticleSet.PubmedArticle.MedlineCitation,
-              )
-
-          const newManuscripts = withoutDuplicates
-            .map(({ MedlineCitation }) => {
-              const { AuthorList, ArticleTitle, Abstract, Journal } =
-                MedlineCitation.Article
-
-              const year = Journal.JournalIssue.PubDate.Year
-                ? Journal.JournalIssue.PubDate.Year._text
-                : null
-
-              const month = Journal.JournalIssue.PubDate.Month
-                ? Journal.JournalIssue.PubDate.Month._text
-                : null
-
-              const day = Journal.JournalIssue.PubDate.Day
-                ? Journal.JournalIssue.PubDate.Day._text
-                : null
-
-              const publishedDate = [year, month, day].filter(Boolean).join('-')
-
-              const topics = topic ? [topic] : []
-
-              // for some titles HTML is returned, need to find _text property in nested object
-              const flattedArticleTitle = flattenObj(ArticleTitle)
-
-              // the name of nested property in objects is always _text
-              const titlePropName = Object.keys(flattedArticleTitle).find(key =>
-                key.includes('_text'),
-              )
-
-              const articleTitle = flattedArticleTitle[titlePropName]
-
-              let abstract = ''
-
-              if (Abstract?.AbstractText) {
-                if (Abstract.AbstractText.length) {
-                  abstract = Abstract.AbstractText.map(
-                    textWithAttributes =>
-                      `<p><b>${
-                        textWithAttributes._attributes
-                          ? textWithAttributes._attributes.Label
-                          : ''
-                      }</b> <br/> ${joinToStringIfArray(
-                        textWithAttributes._text,
-                      )}</p>`,
-                  )
-                    .join('')
-                    .replace(/\n/gi, '')
-                } else {
-                  abstract = joinToStringIfArray(Abstract.AbstractText._text)
-                }
-              }
-
-              return publishedDate
-                ? {
-                    status: 'new',
-                    isImported: true,
-                    importSource: pubmedImportSourceId.id,
-                    importSourceServer: 'pubmed',
-                    submission: {
-                      ...emptySubmission,
-                      firstAuthor: AuthorList
-                        ? AuthorList.Author.length
-                          ? AuthorList.Author.map(
-                              ({ ForeName, LastName }) =>
-                                `${ForeName ? ForeName._text : ''} ${
-                                  LastName ? LastName._text : ''
-                                }`,
-                            ).join(', ')
-                          : [
-                              `${
-                                AuthorList.Author.ForeName
-                                  ? AuthorList.Author.ForeName._text
-                                  : ''
-                              } ${
-                                AuthorList.Author.LastName
-                                  ? AuthorList.Author.LastName._text
-                                  : ''
-                              }`,
-                            ]
-                        : [],
-                      datePublished: publishedDate,
-                      $sourceUri: `https://doi.org/${pubmedDOI(
-                        MedlineCitation,
-                      )}`,
-                      $title: articleTitle,
-                      $abstract: abstract,
-                      topics,
-                      initialTopicsOnImport: topics,
-                      journal: Journal.Title._text,
-                    },
-                    meta: {},
-                    submitterId: ctx.user,
-                    channels: [
-                      {
-                        topic: 'Manuscript discussion',
-                        type: 'all',
-                      },
-                      {
-                        topic: 'Editorial discussion',
-                        type: 'editorial',
-                      },
-                    ],
-                    files: [],
-                    reviews: [],
-                    teams: [],
-                    groupId,
-                  }
-                : null
-            })
-            .filter(Boolean)
-
-          if (!newManuscripts.length) return []
-
-          try {
-            const inserted = await models.Manuscript.query(
-              trx,
-            ).upsertGraphAndFetch(newManuscripts, { relate: true })
-
-            return inserted
-          } catch (e) {
-            console.error(e.message)
-          }
-        },
-      )
-
-      if (lastImportDate.length) {
-        await models.ArticleImportHistory.query(trx)
-          .update({
-            date: new Date().toISOString(),
-          })
-          .where({
-            date: lastImportDate[0].date,
-            groupId,
-          })
-      } else {
-        await models.ArticleImportHistory.query(trx).insert({
-          date: new Date().toISOString(),
-          sourceId: pubmedImportSourceId.id,
-          groupId,
-        })
-      }
-
-      const results = Promise.all(topicsIdsResult)
-      return results
+  const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
+    {
+      server: 'pubmed',
     },
-    { trx: options.trx },
   )
+
+  if (!checkIfSourceExists) {
+    await models.ArticleImportSources.query().insert({
+      server: 'pubmed',
+    })
+  }
+
+  const [pubmedImportSourceId] =
+    await models.ArticleImportSources.query().where({
+      server: 'pubmed',
+    })
+
+  const lastImportDate = await models.ArticleImportHistory.query()
+    .select('date')
+    .where({
+      sourceId: pubmedImportSourceId.id,
+      groupId,
+    })
+
+  const minDate = lastImportDate.length
+    ? new Date(lastImportDate[0].date)
+        .toISOString()
+        .split('T')[0]
+        .toString()
+        .replace(/-/g, '/')
+    : dateTwoWeeksAgoFormatted
+
+  const topicsPromises = Object.entries(pubmedQueries).map(
+    async ([topic, query], index) => {
+      await delay(2000 * index)
+
+      const formData = new FormData()
+
+      const eUtilsUrlParameters = {
+        retmax: '100000',
+        retmode: 'json',
+        db: 'pubmed',
+        term: query,
+        usehistory: 'y',
+        mindate: minDate,
+        maxdate: dateTodayFormatted,
+      }
+
+      Object.entries(eUtilsUrlParameters).map(([key, value]) =>
+        formData.append(key, value),
+      )
+
+      try {
+        const { data } = await axios.post(
+          `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi`,
+          formData,
+          {
+            headers: formData.getHeaders(),
+          },
+        )
+
+        return { topic, ids: data.esearchresult.idlist }
+      } catch (err) {
+        console.error(
+          `Failed to retrieve pubmed data for topic ${topic}. Query:\n${query}\n${err.message}`,
+        )
+      }
+    },
+  )
+
+  const topicsIdsResponse = []
+
+  for (const topicIdPromise of topicsPromises) {
+    const topicIdResponse = await topicIdPromise
+    // eslint-disable-next-line no-continue
+    if (!topicIdResponse) continue
+
+    const filteredTopicIdResponse = topicIdResponse.ids
+      .map(id => {
+        if (topicsIdsResponse.length > 0) {
+          const cc = topicsIdsResponse.map(el => {
+            if (!el.ids.includes(id)) {
+              return id
+            }
+
+            return true
+          })
+
+          return !cc.includes(true) ? cc[0] : null
+        }
+
+        return id
+      })
+      .filter(Boolean)
+
+    topicsIdsResponse.push({
+      topic: topicIdResponse.topic,
+      ids: filteredTopicIdResponse,
+    })
+  }
+
+  const submissionForm = await getSubmissionForm(groupId)
+
+  const parsedFormStructure = submissionForm.structure.children
+    .map(formElement => {
+      const parsedName = formElement.name && formElement.name.split('.')[1]
+
+      if (parsedName) {
+        return {
+          name: parsedName,
+          component: formElement.component,
+        }
+      }
+
+      return undefined
+    })
+    .filter(x => x !== undefined)
+
+  const emptySubmission = parsedFormStructure.reduce((acc, curr) => {
+    acc[curr.name] =
+      curr.component === 'CheckboxGroup' || curr.component === 'LinksInput'
+        ? []
+        : ''
+    return {
+      ...acc,
+    }
+  }, {})
+
+  const topicsIdsResult = topicsIdsResponse.map(
+    async ({ topic, ids }, index) => {
+      if (!ids.length) {
+        return
+      }
+
+      const formData = new FormData()
+
+      await delay(3000 * index)
+      const idList = ids.join(',')
+
+      const eFetchUrlParameters = {
+        db: 'pubmed',
+        id: idList,
+        tool: 'my_tool',
+        email: 'my_email@example.com',
+        retmode: 'xml',
+      }
+
+      Object.entries(eFetchUrlParameters).map(([key, value]) =>
+        formData.append(key, value),
+      )
+
+      const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi`
+
+      const idsResponse = await fetch(url, {
+        method: 'post',
+        body: formData,
+      }).then(response => response.text())
+
+      const { PubmedArticleSet } = await JSON.parse(
+        xml2json.xml2json(idsResponse, {
+          compact: true,
+          spaces: 2,
+        }),
+      )
+
+      const currentDOIs = currentArticleURLs
+        .map(articleUrl => {
+          if (articleUrl) {
+            if (articleUrl.includes('https://doi.org')) {
+              return articleUrl.split('doi.org/')[1]
+            }
+
+            if (articleUrl.split('content/')[1]) {
+              return articleUrl
+                .split('content/')[1]
+                .split(selectVersionRegexp)[0]
+            }
+
+            console.log('broken url should be here')
+            console.log(articleUrl)
+            return null
+          }
+
+          return null
+        })
+        .filter(Boolean)
+
+      const singleElocationId = eLocationID =>
+        eLocationID ? eLocationID._text : ''
+
+      const pubmedDOI = MedlineCitation => {
+        return Array.isArray(MedlineCitation.Article.ELocationID)
+          ? MedlineCitation.Article.ELocationID.filter(
+              ids => ids._attributes.EIdType === 'doi',
+            )[0]._text
+          : singleElocationId(MedlineCitation.Article.ELocationID)
+      }
+
+      const singlePubmedArticles = MedlineCitation =>
+        !currentDOIs.includes(pubmedDOI(MedlineCitation))
+          ? [PubmedArticleSet.PubmedArticle]
+          : []
+
+      const withoutDuplicates = Array.isArray(PubmedArticleSet.PubmedArticle)
+        ? PubmedArticleSet.PubmedArticle.filter(({ MedlineCitation }) => {
+            return !currentDOIs.includes(pubmedDOI(MedlineCitation))
+          })
+        : singlePubmedArticles(PubmedArticleSet.PubmedArticle.MedlineCitation)
+
+      const newManuscripts = withoutDuplicates
+        .map(({ MedlineCitation }) => {
+          const { AuthorList, ArticleTitle, Abstract, Journal } =
+            MedlineCitation.Article
+
+          const year = Journal.JournalIssue.PubDate.Year
+            ? Journal.JournalIssue.PubDate.Year._text
+            : null
+
+          const month = Journal.JournalIssue.PubDate.Month
+            ? Journal.JournalIssue.PubDate.Month._text
+            : null
+
+          const day = Journal.JournalIssue.PubDate.Day
+            ? Journal.JournalIssue.PubDate.Day._text
+            : null
+
+          const publishedDate = [year, month, day].filter(Boolean).join('-')
+
+          const topics = topic ? [topic] : []
+
+          // for some titles HTML is returned, need to find _text property in nested object
+          const flattedArticleTitle = flattenObj(ArticleTitle)
+
+          // the name of nested property in objects is always _text
+          const titlePropName = Object.keys(flattedArticleTitle).find(key =>
+            key.includes('_text'),
+          )
+
+          const articleTitle = flattedArticleTitle[titlePropName]
+
+          let abstract = ''
+
+          if (Abstract?.AbstractText) {
+            if (Abstract.AbstractText.length) {
+              abstract = Abstract.AbstractText.map(
+                textWithAttributes =>
+                  `<p><b>${
+                    textWithAttributes._attributes
+                      ? textWithAttributes._attributes.Label
+                      : ''
+                  }</b> <br/> ${joinToStringIfArray(
+                    textWithAttributes._text,
+                  )}</p>`,
+              )
+                .join('')
+                .replace(/\n/gi, '')
+            } else {
+              abstract = joinToStringIfArray(Abstract.AbstractText._text)
+            }
+          }
+
+          return publishedDate
+            ? {
+                status: 'new',
+                isImported: true,
+                importSource: pubmedImportSourceId.id,
+                importSourceServer: 'pubmed',
+                submission: {
+                  ...emptySubmission,
+                  firstAuthor: AuthorList
+                    ? AuthorList.Author.length
+                      ? AuthorList.Author.map(
+                          ({ ForeName, LastName }) =>
+                            `${ForeName ? ForeName._text : ''} ${
+                              LastName ? LastName._text : ''
+                            }`,
+                        ).join(', ')
+                      : [
+                          `${
+                            AuthorList.Author.ForeName
+                              ? AuthorList.Author.ForeName._text
+                              : ''
+                          } ${
+                            AuthorList.Author.LastName
+                              ? AuthorList.Author.LastName._text
+                              : ''
+                          }`,
+                        ]
+                    : [],
+                  datePublished: publishedDate,
+                  $sourceUri: `https://doi.org/${pubmedDOI(MedlineCitation)}`,
+                  $title: articleTitle,
+                  $abstract: abstract,
+                  topics,
+                  initialTopicsOnImport: topics,
+                  journal: Journal.Title._text,
+                },
+                meta: {},
+                submitterId: ctx.user,
+                channels: [
+                  {
+                    topic: 'Manuscript discussion',
+                    type: 'all',
+                  },
+                  {
+                    topic: 'Editorial discussion',
+                    type: 'editorial',
+                  },
+                ],
+                files: [],
+                reviews: [],
+                teams: [],
+                groupId,
+              }
+            : null
+        })
+        .filter(Boolean)
+
+      if (!newManuscripts.length) return []
+
+      try {
+        const inserted = await models.Manuscript.query().upsertGraphAndFetch(
+          newManuscripts,
+          { relate: true },
+        )
+
+        return inserted
+      } catch (e) {
+        console.error(e.message)
+      }
+    },
+  )
+
+  if (lastImportDate.length) {
+    await models.ArticleImportHistory.query()
+      .update({
+        date: new Date().toISOString(),
+      })
+      .where({
+        date: lastImportDate[0].date,
+        groupId,
+      })
+  } else {
+    await models.ArticleImportHistory.query().insert({
+      date: new Date().toISOString(),
+      sourceId: pubmedImportSourceId.id,
+      groupId,
+    })
+  }
+
+  const results = Promise.all(topicsIdsResult)
+  return results
 }
 
 module.exports = getData

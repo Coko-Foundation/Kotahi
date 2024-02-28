@@ -308,7 +308,7 @@ const typeDefs = `
     taskId: ID!
     senderEmail: String!
     recipientEmail: String!
-    emailTemplateId: ID!
+    emailTemplateId: ID
     content: String!
     created: DateTime!
     updated: DateTime
