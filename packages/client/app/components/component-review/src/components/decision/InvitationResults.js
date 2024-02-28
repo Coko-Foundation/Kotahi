@@ -126,7 +126,7 @@ const InvitationResult = ({ invitation }) => {
             </Name>
             {responseComment && (
               <Controls>
-                <ToggleReview open={open} toggle={toggleOpen} />
+                <ToggleReview open={open} t={t} toggle={toggleOpen} />
               </Controls>
             )}
           </ReviewHeadingRoot>

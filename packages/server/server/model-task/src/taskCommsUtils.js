@@ -1,8 +1,5 @@
 const moment = require('moment-timezone')
-
-const { useTransaction } = require('@coko/server')
 const models = require('@pubsweet/models')
-
 const taskConfigs = require('../../../config/journal/tasks.json')
 
 const {
@@ -167,58 +164,53 @@ const updateAlertsForTask = async (task, trx) => {
 
 /** For all tasks that have gone overdue during the previous calendar day, create alerts as appropriate.
  * Don't look further than yesterday, to avoid regenerating alerts that have already been seen. */
-const createNewTaskAlerts = async (groupId, options = {}) => {
-  useTransaction(
-    async trx => {
-      const activeConfig = await models.Config.getCached(groupId, { trx })
+const createNewTaskAlerts = async groupId => {
+  const activeConfig = await models.Config.getCached(groupId)
 
-      const startOfToday = moment()
-        .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
-        .startOf('day')
+  const startOfToday = moment()
+    .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
+    .startOf('day')
 
-      const startOfYesterday = moment(startOfToday).subtract(1, 'days')
+  const startOfYesterday = moment(startOfToday).subtract(1, 'days')
 
-      const overdueTasks = await models.Task.query(trx)
-        .whereNotNull('dueDate')
-        .where('dueDate', '<', startOfToday.toDate())
-        .where('dueDate', '>=', startOfYesterday.toDate()) // Don't look earlier than yesterday, so we don't recreate alerts that are already dismissed.
-        .where({ status: 'In progress', groupId })
+  const overdueTasks = await models.Task.query()
+    .whereNotNull('dueDate')
+    .where('dueDate', '<', startOfToday.toDate())
+    .where('dueDate', '>=', startOfYesterday.toDate()) // Don't look earlier than yesterday, so we don't recreate alerts that are already dismissed.
+    .where({ status: 'In progress', groupId })
 
-      const manuscriptIds = [...new Set(overdueTasks.map(t => t.manuscriptId))]
-      const manuscriptMap = {}
-      await Promise.all(
-        manuscriptIds.map(async manuscriptId => {
-          const isActive = await manuscriptIsActive(manuscriptId, { trx })
+  const manuscriptIds = [...new Set(overdueTasks.map(t => t.manuscriptId))]
+  const manuscriptMap = {}
+  await Promise.all(
+    manuscriptIds.map(async manuscriptId => {
+      const isActive = await manuscriptIsActive(manuscriptId)
 
-          const editorIds = isActive
-            ? await getEditorIdsForManuscript(manuscriptId, { trx })
-            : []
+      const editorIds = isActive
+        ? await getEditorIdsForManuscript(manuscriptId)
+        : []
 
-          manuscriptMap[manuscriptId] = { editorIds, shouldSkip: !editorIds }
-        }),
-      )
+      manuscriptMap[manuscriptId] = { editorIds, shouldSkip: !editorIds }
+    }),
+  )
 
-      const alertsToInsert = []
+  const alertsToInsert = []
 
-      overdueTasks.forEach(task => {
-        const manuscriptDetails = manuscriptMap[task.manuscriptId]
-        if (manuscriptDetails.shouldSkip) return // I.e., continue
+  overdueTasks.forEach(task => {
+    const manuscriptDetails = manuscriptMap[task.manuscriptId]
+    if (manuscriptDetails.shouldSkip) return // I.e., continue
 
-        /* TODO Re-enable once we start creating alerts for assignees
+    /* TODO Re-enable once we start creating alerts for assignees
     if (task.assigneeUserId)
       alertsToInsert.push({ taskId: task.id, userId: task.assigneeUserId }) */
-        manuscriptDetails.editorIds.forEach(editorId => {
-          alertsToInsert.push({ taskId: task.id, userId: editorId })
-        })
-      })
+    manuscriptDetails.editorIds.forEach(editorId => {
+      alertsToInsert.push({ taskId: task.id, userId: editorId })
+    })
+  })
 
-      await models.TaskAlert.query(trx)
-        .insert(alertsToInsert)
-        .onConflict(['taskId', 'userId'])
-        .ignore()
-    },
-    { trx: options.trx },
-  )
+  await models.TaskAlert.query()
+    .insert(alertsToInsert)
+    .onConflict(['taskId', 'userId'])
+    .ignore()
 }
 
 const deleteAlertsForManuscript = async manuscriptId => {
@@ -246,8 +238,7 @@ const getTaskEmailNotifications = async (
     .withGraphFetched('task.manuscript')
 }
 
-const sendNotification = async (n, options = {}) => {
-  const { trx } = options
+const sendNotification = async n => {
   const { recipientTypes } = taskConfigs.emailNotifications
   const { assigneeTypes } = taskConfigs
   let notificationRecipients = []
@@ -321,24 +312,18 @@ const sendNotification = async (n, options = {}) => {
           break
 
         case assigneeTypes.EDITOR:
-          notificationRecipients = await getTeamRecipients(
-            n,
-            [
-              assigneeTypes.EDITOR,
-              assigneeTypes.SENIOR_EDITOR,
-              assigneeTypes.HANDLING_EDITOR,
-            ],
-            { trx },
-          )
+          notificationRecipients = await getTeamRecipients(n, [
+            assigneeTypes.EDITOR,
+            assigneeTypes.SENIOR_EDITOR,
+            assigneeTypes.HANDLING_EDITOR,
+          ])
           break
 
         case assigneeTypes.REVIEWER:
         case assigneeTypes.AUTHOR:
-          notificationRecipients = await getTeamRecipients(
-            n,
-            [n.task.assigneeType],
-            { trx },
-          )
+          notificationRecipients = await getTeamRecipients(n, [
+            n.task.assigneeType,
+          ])
           break
         default:
       }
@@ -350,7 +335,7 @@ const sendNotification = async (n, options = {}) => {
   const { manuscript } = n.task
 
   // eslint-disable-next-line
-  const editor = await manuscript.getManuscriptEditor({ trx })
+  const editor = await manuscript.getManuscriptEditor()
   const currentUser = editor ? editor.username : ''
 
   // eslint-disable-next-line no-restricted-syntax
@@ -382,7 +367,7 @@ const sendNotification = async (n, options = {}) => {
         const emailTemplateOption = n.emailTemplateId.replace(/([A-Z])/g, ' $1')
 
         // eslint-disable-next-line no-await-in-loop
-        const emailTemplate = await models.EmailTemplate.query(trx).findById(
+        const emailTemplate = await models.EmailTemplate.query().findById(
           emailTemplateOption,
         )
 
@@ -399,9 +384,9 @@ const sendNotification = async (n, options = {}) => {
 
         const ctx = null
         // eslint-disable-next-line no-await-in-loop
-        await sendEmailWithPreparedData(notificationInput, ctx, editor, { trx })
+        await sendEmailWithPreparedData(notificationInput, ctx, editor)
         // eslint-disable-next-line no-await-in-loop
-        await logTaskEmailNotificationData(logData, { trx })
+        await logTaskEmailNotificationData(logData)
       } catch (error) {
         console.error(error)
       }
@@ -409,9 +394,8 @@ const sendNotification = async (n, options = {}) => {
   }
 }
 
-const sendAutomatedTaskEmailNotifications = async (groupId, options = {}) => {
-  const { trx } = options
-  const activeConfig = await models.Config.getCached(groupId, { trx })
+const sendAutomatedTaskEmailNotifications = async groupId => {
+  const activeConfig = await models.Config.getCached(groupId)
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -419,13 +403,10 @@ const sendAutomatedTaskEmailNotifications = async (groupId, options = {}) => {
 
   const startOfTomorrow = moment(startOfToday).add(1, 'days')
 
-  const taskEmailNotifications = await getTaskEmailNotifications(
-    {
-      status: taskConfigs.status.IN_PROGRESS,
-      groupId,
-    },
-    { trx },
-  )
+  const taskEmailNotifications = await getTaskEmailNotifications({
+    status: taskConfigs.status.IN_PROGRESS,
+    groupId,
+  })
 
   // eslint-disable-next-line no-restricted-syntax
   await Promise.all(
@@ -442,7 +423,7 @@ const sendAutomatedTaskEmailNotifications = async (groupId, options = {}) => {
           dateOfNotification.isBefore(startOfTomorrow)
         )
       })
-      .map(n => sendNotification(n, { trx })),
+      .map(n => sendNotification(n)),
   )
 }
 

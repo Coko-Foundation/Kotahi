@@ -36,9 +36,8 @@ const isLatestVersionOfManuscript = async (versionId, options = {}) => {
   return versionId === latestVersionId
 }
 
-const archiveOldManuscripts = async (groupId, options = {}) => {
-  const { trx } = options
-  const activeConfig = await models.Config.getCached(groupId, { trx })
+const archiveOldManuscripts = async groupId => {
+  const activeConfig = await models.Config.getCached(groupId)
 
   const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
@@ -47,7 +46,7 @@ const archiveOldManuscripts = async (groupId, options = {}) => {
     new Date().valueOf() - archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
   )
 
-  const archivedCount = await models.Manuscript.query(trx)
+  const archivedCount = await models.Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
     .where('status', 'new')

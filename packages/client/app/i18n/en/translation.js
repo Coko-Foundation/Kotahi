@@ -410,12 +410,12 @@ const en = {
       'List columns to display on the Manuscripts page':
         'List columns to display on the Manuscripts page',
       numberOfManuscripts:
-        'Number of manuscripts listed per page on the Manucripts page',
+        'Number of manuscripts listed per page on the Manuscripts page',
       hourManuscriptsImported: 'Hour when manuscripts are imported daily (UTC)',
       daysManuscriptRemain:
         'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
       importFromSematic:
-        'Import manuscripts from Sematic Scholar no older than ‘x’ number of days',
+        'Import manuscripts from Semantic Scholar no older than ‘x’ number of days',
       newSubmissionActionVisisble:
         '‘Add new submission’ action visible on the Manuscripts page',
       displayActionToSelect:
@@ -512,6 +512,50 @@ const en = {
       },
       allowedIPs: 'List of repository IPs allowed access',
       api: 'COAR Notify',
+      semanticScholar: 'Semantic Scholar',
+      semanticScholarPublishingServers: {
+        'Association for Computational Linguistics':
+          'Association for Computational Linguistics',
+        'Association for Computing Machinery':
+          'Association for Computing Machinery',
+        arXiv: 'arXiv',
+        BioOne: 'BioOne',
+        bioRxiv: 'bioRxiv',
+        'BMJ Journals': 'BMJ Journals',
+        'Cambridge University Press': 'Cambridge University Press',
+        ChemRxiv: 'ChemRxiv',
+        CiteCeerX: 'CiteCeerX',
+        'Clinical Trials Transformation Initiative':
+          'Clinical Trials Transformation Initiative',
+        'DBLP Computer Science Bibliography':
+          'DBLP Computer Science Bibliography',
+        'De Gruyter academic publishing': 'De Gruyter academic publishing',
+        Frontiers: 'Frontiers',
+        'HAL Open Sience': 'HAL Open Sience',
+        HighWire: 'HighWire',
+        IEEE: 'IEEE',
+        'IOP Publishing': 'IOP Publishing',
+        Karger: 'Karger',
+        medRxiv: 'medRxiv',
+        Microsoft: 'Microsoft',
+        'Papers With Code': 'Papers With Code',
+        'Project Muse': 'Project Muse',
+        PubMed: 'PubMed',
+        'Research Square': 'Research Square',
+        'Sage Publishing': 'Sage Publishing',
+        Science: 'Science',
+        'Scientific.Net': 'Scientific.Net',
+        'Scitepress Digital Library': 'Scitepress Digital Library',
+        'Springer Nature': 'Springer Nature',
+        'SPIE.': 'SPIE.',
+        SSRN: 'SSRN',
+        'Taylor and Francis Group': 'Taylor and Francis Group',
+        'The MIT Press': 'The MIT Press',
+        'The Royal Society Publishing': 'The Royal Society Publishing',
+        'University of Chicago Press': 'University of Chicago Press',
+        Wiley: 'Wiley',
+        'Wolters Kluwer': 'Wolters Kluwer',
+      },
     },
     reportsPage: {
       Reports: 'Reports',

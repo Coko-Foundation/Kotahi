@@ -1,6 +1,6 @@
 /* eslint-disable global-require, no-console, import/no-dynamic-require, no-await-in-loop, no-continue, no-plusplus */
 
-const { useTransaction, uuid } = require('@coko/server')
+const { uuid } = require('@coko/server')
 const models = require('@pubsweet/models')
 const { chunk } = require('lodash')
 
@@ -57,138 +57,132 @@ const runImports = async (
   groupId,
   evaluatedStatusString,
   submitterId = null,
-  options = {},
 ) => {
   const importType = submitterId ? 'manual' : 'automatic'
   const urisAlreadyImporting = []
   const doisAlreadyImporting = []
   const importWorkers = importWorkersByGroup[groupId] || []
 
-  useTransaction(
-    async trx => {
-      for (let i = 0; i < importWorkers.length; i += 1) {
-        const worker = importWorkers[i]
-        if (![importType, 'any'].includes(worker.importType)) continue
+  for (let i = 0; i < importWorkers.length; i += 1) {
+    const worker = importWorkers[i]
+    if (![importType, 'any'].includes(worker.importType)) continue
 
-        console.info(`Importing manuscripts using plugin ${worker.name}`)
-        let importSource, lastImportDate
+    console.info(`Importing manuscripts using plugin ${worker.name}`)
+    let importSource, lastImportDate
 
-        try {
-          let [sourceRecord] = await models.ArticleImportSources.query(
-            trx,
-          ).where({
+    try {
+      let [sourceRecord] = await models.ArticleImportSources.query().where({
+        server: worker.name,
+      })
+      if (!sourceRecord)
+        sourceRecord = await models.ArticleImportSources.query().insertAndFetch(
+          {
             server: worker.name,
-          })
-          if (!sourceRecord)
-            sourceRecord = await models.ArticleImportSources.query(
-              trx,
-            ).insertAndFetch({
-              server: worker.name,
-            })
-          importSource = sourceRecord.id
-
-          const lastImportRecord = await models.ArticleImportHistory.query(trx)
-            .select('date')
-            .findOne({ sourceId: importSource, groupId })
-
-          lastImportDate = lastImportRecord ? lastImportRecord.date : null
-        } catch (error) {
-          console.error(
-            `Failed to query sourceId and lastImportDate for plugin ${worker.name} on group ${groupId}. Skipping.`,
-          )
-          console.error(error)
-          continue
-        }
-
-        let newItems
-
-        try {
-          newItems = await worker.doImport({
-            urisAlreadyImporting: [...urisAlreadyImporting],
-            doisAlreadyImporting: [...doisAlreadyImporting],
-            lastImportDate: lastImportDate ? new Date(lastImportDate) : null,
-          })
-        } catch (error) {
-          console.error(
-            `Import plugin ${worker.name} failed on group ${groupId}. Skipping.`,
-          )
-          console.error(error)
-          continue
-        }
-
-        if (!Array.isArray(newItems))
-          throw new Error(
-            `Expected ${worker.name} import function to return an array of manuscripts, but received ${newItems}`,
-          )
-        console.info(
-          `Found ${newItems.length} new manuscripts for group ${groupId}.`,
+          },
         )
+      importSource = sourceRecord.id
 
-        const flattenedItems = flatten(newItems)
+      const lastImportRecord = await models.ArticleImportHistory.query()
+        .select('date')
+        .findOne({ sourceId: importSource, groupId })
 
-        const allNewManuscripts = flattenedItems.map(preprint => {
-          const uri = preprint.submission.$sourceUri
-          const doi = preprint.submission.$doi
+      lastImportDate = lastImportRecord ? lastImportRecord.date : null
+    } catch (error) {
+      console.error(
+        `Failed to query sourceId and lastImportDate for plugin ${worker.name} on group ${groupId}. Skipping.`,
+      )
+      console.error(error)
+      continue
+    }
 
-          if (uri) urisAlreadyImporting.push(uri)
-          if (doi) doisAlreadyImporting.push(doi)
+    let newItems
 
-          const result = {
-            submission: {},
-            importSourceServer: null,
-            ...preprint,
-            status: 'new',
-            isImported: true,
-            importSource,
-            submitterId,
-            files: [],
-            teams: [],
-            groupId,
-          }
+    try {
+      newItems = await worker.doImport({
+        urisAlreadyImporting: [...urisAlreadyImporting],
+        doisAlreadyImporting: [...doisAlreadyImporting],
+        lastImportDate: lastImportDate ? new Date(lastImportDate) : null,
+      })
+    } catch (error) {
+      console.error(
+        `Import plugin ${worker.name} failed on group ${groupId}. Skipping.`,
+      )
+      console.error(error)
+      continue
+    }
 
-          if (!preprint.parentId) {
-            result.channels = [
-              {
-                topic: 'Manuscript discussion',
-                type: 'all',
-              },
-              {
-                topic: 'Editorial discussion',
-                type: 'editorial',
-              },
-            ]
-          }
+    if (!Array.isArray(newItems))
+      throw new Error(
+        `Expected ${worker.name} import function to return an array of manuscripts, but received ${newItems}`,
+      )
+    console.info(
+      `Found ${newItems.length} new manuscripts for group ${groupId}.`,
+    )
 
-          if (
-            Array.isArray(preprint.reviews) &&
-            preprint.reviews.some(r => r.isDecision)
-          )
-            result.decision = evaluatedStatusString
+    const flattenedItems = flatten(newItems)
 
-          return result
-        })
+    const allNewManuscripts = flattenedItems.map(preprint => {
+      const uri = preprint.submission.$sourceUri
+      const doi = preprint.submission.$doi
 
-        console.log('Total items to save in DB => ', allNewManuscripts.length)
+      if (uri) urisAlreadyImporting.push(uri)
+      if (doi) doisAlreadyImporting.push(doi)
 
-        saveImportedManuscripts(allNewManuscripts, groupId, submitterId, {
-          trx,
-        })
-
-        if (lastImportDate) {
-          await models.ArticleImportHistory.query(trx)
-            .patch({ date: new Date().toISOString() })
-            .where({ sourceId: importSource, groupId })
-        } else {
-          await models.ArticleImportHistory.query(trx).insert({
-            date: new Date().toISOString(),
-            sourceId: importSource,
-            groupId,
-          })
-        }
+      const result = {
+        submission: {},
+        importSourceServer: null,
+        ...preprint,
+        status: 'new',
+        isImported: true,
+        importSource,
+        submitterId,
+        files: [],
+        teams: [],
+        groupId,
       }
-    },
-    { trx: options.trx },
-  )
+
+      if (!preprint.parentId) {
+        result.channels = [
+          {
+            topic: 'Manuscript discussion',
+            type: 'all',
+          },
+          {
+            topic: 'Editorial discussion',
+            type: 'editorial',
+          },
+        ]
+      }
+
+      if (
+        Array.isArray(preprint.reviews) &&
+        preprint.reviews.some(r => r.isDecision)
+      )
+        result.decision = evaluatedStatusString
+
+      return result
+    })
+
+    console.log('Total items to save in DB => ', allNewManuscripts.length)
+
+    // Rather than save inside a long-running transaction, we save what we can
+    // and if there is a failure we simply don't update the article import
+    // history to allow those manuscripts to be re-requested on next import
+    // (rather than rolling all manuscripts back)
+    saveImportedManuscripts(allNewManuscripts, groupId, submitterId, {})
+
+    if (lastImportDate) {
+      await models.ArticleImportHistory.query()
+        .patch({ date: new Date().toISOString() })
+        .where({ sourceId: importSource, groupId })
+    } else {
+      await models.ArticleImportHistory.query().insert({
+        date: new Date().toISOString(),
+        sourceId: importSource,
+        groupId,
+      })
+    }
+  }
 }
 
 module.exports = { runImports, importWorkersByGroup }

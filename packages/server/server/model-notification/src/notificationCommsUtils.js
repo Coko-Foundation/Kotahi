@@ -1,6 +1,4 @@
 const config = require('config')
-
-const { useTransaction } = require('@coko/server')
 const models = require('@pubsweet/models')
 
 const sendEmailNotification = require('../../email-notifications')
@@ -9,55 +7,50 @@ const {
   getUserRolesInManuscript,
 } = require('../../model-user/src/userCommsUtils')
 
-const sendNotifications = async (groupId, options = {}) => {
-  useTransaction(
-    async trx => {
-      // The following query results first row for every user and path string combination
-      // in the notification digest, where max notification time is in the past.
-      const notificationDigestRows = await models.NotificationDigest.query(trx)
-        .distinctOn(['user_id', 'path_string'])
-        .where('max_notification_time', '<', new Date())
-        .where({ groupId })
-        .orderBy(['user_id', 'path_string', 'max_notification_time'])
+const sendNotifications = async groupId => {
+  // The following query results first row for every user and path string combination
+  // in the notification digest, where max notification time is in the past.
+  const notificationDigestRows = await models.NotificationDigest.query()
+    .distinctOn(['user_id', 'path_string'])
+    .where('max_notification_time', '<', new Date())
+    .where({ groupId })
+    .orderBy(['user_id', 'path_string', 'max_notification_time'])
 
-      let notificationCount = 0
+  let notificationCount = 0
 
-      await Promise.all(
-        notificationDigestRows.map(async notificationDigest => {
-          if (notificationDigest.actioned) return
+  await Promise.all(
+    notificationDigestRows.map(async notificationDigest => {
+      if (notificationDigest.actioned) return
 
-          await sendChatNotification({
-            recipientId: notificationDigest.userId,
-            messageId: notificationDigest.context.messageId,
-            groupId,
-          })
+      await sendChatNotification({
+        recipientId: notificationDigest.userId,
+        messageId: notificationDigest.context.messageId,
+        groupId,
+      })
 
-          notificationCount += 1
+      notificationCount += 1
 
-          // query to update all notificationdigest entries where user=user and path=path
-          await models.NotificationDigest.query(trx)
-            .update({
-              actioned: true,
-            })
-            .where({
-              userId: notificationDigest.userId,
-              pathString: notificationDigest.pathString,
-              groupId,
-            })
-        }),
-      )
-
-      if (notificationCount > 0) {
-        // eslint-disable-next-line no-console
-        console.info(
-          `Sent ${notificationCount} event notification${
-            notificationCount === 1 ? '' : 's'
-          } for group ${groupId}`,
-        )
-      }
-    },
-    { trx: options.trx },
+      // query to update all notificationdigest entries where user=user and path=path
+      await models.NotificationDigest.query()
+        .update({
+          actioned: true,
+        })
+        .where({
+          userId: notificationDigest.userId,
+          pathString: notificationDigest.pathString,
+          groupId,
+        })
+    }),
   )
+
+  if (notificationCount > 0) {
+    // eslint-disable-next-line no-console
+    console.info(
+      `Sent ${notificationCount} event notification${
+        notificationCount === 1 ? '' : 's'
+      } for group ${groupId}`,
+    )
+  }
 }
 
 const sendChatNotification = async ({

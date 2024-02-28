@@ -15,16 +15,14 @@ const shouldRunDefaultImportsForColab = [true, 'true'].includes(
   config['import-for-prc'].default_import,
 )
 
-const importManuscripts = async (groupId, ctx, options = {}) => {
-  const { trx } = options
-
+const importManuscripts = async (groupId, ctx) => {
   const key = `${groupId}-imports`
   if (importsInProgress.has(key)) return false
 
   try {
     importsInProgress.add(key)
 
-    const activeConfig = await models.Config.query(trx).findOne({
+    const activeConfig = await models.Config.query().findOne({
       groupId,
       active: true,
     })
@@ -35,20 +33,16 @@ const importManuscripts = async (groupId, ctx, options = {}) => {
       ? 'evaluated'
       : 'accepted'
 
-    const promises = [
-      runImports(groupId, evaluatedStatusString, ctx.user, { trx }),
-    ]
+    const promises = [runImports(groupId, evaluatedStatusString, ctx.user)]
 
     if (activeConfig.formData.instanceName === 'preprint2') {
-      promises.push(importArticlesFromBiorxiv(groupId, ctx, { trx }))
-      promises.push(importArticlesFromPubmed(groupId, ctx, { trx }))
+      promises.push(importArticlesFromBiorxiv(groupId, ctx))
+      promises.push(importArticlesFromPubmed(groupId, ctx))
     } else if (
       activeConfig.formData.instanceName === 'prc' &&
       shouldRunDefaultImportsForColab
     ) {
-      promises.push(
-        importArticlesFromBiorxivWithFullTextSearch(groupId, ctx, { trx }),
-      )
+      promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
     }
 
     if (!promises.length) return false
@@ -68,19 +62,14 @@ const importManuscripts = async (groupId, ctx, options = {}) => {
   }
 }
 
-const importManuscriptsFromSemanticScholar = async (
-  groupId,
-  ctx,
-  options = {},
-) => {
-  const { trx } = options
+const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
   const key = `${groupId}-SemanticScholar`
   if (importsInProgress.has(key)) return false
 
   try {
     importsInProgress.add(key)
 
-    const activeConfig = await models.Config.query(trx).findOne({
+    const activeConfig = await models.Config.query().findOne({
       groupId,
       active: true,
     })
@@ -89,9 +78,9 @@ const importManuscriptsFromSemanticScholar = async (
 
     if (
       activeConfig.formData.instanceName === 'prc' &&
-      shouldRunDefaultImportsForColab
+      activeConfig.formData.semanticScholar.enableSemanticScholar
     ) {
-      promises.push(importArticlesFromSemanticScholar(groupId, ctx, { trx }))
+      promises.push(importArticlesFromSemanticScholar(groupId, ctx))
     }
 
     if (!promises.length) return false

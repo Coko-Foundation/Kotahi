@@ -424,7 +424,7 @@ const fr = {
       daysManuscriptRemain:
         "Nombre de jours pendant lesquels un manuscrit doit rester sur la page des manuscrits avant d'être automatiquement archivé",
       importFromSematic:
-        'Importer des manuscrits de Sematic Scholar datant de moins de « x » nombre de jours',
+        'Importer des manuscrits de Semantic Scholar datant de moins de « x » nombre de jours',
       newSubmissionActionVisisble:
         'Action « Ajouter une nouvelle soumission » visible sur la page des manuscrits',
       displayActionToSelect:
@@ -536,6 +536,50 @@ const fr = {
       },
       allowedIPs: 'Liste des adresses IP du référentiel autorisées à accéder',
       api: 'API Kotahi',
+      // Since these are publishing servers, hence kept the original language
+      semanticScholarPublishingServers: {
+        'Association for Computational Linguistics':
+          'Association for Computational Linguistics',
+        'Association for Computing Machinery':
+          'Association for Computing Machinery',
+        arXiv: 'arXiv',
+        BioOne: 'BioOne',
+        bioRxiv: 'bioRxiv',
+        'BMJ Journals': 'BMJ Journals',
+        'Cambridge University Press': 'Cambridge University Press',
+        ChemRxiv: 'ChemRxiv',
+        CiteCeerX: 'CiteCeerX',
+        'Clinical Trials Transformation Initiative':
+          'Clinical Trials Transformation Initiative',
+        'DBLP Computer Science Bibliography':
+          'DBLP Computer Science Bibliography',
+        'De Gruyter academic publishing': 'De Gruyter academic publishing',
+        Frontiers: 'Frontiers',
+        'HAL Open Sience': 'HAL Open Sience',
+        HighWire: 'HighWire',
+        IEEE: 'IEEE',
+        'IOP Publishing': 'IOP Publishing',
+        Karger: 'Karger',
+        medRxiv: 'medRxiv',
+        Microsoft: 'Microsoft',
+        'Papers With Code': 'Papers With Code',
+        'Project Muse': 'Project Muse',
+        PubMed: 'PubMed',
+        'Research Square': 'Research Square',
+        'Sage Publishing': 'Sage Publishing',
+        Science: 'Science',
+        'Scientific.Net': 'Scientific.Net',
+        'Scitepress Digital Library': 'Scitepress Digital Library',
+        'Springer Nature': 'Springer Nature',
+        'SPIE.': 'SPIE.',
+        SSRN: 'SSRN',
+        'Taylor and Francis Group': 'Taylor and Francis Group',
+        'The MIT Press': 'The MIT Press',
+        'The Royal Society Publishing': 'The Royal Society Publishing',
+        'University of Chicago Press': 'University of Chicago Press',
+        Wiley: 'Wiley',
+        'Wolters Kluwer': 'Wolters Kluwer',
+      },
     },
     reportsPage: {
       Reports: 'Rapports',
