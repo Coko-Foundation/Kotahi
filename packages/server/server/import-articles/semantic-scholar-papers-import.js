@@ -119,13 +119,12 @@ const getData = async (groupId, ctx) => {
       activeConfig.formData.semanticScholar.semanticScholarPublishingServers
 
     const importsFromSpecificPreprintServers = importsForPastSixWeeks.filter(
-      preprint =>
-        allowedPreprintServers.some(server =>
-          preprint.venue
-            .toLowerCase()
-            .split(/\s+/)
-            .includes(server.toLowerCase()),
-        ),
+      preprint => {
+        const venueLcTokens = preprint.venue.toLowerCase().split(/\s+/)
+        return allowedPreprintServers.some(server =>
+          venueLcTokens.includes(server.toLowerCase()),
+        )
+      },
     )
 
     const currentDOIs = new Set(
