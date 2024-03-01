@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { set } from 'lodash'
 import { adopt } from 'react-adopt'
-import { hasValue } from '../../../../../shared/htmlUtils'
+import { set } from 'lodash'
 import CollaborativeWax from '../../../../wax-collab/src/CollaborativeWax'
 import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
+
 import withModal from '../../../../asset-manager/src/ui/Modal/withModal'
 import theme, { space, color } from '../../../../../theme'
 
@@ -76,36 +76,35 @@ const FullWaxField = ({
   onChange,
   currentUser,
   readonly,
+  collaborativeObject,
   ...rest
 }) => {
-  const saveSource = () => {} // TODO
-
-  const manuscript = { id: null } // TODO
+  const { identifier } = collaborativeObject
 
   return (
     <Panel>
       <Composed
-        currentUser={currentUser}
         isAuthorMode={false}
         isCurrentUserAuthor={false}
         isCurrentUserEditor
-        manuscript={manuscript}
         readonly={readonly}
-        saveSource={saveSource}
       >
-        {() => (
+        {({ onAssetManager }) => (
           <div>
             <CollaborativeWax
               editorMode="FullWaxEditor"
+              identifier={identifier}
+              onAssetManager={onAssetManager}
               validationStatus={validationStatus}
               {...rest}
+              collaborativeObject={collaborativeObject}
               onBlur={() => {
                 setTouched(set({}, rest.name, true))
               }}
               onChange={val => {
                 setTouched(set({}, rest.name, true))
-                const cleanedVal = hasValue(val) ? val : ''
-                onChange(cleanedVal)
+                onChange(identifier)
+                // console.log('test')
               }}
             />
           </div>

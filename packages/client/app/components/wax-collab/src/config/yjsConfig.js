@@ -4,13 +4,10 @@ import { YjsService } from 'wax-prosemirror-services'
 export default (config, { yjsProvider, ydoc }) => {
   if (yjsProvider && ydoc) {
     config.YjsService = {
-      provider: () => {
-        return yjsProvider
-      },
-      ydoc: () => {
-        return ydoc
-      },
+      provider: () => yjsProvider,
+      ydoc: () => ydoc,
       cursorBuilder: user => {
+        // console.log({ user })
         const cursor = document.createElement('span')
         cursor.classList.add('ProseMirror-yjs-cursor')
         cursor.setAttribute('style', `border-color: ${user.color}`)

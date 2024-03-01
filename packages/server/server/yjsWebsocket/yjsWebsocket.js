@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 const { logger, verifyJWT } = require('@coko/server')
-
+const { omit } = require('lodash')
 const map = require('lib0/map')
 const Y = require('yjs')
 const { WebSocketServer } = require('ws')
-const { Doc } = require('@pubsweet/models')
+const { CollaborativeDoc } = require('@pubsweet/models')
 const config = require('config')
 
 const WSSharedDoc = require('./wsSharedDoc')
@@ -43,7 +43,7 @@ const messageListener = (conn, doc, message) => {
   }
 }
 
-export default () => {
+module.exports = () => {
   try {
     const WSServer = new WebSocketServer({
       port: config.get('pubsweet-server.wsYjsServerPort'),
@@ -53,14 +53,19 @@ export default () => {
     // eslint-disable-next-line consistent-return
     WSServer.on('connection', async (injectedWS, request) => {
       injectedWS.binaryType = 'arraybuffer'
-      const [identifier, params] = request.url.slice('1').split('?')
-      const token = params?.split('=')[1] || ''
+      const [id, params] = request.url.slice('1').split('?')
+
+      const variables = {}
+      params.split('&').forEach(pair => {
+        const [key, value] = pair.split('=')
+        variables[key] = value || ''
+      })
 
       let userId = null
 
       try {
         userId = await new Promise((resolve, reject) => {
-          verifyJWT(token, (_, usr) => {
+          verifyJWT(variables.token, (_, usr) => {
             if (usr) {
               resolve(usr)
             } else {
@@ -73,17 +78,23 @@ export default () => {
         userId = null
       }
 
-      const doc = getYDoc(identifier, userId)
+      const doc = getYDoc(id, userId)
 
       if (userId) {
-        const docObject = await Doc.query().findOne({ identifier })
+        const docObject = await CollaborativeDoc.query().findOne({ id })
 
-        if (docObject) {
-          await docObject.addMemberAsViewer(userId)
-        } else {
+        if (!docObject) {
           const state = Y.encodeStateAsUpdate(doc)
           const delta = doc.getText('prosemirror').toDelta()
-          await Doc.createDoc({ state, delta, identifier, userId })
+
+          await CollaborativeDoc.query()
+            .insert({
+              docs_prosemirror_delta: delta,
+              docs_y_doc_state: state,
+              groupId: variables.groupId,
+              ...omit(variables, ['token']),
+            })
+            .returning('*')
         }
       }
 

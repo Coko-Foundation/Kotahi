@@ -1,11 +1,10 @@
 /* eslint-disable react/prop-types */
-import { uuid } from '@coko/server'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { WebsocketProvider } from 'y-websocket'
-
 import * as Y from 'yjs'
 
-const { CLIENT_YJS_WEBSOCKET_URL } = process.env
+import { ConfigContext } from '../../../config/src'
 
 const arrayColor = [
   '#D9E3F0',
@@ -19,11 +18,13 @@ const arrayColor = [
   '#ba68c8',
 ]
 
-const useYjs = (identifier, currentUser) => {
+const useYjs = (identifier, object) => {
+  const { groupId } = useContext(ConfigContext)
   const [yjsProvider, setYjsProvider] = useState(null)
+
   const [ydoc, setYDoc] = useState(null)
 
-  const createYjsProvider = () => {
+  const createYjsProvider = currentUser => {
     let ydocInstance = null
 
     if (ydoc) {
@@ -35,30 +36,42 @@ const useYjs = (identifier, currentUser) => {
 
     if (!identifier) {
       // eslint-disable-next-line no-param-reassign
-      identifier = Array.from(Array(20), () =>
-        Math.floor(Math.random() * 36).toString(36),
-      ).join('')
+      identifier = uuidv4()
     }
 
     // eslint-disable-next-line no-restricted-globals
     const provider = new WebsocketProvider(
-      CLIENT_YJS_WEBSOCKET_URL,
+      process.env.CLIENT_YJS_WEBSOCKET_URL,
       identifier,
       ydocInstance,
-      { params: { token: localStorage.getItem('token') || '' } },
+      {
+        params: {
+          token: localStorage.getItem('token') || '',
+          groupId,
+          ...object,
+        },
+      },
     )
 
     const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
 
     provider.awareness.setLocalStateField('user', {
-      id: currentUser.id || uuid(),
+      id: currentUser.id || uuidv4(),
       color,
       displayName: currentUser
-        ? currentUser.displayName || currentUser.email
+        ? currentUser.username || currentUser.email
         : 'Anonymous',
     })
 
     setYjsProvider(provider)
+  }
+
+  if (!object) {
+    throw new Error('You need to specify a collaborativeObject')
+  }
+
+  if (!identifier) {
+    throw new Error('You need to specify a Identifier')
   }
 
   return {

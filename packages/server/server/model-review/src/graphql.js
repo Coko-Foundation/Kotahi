@@ -7,6 +7,7 @@ const Review = require('../../../models/review/review.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const User = require('../../../models/user/user.model')
 const Team = require('../../../models/team/team.model')
+const TeamMember = require('../../../models/teamMember/teamMember.model')
 
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
@@ -119,29 +120,27 @@ const resolvers = {
     },
 
     async lockUnlockCollaborativeReview(_, { id }) {
-      const review = await models.Review.query()
+      const review = await Review.query()
         .findOne({
           id,
           isCollaborative: true,
         })
         .throwIfNotFound()
 
-      const updatedReview = await models.Review.query()
+      const updatedReview = await Review.query()
         .patch({ isLock: !review.isLock })
         .findOne({ id })
         .returning('*')
 
       const status = updatedReview.isLock ? 'closed' : 'inProgress'
 
-      const team = await models.Team.query().findOne({
+      const team = await Team.query().findOne({
         role: 'collaborativeReviewer',
         objectId: updatedReview.manuscriptId,
         objectType: 'manuscript',
       })
 
-      await models.TeamMember.query()
-        .patch({ status })
-        .where({ teamId: team.id })
+      await TeamMember.query().patch({ status }).where({ teamId: team.id })
 
       return {
         ...updatedReview,

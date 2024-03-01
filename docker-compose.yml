@@ -27,6 +27,7 @@ services:
       - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
       - FLAX_SITE_URL=${FLAX_SITE_URL:-http://localhost:8081}
+      - CLIENT_YJS_WEBSOCKET_URL=${CLIENT_YJS_WEBSOCKET_URL:-ws://0.0.0.0:5010}
     volumes:
       - ./packages/client/app:/home/node/app/app
       - ./packages/client/certs:/home/node/app/certs

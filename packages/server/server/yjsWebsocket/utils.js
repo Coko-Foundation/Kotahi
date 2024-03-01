@@ -4,7 +4,8 @@ const awarenessProtocol = require('y-protocols/dist/awareness.cjs')
 const encoding = require('lib0/encoding')
 const decoding = require('lib0/decoding')
 const Y = require('yjs')
-const { Doc } = require('@pubsweet/models')
+const { CollaborativeDoc } = require('@pubsweet/models')
+
 const { db } = require('@coko/server')
 
 let persistence = null
@@ -21,6 +22,7 @@ const docs = new Map()
  * @param {WSSharedDoc} doc
  */
 const updateHandler = (update, origin, doc) => {
+  console.log(update, doc)
   const encoder = encoding.createEncoder()
   encoding.writeVarUint(encoder, messageSync)
   syncProtocol.writeUpdate(encoder, update)
@@ -84,28 +86,27 @@ const closeConn = (doc, conn) => {
 }
 
 persistence = {
-  bindState: async (identifier, doc) => {
-    const docInstance = await Doc.query().findOne({ identifier })
+  bindState: async (id, doc) => {
+    const docInstance = await CollaborativeDoc.query().findOne({ id })
 
     if (docInstance && docInstance.docsYDocState) {
       Y.applyUpdate(doc, docInstance.docsYDocState)
     }
   },
   writeState: async ydoc => {
-    const identifier = ydoc.name
+    const id = ydoc.name
     const state = Y.encodeStateAsUpdate(ydoc)
     const delta = ydoc.getText('prosemirror').toDelta()
     const timestamp = db.fn.now()
 
-    const docYjs = await Doc.query().findOne({ identifier })
+    const docYjs = await CollaborativeDoc.query().findOne({ id })
 
     if (delta && delta.length > 0) {
       if (!docYjs) {
         try {
-          await Doc.query().insert({
+          await CollaborativeDoc.query().insert({
             docs_prosemirror_delta: delta,
             docs_y_doc_state: state,
-            identifier,
           })
         } catch (e) {
           console.log(`Insert Query`)
@@ -113,13 +114,13 @@ persistence = {
         }
       } else {
         try {
-          await Doc.query()
+          await CollaborativeDoc.query()
             .patch({
               docs_prosemirror_delta: delta,
               docs_y_doc_state: state,
               updated: timestamp,
             })
-            .findOne({ identifier })
+            .findOne({ id })
         } catch (e) {
           console.log(`Patch Query`)
           console.log(e)
