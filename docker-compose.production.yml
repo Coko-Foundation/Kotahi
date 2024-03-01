@@ -115,7 +115,7 @@ services:
 
     volumes:
       - ./uploads:/home/node/app/uploads
-      - ./config:/home/node/app/config
+      - ./packages/server/config:/home/node/app/config
       - ./config/plugins:/home/node/app/plugins
 
   xsweet:
