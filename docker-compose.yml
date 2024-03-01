@@ -161,6 +161,7 @@ services:
       - ./packages/server/config:/home/node/app/config
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
+      - ./config/plugins:/home/node/app/plugins
 
   pagedjs:
     depends_on:

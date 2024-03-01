@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop, import/no-unresolved */
 const { useTransaction, logger } = require('@coko/server')
-const { chunk, get, set } = require('lodash')
+const { chunk } = require('lodash')
 
 /* eslint-disable import/extensions */
 // Paths are relative to the generated migrations folder
@@ -88,7 +88,7 @@ const tweakDataValueByField = (value, fieldName) => {
 }
 
 const renameDataInManuscript = (manuscript, instanceType) => {
-  const delta = {}
+  const addedFields = new Set()
 
   const fieldEntries = Object.fromEntries(
     Object.entries(manuscript.meta)
@@ -105,16 +105,28 @@ const renameDataInManuscript = (manuscript, instanceType) => {
     const value = fieldEntries[key]
     const newFieldName = getNewFieldName(key, instanceType)
 
-    if (value && !get(delta, newFieldName)) {
+    if (value && !addedFields.has(newFieldName)) {
       const newValue = tweakDataValueByField(value, newFieldName)
       if (!newValue) return // continue, rather than overwrite wth blank data
-      set(delta, newFieldName, newValue)
+      delete fieldEntries[key]
+      fieldEntries[newFieldName] = newValue
+      addedFields.add(newFieldName) // To avoid overwriting. We have an order of precedence when two fields are mapped to the same standard field.
+    }
+  })
+
+  const newMeta = {}
+  const newSubmission = {}
+  Object.entries(fieldEntries).forEach(([key, value]) => {
+    if (key.startsWith('submission.')) {
+      newSubmission[key.split('submission.')[1]] = value
+    } else if (key.startsWith('meta.')) {
+      newMeta[key.split('meta.')[1]] = value
     }
   })
 
   return {
-    meta: delta.meta,
-    submission: JSON.stringify(delta.submission),
+    meta: newMeta,
+    submission: JSON.stringify(newSubmission),
   }
 }
 
