@@ -1,6 +1,4 @@
-/* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
-// const { map } = require('lodash')
 const models = require('@pubsweet/models')
 
 const {
@@ -48,20 +46,9 @@ const getData = async (groupId, ctx) => {
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
 
   if (latestLimitedSelectedManuscripts.length > 0) {
-    const importDOIParams = []
-    latestLimitedSelectedManuscripts.map(manuscript => {
-      const DOI = manuscript.submission.$doi
-
-      if (DOI) {
-        const doiParts = DOI.split('.org/')
-
-        const encodedDOI =
-          doiParts.length > 1 ? encodeURI(doiParts[1]) : encodeURI(DOI)
-
-        return importDOIParams.push(`DOI:${encodedDOI ?? DOI}`)
-      }
-
-      return true
+    const importDOIParams = latestLimitedSelectedManuscripts.map(manuscript => {
+      const DOI = encodeURI(manuscript.submission.$doi)
+      return `DOI:${DOI}`
     })
 
     const importParameters = JSON.stringify({
@@ -134,8 +121,7 @@ const getData = async (groupId, ctx) => {
     const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
 
     const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
-      preprints =>
-        !currentDOIs.has(`https://doi.org/${preprints.externalIds.DOI}`),
+      preprints => !currentDOIs.has(preprints.externalIds.DOI),
     )
 
     const withoutUrlDuplicates = withoutDOIDuplicates.filter(
@@ -227,6 +213,8 @@ const getData = async (groupId, ctx) => {
       console.error(e.message)
     }
   }
+
+  return []
 }
 
 /* The following code is commented, since semantic scholar now provides journal and publication date as well. In case there is any inconsistency in that data, we can reuse the following */

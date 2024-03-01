@@ -122,9 +122,9 @@ const makeArticleMeta = (
 
   const formData = metadata.submission || {}
 
-  if (metadata.doi) {
+  if (formData.$doi) {
     // If we have a DOI in the metadata, we export that as the article ID: https://jats.nlm.nih.gov/archiving/tag-library/1.1d1/n-7s30.html
-    thisArticleMeta += `<article-id pub-id-type="doi">${metadata.doi}</article-id>`
+    thisArticleMeta += `<article-id pub-id-type="doi">${formData.$doi}</article-id>`
   }
 
   if (metadata.pmid) {
@@ -137,28 +137,25 @@ const makeArticleMeta = (
     thisArticleMeta += `<article-id pub-id-type="publisher-id">${metadata.id}</article-id>`
   }
 
-  if (metadata.title) {
+  if (title || formData.$title) {
     thisArticleMeta += `<title-group><article-title>${
-      title || metadata.title
+      title || formData.$title
     }</article-title></title-group>`
   }
 
-  if (formData.authorNames && formData.authorNames.length) {
+  if (formData.$authors?.length) {
     let authorsList = ''
     let affilList = ''
 
-    for (let i = 0; i < formData.authorNames.length; i += 1) {
-      if (
-        formData.authorNames[i].lastName &&
-        formData.authorNames[i].firstName
-      ) {
-        authorsList += `<contrib contrib-type="author"><name><surname>${formData.authorNames[i].lastName}</surname><given-names>${formData.authorNames[i].firstName}</given-names></name>`
+    for (let i = 0; i < formData.$authors.length; i += 1) {
+      if (formData.$authors[i].lastName && formData.$authors[i].firstName) {
+        authorsList += `<contrib contrib-type="author"><name><surname>${formData.$authors[i].lastName}</surname><given-names>${formData.$authors[i].firstName}</given-names></name>`
       }
 
-      if (formData.authorNames[i].affiliation) {
-        const thisId = formData.authorNames[i].id || `author_${i}`
+      if (formData.$authors[i].affiliation) {
+        const thisId = formData.$authors[i].id || `author_${i}`
         authorsList += `<xref ref-type="aff" rid="auth-${thisId}" />`
-        affilList += `<aff id="auth-${thisId}">${formData.authorNames[i].affiliation}</aff>`
+        affilList += `<aff id="auth-${thisId}">${formData.$authors[i].affiliation}</aff>`
       }
 
       authorsList += `</contrib>`
@@ -186,10 +183,10 @@ const makeArticleMeta = (
     thisArticleMeta += `<issue>${formData.issueNumber}</issue>`
   }
 
-  if (abstract || formData.abstract) {
-    // TODO: note that the quotes in submission.abstract can be escaped. Does this break our parser?
+  if (abstract || formData.$abstract) {
+    // TODO: note that the quotes in submission.$abstract can be escaped. Does this break our parser?
     thisArticleMeta += `<abstract>${htmlToJats(
-      abstract || formData.abstract,
+      abstract || formData.$abstract,
     )}</abstract>`
   }
 
@@ -198,7 +195,7 @@ const makeArticleMeta = (
     thisArticleMeta += `<kwd-group kwd-group-type="author">${keywordList
       .map(x => `<kwd>${x}</kwd>`)
       .join('')}</kwd-group>`
-  } else if (formData.content && formData.content.length) {
+  } else if (formData.content?.length) {
     // this is for keywords
     let contentList = ''
 
