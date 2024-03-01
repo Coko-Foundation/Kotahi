@@ -88,7 +88,7 @@ const getCurrentCrossrefTimestamp = date => {
 }
 
 /** Get the list of citations as a fragment of Crossref-flavoured XML.
- * Citations are read from HTML, from either submission.citations or submission.references, with one citation expected per paragraph. */
+ * Citations are read from HTML, from submission.references, with one citation expected per paragraph. */
 const getCitations = manuscript => {
   const rawCitationBlock = manuscript.submission.references
 

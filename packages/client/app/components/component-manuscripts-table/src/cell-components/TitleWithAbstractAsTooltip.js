@@ -83,13 +83,8 @@ const TitleWithAbstractAsTooltip = ({ manuscript }) => {
         <IsImportedFromCoar height="20" width="20" />
       )}
       <span style={{ wordBreak: 'break-word' }}>
-        {manuscript.submission.link ? (
-          <a
-            href={manuscript.submission.link}
-            rel="noreferrer"
-            target="_blank"
-            title={manuscript.submission.link}
-          >
+        {url ? (
+          <a href={url} rel="noreferrer" target="_blank" title={url}>
             {title}
           </a>
         ) : (

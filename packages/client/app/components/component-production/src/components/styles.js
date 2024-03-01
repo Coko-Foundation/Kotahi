@@ -89,7 +89,6 @@ export const CloseButton = styled.span`
     content: '×';
     font-size: var(--size);
     position: relative;
-    top: calc(0px - calc(var(--size) * 0.1));
   }
 `
 
