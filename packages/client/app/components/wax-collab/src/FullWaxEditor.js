@@ -69,6 +69,7 @@ const FullWaxEditor = ({
           autoFocus={autoFocus}
           config={fullWaxEditorConfig(handleAssetManager, readonly)}
           fileUpload={file => renderImage(file)}
+          key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
           layout={
             useComments
               ? FullWaxEditorCommentsLayout(readonly, authorComments)

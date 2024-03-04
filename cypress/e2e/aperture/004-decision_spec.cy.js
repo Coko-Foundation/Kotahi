@@ -27,7 +27,8 @@ describe('Completing a review', () => {
       /* Editor submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControlPanelDecision()
+      DashboardPage.clickControl() // Navigate to Control Page
+      ControlPage.clickDecisionTab(1)
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       // Fill the decision form
       ControlPage.clickDecisionTextInput()
@@ -68,7 +69,8 @@ describe('Completing a review', () => {
       /* Editor Workflow: Approve the new Manuscript version */
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControlPanelDecision()
+      DashboardPage.clickControl() // Navigate to Control Page
+      ControlPage.clickDecisionTab(1)
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
       ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {

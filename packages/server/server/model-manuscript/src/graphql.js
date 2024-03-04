@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { map, chunk } = require('lodash')
+const { map, chunk, orderBy } = require('lodash')
 const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
@@ -564,10 +564,6 @@ const resolvers = {
 
       const authorName = author ? author.username : ''
 
-      if (manuscript.authorFeedback.submitted) {
-        delete manuscript.authorFeedback.submitted
-      }
-
       let assignedAuthors = []
 
       if (
@@ -589,7 +585,11 @@ const resolvers = {
           status: 'assigned',
           authorFeedback: {
             ...manuscript.authorFeedback,
-            assignedAuthors,
+            assignedAuthors: orderBy(
+              assignedAuthors,
+              [obj => new Date(obj.assignedOnDate)],
+              ['desc'],
+            ),
           },
         },
       )
@@ -639,10 +639,20 @@ const resolvers = {
             manuscript.groupId,
           )
 
-          // Get channel ID
-          const channelId = manuscript.channels.find(
-            channel => channel.topic === 'Editorial discussion',
-          ).id
+          let channelId
+
+          if (manuscript.parentId) {
+            const channel = await models.Manuscript.relatedQuery('channels')
+              .for(manuscript.parentId)
+              .findOne({ topic: 'Editorial discussion' })
+
+            channelId = channel.id
+          } else {
+            // Get channel ID
+            channelId = manuscript.channels.find(
+              channel => channel.topic === 'Editorial discussion',
+            ).id
+          }
 
           models.Message.createMessage({
             content: `Author proof assigned Email sent by Kotahi to ${author.username}`,
@@ -891,12 +901,61 @@ const resolvers = {
       return commonUpdateManuscript(id, input, ctx)
     },
     async submitAuthorProofingFeedback(_, { id, input }, ctx) {
-      const updated = await commonUpdateManuscript(id, input, ctx)
+      let updated = await commonUpdateManuscript(id, input, ctx)
 
       if (updated.status === 'completed') {
         const manuscript = await models.Manuscript.query()
           .findById(id)
           .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
+
+        // after submission of feedback adding it to 'previousSubmissions' list
+        let previousSubmissions = []
+
+        if (manuscript.authorFeedback.previousSubmissions?.length > 0) {
+          previousSubmissions = [
+            ...manuscript.authorFeedback.previousSubmissions,
+          ]
+        }
+
+        const submitter = manuscript.authorFeedback.submitterId
+          ? await models.User.query().findById(
+              manuscript.authorFeedback.submitterId,
+            )
+          : null
+
+        if (manuscript.authorFeedback.submitted) {
+          previousSubmissions.push({
+            text: manuscript.authorFeedback.text,
+            fileIds: manuscript.authorFeedback.fileIds,
+            submitterId: manuscript.authorFeedback.submitterId,
+            submitter: {
+              id: submitter.id,
+              username: submitter.username,
+            },
+            edited: manuscript.authorFeedback.edited,
+            submitted: manuscript.authorFeedback.submitted,
+          })
+
+          delete manuscript.authorFeedback.text
+          delete manuscript.authorFeedback.fileIds
+          delete manuscript.authorFeedback.submitterId
+          delete manuscript.authorFeedback.edited
+          delete manuscript.authorFeedback.submitted
+        }
+
+        updated = await models.Manuscript.query().patchAndFetchById(
+          manuscript.id,
+          {
+            authorFeedback: {
+              ...manuscript.authorFeedback,
+              previousSubmissions: orderBy(
+                previousSubmissions,
+                [obj => new Date(obj.submitted)],
+                ['desc'],
+              ),
+            },
+          },
+        )
 
         const author = await models.User.query().findById(ctx.user)
 
@@ -963,10 +1022,19 @@ const resolvers = {
               manuscript.groupId,
             )
 
-            // Get channel ID
-            const channelId = manuscript.channels.find(
-              channel => channel.topic === 'Editorial discussion',
-            ).id
+            let channelId
+
+            if (manuscript.parentId) {
+              const channel = await models.Manuscript.relatedQuery('channels')
+                .for(manuscript.parentId)
+                .findOne({ topic: 'Editorial discussion' })
+
+              channelId = channel.id
+            } else {
+              channelId = manuscript.channels.find(
+                channel => channel.topic === 'Editorial discussion',
+              ).id
+            }
 
             models.Message.createMessage({
               content: `Author proof completed Email sent by Kotahi to ${editor.user.username}`,
@@ -1040,10 +1108,20 @@ const resolvers = {
             manuscript.groupId,
           )
 
-          // Get channel ID
-          const channelId = manuscript.channels.find(
-            channel => channel.topic === 'Editorial discussion',
-          ).id
+          let channelId
+
+          if (manuscript.parentId) {
+            const channel = await models.Manuscript.relatedQuery('channels')
+              .for(manuscript.parentId)
+              .findOne({ topic: 'Editorial discussion' })
+
+            channelId = channel.id
+          } else {
+            // Get channel ID
+            channelId = manuscript.channels.find(
+              channel => channel.topic === 'Editorial discussion',
+            ).id
+          }
 
           models.Message.createMessage({
             content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
@@ -2282,17 +2360,26 @@ const typeDefs = `
 
   type ManuscriptAuthorFeeback {
     text: String
-    fileIds: [String]
+    fileIds: [String!]
     submitter: User
     edited: DateTime
     submitted: DateTime
-    assignedAuthors: [AssignedAuthor]
+    assignedAuthors: [AssignedAuthor!]
+    previousSubmissions: [previousSubmission!]
   }
 
   type AssignedAuthor {
-    authorId: ID
-    authorName: String
-    assignedOnDate: DateTime
+    authorId: ID!
+    authorName: String!
+    assignedOnDate: DateTime!
+  }
+
+  type previousSubmission {
+    text: String!
+    fileIds: [String!]
+    submitter: User
+    edited: DateTime
+    submitted: DateTime!
   }
 
   type Preprint {

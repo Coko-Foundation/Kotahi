@@ -231,6 +231,7 @@ const ProductionWaxEditor = ({
                 )
           }
           fileUpload={file => renderImage(file)}
+          key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
           layout={productionLayout}
           onChange={source => {
             saveSource(source)

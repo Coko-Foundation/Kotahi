@@ -22,7 +22,6 @@ const SubmissionsTable = ({
   manuscriptsUserHasCurrentRoleIn,
   submissionForm,
   applyQueryParams,
-  updateManuscript,
   uriQueryParams,
 }) => {
   const config = useContext(ConfigContext)
@@ -50,7 +49,6 @@ const SubmissionsTable = ({
   const specialComponentValues = {
     urlFrag,
     currentUser,
-    updateManuscript,
   }
 
   const displayProps = {

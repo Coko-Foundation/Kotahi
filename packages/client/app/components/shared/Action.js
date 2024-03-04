@@ -55,10 +55,14 @@ const IconContainer = styled.div`
 `
 
 /** Equivalent of <a href="...">, styled the same as other Actions */
-export const LinkAction = ({ children, isDisabled, to }) => {
+export const LinkAction = ({ children, isDisabled, to, dataTestId }) => {
   const history = useHistory()
   return (
-    <Action isDisabled={isDisabled} onClick={() => history.push(to)}>
+    <Action
+      dataTestId={dataTestId}
+      isDisabled={isDisabled}
+      onClick={() => history.push(to)}
+    >
       {children}
     </Action>
   )
@@ -80,6 +84,7 @@ LinkAction.defaultProps = { isDisabled: false }
 const Action = ({
   children,
   className,
+  dataTestId,
   isDisabled,
   onActionCompleted,
   onClick,
@@ -92,10 +97,11 @@ const Action = ({
     <>
       <ActionLink
         className={className}
+        data-testid={dataTestId}
         disabled={isInProgress || isDisabled || typeof onClick !== 'function'}
-        onClick={async () => {
+        onClick={async e => {
           setIsInProgress(true)
-          const result = await onClick()
+          const result = await onClick(e)
           if (onActionCompleted)
             setResultStatus(await onActionCompleted(result))
           setIsInProgress(false)

@@ -80,8 +80,7 @@ const AuthorFeedbackForm = ({
   currentUser,
   manuscript,
   submitAuthorProofingFeedback,
-  isReadOnlyVersion,
-  setHideEditorSection,
+  isReadOnly,
 }) => {
   const history = useHistory()
   const config = useContext(ConfigContext)
@@ -89,13 +88,12 @@ const AuthorFeedbackForm = ({
   const { authorFeedback, files: allFiles } = manuscript
   const { t } = useTranslation()
 
-  const authorFeedbackFiles = _(allFiles)
-    .keyBy('id')
-    .at(authorFeedback.fileIds)
-    .value()
+  const authorFeedbackFiles = authorFeedback.fileIds
+    ? _(allFiles).keyBy('id').at(authorFeedback.fileIds).value()
+    : []
 
   const [readOnly, setReadOnly] = useState(
-    !!authorFeedback.submitted || isReadOnlyVersion,
+    !!authorFeedback.submitted || isReadOnly,
   )
 
   const [
@@ -137,7 +135,6 @@ const AuthorFeedbackForm = ({
 
   const submit = async formData => {
     setSubmitAuthorProofingFeedbackStatus('pending')
-    setHideEditorSection(true)
     await submitAuthorProofingFeedback({
       variables: {
         id: manuscript.id,

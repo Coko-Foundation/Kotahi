@@ -140,8 +140,8 @@ const fr = {
       Editor: 'Éditeur',
       'Reviewer Status': 'Statut du réviseur',
       Actions: 'Actions',
-      Decision: 'Décision',
-      Team: 'Équipe',
+      Control: 'Contrôle',
+      Production: 'Production',
       'No results found': 'Aucun résultat trouvé',
       pagination: `Affichage de <strong>{{firstResult}}</strong> à <strong>{{lastResult}}</strong> sur <strong>{{totalCount}}</strong> résultats`,
       reviewAccept: 'Accepter',
@@ -176,7 +176,10 @@ const fr = {
       "Manuscripts I'm editor of": 'Manuscrits dont je suis éditeur',
       mySubmissions: {
         'My Submissions': 'Mes soumissions',
-        'Author proofing editor': "Éditeur de correction d'auteur",
+        'Provide production feedback':
+          'Fournir des commentaires sur la production',
+        'View production feedback':
+          'Afficher les commentaires sur la production',
       },
       toReview: {
         'To Review': 'À réviser',
@@ -379,6 +382,8 @@ const fr = {
       'Edited on': 'Edité le {{date}}',
       submittedOn: '{{submitterName}} soumis le {{date}}',
       'read-only': ' (lecture seulement)',
+      'Previous Feedback Submissions':
+        'Soumissions de commentaires précédentes',
       'No supported view of the file': 'Aucune vue supportée du fichier',
       Download: 'Télécharger',
       Editor: 'Éditeur',

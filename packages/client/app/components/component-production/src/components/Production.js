@@ -17,6 +17,7 @@ import {
   ErrorBoundary,
   SectionContent,
   Spinner,
+  VersionSwitcher,
 } from '../../../shared'
 import { Info } from './styles'
 import { ControlsContainer } from '../../../component-manuscripts/src/style'
@@ -24,6 +25,12 @@ import AuthorFeedbackForm from '../../../component-author-feedback/src/component
 import UploadAsset from './uploadManager/UploadAsset'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 import { color } from '../../../../theme'
+import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
+import PreviousFeedbackSubmissions from './PreviousFeedbackSubmissions'
+
+const PreviousFeedBackSection = styled.div`
+  margin-bottom: calc(${th('gridUnit')} * 3);
+`
 
 const FlexRow = styled.div`
   display: flex;
@@ -61,18 +68,22 @@ const Production = ({
   form,
   manuscript,
   currentUser,
+  currentUserRole,
   makePdf,
   makeJats,
   submitAuthorProofingFeedback,
+  unparsedManuscript,
   updateManuscript,
   updateTemplate,
   onAssetManager,
   isAuthorProofingVersion,
   isReadOnlyVersion,
-  hideEditorSection,
-  setHideEditorSection,
 }) => {
-  const { authorFeedback } = manuscript
+  const versions = gatherManuscriptVersions(unparsedManuscript)
+
+  const showFeedbackTab = versions.some(
+    v => v.manuscript?.authorFeedback?.previousSubmissions?.length > 0,
+  )
 
   const debouncedSave = useCallback(
     debounce(source => {
@@ -151,15 +162,28 @@ const Production = ({
 
   const feedbackSection = {
     content: (
-      <SectionContent>
-        <AuthorFeedbackForm
-          currentUser={currentUser}
-          isReadOnlyVersion={isReadOnlyVersion}
-          manuscript={manuscript}
-          setHideEditorSection={setHideEditorSection}
-          submitAuthorProofingFeedback={submitAuthorProofingFeedback}
-        />
-      </SectionContent>
+      <>
+        {isAuthorProofingVersion &&
+          ['assigned', 'inProgress'].includes(manuscript.status) && (
+            <SectionContent>
+              <AuthorFeedbackForm
+                currentUser={currentUser}
+                manuscript={manuscript}
+                submitAuthorProofingFeedback={submitAuthorProofingFeedback}
+              />
+            </SectionContent>
+          )}
+        <PreviousFeedBackSection>
+          <VersionSwitcher fullWidth>
+            {versions.map((version, i) => (
+              <PreviousFeedbackSubmissions
+                key={version.manuscript.id}
+                version={version.manuscript}
+              />
+            ))}
+          </VersionSwitcher>
+        </PreviousFeedBackSection>
+      </>
     ),
     key: 'feedback',
     label: t('productionPage.Feedback'),
@@ -229,23 +253,24 @@ const Production = ({
 
   const tabSections = []
 
+  // Only author in author proofing mode can have editor seciton and feedback section visible
   if (isAuthorProofingVersion) {
-    // While switching from editing mode to readonly mode the editorSection throws 'Too much recursion' below check avoids the page crash
-    if (hideEditorSection) {
-      tabSections.push(feedbackSection)
-    } else {
-      tabSections.push(editorSection, feedbackSection)
-    }
+    tabSections.push(editorSection, feedbackSection)
   } else {
-    tabSections.push(
-      editorSection,
-      htmlTemplate,
-      cssPagedJS,
-      uploadAssets,
-      manuscriptMetadata,
-    )
+    // The manuscript editor can only view editor section and feedback section in readonly mode
+    if (isReadOnlyVersion && currentUserRole.isEditor) {
+      tabSections.push(editorSection)
+    } else {
+      tabSections.push(
+        editorSection,
+        htmlTemplate,
+        cssPagedJS,
+        uploadAssets,
+        manuscriptMetadata,
+      )
+    }
 
-    if (authorFeedback.submitted) tabSections.push(feedbackSection)
+    if (!isReadOnlyVersion && showFeedbackTab) tabSections.push(feedbackSection) // The manuscript versions should have one feedback submitted record to show feedback tab
   }
 
   return (

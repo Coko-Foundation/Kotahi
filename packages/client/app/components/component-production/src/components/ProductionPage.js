@@ -153,6 +153,16 @@ const fragmentFields = `
       authorName
       assignedOnDate
     }
+    previousSubmissions {
+      text
+      fileIds
+      edited
+      submitted
+      submitter {
+        username
+        id
+      }
+    }
   }
 `
 
@@ -198,27 +208,25 @@ const submitAuthorProofingFeedbackMutation = gql`
   }
 `
 
-const showAuthorProofingMode = (manuscript, currentUser, updateManuscript) => {
-  const authorTeam = manuscript.teams.find(team => team.role === 'author')
-
-  const sortedAuthors = authorTeam?.members
-    .slice()
-    .sort(
-      (a, b) =>
-        Date.parse(new Date(b.created)) - Date.parse(new Date(a.created)),
-    )
+const showAuthorProofingMode = (
+  currentUserRole,
+  manuscript,
+  updateManuscript,
+) => {
+  // Admin and Group Manager roles don't need to be in author proofing mode
+  if (currentUserRole.isAdmin || currentUserRole.isGroupManager) return false
 
   const isAuthorProofingAssignedToAuthor =
-    manuscript.status === 'assigned' &&
-    sortedAuthors[0]?.user?.id === currentUser.id
+    manuscript.status === 'assigned' && currentUserRole.isAuthor
 
   if (isAuthorProofingAssignedToAuthor) {
     updateManuscript(manuscript.id, { status: 'inProgress' })
   }
 
+  // Author proofing authors and assigned edtior of the manuscript can only be in author proofing mode
   return (
     ['assigned', 'inProgress', 'completed'].includes(manuscript.status) &&
-    sortedAuthors[0]?.user?.id === currentUser.id
+    currentUserRole.isAuthor
   )
 }
 
@@ -240,7 +248,6 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
   const client = useApolloClient()
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
-  const [hideEditorSection, setHideEditorSection] = React.useState(false)
   // const [saving, setSaving] = React.useState(false)
   // const [downloading, setDownloading] = React.useState(false)
 
@@ -287,18 +294,48 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
     submission: JSON.parse(data.manuscript.submission),
   }
 
-  const { submissionForm, articleTemplate } = data
+  const {
+    submissionForm,
+    articleTemplate,
+    manuscript: unparsedManuscript,
+  } = data
+
+  // Get 'currentUserRole' for the manuscript version isAdmin, isGroupManager, isAuthor, isEditor
+  const currentUserRole = {}
+
+  const { globalRoles = [] } = currentUser
+  currentUserRole.isAdmin = globalRoles.includes('admin')
+  currentUserRole.isGroupManager =
+    currentUser.groupRoles.includes('groupManager')
+
+  const authorTeam = manuscript.teams.find(team => team.role === 'author')
+
+  const sortedAuthors = authorTeam?.members
+    .slice()
+    .sort(
+      (a, b) =>
+        Date.parse(new Date(b.created)) - Date.parse(new Date(a.created)),
+    )
+
+  currentUserRole.isAuthor = sortedAuthors[0]?.user?.id === currentUser.id // This logic might change in the future! Now it uses the latest created author
+
+  const editorTeam = manuscript.teams.find(team => team.role === 'editor')
+
+  currentUserRole.isEditor = editorTeam?.members[0]?.user?.id === currentUser.id // This will be 'true' only for 'editor' role assigned and not for 'handlingEditor' or 'senoirEditor'
 
   const isAuthorProofingMode = showAuthorProofingMode(
+    currentUserRole,
     manuscript,
-    currentUser,
     updateManuscript,
   ) // If true, we are in author proofing mode
 
+  // 'currentUser' is assigned author for proofing and has completed author proofing, we go read-only
+  // If the currentUser is editor of the manuscript version, we go read-only (might change in the future!)
+  // If the author proofing mode status is 'assigned' or 'inProgress' and currentUser is neither author nor editor, we go read-only
   const isReadOnlyMode =
     (isAuthorProofingMode && ['completed'].includes(manuscript.status)) ||
     (['assigned', 'inProgress'].includes(manuscript.status) &&
-      !isAuthorProofingMode) // If author proofing is enabled, but we are not the author or author has completed author proofing, we go read-only
+      !isAuthorProofingMode)
 
   // console.log('Author proofing mode: ', isAuthorProofingMode)
   // console.log('Read only mode: ', isReadOnlyMode)
@@ -319,6 +356,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
       manuscript={manuscript}
       setMakingJats={setMakingJats}
       setMakingPdf={setMakingPdf}
+      unparsedManuscript={unparsedManuscript}
       updateManuscript={updateManuscript}
       updateTemplate={updateTemplate}
     >
@@ -348,20 +386,20 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
             articleTemplate={articleTemplate}
             client={client}
             currentUser={currentUser}
+            currentUserRole={currentUserRole}
             displayShortIdAsIdentifier={controlPanel?.displayManuscriptShortId}
             file={manuscript.files.find(file =>
               file.tags.includes('manuscript'),
             )}
             form={form}
-            hideEditorSection={hideEditorSection}
             isAuthorProofingVersion={isAuthorProofingMode}
             isReadOnlyVersion={isReadOnlyMode}
             makeJats={setMakingJats}
             makePdf={setMakingPdf}
             manuscript={manuscript}
             onAssetManager={onAssetManager}
-            setHideEditorSection={setHideEditorSection}
             submitAuthorProofingFeedback={submitAuthorProofingFeedback}
+            unparsedManuscript={unparsedManuscript}
             updateManuscript={(a, b) => {
               // TODO: This might need to be different based on value of isAuthorProofingMode?
               // eslint-disable-next-line

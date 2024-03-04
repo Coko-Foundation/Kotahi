@@ -1,23 +1,17 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'
-import { Edit } from 'react-feather'
-import styled from 'styled-components'
-import Tooltip from 'rc-tooltip'
 import { useTranslation } from 'react-i18next'
-import { color } from '../../../../theme'
+import styled from 'styled-components'
+import { Action } from '../../../shared'
 import { ConfigContext } from '../../../config/src'
 
-const EditIcon = styled(Edit)`
-  color: ${color.brand1.base};
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
-const AuthorProofingLink = ({
-  manuscript,
-  urlFrag,
-  currentUser,
-  updateManuscript,
-}) => {
+const AuthorProofingLink = ({ manuscript, urlFrag, currentUser }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const authorProofingEnabled = config.controlPanel?.authorProofingEnabled // let's set this based on the config
@@ -32,38 +26,24 @@ const AuthorProofingLink = ({
     )
 
   if (
-    ['assigned', 'inProgress'].includes(manuscript.status) &&
+    manuscript.authorFeedback.assignedAuthors?.length > 0 &&
     sortedAuthors[0]?.user?.id === currentUser.id
   ) {
     return authorProofingEnabled ? (
-      <Tooltip
-        destroyTooltipOnHide={{ keepParent: true }}
-        onClick={async e => {
-          e.stopPropagation()
-          await updateManuscript({
-            variables: {
-              id: manuscript.id,
-              input: JSON.stringify({
-                status: 'inProgress',
-              }),
-            },
-          })
-          history.push(`${urlFrag}/versions/${manuscript.id}/production`)
-        }}
-        overlay={
-          <p>{t('dashboardPage.mySubmissions.Author proofing editor')}</p>
-        }
-        overlayInnerStyle={{
-          backgroundColor: 'black',
-          color: 'white',
-          borderColor: 'black',
-          fontWeight: 'normal',
-        }}
-        placement="top"
-        trigger={['hover']}
-      >
-        <EditIcon />
-      </Tooltip>
+      <Container>
+        <Action
+          dataTestId="author-proofing-editor"
+          onClick={async e => {
+            e.stopPropagation()
+            history.push(`${urlFrag}/versions/${manuscript.id}/production`)
+          }}
+        >
+          {['assigned', 'inProgress'].includes(manuscript.status) &&
+            t('dashboardPage.mySubmissions.Provide production feedback')}
+          {manuscript.status === 'completed' &&
+            t('dashboardPage.mySubmissions.View production feedback')}
+        </Action>
+      </Container>
     ) : null
   }
 

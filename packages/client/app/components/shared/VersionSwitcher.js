@@ -6,7 +6,7 @@ import { Select } from './Select'
 import PlainOrRichText from './PlainOrRichText'
 
 const Container = styled.div`
-  margin-top: ${props => grid(props.top)};
+  margin-top: ${grid(2)};
 `
 
 const VerisonLabelWrapper = styled.div`
@@ -36,7 +36,7 @@ const StyledSelect = styled(Select)`
 
   border: 1px solid ${({ theme }) => theme.color.gray95};
   box-shadow: ${props => props.theme.boxShadow.shades[100]};
-  width: 94%;
+  width: ${props => (props.fullWidth ? 100 : 94)}%;
 `
 
 const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
@@ -57,7 +57,11 @@ const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
 }
 
 /* eslint-disable import/prefer-default-export */
-export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
+export const VersionSwitcher = ({
+  versions = [],
+  children,
+  fullWidth = false,
+}) => {
   // One can pass in versions as prop or as children
   let normalizedVersions
   let mode
@@ -91,6 +95,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
   return (
     <>
       <StyledSelect
+        fullWidth={fullWidth}
         onChange={option => selectVersionKey(option.value)}
         options={normalizedVersions.map((d, i) => ({
           value: d.key,
@@ -109,7 +114,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
         standalone
         value={selectedVersionKey}
       />
-      <Container top={top}>
+      <Container>
         {mode === 'props' ? selectedVersion.content : selectedVersion}
       </Container>
     </>
