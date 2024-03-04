@@ -153,7 +153,8 @@ describe('control page tests', () => {
   //     ReviewPage.clickAcceptRadioButton()
   //     ReviewPage.clickSubmitButton()
   //     ReviewPage.waitThreeSec()
-  //     DashboardPage.clickControlPanelDecision()
+  //     DashboardPage.clickControl() // Navigate to Control Page
+  //     ControlPage.clickDecisionTab(1)
   //     ControlPage.clickShow()
   //     ControlPage.getAcceptedToPublishReview().should('be.visible')
   //   })
@@ -202,7 +203,8 @@ describe('control page tests', () => {
   //       cy.login(name.role.reviewers[0], dashboard)
   //     })
   //     cy.awaitDisappearSpinner()
-  //     DashboardPage.clickControlPanelDecision()
+  //     DashboardPage.clickControl() // Navigate to Control Page
+  //     ControlPage.clickDecisionTab(1)
   //   })
   //   it('review is hidden from the author of the article', () => {
   //     ControlPage.clickHideReviewToAuthor()

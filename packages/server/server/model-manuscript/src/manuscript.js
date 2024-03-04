@@ -451,7 +451,11 @@ class Manuscript extends BaseModel {
             },
             assignedAuthors: {
               items: { type: 'object' },
-              type: ['array', 'null'],
+              type: ['array'],
+            },
+            previousSubmissions: {
+              items: { type: 'object' },
+              type: ['array'],
             },
           },
         },

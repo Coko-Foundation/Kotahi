@@ -27,7 +27,6 @@ import KanbanBoard from './KanbanBoard'
 import InviteReviewer from './reviewers/InviteReviewer'
 import { ConfigContext } from '../../../config/src'
 import { getActiveTab } from '../../../../shared/manuscriptUtils'
-import AuthorFeedbackForm from '../../../component-author-feedback/src/components/AuthorFeedbackForm'
 
 const TaskSectionRow = styled(SectionRow)`
   padding: 12px 0 18px;
@@ -121,20 +120,23 @@ const DecisionVersion = ({
     [location],
   )
 
-  const addEditor = (manuscript, label, isCurrent, user) => {
-    const isThisReadOnly = !isCurrent
+  const addEditor = (manuscript, isCurrent, user) => {
+    const isReadOnly =
+      !isCurrent || ['assigned', 'inProgress'].includes(manuscript.status)
 
     return {
       content: (
         <EditorSection
           currentUser={user}
           manuscript={manuscript}
-          readonly={isThisReadOnly}
-          saveSource={isThisReadOnly ? null : debouncedSave}
+          readonly={isReadOnly}
+          saveSource={isReadOnly ? null : debouncedSave}
         />
       ),
       key: `editor`,
-      label,
+      label: `${t('decisionPage.Manuscript text')} ${
+        isReadOnly ? t('decisionPage.read-only') : ''
+      }`,
     }
   }
 
@@ -151,12 +153,7 @@ const DecisionVersion = ({
     existingReview.current = reviewOrInitial(version)
   }, [version.reviews])
 
-  const editorSection = addEditor(
-    version,
-    t('decisionPage.Manuscript text'),
-    isCurrentVersion,
-    currentUser,
-  )
+  const editorSection = addEditor(version, isCurrentVersion, currentUser)
 
   const metadataSection = () => {
     const submissionValues = isCurrentVersion
@@ -484,22 +481,6 @@ const DecisionVersion = ({
     }
   }
 
-  const feedbackSection = () => {
-    return {
-      content: (
-        <SectionContent>
-          <AuthorFeedbackForm
-            currentUser={currentUser}
-            isReadOnlyVersion
-            manuscript={version}
-          />
-        </SectionContent>
-      ),
-      key: 'feedback',
-      label: 'Feedback',
-    }
-  }
-
   let defaultActiveKey
 
   switch (config?.controlPanel?.showTabs[0]) {
@@ -544,9 +525,6 @@ const DecisionVersion = ({
     if (config?.controlPanel?.showTabs.includes('Tasks & Notifications'))
       sections.push(tasksAndNotificationsSection())
   }
-
-  // Temporary may change in future iterations so not adding it to config for now!
-  if (version?.authorFeedback?.submitted) sections.push(feedbackSection())
 
   return (
     <HiddenTabs

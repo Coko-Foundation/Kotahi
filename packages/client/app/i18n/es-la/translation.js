@@ -141,8 +141,8 @@ const esLa = {
       Editor: 'Editor',
       'Reviewer Status': 'Estado del Revisor',
       Actions: 'Acciones',
-      Decision: 'DECISIÓN',
-      Team: 'EQUIPO',
+      Control: 'Control',
+      Production: 'Producción',
       'No results found': 'No se encontraron resultados',
       pagination: `Mostrando <strong>{{firstResult}}</strong> a <strong>{{lastResult}}</strong> de <strong>{{totalCount}}</strong> resultados`,
       reviewAccept: 'Aceptar',
@@ -177,7 +177,8 @@ const esLa = {
       "Manuscripts I'm editor of": 'Manuscritos en los que soy editor',
       mySubmissions: {
         'My Submissions': 'Mis Presentaciones',
-        'Author proofing editor': 'Editor de pruebas de autor',
+        'Provide production feedback': 'Proporcionar comentarios de producción',
+        'View production feedback': 'Ver comentarios de producción',
       },
       toReview: {
         'To Review': 'Para Revisión',
@@ -379,6 +380,7 @@ const esLa = {
       'Edited on': 'Editado el {{date}}',
       submittedOn: '{{submitterName}} presentado el {{date}}',
       'read-only': ' (solo lectura)',
+      'Previous Feedback Submissions': 'Envíos de comentarios anteriores',
       'No supported view of the file': 'No hay una vista admitida del archivo',
       Download: 'Descargar',
       Editor: 'Editor',

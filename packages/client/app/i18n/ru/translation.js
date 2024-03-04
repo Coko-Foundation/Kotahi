@@ -140,8 +140,8 @@ const ru = {
       Editor: 'Редактор',
       'Reviewer Status': 'Статус рецензента',
       Actions: 'Действия',
-      Decision: 'Решение',
-      Team: 'Исполнители',
+      Control: 'Контроль',
+      Production: 'Производство',
       'No results found': 'Результаты не найдены',
       pagination: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результата`,
       pagination_few: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
@@ -178,7 +178,8 @@ const ru = {
       "Manuscripts I'm editor of": 'Статьи для редактирования',
       mySubmissions: {
         'My Submissions': 'Мои статьи',
-        'Author proofing editor': 'Редактор авторских корректур',
+        'Provide production feedback': 'Оставьте отзыв о производстве',
+        'View production feedback': 'Посмотреть отзывы о производстве',
       },
       toReview: {
         'To Review': 'Статьи для рецензирования',
@@ -380,6 +381,7 @@ const ru = {
       'Edited on': 'Отредактировано {{date}}',
       submittedOn: '{{submitterName}} представлены на {{date}}',
       'read-only': ' (только для чтения)',
+      'Previous Feedback Submissions': 'Предыдущие отзывы',
       'No supported view of the file':
         'Нет поддерживаемого представления файла',
       Download: 'Загрузить',

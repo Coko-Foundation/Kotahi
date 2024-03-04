@@ -44,7 +44,6 @@ const buildSpecialColumnProps = (
     getMainActionLink,
     currentUser,
     updateReviewerStatus,
-    updateManuscript,
   } = specialComponentValues
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
@@ -191,11 +190,11 @@ const buildSpecialColumnProps = (
     authorProofingLink: {
       title: 'Actions',
       flex: '0 1 10em',
+      centered: true,
       component: AuthorProofingLink,
       extraProps: {
         urlFrag,
         currentUser,
-        updateManuscript,
       },
     },
     reviewerLinks: {

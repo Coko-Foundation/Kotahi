@@ -19,6 +19,12 @@ teams {
   }
 }
 status
+authorFeedback {
+  assignedAuthors {
+    authorName
+    assignedOnDate
+  }
+}
 meta {
   manuscriptId
   history {

@@ -25,6 +25,7 @@ const SimpleWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
+        key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)

@@ -60,11 +60,11 @@ const AssignAuthorForProofing = ({
           {t('decisionPage.Submit for author proofing')}
         </ActionButton>
         <AssignedAuthorForProofingInfo>
-          {authorTeam?.members.length === 0 && t('decisionPage.authorRequired')}
+          {authorTeam?.members?.length === 0 &&
+            t('decisionPage.authorRequired')}
         </AssignedAuthorForProofingInfo>
       </SectionRowGrid>
-      {manuscript?.authorFeedback?.assignedAuthors &&
-      manuscript?.authorFeedback?.assignedAuthors.length > 0 ? (
+      {manuscript.authorFeedback.assignedAuthors?.length > 0 ? (
         <AssignedAuthorForProofingLogsContainer>
           <AssignedAuthorForProofingLogsToggle
             onClick={() => setToggled(!isToggled)}
@@ -75,8 +75,8 @@ const AssignAuthorForProofing = ({
           </AssignedAuthorForProofingLogsToggle>
           {isToggled && (
             <AssignedAuthorForProofingLogs>
-              {manuscript?.authorFeedback?.assignedAuthors.map(a => (
-                <>
+              {manuscript.authorFeedback.assignedAuthors.map(a => (
+                <React.Fragment key={`author-assigned-${a.assignedOnDate}`}>
                   <span>
                     {t('decisionPage.assignedOn', {
                       assigneeName: a.authorName,
@@ -84,7 +84,7 @@ const AssignAuthorForProofing = ({
                     })}
                   </span>
                   <br />
-                </>
+                </React.Fragment>
               ))}
             </AssignedAuthorForProofingLogs>
           )}

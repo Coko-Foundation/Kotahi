@@ -1,49 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Action, ActionGroup } from '@pubsweet/ui'
-import { Users, MessageSquare } from 'react-feather'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { LinkAction } from '../../../shared'
 
-const StyledActionGroup = styled(ActionGroup)`
-  text-align: left;
-`
-
-const StyledAction = styled(Action)`
-  align-items: center;
+const Container = styled.div`
   display: flex;
-  font-size: 14px;
+  flex-direction: column;
 `
 
 const EditorItemLinks = ({ manuscript, urlFrag }) => {
   const { t } = useTranslation()
   return (
-    <StyledActionGroup>
-      <StyledAction
-        data-testid="control-panel-decision"
-        to={{
-          pathname: `${urlFrag}/versions/${
-            manuscript.parentId || manuscript.id
-          }/decision`,
-          state: { tab: 'Decision' },
-        }}
+    <Container>
+      <LinkAction
+        dataTestId="control-panel-team"
+        to={`${urlFrag}/versions/${
+          manuscript.parentId || manuscript.id
+        }/decision`}
       >
-        <MessageSquare />
-        &nbsp;{t('manuscriptsTable.Decision')}
-      </StyledAction>
-      <StyledAction
-        data-testid="control-panel-team"
-        to={{
-          pathname: `${urlFrag}/versions/${
-            manuscript.parentId || manuscript.id
-          }/decision`,
-          state: { tab: 'Team' },
-        }}
+        {t('manuscriptsTable.Control')}
+      </LinkAction>
+      <LinkAction
+        dataTestId="production-editor"
+        to={`${urlFrag}/versions/${manuscript.id}/production`}
       >
-        <Users />
-        &nbsp;{t('manuscriptsTable.Team')}
-      </StyledAction>
-    </StyledActionGroup>
+        {t('manuscriptsTable.Production')}
+      </LinkAction>
+    </Container>
   )
 }
 
