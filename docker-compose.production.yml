@@ -115,7 +115,8 @@ services:
 
     volumes:
       - ./uploads:/home/node/app/uploads
-      - ./config:/home/node/app/config
+      - ./packages/server/config:/home/node/app/config
+      - ./config/plugins:/home/node/app/plugins
 
   xsweet:
     depends_on:
@@ -153,7 +154,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.38
+    image: cokoapps/kotahi-flax:0.2.39
     depends_on:
       - server
     ports:

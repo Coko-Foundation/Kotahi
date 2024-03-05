@@ -16,7 +16,7 @@ describe('Editor assigning reviewers', () => {
       // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControlPanelTeam() // Navigate to Control Page
+      DashboardPage.clickControl() // Navigate to Control Page
       ControlPage.waitThreeSec()
 
       // Invite all the reviewers

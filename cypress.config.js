@@ -4,10 +4,6 @@ const { readFileSync } = require('fs')
 const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, './.env') })
 
-const { resetDbAndApplyDump, applyDump } = require('./scripts/resetDb')
-
-const seedForms = require('./scripts/seedForms')
-
 const dumpFile = name => path.join(__dirname, 'cypress', 'dumps', `${name}.sql`)
 
 module.exports = defineConfig({
@@ -30,10 +26,23 @@ module.exports = defineConfig({
           // eslint-disable-next-line no-console
           console.log(name, 'name')
 
-          const result = resetDbAndApplyDump(
+          // Migrations paths in components.json are relative to packages/server, but cypress runs
+          // in the project root folder. So we must change folder while migrations are run.
+          const originalDirectory = process.cwd()
+          const targetDirectory = './packages/server'
+
+          process.chdir(targetDirectory)
+
+          const {
+            resetDbAndApplyDump,
+          } = require('./packages/server/scripts/resetDb') /* eslint-disable-line global-require */
+
+          const result = await resetDbAndApplyDump(
             readFileSync(dumpFile(name), 'utf-8'),
             name,
           )
+
+          process.chdir(originalDirectory)
 
           // Wait long enough for server-side cache to clear
           await new Promise(resolve => setTimeout(resolve, 10500))
@@ -42,6 +51,10 @@ module.exports = defineConfig({
         seed: async name => {
           // eslint-disable-next-line no-console
           console.log(name, 'name')
+
+          /* eslint-disable-next-line global-require */
+          const { applyDump } = require('./packages/server/scripts/resetDb')
+
           // Restore without clear
           return applyDump(
             readFileSync(dumpFile(name), 'utf-8'),
@@ -52,42 +65,14 @@ module.exports = defineConfig({
           )
         },
         createToken: async username => {
-          // eslint-disable-next-line global-require
-          const { User } = require('@pubsweet/models')
-
-          // eslint-disable-next-line global-require
-          const { createJWT } = require('@coko/server')
-
-          const user = await User.query().where({ username }).first()
-
-          if (!user) {
-            const users = await User.query().select('username')
-            throw new Error(
-              `Could not find ${username} among users [${users
-                .map(u => `'${u.username}'`)
-                .join(', ')}]`,
-            )
-          }
-
-          const jwt = createJWT(user)
-
-          return jwt
+          /* eslint-disable-next-line global-require */
+          const createToken = require('./packages/server/scripts/cypress/createToken')
+          return createToken(username)
         },
         seedForms: async () => {
-          // eslint-disable-next-line global-require
-          const { Group, Config } = require('@pubsweet/models')
-
-          // eslint-disable-next-line no-console
-          console.log('Seeding forms...')
-          const group = await Group.query().findOne({ name: 'kotahi' })
-
-          const activeConfig = await Config.query().findOne({
-            groupId: group.id,
-            active: true,
-          })
-
-          await seedForms(group, activeConfig)
-          return null
+          /* eslint-disable-next-line global-require */
+          const seedForms = require('./packages/server/scripts/cypress/seedForms')
+          return seedForms()
         },
         log(message) {
           // eslint-disable-next-line no-console
@@ -99,4 +84,6 @@ module.exports = defineConfig({
     },
     baseUrl: 'http://localhost:4000',
   },
+  screenshotOnRunFailure: false,
+  video: false,
 })

@@ -26,6 +26,7 @@ db-data/*
 /.idea
 config/journal/docmaps_scheme.json
 .vscode
+.nvmrc
 
 cypress/videos
 cypress/screenshots

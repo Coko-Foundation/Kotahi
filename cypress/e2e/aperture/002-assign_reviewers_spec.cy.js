@@ -28,7 +28,7 @@ describe('Editor assigning reviewers', () => {
       DashboardPage.clickDashboardTab(2)
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(2000)
-      DashboardPage.clickControlPanelTeam() // Navigate to Control Page
+      DashboardPage.clickControl() // Navigate to Control Page
 
       // Invite all the reviewers
       cy.reload()
