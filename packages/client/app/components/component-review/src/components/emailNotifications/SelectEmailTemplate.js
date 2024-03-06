@@ -2,6 +2,12 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Select } from '../../../../shared'
 
+const hideEmailTemplateTypes = [
+  'authorProofingInvitation',
+  'authorProofingSubmitted',
+  'systemEmail',
+]
+
 const SelectEmailTemplate = ({
   onChangeEmailTemplate,
   selectedEmailTemplate,
@@ -13,7 +19,7 @@ const SelectEmailTemplate = ({
   emailTemplates,
 }) => {
   const emailOptionsToDisplay = emailTemplates.filter(template => {
-    return template.emailTemplateType !== 'systemEmail'
+    return !hideEmailTemplateTypes.includes(template.emailTemplateType)
   })
 
   const emailNotificationOptions = emailOptionsToDisplay.map(template => {
