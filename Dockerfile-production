@@ -27,22 +27,17 @@ ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV USE_COLAB_EMAIL $use_colab_email
 ENV FLAX_SITE_URL $flax_site_url
 
-RUN apk add --no-cache git python3 make g++ bash 
+RUN apk add --no-cache git python3 make g++ bash
 
 WORKDIR /home/node/app
 
-COPY package.json .
-COPY yarn.lock .
-
-# Install production node modules for server use
-RUN yarn install --frozen-lockfile --production=true
-# Copy to another folder for later use
-RUN mv node_modules production_node_modules
+COPY packages/client/package.json .
+COPY packages/client/yarn.lock .
 
 # Install development node modules for building webpack bundle
 RUN yarn install --frozen-lockfile --production=false
 
-COPY . .
+COPY ./packages/client .
 
 RUN yarn webpack --config webpack/webpack.production.config.js
 
@@ -54,20 +49,20 @@ WORKDIR /home/node/app
 RUN mkdir ./uploads
 
 RUN chown -R node:node .
-RUN apk add bash coreutils postgresql-client
+RUN apk add --no-cache bash coreutils postgresql-client git python3 make g++
 USER node
 
-COPY --chown=node:node ./config ./config
-COPY --chown=node:node ./public ./public
-COPY --chown=node:node ./scripts ./scripts
-COPY --chown=node:node ./server ./server
-COPY --chown=node:node ./app/storage ./app/storage
-COPY --chown=node:node ./app/brandConfig.json ./app/brandConfig.json
-COPY --chown=node:node ./startServer.js .
-COPY --chown=node:node ./profiles ./profiles
+COPY ./packages/server/package.json .
+COPY ./packages/server/yarn.lock .
+RUN yarn install --frozen-lockfile --production=true
+
+COPY --chown=node:node ./packages/server .
+COPY --chown=node:node ./packages/client/public ./public
+
+# COPY --chown=node:node ./app/storage ./app/storage
+# COPY --chown=node:node ./app/brandConfig.json ./app/brandConfig.json
 
 COPY --from=build /home/node/app/_build/assets ./_build/assets
-COPY --from=build /home/node/app/production_node_modules ./node_modules
 
 VOLUME /home/node/app/uploads
 
