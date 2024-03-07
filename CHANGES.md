@@ -1,5 +1,9 @@
 ## Changes
 
+### Version 3.1.0
+
+If you have any plugin packages, they should be moved from `config/plugins/` folder to `packages/server/config/plugins` folder, along with the `plugins_manifest.json` file.
+
 ### 2024-01-25: Version 3.0.0
 
 - The following instance archtypes used in the codebase have been renamed
