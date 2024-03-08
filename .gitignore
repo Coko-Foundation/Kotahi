@@ -15,16 +15,19 @@ uploads/
 config/local*.*
 .vscode/launch.json
 .DS_Store
-config/*.env
-config/translationOverrides.js
-!packages/server/config/plugins
+packages/server/config/*.env
+packages/server/config/local*
+packages/server/*/config/local*
 packages/server/config/plugins/*
+!packages/server/config/plugins
 !packages/server/config/plugins/example_plugins_manifest.json
+packages/server/config/translationOverrides.js
+
 minio/data/*
 .minio.sys
 db-data/*
 /.idea
-config/journal/docmaps_scheme.json
+packages/server/config/journal/docmaps_scheme.json
 .vscode
 .nvmrc
 

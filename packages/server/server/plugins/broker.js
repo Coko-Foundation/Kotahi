@@ -1,3 +1,4 @@
+const { logger } = require('@coko/server')
 const models = require('@pubsweet/models')
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 const { importWorkersByGroup } = require('./imports')
@@ -120,7 +121,7 @@ const getBroker = (groupId, workerName) => {
       )
     },
     groupId,
-    logger: console,
+    logger,
   }
 }
 
