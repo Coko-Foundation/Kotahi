@@ -1933,9 +1933,16 @@ const resolvers = {
       return exportData
     },
     async currentUserIsReviewerOfManuscript(_, { manuscriptId }, ctx) {
+      const otherVersions = await (
+        await models.Manuscript.query().findById(manuscriptId)
+      ).getManuscriptVersions()
+
+      const versionIds = [manuscriptId, ...otherVersions.map(v => v.id)]
+
       const team = await models.User.relatedQuery('teams')
         .for(ctx.user)
-        .findOne({ role: 'reviewer', objectId: manuscriptId })
+        .findOne({ role: 'reviewer' })
+        .whereIn('objectId', versionIds)
 
       return !!team
     },
