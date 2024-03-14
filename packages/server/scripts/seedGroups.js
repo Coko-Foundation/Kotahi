@@ -275,11 +275,11 @@ const createGroupAndRelatedData = async (
       emailTemplateType: 'systemEmail',
       emailContent: {
         description: '@mention notification',
-        subject: `Kotahi | {{ currentUser }} has mentioned you in a discussion`,
+        subject: `Kotahi | {{ senderName }} has mentioned you in a discussion`,
         ccEditors: false,
         body: `<p>
         <p>Dear {{ recipientName }},</p>
-        <p>{{ currentUser }} mentioned you in a discussion. Click here to reply; {{ discussionUrl }}</p>
+        <p>{{ senderName }} mentioned you in a discussion. Click here to reply; {{ discussionUrl }}</p>
         <p>Want to change your notification settings? Login to Kotahi and go to your profile page.</p>
         <p>Regards,<br>
         Kotahi team</p>`,
