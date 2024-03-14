@@ -5,7 +5,7 @@ module.exports = [
     subject: 'Kotahi | Task notification',
     ccEditors: false,
     body: `<p>
-        <p>Dear {{ recipientName }}</p>
+        <p>Dear {{ recipientName }},</p>
         <p>A task requires your attention<br />
         {{{ manuscriptLink }}}
         </p>
@@ -63,7 +63,7 @@ module.exports = [
     ccEditors: false,
     type: 'systemEmail',
     body: `<p>
-        <p>Dear {{ recipientName }}</p>
+        <p>Dear {{ recipientName }},</p>
 
         <p>You have new discussion messages. Click here to reply; {{{ discussionUrl }}}</p>
         <p>Want to change your notifications settings? Login to Kotahi and go to your profile page<br></p>
@@ -94,7 +94,7 @@ module.exports = [
     emailTemplateKey: 'authorProofingSubmittedEmailTemplate',
     description: 'Author proofing submitted',
     subject:
-      'Kotahi | {{ currentUser }} has completed proofing {{ manuscriptTitle }}',
+      'Kotahi | {{ senderName }} has completed proofing {{ manuscriptTitle }}',
     ccEditors: false,
     type: 'authorProofingSubmitted',
     body: `

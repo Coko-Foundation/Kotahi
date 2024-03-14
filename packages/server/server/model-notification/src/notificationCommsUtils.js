@@ -70,9 +70,9 @@ const sendChatNotification = async ({
   const group = await models.Group.query().findById(groupId)
 
   // send email notification
-  const baseUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+  const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
 
-  let discussionUrl = baseUrl
+  let discussionUrl = appUrl
 
   if (!channel.manuscriptId) {
     discussionUrl += `/admin/manuscripts` // admin discussion
@@ -95,7 +95,7 @@ const sendChatNotification = async ({
     } else if (roles.author) {
       discussionUrl += '/submit'
     } else {
-      discussionUrl = `${baseUrl}/dashboard`
+      discussionUrl = `${appUrl}/dashboard`
     }
   }
 
@@ -108,7 +108,7 @@ const sendChatNotification = async ({
   const data = {
     recipientName: recipient.username,
     discussionUrl,
-    currentUser: currentUser?.username,
+    senderName: currentUser?.username || '',
   }
 
   const activeConfig = await models.Config.getCached(groupId)

@@ -2,7 +2,6 @@
 const { ref } = require('objection')
 const axios = require('axios')
 const { map, chunk, orderBy } = require('lodash')
-const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
@@ -52,7 +51,6 @@ const {
   deletePublication,
 } = require('../../publishing/hypothesis')
 
-const sendEmailNotification = require('../../email-notifications')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
@@ -82,6 +80,7 @@ const {
   getUsersById,
   getUserRolesInManuscript,
   getSharedReviewersIds,
+  sendEmailWithPreparedData,
 } = require('../../model-user/src/userCommsUtils')
 
 const {
@@ -560,9 +559,9 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[channels]')
 
+      const sender = await models.User.query().findById(ctx.user)
       const author = await manuscript.getManuscriptAuthor()
-
-      const authorName = author ? author.username : ''
+      const authorName = author?.username || ''
 
       let assignedAuthors = []
 
@@ -611,33 +610,17 @@ const resolvers = {
         return updated
       }
 
-      const group = await models.Group.query().findById(manuscript.groupId)
-
-      const appUrl = config['pubsweet-client'].baseUrl
-      const urlFrag = `/${group.name}`
-      const baseUrl = appUrl + urlFrag
-      const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
-
-      const data = {
-        manuscriptTitle: manuscript.submission.$title,
-        authorName,
-        receiverName,
-        recipientName: receiverName,
-        shortId: manuscript.shortId,
-        manuscriptProductionLink: manuscriptProductionPageUrl,
-      }
-
       if (selectedTemplate) {
-        const selectedEmailTemplate =
-          await models.EmailTemplate.query().findById(selectedTemplate)
+        const notificationInput = {
+          manuscript,
+          selectedEmail: receiverEmail,
+          selectedTemplate,
+          currentUser: sender?.username || '',
+          groupId: manuscript.groupId,
+        }
 
         try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
-            manuscript.groupId,
-          )
+          await sendEmailWithPreparedData(notificationInput, ctx, sender)
 
           let channelId
 
@@ -732,7 +715,7 @@ const resolvers = {
       return id
     },
     // TODO Rename to something like 'setReviewerResponse'
-    async reviewerResponse(_, { action, teamId }, context) {
+    async reviewerResponse(_, { action, teamId }, ctx) {
       const {
         Review: ReviewModel,
         // eslint-disable-next-line global-require
@@ -751,7 +734,7 @@ const resolvers = {
 
       for (let i = 0; i < team.members.length; i += 1) {
         if (
-          team.members[i].userId === context.user &&
+          team.members[i].userId === ctx.user &&
           team.members[i].status !== 'completed'
         )
           team.members[i].status = action
@@ -762,14 +745,14 @@ const resolvers = {
       if (action === 'accepted') {
         await addUserToManuscriptChatChannel({
           manuscriptId: team.objectId,
-          userId: context.user,
+          userId: ctx.user,
           type: 'editorial',
         })
       }
 
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
-        userId: context.user,
+        userId: ctx.user,
         isDecision: false,
       })
 
@@ -779,7 +762,7 @@ const resolvers = {
           isDecision: false,
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
-          userId: context.user,
+          userId: ctx.user,
           manuscriptId: team.objectId,
           jsonData: '{}',
         }
@@ -790,7 +773,7 @@ const resolvers = {
       if (action === 'rejected') {
         // Automated email reviewReject on rejection
         const reviewer = await models.User.query()
-          .findById(context.user)
+          .findById(ctx.user)
           .withGraphJoined('[defaultIdentity]')
 
         const reviewerName =
@@ -844,38 +827,17 @@ const resolvers = {
           return team
         }
 
-        let instance
-
-        if (config['notification-email'].use_colab === 'true') {
-          instance = 'prc'
-        } else {
-          instance = 'generic'
-        }
-
-        const data = {
-          articleTitle: manuscript.submission.$title,
-          authorName:
-            manuscript.submitter.username ||
-            manuscript.submitter.defaultIdentity.name ||
-            '',
-          receiverName,
-          recipientName: receiverName,
-          reviewerName,
-          instance,
-          shortId: manuscript.shortId,
-        }
-
         if (selectedTemplate) {
-          const selectedEmailTemplate =
-            await models.EmailTemplate.query().findById(selectedTemplate)
+          const notificationInput = {
+            manuscript,
+            selectedEmail: receiverEmail,
+            selectedTemplate,
+            currentUser: reviewerName,
+            groupId: manuscript.groupId,
+          }
 
           try {
-            await sendEmailNotification(
-              receiverEmail,
-              selectedEmailTemplate,
-              data,
-              manuscript.groupId,
-            )
+            await sendEmailWithPreparedData(notificationInput, ctx, reviewer)
 
             // Send Notification in Editorial Discussion Panel
             models.Message.createMessage({
@@ -994,33 +956,17 @@ const resolvers = {
           return updated
         }
 
-        const group = await models.Group.query().findById(manuscript.groupId)
-
-        const appUrl = config['pubsweet-client'].baseUrl
-        const urlFrag = `/${group.name}`
-        const baseUrl = appUrl + urlFrag
-        const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
-
-        const data = {
-          manuscriptTitle: manuscript.submission.$title,
-          receiverName,
-          currentUser: author.username,
-          recipientName: receiverName,
-          shortId: manuscript.shortId,
-          manuscriptProductionLink: manuscriptProductionPageUrl,
-        }
-
         if (selectedTemplate) {
-          const selectedEmailTemplate =
-            await models.EmailTemplate.query().findById(selectedTemplate)
+          const notificationInput = {
+            manuscript,
+            selectedEmail: receiverEmail,
+            selectedTemplate,
+            currentUser: author?.username || '',
+            groupId: manuscript.groupId,
+          }
 
           try {
-            await sendEmailNotification(
-              receiverEmail,
-              selectedEmailTemplate,
-              data,
-              manuscript.groupId,
-            )
+            await sendEmailWithPreparedData(notificationInput, ctx, author)
 
             let channelId
 
@@ -1067,6 +1013,8 @@ const resolvers = {
 
       const activeConfig = await models.Config.getCached(manuscript.groupId)
 
+      const sender = await models.User.query().findById(ctx.user)
+
       const receiverEmail = manuscript.submitter.email
       /* eslint-disable-next-line */
       const receiverName =
@@ -1085,28 +1033,17 @@ const resolvers = {
         return commonUpdateManuscript(id, input, ctx)
       }
 
-      const data = {
-        articleTitle: manuscript.submission.$title,
-        authorName:
-          manuscript.submitter.username ||
-          manuscript.submitter.defaultIdentity.name ||
-          '',
-        receiverName,
-        recipientName: receiverName,
-        shortId: manuscript.shortId,
-      }
-
       if (selectedTemplate) {
-        const selectedEmailTemplate =
-          await models.EmailTemplate.query().findById(selectedTemplate)
+        const notificationInput = {
+          manuscript,
+          selectedEmail: receiverEmail,
+          selectedTemplate,
+          currentUser: sender?.username || '',
+          groupId: manuscript.groupId,
+        }
 
         try {
-          await sendEmailNotification(
-            receiverEmail,
-            selectedEmailTemplate,
-            data,
-            manuscript.groupId,
-          )
+          await sendEmailWithPreparedData(notificationInput, ctx, sender)
 
           let channelId
 
@@ -1192,6 +1129,8 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
+        const sender = await models.User.query().findById(ctx.user)
+
         const selectedTemplate =
           activeConfig.formData.eventNotification
             ?.evaluationCompleteEmailTemplate
@@ -1199,29 +1138,19 @@ const resolvers = {
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-        const group = await models.Group.query().findById(manuscript.groupId)
-
-        const urlFrag = `/${group.name}`
-        const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
-
         if (emailValidationResult && receiverName) {
-          const data = {
-            articleTitle: manuscript.submission.$title,
-            authorName:
-              manuscript.submitter.username ||
-              manuscript.submitter.defaultIdentity.name ||
-              '',
-            receiverName,
-            recipientName: receiverName,
-            appUrl: baseUrl,
-            shortId: manuscript.shortId,
-          }
-
           if (selectedTemplate) {
-            const selectedEmailTemplate =
-              await models.EmailTemplate.query().findById(selectedTemplate)
+            const notificationInput = {
+              manuscript,
+              selectedEmail: receiverEmail,
+              selectedTemplate,
+              currentUser: sender?.username || '',
+              groupId: manuscript.groupId,
+            }
 
             try {
+              await sendEmailWithPreparedData(notificationInput, ctx, sender)
+
               // Add Email Notification Record in Editorial Discussion Panel
               const author = manuscript.teams.find(team => {
                 if (team.role === 'author') {
@@ -1242,13 +1171,6 @@ const resolvers = {
                 channelId,
                 userId: manuscript.submitterId,
               })
-
-              await sendEmailNotification(
-                receiverEmail,
-                selectedEmailTemplate,
-                data,
-                manuscript.groupId,
-              )
             } catch (e) {
               /* eslint-disable-next-line */
               console.log('email was not sent', e)

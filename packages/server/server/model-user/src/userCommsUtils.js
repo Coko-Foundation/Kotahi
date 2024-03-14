@@ -114,7 +114,7 @@ const sendEmailWithPreparedData = async (
     selectedTemplate,
     externalEmail, // New User Email
     externalName, // New User username
-    currentUser,
+    currentUser, // Name of the currentUser or senderName
     groupId,
   } = inputParsed
 
@@ -122,16 +122,14 @@ const sendEmailWithPreparedData = async (
     trx,
   ).findById(selectedTemplate)
 
-  const appUrl = config['pubsweet-client'].baseUrl
   const receiverEmail = externalEmail || selectedEmail
 
   let receiverName = externalName
 
   const group = await models.Group.query(trx).findById(groupId)
 
-  const urlFrag = `/${group.name}`
-  const baseUrl = appUrl + urlFrag
-  let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
+  const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+  let manuscriptPageUrl = `${appUrl}/versions/${manuscript.id}`
   let roles = {}
 
   if (selectedEmail) {
@@ -149,8 +147,7 @@ const sendEmailWithPreparedData = async (
     })
   }
 
-  const manuscriptProductionPageUrl = `${baseUrl}/versions/${manuscript.id}/production`
-
+  // manuscriptPageUrl based on user roles
   if (roles.groupManager || roles.anyEditor) {
     manuscriptPageUrl += '/decision?tab=decision'
   } else if (roles.reviewer) {
@@ -158,9 +155,10 @@ const sendEmailWithPreparedData = async (
   } else if (roles.author) {
     manuscriptPageUrl += '/submit'
   } else {
-    manuscriptPageUrl = `${baseUrl}/dashboard`
+    manuscriptPageUrl = `${appUrl}/dashboard`
   }
 
+  const manuscriptProductionPageUrl = `${appUrl}/versions/${manuscript.id}/production` // manuscriptProductionPageUrl used only for author proofing flow
   const manuscriptId = manuscript.id
 
   const manuscriptObject = await models.Manuscript.query(trx).findById(
@@ -193,6 +191,7 @@ const sendEmailWithPreparedData = async (
 
   let invitationId = ''
 
+  // authorInvitation, reviewerInvitation create Invitation
   if (
     ['authorInvitation', 'reviewerInvitation'].includes(
       selectedEmailTemplateData.emailTemplateType,
@@ -240,6 +239,7 @@ const sendEmailWithPreparedData = async (
     )
   }
 
+  // TODO: check and remove instance is it still used? May be deadcode
   let instance
 
   if (config['notification-email'].use_colab === 'true') {
@@ -255,24 +255,20 @@ const sendEmailWithPreparedData = async (
       receiverEmail,
       selectedEmailTemplateData,
       {
-        manuscriptTitle: manuscript.submission.$title,
         authorName,
         senderName: currentUser,
         recipientName: receiverName,
-        manuscriptNumber: manuscript.shortId,
-        currentUser,
-        receiverName,
         ccEmails,
-        shortId: manuscript.shortId,
         instance,
         toEmail,
         invitationId,
-        submissionLink: manuscript.submission.$sourceUri,
         purpose,
         status,
         senderId,
-        appUrl: baseUrl,
+        manuscriptNumber: manuscript.shortId,
         manuscriptLink: manuscriptPageUrl,
+        manuscriptTitle: manuscript.submission.$title,
+        manuscriptTitleLink: manuscript.submission.$sourceUri,
         manuscriptProductionLink: manuscriptProductionPageUrl,
       },
       manuscriptObject.groupId,

@@ -16,6 +16,7 @@ const renderTemplate = async (templateContent, data) => {
 
 const sendEmailNotification = async (receiver, template, data, groupId) => {
   const activeConfig = await models.Config.getCached(groupId)
+  const group = await models.Group.query().findById(groupId)
 
   let ccEmails = template.emailContent?.cc || ''
 
@@ -38,15 +39,17 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     data,
   )
 
+  const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+
   // Modify the email template using Handlebars
   mailOptions.html = await renderTemplate(template.emailContent.body, {
     ...data,
-    acceptInviteLink: `<a href="${data.appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
-    declineInviteLink: `<a href="${data.appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
-    manuscriptTitleLink: `<a href="${data.submissionLink}">${data.manuscriptTitle}</a>`,
+    acceptInviteLink: `<a href="${appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
+    declineInviteLink: `<a href="${appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
+    loginLink: `<a href="${appUrl}/login" target="_blank">${appUrl}/login</a>`,
+    manuscriptTitleLink: `<a href="${data.manuscriptTitleLink}">${data.manuscriptTitle}</a>`,
     manuscriptLink: `<a href="${data.manuscriptLink}" target="_blank">${data.manuscriptLink}</a>`,
     manuscriptProductionLink: `<a href="${data.manuscriptProductionLink}" target="_blank">${data.manuscriptProductionLink}</a>`,
-    loginLink: `<a href="${data.appUrl}/login" target="_blank">${data.appUrl}/login</a>`,
   })
 
   mailOptions.from = activeConfig.formData.notification.gmailSenderEmail
