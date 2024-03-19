@@ -8,16 +8,14 @@ const setInitialValues = (
   existingConfig,
   selectedFile,
   fieldName,
-  setFileId,
+  tempStoredFiles,
 ) => {
-  const initialData = { ...existingConfig }
+  const initialData = { ...existingConfig, ...tempStoredFiles?.current }
 
   if (selectedFile?.length < 1) {
     initialData[fieldName] = [initialData[fieldName]]
-    setFileId(initialData[fieldName][0]?.id)
   } else {
     initialData[fieldName] = selectedFile
-    setFileId(selectedFile?.id)
   }
 
   return initialData
@@ -35,26 +33,27 @@ const FilesUploadWithOnChange = ({ handleFileChange, ...otherProps }) => (
 
 const BrandIcon = ({
   config,
-  setFileId,
   createFile,
   fieldName,
   fileType,
   deleteFile,
   mimeTypesToAccept,
+  tempStoredFiles,
   ...restProps
 }) => {
   const [selectedFile, setSelectedFile] = useState([])
 
   const handleFileChange = file => {
-    setFileId(file?.id)
     setSelectedFile(file)
+    // eslint-disable-next-line no-param-reassign
+    tempStoredFiles.current[fieldName] = file
   }
 
   const initialData = setInitialValues(
     config,
     selectedFile,
     fieldName,
-    setFileId,
+    tempStoredFiles,
   )
 
   return (

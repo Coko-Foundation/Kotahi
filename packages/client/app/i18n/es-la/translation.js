@@ -398,6 +398,11 @@ const esLa = {
       accepted: 'Invitación {{invitationType}} aceptada',
     },
     configPage: {
+      generalTab: 'General',
+      workflowTab: 'Flujo de trabajo',
+      productionTab: 'Producción',
+      integrationsTab: 'Integraciones y servicios de publicación',
+      notificationsTab: 'Notificaciones y correo electrónico',
       Configuration: 'Configuración',
       'Instance Type': 'Tipo de Instancia',
       'Group Identity': 'Identidad del Grupo',
@@ -504,7 +509,7 @@ const esLa = {
         'Todos los usuarios tienen roles de Gerente de Grupo y Administrador',
       kotahiApis: 'API de Kotahi',
       tokens: 'Tokens',
-      Submit: 'Enviar',
+      Update: 'Actualizar',
       article: 'artículo',
       'peer review': 'revisión de pares',
       showTabs: {

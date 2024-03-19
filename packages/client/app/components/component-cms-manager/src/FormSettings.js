@@ -5,13 +5,14 @@ import ContentWaxEditor from './editor/ContentWaxEditor'
 
 import StaticTextInput from './components/StaticTextInput'
 
-import { FormTextInput, ColorInput, SimpleWaxEditorContainer } from './style'
+import { FormTextInput, SimpleWaxEditorContainer } from './style'
 
 import { Checkbox } from '../../shared/Checkbox'
 
 import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
 
 import { hasValue } from '../../../shared/htmlUtils'
+import { ColorPicker } from '../../shared'
 
 const createEditorComponent = (EditorComponent, shouldWrap = true) => {
   return ({ validationStatus, setTouched, onChange, ...rest }) => {
@@ -50,7 +51,7 @@ export const inputComponents = {
   StaticTextInput: staticTextInput,
   SimpleWaxEditor: simpleWaxEditor,
   AbstractEditor: richEditor,
-  ColorInput,
+  ColorInput: ColorPicker,
 }
 
 export const inputFields = [

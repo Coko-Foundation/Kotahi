@@ -11,11 +11,17 @@ import { Icon } from './Icon'
 import { color } from '../../theme'
 
 const Root = styled.div`
+  align-items: center;
   border: 1px dashed ${color.gray60};
   border-radius: ${th('borderRadius')};
+  display: flex;
   height: ${grid(8)};
-  line-height: ${grid(8)};
+  justify-content: center;
+  /* line-height: ${grid(8)}; */
+  padding: 0 ${grid(1)};
   text-align: center;
+  white-space: nowrap;
+  width: fit-content;
 `
 
 const Files = styled.div`
