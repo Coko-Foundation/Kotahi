@@ -393,6 +393,11 @@ const en = {
       accepted: 'Accepted {{invitationType}} invitation',
     },
     configPage: {
+      generalTab: 'General',
+      workflowTab: 'Workflow',
+      productionTab: 'Production',
+      integrationsTab: 'Integrations and Publishing Endpoints',
+      notificationsTab: 'Notifications and E-mail',
       Configuration: 'Configuration',
       'Instance Type': 'Instance Type',
       'Group Identity': 'Group Identity',
@@ -486,7 +491,7 @@ const en = {
       userIsAdmin: 'All users are assigned Group Manager and Admin roles',
       kotahiApis: 'Kotahi APIs',
       tokens: 'Tokens',
-      Submit: 'Submit',
+      Update: 'Update',
       article: 'article',
       'peer review': 'peer review',
       showTabs: {

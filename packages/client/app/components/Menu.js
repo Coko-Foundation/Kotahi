@@ -9,6 +9,10 @@ import { UserAvatar } from './component-avatar/src'
 import { color } from '../theme'
 import { convertCamelCaseToTitleCase } from '../shared/textUtils'
 
+const StyledLink = styled(Link)`
+  user-select: none;
+`
+
 const Root = styled.nav`
   background: linear-gradient(
     134deg,
@@ -27,7 +31,10 @@ const UserName = styled.div`
   word-break: break-word;
 `
 
-const NonLink = styled.div``
+const NonLink = styled.div`
+  cursor: pointer;
+  user-select: none;
+`
 
 const Section = styled.div``
 
@@ -57,7 +64,7 @@ const NavItem = ({
   hasAlert,
 }) =>
   link ? (
-    <Link className={className} onClick={onClick} to={link}>
+    <StyledLink className={className} onClick={onClick} to={link}>
       <span>
         {icon && <Icon>{icon}</Icon>}
         {name}
@@ -66,7 +73,7 @@ const NavItem = ({
       {menu ? (
         <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
       ) : null}
-    </Link>
+    </StyledLink>
   ) : (
     <NonLink className={className} onClick={onClick}>
       <span>

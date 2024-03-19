@@ -401,6 +401,11 @@ const fr = {
       accepted: "A accepté l'invitation {{invitationType}}",
     },
     configPage: {
+      generalTab: 'Général',
+      workflowTab: 'Flux de travail',
+      productionTab: 'Production',
+      integrationsTab: 'Intégrations et points de terminaison de publication',
+      notificationsTab: 'Notifications et courrier électronique',
       Configuration: 'Configuration',
       'Instance Type': "Type d'instance",
       'Group Identity': 'Identité du groupe',
@@ -509,7 +514,7 @@ const fr = {
         "Tous les utilisateurs sont assignés les rôles de gestionnaire de groupe et d'administrateur",
       kotahiApis: 'API Kotahi',
       tokens: 'Jetons',
-      Submit: 'Soumettre',
+      Update: 'Mise à jour',
       article: 'article',
       'peer review': 'évaluation par les pairs',
       showTabs: {

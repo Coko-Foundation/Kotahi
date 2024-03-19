@@ -400,6 +400,11 @@ const ru = {
       accepted: '{{invitationType}} принял приглашение',
     },
     configPage: {
+      generalTab: 'Общие',
+      workflowTab: 'Рабочий процесс',
+      productionTab: 'Производство',
+      integrationsTab: 'Интеграции и конечные точки публикации',
+      notificationsTab: 'Уведомления и электронная почта',
       Configuration: 'Настройки',
       'Instance Type': 'Тип элемента',
       'Group Identity': 'Групповая идентификация',
@@ -502,7 +507,7 @@ const ru = {
         'Всем пользователям назначаются роли администратора и редактора',
       kotahiApis: 'Котахи API',
       tokens: 'Токены',
-      Submit: 'Подтвердить',
+      Update: 'Обновлять',
       article: 'Статья',
       'peer review': 'Рецензия',
       showTabs: {

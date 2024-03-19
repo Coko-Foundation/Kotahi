@@ -15,10 +15,16 @@ export const CompactChatButton = styled(RoundIconButton)`
 `
 
 export const Tab = styled.div`
+  --bgActive: ${color.backgroundA};
+  --bgInactive: linear-gradient(
+    180deg,
+    #ececec 0%,
+    #ececec 40.1%,
+    #d6d6d6 100%
+  );
+
   background: ${({ active }) =>
-    active
-      ? color.backgroundA
-      : 'linear-gradient(180deg, #ECECEC 0%, #ECECEC 40.1%, #D6D6D6 100%)'};
+    active ? `var(--bgActive)` : `var(--bgInactive)`};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;
   box-shadow: ${({ active }) =>
     active
