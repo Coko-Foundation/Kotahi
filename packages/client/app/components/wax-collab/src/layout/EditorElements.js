@@ -194,9 +194,11 @@ const EditorStyles = css`
   .math-node {
     cursor: auto;
     font-family: 'Consolas', 'Ubuntu Mono', monospace;
-    font-size: 0.95em;
+    font-size: 16px;
     min-height: 1em;
     min-width: 1em;
+    position: relative;
+    top: 7px;
 
     .ProseMirror {
       background: #eee;
@@ -205,6 +207,10 @@ const EditorStyles = css`
       min-height: 100%;
       padding: 0;
     }
+  }
+
+  p .math-node {
+    margin-right: 4px;
   }
 
   .math-node.empty-math .math-render::before {
