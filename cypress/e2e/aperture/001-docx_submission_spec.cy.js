@@ -34,7 +34,7 @@ describe('Upload manuscript test', () => {
 
       // assert form exists in dashboard
 
-      DashboardPage.getSectionTitleWithText('My Submissions')
+      DashboardPage.getSectionTitleWithText('My submissions')
       DashboardPage.clickDashboardTab(1)
       DashboardPage.clickDashboardTab(0)
       DashboardPage.getSubmissionTitle().should('contain', data.title3)

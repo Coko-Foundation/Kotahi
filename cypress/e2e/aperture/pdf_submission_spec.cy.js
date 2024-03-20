@@ -26,7 +26,7 @@ describe('Upload manuscript test', () => {
       SubmissionFormPage.clickSubmitYourManuscript() // Submit your form
 
       // assert form exists in dashboard
-      DashboardPage.getSectionTitleWithText('My Submissions')
+      DashboardPage.getSectionTitleWithText('My submissions')
       // the following line is added so that it gives enough time for the dom to update the title of the submission in dashboard.
       DashboardPage.clickDashboardTab(1)
       DashboardPage.clickDashboardTab(0)
