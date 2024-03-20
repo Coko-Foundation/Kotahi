@@ -14,7 +14,7 @@ module.exports = {
   },
   'pubsweet-client': {
     protocol: 'http',
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 4000,
   },
   mailer: {

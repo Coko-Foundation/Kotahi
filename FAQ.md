@@ -6,24 +6,36 @@
 
 Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, if `NODE_ENV` is set to `development`, the app will expect you to be using an account on ORCID's sandbox (this can be overridden via the `USE_SANDBOXED_ORCID` flag). ORCID's sandbox will only send emails to mailinator accounts, so you have to register on ORCID's sandbox with a mailinator one-time email address.
 
-Here's how to set this up in less than 20 easy steps:
+**Mailinator (part 1)**:
 
 1. Go to [mailinator.com](https://mailinator.com)
 2. In the search bar at the top of the page enter your desired username (we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a username that is unlikely to be used already by someone else)
 3. You'll be taken to a new page. This is your inbox for `mycokotestemail@mailinator.com`. Keep this page open. (also keep in mind that this is a fully **public** inbox)
-4. Go to [sandbox.orcid.org](https://sandbox.orcid.org)
-5. Click on "SIGN IN/REGISTER", then on "register now"
-6. Fill out the form. In the email field use your newly created mailinator email.
-7. Fill out the rest of the form until you register.
-8. You'll be taken to your dashboard. Click on your name at the top right, then "Developer Tools".
-9. Click on the "Verify your email address to get started" button.
-10. Go to your mailinator inbox. Open the email you received from orcid and click on the "Verify your email address" button.
-11. Go back to your developer tools section in ORCID. Click on "Register for the free ORCID public API", check the consent box and click on "Continue".
-12. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development, so you could enter e.g. `kotahi dev`, `http://www.google.com` (any valid URL), `description`.
-13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://localhost:4000/auth/orcid/callback`. [1] (Note: ORCID supports multiple redirect URIs, so you can add both http and https URIs if needed.)
-14. Click on the floating save icon on the right.
-15. You should now be presented with a gray box that gives you a client id and a client secret.
-16. Edit your environment file (copy `.env.orcid.example` to `.env` if you don't have one yet) to include the client id and client secret from the step above, e.g.
+
+**Orcid (part 1)**
+
+1. Go to [sandbox.orcid.org](https://sandbox.orcid.org)
+2. Click on "SIGN IN/REGISTER", then on "register now"
+3. Fill out the form. In the email field use your newly created mailinator email.
+4. Fill out the rest of the form until you register.
+5. You'll be taken to your dashboard. Click on your name at the top right, then "Developer Tools".
+6. Click on the "Verify your email address to get started" button.
+
+**Mailinator (part 2)**
+
+1. Go to your mailinator inbox. Open the email you received from orcid and click on the "Verify your email address" button.
+
+**Orcid (part 2)**
+
+1. Go back to your developer tools section in ORCID. Click on "Register for the free ORCID public API", check the consent box and click on "Continue".
+2. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development, so you could enter e.g. `kotahi dev`, `http://www.google.com` (any valid URL), `description`.
+3. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. For development, you'll probably be running the client on `localhost`, but ORCID requires a valid url, so replace that with `127.0.0.1`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://127.0.0.1:4000/auth/orcid/callback`. (Note: ORCID supports multiple redirect URIs, so you can add both http and https URIs if needed.)
+4. Click on the floating save icon on the right.
+5. You should now be presented with a gray box that gives you a client id and a client secret.
+
+**Kotahi**
+
+1. Edit your environment file (`.env` in your root folder) to include the client id and client secret from the step above, e.g.
 
 ```
 USE_SANDBOXED_ORCID=true
@@ -31,20 +43,11 @@ ORCID_CLIENT_ID=APP-B6O346VLWWXBQ427
 ORCID_CLIENT_SECRET=b37055db-4405-4dfb-a547-d393cd63bb2a
 ```
 
-17. (Re-)Start the app via `docker-compose up`.
+2. (Re-)Start the app via `docker-compose up`.
 
 You should now be able to use the login at `http://localhost:4000/login`.
 
-18. If clicking on the Login with ORCHID or Register with ORCHID button the following error message occurs
-
-Error: The provided client id APP-QOSMNFDSJDSIJDSDS # please make your own! see https://gitlab.coko.foundation/kotahi/kotah-/blob/main/FAQ.md#how-do-i-setup-orcid-for-development is invalid.
-
-Then remove the comment available after client id, provided by you in the .env file available in the directory, where you have
-pulled Kotahi code from gitlab.
-
 _Disclaimer: ORCID is a separate organisation from Coko and we are in no way affiliated with them. This is meant as a guide to make a developer's life easier. If you encounter issues with ORCID services not working as expected, please contact their support._
-
-[1] Even though this URL does not exist for the client (ie. it isn't handled by our `react-router` setup), it will be redirected to the server via `webpack-dev-server`'s proxy.
 
 #### Why is ORCID's login page not loading?
 
