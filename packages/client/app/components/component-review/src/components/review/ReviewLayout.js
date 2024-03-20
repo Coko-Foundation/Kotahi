@@ -1,10 +1,10 @@
-import React, { useContext, useCallback, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuid } from 'uuid'
-import { set, debounce } from 'lodash'
+import { set } from 'lodash'
 import { gql } from '@apollo/client'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
@@ -160,7 +160,9 @@ const ReviewLayout = ({
         r => r.user?.id === currentUser.id && !r.isDecision,
       )
 
-      const reviewData = reviewForCurrentUserData?.jsonData || {}
+      const reviewData = reviewForCurrentUserData
+        ? JSON.parse(reviewForCurrentUserData?.jsonData)
+        : {}
 
       const reviewersTeam = latestManuscript.teams.find(
         team => team.role === 'reviewer',
@@ -170,7 +172,7 @@ const ReviewLayout = ({
         member => member.user.id === currentUser?.id,
       )?.status
 
-      const existingReview = latestManuscript.reviews.find(
+      const existingReview = latestManuscript.reviews?.find(
         review => review.user?.id === currentUser.id && !review.isDecision,
       ) || {
         id: uuid(),
@@ -235,13 +237,6 @@ const ReviewLayout = ({
         })
       }
 
-      const debouncedUpdateReviewJsonData = useCallback(
-        debounce(updateReviewJsonData ?? (() => {}), 500),
-        [],
-      )
-
-      useEffect(() => debouncedUpdateReviewJsonData.flush, [])
-
       const handleSubmit = async () => {
         await updateReviewerStatus({
           variables: {
@@ -274,7 +269,7 @@ const ReviewLayout = ({
                 manuscriptShortId={latestManuscript.shortId}
                 manuscriptStatus={latestManuscript.status}
                 onChange={(value, path) =>
-                  debouncedUpdateReviewJsonData(
+                  updateReviewJsonData(
                     latestManuscript.id,
                     existingReview,
                     value,
