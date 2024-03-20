@@ -172,16 +172,12 @@ const esLa = {
       Dashboard: 'Tablero',
       'New submission': '+ Nueva presentación',
       'New Alerts': 'Nuevas Alertas',
-      'My Submissions': 'Mis Presentaciones',
-      'To Review': 'Para Revisión',
-      "Manuscripts I'm editor of": 'Manuscritos en los que soy editor',
+      'My Submissions': 'Mis presentaciones',
+      'To Review': 'Asignaciones de revisión',
+      "Manuscripts I'm editor of": 'Cola de edición',
       mySubmissions: {
-        'My Submissions': 'Mis Presentaciones',
         'Provide production feedback': 'Proporcionar comentarios de producción',
         'View production feedback': 'Ver comentarios de producción',
-      },
-      toReview: {
-        'To Review': 'Para Revisión',
       },
     },
     reviewPage: {
@@ -419,8 +415,8 @@ const esLa = {
       pagesVisibleToRegistered:
         'Páginas del panel de control visibles para usuarios registrados',
       'My Submissions': 'Mis Envíos',
-      'To Review': 'Por Revisar',
-      "Manuscripts I'm editor of": 'Manuscritos de los que soy editor',
+      'To Review': 'Asignaciones de revisión',
+      "Manuscripts I'm editor of": 'Cola de edición',
       'Manuscripts page': 'Página de Manuscritos',
       'List columns to display on the Manuscripts page':
         'Listar columnas para mostrar en la página de Manuscritos',

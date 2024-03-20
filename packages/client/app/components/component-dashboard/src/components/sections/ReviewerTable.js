@@ -85,7 +85,7 @@ const ReviewerTable = ({
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>{t('dashboardPage.toReview.To Review')}</Title>
+        <Title>{t('dashboardPage.To Review')}</Title>
       </SectionHeader>
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}

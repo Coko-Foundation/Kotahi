@@ -174,15 +174,11 @@ const ru = {
       'New submission': 'Загрузить новую статью',
       'New Alerts': 'Новые оповещения',
       'My Submissions': 'Мои статьи',
-      'To Review': 'Статьи для рецензирования',
-      "Manuscripts I'm editor of": 'Статьи для редактирования',
+      'To Review': 'Обзор назначений',
+      "Manuscripts I'm editor of": 'Очередь редактирования',
       mySubmissions: {
-        'My Submissions': 'Мои статьи',
         'Provide production feedback': 'Оставьте отзыв о производстве',
         'View production feedback': 'Посмотреть отзывы о производстве',
-      },
-      toReview: {
-        'To Review': 'Статьи для рецензирования',
       },
     },
     reviewPage: {
@@ -421,8 +417,8 @@ const ru = {
       pagesVisibleToRegistered:
         'Страницы панели управления, доступные зарегистрированным пользователям',
       'My Submissions': 'Мои статьи',
-      'To Review': 'Статьи для рецензирования',
-      "Manuscripts I'm editor of": 'Статьи для редактирования',
+      'To Review': 'Обзор назначений',
+      "Manuscripts I'm editor of": 'Очередь редактирования',
       'Manuscripts page': 'Страница со статьями',
       'List columns to display on the Manuscripts page':
         'Список полей, отображаемых на странице со статьями',

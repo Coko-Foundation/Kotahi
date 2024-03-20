@@ -172,17 +172,13 @@ const fr = {
       'New submission': '+ Nouvelle soumission',
       'New Alerts': 'Nouvelles alertes',
       'My Submissions': 'Mes soumissions',
-      'To Review': 'À réviser',
-      "Manuscripts I'm editor of": 'Manuscrits dont je suis éditeur',
+      'To Review': 'Affectations de révision',
+      "Manuscripts I'm editor of": "File d'attente d'édition",
       mySubmissions: {
-        'My Submissions': 'Mes soumissions',
         'Provide production feedback':
           'Fournir des commentaires sur la production',
         'View production feedback':
           'Afficher les commentaires sur la production',
-      },
-      toReview: {
-        'To Review': 'À réviser',
       },
     },
     reviewPage: {
@@ -422,8 +418,8 @@ const fr = {
       pagesVisibleToRegistered:
         'Pages du tableau de bord visibles aux utilisateurs enregistrés',
       'My Submissions': 'Mes soumissions',
-      'To Review': 'À évaluer',
-      "Manuscripts I'm editor of": "Manuscrits dont je suis l'éditeur",
+      'To Review': 'Affectations de révision',
+      "Manuscripts I'm editor of": "File d'attente d'édition",
       'Manuscripts page': 'Page des manuscrits',
       'List columns to display on the Manuscripts page':
         'Liste des colonnes à afficher sur la page des manuscrits',

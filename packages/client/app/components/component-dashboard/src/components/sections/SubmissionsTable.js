@@ -69,7 +69,7 @@ const SubmissionsTable = ({
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>{t('dashboardPage.mySubmissions.My Submissions')}</Title>
+        <Title>{t('dashboardPage.My Submissions')}</Title>
       </SectionHeader>
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}
