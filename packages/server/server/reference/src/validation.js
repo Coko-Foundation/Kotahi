@@ -55,6 +55,16 @@ const createFormattedReference = async (data, groupId) => {
     'container-title': journalTitle,
   } = data
 
+  // console.log('issued data:', data.issued)
+
+  const rawDate = data.issued?.raw ? data.issued.raw : false
+
+  const yearFromDateParts = data.issued['date-parts']?.length
+    ? String(data.issued['date-parts'][0][0] || '')
+    : ''
+
+  const year = rawDate || yearFromDateParts
+
   const outputData = {
     doi,
     DOI: doi,
@@ -62,6 +72,7 @@ const createFormattedReference = async (data, groupId) => {
     page,
     issue,
     volume,
+    issued: { raw: String(year) },
     title: pluckTitle(title),
     journalTitle: pluckJournalTitle(journalTitle),
   }
@@ -69,7 +80,6 @@ const createFormattedReference = async (data, groupId) => {
   const formattedCitation = await formatCitation(outputData, groupId)
 
   outputData.formattedCitation = formattedCitation.result
-
   return outputData
 }
 
@@ -97,7 +107,7 @@ const getMatchingReferencesFromCrossRef = async (
         select: 'DOI,author,issue,page,title,volume,container-title',
         mailto: crossrefRetrievalEmail,
       },
-      timeout: 5000,
+      timeout: 15000,
       headers: {
         'User-Agent': `Kotahi (Axios 0.21; mailto:${crossrefRetrievalEmail})`,
       },
@@ -131,10 +141,10 @@ const getFormattedReferencesFromCrossRef = async (
       params: {
         'query.bibliographic': reference,
         rows: count,
-        select: 'DOI,author,issue,page,title,volume,container-title',
+        select: 'DOI,author,issue,page,title,volume,container-title,issued',
         mailto: crossrefRetrievalEmail || '',
       },
-      timeout: 5000,
+      timeout: 15000,
       headers: {
         'User-Agent': `Kotahi (Axios 0.21; mailto:${
           crossrefRetrievalEmail || ''
@@ -163,7 +173,7 @@ const getReferenceWithDoi = async (doi, crossrefRetrievalEmail) => {
       params: {
         mailto: crossrefRetrievalEmail,
       },
-      timeout: 5000,
+      timeout: 15000,
       headers: {
         'User-Agent': `Kotahi (Axios 0.21; mailto:${crossrefRetrievalEmail})`,
       },

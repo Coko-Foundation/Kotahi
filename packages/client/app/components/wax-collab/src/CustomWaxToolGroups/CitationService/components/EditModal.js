@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { sanitize } from 'isomorphic-dompurify'
 import { debounce } from 'lodash'
+import { ConfigContext } from '../../../../../config/src'
 import { InputP, Button, StatusBar, CitationVersionWrapper } from './styles'
 
 // TODO:
@@ -12,11 +14,15 @@ import { InputP, Button, StatusBar, CitationVersionWrapper } from './styles'
 const EditModal = ({
   citationData, // why is this sometimes coming in as a string? That's probably leading to problems.
   formattedCitation,
+  formattedOriginalText,
   setCitationData,
   closeModal,
   styleReference,
 }) => {
   // console.log('Coming in: ', citationData, formattedCitation)
+  const config = useContext(ConfigContext)
+  const { styleName } = config?.production
+  const { t } = useTranslation()
   const [currentText, setCurrentText] = useState(formattedCitation)
   const [reRender, setReRender] = useState(-1)
   const [currentCitation, setCurrentCitation] = useState({})
@@ -46,7 +52,7 @@ const EditModal = ({
     setCurrentCitation(newCitation)
   }
 
-  const debounceReformat = useCallback(debounce(formatCurrentCitation, 1000), [
+  const debounceReformat = useCallback(debounce(formatCurrentCitation, 250), [
     formatCurrentCitation,
   ])
 
@@ -63,7 +69,7 @@ const EditModal = ({
       title: '',
       formattedCitation,
       issue: '',
-      issued: '',
+      issued: { raw: '' },
       page: '',
       type: '', // do we need this?
       volume: '',
@@ -78,14 +84,30 @@ const EditModal = ({
   return typeof currentCitation === 'object' &&
     JSON.stringify(currentCitation) !== '{}' ? (
     <div>
-      <h4>Edit citation</h4>
-      <CitationVersionWrapper className="selected">
+      <h4>
+        Edit citation <p>{t(`configPage.production.${styleName}`)}</p>
+      </h4>
+      <CitationVersionWrapper className="static">
+        <div
+          // eslint-disable-next-line
+          dangerouslySetInnerHTML={{
+            __html: sanitize(formattedOriginalText),
+          }}
+        />
+        <p>
+          <strong>Original</strong>
+        </p>
+      </CitationVersionWrapper>
+      <CitationVersionWrapper>
         <div
           // eslint-disable-next-line
           dangerouslySetInnerHTML={{
             __html: sanitize(currentText),
           }}
         />
+        <p>
+          <strong>Edited</strong>
+        </p>
       </CitationVersionWrapper>
       <form key={`form-${reRender}`}>
         {currentCitation.author && currentCitation.author.length
@@ -328,7 +350,11 @@ const EditModal = ({
           <label htmlFor="issued">
             Year:{' '}
             <input
-              defaultValue={currentCitation.issued}
+              defaultValue={
+                typeof currentCitation.issued?.raw !== 'undefined'
+                  ? currentCitation.issued.raw
+                  : currentCitation.issued || ''
+              }
               name="issued"
               onBlur={formatCurrentCitation}
               onChange={e => {
@@ -339,7 +365,7 @@ const EditModal = ({
                 if (e.currentTarget.name === 'issued') {
                   const newCitation = {
                     ...currentCitation,
-                    issued: e.target.value,
+                    issued: { raw: e.target.value },
                   }
 
                   setCurrentCitation(newCitation)
