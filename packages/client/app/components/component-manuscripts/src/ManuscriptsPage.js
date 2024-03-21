@@ -36,6 +36,7 @@ import {
 import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
 import useChat from '../../../hooks/useChat'
 import { updateManuscriptMutation } from '../../component-review/src/components/DecisionPage'
+import mutations from '../../component-dashboard/src/graphql/mutations'
 
 const ManuscriptsPage = ({ currentUser, history }) => {
   const { t } = useTranslation()
@@ -227,6 +228,8 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   }
 
   const [update] = useMutation(updateMutation)
+  const [chatExpand] = useMutation(mutations.updateChatUI)
+
   const [doPublishManuscript] = useMutation(publishManuscriptMutation)
   const client = useApolloClient()
 
@@ -256,6 +259,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       applyQueryParams={applyQueryParams}
       archiveManuscriptMutations={archiveManuscriptMutations}
       channels={channels}
+      chatExpand={chatExpand}
       chatProps={chatProps}
       chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}

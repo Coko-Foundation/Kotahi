@@ -12,6 +12,7 @@ const QUERY = gql`
       recentTab
       menuPinned
       preferredLanguage
+      chatExpanded
       defaultIdentity {
         identifier
         email
