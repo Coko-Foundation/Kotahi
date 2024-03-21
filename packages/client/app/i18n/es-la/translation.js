@@ -106,7 +106,10 @@ const esLa = {
       'Go to your profile': 'Ir a tu perfil',
       Article: 'Plantilla de Artículo',
     },
-
+    menuSettings: {
+      KeepMenuVisible: 'Mantener menú visible',
+      MinimalSidebar: 'Menu lateral minimo',
+    },
     profilePage: {
       'Your profile': 'Tu perfil',
       'Profile: ': 'Perfil: ',

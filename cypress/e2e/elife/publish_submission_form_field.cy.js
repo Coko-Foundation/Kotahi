@@ -21,7 +21,7 @@ describe.skip('Update the submission form field', () => {
     })
 
     // enter the from page and assert the fileds()
-    cy.contains('Settings').click()
+    Menu.clickSettings()
     Menu.clickForms()
     cy.contains('Submission').click()
 

@@ -14,6 +14,7 @@ import Tooltip from './Tooltip'
 import { color } from '../../../theme'
 
 const Page = styled.div`
+  flex: 1 1 100%;
   height: 100vh;
   overflow-y: auto;
   padding: 0 ${grid(2)} ${grid(3)} ${grid(2)};

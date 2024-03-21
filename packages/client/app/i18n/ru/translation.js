@@ -107,6 +107,10 @@ const ru = {
       Article: 'Шаблон Статьи',
       'Go to your profile': 'Перейти в ваш профиль',
     },
+    menuSettings: {
+      KeepMenuVisible: 'оставить меню видимым',
+      MinimalSidebar: 'Минимальная боковая панель',
+    },
     profilePage: {
       'Your profile': 'Ваш профиль',
       'Profile: ': 'Профиль: ',

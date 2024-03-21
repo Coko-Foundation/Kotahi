@@ -94,4 +94,12 @@ export default {
       }
     }
   `,
+  updateMenu: gql`
+    mutation ($expanded: Boolean!) {
+      updateMenuUI(expanded: $expanded) {
+        id
+        menuPinned
+      }
+    }
+  `,
 }

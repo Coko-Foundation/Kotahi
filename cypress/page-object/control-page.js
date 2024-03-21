@@ -24,7 +24,7 @@ const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
 // Reviews + Invitations
 const INVITE_REVIEWER_DROPDOWN = 'Invite reviewers'
 const INVITE_REVIEWER_OPTION_LIST = 'react-select'
-const INVITE_REVIEWER_SUBMIT_BUTTON = 'button[type="submit"]'
+const INVITE_REVIEWER_SUBMIT_BUTTON = 'invite-reviewer'
 const INVITED_REVIEWERS = '[class*=KanbanCard__Card]'
 const INVITE_REVIEWER_SUBMIT_MODAL_BUTTON = 'submit-modal'
 const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]:nth(10)'
@@ -88,7 +88,7 @@ export const ControlPage = {
     return cy.getByContainsId(INVITE_REVIEWER_OPTION_LIST)
   },
   getInviteReviewerSubmitButton() {
-    return cy.get(INVITE_REVIEWER_SUBMIT_BUTTON)
+    return cy.getByDataTestId(INVITE_REVIEWER_SUBMIT_BUTTON)
   },
   clickInviteReviewerSubmit() {
     this.getInviteReviewerSubmitButton().click()

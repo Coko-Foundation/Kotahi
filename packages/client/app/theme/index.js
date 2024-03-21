@@ -78,6 +78,7 @@ const cokoTheme = {
   // font sizes
   fontSizeBase: '16px',
   fontSizeBaseSmall: '14px',
+  fontSizeBaseSmaller: '12px',
   fontSizeHeading1: '40px',
   fontSizeHeading2: '36px',
   fontSizeHeading3: '28px',
@@ -88,6 +89,7 @@ const cokoTheme = {
   // line heights
   lineHeightBase: '24px',
   lineHeightBaseSmall: '16px',
+  lineHeightBaseSmaller: '14px',
   lineHeightHeading1: '48px',
   lineHeightHeading2: '40px',
   lineHeightHeading3: '32px',

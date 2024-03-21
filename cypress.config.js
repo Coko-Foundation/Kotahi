@@ -29,20 +29,26 @@ module.exports = defineConfig({
           // Migrations paths in components.json are relative to packages/server, but cypress runs
           // in the project root folder. So we must change folder while migrations are run.
           const originalDirectory = process.cwd()
-          const targetDirectory = './packages/server'
 
-          process.chdir(targetDirectory)
+          if (!originalDirectory.endsWith('/packages/server')) {
+            const targetDirectory = './packages/server'
+            process.chdir(targetDirectory)
+          }
 
-          const {
-            resetDbAndApplyDump,
-          } = require('./packages/server/scripts/resetDb') /* eslint-disable-line global-require */
+          let result = false
 
-          const result = await resetDbAndApplyDump(
-            readFileSync(dumpFile(name), 'utf-8'),
-            name,
-          )
+          try {
+            const {
+              resetDbAndApplyDump,
+            } = require('./packages/server/scripts/resetDb') /* eslint-disable-line global-require */
 
-          process.chdir(originalDirectory)
+            result = await resetDbAndApplyDump(
+              readFileSync(dumpFile(name), 'utf-8'),
+              name,
+            )
+          } finally {
+            process.chdir(originalDirectory)
+          }
 
           // Wait long enough for server-side cache to clear
           await new Promise(resolve => setTimeout(resolve, 10500))

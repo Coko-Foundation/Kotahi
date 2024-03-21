@@ -105,7 +105,10 @@ const en = {
       Article: 'Article Template',
       'Go to your profile': 'Go to your profile',
     },
-
+    menuSettings: {
+      KeepMenuVisible: 'Keep menu visible',
+      MinimalSidebar: 'Minimal sidebar',
+    },
     profilePage: {
       'Your profile': 'Your profile',
       'Profile: ': 'Profile: ',

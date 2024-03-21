@@ -116,7 +116,12 @@ const ReviewerForm = ({
               reviewerUsers={reviewerUsers}
               validate={required}
             />
-            <Button disabled={!isValid} primary type="submit">
+            <Button
+              data-testid="invite-reviewer"
+              disabled={!isValid}
+              primary
+              type="submit"
+            >
               {t('decisionPage.Invite reviewer')}
             </Button>
           </>

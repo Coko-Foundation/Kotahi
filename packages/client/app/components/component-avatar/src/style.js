@@ -20,6 +20,7 @@ export const Container = styled.div`
   display: block;
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
+  transition: all var(--transition-time);
   width: ${props => (props.size ? `${props.size}px` : '32px')};
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
@@ -60,6 +61,7 @@ export const Img = styled(ReactImage)`
   display: inline-block;
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   object-fit: cover;
+  transition: all var(--transition-time);
   width: ${props => (props.size ? `${props.size}px` : '32px')};
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */

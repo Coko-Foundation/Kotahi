@@ -15,8 +15,8 @@ describe('Form builder', () => {
       cy.login(name.role.admin, dashboard)
     })
 
-    // enter the from page and assert the fileds
-    cy.contains('Settings').click()
+    // enter the form page and assert the fields
+    Menu.clickSettings()
     Menu.clickForms()
     cy.contains('Submission').click()
 
@@ -36,6 +36,7 @@ describe('Form builder', () => {
     cy.contains('Save').click()
 
     // for review field
+    Menu.clickSettings()
     cy.contains('Review').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Review')
     FormsPage.clickFormOption(1)
@@ -54,6 +55,7 @@ describe('Form builder', () => {
     cy.contains('Save').click()
 
     // for decision field
+    Menu.clickSettings()
     cy.contains('Decision').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)

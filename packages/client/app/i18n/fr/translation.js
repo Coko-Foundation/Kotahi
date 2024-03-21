@@ -105,6 +105,10 @@ const fr = {
       Article: "Modèle d' Article",
       'Go to your profile': 'Accéder à votre profil',
     },
+    menuSettings: {
+      KeepMenuVisible: 'Garder le menu visible',
+      MinimalSidebar: 'Barre latérale minimale',
+    },
 
     profilePage: {
       'Your profile': 'Votre profil',

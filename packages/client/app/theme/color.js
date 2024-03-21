@@ -48,6 +48,8 @@ const color = {
   brand1: {
     shade50: () => Color(colorBrand1).darken(0.52),
     shade25: () => Color(colorBrand1).darken(0.27),
+    shade15: () => Color(colorBrand1).darken(0.17),
+    shade10: () => Color(colorBrand1).darken(0.11),
     base: () => colorBrand1,
     tint10: () => lightenBy(colorBrand1, 0.1),
     tint25: () => lightenBy(colorBrand1, 0.26),
@@ -58,6 +60,8 @@ const color = {
   brand2: {
     shade50: () => Color(colorBrand2).darken(0.52),
     shade25: () => Color(colorBrand2).darken(0.27),
+    shade15: () => Color(colorBrand2).darken(0.17),
+    shade10: () => Color(colorBrand2).darken(0.11),
     base: () => colorBrand2,
     tint10: () => lightenBy(colorBrand2, 0.1),
     tint25: () => lightenBy(colorBrand2, 0.26),
