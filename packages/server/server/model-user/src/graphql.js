@@ -433,6 +433,13 @@ const resolvers = {
         }
       }
     },
+    async expandChat(_, { state }, ctx) {
+      const user = await models.User.query().updateAndFetchById(ctx.user, {
+        chatExpanded: state,
+      })
+
+      return user
+    },
     async updateMenuUI(_, { expanded }, ctx) {
       const user = await models.User.query().updateAndFetchById(ctx.user, {
         menuPinned: expanded,
@@ -538,6 +545,7 @@ const typeDefs = `
     updateMenuUI(expanded: Boolean!): User!
     setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
     setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
+    expandChat(state: Boolean!): User!
   }
 
   type UpdateEmailResponse {
@@ -574,6 +582,7 @@ const typeDefs = `
     lastOnline: DateTime
     isOnline: Boolean
     recentTab: String
+    chatExpanded: Boolean!
     menuPinned: Boolean!
   }
 

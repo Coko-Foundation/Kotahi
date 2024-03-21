@@ -121,6 +121,7 @@ const Manuscripts = ({ history, ...props }) => {
     channels,
     doUpdateManuscript,
     exportManuscriptsToJson,
+    chatExpand,
   } = props
 
   const { t } = useTranslation()
@@ -134,7 +135,10 @@ const Manuscripts = ({ history, ...props }) => {
   const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
-  const [isAdminChatOpen, setIsAdminChatOpen] = useState(false)
+
+  const [isAdminChatOpen, setIsAdminChatOpen] = useState(
+    currentUser.chatExpanded,
+  )
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
@@ -297,7 +301,7 @@ const Manuscripts = ({ history, ...props }) => {
   const hideChat = async () => {
     try {
       setIsAdminChatOpen(false)
-
+      chatExpand({ variables: { state: false } })
       const { channelsData } = chatProps || {}
 
       const dataRefetchPromises = channelsData?.map(async channel => {
@@ -344,7 +348,10 @@ const Manuscripts = ({ history, ...props }) => {
       {!isAdminChatOpen && (
         <RoundIconButtonWrapper
           iconName="MessageSquare"
-          onClick={() => setIsAdminChatOpen(true)}
+          onClick={() => {
+            setIsAdminChatOpen(true)
+            chatExpand({ variables: { state: true } })
+          }}
           title={t('chat.Show group manager discussion')}
           unreadMessagesCount={channelData?.unreadMessagesCount}
         />

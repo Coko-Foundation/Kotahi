@@ -102,6 +102,7 @@ class User extends BaseModel {
         recentTab: { type: ['string', 'null'] },
         preferredLanguage: { type: ['string', 'null'] },
         eventNotificationsOptIn: { type: ['boolean', true] },
+        chatExpanded: { type: 'boolean' },
         menuPinned: { type: 'boolean' },
       },
     }
