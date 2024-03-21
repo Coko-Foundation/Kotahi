@@ -433,6 +433,13 @@ const resolvers = {
         }
       }
     },
+    async updateMenuUI(_, { expanded }, ctx) {
+      const user = await models.User.query().updateAndFetchById(ctx.user, {
+        menuPinned: expanded,
+      })
+
+      return user
+    },
   },
   User: {
     async isOnline(parent) {
@@ -528,6 +535,7 @@ const typeDefs = `
     sendEmail(input: String!): SendEmailPayload!
     updateEmail(id: ID!, email: String!): UpdateEmailResponse
     updateRecentTab(tab: String): User
+    updateMenuUI(expanded: Boolean!): User!
     setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
     setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
   }
@@ -566,6 +574,7 @@ const typeDefs = `
     lastOnline: DateTime
     isOnline: Boolean
     recentTab: String
+    menuPinned: Boolean!
   }
 
   type CurrentRole {

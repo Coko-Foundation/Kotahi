@@ -33,6 +33,7 @@ const FormTemplateStyled = styled.div`
 
 const StyledManuscript = styled(Manuscript)`
   display: flex;
+  flex: 1 1 100%;
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
@@ -46,7 +47,7 @@ const ScrollableTabContent = styled.section`
   box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
   height: calc(100vh - 108px);
   overflow: auto;
-  width: calc(100vw - 232px);
+  width: calc(100% - 50px);
 `
 
 const Article = ({
@@ -172,29 +173,27 @@ const Article = ({
   }
 
   return (
-    <div>
-      <StyledManuscript>
-        <HeadingWithAction>
-          <FlexRow>
-            <Heading>{t('cmsPage.article.title')}</Heading>
-            <FormActionButton onClick={onPublish} primary type="button">
-              {submitButtonText}
-            </FormActionButton>
-          </FlexRow>
-        </HeadingWithAction>
-        <ErrorBoundary>
-          <HiddenTabs
-            defaultActiveKey="article-template"
-            sections={[
-              cssArticle,
-              htmlTemplate,
-              uploadAssets,
-              manuscriptMetadata,
-            ]}
-          />
-        </ErrorBoundary>
-      </StyledManuscript>
-    </div>
+    <StyledManuscript>
+      <HeadingWithAction>
+        <FlexRow>
+          <Heading>{t('cmsPage.article.title')}</Heading>
+          <FormActionButton onClick={onPublish} primary type="button">
+            {submitButtonText}
+          </FormActionButton>
+        </FlexRow>
+      </HeadingWithAction>
+      <ErrorBoundary>
+        <HiddenTabs
+          defaultActiveKey="article-template"
+          sections={[
+            cssArticle,
+            htmlTemplate,
+            uploadAssets,
+            manuscriptMetadata,
+          ]}
+        />
+      </ErrorBoundary>
+    </StyledManuscript>
   )
 }
 

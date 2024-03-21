@@ -9,8 +9,8 @@ import { UsersPage } from '../users-page'
  * These options are available on all other pages.
  */
 const MENU_CONTAINER = 'menu-container'
-const USER_BUTTON = 'Menu__UserItem'
-const BACKGROUND = 'Menu__Root'
+const USER_BUTTON = 'menuStyleds__UserItem'
+const BACKGROUND = 'menuStyleds__MainNavWrapper'
 const MESSAGE_NOT_AUTHORISED = 'AdminPage__Root'
 
 export const Menu = {
@@ -18,7 +18,7 @@ export const Menu = {
     return cy.getByDataTestId(MENU_CONTAINER)
   },
   getDashboardButton() {
-    return this.getMenuContainer().contains('Dashboard')
+    return cy.getByDataTestId('menu-Dashboard')
   },
   clickDashboard() {
     this.getDashboardButton().click()
@@ -29,34 +29,37 @@ export const Menu = {
     DashboardPage.getHeader().should('contain', 'Dashboard')
   },
   getFormsButton() {
-    return this.getMenuContainer().contains('Forms')
+    return cy.getByDataTestId('menu-Forms')
   },
   clickForms() {
     this.getFormsButton().click()
   },
   clickFormsAndVerifyPageLoaded() {
     this.getSettingsButton().click()
-    this.getFormsButton().click()
-    cy.contains('Submission').click()
+    this.clickForms()
+    cy.getByDataTestId('menu-Submission').click()
     cy.awaitDisappearSpinner()
     cy.contains('Submission Form Builder').should('be.visible')
   },
   getUsersButton() {
-    return this.getMenuContainer().contains('Users')
+    return cy.getByDataTestId('menu-Users')
   },
   clickUsers() {
     this.getUsersButton().click()
   },
   clickUsersAndVerifyPageLoaded() {
-    this.getUsersButton().click()
+    this.clickUsers()
     cy.awaitDisappearSpinner()
     UsersPage.getTitle().should('be.visible')
   },
   getSettingsButton() {
-    return this.getMenuContainer().contains('Settings')
+    return cy.getByDataTestId('menu-Settings')
+  },
+  clickSettings() {
+    this.getSettingsButton().click()
   },
   getManuscriptsButton() {
-    return this.getMenuContainer().contains('Manuscripts')
+    return cy.getByDataTestId('menu-Manuscripts')
   },
   clickManuscripts() {
     this.getManuscriptsButton().click()
@@ -66,13 +69,13 @@ export const Menu = {
     cy.awaitDisappearSpinner()
   },
   getReportsButton() {
-    return this.getMenuContainer().contains('Reports')
+    return cy.getByDataTestId('menu-Reports')
   },
   clickReports() {
     this.getReportsButton().click()
   },
   getMyProfileButton() {
-    return this.getMenuContainer().contains('My profile')
+    return this.getMenuContainer().get('[title="Go to your profile"]')
   },
   clickMyProfile() {
     this.getMyProfileButton().click()

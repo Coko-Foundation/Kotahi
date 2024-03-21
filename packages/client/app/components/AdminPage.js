@@ -54,9 +54,7 @@ const getParams = ({ routerPath, path }) => {
 }
 
 const Root = styled.div`
-  display: grid;
-  grid-template-areas: 'menu main';
-  grid-template-columns: 200px auto;
+  display: flex;
   height: 100vh;
   max-height: 100vh;
   ${({ converting }) =>
@@ -69,6 +67,7 @@ const Root = styled.div`
   `};
   overflow: hidden;
   position: relative;
+  width: 100vw;
   z-index: 0;
 `
 

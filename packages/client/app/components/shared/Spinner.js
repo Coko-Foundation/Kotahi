@@ -29,6 +29,7 @@ const LoadingPage = styled.div`
   height: 100%;
   justify-content: center;
   padding-bottom: calc(${th('gridUnit')} * 2);
+  width: 100%;
 `
 
 /* eslint-disable import/prefer-default-export */

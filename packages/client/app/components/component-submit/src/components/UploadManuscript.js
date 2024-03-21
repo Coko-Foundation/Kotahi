@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import styled, { css, keyframes, withTheme } from 'styled-components'
-import { Icon, Action } from '@pubsweet/ui'
+import { Icon } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import { XpubContext } from '../../../xpub-with-context/src'
 import upload from '../upload'
-import { Dropzone } from '../../../shared'
+import { Dropzone, Action } from '../../../shared'
 import { color } from '../../../../theme'
 
 const StatusIcon = withTheme(({ children, theme }) => (
@@ -233,7 +233,7 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
           </Root>
         )}
       </Dropzone>
-      <Action onClick={() => uploadManuscript()}>
+      <Action dataTestId="submitUrl" onClick={() => uploadManuscript()}>
         {t('newSubmission.Submit a URL instead')}
       </Action>
     </>

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Item } from '../app/components/Menu'
 import DesignEmbed from './common/utils'
+import { NavItem } from '../app/components/component-menu'
 
 export const Base = args => (
   <>
@@ -18,7 +18,7 @@ export const Base = args => (
         <h2 style={{ color: '#ffffff' }}>Component</h2>
       </>
     )}
-    <Item {...args} />
+    <NavItem {...args} />
   </>
 )
 export const Active = Base.bind()
@@ -59,7 +59,7 @@ CheckSquare.args = {
 
 export default {
   title: 'Menu/Item',
-  component: Item,
+  component: NavItem,
   argTypes: {
     active: { control: { type: 'boolean' } },
     link: { control: { type: 'text' } },

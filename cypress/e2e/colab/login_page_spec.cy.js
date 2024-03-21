@@ -44,7 +44,7 @@ describe('Login page tests', () => {
       })
       cy.awaitDisappearSpinner()
       Menu.getBackground()
-        .should('have.css', 'background-image')
+        .should('have.css', 'background')
         .and('contains', Color(settings.prc.primaryColor).string())
     })
   })

@@ -68,6 +68,7 @@ export const ColorInput = styled(TextInput)`
 export const EditPageContainer = styled.div`
   display: flex;
   overflow: auto;
+  width: 100%;
 `
 
 export const EditPageLeft = styled.div`

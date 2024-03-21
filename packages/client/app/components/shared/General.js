@@ -61,6 +61,7 @@ export const Container = styled.div`
   background: ${color.backgroundC};
   overflow-y: auto;
   padding: ${grid(2)};
+  width: 100%;
 `
 
 export const Title = styled.h2`
@@ -133,6 +134,7 @@ export const HeadingWithAction = styled.div`
 export const Columns = styled.div`
   align-content: stretch;
   display: flex;
+  flex: 1 1 100%;
   flex-direction: row;
   height: 100vh;
   justify-content: center;
