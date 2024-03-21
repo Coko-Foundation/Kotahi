@@ -211,7 +211,9 @@ const findCslCitations = (html, refCount, refList) => {
         }
 
         if (parsedStructure.issued) {
-          thisJatsReference += `<year>${parsedStructure.issued}</year>`
+          thisJatsReference += `<year>${
+            parsedStructure.issued?.raw || parsedStructure.issue
+          }</year>`
         }
 
         if (parsedStructure.volume) {

@@ -35,6 +35,9 @@ const getCrossRefQuery = gql`
           sequence
         }
         issue
+        issued {
+          raw
+        }
         page
         title
         volume

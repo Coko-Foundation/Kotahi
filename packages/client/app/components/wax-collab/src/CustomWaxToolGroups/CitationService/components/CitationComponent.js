@@ -351,6 +351,7 @@ const CitationComponent = ({ node, getPos }) => {
               setEditing(false)
             }}
             formattedCitation={potentialText}
+            formattedOriginalText={formattedOriginalText}
             setCitationData={currentCitation => {
               const newStructures = { ...structures, custom: currentCitation }
               setStructures(newStructures)
@@ -457,16 +458,19 @@ const CitationComponent = ({ node, getPos }) => {
               />
             ) : null}
             <StatusBar>
-              <Button
-                disabled={loading || otherLoading} // This is now set to disabled if there are still versions to come in
-                onClick={e => {
-                  e.preventDefault()
-                  setEditing(true)
-                }}
-                type="button"
-              >
-                Edit
-              </Button>
+              {decodeEntities(formattedOriginalText) !==
+                decodeEntities(potentialText) && (
+                <Button
+                  disabled={loading || otherLoading} // This is now set to disabled if there are still versions to come in
+                  onClick={e => {
+                    e.preventDefault()
+                    setEditing(true)
+                  }}
+                  type="button"
+                >
+                  Edit
+                </Button>
+              )}
               <Button
                 onClick={e => {
                   e.preventDefault()

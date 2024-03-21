@@ -155,10 +155,15 @@ const typeDefs = `
     sequence: String
   }
 
+	type IssuedDate {
+		raw: String
+	}
+
   type Reference {
     doi: String
     author: [ReferenceAuthor]
     issue: String
+		issued: IssuedDate
     page: String
     title: String
     volume: String
@@ -169,6 +174,7 @@ const typeDefs = `
     doi: String
     author: [ReferenceAuthor]
     issue: String
+		issued: IssuedDate
     page: String
     title: String
     volume: String

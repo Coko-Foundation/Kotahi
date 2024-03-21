@@ -59,7 +59,13 @@ export const PopUpWrapper = styled.div`
     color: ${color.brand1.base};
     font-size: 30px;
     margin: 0;
-    padding: 16px;
+    padding: 15px;
+  }
+
+  & > div > h4 > p {
+    font-size: 14px;
+    line-height: 22.4px;
+    margin-top: 6px;
   }
 `
 
@@ -116,6 +122,10 @@ export const CitationVersionWrapper = styled.label`
 
   &.selected {
     background-color: ${color.gray95};
+  }
+
+  &.static {
+    color: ${color.gray40};
   }
 
   & > button {

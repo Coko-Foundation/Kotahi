@@ -225,6 +225,12 @@ const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
 
         const formattedCitations = await Promise.all(
           res.data.map(async citation => {
+            // reshaping Anystyle CSL to match what we expect
+            if (citation.issued) {
+              // eslint-disable-next-line
+              citation.issued = { raw: citation.issued }
+            }
+
             const formattedCitation = await formatCitation(citation, groupId)
             // eslint-disable-next-line
             citation.formattedCitation = formattedCitation.result
