@@ -326,7 +326,7 @@ The `unreviewedPreprints` query returns an `id` and `shortId`, and the following
 
 ### How do I modify wording or add languages?
 
-You can customise UI wording by supplying the `config/translationOverrides.js` file. Copy the structure provided in `config/translationOverrides.example.js`.
+You can customise UI wording by supplying the `packages/client/config/translation/translationOverrides.js` file. Copy the structure provided in `packages/client/config/translation/translationOverrides.example.js`.
 This allows you to modify terminology as appropriate for your organisation, e.g. changing 'editor' to 'curator'. You can also use this file to add new languages.
 
 Note that changes in this file will affect _all_ groups you have running. Also note, this file does not let you translate forms, tasks, email templates or templates for exporting manuscripts to PDF or Flax: all of these should instead be modified directly via the UI.

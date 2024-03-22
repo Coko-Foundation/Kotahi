@@ -1,8 +1,12 @@
 ## Changes
 
+### Version 3.2.0
+
+If you have a `translationOverrides.js` file, it must be moved from `config/` folder to `packages/client/config/translation/` folder.
+
 ### Version 3.1.0
 
-If you have any plugin packages, they should be moved from `config/plugins/` folder to `packages/server/config/plugins` folder, along with the `plugins_manifest.json` file.
+If you have any plugin packages, they should be moved from `config/plugins/` folder to `packages/server/config/plugins/` folder, along with the `plugins_manifest.json` file.
 
 ### 2024-01-25: Version 3.0.0
 

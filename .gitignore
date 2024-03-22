@@ -21,7 +21,7 @@ packages/server/*/config/local*
 packages/server/config/plugins/*
 !packages/server/config/plugins
 !packages/server/config/plugins/example_plugins_manifest.json
-packages/server/config/translationOverrides.js
+packages/client/config/translation/translationOverrides.js
 
 minio/data/*
 .minio.sys

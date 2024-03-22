@@ -115,6 +115,7 @@ services:
     volumes:
       - ./uploads:/home/node/app/uploads
       - ./packages/server/config:/home/node/app/config
+      - ./packages/client/config/translation:/home/node/app/config/translation
 
   xsweet:
     depends_on:
