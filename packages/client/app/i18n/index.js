@@ -7,8 +7,9 @@ import ru from './ru/translation'
 let translationOverrides
 
 try {
-  // eslint-disable-next-line global-require, import/no-unresolved, import/extensions
-  translationOverrides = require('../../config/translationOverrides').default
+  translationOverrides =
+    // eslint-disable-next-line global-require, import/no-unresolved, import/extensions
+    require('../../config/translation/translationOverrides').default
 } catch (error) {
   // ignore
 }
