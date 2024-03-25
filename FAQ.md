@@ -387,7 +387,7 @@ The `INSTANCE_GROUPS` setting in the `.env` file should contain one or more _gro
 Example setting for running a single group only:
 
 ```
-INSTANCE_GROUPS=kotahi:journal
+INSTANCE_GROUPS=myjournal:journal
 ```
 
 Example setting for running multiple groups:
