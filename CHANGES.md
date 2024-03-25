@@ -4,6 +4,10 @@
 
 If you have a `translationOverrides.js` file, it must be moved from `config/` folder to `packages/client/config/translation/` folder.
 
+**Development instances only:** Any dev instances hosted on `localhost` will need to their 'Redirect URIs' changed in ORCID, to be able to log in. Alternately, if your port is 4000, you can just change the `ORCID_CLIENT_ID` in your `.env` file to the one supplied in the `.env.example` file, and no further changes should be required.
+
+To change 'Redirect URIs' in ORCID, follow the [instructions in the FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#how-do-i-setup-orcid-for-development), and replace any Redirect URIs mentioning "localhost" with equivalent URIs containing `127.0.0.1`.
+
 ### Version 3.1.0
 
 If you have any plugin packages, they should be moved from `config/plugins/` folder to `packages/server/config/plugins/` folder, along with the `plugins_manifest.json` file.
