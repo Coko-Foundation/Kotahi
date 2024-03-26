@@ -1,4 +1,4 @@
-import getUriQueryParams from '../urlUtils'
+import { getUriQueryParams } from '../urlUtils'
 
 describe('getUriQueryParams', () => {
   test('none', () => {
