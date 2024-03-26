@@ -545,6 +545,7 @@ const permissions = {
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
+    addCollaborativeReviewer: isAuthenticated,
     addReviewer: isAuthenticated,
     archiveManuscript: or(userIsGm, userIsAdmin),
     archiveManuscripts: or(userIsGm, userIsAdmin),
@@ -583,6 +584,11 @@ const permissions = {
     makeDecision: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     publishManuscript: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     removeReviewer: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    removeCollaborativeReviewer: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsAdmin,
+    ),
     removeTaskAlertsForCurrentUser: isAuthenticated,
     reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
     sendEmail: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),

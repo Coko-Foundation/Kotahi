@@ -35,6 +35,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
     groupManager: userIsGM,
     author: false,
     reviewer: false,
+    collaborativeReviewer: false,
     editor: false,
     handlingEditor: false,
     seniorEditor: false,
@@ -153,7 +154,7 @@ const sendEmailWithPreparedData = async (
   // manuscriptPageUrl based on user roles
   if (roles.groupManager || roles.anyEditor) {
     manuscriptPageUrl += '/decision?tab=decision'
-  } else if (roles.reviewer) {
+  } else if (roles.reviewer || roles.collaborativeReviewer) {
     manuscriptPageUrl += '/review'
   } else if (roles.author) {
     manuscriptPageUrl += '/submit'

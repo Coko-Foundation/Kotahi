@@ -5,4 +5,5 @@ module.exports = {
   managingEditor: 'Managing Editor',
   seniorEditor: 'Senior Editor',
   reviewer: 'Reviewer',
+  collaborativeReviewer: 'Collaborative Reviewer',
 }

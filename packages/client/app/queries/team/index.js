@@ -49,6 +49,13 @@ mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
   }
 }`
 
+export const ASSIGN_USER_AS_COLLABORATIVE_REVIEWER = gql`
+mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
+  addCollaborativeReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
+    ${teamFields}
+  }
+}`
+
 export const UPDATE_REVIEWER_STATUS_MUTATION = gql`
   mutation ($manuscriptId: ID!, $status: String) {
     updateReviewerTeamMemberStatus(

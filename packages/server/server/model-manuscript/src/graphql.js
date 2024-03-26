@@ -1217,8 +1217,20 @@ const resolvers = {
 
       return Manuscript.query().updateAndFetchById(id, manuscript)
     },
-    async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
+    async addReviewer(
+      _,
+      { manuscriptId, userId, invitationId, isCollaborative },
+      ctx,
+    ) {
+      const manuscript = await Manuscript.query().findById(manuscriptId)
       const status = invitationId ? 'accepted' : 'invited'
+
+      const team = isCollaborative
+        ? {
+            role: 'collaborativeReviewer',
+            name: 'Collaborative Reviewers',
+          }
+        : { role: 'reviewer', name: 'Reviewers' }
 
       let invitationData
 
@@ -1226,9 +1238,9 @@ const resolvers = {
         invitationData = await Invitation.query().findById(invitationId)
       }
 
-      const existingTeam = await Manuscript.relatedQuery('teams')
-        .for(manuscriptId)
-        .where('role', 'reviewer')
+      const existingTeam = await manuscript
+        .$relatedQuery('teams')
+        .where('role', team.role)
         .first()
 
       // Add the reviewer to the existing team of reviewers
@@ -1257,29 +1269,38 @@ const resolvers = {
         objectId: manuscriptId,
         objectType: 'manuscript',
         members: [{ status, userId }],
-        role: 'reviewer',
-        name: 'Reviewers',
+        role: team.role,
+        name: team.name,
       }).saveGraph()
 
       return newTeam
     },
-    async removeReviewer(_, { manuscriptId, userId }, ctx) {
-      const reviewerTeam = await Manuscript.relatedQuery('teams')
-        .for(manuscriptId)
-        .where('role', 'reviewer')
-        .first()
+    async removeReviewer(_, { manuscriptId, userId }) {
+      const manuscript = await Manuscript.query().findById(manuscriptId)
 
-      await TeamMember.query()
-        .where({
+      const reviewerTeams = await manuscript
+        .$relatedQuery('teams')
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
+
+      const [deletedTeamMember] = await TeamMember.query()
+        .builder.whereIn(
+          'teamId',
+          reviewerTeams.map(reviewerTeam => reviewerTeam.id),
+        )
+        .andWhere({
           userId,
-          teamId: reviewerTeam.id,
         })
         .delete()
+        .returning('*')
 
       await removeUserFromManuscriptChatChannel({
         manuscriptId,
         userId,
         type: 'editorial',
+      })
+
+      const reviewerTeam = await Team.query().findOne({
+        id: deletedTeamMember.teamId,
       })
 
       return reviewerTeam.$query().withGraphFetched('members.user')
@@ -2199,6 +2220,8 @@ const typeDefs = `
     assignTeamEditor(id: ID!, input: String): [Team]
     addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
+    addCollaborativeReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
+    removeCollaborativeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
     importManuscripts(groupId: ID!): Boolean!

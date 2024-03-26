@@ -23,6 +23,9 @@ module.exports = {
     reviewer: {
       name: 'Reviewer',
     },
+    collaborativeReviewer: {
+      name: 'Collaborative Reviewer',
+    },
     author: {
       name: 'Author',
     },

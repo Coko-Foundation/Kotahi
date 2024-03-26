@@ -292,6 +292,7 @@ const sendNotification = async n => {
       break
 
     case recipientTypes.REVIEWER:
+    case assigneeTypes.COLLABORATIVE_REVIEWER:
     case recipientTypes.AUTHOR:
       notificationRecipients = await getTeamRecipients(n, [n.recipientType])
       break
@@ -332,6 +333,7 @@ const sendNotification = async n => {
           break
 
         case assigneeTypes.REVIEWER:
+        case assigneeTypes.COLLABORATIVE_REVIEWER:
         case assigneeTypes.AUTHOR:
           notificationRecipients = await getTeamRecipients(n, [
             n.task.assigneeType,

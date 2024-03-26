@@ -11,6 +11,7 @@
     "REGISTERED_USER": "registeredUser",
     "EDITOR": "editor",
     "REVIEWER": "reviewer",
+    "COLLABORATIVE_REVIEWER": "collaborativeReviewer",
     "SENIOR_EDITOR": "seniorEditor",
     "HANDLING_EDITOR": "handlingEditor",
     "AUTHOR": "author"
@@ -22,6 +23,7 @@
       "ASSIGNEE": "assignee",
       "EDITOR": "editor",
       "REVIEWER": "reviewer",
+      "COLLABORATIVE_REVIEWER": "collaborativeReviewer",
       "SENIOR_EDITOR": "seniorEditor",
       "HANDLING_EDITOR": "handlingEditor",
       "AUTHOR": "author"
