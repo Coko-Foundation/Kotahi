@@ -440,6 +440,8 @@ const en = {
       'Control pages visible to editors': 'Control pages visible to editors',
       Team: 'Team',
       Submission: 'Submission',
+      openAi: 'OpenAI',
+      openAiApiKey: `OpenAI access key`,
       allowToSubmitNewVersion:
         'Allow an author to submit a new version of their manuscript at any time',
       'Review page': 'Review page',

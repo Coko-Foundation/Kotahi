@@ -25,7 +25,7 @@ export const tabKeyBasedSchema = {
     'user',
   ],
   production: ['production'],
-  integrations: ['kotahiApis', 'coarNotify'],
+  integrations: ['kotahiApis', 'coarNotify', 'openAi'],
   notifications: ['notification', 'eventNotification'],
 }
 
@@ -576,6 +576,16 @@ export const generateSchemas = (
             },
           },
         },
+        openAi: {
+          type: 'object',
+          title: t('configPage.openAi'),
+          properties: {
+            apiKey: {
+              type: ['string', 'null'],
+              description: t('configPage.openAiApiKey'),
+            },
+          },
+        },
       },
       preprint2: {
         instanceName: {
@@ -1107,6 +1117,16 @@ export const generateSchemas = (
             },
           },
         },
+        openAi: {
+          type: 'object',
+          title: t('configPage.openAi'),
+          properties: {
+            apiKey: {
+              type: ['string', 'null'],
+              description: t('configPage.openAiApiKey'),
+            },
+          },
+        },
       },
       prc: {
         instanceName: {
@@ -1631,6 +1651,16 @@ export const generateSchemas = (
             repoIpAddress: {
               type: ['string', 'null'],
               description: t('configPage.allowedIPs'),
+            },
+          },
+        },
+        openAi: {
+          type: 'object',
+          title: t('configPage.openAi'),
+          properties: {
+            apiKey: {
+              type: ['string', 'null'],
+              description: t('configPage.openAiApiKey'),
             },
           },
         },
@@ -2177,6 +2207,16 @@ export const generateSchemas = (
             repoIpAddress: {
               type: ['string', 'null'],
               description: t('configPage.allowedIPs'),
+            },
+          },
+        },
+        openAi: {
+          type: 'object',
+          title: t('configPage.openAi'),
+          properties: {
+            apiKey: {
+              type: ['string', 'null'],
+              description: t('configPage.openAiApiKey'),
             },
           },
         },

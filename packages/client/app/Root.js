@@ -179,7 +179,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
 
 const Root = ({ makeApolloConfig, connectToWebSocket = true }) => {
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <ApolloProvider
         client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
       >

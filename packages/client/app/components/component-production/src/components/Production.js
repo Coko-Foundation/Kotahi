@@ -27,6 +27,8 @@ import ReadonlyFormTemplate from '../../../component-review/src/components/metad
 import { color } from '../../../../theme'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import PreviousFeedbackSubmissions from './PreviousFeedbackSubmissions'
+import { CssAssistantProvider } from '../../../component-ai-assistant/hooks/CssAssistantContext'
+import AiPDFDesigner from '../../../component-ai-assistant/AiPDFDesigner'
 
 const PreviousFeedBackSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -58,6 +60,24 @@ const ScrollableTabContent = styled.section`
   height: calc(100vh - 108px);
   overflow: auto;
   width: calc(100vw - 232px);
+`
+
+const LabeledTab = styled.div`
+  position: relative;
+
+  &::before {
+    background: ${color.brand1.base};
+    border-radius: 5px;
+    color: white;
+    content: 'Beta';
+    display: flex;
+    font-size: 11px;
+    line-height: 1;
+    padding: 3px 5px;
+    position: absolute;
+    right: -42%;
+    top: -15px;
+  }
 `
 
 const Production = ({
@@ -251,6 +271,17 @@ const Production = ({
     label: t('productionPage.PDF metadata'),
   }
 
+  const cssAiAssistant = {
+    content: (
+      <CssAssistantProvider>
+        <AiPDFDesigner currentUser={currentUser} manuscript={manuscript} />
+      </CssAssistantProvider>
+    ),
+    hideOnly: true,
+    key: 'css-ai-assistant',
+    label: <LabeledTab>AiAssistant</LabeledTab>,
+  }
+
   const tabSections = []
 
   // Only author in author proofing mode can have editor seciton and feedback section visible
@@ -267,6 +298,7 @@ const Production = ({
         cssPagedJS,
         uploadAssets,
         manuscriptMetadata,
+        cssAiAssistant,
       )
     }
 
