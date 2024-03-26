@@ -95,6 +95,16 @@ const HiddenTabs = ({
     }
   }
 
+  const hideMethod = (section, key) =>
+    section.hideOnly
+      ? {
+          visibility: section.key === key ? 'visible' : 'hidden',
+          position: section.key === key ? 'relative' : 'absolute',
+          pointerEvents: section.key === key ? 'all' : 'none',
+          opacity: section.key === key ? '1' : '0',
+          display: 'flex',
+        }
+      : { display: key === section.key ? 'flex' : 'none' }
   // const currentContent = (
   //   sections.find(section => section.key === activeKey) || {}
   // ).content
@@ -134,11 +144,11 @@ const HiddenTabs = ({
         <div
           key={section.key}
           style={{
-            display: section.key === activeKey ? 'flex' : 'none',
             height: '100%',
             flex: shouldFillFlex ? '1' : undefined,
             flexDirection: 'column',
             minHeight: shouldFillFlex ? '0' : undefined,
+            ...hideMethod(section, activeKey),
           }}
         >
           {section.content}

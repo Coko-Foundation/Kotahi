@@ -450,6 +450,8 @@ const ru = {
         'Редакторам доступен просмотр разделов управления',
       Team: 'Исполнители',
       coarNotify: 'COAR-Уведомить',
+      openAi: 'OpenAI',
+      openAiApiKey: ` Ключ доступа OpenAI`,
       acceptedIPs: 'Принятые IP-адреса',
       Submission: 'Подача',
       allowToSubmitNewVersion:

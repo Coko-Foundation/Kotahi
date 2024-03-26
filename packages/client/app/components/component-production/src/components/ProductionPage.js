@@ -361,7 +361,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
       updateTemplate={updateTemplate}
     >
       {({ onAssetManager }) => (
-        <div>
+        <div style={{ width: '100%' }}>
           {makingPdf ? (
             <DownloadPdfComponent
               manuscript={manuscript}

@@ -1,0 +1,8 @@
+input ChatGptMessage {
+  role: String!
+  content: String!
+}
+
+extend type Query {
+  chatGPT(input: String!, groupId: ID!, history: [ChatGptMessage!]): String!
+}

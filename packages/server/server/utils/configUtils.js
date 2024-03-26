@@ -73,7 +73,7 @@ const stripSensitiveInformation = async configData => {
   delete config.formData.publishing.hypothesis.group
   delete config.formData.publishing.hypothesis.apiKey
   delete config.formData.publishing.webhook
-
+  config?.formData?.openAi?.apiKey && delete config.formData.openAi.apiKey
   // notification - credentials
   delete config.formData.notification
 

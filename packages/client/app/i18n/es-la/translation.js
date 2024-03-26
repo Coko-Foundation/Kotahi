@@ -448,6 +448,8 @@ const esLa = {
       'Control pages visible to editors':
         'Páginas de control visibles para editores',
       Team: 'Equipo',
+      openAi: 'OpenAI',
+      openAiApiKey: `Clave de acceso de OpenAI`,
       Submission: 'Envío',
       allowToSubmitNewVersion:
         'Permitir a un autor enviar una nueva versión de su manuscrito en cualquier momento',

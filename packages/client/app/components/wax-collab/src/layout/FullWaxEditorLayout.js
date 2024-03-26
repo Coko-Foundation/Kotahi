@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   WaxContext,
   ComponentPlugin,
@@ -36,12 +36,19 @@ const NotesArea = ComponentPlugin('notesArea')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 const FullWaxEditorLayout =
-  readOnly =>
+  (readOnly, getActiveViewDom) =>
   ({ editor }) => {
     const {
       pmViews: { main },
       options,
+      activeView,
     } = useContext(WaxContext)
+
+    useEffect(() => {
+      activeView.dom?.outerHTML &&
+        getActiveViewDom &&
+        getActiveViewDom(activeView.dom?.outerHTML)
+    }, [activeView.dom, activeView])
 
     const notes = (main && getNotes(main)) ?? []
 
