@@ -72,12 +72,34 @@ const KanbanBoard = ({
   const { t } = useTranslation()
 
   const emailAndWebReviewers = [
-    ...invitations.map(invitation => {
-      return { ...invitation, isEmail: true }
-    }),
     ...reviewers.map(reviewer => {
-      return { ...reviewer, isEmail: false }
+      return {
+        ...reviewer,
+        // Set isEmail flag true if the reviewer has pending reviewer invitations
+        isEmail: !!invitations.find(
+          invitation =>
+            invitation.invitedPersonType === 'REVIEWER' &&
+            invitation.user.id === reviewer.user.id,
+        ),
+      }
     }),
+    ...invitations
+      .filter(invitation => {
+        const reviewerAlreadyExist = reviewers.find(
+          reviewer =>
+            invitation.invitedPersonType === 'REVIEWER' &&
+            invitation.user.id === reviewer.user.id,
+        )
+
+        // Filter only REVIEWER invitations to avoid other invitedPersontType's to be listed here
+        // Exclude invitation record if user is already a reviewer to avoid duplicate kanban cards
+        return (
+          invitation.invitedPersonType === 'REVIEWER' && !reviewerAlreadyExist
+        )
+      })
+      .map(invitation => {
+        return { ...invitation, isEmail: true }
+      }),
   ]
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(statuses, t)
