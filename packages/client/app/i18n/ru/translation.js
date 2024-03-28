@@ -501,6 +501,8 @@ const ru = {
         'Приглашение, подтвержденное автором',
       authorProofingSubmittedEmailTemplate:
         'Автор завершил проверку и отправил отзыв',
+      'Editors edit reviews':
+        'Редакторы могут редактировать отправленные отзывы.',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
@@ -515,6 +517,7 @@ const ru = {
       showTabs: {
         Team: 'Исполнители',
         Decision: 'Решение',
+        Reviews: 'Отзывы',
         'Manuscript text': 'Текст статьи',
         Metadata: 'Основные данные',
         'Tasks & Notifications': 'Задачи и уведомления',

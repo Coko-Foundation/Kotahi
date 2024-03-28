@@ -67,6 +67,7 @@ const ReviewHeading = ({
   user,
   isHiddenFromAuthor,
   isHiddenReviewerName,
+  canEditReviews,
   toggleOpen,
   manuscriptId,
   teams,
@@ -79,8 +80,12 @@ const ReviewHeading = ({
   canHideReviews,
 }) => {
   const config = useContext(ConfigContext)
-  if (!currentUser) return null
   const { t } = useTranslation()
+
+  if (!currentUser) return null
+
+  const isTheUserOfTheReview = currentUser.id === review.user?.id
+  const shouldNotSetUser = !isTheUserOfTheReview
 
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')
@@ -94,20 +99,30 @@ const ReviewHeading = ({
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
-    updateReview(reviewId, {
-      isHiddenFromAuthor: reviewHiddenFromAuthor,
+    updateReview(
+      reviewId,
+      {
+        isHiddenFromAuthor: reviewHiddenFromAuthor,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+      shouldNotSetUser,
+    )
   }
 
   const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
     reviewId,
     reviewerNameHiddenFromPublishedAndAuthor,
   ) => {
-    updateReview(reviewId, {
-      isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
+    updateReview(
+      reviewId,
+      {
+        isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+      shouldNotSetUser,
+    )
   }
 
   // TODO: Display user's ORCID
@@ -185,6 +200,7 @@ const Root = styled.div`
 `
 
 const DecisionReview = ({
+  canEditReviews,
   review,
   reviewForm,
   reviewer,
@@ -192,6 +208,7 @@ const DecisionReview = ({
   teams,
   isControlPage,
   updateReview,
+  refetchManuscript,
   canHideReviews,
   showEditorOnlyFields,
   threadedDiscussionProps,
@@ -221,6 +238,7 @@ const DecisionReview = ({
     <Root>
       <ReviewHeading
         canBePublishedPublicly={canBePublishedPublicly}
+        canEditReviews={canEditReviews}
         canHideReviews={canHideReviews}
         currentUser={currentUser}
         id={id}
@@ -241,11 +259,14 @@ const DecisionReview = ({
         user={user}
       />
       <ReviewDetailsModal
+        canEditReviews={canEditReviews}
+        currentUser={currentUser}
         isControlPage={isControlPage}
         isOpen={open}
         manuscriptId={manuscriptId}
         onClose={toggleOpen}
         readOnly={readOnly}
+        refetchManuscript={refetchManuscript}
         review={review}
         reviewerTeamMember={reviewerTeamMember}
         reviewForm={reviewForm}

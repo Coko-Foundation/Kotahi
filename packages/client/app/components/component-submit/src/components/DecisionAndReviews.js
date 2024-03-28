@@ -59,6 +59,8 @@ const DecisionAndReviews = ({
   threadedDiscussionProps,
   currentUser,
   allowAuthorsSubmitNewVersion,
+  showDecision = true,
+  showReviews = true,
 }) => {
   const decision =
     manuscript.reviews &&
@@ -93,53 +95,57 @@ const DecisionAndReviews = ({
 
   return (
     <>
-      <SectionContent>
-        <SectionHeader>
-          <Title>{decisionForm.name}</Title>
-        </SectionHeader>
-        <Decision
-          allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
-          decisionForm={decisionForm}
-          editor={decision?.user}
-          manuscript={manuscript}
-          showEditorOnlyFields={showEditorOnlyFields}
-          threadedDiscussionProps={threadedDiscussionProps}
-        />
-      </SectionContent>
-      <SectionContent>
-        <SectionHeader>
-          <Title>{t('manuscriptSubmit.Reviews')}</Title>
-        </SectionHeader>
+      {showDecision && (
+        <SectionContent>
+          <SectionHeader>
+            <Title>{decisionForm.name}</Title>
+          </SectionHeader>
+          <Decision
+            allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+            decisionForm={decisionForm}
+            editor={decision?.user}
+            manuscript={manuscript}
+            showEditorOnlyFields={showEditorOnlyFields}
+            threadedDiscussionProps={threadedDiscussionProps}
+          />
+        </SectionContent>
+      )}
+      {showReviews && (
+        <SectionContent>
+          <SectionHeader>
+            <Title>{t('manuscriptSubmit.Reviews')}</Title>
+          </SectionHeader>
 
-        {reviewsToShow.length ? (
-          reviewsToShow.map((review, index) => (
-            <SectionRow key={review.id}>
-              <DecisionReview
-                currentUser={currentUser}
-                isControlPage={isControlPage}
-                open
-                readOnly
-                review={review}
-                reviewer={{
-                  name: review.user?.username,
-                  ordinal: index + 1,
-                  user: review.user,
-                }}
-                reviewForm={reviewForm}
-                showEditorOnlyFields={showEditorOnlyFields}
-                teams={manuscript.teams}
-                threadedDiscussionProps={threadedDiscussionProps}
-              />
+          {reviewsToShow.length ? (
+            reviewsToShow.map((review, index) => (
+              <SectionRow key={review.id}>
+                <DecisionReview
+                  currentUser={currentUser}
+                  isControlPage={isControlPage}
+                  open
+                  readOnly
+                  review={review}
+                  reviewer={{
+                    name: review.user?.username,
+                    ordinal: index + 1,
+                    user: review.user,
+                  }}
+                  reviewForm={reviewForm}
+                  showEditorOnlyFields={showEditorOnlyFields}
+                  teams={manuscript.teams}
+                  threadedDiscussionProps={threadedDiscussionProps}
+                />
+              </SectionRow>
+            ))
+          ) : (
+            <SectionRow>
+              {reviews.length
+                ? t('manuscriptSubmit.No reviews to show')
+                : t('manuscriptSubmit.No completed reviews')}
             </SectionRow>
-          ))
-        ) : (
-          <SectionRow>
-            {reviews.length
-              ? t('manuscriptSubmit.No reviews to show')
-              : t('manuscriptSubmit.No completed reviews')}
-          </SectionRow>
-        )}
-      </SectionContent>
+          )}
+        </SectionContent>
+      )}
     </>
   )
 }

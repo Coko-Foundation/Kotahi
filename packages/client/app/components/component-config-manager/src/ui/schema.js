@@ -1287,6 +1287,11 @@ export const generateSchemas = (
               title: t('configPage.Author proofing enabled'),
               default: false,
             },
+            editorsEditReviewsEnabled: {
+              type: 'boolean',
+              title: t('configPage.Editors edit reviews'),
+              default: false,
+            },
             showTabs: {
               type: 'array',
               description: t('configPage.Control pages visible to editors'),
@@ -1294,6 +1299,7 @@ export const generateSchemas = (
               default: [
                 'Team',
                 'Decision',
+                'Reviews',
                 'Manuscript text',
                 'Metadata',
                 'Tasks & Notifications',
@@ -1308,6 +1314,10 @@ export const generateSchemas = (
                   {
                     const: 'Decision',
                     title: t('configPage.showTabs.Decision'),
+                  },
+                  {
+                    const: 'Reviews',
+                    title: t('configPage.showTabs.Reviews'),
                   },
                   {
                     const: 'Manuscript text',
@@ -1824,6 +1834,11 @@ export const generateSchemas = (
               title: t('configPage.Author proofing enabled'),
               default: true,
             },
+            editorsEditReviewsEnabled: {
+              type: 'boolean',
+              title: t('configPage.Editors edit reviews'),
+              default: false,
+            },
             showTabs: {
               type: 'array',
               description: t('configPage.Control pages visible to editors'),
@@ -1831,6 +1846,7 @@ export const generateSchemas = (
               default: [
                 'Team',
                 'Decision',
+                'Reviews',
                 'Manuscript text',
                 'Metadata',
                 'Tasks & Notifications',
@@ -1845,6 +1861,10 @@ export const generateSchemas = (
                   {
                     const: 'Decision',
                     title: t('configPage.showTabs.Decision'),
+                  },
+                  {
+                    const: 'Reviews',
+                    title: t('configPage.showTabs.Reviews'),
                   },
                   {
                     const: 'Manuscript text',

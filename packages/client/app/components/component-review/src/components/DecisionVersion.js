@@ -389,25 +389,10 @@ const DecisionVersion = ({
               manuscript={version}
               readOnly
               reviewForm={reviewForm}
+              showDecision
               showEditorOnlyFields
+              showReviews={false}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
-            />
-          )}
-          {isCurrentVersion && (
-            <DecisionReviews
-              canHideReviews={canHideReviews}
-              currentUser={currentUser}
-              invitations={invitations}
-              manuscript={version}
-              reviewers={reviewers}
-              reviewForm={reviewForm}
-              threadedDiscussionProps={threadedDiscussionExtendedProps}
-              updateReview={updateReview}
-              updateSharedStatusForInvitedReviewer={
-                updateSharedStatusForInvitedReviewer
-              }
-              updateTeamMember={updateTeamMember}
-              urlFrag={urlFrag}
             />
           )}
           {isCurrentVersion && (
@@ -481,6 +466,60 @@ const DecisionVersion = ({
     }
   }
 
+  const reviewsSection = () => {
+    return {
+      content: (
+        <>
+          {!isCurrentVersion && (
+            <SectionContent>
+              <SectionHeader>
+                <Title>{t('decisionPage.decisionTab.Archived version')}</Title>
+              </SectionHeader>
+              <SectionRow>
+                {t('decisionPage.decisionTab.notCurrentVersion')}
+              </SectionRow>
+            </SectionContent>
+          )}
+          {!isCurrentVersion && (
+            <DecisionAndReviews
+              currentUser={currentUser}
+              decisionForm={decisionForm}
+              isControlPage
+              manuscript={version}
+              readOnly
+              reviewForm={reviewForm}
+              showDecision={false}
+              showEditorOnlyFields
+              showReviews
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
+            />
+          )}
+          {isCurrentVersion && (
+            <DecisionReviews
+              canEditReviews={config?.controlPanel?.editorsEditReviewsEnabled}
+              canHideReviews={canHideReviews}
+              currentUser={currentUser}
+              invitations={invitations}
+              manuscript={version}
+              refetch={refetch}
+              reviewers={reviewers}
+              reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
+              updateReview={updateReview}
+              updateSharedStatusForInvitedReviewer={
+                updateSharedStatusForInvitedReviewer
+              }
+              updateTeamMember={updateTeamMember}
+              urlFrag={urlFrag}
+            />
+          )}
+        </>
+      ),
+      key: 'reviews',
+      label: 'Reviews',
+    }
+  }
+
   let defaultActiveKey
 
   switch (config?.controlPanel?.showTabs[0]) {
@@ -489,6 +528,9 @@ const DecisionVersion = ({
       break
     case 'Decision':
       defaultActiveKey = `decision`
+      break
+    case 'Reviews':
+      defaultActiveKey = `reviews`
       break
     case 'Manuscript text':
       defaultActiveKey = `editor`
@@ -518,6 +560,8 @@ const DecisionVersion = ({
       sections.push(teamSection())
     if (config?.controlPanel?.showTabs.includes('Decision'))
       sections.push(decisionSection())
+    if (config?.controlPanel?.showTabs.includes('Reviews'))
+      sections.push(reviewsSection())
     if (config?.controlPanel?.showTabs.includes('Manuscript text'))
       sections.push(editorSection)
     if (config?.controlPanel?.showTabs.includes('Metadata'))

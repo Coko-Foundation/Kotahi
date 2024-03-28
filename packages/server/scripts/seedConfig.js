@@ -215,6 +215,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             showTabs: [
               'Team',
               'Decision',
+              'Reviews',
               'Manuscript text',
               'Metadata',
               'Tasks & Notifications',
@@ -223,6 +224,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             sharedReview: process.env.REVIEW_SHARED === 'true',
             displayManuscriptShortId: true,
             authorProofingEnabled: false,
+            editorsEditReviewsEnabled: false,
           },
           notification,
           eventNotification: {},
@@ -262,6 +264,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             showTabs: [
               'Team',
               'Decision',
+              'Reviews',
               'Manuscript text',
               'Metadata',
               'Tasks & Notifications',
@@ -270,6 +273,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             sharedReview: process.env.REVIEW_SHARED === 'true',
             displayManuscriptShortId: true,
             authorProofingEnabled: false,
+            editorsEditReviewsEnabled: false,
           },
           notification,
           eventNotification: {},
@@ -308,6 +312,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             showTabs: [
               'Team',
               'Decision',
+              'Reviews',
               'Manuscript text',
               'Metadata',
               'Tasks & Notifications',
@@ -316,6 +321,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             sharedReview: process.env.REVIEW_SHARED === 'true',
             displayManuscriptShortId: true,
             authorProofingEnabled: false,
+            editorsEditReviewsEnabled: false,
           },
           notification,
           eventNotification: {},

@@ -25,6 +25,7 @@ const getReviewerTeamMember = (manuscript, currentUser) => {
 }
 
 const DecisionReviews = ({
+  canEditReviews,
   reviewers,
   reviewForm,
   manuscript,
@@ -33,6 +34,7 @@ const DecisionReviews = ({
   threadedDiscussionProps,
   invitations,
   urlFrag,
+  refetch,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   currentUser,
@@ -81,11 +83,13 @@ const DecisionReviews = ({
           .map((review, index) => (
             <SectionRow key={review.id}>
               <DecisionReview
+                canEditReviews={canEditReviews}
                 canHideReviews={canHideReviews}
                 currentUser={currentUser}
                 isControlPage
                 manuscriptId={manuscript.id}
                 open
+                refetchManuscript={refetch}
                 review={review}
                 reviewer={{ user: review?.user, ordinal: index + 1 }}
                 reviewerTeamMember={getReviewerTeamMember(
