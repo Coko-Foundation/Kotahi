@@ -520,6 +520,8 @@ const ru = {
         'Тип доступа к статьям Collaborator изменен',
       collaboratorAccessRemovedEmailTemplate:
         'Доступ к статьям соавторов закрыт',
+      'Editors edit reviews':
+        'Редакторы могут редактировать отправленные отзывы.',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
@@ -534,6 +536,7 @@ const ru = {
       showTabs: {
         Team: 'Исполнители',
         Decision: 'Решение',
+        Reviews: 'Отзывы',
         'Manuscript text': 'Текст статьи',
         Metadata: 'Основные данные',
         'Tasks & Notifications': 'Задачи и уведомления',

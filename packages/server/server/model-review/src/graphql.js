@@ -10,7 +10,7 @@ const {
 
 const resolvers = {
   Mutation: {
-    async updateReview(_, { id, input }, ctx) {
+    async updateReview(_, { id, input, shouldNotSetUser }, ctx) {
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await models.Review.query().findById(id)) || {}
 
@@ -30,7 +30,7 @@ const resolvers = {
         isHiddenReviewerName: false,
         ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
         // Prevent reassignment of userId or manuscriptId:
-        userId: existingReview.userId || ctx.user,
+        userId: shouldNotSetUser ? null : existingReview.userId || ctx.user,
         manuscriptId: existingReview.manuscriptId || input.manuscriptId,
       }
 
@@ -55,7 +55,11 @@ const resolvers = {
 
       // We want to modify file URIs before return, so we'll use the parsed jsonData
       review.jsonData = mergedReview.jsonData
-      const reviewUser = await models.User.query().findById(review.userId)
+      let reviewUser = null
+
+      if (!shouldNotSetUser) {
+        reviewUser = await models.User.query().findById(review.userId)
+      }
 
       await convertFilesToFullObjects(
         review,
@@ -102,7 +106,15 @@ const resolvers = {
   Review: {
     async user(parent, { id }, ctx) {
       // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
-      return parent.user || models.User.query().findById(parent.userId)
+      if (parent.user) {
+        return parent.user
+      }
+
+      if (parent.userId) {
+        return models.User.query().findById(parent.userId)
+      }
+
+      return null
     },
     async isSharedWithCurrentUser(parent, _, ctx) {
       if (
@@ -131,7 +143,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Mutation {
-    updateReview(id: ID, input: ReviewInput): Review!
+    updateReview(id: ID, input: ReviewInput, shouldNotSetUser: Boolean): Review!
     updateReviewerTeamMemberStatus(manuscriptId: ID!, status: String): TeamMember
   }
 

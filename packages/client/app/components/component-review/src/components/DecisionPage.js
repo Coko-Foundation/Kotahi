@@ -313,9 +313,18 @@ const DecisionPage = ({ currentUser, match }) => {
       },
     })
 
-  const updateReview = async (reviewId, reviewData, manuscriptId) => {
+  const updateReview = async (
+    reviewId,
+    reviewData,
+    manuscriptId,
+    shouldNotSetUser = false,
+  ) => {
     doUpdateReview({
-      variables: { id: reviewId || undefined, input: reviewData },
+      variables: {
+        id: reviewId || undefined,
+        input: reviewData,
+        shouldNotSetUser,
+      },
       update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
           id: cache.identify({

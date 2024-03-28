@@ -1,13 +1,16 @@
 import React, { useState, useContext } from 'react'
+import { gql, useMutation } from '@apollo/client'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
 import { useTranslation } from 'react-i18next'
+import { Formik } from 'formik'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 import { ensureJsonIsParsed } from '../../../shared/objectUtils'
 import Modal, { SecondaryButton } from '../../component-modal/src/Modal'
 import {
   ConfigurableStatus,
+  FilesUpload,
   UserInfo,
   UserCombo,
   Primary,
@@ -21,6 +24,32 @@ import ReadonlyFieldData from '../../component-review/src/components/metadata/Re
 import { ConfigContext } from '../../config/src'
 import localizeReviewFilterOptions from '../../../shared/localizeReviewFilterOptions'
 import localizeRecommendations from '../../../shared/localizeRecommendations'
+import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
+
+const createFileMutation = gql`
+  mutation ($file: Upload!, $meta: FileMetaInput!) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
+    }
+  }
+`
+
+const deleteFileMutation = gql`
+  mutation ($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
 
 const Header = styled.div`
   font-size: 18px;
@@ -57,8 +86,10 @@ const ReviewDetailsModal = (
 ) => {
   const {
     status,
+    canEditReviews,
     review,
     reviewerTeamMember,
+    refetchManuscript,
     reviewForm,
     onClose,
     threadedDiscussionProps,
@@ -72,10 +103,51 @@ const ReviewDetailsModal = (
     updateSharedStatusForInvitedReviewer,
     updateTeamMember,
     updateReview,
+    currentUser,
   } = props
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+
+  const isTheUserOfTheReview = currentUser?.id === review?.user?.id
+
+  const shouldNotSetUser = canEditReviews && !isTheUserOfTheReview
+
+  const [createFile] = useMutation(createFileMutation)
+
+  const handleFileChange = (files, property) => {
+    const cleanData = files.map(file => {
+      if (typeof file === 'object' && file !== null) {
+        return file.id
+      }
+
+      return file
+    })
+
+    const currentData = JSON.parse(review.jsonData)
+    currentData[property] = cleanData
+    updateReview(
+      review.id,
+      {
+        jsonData: JSON.stringify(currentData),
+        manuscriptId,
+      },
+      manuscriptId,
+      shouldNotSetUser,
+    )
+  }
+
+  const [deleteFile] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile: fileToDelete } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: fileToDelete,
+      })
+
+      cache.evict({ id })
+    },
+    onCompleted: () => refetchManuscript(),
+  })
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,
@@ -99,7 +171,7 @@ const ReviewDetailsModal = (
 
   return (
     <Modal
-      contentStyles={{ width: '50%' }}
+      contentStyles={{ width: '70%' }}
       isOpen={isOpen}
       leftActions={
         !readOnly && (
@@ -108,6 +180,7 @@ const ReviewDetailsModal = (
             manuscriptId={manuscriptId}
             review={review}
             reviewerTeamMember={reviewerTeamMember}
+            shouldNotSetUser={shouldNotSetUser}
             updateReview={updateReview}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
@@ -176,10 +249,18 @@ const ReviewDetailsModal = (
       </StatusContainer>
       {review ? (
         <ReviewData
+          canEditReviews={canEditReviews}
+          createFile={createFile}
+          deleteFile={deleteFile}
+          handleFileChange={handleFileChange}
+          manuscriptId={manuscriptId}
+          readOnly={readOnly}
           review={review}
           reviewForm={reviewForm}
+          shouldNotSetUser={shouldNotSetUser}
           showEditorOnlyFields={showEditorOnlyFields}
           threadedDiscussionProps={threadedDiscussionProps}
+          updateReview={updateReview}
         />
       ) : (
         <ReviewItemsContainer>
@@ -193,6 +274,7 @@ const ReviewDetailsModal = (
 const CheckboxActions = ({
   review,
   reviewerTeamMember,
+  shouldNotSetUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   isInvitation,
@@ -221,17 +303,27 @@ const CheckboxActions = ({
   }
 
   const toggleIsHiddenFromAuthor = () => {
-    updateReview(review?.id, {
-      isHiddenFromAuthor: !review?.isHiddenFromAuthor,
+    updateReview(
+      review?.id,
+      {
+        isHiddenFromAuthor: !review?.isHiddenFromAuthor,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+      shouldNotSetUser,
+    )
   }
 
   const toggleIsHiddenReviewerNameFromPublishedAndAuthor = () => {
-    updateReview(review?.id, {
-      isHiddenReviewerName: !review?.isHiddenReviewerName,
+    updateReview(
+      review?.id,
+      {
+        isHiddenReviewerName: !review?.isHiddenReviewerName,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+      shouldNotSetUser,
+    )
   }
 
   return (
@@ -266,6 +358,14 @@ const CheckboxActions = ({
 }
 
 const ReviewData = ({
+  canEditReviews,
+  manuscriptId,
+  updateReview,
+  readOnly,
+  createFile,
+  deleteFile,
+  handleFileChange,
+  shouldNotSetUser,
   review,
   reviewForm,
   threadedDiscussionProps,
@@ -295,6 +395,70 @@ const ReviewData = ({
     element => isViewable(element) && isFileField(element),
   )
 
+  const onBlurHandler = (key, value) => {
+    updateReview(
+      review.id,
+      {
+        jsonData: JSON.stringify({ [key]: value }),
+        manuscriptId,
+      },
+      manuscriptId,
+      shouldNotSetUser,
+    )
+  }
+
+  const fieldRenderer = element => {
+    if (
+      (element.name === 'comment' || element.name === 'confidentialComment') &&
+      !readOnly &&
+      canEditReviews
+    ) {
+      return (
+        <SimpleWaxEditor
+          onChange={value => onBlurHandler(element.name, value)}
+          value={reviewFormData[element.name]}
+        />
+      )
+    }
+
+    if (
+      (element.name === 'files' || element.name === 'confidentialFiles') &&
+      !readOnly &&
+      canEditReviews
+    ) {
+      return (
+        <Formik
+          initialValues={{ [element.name]: reviewFormData[element.name] }}
+          onSubmit={actions => {
+            actions.setSubmitting(false)
+          }}
+        >
+          <FilesUpload
+            acceptMultiple
+            confirmBeforeDelete
+            createFile={createFile}
+            deleteFile={deleteFile}
+            fieldName={element.name}
+            fileType="review"
+            manuscriptId={manuscriptId}
+            onChange={handleFileChange}
+            reviewId={review.id}
+            values={reviewFormData}
+          />
+        </Formik>
+      )
+    }
+
+    return (
+      <ReadonlyFieldData
+        fieldName={element.name}
+        form={reviewForm}
+        formData={reviewFormData}
+        threadedDiscussionProps={threadedDiscussionProps}
+      />
+    )
+  }
+
   return (
     <>
       {recommendationConfig && (
@@ -310,12 +474,7 @@ const ReviewData = ({
         {[...nonFileFields, ...fileFields].map((element, i) => (
           <ReviewItemContainer key={element.id}>
             <Header>{element.shortDescription || element.title}</Header>
-            <ReadonlyFieldData
-              fieldName={element.name}
-              form={reviewForm}
-              formData={reviewFormData}
-              threadedDiscussionProps={threadedDiscussionProps}
-            />
+            {fieldRenderer(element)}
           </ReviewItemContainer>
         ))}
       </ReviewItemsContainer>

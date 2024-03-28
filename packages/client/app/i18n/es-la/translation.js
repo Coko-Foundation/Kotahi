@@ -521,6 +521,8 @@ const esLa = {
         'Se cambió el tipo de acceso al artículo del colaborador',
       collaboratorAccessRemovedEmailTemplate:
         'Se eliminó el acceso al artículo de colaborador',
+      'Editors edit reviews':
+        'Los editores pueden editar las reseñas enviadas.',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',
@@ -535,6 +537,7 @@ const esLa = {
       showTabs: {
         Team: 'Equipo',
         Decision: 'Decisión',
+        Reviews: 'Reseñas',
         'Manuscript text': 'Texto del Manuscrito',
         Metadata: 'Metadatos',
         'Tasks & Notifications': 'Tareas y Notificaciones',
