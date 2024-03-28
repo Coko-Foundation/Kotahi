@@ -84,7 +84,7 @@ const ReviewHeading = ({
 
   if (!currentUser) return null
 
-  const isTheUserOfTheReview = currentUser.id === review.user?.id
+  const isTheUserOfTheReview = currentUser.id === review?.user?.id
   const shouldNotSetUser = !isTheUserOfTheReview
 
   const editorTeam = teams.filter(team => {
