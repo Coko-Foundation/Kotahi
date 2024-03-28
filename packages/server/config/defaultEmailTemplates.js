@@ -57,6 +57,29 @@ module.exports = [
       </p>`,
   },
   {
+    emailTemplateKey: 'collabroativeReviewerInvitationEmailTemplate',
+    description: 'Collaborative Reviewer Invitation',
+    subject: 'Kotahi | Collaborative Reviewer invitation',
+    ccEditors: false,
+    type: 'collaborativeReviewerInvitation',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              You have been selected to collaborate on peer review with manuscript titled “{{ manuscriptTitle }}”. Click on the link below to accept or decline the invitation;
+          </p>
+          <p>{{{ acceptInviteLink }}}</p>
+          <p>{{{ declineInviteLink }}}</a></p>
+          <p>
+              Please note; that you will require an ORCID account in order to log in. If you don’t already have an account, it takes 2 mins to <a href="https://orcid.org/register" target="_blank">register a new ORCID account here</a>. <br>
+          </p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
+  {
     emailTemplateKey: 'chatNotification',
     description: 'Chat notification',
     subject: 'Kotahi | Discussion notification',

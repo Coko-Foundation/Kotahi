@@ -789,7 +789,7 @@ const resolvers = {
 
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
-        userId: ctx.user,
+        userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
         isDecision: false,
       })
 
@@ -801,6 +801,7 @@ const resolvers = {
           isHiddenFromAuthor: true,
           userId: ctx.user,
           manuscriptId: team.objectId,
+          isCollaborative: team.role === 'collaborativeReviewer',
           jsonData: '{}',
         }
 
@@ -2271,6 +2272,7 @@ const typeDefs = `
     isDecision: Boolean
     isHiddenReviewerName: Boolean
     isHiddenFromAuthor: Boolean
+    isCollaborative: Boolean
     jsonData: String
   }
 
@@ -2457,6 +2459,7 @@ const typeDefs = `
     open: Boolean
     user: ReviewUser
     isHiddenFromAuthor: Boolean
+    isCollaborative: Boolean
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
     canBePublishedPublicly: Boolean!

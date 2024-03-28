@@ -161,6 +161,7 @@ const typeDefs = `
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
+    isCollaborative: Boolean!
     canBePublishedPublicly: Boolean!
     jsonData: String
     userId: String

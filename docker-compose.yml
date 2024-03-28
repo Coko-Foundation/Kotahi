@@ -38,7 +38,7 @@ services:
       dockerfile: ./Dockerfile-development
     depends_on:
       - db
-      - xsweet
+      # - xsweet
       - fileHosting
     entrypoint:
       [
@@ -203,6 +203,7 @@ services:
     volumes:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
+<<<<<<< HEAD
   xsweet:
     depends_on:
       - db-xsweet
@@ -228,15 +229,42 @@ services:
         'scripts/setupDevServer.sh',
       ]
     command: ['node', 'server/startServer.js']
+=======
+  # xsweet:
+  #   depends_on:
+  #     - db-xsweet
+  #   image: cokoapps/xsweet:2.3.0
+  #   ports:
+  #     - ${SERVICE_XSWEET_PORT:-3004}:${SERVICE_XSWEET_PORT:-3004}
+  #   environment:
+  #     - PUBSWEET_SECRET=xsweet_dev_secret
+  #     - POSTGRES_USER=xsweet_user_dev
+  #     - POSTGRES_PASSWORD=xsweet_user_password
+  #     - POSTGRES_HOST=db-xsweet
+  #     - POSTGRES_DB=xsweet_dev
+  #     - POSTGRES_PORT=5432
+  #     - SERVER_PORT=${SERVICE_XSWEET_PORT:-3004}
+  #     - NODE_ENV=development
+  #   entrypoint:
+  #     [
+  #       'sh',
+  #       'scripts/wait-for-it',
+  #       'db-xsweet:5432',
+  #       '--',
+  #       'sh',
+  #       'scripts/setupDevServer.sh',
+  #     ]
+  #   command: ['node', 'server/startServer.js']
+>>>>>>> feat(models): add review model
 
-  db-xsweet:
-    image: postgres:14.4-alpine
-    environment:
-      - POSTGRES_USER=xsweet_user_dev
-      - POSTGRES_DB=xsweet_dev
-      - POSTGRES_PASSWORD=xsweet_user_password
-    volumes:
-      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
+  # db-xsweet:
+  #   image: postgres:14.4-alpine
+  #   environment:
+  #     - POSTGRES_USER=xsweet_user_dev
+  #     - POSTGRES_DB=xsweet_dev
+  #     - POSTGRES_PASSWORD=xsweet_user_password
+  #   volumes:
+  #     - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   db:
     image: postgres:10-alpine

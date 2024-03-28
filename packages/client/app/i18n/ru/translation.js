@@ -951,6 +951,7 @@ const ru = {
         'Invite Reviewer': 'Пригласить рецензента',
         Shared: 'Показывать другим рецензентам',
         'Email Notification': 'Уведомления по Email',
+        Collaborate: 'Сотрудничать',
         Cancel: 'Отменить',
         Invite: 'Пригласить',
       },

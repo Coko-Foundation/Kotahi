@@ -951,6 +951,7 @@ const esLa = {
         'Invite Reviewer': 'Invitar Revisor',
         Shared: 'Compartido',
         'Email Notification': 'Notificación por Correo Electrónico',
+        Collaborate: 'Colaborar',
         Cancel: 'Cancelar',
         Invite: 'Invitar',
       },

@@ -7,6 +7,7 @@ const reviewFields = `
   jsonData
   isDecision
   isHiddenFromAuthor
+  isCollaborative
   isHiddenReviewerName
   canBePublishedPublicly
   user {

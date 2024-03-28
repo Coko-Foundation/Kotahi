@@ -86,6 +86,10 @@ const InviteReviewerModal = ({
     value: 'email-notification',
     label: t('modals.inviteReviewer.Email Notification'),
   })
+  options.push({
+    value: 'isCollaborative',
+    label: t('modals.inviteReviewer.Collaborate'),
+  })
 
   return (
     <Modal
@@ -118,6 +122,9 @@ const InviteReviewerModal = ({
             onClick={async () => {
               const isInvitation =
                 condition?.value?.includes('email-notification')
+
+              // const isColaborative =
+              //   condition?.value?.includes('isCollaborative')
 
               let teamMember
 

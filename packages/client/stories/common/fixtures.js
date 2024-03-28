@@ -51,6 +51,7 @@ export const manuscriptWithTeams = {
       confidentialComment: null,
       isDecision: true,
       isHiddenFromAuthor: null,
+      isCollaborative: false,
       isHiddenReviewerName: null,
       canBePublishedPublicly: false,
       recommendation: 'accepted',

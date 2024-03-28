@@ -48,6 +48,7 @@ class Review extends BaseModel {
         isDecision: { type: 'boolean' },
         isHiddenFromAuthor: { type: 'boolean' },
         isHiddenReviewerName: { type: 'boolean' },
+        isCollaborative: { type: 'boolean' },
         canBePublishedPublicly: { type: 'boolean' },
         jsonData: {},
       },
