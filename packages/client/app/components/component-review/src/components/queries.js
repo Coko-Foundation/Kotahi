@@ -345,8 +345,8 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 `
 
 export const updateReviewMutation = gql`
-  mutation($id: ID, $input: ReviewInput) {
-    updateReview(id: $id, input: $input) {
+  mutation($id: ID, $input: ReviewInput, $shouldNotSetUser: Boolean) {
+    updateReview(id: $id, input: $input, shouldNotSetUser: $shouldNotSetUser) {
       ${reviewFields}
     }
   }

@@ -38,6 +38,8 @@ tmp/
 uploads/*
 CONTRIBUTING.md
 
+packages/*/node_modules
+
 # development config files
 .eslintrc.js
 .commitlintrc.js

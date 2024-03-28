@@ -248,6 +248,7 @@ const ReviewDetailsModal = (
 const CheckboxActions = ({
   review,
   reviewerTeamMember,
+  shouldNotSetUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   isInvitation,

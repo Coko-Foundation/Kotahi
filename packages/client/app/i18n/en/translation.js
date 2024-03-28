@@ -536,6 +536,7 @@ const en = {
         'Collaborator article access type changed',
       collaboratorAccessRemovedEmailTemplate:
         'Collaborator article access removed',
+      'Editors edit reviews': 'Editors can edit submitted reviews',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
