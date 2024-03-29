@@ -293,7 +293,7 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.selectOptionWithText('Control')
-        ControlPage.clickDecisionTab(1)
+        ControlPage.clickReviewsTab(2)
         ControlPage.clickHideReviewToAuthor()
         ControlPage.clickHideReviewerNameToAuthor()
       })
