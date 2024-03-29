@@ -246,6 +246,7 @@ const en = {
       inviteUser: {
         Email: 'Email',
         Name: 'Name',
+        Collaborate: 'Collaborate',
       },
       declinedInvitation: 'Declined {{dateString}}',
       'Invited via email': 'Invited via email',

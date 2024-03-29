@@ -13,6 +13,7 @@ import {
 } from '../emailNotifications/emailUtils'
 import InviteReviewerModal from './InviteReviewerModal'
 import ReviewerForm from './ReviewerForm'
+import selectReviewerInvitationEmail from './util'
 import { ConfigContext } from '../../../../config/src'
 
 const InviteReviewer = ({
@@ -38,28 +39,29 @@ const InviteReviewer = ({
   const [isNewUser, setIsNewUser] = useState(false)
   const [notificationStatus, setNotificationStatus] = useState(null)
 
-  let reviewerInvitationEmailTemplate
-
-  if (config.eventNotification?.reviewerInvitationPrimaryEmailTemplate) {
-    reviewerInvitationEmailTemplate =
-      config.eventNotification.reviewerInvitationPrimaryEmailTemplate
-  } else {
-    reviewerInvitationEmailTemplate = emailTemplates.find(
-      template => template.emailTemplateType === 'reviewerInvitation',
-    ).id
-  }
-
   return (
     <>
       <Formik
         displayName="reviewers"
-        initialValues={{ user: undefined, email: undefined, name: undefined }}
+        initialValues={{
+          user: undefined,
+          email: undefined,
+          name: undefined,
+          collaborate: false,
+        }}
         onSubmit={async values => {
           if (!isNewUser) {
             setOpen(true)
             setUserId(values.user.id)
           } else {
             setNotificationStatus('pending')
+
+            const reviewerInvitationEmailTemplate =
+              selectReviewerInvitationEmail(
+                config,
+                emailTemplates,
+                values.collaborate,
+              )
 
             const output = await sendEmail(
               manuscript,
@@ -117,9 +119,7 @@ const InviteReviewer = ({
         manuscript={manuscript}
         onClose={() => setOpen(false)}
         open={open}
-        reviewerInvitationEmailTemplate={reviewerInvitationEmailTemplate}
         reviewerUsers={reviewerUsers}
-        selectedEmail={selectedEmail}
         sendChannelMessage={sendChannelMessage}
         sendNotifyEmail={sendNotifyEmail}
         updateSharedStatusForInvitedReviewer={

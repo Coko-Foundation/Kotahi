@@ -336,16 +336,16 @@ export const query = gql`
 `
 
 export const addReviewerMutation = gql`
-mutation($manuscriptId: ID!, $userId: ID!) {
-  addReviewer(manuscriptId: $manuscriptId, userId: $userId) {
+mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, isCollaborative: $isCollaborative) {
     ${teamFields}
   }
 }
 `
 
 export const removeReviewerMutation = gql`
-mutation($manuscriptId: ID!, $userId: ID!) {
-  removeReviewer(manuscriptId: $manuscriptId, userId: $userId) {
+mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean) {
+  removeReviewer(manuscriptId: $manuscriptId, userId: $userId, isCollaborative: $isCollaborative) {
     ${teamFields}
   }
 }

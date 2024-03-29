@@ -43,15 +43,8 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 }`
 
 export const ASSIGN_USER_AS_REVIEWER = gql`
-mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
-  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
-    ${teamFields}
-  }
-}`
-
-export const ASSIGN_USER_AS_COLLABORATIVE_REVIEWER = gql`
-mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
-  addCollaborativeReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
+mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID, $isCollaborative: Boolean) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId, isCollaborative: $isCollaborative ) {
     ${teamFields}
   }
 }`

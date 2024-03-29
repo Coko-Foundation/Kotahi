@@ -250,6 +250,7 @@ const fr = {
       inviteUser: {
         Email: 'Email',
         Name: 'Nom',
+        Collaborate: 'Collaborer',
       },
       declinedInvitation: 'Refusé {{dateString}}',
       'Invited via email': 'Invité par email',

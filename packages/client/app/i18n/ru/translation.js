@@ -252,6 +252,7 @@ const ru = {
       inviteUser: {
         Email: 'Email',
         Name: 'ФИО',
+        Collaborate: 'Сотрудничать',
       },
       declinedInvitation: 'Отклонено {{dateString}}',
       'Invited via email': 'Приглашен по email',

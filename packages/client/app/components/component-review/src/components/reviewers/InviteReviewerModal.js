@@ -17,6 +17,7 @@ import {
   sendEmail,
   sendEmailChannelMessage,
 } from '../emailNotifications/emailUtils'
+import selectReviewerInvitationEmail from './util'
 
 const ModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};
@@ -46,13 +47,11 @@ const InviteReviewerModal = ({
   reviewerUsers,
   addReviewer,
   manuscript,
-  selectedEmail,
   sendChannelMessage,
   sendNotifyEmail,
   currentUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
-  reviewerInvitationEmailTemplate,
   emailTemplates,
 }) => {
   const config = useContext(ConfigContext)
@@ -123,13 +122,20 @@ const InviteReviewerModal = ({
               const isInvitation =
                 condition?.value?.includes('email-notification')
 
-              // const isColaborative =
-              //   condition?.value?.includes('isCollaborative')
+              const isColaborative =
+                condition?.value?.includes('isCollaborative')
 
               let teamMember
 
               if (isInvitation) {
                 setInviteStatus('pending')
+
+                const reviewerInvitationEmailTemplate =
+                  selectReviewerInvitationEmail(
+                    config,
+                    emailTemplates,
+                    isColaborative,
+                  )
 
                 const response = await sendEmail(
                   manuscript,
@@ -163,6 +169,18 @@ const InviteReviewerModal = ({
                 }
 
                 teamMember = response.invitation
+              } else {
+                const { data } = await addReviewer({
+                  variables: {
+                    userId: identity.id,
+                    manuscriptId: manuscript.id,
+                    isColaborative,
+                  },
+                })
+
+                teamMember = data.addReviewer.members.find(
+                  member => member.user.id === identity.id,
+                )
               }
 
               const { data } = await addReviewer({

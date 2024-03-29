@@ -248,6 +248,7 @@ const esLa = {
       inviteUser: {
         Email: 'Email',
         Name: 'Nombre',
+        Collaborate: 'Collaborar',
       },
       declinedInvitation: 'Rechazado el {{dateString}}',
       'Invited via email': 'Invitado vía correo electrónico',

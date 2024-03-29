@@ -1306,6 +1306,7 @@ const resolvers = {
 
       return reviewerTeam.$query().withGraphFetched('members.user')
     },
+
     /** To identify which data we're making publishable/unpublishable, we need:
      * manuscriptId; the ID of the owning review/decision or manuscript object; and the fieldName.
      * For threaded discussion comments, the fieldName should have the commentId concatenated onto it, like this:
@@ -2219,10 +2220,8 @@ const typeDefs = `
     deleteManuscripts(ids: [ID]!): [ID]!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
-    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
+    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID, isCollaborative: Boolean): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
-    addCollaborativeReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
-    removeCollaborativeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
     importManuscripts(groupId: ID!): Boolean!

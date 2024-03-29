@@ -7,7 +7,6 @@ import { Spinner } from '@pubsweet/ui/dist/atoms'
 import {
   ASSIGN_USER_AS_AUTHOR,
   ASSIGN_USER_AS_REVIEWER,
-  ASSIGN_USER_AS_COLLABORATIVE_REVIEWER,
 } from '../../../../queries/team'
 import {
   GET_INVITATION_MANUSCRIPT_ID,
@@ -80,21 +79,6 @@ const InvitationAcceptedPage = () => {
     },
   })
 
-  const [assignUserAsCollaborativeReviewer] = useMutation(
-    ASSIGN_USER_AS_COLLABORATIVE_REVIEWER,
-    {
-      onCompleted: teamFields => {
-        addReviewerResponse({
-          variables: {
-            currentUserId: invitedUserId,
-            action: 'accepted',
-            teamId: teamFields?.addCollaborativeReviewer?.id,
-          },
-        })
-      },
-    },
-  )
-
   const [addReviewerResponse] = useMutation(
     mutations.reviewerResponseMutation,
     {
@@ -130,20 +114,6 @@ const InvitationAcceptedPage = () => {
 
       if (data.invitationManuscriptId.invitedPersonType === 'REVIEWER') {
         assignUserAsReviewer({
-          variables: {
-            manuscriptId,
-            userId: invitedUserId,
-            invitationId,
-            isShared: !!data.invitationManuscriptId.isShared,
-          },
-        })
-      }
-
-      if (
-        data.invitationManuscriptId.invitedPersonType ===
-        'COLLABORATIVE_REVIEWER'
-      ) {
-        assignUserAsCollaborativeReviewer({
           variables: {
             manuscriptId,
             userId: invitedUserId,
