@@ -61,6 +61,7 @@ module.exports = {
     showTabs: [
       'Team',
       'Decision',
+      'Reviews',
       'Manuscript text',
       'Metadata',
       'Tasks & Notifications',
