@@ -132,7 +132,11 @@ const ConfigManagerForm = ({
     setPendingChanges(prev => {
       const isChanged = properties
         .flat()
-        .some(p => !isEqual(formData[p], initialFormData.current[p]))
+        .some(
+          p =>
+            initialFormData.current[p] &&
+            !isEqual(formData[p], initialFormData.current[p]),
+        )
 
       return { ...prev, [key]: isChanged }
     })
