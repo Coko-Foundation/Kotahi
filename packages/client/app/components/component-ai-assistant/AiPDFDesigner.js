@@ -489,7 +489,7 @@ const AiPDFDesigner = ({
         <CssAssistantUi>
           <ChatBubble
             forceHide={showChat}
-            hasApiKey={config?.openAi?.apiKey}
+            hasApiKey={config?.aiDesignStudio?.apiKey}
             icons={settings.ui.icons}
             onRight
           />
@@ -577,7 +577,7 @@ const AiPDFDesigner = ({
           </WindowHeading>
           {loading && <LoadingOverlay />}
           <OverlayAnimated $loading={loading}>
-            <span>Proccesing...</span>
+            <span>Processing...</span>
           </OverlayAnimated>
           <EditorContainer $loading={loading} onScroll={handleScroll}>
             <Editor

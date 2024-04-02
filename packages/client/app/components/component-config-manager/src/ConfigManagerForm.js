@@ -73,7 +73,13 @@ const Footer = styled.div`
     transition: opacity 0.2s;
   }
 `
+
 // #endregion Styleds
+const StyledWrapper = styled.span`
+  #form-integrations_publishing > legend:nth-of-type(1) {
+    display: ${p => (p.$hideFirstLegend ? 'none' : 'block')};
+  }
+`
 
 const FieldTemplate = props => {
   const { classNames, description, children, showInstanceType, t } = props
@@ -81,10 +87,12 @@ const FieldTemplate = props => {
   // eslint-disable-next-line no-nested-ternary
   return !showInstanceType ? (
     !currentFieldName('instanceName') ? (
-      <div className={classNames}>
-        {description}
-        {children}
-      </div>
+      <StyledWrapper $hideFirstLegend={currentFieldName('publishing')}>
+        <div className={classNames}>
+          {description}
+          {children}
+        </div>
+      </StyledWrapper>
     ) : (
       ''
     )

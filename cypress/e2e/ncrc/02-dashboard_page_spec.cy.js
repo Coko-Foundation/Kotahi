@@ -17,6 +17,6 @@ describe.skip('Dashboard page tests', () => {
     Menu.clickDashboard()
   })
   it("section 'Editing Queue' is visible", () => {
-    DashboardPage.getSectionTitleWithText('Editing queue').should('be.visible')
+    DashboardPage.getSectionTitleWithText('Editing Queue').should('be.visible')
   })
 })

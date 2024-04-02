@@ -16,6 +16,7 @@ import {
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 import { UPDATE_REVIEWER_STATUS_MUTATION } from '../../../../queries/team'
 import useChat from '../../../../hooks/useChat'
+import mutations from '../../../component-dashboard/src/graphql/mutations'
 
 const createFileMutation = gql`
   mutation ($file: Upload!, $meta: FileMetaInput!) {
@@ -235,6 +236,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const [completeComments] = useMutation(COMPLETE_COMMENTS)
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
+  const [chatExpand] = useMutation(mutations.updateChatUI)
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -345,6 +347,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
     <ReviewLayout
       channelId={channelId}
       channels={channels}
+      chatExpand={chatExpand}
       chatProps={chatProps}
       createFile={createFile}
       currentUser={currentUser}

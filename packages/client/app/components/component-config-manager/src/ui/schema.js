@@ -25,7 +25,7 @@ export const tabKeyBasedSchema = {
     'user',
   ],
   production: ['production'],
-  integrations: ['kotahiApis', 'coarNotify', 'openAi'],
+  integrations: ['kotahiApis', 'coarNotify', 'aiDesignStudio', 'publishing'],
   notifications: ['notification', 'eventNotification'],
 }
 
@@ -576,9 +576,9 @@ export const generateSchemas = (
             },
           },
         },
-        openAi: {
+        aiDesignStudio: {
           type: 'object',
-          title: t('configPage.openAi'),
+          title: t('configPage.aiDesignStudio'),
           properties: {
             apiKey: {
               type: ['string', 'null'],
@@ -1117,9 +1117,9 @@ export const generateSchemas = (
             },
           },
         },
-        openAi: {
+        aiDesignStudio: {
           type: 'object',
-          title: t('configPage.openAi'),
+          title: t('configPage.aiDesignStudio'),
           properties: {
             apiKey: {
               type: ['string', 'null'],
@@ -1654,9 +1654,9 @@ export const generateSchemas = (
             },
           },
         },
-        openAi: {
+        aiDesignStudio: {
           type: 'object',
-          title: t('configPage.openAi'),
+          title: t('configPage.aiDesignStudio'),
           properties: {
             apiKey: {
               type: ['string', 'null'],
@@ -2210,9 +2210,9 @@ export const generateSchemas = (
             },
           },
         },
-        openAi: {
+        aiDesignStudio: {
           type: 'object',
-          title: t('configPage.openAi'),
+          title: t('configPage.aiDesignStudio'),
           properties: {
             apiKey: {
               type: ['string', 'null'],

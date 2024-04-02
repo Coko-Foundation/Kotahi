@@ -22,6 +22,7 @@ import {
   DELETE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 import useChat from '../../../../hooks/useChat'
+import mutations from '../../../component-dashboard/src/graphql/mutations'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -81,6 +82,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const { urlFrag } = config
+  const [chatExpand] = useMutation(mutations.updateChatUI)
 
   useEffect(() => {
     return () => {
@@ -277,6 +279,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
     <Submit
       channelId={channelId}
       channels={channels}
+      chatExpand={chatExpand}
       chatProps={chatProps}
       createFile={createFile}
       createNewVersion={createNewVersion}

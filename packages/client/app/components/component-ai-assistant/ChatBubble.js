@@ -216,8 +216,8 @@ const ChatBubble = ({ forceHide, icons, hasApiKey }) => {
               </>
             ) : (
               <span>
-                To use this feature, Kotahi requires OpenAI API access to be
-                configured.
+                To use this feature, Kotahi requires AI Design Studio API access
+                to be configured.
               </span>
             ))}
         </PaddedContent>
