@@ -74,12 +74,13 @@ const Footer = styled.div`
   }
 `
 
-// #endregion Styleds
-const StyledWrapper = styled.span`
+// TODO Improve on this hardcoded hack to hide the "Publishing" heading.
+const StyledWrapper = styled.div`
   #form-integrations_publishing > legend:nth-of-type(1) {
     display: ${p => (p.$hideFirstLegend ? 'none' : 'block')};
   }
 `
+// #endregion Styleds
 
 const FieldTemplate = props => {
   const { classNames, description, children, showInstanceType, t } = props

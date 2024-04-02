@@ -34,6 +34,10 @@ const ButtonContainer = styled.div`
   }
 `
 
+const EnterEmailLabel = styled.label`
+  display: block;
+`
+
 const EnterEmail = ({ updateUserEmail, user }) => {
   const [email, setEmail] = useState('')
   const [updateEmailError, setUpdateEmailError] = useState('')
@@ -57,7 +61,7 @@ const EnterEmail = ({ updateUserEmail, user }) => {
           e.preventDefault()
         }}
       >
-        <label htmlFor="enter-email">Enter Email</label>
+        <EnterEmailLabel htmlFor="enter-email">Enter Email</EnterEmailLabel>
         <InlineTextField
           autoFocus
           error={updateEmailError}
