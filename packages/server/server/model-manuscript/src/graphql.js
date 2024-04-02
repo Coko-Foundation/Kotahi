@@ -1940,11 +1940,19 @@ const resolvers = {
 
       const versionIds = [manuscriptId, ...otherVersions.map(v => v.id)]
 
-      const assignments = await User.relatedQuery('teams')
+      let assignments = await User.relatedQuery('teams')
         .for(ctx.user)
         .select('objectId')
         .where({ role: 'reviewer' })
         .whereIn('objectId', versionIds)
+
+      const collaborativeAssignments = await User.relatedQuery('teams')
+        .for(ctx.user)
+        .select('objectId')
+        .findOne({ role: 'collaborativeReviewer' })
+        .whereIn('objectId', versionIds)
+
+      assignments = assignments.concat(collaborativeAssignments)
 
       return [...new Set(assignments.map(a => a.objectId))]
     },

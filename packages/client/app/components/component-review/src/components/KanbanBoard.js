@@ -80,11 +80,17 @@ const KanbanBoard = ({
   updateReview,
 }) => {
   const reviewers = getMembersOfTeam(version, 'reviewer')
+
+  const collaborativeReviewers = getMembersOfTeam(
+    version,
+    'collaborativeReviewer',
+  )
+
   const { t } = useTranslation()
 
   const emailAndWebReviewers = []
 
-  reviewers.forEach(reviewer => {
+  reviewers.concat(collaborativeReviewers).forEach(reviewer => {
     emailAndWebReviewers.push({
       ...reviewer,
       status: normalizeStatus(reviewer.status),
@@ -98,7 +104,8 @@ const KanbanBoard = ({
   })
 
   invitations
-    .filter(i => i.invitedPersonType === 'REVIEWER')
+    .filter(i => i.invitedPersonType === 'REVIEWER' ||
+      i.invitedPersonType === 'COLLABORATIVE_REVIEWER')
     .map(i => ({ ...i, status: normalizeStatus(i.status) }))
     .forEach(invitation => {
       const existingReviewer = emailAndWebReviewers.find(

@@ -163,6 +163,19 @@ const ConfigManagerForm = ({
       title: defaultReviewerInvitationEmail.emailContent.description,
     }
 
+    // modifying the default reviewer invitation template into react json schema form structure
+    const defaultCollaborativeReviewerInvitationEmail = emailTemplates.find(
+      emailTemplate =>
+        emailTemplate.emailTemplateType === 'collaborativeReviewerInvitation',
+    )
+
+    // modifying the default reviewer invitation template into react json schema form structure
+    const defaultCollaborativeReviewerInvitationTemplate = {
+      const: defaultCollaborativeReviewerInvitationEmail.id,
+      title:
+        defaultCollaborativeReviewerInvitationEmail.emailContent.description,
+    }
+
     // This will return first email template found of author proofing invitation type
     const defaultAuthorProofingInvitationEmail = emailTemplates.find(
       emailTemplate =>
@@ -193,6 +206,7 @@ const ConfigManagerForm = ({
       createFile,
       config,
       defaultReviewerInvitationTemplate,
+      defaultCollaborativeReviewerInvitationTemplate,
       defaultAuthorProofingInvitationTemplate,
       defaultAuthorProofingSubmittedTemplate,
       t,

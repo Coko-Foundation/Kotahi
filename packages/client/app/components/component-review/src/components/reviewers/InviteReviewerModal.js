@@ -17,7 +17,7 @@ import {
   sendEmail,
   sendEmailChannelMessage,
 } from '../emailNotifications/emailUtils'
-import selectReviewerInvitationEmail from './util'
+import { selectReviewerInvitationEmail } from './util'
 
 const ModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};

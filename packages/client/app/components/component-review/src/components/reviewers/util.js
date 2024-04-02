@@ -6,13 +6,24 @@ export const selectReviewerInvitationEmail = (
 ) => {
   let reviewerInvitationEmailTemplate
 
-  if (config.eventNotification?.reviewerInvitationPrimaryEmailTemplate) {
+  if (
+    !isCollaborative &&
+    config.eventNotification?.reviewerInvitationPrimaryEmailTemplate
+  ) {
     reviewerInvitationEmailTemplate =
       config.eventNotification.reviewerInvitationPrimaryEmailTemplate
+  } else if (
+    isCollaborative &&
+    config.eventNotification
+      ?.reviewerCollaborativeInvitationPrimaryEmailTemplate
+  ) {
+    reviewerInvitationEmailTemplate =
+      config.eventNotification
+        .reviewerCollaborativeInvitationPrimaryEmailTemplate
   } else if (isCollaborative) {
     reviewerInvitationEmailTemplate = emailTemplates.find(
       template =>
-        template.emailTemplateType === 'reviewerCollaborativeInvitation',
+        template.emailTemplateType === 'collaborativeReviewerInvitation',
     ).id
   } else {
     reviewerInvitationEmailTemplate = emailTemplates.find(

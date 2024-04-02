@@ -247,7 +247,9 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     .where({
       objectId: manuscript.id,
       objectType: 'manuscript',
-      role: 'reviewer',
+    })
+    .andWhere(builder => {
+      builder.whereIn('role', ['reviewer', 'collaborativeReviewer'])
     })
     .first()
 

@@ -8,6 +8,7 @@ import { convertTimestampToRelativeDateString } from '../../../../../shared/date
 import { UserAvatar } from '../../../../component-avatar/src'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
 import { color } from '../../../../../theme'
+import { ColorBadge } from '../../../../shared'
 
 const Card = styled.div`
   background-color: ${color.gray97};
@@ -49,6 +50,7 @@ const DateDisplay = styled.div`
 const LeftSide = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 `
 
 const EmailDisplay = styled(DateDisplay)`
@@ -65,6 +67,11 @@ const MailIcon = styled(Mail)`
   height: 12px;
   margin-right: calc(${th('gridUnit')} / 2);
   width: auto;
+`
+
+const CollaborativeBadge = styled.div`
+  flex-basis: 100%;
+  padding-top: 10px;
 `
 
 const KanbanCard = ({
@@ -131,6 +138,11 @@ const KanbanCard = ({
               </EmailDisplay>
             )}
           </InfoGrid>
+          {reviewer.invitedPersonType === 'COLLABORATIVE_REVIEWER' && (
+            <CollaborativeBadge>
+              <ColorBadge color="green">Is collaborative review</ColorBadge>
+            </CollaborativeBadge>
+          )}
         </LeftSide>
       </Card>
     </>

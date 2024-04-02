@@ -13,7 +13,7 @@ import {
 } from '../emailNotifications/emailUtils'
 import InviteReviewerModal from './InviteReviewerModal'
 import ReviewerForm from './ReviewerForm'
-import selectReviewerInvitationEmail from './util'
+import { selectReviewerInvitationEmail } from './util'
 import { ConfigContext } from '../../../../config/src'
 
 const InviteReviewer = ({

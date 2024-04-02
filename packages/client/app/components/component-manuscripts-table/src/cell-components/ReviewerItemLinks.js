@@ -22,7 +22,13 @@ const ReviewerItemLinks = ({
   getMainActionLink,
 }) => {
   const status = findReviewerStatus(manuscript, currentUser.id)
-  const team = (manuscript.teams || []).find(t => t.role === 'reviewer')
+
+  const team = (manuscript.teams || []).find(t => {
+    const member = t.members.find(m => m.user.id === currentUser.id)
+    return (
+      (t.role === 'reviewer' || t.role === 'collaborativeReviewer') && member
+    )
+  })
 
   const history = useHistory()
 

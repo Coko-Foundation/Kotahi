@@ -545,6 +545,8 @@ const fr = {
       reviewRejectedEmailTemplate:
         "L'évaluateur rejette une invitation à évaluer",
       reviewerInvitationPrimaryEmailTemplate: "Invitation à l'évaluation",
+      reviewerCollaborativeInvitationPrimaryEmailTemplate:
+        'Invitación al revisor collaborer',
       evaluationCompleteEmailTemplate: 'Évaluation soumise',
       submissionConfirmationEmailTemplate: 'Manuscrit soumis',
       alertUnreadMessageDigestTemplate: 'Message de discussion non lu',

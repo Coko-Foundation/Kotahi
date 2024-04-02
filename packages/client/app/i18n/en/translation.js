@@ -523,6 +523,8 @@ const en = {
       eventNotification: 'Event Notifications',
       reviewRejectedEmailTemplate: 'Reviewer rejects an invitation to review',
       reviewerInvitationPrimaryEmailTemplate: 'Reviewer invitation',
+      reviewerCollaborativeInvitationPrimaryEmailTemplate:
+        'Reviewer collaborative invitation',
       evaluationCompleteEmailTemplate: 'Submitted review',
       submissionConfirmationEmailTemplate: 'Submitted manuscript',
       alertUnreadMessageDigestTemplate: 'Unread discussion message',

@@ -94,7 +94,7 @@ const resolvers = {
 
       const team = await manuscript
         .$relatedQuery('teams')
-        .where('role', 'reviewer')
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
         .first()
 
       const member = await team

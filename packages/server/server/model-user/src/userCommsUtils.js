@@ -195,9 +195,11 @@ const sendEmailWithPreparedData = async (
 
   // authorInvitation, reviewerInvitation create Invitation
   if (
-    ['authorInvitation', 'reviewerInvitation'].includes(
-      selectedEmailTemplateData.emailTemplateType,
-    )
+    [
+      'authorInvitation',
+      'reviewerInvitation',
+      'collaborativeReviewerInvitation',
+    ].includes(selectedEmailTemplateData.emailTemplateType)
   ) {
     let userId = null
     let invitedPersonName = ''
@@ -216,10 +218,16 @@ const sendEmailWithPreparedData = async (
       invitedPersonName = externalName
     }
 
-    const invitedPersonType =
-      selectedEmailTemplateData.emailTemplateType === 'authorInvitation'
-        ? 'AUTHOR'
-        : 'REVIEWER'
+    let invitedPersonType = 'REVIEWER'
+
+    if (selectedEmailTemplateData.emailTemplateType === 'authorInvitation') {
+      invitedPersonType = 'AUTHOR'
+    } else if (
+      selectedEmailTemplateData.emailTemplateType ===
+      'collaborativeReviewerInvitation'
+    ) {
+      invitedPersonType = 'COLLABORATIVE_REVIEWER'
+    }
 
     const newInvitation = await new Invitation({
       manuscriptId,
@@ -230,7 +238,7 @@ const sendEmailWithPreparedData = async (
       invitedPersonType,
       invitedPersonName,
       userId,
-    }).saveGraph() // no trx!!
+    }).saveGraph()
 
     invitationId = newInvitation.id
   }
