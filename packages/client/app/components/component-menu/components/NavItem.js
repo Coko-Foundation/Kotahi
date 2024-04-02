@@ -33,7 +33,7 @@ const NavItem = props => {
 
   return link ? (
     <StyledLink
-      active={location.pathname === link || location.pathname.includes(link)}
+      $active={location.pathname === link || location.pathname.includes(link)}
       className={className}
       data-testid={`menu-${name}`}
       depth={depth}

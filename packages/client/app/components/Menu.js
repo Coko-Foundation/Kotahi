@@ -79,7 +79,7 @@ const Menu = ({
         }
         type="submit"
       >
-        <StyledPinButton $pinned={menuPinned} menuIsMinimal={menuIsMinimal} />
+        <StyledPinButton $menuIsMinimal={menuIsMinimal} $pinned={menuPinned} />
       </SectionNavLayoutSettings>
       {/* TODO: Place this notice (used for offline notification) better */}
       {notice}
