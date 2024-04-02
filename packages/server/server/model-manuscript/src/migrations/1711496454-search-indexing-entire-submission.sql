@@ -6,10 +6,7 @@ DECLARE
 BEGIN
   -- Check the type of the JSONB value
   IF jsonb_typeof(jsonb_value) = 'string' THEN
-    -- Process string values, excluding 'true' and 'false'
-    IF jsonb_value::text NOT IN ('"true"', '"false"') THEN
-      result_text := jsonb_value::text || E'\n';
-    END IF;
+    result_text := trim(both '"' from jsonb_value::text) || E'\n';
   ELSIF jsonb_typeof(jsonb_value) = 'object' THEN
     FOR element IN SELECT value FROM jsonb_each(jsonb_value) LOOP
       result_text := result_text || concatenate_text_values(element);
