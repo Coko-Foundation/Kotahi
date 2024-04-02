@@ -85,7 +85,7 @@ const ReviewHeading = ({
   if (!currentUser) return null
 
   const isTheUserOfTheReview = currentUser.id === review?.user?.id
-  const shouldNotSetUser = !isTheUserOfTheReview
+  const shouldNotSetUser = canEditReviews && !isTheUserOfTheReview
 
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')

@@ -30,7 +30,7 @@ const resolvers = {
         isHiddenReviewerName: false,
         ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
         // Prevent reassignment of userId or manuscriptId:
-        userId: shouldNotSetUser ? null : existingReview.userId || ctx.user,
+        userId: existingReview.userId || (shouldNotSetUser ? null : ctx.user),
         manuscriptId: existingReview.manuscriptId || input.manuscriptId,
       }
 
@@ -55,11 +55,8 @@ const resolvers = {
 
       // We want to modify file URIs before return, so we'll use the parsed jsonData
       review.jsonData = mergedReview.jsonData
-      let reviewUser = null
 
-      if (!shouldNotSetUser) {
-        reviewUser = await models.User.query().findById(review.userId)
-      }
+      const reviewUser = await models.User.query().findById(review.userId)
 
       await convertFilesToFullObjects(
         review,

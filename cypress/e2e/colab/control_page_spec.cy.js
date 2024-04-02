@@ -312,7 +312,7 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
       })
-      ControlPage.clickDecisionTab(1)
+      ControlPage.clickReviewsTab(2)
       ControlPage.clickHideReviewToAuthor()
       ControlPage.clickHideReviewerNameToAuthor()
       cy.fixture('role_names').then(name => {
