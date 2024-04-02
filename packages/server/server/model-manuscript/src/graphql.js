@@ -1499,6 +1499,7 @@ const resolvers = {
         filters,
         timezoneOffsetMinutes,
         groupId,
+        searchInAllVersions,
       },
       ctx,
     ) {
@@ -1535,20 +1536,32 @@ const resolvers = {
             ? m.manuscriptVersions[0]
             : m
 
-        if (
-          latestVersion.teams.some(t =>
-            t.members.some(member => {
-              return (
-                member.userId === ctx.user &&
-                wantedRoles.includes(t.role) &&
-                (!reviewerStatus || member.status === reviewerStatus)
+        const versionsToSearch = searchInAllVersions
+          ? [m, ...(m.manuscriptVersions ?? [])]
+          : [latestVersion]
+
+        const rolesFound = new Set()
+
+        versionsToSearch.forEach(v =>
+          v.teams
+            .filter(t => wantedRoles.includes(t.role))
+            .forEach(t => {
+              if (
+                t.members.some(
+                  member =>
+                    member.userId === ctx.user &&
+                    (!reviewerStatus || member.status === reviewerStatus),
+                )
               )
+                rolesFound.add(t.role)
             }),
-          )
-        ) {
+        )
+
+        if (rolesFound.size) {
           // eslint-disable-next-line no-param-reassign
           latestVersion.hasOverdueTasksForUser =
             manuscriptHasOverdueTasksForUser(latestVersion, ctx.user)
+          latestVersion.rolesFound = [...rolesFound]
 
           userManuscriptsWithInfo[latestVersion.id] = latestVersion
         }
@@ -1854,19 +1867,25 @@ const resolvers = {
 
       return exportData
     },
-    async currentUserIsReviewerOfManuscript(_, { manuscriptId }, ctx) {
+    /** Return all version IDs for which the current user is assigned as a reviewer */
+    async versionsOfManuscriptCurrentUserIsReviewerOf(
+      _,
+      { manuscriptId },
+      ctx,
+    ) {
       const otherVersions = await (
         await models.Manuscript.query().findById(manuscriptId)
       ).getManuscriptVersions()
 
       const versionIds = [manuscriptId, ...otherVersions.map(v => v.id)]
 
-      const team = await models.User.relatedQuery('teams')
+      const assignments = await models.User.relatedQuery('teams')
         .for(ctx.user)
-        .findOne({ role: 'reviewer' })
+        .select('objectId')
+        .where({ role: 'reviewer' })
         .whereIn('objectId', versionIds)
 
-      return !!team
+      return [...new Set(assignments.map(a => a.objectId))]
     },
   },
   Manuscript: {
@@ -2104,7 +2123,7 @@ const typeDefs = `
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
     paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
-    manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
+    manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!, searchInAllVersions: Boolean!): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int, groupId: ID!): PaginatedManuscripts
     validateDOI(doiOrUrl: String): validateDOIResponse
     validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
@@ -2116,7 +2135,7 @@ const typeDefs = `
     unreviewedPreprints(token: String!, groupName: String): [Preprint!]!
     doisToRegister(id: ID!): [String]
     getManuscriptsData(selectedManuscripts: [ID!]!): [ManuscriptExport!]!
-    currentUserIsReviewerOfManuscript(manuscriptId: ID!): Boolean!
+    versionsOfManuscriptCurrentUserIsReviewerOf(manuscriptId: ID!): [ID!]!
   }
 
   input ManuscriptsFilter {
@@ -2192,6 +2211,7 @@ const typeDefs = `
     hasOverdueTasksForUser: Boolean
     invitations: [Invitation]
     authorFeedback: ManuscriptAuthorFeeback
+    rolesFound: [String!]
   }
 
   type ReviewExport {

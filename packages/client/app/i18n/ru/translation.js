@@ -22,6 +22,7 @@ const ru = {
       inProgress: 'В работе',
       completed: 'Завершено',
       unanswered: 'Без ответа',
+      notAssignedForThisVersion: 'Не рецензент текущей версии',
     },
     common: {
       cms: 'CMS',
@@ -155,6 +156,7 @@ const ru = {
       reviewDo: 'Рецензировать',
       reviewCompleted: 'Готово',
       reviewContinue: 'Продолжить',
+      viewOldReviews: 'Просмотреть старые отзывы',
       all: 'Все',
       Search: 'Поиск',
       actions: {

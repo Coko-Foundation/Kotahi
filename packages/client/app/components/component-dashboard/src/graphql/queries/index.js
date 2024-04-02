@@ -41,6 +41,7 @@ hasOverdueTasksForUser
 invitations {
   status
 }
+rolesFound
 `
 
 const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
@@ -77,7 +78,7 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
 
 export default {
   dashboard: gql`
-    query Dashboard($reviewerStatus: String, $wantedRoles: [String]!, $sort: ManuscriptsSort, $filters: [ManuscriptsFilter!]!, $offset: Int, $limit: Int, $timezoneOffsetMinutes: Int, $groupId: ID!) {
+    query Dashboard($reviewerStatus: String, $wantedRoles: [String]!, $sort: ManuscriptsSort, $filters: [ManuscriptsFilter!]!, $offset: Int, $limit: Int, $timezoneOffsetMinutes: Int, $groupId: ID!, $searchInAllVersions: Boolean!) {
       manuscriptsUserHasCurrentRoleIn(
         reviewerStatus: $reviewerStatus
         wantedRoles: $wantedRoles
@@ -86,7 +87,8 @@ export default {
         offset: $offset
         limit: $limit
         timezoneOffsetMinutes: $timezoneOffsetMinutes
-        groupId: $groupId)
+        groupId: $groupId
+        searchInAllVersions: $searchInAllVersions)
         {
           totalCount
           manuscripts {

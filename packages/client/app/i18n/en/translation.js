@@ -22,6 +22,7 @@ const en = {
       inProgress: 'In Progress',
       completed: 'Completed',
       unanswered: 'Unanswered',
+      notAssignedForThisVersion: 'Not a reviewer of the current version',
     },
     common: {
       cms: 'CMS',
@@ -152,6 +153,7 @@ const en = {
       reviewDo: 'Do Review',
       reviewCompleted: 'Completed',
       reviewContinue: 'Continue Review',
+      viewOldReviews: 'View old review(s)',
       all: 'All',
       Search: 'Search',
       actions: {

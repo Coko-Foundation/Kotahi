@@ -55,11 +55,16 @@ const IconContainer = styled.div`
 `
 
 /** Equivalent of <a href="...">, styled the same as other Actions */
-export const LinkAction = ({ children, isDisabled, to, dataTestId }) => {
+export const LinkAction = ({
+  children,
+  isDisabled,
+  to,
+  'data-testid': dataTestId,
+}) => {
   const history = useHistory()
   return (
     <Action
-      dataTestId={dataTestId}
+      data-testid={dataTestId}
       isDisabled={isDisabled}
       onClick={() => history.push(to)}
     >
@@ -84,7 +89,7 @@ LinkAction.defaultProps = { isDisabled: false }
 const Action = ({
   children,
   className,
-  dataTestId,
+  'data-testid': dataTestId,
   isDisabled,
   onActionCompleted,
   onClick,

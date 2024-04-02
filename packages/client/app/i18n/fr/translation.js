@@ -22,6 +22,7 @@ const fr = {
       inProgress: 'En cours',
       completed: 'Terminé',
       unanswered: 'Sans réponse',
+      notAssignedForThisVersion: "N'est pas évaluateur de la version actuelle",
     },
     common: {
       cms: 'CMS',
@@ -153,6 +154,7 @@ const fr = {
       reviewDo: 'Faire la révision',
       reviewCompleted: 'Terminé',
       reviewContinue: 'Continuer la révision',
+      viewOldReviews: 'Voir les anciennes évaluations',
       all: 'Tous',
       Search: 'Rechercher',
       actions: {

@@ -14,7 +14,7 @@ const EditorItemLinks = ({ manuscript, urlFrag }) => {
   return (
     <Container>
       <LinkAction
-        dataTestId="control-panel-team"
+        data-testid="control-panel-team"
         to={`${urlFrag}/versions/${
           manuscript.parentId || manuscript.id
         }/decision`}
@@ -22,7 +22,7 @@ const EditorItemLinks = ({ manuscript, urlFrag }) => {
         {t('manuscriptsTable.Control')}
       </LinkAction>
       <LinkAction
-        dataTestId="production-editor"
+        data-testid="production-editor"
         to={`${urlFrag}/versions/${manuscript.id}/production`}
       >
         {t('manuscriptsTable.Production')}

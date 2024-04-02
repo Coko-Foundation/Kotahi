@@ -1,8 +1,8 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Action, ActionGroup } from '@pubsweet/ui'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Action, MediumRow } from '../../../shared'
 import { color } from '../../../../theme'
 
 const Divider = styled.div`
@@ -27,7 +27,7 @@ const ReviewerItemLinks = ({
     team.members &&
     team.members.find(member => member.user.id === currentUser.id)
 
-  const status = currentMember && currentMember.status
+  const status = currentMember?.status ?? 'none'
 
   const history = useHistory()
 
@@ -38,37 +38,36 @@ const ReviewerItemLinks = ({
     completed: t('manuscriptsTable.reviewCompleted'),
     accepted: t('manuscriptsTable.reviewDo'),
     inProgress: t('manuscriptsTable.reviewContinue'),
+    none: t('manuscriptsTable.viewOldReviews'),
   }
 
-  if (['accepted', 'completed', 'inProgress'].includes(status)) {
+  if (['accepted', 'completed', 'inProgress', 'none'].includes(status)) {
     return (
-      <ActionGroup>
-        <Action
-          onClick={async e => {
-            e.stopPropagation()
-            // on click, update review status before forwarding to link
+      <Action
+        onClick={async e => {
+          e.stopPropagation()
+          // on click, update review status before forwarding to link
 
-            if (status === 'accepted') {
-              await updateReviewerStatus({
-                variables: {
-                  manuscriptId: manuscript.id,
-                  status: 'inProgress',
-                },
-              })
-            }
+          if (status === 'accepted') {
+            await updateReviewerStatus({
+              variables: {
+                manuscriptId: manuscript.id,
+                status: 'inProgress',
+              },
+            })
+          }
 
-            history.push(mainActionLink)
-          }}
-        >
-          {reviewLinkText[status]}
-        </Action>
-      </ActionGroup>
+          history.push(mainActionLink)
+        }}
+      >
+        {reviewLinkText[status]}
+      </Action>
     )
   }
 
   if (status === 'invited') {
     return (
-      <ActionGroup>
+      <MediumRow>
         <Action
           data-testid="accept-review"
           onClick={e => {
@@ -100,15 +99,11 @@ const ReviewerItemLinks = ({
         >
           {t('manuscriptsTable.reviewReject')}
         </Action>
-      </ActionGroup>
+      </MediumRow>
     )
   }
 
-  return (
-    <ActionGroup>
-      <Action disabled>{t(`reviewerStatus.${status}`)}</Action>
-    </ActionGroup>
-  )
+  return <Action disabled>{t(`reviewerStatus.${status}`)}</Action>
 }
 
 export default ReviewerItemLinks
