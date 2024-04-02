@@ -129,6 +129,8 @@ const seedConfig = async (group, instanceName, index, options) => {
           eventNotification: {},
           groupIdentity,
           kotahiApis: {},
+          coarNotify: {},
+          aiDesignStudio: {},
         },
         type: 'Config',
       }
@@ -170,6 +172,8 @@ const seedConfig = async (group, instanceName, index, options) => {
           eventNotification: {},
           groupIdentity,
           kotahiApis: {},
+          coarNotify: {},
+          aiDesignStudio: {},
         },
         type: 'Config',
       }
@@ -228,6 +232,8 @@ const seedConfig = async (group, instanceName, index, options) => {
           eventNotification: {},
           groupIdentity,
           kotahiApis: {},
+          coarNotify: {},
+          aiDesignStudio: {},
         },
         type: 'Config',
       }
@@ -239,7 +245,6 @@ const seedConfig = async (group, instanceName, index, options) => {
           instanceName: 'journal',
           user: {
             isAdmin: false,
-            kotahiApiTokens,
           },
           report: { showInMenu: true },
           review: { showSummary: false },
@@ -274,7 +279,11 @@ const seedConfig = async (group, instanceName, index, options) => {
           notification,
           eventNotification: {},
           groupIdentity,
-          kotahiApis: {},
+          kotahiApis: {
+            tokens: kotahiApiTokens,
+          },
+          coarNotify: {},
+          aiDesignStudio: {},
         },
         type: 'Config',
       }
@@ -321,6 +330,8 @@ const seedConfig = async (group, instanceName, index, options) => {
           eventNotification: {},
           groupIdentity,
           kotahiApis: {},
+          coarNotify: {},
+          aiDesignStudio: {},
         },
         type: 'Config',
       }
