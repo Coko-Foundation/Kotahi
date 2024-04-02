@@ -1,18 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { LinkAction } from '../../../shared'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`
+import { LinkAction, SolidColumn } from '../../../shared'
 
 const EditorItemLinks = ({ manuscript, urlFrag }) => {
   const { t } = useTranslation()
   return (
-    <Container>
+    <SolidColumn>
       <LinkAction
         dataTestId="control-panel-team"
         to={`${urlFrag}/versions/${
@@ -27,7 +21,7 @@ const EditorItemLinks = ({ manuscript, urlFrag }) => {
       >
         {t('manuscriptsTable.Production')}
       </LinkAction>
-    </Container>
+    </SolidColumn>
   )
 }
 
