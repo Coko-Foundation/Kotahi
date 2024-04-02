@@ -37,6 +37,7 @@ const DashboardEditsPage = ({ currentUser, history }) => {
       filters,
       timezoneOffsetMinutes: new Date().getTimezoneOffset(),
       groupId: config.groupId,
+      searchInAllVersions: false,
     },
     fetchPolicy: 'network-only',
   })

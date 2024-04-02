@@ -166,7 +166,7 @@ const query = gql`
       }
     }
 
-    currentUserIsReviewerOfManuscript(manuscriptId: $id)
+    versionsOfManuscriptCurrentUserIsReviewerOf(manuscriptId: $id)
 
     threadedDiscussions(manuscriptId: $id) {
       id
@@ -296,7 +296,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
   if (manuscript.parentId)
     return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
 
-  if (!data.currentUserIsReviewerOfManuscript)
+  if (!data.versionsOfManuscriptCurrentUserIsReviewerOf.length)
     return (
       <Page>
         <Heading>This review is not accessible.</Heading>
@@ -361,6 +361,9 @@ const ReviewPage = ({ currentUser, history, match }) => {
       updateReviewerStatus={updateReviewerStatus}
       updateReviewMutation={updateReviewMutation}
       versions={versions}
+      versionsOfManuscriptCurrentUserIsReviewerOf={
+        data.versionsOfManuscriptCurrentUserIsReviewerOf
+      }
     />
   )
 }

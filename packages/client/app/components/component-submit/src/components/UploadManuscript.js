@@ -233,7 +233,7 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
           </Root>
         )}
       </Dropzone>
-      <Action dataTestId="submitUrl" onClick={() => uploadManuscript()}>
+      <Action data-testid="submitUrl" onClick={() => uploadManuscript()}>
         {t('newSubmission.Submit a URL instead')}
       </Action>
     </>

@@ -1,6 +1,6 @@
 import React from 'react'
-import i18next from 'i18next'
-import { ConfigurableStatus } from '../../../shared'
+import { t } from 'i18next'
+import { CompactDetailLabel, ConfigurableStatus } from '../../../shared'
 import reviewStatuses from '../../../../../config/journal/review-status'
 import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
@@ -8,13 +8,22 @@ import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilter
 const ReviewerStatusBadge = ({ manuscript, currentUser }) => {
   const members = getMembersOfTeam(manuscript, 'reviewer')
 
-  const status = members?.find(
+  const memberRecord = members?.find(
     member => member.user.id === currentUser.id,
-  )?.status
+  )
+
+  if (!memberRecord)
+    return (
+      <CompactDetailLabel>
+        {t('reviewerStatus.notAssignedForThisVersion')}
+      </CompactDetailLabel>
+    )
+
+  const status = memberRecord?.status
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,
-    i18next.t,
+    t,
   )
 
   const statusConfig = LocalizedReviewFilterOptions.find(

@@ -23,6 +23,7 @@ const esLa = {
       inProgress: 'En Progreso',
       completed: 'Completado',
       unanswered: 'Sin Respuesta',
+      notAssignedForThisVersion: 'No es revisor de la versión actual',
     },
     common: {
       cms: 'CMS',
@@ -153,6 +154,7 @@ const esLa = {
       reviewDo: 'Hacer Revisión',
       reviewCompleted: 'Completado',
       reviewContinue: 'Continuar Revisión',
+      viewOldReviews: 'Ver revisiones anteriores',
       all: 'Todo',
       Search: 'Buscar',
       actions: {

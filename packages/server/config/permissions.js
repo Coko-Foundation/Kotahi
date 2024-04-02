@@ -458,7 +458,6 @@ const permissions = {
     convertToJats: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     convertToPdf: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     currentUser: isAuthenticated,
-    currentUserIsReviewerOfManuscript: allow,
     docmap: allow,
     editorsActivity: or(userIsGm, userIsAdmin),
     file: deny, // Never used
@@ -521,6 +520,7 @@ const permissions = {
     users: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     validateDOI: isAuthenticated,
     validateSuffix: isAuthenticated,
+    versionsOfManuscriptCurrentUserIsReviewerOf: allow,
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse

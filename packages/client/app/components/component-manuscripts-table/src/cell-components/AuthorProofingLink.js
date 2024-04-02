@@ -32,7 +32,7 @@ const AuthorProofingLink = ({ manuscript, urlFrag, currentUser }) => {
     return authorProofingEnabled ? (
       <Container>
         <Action
-          dataTestId="author-proofing-editor"
+          data-testid="author-proofing-editor"
           onClick={async e => {
             e.stopPropagation()
             history.push(`${urlFrag}/versions/${manuscript.id}/production`)

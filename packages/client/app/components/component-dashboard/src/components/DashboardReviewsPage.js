@@ -47,6 +47,7 @@ const DashboardReviewsPage = ({ currentUser, history }) => {
       filters,
       timezoneOffsetMinutes: new Date().getTimezoneOffset(),
       groupId: config.groupId,
+      searchInAllVersions: true,
     },
     fetchPolicy: 'network-only',
   })
