@@ -57,6 +57,7 @@ const Submit = ({
   manuscriptLatestVersionId,
   validateDoi,
   validateSuffix,
+  chatExpand,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -65,7 +66,7 @@ const Submit = ({
   )
 
   const [isSubmisionDiscussionVisible, setIsSubmisionDiscussionVisible] =
-    React.useState(false)
+    React.useState(currentUser.chatExpanded)
 
   const allowAuthorsSubmitNewVersion =
     config?.submission?.allowAuthorsSubmitNewVersion
@@ -214,6 +215,7 @@ const Submit = ({
         await refetchNotificationOptionData()
       }
 
+      chatExpand({ variables: { state: !isSubmisionDiscussionVisible } })
       setIsSubmisionDiscussionVisible(prevState => !prevState)
     } catch (error) {
       console.error('Error toggling submission discussion visibility:', error)

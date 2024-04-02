@@ -92,7 +92,7 @@ describe.skip('Login page tests', () => {
     })
     cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('be.visible')
-    DashboardPage.getSectionTitleWithText('Editing queue').should('be.visible')
+    DashboardPage.getSectionTitleWithText('Editing Queue').should('be.visible')
     Menu.getFormsButton().should('not.exist')
     Menu.getUsersButton().should('not.exist')
     Menu.getManuscriptsButton().should('not.exist')

@@ -79,7 +79,9 @@ const DecisionVersions = ({
     [],
   )
 
-  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(false)
+  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(
+    currentUser.chatExpanded,
+  )
 
   const toggleDiscussionVisibility = async () => {
     try {

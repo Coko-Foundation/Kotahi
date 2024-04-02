@@ -279,7 +279,7 @@ const Production = ({
     ),
     hideOnly: true,
     key: 'css-ai-assistant',
-    label: <LabeledTab>AiAssistant</LabeledTab>,
+    label: <LabeledTab>Ai Design Studio</LabeledTab>,
   }
 
   const tabSections = []

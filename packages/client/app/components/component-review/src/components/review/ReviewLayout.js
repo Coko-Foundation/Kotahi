@@ -48,6 +48,7 @@ const ReviewLayout = ({
   updateReviewMutation,
   history,
   updateReviewerStatus,
+  chatExpand,
 }) => {
   const config = useContext(ConfigContext) || {}
   const { urlFrag } = config
@@ -404,7 +405,9 @@ const ReviewLayout = ({
     })
   }
 
-  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(false)
+  const [isDiscussionVisible, setIsDiscussionVisible] = React.useState(
+    currentUser.chatExpanded,
+  )
 
   const toggleSubmissionDiscussionVisibility = async () => {
     try {
@@ -416,7 +419,7 @@ const ReviewLayout = ({
       })
 
       await Promise.all(dataRefetchPromises)
-
+      chatExpand({ variables: { state: !isDiscussionVisible } })
       setIsDiscussionVisible(prevState => !prevState)
     } catch (error) {
       console.error('Error toggling submission discussion visibility:', error)
