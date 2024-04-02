@@ -85,13 +85,14 @@ export const StyledPinButton = styled(PinButton)`
   background: ${p => (p.$pinned ? '#fff4' : 'transparent')};
   border-radius: 4px;
   color: ${p => (p.$pinned ? color.brand1.tint90 : color.brand1.tint25)};
-  max-width: ${p => (p.menuIsMinimal ? '0' : '100%')};
-  opacity: ${p => (p.menuIsMinimal ? '0' : '1')};
+  max-width: ${p => (p.$menuIsMinimal ? '0' : '100%')};
+  opacity: ${p => (p.$menuIsMinimal ? '0' : '1')};
   overflow: hidden;
   padding: 1px 2px 2px 2px;
   position: absolute;
   right: 4px;
   top: 1px;
+  transition: opacity ease 0.2s;
 
   svg {
     aspect-ratio: 1 / 1;
@@ -105,9 +106,9 @@ export const StyledPinButton = styled(PinButton)`
 
 // #region Link
 export const StyledLink = styled(Link)`
-  background-color: ${p => (p.active ? color.brand1.tint70 : 'unset')};
+  background-color: ${p => (p.$active ? color.brand1.tint70 : 'unset')};
   border-radius: 10px;
-  color: ${p => (p.active ? color.text : color.textReverse)} !important;
+  color: ${p => (p.$active ? color.text : color.textReverse)} !important;
   cursor: pointer;
   display: flex;
   font-size: ${th('fontSizeBase')} !important;
@@ -136,7 +137,7 @@ export const StyledLink = styled(Link)`
   }
 
   svg {
-    stroke: ${p => (p.active ? color.text : color.textReverse)};
+    stroke: ${p => (p.$active ? color.text : color.textReverse)};
     transition: stroke var(--transition-link-colors);
     width: 1em;
   }
@@ -216,9 +217,9 @@ export const UserItem = styled(Link)`
   border-bottom: 1px solid #fff2;
   color: ${color.textReverse};
   display: flex;
-  gap: ${p => (p.expanded ? '16px' : '0')};
+  gap: ${p => (p.$expanded ? '16px' : '0')};
   overflow: hidden;
-  padding: ${p => (p.expanded ? '11.2px 16px 16px 8px' : '8px 0 8px 2.4px')};
+  padding: ${p => (p.$expanded ? '11.2px 16px 16px 8px' : '8px 0 8px 2.4px')};
   text-decoration: none !important;
   transition: all var(--transition-time);
   width: 100%;
