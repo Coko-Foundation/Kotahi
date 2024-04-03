@@ -447,6 +447,15 @@ const resolvers = {
 
       return user
     },
+    searchUsersByEmail(_, { search, exclude }, ctx) {
+      if (!search) {
+        return []
+      }
+
+      return models.User.query()
+        .where({ email: search.toLowerCase() })
+        .whereNotIn('id', exclude || [])
+    },
   },
   User: {
     async isOnline(parent) {
@@ -546,6 +555,7 @@ const typeDefs = `
     setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
     setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
     expandChat(state: Boolean!): User!
+	searchUsersByEmail(search: String, exclude: [ID]!): [User]
   }
 
   type UpdateEmailResponse {

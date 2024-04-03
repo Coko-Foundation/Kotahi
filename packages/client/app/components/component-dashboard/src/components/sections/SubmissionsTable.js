@@ -69,13 +69,23 @@ const SubmissionsTable = ({
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>{t('dashboardPage.My Submissions')}</Title>
+        <Title>
+          {t(
+            `dashboardPage.${
+              ['lab'].includes(config.instanceName)
+                ? 'Articles'
+                : 'My Submissions'
+            }`,
+          )}
+        </Title>
       </SectionHeader>
       <ManuscriptsTable
         applyQueryParams={applyQueryParams}
         columnsProps={columnsProps}
         getMainActionLink={manuscript =>
-          `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/submit`
+          `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/${
+            ['lab'].includes(config.instanceName) ? 'evaluation' : 'submit'
+          }`
         }
         manuscripts={manuscriptsUserHasCurrentRoleIn.manuscripts}
         sortDirection={sortDirection}

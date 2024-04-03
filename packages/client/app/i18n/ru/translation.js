@@ -9,6 +9,7 @@ const ru = {
       revise: 'Нуждается в исправлении',
       revising: 'На исправлении',
       published: 'Опубликовано',
+      unpublished: 'Неопубликовано',
       unknown: 'Неизвестный статус',
       assigned: 'Доказательство автора присвоено',
       inProgress: 'Авторская проверка в процессе',
@@ -166,6 +167,7 @@ const ru = {
         Archive: 'В архив',
         Production: 'Редактирование',
         Publish: 'Опубликовать',
+        Republish: 'Переиздать',
         confirmArchive:
           'Подтвердите, если действительно хотите переместить рукопись в архив',
         confirmArchiveButton: 'Архивировать',
@@ -178,10 +180,12 @@ const ru = {
     dashboardPage: {
       Dashboard: 'Панель управления',
       'New submission': 'Загрузить новую статью',
+      'New post': 'Новый пост',
       'New Alerts': 'Новые оповещения',
       'My Submissions': 'Мои статьи',
       'To Review': 'Обзор назначений',
       "Manuscripts I'm editor of": 'Очередь редактирования',
+      Articles: 'Статьи',
       mySubmissions: {
         'Provide production feedback': 'Оставьте отзыв о производстве',
         'View production feedback': 'Посмотреть отзывы о производстве',
@@ -503,6 +507,12 @@ const ru = {
         'Приглашение, подтвержденное автором',
       authorProofingSubmittedEmailTemplate:
         'Автор завершил проверку и отправил отзыв',
+      collaboratorAccessGrantedEmailTemplate:
+        'Доступ к статье соавтора предоставлен',
+      collaboratorAccessChangeEmailTemplate:
+        'Тип доступа к статьям Collaborator изменен',
+      collaboratorAccessRemovedEmailTemplate:
+        'Доступ к статьям соавторов закрыт',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
@@ -796,6 +806,16 @@ const ru = {
       'No reviews to show': 'Нет рецензий для показа.',
       'No completed reviews': 'Нет завершенных рецензий.',
       Metadata: 'Основные данные',
+      Article: 'Статья',
+      Publish: 'Публиковать',
+      Share: 'Делиться',
+      Collaborate: 'Сотрудничать',
+      collaborateArticle: 'Совместная статья',
+      submitForPublishing: 'Отправить для публикации',
+    },
+    inviteCollaborator: {
+      selectPlaceholder: 'Электронная почта, через запятую',
+      addUser: 'Добавить пользователя',
     },
     chat: {
       'Your message here...': 'Введите сообщение',
@@ -979,14 +999,24 @@ const ru = {
     },
     newSubmission: {
       'New submission': 'Загрузить новую статью',
+      'New post': 'Новый пост',
       'Submission created': 'Загружено',
+      'Creating article': 'Создание статьи',
+      'Article created': 'Статья создана',
       'Upload Manuscript': 'Загрузить рукопись',
+      'Upload Article': 'Загрузить статью',
       dragNDrop: 'Перетащите файлы сюда',
       acceptedFiletypes: 'Принимаемые форматы файлов: pdf,epub,zip,docx,latex',
       converting:
         'Ваша рукопись преобразуется в редактируемую версию. Это может занять некоторое время.',
       'Submit a URL instead': 'Вставить URL-адрес вместо файла',
       errorUploading: 'Файл не распознан',
+    },
+    collaborateForm: {
+      author: 'Автор',
+      canView: 'Можно просмотреть',
+      canEdit: 'Можно редактировать',
+      removeAccess: 'Удалить доступ',
     },
     formBuilder: {
       'New Form': 'Новая форма',

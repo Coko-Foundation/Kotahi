@@ -53,6 +53,46 @@ const userOwnsMessage = rule({ cache: 'contextual' })(
   },
 )
 
+const userIsViewingCollaborator = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
+
+  const manuscriptId = parent?.manuscriptId ?? args?.id
+
+  const collaboratorResults = await ctx.connectors.TeamMember.model
+    .query()
+    .leftJoin('teams', 'team_members.team_id', 'teams.id')
+    .where({
+      'teams.role': 'collaborator',
+      'teams.object_id': manuscriptId,
+      'team_members.user_id': ctx.user,
+      'team_members.status': 'read',
+    })
+
+  return !!collaboratorResults.length
+})
+
+const userIsEditingCollaborator = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
+
+  const manuscriptId = parent?.manuscriptId ?? args?.id
+
+  const collaboratorResults = await ctx.connectors.TeamMember.model
+    .query()
+    .leftJoin('teams', 'team_members.team_id', 'teams.id')
+    .where({
+      'teams.role': 'collaborator',
+      'teams.object_id': manuscriptId,
+      'team_members.user_id': ctx.user,
+      'team_members.status': 'write',
+    })
+
+  return !!collaboratorResults.length
+})
+
 const getLatestVersionOfManuscriptOfFile = async (file, ctx) => {
   const manuscript = await cachedGet(`msOfFile:${file.id}`)
 
@@ -197,12 +237,18 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       'reviewer',
     )
 
+    const isCollaborator = await userIsMemberOfTeamWithRoleQuery(
+      user,
+      manuscript.id,
+      'collaborator',
+    )
+
     const isEditor = await cachedGet(
       `userIsEditor:${ctx.user}:${manuscript.id}`,
     )
 
     if (channel.type === 'all') {
-      return isAuthor || isReviewer || isEditor
+      return isAuthor || isReviewer || isEditor || isCollaborator
     }
 
     if (channel.type === 'editorial') {
@@ -491,6 +537,8 @@ const permissions = {
       userIsEditor,
       userIsAuthorOfManuscript,
       userIsReviewerOrInvitedReviewerOfTheManuscript,
+      userIsEditingCollaborator,
+      userIsViewingCollaborator,
     ),
     manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
@@ -512,7 +560,7 @@ const permissions = {
     tasks: or(userIsGm, userIsAdmin),
     team: deny, // Never used
     teamByName: deny, // Never used
-    teams: deny, // Never used
+    teams: isAuthenticated,
     threadedDiscussions: isAuthenticated,
     unreviewedPreprints: allow, // This has its own token-based authentication.
     user: isAuthenticated,
@@ -593,6 +641,7 @@ const permissions = {
       userIsEditor,
       userIsGm,
       userIsAdmin,
+      userIsEditingCollaborator,
     ),
     updatePendingComment: isAuthenticated,
     updateReview: or(
@@ -610,7 +659,12 @@ const permissions = {
       userIsAdmin,
     ),
     updateTeam: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
-    updateTeamMember: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
+    updateTeamMember: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsAdmin,
+      userIsAuthorOfManuscript,
+    ),
     updateReviewerTeamMemberStatus: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,

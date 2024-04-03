@@ -48,9 +48,11 @@ const Actions = ({
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
         {t('manuscriptsTable.actions.View')}
       </LinkAction>
-      <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
-        {t('manuscriptsTable.actions.Archive')}
-      </Action>
+      {!['lab'].includes(config.instanceName) && (
+        <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
+          {t('manuscriptsTable.actions.Archive')}
+        </Action>
+      )}
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
         {t('manuscriptsTable.actions.Production')}
       </LinkAction>

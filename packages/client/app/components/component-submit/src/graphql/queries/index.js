@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-export const reviewFields = `
+const reviewFields = `
   id
   created
   updated
@@ -63,7 +63,7 @@ const formFields = `
   }
 `
 
-export const fragmentFields = `
+const fragmentFields = `
   id
   shortId
   created
@@ -92,6 +92,7 @@ export const fragmentFields = `
     objectType
     members {
       id
+	  status
       user {
         id
         username
@@ -138,7 +139,7 @@ export const fragmentFields = `
   }
 `
 
-const query = gql`
+const GET_MANUSCRIPT_AND_FORMS = gql`
   query($id: ID!, $groupId: ID, $submitPurpose: String!, $decisionPurpose: String!, $reviewPurpose: String!) {
     manuscript(id: $id) {
       ${fragmentFields}
@@ -202,4 +203,38 @@ const query = gql`
   }
 `
 
-export default query
+const GET_MANUSCRIPT_TEAMS = gql`
+  query GetManuscriptTeams($where: TeamWhereInput) {
+    teams(where: $where) {
+      id
+      role
+      members {
+        id
+        status
+        user {
+          id
+          username
+          profilePicture
+        }
+      }
+    }
+  }
+`
+
+const SEARCH_USERS_BY_EMAIL = gql`
+  mutation SearchUsersByEmail($search: String, $exclude: [ID]!) {
+    searchUsersByEmail(search: $search, exclude: $exclude) {
+      id
+      profilePicture
+      username
+    }
+  }
+`
+
+export {
+  fragmentFields,
+  GET_MANUSCRIPT_AND_FORMS,
+  GET_MANUSCRIPT_TEAMS,
+  reviewFields,
+  SEARCH_USERS_BY_EMAIL,
+}

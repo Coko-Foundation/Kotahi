@@ -170,6 +170,15 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
             },
           },
         },
+        Team: {
+          fields: {
+            members: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
       },
     }),
   }
