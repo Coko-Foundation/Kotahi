@@ -554,6 +554,12 @@ const ru = {
         'Доступ к статьям соавторов закрыт',
       'Editors edit reviews':
         'Редакторы могут редактировать отправленные отзывы.',
+      collaboratorAccessGrantedEmailTemplate:
+        'Доступ к статье соавтора предоставлен',
+      collaboratorAccessChangeEmailTemplate:
+        'Тип доступа к статьям Collaborator изменен',
+      collaboratorAccessRemovedEmailTemplate:
+        'Доступ к статьям соавторов закрыт',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
