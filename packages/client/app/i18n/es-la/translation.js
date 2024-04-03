@@ -545,6 +545,12 @@ const esLa = {
         'Se eliminó el acceso al artículo de colaborador',
       'Editors edit reviews':
         'Los editores pueden editar las reseñas enviadas.',
+      collaboratorAccessGrantedEmailTemplate:
+        'Acceso al artículo de colaborador concedido',
+      collaboratorAccessChangeEmailTemplate:
+        'Se cambió el tipo de acceso al artículo del colaborador',
+      collaboratorAccessRemovedEmailTemplate:
+        'Se eliminó el acceso al artículo de colaborador',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',
