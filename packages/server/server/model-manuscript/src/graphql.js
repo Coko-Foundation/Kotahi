@@ -432,6 +432,7 @@ const resolvers = {
     async createManuscript(_, vars, ctx) {
       const { meta, files, groupId } = vars.input
       const group = await Group.query().findById(groupId)
+      const activeConfig = await Config.getCached(groupId)
       const submissionForm = await getSubmissionForm(group.id)
 
       const parsedFormStructure = submissionForm.structure.children
@@ -525,6 +526,17 @@ const resolvers = {
         manuscriptId: updatedManuscript.id,
         userId: ctx.user,
       })
+
+      if (['lab'].includes(activeConfig.formData.instanceName)) {
+        await Team.query().insert({
+          role: 'collaborator',
+          name: 'Collaborator',
+          objectId: updatedManuscript.id,
+          objectType: 'manuscript',
+          global: false,
+        })
+      }
+
       return updatedManuscript
     },
 
@@ -1131,7 +1143,7 @@ const resolvers = {
             manuscript.decision = 'accepted'
             manuscript.status = 'accepted'
           } else if (
-            ['preprint1', 'preprint2'].includes(
+            ['preprint1', 'preprint2', 'lab'].includes(
               activeConfig.formData.instanceName,
             )
           ) {

@@ -9,6 +9,7 @@ const en = {
       revise: 'Revise',
       revising: 'Revising',
       published: 'Published',
+      unpublished: 'Unpublished',
       assigned: 'Author proof assigned',
       inProgress: 'Author proofing in progress',
       completed: 'Author proof completed',
@@ -167,6 +168,7 @@ const en = {
         Archive: 'Archive',
         Production: 'Production',
         Publish: 'Publish',
+        Republish: 'Republish',
         confirmArchive:
           'Please confirm you would like to archive this manuscript',
         confirmArchiveButton: 'Archive',
@@ -178,10 +180,12 @@ const en = {
     dashboardPage: {
       Dashboard: 'Dashboard',
       'New submission': '+ New submission',
+      'New post': '+ New post',
       'New Alerts': 'New Alerts',
       'My Submissions': 'My Submissions',
       'To Review': 'Review Assignments',
       "Manuscripts I'm editor of": 'Editing Queue',
+      Articles: 'Articles',
       mySubmissions: {
         'Provide production feedback': 'Provide production feedback',
         'View production feedback': 'View production feedback',
@@ -526,6 +530,12 @@ const en = {
       authorProofingSubmittedEmailTemplate:
         'Author proof completed and submitted feedback',
       'Editors edit reviews': 'Editors can edit submitted reviews',
+      collaboratorAccessGrantedEmailTemplate:
+        'Collaborator article access granted',
+      collaboratorAccessChangeEmailTemplate:
+        'Collaborator article access type changed',
+      collaboratorAccessRemovedEmailTemplate:
+        'Collaborator article access removed',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
@@ -814,6 +824,16 @@ const en = {
       'No reviews to show': 'No reviews to show.',
       'No completed reviews': 'No completed reviews.',
       Metadata: 'Metadata',
+      Article: 'Article',
+      Publish: 'Publish',
+      Share: 'Share',
+      Collaborate: 'Collaborate',
+      collaborateArticle: 'Collaborate article',
+      submitForPublishing: 'Submit for publishing',
+    },
+    inviteCollaborator: {
+      selectPlaceholder: 'Email, comma separated',
+      addUser: 'Add user',
     },
     chat: {
       'Your message here...': 'Your message here...',
@@ -1000,14 +1020,24 @@ const en = {
 
     newSubmission: {
       'New submission': 'New submission',
+      'New post': 'New post',
       'Submission created': 'Submission created',
+      'Creating article': 'Creating article',
+      'Article created': 'Article created',
       'Upload Manuscript': 'Upload Manuscript',
+      'Upload Article': 'Upload Article',
       dragNDrop: 'Drag and drop or click to select file',
       acceptedFiletypes: 'Accepted file types: pdf, epub, zip, docx, latex',
       converting:
         'Your manuscript is being converted into a directly editable version. This might take a few seconds.',
       'Submit a URL instead': 'Submit a URL instead',
       errorUploading: '{{error}}',
+    },
+    collaborateForm: {
+      author: 'Author',
+      canView: 'Can view',
+      canEdit: 'Can edit',
+      removeAccess: 'Remove access',
     },
     formBuilder: {
       'New Form': 'New Form',

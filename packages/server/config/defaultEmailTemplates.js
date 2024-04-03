@@ -110,4 +110,63 @@ module.exports = [
           </p>
       </p>`,
   },
+  {
+    emailTemplateKey: 'collaboratorAccessGrantedEmailTemplate',
+    description: 'Collaborator access granted for article',
+    subject:
+      'Kotahi | Collaborator access to {{ manuscriptTitle }} has been granted',
+    ccEditors: false,
+    type: 'collaboratorAccessGranted',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              Your access to “{{ manuscriptTitle }}” has been granted by {{ authorName }}. You can now {{ accessType }} this article. Click here to view:
+          </p>
+          <p>{{{ manuscriptLink }}}</p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
+  {
+    emailTemplateKey: 'collaboratorAccessChangeEmailTemplate',
+    description: 'Collaborator access changed for article',
+    subject:
+      'Kotahi | Collaborator access to {{ manuscriptTitle }} has been changed',
+    ccEditors: false,
+    type: 'collaboratorAccessChanged',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              Your access to “{{ manuscriptTitle }}” has been changed. You can now {{ accessType }} this article. Click here to view: 
+          </p>
+          <p>{{{ manuscriptLink }}}</p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
+  {
+    emailTemplateKey: 'collaboratorAccessRemovedEmailTemplate',
+    description: 'Collaborator access removed for article',
+    subject:
+      'Kotahi | Collaborator access to {{ manuscriptTitle }} has been removed',
+    ccEditors: false,
+    type: 'collaboratorAccessRemoved',
+    body: `
+        <p>
+          <p>Dear {{ recipientName }},</p>
+          <p>
+              Your access to “{{ manuscriptTitle }}” has been removed by {{ authorName }}. 
+          </p>
+          <p>
+              Regards, <br>
+              Kotahi team
+          </p>
+      </p>`,
+  },
 ]

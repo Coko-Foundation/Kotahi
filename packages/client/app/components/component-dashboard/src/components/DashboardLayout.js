@@ -85,7 +85,11 @@ const DashboardLayout = ({
               onClick={() => history.push(`${urlFrag}/newSubmission`)}
               primary
             >
-              {t('dashboardPage.New submission')}
+              {t(
+                `dashboardPage.New ${
+                  ['lab'].includes(config.instanceName) ? 'post' : 'submission'
+                }`,
+              )}
             </Button>
 
             {createNewTaskAlerts && (
@@ -103,9 +107,11 @@ const DashboardLayout = ({
           {dashboardPages.map(({ href, label }) => (
             <TabContainer key={href}>
               <TabLink to={urlFrag + href}>
-                <Tab active={location.pathname.endsWith(href)}>
-                  <div>{label}</div>
-                </Tab>
+                {!['lab'].includes(config.instanceName) && (
+                  <Tab active={location.pathname.endsWith(href)}>
+                    <div>{label}</div>
+                  </Tab>
+                )}
               </TabLink>
             </TabContainer>
           ))}

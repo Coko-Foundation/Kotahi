@@ -1,9 +1,11 @@
+const { useTransaction, logger } = require('@coko/server')
 const Team = require('../../../models/team/team.model')
 const TeamMember = require('../../../models/teamMember/teamMember.model')
 const User = require('../../../models/user/user.model')
 const Message = require('../../../models/message/message.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
+const Config = require('../../../models/config/config.model')
 
 const {
   updateAlertsUponTeamUpdate,
@@ -15,6 +17,10 @@ const {
 } = require('../../model-channel/src/channelCommsUtils')
 
 const { evictFromCacheByPrefix, cachedGet } = require('../../querycache')
+
+const {
+  sendEmailWithPreparedData,
+} = require('../../model-user/src/userCommsUtils')
 
 const resolvers = {
   Query: {
@@ -142,7 +148,265 @@ const resolvers = {
       )
     },
     async updateTeamMember(_, { id, input }, ctx) {
-      return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
+      return useTransaction(async trx => {
+        const updatedTeamMember = await TeamMember.query(
+          trx,
+        ).updateAndFetchById(id, JSON.parse(input))
+
+        const collaboratorTeam = await Team.query(trx).findById(
+          updatedTeamMember.teamId,
+        )
+
+        if (collaboratorTeam.role === 'collaborator') {
+          const manuscript = await Manuscript.query(trx)
+            .findById(collaboratorTeam.objectId)
+            .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
+
+          const activeConfig = await Config.getCached(manuscript.groupId)
+          const author = await User.query(trx).findById(ctx.user)
+
+          const collaborator = manuscript.teams
+            .find(t => t.id === collaboratorTeam.id)
+            ?.members.find(m => m.id === id)?.user
+
+          const selectedEmail = collaborator?.email
+          const receiverName = collaborator?.username
+
+          const selectedTemplate =
+            activeConfig.formData.eventNotification
+              ?.collaboratorAccessChangeEmailTemplate
+
+          const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+
+          const emailValidationResult =
+            selectedEmail && emailValidationRegexp.test(selectedEmail)
+
+          const teamMemberStatus = updatedTeamMember.status
+
+          if (!emailValidationResult || !receiverName) {
+            return updatedTeamMember
+          }
+
+          if (selectedTemplate) {
+            const notificationInput = {
+              manuscript,
+              selectedEmail,
+              selectedTemplate,
+              currentUser: author?.username || '',
+              groupId: manuscript.groupId,
+              teamMemberStatus,
+            }
+
+            try {
+              await sendEmailWithPreparedData(notificationInput, ctx, author, {
+                trx,
+              })
+
+              let channelId
+
+              if (manuscript.parentId) {
+                const channel = await Manuscript.relatedQuery('channels')
+                  .for(manuscript.parentId)
+                  .findOne({ topic: 'Manuscript discussion' })
+
+                channelId = channel.id
+              } else {
+                channelId = manuscript.channels.find(
+                  channel => channel.topic === 'Manuscript discussion',
+                ).id
+              }
+
+              Message.createMessage({
+                content: `Article access changed to "can  ${
+                  teamMemberStatus === 'read' ? 'view' : 'edit'
+                }" Email sent by Kotahi to ${receiverName}`,
+                channelId,
+                userId: collaborator.id,
+              })
+            } catch (e) {
+              logger.error('updateTeamMember email was not sent', e)
+            }
+          }
+        }
+
+        return updatedTeamMember
+      })
+    },
+    async addTeamMembers(_, { teamId, members, status }, ctx) {
+      return useTransaction(async trx => {
+        const newTeamMembers = await Promise.all(
+          members.map(userId =>
+            TeamMember.query(trx).insert({ teamId, userId, status }),
+          ),
+        )
+
+        const collaboratorTeam = await Team.query(trx).findById(teamId)
+
+        if (collaboratorTeam.role === 'collaborator') {
+          const manuscript = await Manuscript.query(trx)
+            .findById(collaboratorTeam.objectId)
+            .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
+
+          const activeConfig = await Config.getCached(manuscript.groupId)
+          const author = await User.query(trx).findById(ctx.user)
+
+          const collaborators = manuscript.teams
+            .find(t => t.id === collaboratorTeam.id)
+            ?.members.filter(m =>
+              newTeamMembers.map(tm => tm.id).includes(m.id),
+            )
+            .map(member => member.user)
+
+          await Promise.all(
+            collaborators.map(async collaborator => {
+              const selectedEmail = collaborator?.email
+              const receiverName = collaborator?.username
+
+              const selectedTemplate =
+                activeConfig.formData.eventNotification
+                  ?.collaboratorAccessGrantedEmailTemplate
+
+              const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+
+              const emailValidationResult =
+                selectedEmail && emailValidationRegexp.test(selectedEmail)
+
+              const teamMemberStatus = status
+
+              if (!emailValidationResult || !receiverName) {
+                return
+              }
+
+              if (selectedTemplate) {
+                const notificationInput = {
+                  manuscript,
+                  selectedEmail,
+                  selectedTemplate,
+                  currentUser: author?.username || '',
+                  groupId: manuscript.groupId,
+                  teamMemberStatus,
+                }
+
+                try {
+                  await sendEmailWithPreparedData(
+                    notificationInput,
+                    ctx,
+                    author,
+                    { trx },
+                  )
+
+                  let channelId
+
+                  if (manuscript.parentId) {
+                    const channel = await Manuscript.relatedQuery('channels')
+                      .for(manuscript.parentId)
+                      .findOne({ topic: 'Manuscript discussion' })
+
+                    channelId = channel.id
+                  } else {
+                    channelId = manuscript.channels.find(
+                      channel => channel.topic === 'Manuscript discussion',
+                    ).id
+                  }
+
+                  Message.createMessage({
+                    content: `Article access granted as "can  ${
+                      teamMemberStatus === 'read' ? 'view' : 'edit'
+                    }" Email sent by Kotahi to ${receiverName}`,
+                    channelId,
+                    userId: collaborator.id,
+                  })
+                } catch (e) {
+                  logger.error('addTeamMember email was not sent', e)
+                }
+              }
+            }),
+          )
+        }
+
+        return collaboratorTeam
+      })
+    },
+    async removeTeamMember(_, { teamId, userId }, ctx) {
+      return useTransaction(async trx => {
+        const teamMemberToDelete = await TeamMember.query(trx).findOne({
+          teamId,
+          userId,
+        })
+
+        await TeamMember.query(trx)
+          .delete()
+          .where({ id: teamMemberToDelete.id })
+
+        const collaboratorTeam = await Team.query(trx).findById(teamId)
+
+        if (collaboratorTeam.role === 'collaborator') {
+          const manuscript = await Manuscript.query(trx)
+            .findById(collaboratorTeam.objectId)
+            .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
+
+          const activeConfig = await Config.getCached(manuscript.groupId)
+          const author = await User.query(trx).findById(ctx.user)
+
+          const collaborator = await User.query(trx).findById(userId)
+
+          const selectedEmail = collaborator?.email
+          const receiverName = collaborator?.username
+
+          const selectedTemplate =
+            activeConfig.formData.eventNotification
+              ?.collaboratorAccessRemovedEmailTemplate
+
+          const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+
+          const emailValidationResult =
+            selectedEmail && emailValidationRegexp.test(selectedEmail)
+
+          if (!emailValidationResult || !receiverName) {
+            return teamMemberToDelete
+          }
+
+          if (selectedTemplate) {
+            const notificationInput = {
+              manuscript,
+              selectedEmail,
+              selectedTemplate,
+              currentUser: author?.username || '',
+              groupId: manuscript.groupId,
+            }
+
+            try {
+              await sendEmailWithPreparedData(notificationInput, ctx, author, {
+                trx,
+              })
+
+              let channelId
+
+              if (manuscript.parentId) {
+                const channel = await Manuscript.relatedQuery('channels')
+                  .for(manuscript.parentId)
+                  .findOne({ topic: 'Manuscript discussion' })
+
+                channelId = channel.id
+              } else {
+                channelId = manuscript.channels.find(
+                  channel => channel.topic === 'Manuscript discussion',
+                ).id
+              }
+
+              Message.createMessage({
+                content: `Article access removed Email sent by Kotahi to ${receiverName}`,
+                channelId,
+                userId: collaborator.id,
+              })
+            } catch (e) {
+              logger.error('removeTeamMember email was not sent', e)
+            }
+          }
+        }
+
+        return teamMemberToDelete
+      })
     },
   },
   User: {
@@ -179,6 +443,8 @@ const typeDefs = `
     deleteTeam(id: ID): Team
     updateTeam(id: ID, input: TeamInput): Team
     updateTeamMember(id: ID!, input: String): TeamMember
+	addTeamMembers(teamId: ID!, members: [ID!]!, status: String): Team!
+	removeTeamMember(teamId: ID!, userId: ID!): TeamMember!
   }
 
   extend type User {

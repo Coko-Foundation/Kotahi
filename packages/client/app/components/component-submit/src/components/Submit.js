@@ -26,6 +26,8 @@ import {
   ChatButton,
   CollapseButton,
 } from '../../../component-review/src/components/style'
+import LabAction from './LabActions'
+import { hasEditAccess } from '../../../../shared/userPermissions'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -71,6 +73,8 @@ const Submit = ({
   const allowAuthorsSubmitNewVersion =
     config?.submission?.allowAuthorsSubmitNewVersion
 
+  const isLabInstance = ['lab'].includes(config?.instanceName)
+
   const decisionSections = []
 
   const submissionValues = createBlankSubmissionBasedOnForm(submissionForm)
@@ -88,13 +92,15 @@ const Submit = ({
   versions.forEach(({ manuscript: version, label }, index) => {
     const userCanEditManuscriptAndFormData =
       index === 0 &&
-      (['new', 'revising'].includes(version.status) ||
+      ((['new', 'revising'].includes(version.status) && !isLabInstance) ||
         (currentUser.groupRoles.includes('groupManager') &&
-          version.status !== 'rejected'))
+          version.status !== 'rejected') ||
+        hasEditAccess(version, currentUser))
 
     const editorSection = {
       content: (
         <EditorSection
+          allowEmptyManuscript={isLabInstance}
           currentUser={currentUser}
           manuscript={version}
           readonly={!userCanEditManuscriptAndFormData}
@@ -104,7 +110,9 @@ const Submit = ({
         />
       ),
       key: `editor`,
-      label: t('manuscriptSubmit.Manuscript text'),
+      label: t(
+        `manuscriptSubmit.${isLabInstance ? 'Article' : 'Manuscript text'}`,
+      ),
     }
 
     let decisionSection
@@ -144,7 +152,11 @@ const Submit = ({
       decisionSection = {
         content: <SubmissionForm {...submissionProps} />,
         key: version.id,
-        label: t('manuscriptSubmit.Edit submission info'),
+        label: t(
+          `manuscriptSubmit.${
+            isLabInstance ? 'Metadata' : 'Edit submission info'
+          }`,
+        ),
       }
     } else {
       decisionSection = {
@@ -175,7 +187,11 @@ const Submit = ({
 
     const tabSections = []
 
-    tabSections.push(decisionSection, editorSection)
+    if (isLabInstance) {
+      tabSections.push(editorSection, decisionSection)
+    } else {
+      tabSections.push(decisionSection, editorSection)
+    }
 
     decisionSections.push({
       content: (
@@ -195,7 +211,20 @@ const Submit = ({
                 manuscript={version}
               />
             )}
-          <HiddenTabs defaultActiveKey={version.id} sections={tabSections} />
+          {isLabInstance && (
+            <LabAction
+              currentUser={currentUser}
+              form={submissionForm}
+              manuscript={version}
+              onSubmit={async () => {
+                await onSubmit(version.id)
+              }}
+            />
+          )}
+          <HiddenTabs
+            defaultActiveKey={isLabInstance ? 'editor' : version.id}
+            sections={tabSections}
+          />
         </>
       ),
       key: version.id,

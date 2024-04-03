@@ -284,6 +284,11 @@ const Manuscripts = ({ history, ...props }) => {
 
   const adjustedColumnNames = [...configuredColumnNames]
   adjustedColumnNames.push('actions')
+
+  if (['lab'].includes(config.instanceName)) {
+    adjustedColumnNames.push('publishArticle')
+  }
+
   adjustedColumnNames.splice(0, 0, 'rowItemCheckbox')
 
   // Source of truth for columns
@@ -321,7 +326,11 @@ const Manuscripts = ({ history, ...props }) => {
           onClick={() => history.push(`${urlFrag}/newSubmission`)}
           primary
         >
-          {t('dashboardPage.New submission')}
+          {t(
+            `dashboardPage.New ${
+              ['lab'].includes(config.instanceName) ? 'post' : 'submission'
+            }`,
+          )}
         </ActionButton>
       )}
       {shouldAllowBulkImport && !archived && (

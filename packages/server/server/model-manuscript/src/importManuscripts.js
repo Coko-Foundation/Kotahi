@@ -36,7 +36,7 @@ const importManuscripts = async (groupId, ctx) => {
       active: true,
     })
 
-    const evaluatedStatusString = ['preprint2', 'preprint1'].includes(
+    const evaluatedStatusString = ['preprint2', 'preprint1', 'lab'].includes(
       activeConfig.formData.instanceName,
     )
       ? 'evaluated'

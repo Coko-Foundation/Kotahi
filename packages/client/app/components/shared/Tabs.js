@@ -28,7 +28,9 @@ export const TabsContainer = styled.div`
     props.config &&
     css`
       margin-top: ${() =>
-        ['preprint2'].includes(props.config.instanceName) ? '16px' : '0'};
+        ['preprint2', 'lab'].includes(props.config.instanceName)
+          ? '16px'
+          : '0'};
     `}
 
   ${props =>

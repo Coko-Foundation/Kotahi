@@ -5,7 +5,7 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
-import query, { fragmentFields } from '../userManuscriptFormQuery'
+import { fragmentFields, GET_MANUSCRIPT_AND_FORMS } from '../graphql/queries'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import {
@@ -96,7 +96,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const reviewPurpose = 'review'
 
   const { data, loading, error } = useQuery(
-    query,
+    GET_MANUSCRIPT_AND_FORMS,
     {
       variables: {
         id: match.params.version,
@@ -227,20 +227,32 @@ const SubmitPage = ({ currentUser, match, history }) => {
 
     if (result?.steps?.some(step => !step.succeeded)) return result
 
-    if (['journal', 'prc'].includes(config.instanceName)) {
+    if (['journal', 'prc', 'lab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
-    } else if (['preprint1', 'preprint2'].includes(config.instanceName)) {
+    } else if (
+      ['preprint1', 'preprint2', 'lab'].includes(config.instanceName)
+    ) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
 
     return null
   }
 
+  const publishArticle = async manuscriptId => {
+    return publishManuscript({
+      variables: { id: manuscriptId },
+    })
+  }
+
   const onSubmit = async versionId => {
     await updateManuscript(versionId, manuscriptChangedFields)
 
     const delta = {
-      status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted',
+      status:
+        match.url.includes('/evaluation') &&
+        !['lab'].includes(config.instanceName)
+          ? 'evaluated'
+          : 'submitted',
     }
 
     await submit({
@@ -250,7 +262,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       },
     })
 
-    if (['journal', 'prc'].includes(config.instanceName)) {
+    if (['journal', 'prc', 'lab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
     }
 
@@ -292,6 +304,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       onChange={handleChange}
       onSubmit={onSubmit}
       parent={manuscript}
+      publishArticle={publishArticle}
       republish={republish}
       reviewForm={reviewForm}
       setShouldPublishField={
