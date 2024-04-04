@@ -131,6 +131,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           kotahiApis: {},
           coarNotify: {},
           aiDesignStudio: {},
+          semanticScholar: {
+            enableSemanticScholar: false,
+          },
         },
         type: 'Config',
       }
@@ -174,6 +177,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           kotahiApis: {},
           coarNotify: {},
           aiDesignStudio: {},
+          semanticScholar: {
+            enableSemanticScholar: false,
+          },
         },
         type: 'Config',
       }
@@ -203,10 +209,6 @@ const seedConfig = async (group, instanceName, index, options) => {
             archivePeriodDays: process.env.ARCHIVE_PERIOD_DAYS
               ? Number(process.env.ARCHIVE_PERIOD_DAYS)
               : 60,
-            semanticScholarImportsRecencyPeriodDays: process.env
-              .SEMANTIC_SCHOLAR_IMPORTS_RECENCY_PERIOD_DAYS
-              ? Number(process.env.SEMANTIC_SCHOLAR_IMPORTS_RECENCY_PERIOD_DAYS)
-              : 42,
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
@@ -234,6 +236,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           kotahiApis: {},
           coarNotify: {},
           aiDesignStudio: {},
+          semanticScholar: {
+            enableSemanticScholar: false,
+          },
         },
         type: 'Config',
       }
@@ -284,6 +289,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           coarNotify: {},
           aiDesignStudio: {},
+          semanticScholar: {
+            enableSemanticScholar: false,
+          },
         },
         type: 'Config',
       }
