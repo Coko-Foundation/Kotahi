@@ -10,6 +10,7 @@ import CounterField from '../../shared/CounterField'
 import theme, { color } from '../../../theme'
 import { emailNotifications } from '../../../../config/journal/tasks.json'
 import { ConfigContext } from '../../config/src'
+import { ifReviewInviteThenAssignRecipientsAsReviewers } from './notificationUtils'
 
 const TaskTitle = styled.div`
   color: ${color.gray20};
@@ -148,6 +149,7 @@ const TaskNotificationDetails = ({
   createTaskEmailNotificationLog,
   selectedDurationDays,
   emailTemplates,
+  addReviewer,
 }) => {
   const config = useContext(ConfigContext)
   const { groupId } = config
@@ -443,6 +445,16 @@ const TaskNotificationDetails = ({
 
   const sendTaskNotificationEmailHandler = async () => {
     setTaskNotificationStatus('pending')
+
+    ifReviewInviteThenAssignRecipientsAsReviewers(
+      taskEmailNotification.emailTemplateId,
+      taskEmailNotification.recipientType,
+      taskEmailNotification.recipientUser,
+      task,
+      manuscript,
+      emailTemplates,
+      addReviewer,
+    )
 
     if (taskEmailNotification.recipientType) {
       let input
