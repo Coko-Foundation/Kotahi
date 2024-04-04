@@ -443,7 +443,7 @@ const en = {
       Team: 'Team',
       Submission: 'Submission',
       aiDesignStudio: 'AI Design Studio',
-      openAiApiKey: `AI Design Studio access key`,
+      openAiApiKey: `OpenAI access key`,
       allowToSubmitNewVersion:
         'Allow an author to submit a new version of their manuscript at any time',
       'Review page': 'Review page',
