@@ -455,7 +455,7 @@ const esLa = {
         'Páginas de control visibles para editores',
       Team: 'Equipo',
       aiDesignStudio: 'AI Design Studio',
-      openAiApiKey: `Clave de acceso de AI Design Studio`,
+      openAiApiKey: `Clave de acceso de OpenAI`,
       Submission: 'Envío',
       allowToSubmitNewVersion:
         'Permitir a un autor enviar una nueva versión de su manuscrito en cualquier momento',

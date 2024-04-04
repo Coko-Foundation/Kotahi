@@ -462,7 +462,7 @@ const fr = {
       Submission: 'Soumission',
       coarNotify: 'COAR-Notifier',
       aiDesignStudio: 'AI Design Studio',
-      openAiApiKey: `Clé d'accès AI Design Studio`,
+      openAiApiKey: `Clé d'accès OpenAI`,
       acceptedIPs: 'IP acceptées',
       allowToSubmitNewVersion:
         'Permettre à un auteur de soumettre une nouvelle version de son manuscrit à tout moment',

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
+// NOTE: If you're modifying the schema here, ensure updating those changes to the files 'packages/client/config/sampleConfigFormData.js' and 'packages/server/scripts/seedConfig.js' as well.
 import React from 'react'
+import { Select } from '@pubsweet/ui/dist/molecules'
 import BrandIcon from './BrandIcon'
 import { ColorPicker } from '../../../shared'
 
@@ -25,7 +27,13 @@ export const tabKeyBasedSchema = {
     'user',
   ],
   production: ['production'],
-  integrations: ['kotahiApis', 'coarNotify', 'aiDesignStudio', 'publishing'],
+  integrations: [
+    'semanticScholar',
+    'publishing',
+    'kotahiApis',
+    'coarNotify',
+    'aiDesignStudio',
+  ],
   notifications: ['notification', 'eventNotification'],
 }
 
@@ -157,12 +165,6 @@ export const generateSchemas = (
               minimum: 1,
               maximum: 90,
             },
-            semanticScholarImportsRecencyPeriodDays: {
-              type: 'integer',
-              description: t('configPage.importFromSematic'),
-              minimum: 1,
-              maximum: 90,
-            },
             newSubmission: {
               type: 'boolean',
               title: t('configPage.newSubmissionActionVisisble'),
@@ -177,6 +179,275 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.importManuscriptsManually'),
               default: false,
+            },
+          },
+        },
+        semanticScholar: {
+          type: 'object',
+          title: t(`configPage.semanticScholar`),
+          properties: {
+            enableSemanticScholar: {
+              type: 'boolean',
+              title: 'Enable Semantic Scholar',
+              default: false, // Set the default value to false
+            },
+          },
+          dependencies: {
+            enableSemanticScholar: {
+              oneOf: [
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: true,
+                    },
+                    semanticScholarImportsRecencyPeriodDays: {
+                      type: 'integer',
+                      description: t('configPage.importFromSematic'),
+                      minimum: 1,
+                      maximum: 90,
+                    },
+                    semanticScholarPublishingServers: {
+                      type: 'array',
+                      uniqueItems: true, // Here
+                      description: 'Semantic Scholar Publishing Servers',
+                      items: {
+                        type: 'string',
+                        oneOf: [
+                          {
+                            const: 'computational Linguistics',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computational Linguistics',
+                            ),
+                          },
+                          {
+                            const: 'acm',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computing Machinery',
+                            ),
+                          },
+                          {
+                            const: 'arXiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.arXiv',
+                            ),
+                          },
+                          {
+                            const: 'bioone',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BioOne',
+                            ),
+                          },
+                          {
+                            const: 'bioRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.bioRxiv',
+                            ),
+                          },
+                          {
+                            const: 'british medical journal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BMJ Journals',
+                            ),
+                          },
+                          {
+                            const: 'cambridge',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Cambridge University Press',
+                            ),
+                          },
+                          {
+                            const: 'ChemRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.ChemRxiv',
+                            ),
+                          },
+                          {
+                            const: 'cite seer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.CiteCeerX',
+                            ),
+                          },
+                          {
+                            const: 'clinical trials',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Clinical Trials Transformation Initiative',
+                            ),
+                          },
+                          {
+                            const: 'dblp',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.DBLP Computer Science Bibliography',
+                            ),
+                          },
+                          {
+                            const: 'gruyter',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.De Gruyter academic publishing',
+                            ),
+                          },
+                          {
+                            const: 'frontiers',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Frontiers',
+                            ),
+                          },
+                          {
+                            const: 'hal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HAL Open Sience',
+                            ),
+                          },
+                          {
+                            const: 'highwire',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HighWire',
+                            ),
+                          },
+                          {
+                            const: 'IEEE',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IEEE',
+                            ),
+                          },
+                          {
+                            const: 'iop',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IOP Publishing',
+                            ),
+                          },
+                          {
+                            const: 'karger',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Karger',
+                            ),
+                          },
+                          {
+                            const: 'medRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.medRxiv',
+                            ),
+                          },
+                          {
+                            const: 'microsoft',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Microsoft',
+                            ),
+                          },
+                          {
+                            const: 'papers with code',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Papers With Code',
+                            ),
+                          },
+                          {
+                            const: 'project muse',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Project Muse',
+                            ),
+                          },
+                          {
+                            const: 'pubmed',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.PubMed',
+                            ),
+                          },
+                          {
+                            const: 'research square',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Research Square',
+                            ),
+                          },
+                          {
+                            const: 'sage',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Sage Publishing',
+                            ),
+                          },
+                          {
+                            const: 'science',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Science',
+                            ),
+                          },
+                          {
+                            const: 'scientific.net',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scientific.Net',
+                            ),
+                          },
+                          {
+                            const: 'scitepress',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scitepress Digital Library',
+                            ),
+                          },
+                          {
+                            const: 'springer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Springer Nature',
+                            ),
+                          },
+                          {
+                            const: 'spie',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SPIE.',
+                            ),
+                          },
+                          {
+                            const: 'ssrn',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SSRN',
+                            ),
+                          },
+                          {
+                            const: 'taylor & francis',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Taylor and Francis Group',
+                            ),
+                          },
+                          {
+                            const: 'mit',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The MIT Press',
+                            ),
+                          },
+                          {
+                            const: 'royal society',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The Royal Society Publishing',
+                            ),
+                          },
+                          {
+                            const: 'chicago press',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.University of Chicago Press',
+                            ),
+                          },
+                          {
+                            const: 'wiley',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wiley',
+                            ),
+                          },
+                          {
+                            const: 'wolters kluwer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wolters Kluwer',
+                            ),
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -699,12 +970,6 @@ export const generateSchemas = (
               minimum: 1,
               maximum: 90,
             },
-            semanticScholarImportsRecencyPeriodDays: {
-              type: 'integer',
-              description: t('configPage.importFromSematic'),
-              minimum: 1,
-              maximum: 90,
-            },
             newSubmission: {
               type: 'boolean',
               title: t('configPage.newSubmissionActionVisisble'),
@@ -719,6 +984,275 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.importManuscriptsManually'),
               default: false,
+            },
+          },
+        },
+        semanticScholar: {
+          type: 'object',
+          title: t(`configPage.semanticScholar`),
+          properties: {
+            enableSemanticScholar: {
+              type: 'boolean',
+              title: 'Enable Semantic Scholar',
+              default: false, // Set the default value to false
+            },
+          },
+          dependencies: {
+            enableSemanticScholar: {
+              oneOf: [
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: true,
+                    },
+                    semanticScholarImportsRecencyPeriodDays: {
+                      type: 'integer',
+                      description: t('configPage.importFromSematic'),
+                      minimum: 1,
+                      maximum: 90,
+                    },
+                    semanticScholarPublishingServers: {
+                      type: 'array',
+                      uniqueItems: true, // Here
+                      description: 'Semantic Scholar Publishing Servers',
+                      items: {
+                        type: 'string',
+                        oneOf: [
+                          {
+                            const: 'computational Linguistics',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computational Linguistics',
+                            ),
+                          },
+                          {
+                            const: 'acm',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computing Machinery',
+                            ),
+                          },
+                          {
+                            const: 'arXiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.arXiv',
+                            ),
+                          },
+                          {
+                            const: 'bioone',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BioOne',
+                            ),
+                          },
+                          {
+                            const: 'bioRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.bioRxiv',
+                            ),
+                          },
+                          {
+                            const: 'british medical journal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BMJ Journals',
+                            ),
+                          },
+                          {
+                            const: 'cambridge',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Cambridge University Press',
+                            ),
+                          },
+                          {
+                            const: 'ChemRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.ChemRxiv',
+                            ),
+                          },
+                          {
+                            const: 'cite seer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.CiteCeerX',
+                            ),
+                          },
+                          {
+                            const: 'clinical trials',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Clinical Trials Transformation Initiative',
+                            ),
+                          },
+                          {
+                            const: 'dblp',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.DBLP Computer Science Bibliography',
+                            ),
+                          },
+                          {
+                            const: 'gruyter',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.De Gruyter academic publishing',
+                            ),
+                          },
+                          {
+                            const: 'frontiers',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Frontiers',
+                            ),
+                          },
+                          {
+                            const: 'hal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HAL Open Sience',
+                            ),
+                          },
+                          {
+                            const: 'highwire',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HighWire',
+                            ),
+                          },
+                          {
+                            const: 'IEEE',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IEEE',
+                            ),
+                          },
+                          {
+                            const: 'iop',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IOP Publishing',
+                            ),
+                          },
+                          {
+                            const: 'karger',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Karger',
+                            ),
+                          },
+                          {
+                            const: 'medRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.medRxiv',
+                            ),
+                          },
+                          {
+                            const: 'microsoft',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Microsoft',
+                            ),
+                          },
+                          {
+                            const: 'papers with code',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Papers With Code',
+                            ),
+                          },
+                          {
+                            const: 'project muse',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Project Muse',
+                            ),
+                          },
+                          {
+                            const: 'pubmed',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.PubMed',
+                            ),
+                          },
+                          {
+                            const: 'research square',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Research Square',
+                            ),
+                          },
+                          {
+                            const: 'sage',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Sage Publishing',
+                            ),
+                          },
+                          {
+                            const: 'science',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Science',
+                            ),
+                          },
+                          {
+                            const: 'scientific.net',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scientific.Net',
+                            ),
+                          },
+                          {
+                            const: 'scitepress',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scitepress Digital Library',
+                            ),
+                          },
+                          {
+                            const: 'springer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Springer Nature',
+                            ),
+                          },
+                          {
+                            const: 'spie',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SPIE.',
+                            ),
+                          },
+                          {
+                            const: 'ssrn',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SSRN',
+                            ),
+                          },
+                          {
+                            const: 'taylor & francis',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Taylor and Francis Group',
+                            ),
+                          },
+                          {
+                            const: 'mit',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The MIT Press',
+                            ),
+                          },
+                          {
+                            const: 'royal society',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The Royal Society Publishing',
+                            ),
+                          },
+                          {
+                            const: 'chicago press',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.University of Chicago Press',
+                            ),
+                          },
+                          {
+                            const: 'wiley',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wiley',
+                            ),
+                          },
+                          {
+                            const: 'wolters kluwer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wolters Kluwer',
+                            ),
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -1240,12 +1774,6 @@ export const generateSchemas = (
               minimum: 1,
               maximum: 90,
             },
-            semanticScholarImportsRecencyPeriodDays: {
-              type: 'integer',
-              description: t('configPage.importFromSematic'),
-              minimum: 1,
-              maximum: 90,
-            },
             newSubmission: {
               type: 'boolean',
               title: t('configPage.newSubmissionActionVisisble'),
@@ -1260,6 +1788,275 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.importManuscriptsManually'),
               default: false,
+            },
+          },
+        },
+        semanticScholar: {
+          type: 'object',
+          title: t(`configPage.semanticScholar`),
+          properties: {
+            enableSemanticScholar: {
+              type: 'boolean',
+              title: 'Enable Semantic Scholar',
+              default: false, // Set the default value to false
+            },
+          },
+          dependencies: {
+            enableSemanticScholar: {
+              oneOf: [
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: true,
+                    },
+                    semanticScholarImportsRecencyPeriodDays: {
+                      type: 'integer',
+                      description: t('configPage.importFromSematic'),
+                      minimum: 1,
+                      maximum: 90,
+                    },
+                    semanticScholarPublishingServers: {
+                      type: 'array',
+                      uniqueItems: true, // Here
+                      description: 'Semantic Scholar Publishing Servers',
+                      items: {
+                        type: 'string',
+                        oneOf: [
+                          {
+                            const: 'computational Linguistics',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computational Linguistics',
+                            ),
+                          },
+                          {
+                            const: 'acm',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computing Machinery',
+                            ),
+                          },
+                          {
+                            const: 'arXiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.arXiv',
+                            ),
+                          },
+                          {
+                            const: 'bioone',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BioOne',
+                            ),
+                          },
+                          {
+                            const: 'bioRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.bioRxiv',
+                            ),
+                          },
+                          {
+                            const: 'british medical journal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BMJ Journals',
+                            ),
+                          },
+                          {
+                            const: 'cambridge',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Cambridge University Press',
+                            ),
+                          },
+                          {
+                            const: 'ChemRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.ChemRxiv',
+                            ),
+                          },
+                          {
+                            const: 'cite seer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.CiteCeerX',
+                            ),
+                          },
+                          {
+                            const: 'clinical trials',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Clinical Trials Transformation Initiative',
+                            ),
+                          },
+                          {
+                            const: 'dblp',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.DBLP Computer Science Bibliography',
+                            ),
+                          },
+                          {
+                            const: 'gruyter',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.De Gruyter academic publishing',
+                            ),
+                          },
+                          {
+                            const: 'frontiers',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Frontiers',
+                            ),
+                          },
+                          {
+                            const: 'hal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HAL Open Sience',
+                            ),
+                          },
+                          {
+                            const: 'highwire',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HighWire',
+                            ),
+                          },
+                          {
+                            const: 'IEEE',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IEEE',
+                            ),
+                          },
+                          {
+                            const: 'iop',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IOP Publishing',
+                            ),
+                          },
+                          {
+                            const: 'karger',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Karger',
+                            ),
+                          },
+                          {
+                            const: 'medRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.medRxiv',
+                            ),
+                          },
+                          {
+                            const: 'microsoft',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Microsoft',
+                            ),
+                          },
+                          {
+                            const: 'papers with code',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Papers With Code',
+                            ),
+                          },
+                          {
+                            const: 'project muse',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Project Muse',
+                            ),
+                          },
+                          {
+                            const: 'pubmed',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.PubMed',
+                            ),
+                          },
+                          {
+                            const: 'research square',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Research Square',
+                            ),
+                          },
+                          {
+                            const: 'sage',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Sage Publishing',
+                            ),
+                          },
+                          {
+                            const: 'science',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Science',
+                            ),
+                          },
+                          {
+                            const: 'scientific.net',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scientific.Net',
+                            ),
+                          },
+                          {
+                            const: 'scitepress',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scitepress Digital Library',
+                            ),
+                          },
+                          {
+                            const: 'springer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Springer Nature',
+                            ),
+                          },
+                          {
+                            const: 'spie',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SPIE.',
+                            ),
+                          },
+                          {
+                            const: 'ssrn',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SSRN',
+                            ),
+                          },
+                          {
+                            const: 'taylor & francis',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Taylor and Francis Group',
+                            ),
+                          },
+                          {
+                            const: 'mit',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The MIT Press',
+                            ),
+                          },
+                          {
+                            const: 'royal society',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The Royal Society Publishing',
+                            ),
+                          },
+                          {
+                            const: 'chicago press',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.University of Chicago Press',
+                            ),
+                          },
+                          {
+                            const: 'wiley',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wiley',
+                            ),
+                          },
+                          {
+                            const: 'wolters kluwer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wolters Kluwer',
+                            ),
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -1777,12 +2574,6 @@ export const generateSchemas = (
               minimum: 1,
               maximum: 90,
             },
-            semanticScholarImportsRecencyPeriodDays: {
-              type: 'integer',
-              description: t('configPage.importFromSematic'),
-              minimum: 1,
-              maximum: 90,
-            },
             newSubmission: {
               type: 'boolean',
               title: t('configPage.newSubmissionActionVisisble'),
@@ -1797,6 +2588,275 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.importManuscriptsManually'),
               default: false,
+            },
+          },
+        },
+        semanticScholar: {
+          type: 'object',
+          title: t(`configPage.semanticScholar`),
+          properties: {
+            enableSemanticScholar: {
+              type: 'boolean',
+              title: 'Enable Semantic Scholar',
+              default: false, // Set the default value to false
+            },
+          },
+          dependencies: {
+            enableSemanticScholar: {
+              oneOf: [
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: true,
+                    },
+                    semanticScholarImportsRecencyPeriodDays: {
+                      type: 'integer',
+                      description: t('configPage.importFromSematic'),
+                      minimum: 1,
+                      maximum: 90,
+                    },
+                    semanticScholarPublishingServers: {
+                      type: 'array',
+                      uniqueItems: true, // Here
+                      description: 'Semantic Scholar Publishing Servers',
+                      items: {
+                        type: 'string',
+                        oneOf: [
+                          {
+                            const: 'computational Linguistics',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computational Linguistics',
+                            ),
+                          },
+                          {
+                            const: 'acm',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Association for Computing Machinery',
+                            ),
+                          },
+                          {
+                            const: 'arXiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.arXiv',
+                            ),
+                          },
+                          {
+                            const: 'bioone',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BioOne',
+                            ),
+                          },
+                          {
+                            const: 'bioRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.bioRxiv',
+                            ),
+                          },
+                          {
+                            const: 'british medical journal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.BMJ Journals',
+                            ),
+                          },
+                          {
+                            const: 'cambridge',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Cambridge University Press',
+                            ),
+                          },
+                          {
+                            const: 'ChemRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.ChemRxiv',
+                            ),
+                          },
+                          {
+                            const: 'cite seer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.CiteCeerX',
+                            ),
+                          },
+                          {
+                            const: 'clinical trials',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Clinical Trials Transformation Initiative',
+                            ),
+                          },
+                          {
+                            const: 'dblp',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.DBLP Computer Science Bibliography',
+                            ),
+                          },
+                          {
+                            const: 'gruyter',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.De Gruyter academic publishing',
+                            ),
+                          },
+                          {
+                            const: 'frontiers',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Frontiers',
+                            ),
+                          },
+                          {
+                            const: 'hal',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HAL Open Sience',
+                            ),
+                          },
+                          {
+                            const: 'highwire',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.HighWire',
+                            ),
+                          },
+                          {
+                            const: 'IEEE',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IEEE',
+                            ),
+                          },
+                          {
+                            const: 'iop',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.IOP Publishing',
+                            ),
+                          },
+                          {
+                            const: 'karger',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Karger',
+                            ),
+                          },
+                          {
+                            const: 'medRxiv',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.medRxiv',
+                            ),
+                          },
+                          {
+                            const: 'microsoft',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Microsoft',
+                            ),
+                          },
+                          {
+                            const: 'papers with code',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Papers With Code',
+                            ),
+                          },
+                          {
+                            const: 'project muse',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Project Muse',
+                            ),
+                          },
+                          {
+                            const: 'pubmed',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.PubMed',
+                            ),
+                          },
+                          {
+                            const: 'research square',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Research Square',
+                            ),
+                          },
+                          {
+                            const: 'sage',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Sage Publishing',
+                            ),
+                          },
+                          {
+                            const: 'science',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Science',
+                            ),
+                          },
+                          {
+                            const: 'scientific.net',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scientific.Net',
+                            ),
+                          },
+                          {
+                            const: 'scitepress',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Scitepress Digital Library',
+                            ),
+                          },
+                          {
+                            const: 'springer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Springer Nature',
+                            ),
+                          },
+                          {
+                            const: 'spie',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SPIE.',
+                            ),
+                          },
+                          {
+                            const: 'ssrn',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.SSRN',
+                            ),
+                          },
+                          {
+                            const: 'taylor & francis',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Taylor and Francis Group',
+                            ),
+                          },
+                          {
+                            const: 'mit',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The MIT Press',
+                            ),
+                          },
+                          {
+                            const: 'royal society',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.The Royal Society Publishing',
+                            ),
+                          },
+                          {
+                            const: 'chicago press',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.University of Chicago Press',
+                            ),
+                          },
+                          {
+                            const: 'wiley',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wiley',
+                            ),
+                          },
+                          {
+                            const: 'wolters kluwer',
+                            title: t(
+                              'configPage.semanticScholarPublishingServers.Wolters Kluwer',
+                            ),
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    enableSemanticScholar: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -2821,6 +3881,32 @@ export const generateSchemas = (
         },
         showFeatures: {
           'ui:widget': 'checkboxes',
+        },
+      },
+      semanticScholar: {
+        semanticScholarPublishingServers: {
+          'ui:widget': props => {
+            // eslint-disable-next-line react/destructuring-assignment
+            const options = props.options.enumOptions
+
+            const defaultValue = options.filter(item =>
+              props.value.includes(item.value),
+            )
+
+            const handleChange = selectedOptions => {
+              const selectedValues = selectedOptions.map(option => option.value)
+              props.onChange(selectedValues)
+            }
+
+            return (
+              <Select
+                defaultValue={defaultValue}
+                isMulti
+                onChange={handleChange}
+                options={options}
+              />
+            )
+          },
         },
       },
       publishing: {

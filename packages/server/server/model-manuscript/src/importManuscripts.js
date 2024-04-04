@@ -76,10 +76,7 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
 
     const promises = []
 
-    if (
-      activeConfig.formData.instanceName === 'prc' &&
-      activeConfig.formData.semanticScholar.enableSemanticScholar
-    ) {
+    if (activeConfig.formData.semanticScholar.enableSemanticScholar) {
       promises.push(importArticlesFromSemanticScholar(groupId, ctx))
     }
 

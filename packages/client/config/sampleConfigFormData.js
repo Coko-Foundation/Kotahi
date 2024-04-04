@@ -16,7 +16,6 @@ module.exports = {
     autoImportHourUtc: 21,
     paginationCount: 10,
     archivePeriodDays: 60,
-    semanticScholarImportsRecencyPeriodDays: 42,
   },
   submission: {
     allowAuthorsSubmitNewVersion: true,
@@ -87,6 +86,11 @@ module.exports = {
     primaryColor: '#3aae2a',
     secondaryColor: '#9e9e9e',
     logoPath: '/assets/logo-kotahi.png',
+  },
+  semanticScholar: {
+    enableSemanticScholar: true,
+    semanticScholarPublishingServers: [],
+    semanticScholarImportsRecencyPeriodDays: 42,
   },
   coarNotify: {
     repoIpAddress: '127.0.0.1',

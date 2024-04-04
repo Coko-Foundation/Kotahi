@@ -457,7 +457,7 @@ const ru = {
       Team: 'Исполнители',
       coarNotify: 'COAR-Уведомить',
       aiDesignStudio: 'AI Design Studio',
-      openAiApiKey: ` Ключ доступа AI Design Studio`,
+      openAiApiKey: `Ключ доступа OpenAI`,
       acceptedIPs: 'Принятые IP-адреса',
       Submission: 'Подача',
       allowToSubmitNewVersion:
