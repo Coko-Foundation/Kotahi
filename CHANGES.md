@@ -8,6 +8,33 @@ If you have a `translationOverrides.js` file, it must be moved from `config/` fo
 
 To change 'Redirect URIs' in ORCID, follow the [instructions in the FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#how-do-i-setup-orcid-for-development), and replace any Redirect URIs mentioning "localhost" with equivalent URIs containing `127.0.0.1`.
 
+#### Renaming a Group Name
+
+To rename an existing group or change the default first group name 'kotahi', follow these steps:
+
+##### Step 1: Update Group Name in the Database
+
+Run the following SQL command to replace the group name from 'kotahi' to your desired group name:
+
+```sql
+UPDATE groups SET name='unused' WHERE name='<desired-group-name>'; -- Move existing group (if any) out of the way
+
+UPDATE groups SET name='<desired-group-name>' WHERE name='kotahi'; -- Rename 'kotahi' to your desired name
+```
+
+Replace `<desired-group-name>` with the desired group name you wish to replace 'kotahi' with.
+
+##### Step 2: Update Group Name .env File
+
+Update the group name in the `.env` file.
+
+- Open the `.env` file in your project.
+- Locate the `INSTANCE_GROUPS` variable.
+- Replace the 'kotahi' group name with the desired group name.
+- After updating the `.env` file, redeploy the application to apply the changes.
+
+Note: Ensure that you follow the [instructions in the FAQ](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/FAQ.md#instance_groups-and-multitenancy) regarding `INSTANCE_GROUPS` and group specifications.
+
 ### Version 3.1.0
 
 If you have any plugin packages, they should be moved from `config/plugins/` folder to `packages/server/config/plugins/` folder, along with the `plugins_manifest.json` file.
