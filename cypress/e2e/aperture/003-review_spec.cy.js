@@ -99,13 +99,13 @@ function doReview(name, reviewData) {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(2000)
       cy.get('nav').contains('Dashboard').click()
-      DashboardPage.getDoReviewButton().should('contain', 'Completed')
+      DashboardPage.getDoReviewButton().should('contain', 'View')
     }
   }
 
   // Reject Review Request Workflow
   if (reviewData.verdict === 'reject') {
     DashboardPage.clickRejectReviewButton()
-    cy.get('[role="button"]').should('contain', 'Declined')
+    DashboardPage.getDoReviewButton().should('not.exist')
   }
 }

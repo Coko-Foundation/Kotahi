@@ -36,6 +36,7 @@ const fr = {
       Update: 'Mettre à jour',
       Confirm: 'Confirmer',
       Delete: 'Supprimer',
+      View: 'Voir',
       'Enter search terms...': 'Saisissez des termes de recherche...',
       surroundMultiword:
         'Entourez les expressions à plusieurs mots avec des guillemets "". Excluez un terme en le préfixant avec -. Spécifiez des correspondances alternatives en utilisant OU. Utilisez * comme joker pour les fins de mots. Enveloppez les sous-expressions entre parenthèses ().',
@@ -195,6 +196,7 @@ const fr = {
       Versions: 'Versions',
       'Anonymous Reviewer': 'Réviseur anonyme',
       Submit: 'Soumettre',
+      neverSubmitted: "Cette évaluation n'a pas été soumise",
     },
     reviewVerdict: {
       accept: 'accepter',

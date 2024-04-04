@@ -37,6 +37,7 @@ const esLa = {
       Update: 'Actualizar',
       Confirm: 'Confirmar',
       Delete: 'Eliminar',
+      View: 'Ver',
       'Enter search terms...': 'Ingrese términos de búsqueda...',
       surroundMultiword:
         'Agrupe frases de varias palabras entre comillas "". Excluya un término anteponiendo -. Especifique coincidencias alternativas usando O. Use * como comodín para el final de las palabras. Encierre subexpresiones entre paréntesis ().',
@@ -193,6 +194,7 @@ const esLa = {
       Versions: 'Versiones',
       'Anonymous Reviewer': 'Revisor Anónimo',
       Submit: 'Enviar',
+      neverSubmitted: 'Esta revisión no fue enviada',
     },
     reviewVerdict: {
       accept: 'aceptar',

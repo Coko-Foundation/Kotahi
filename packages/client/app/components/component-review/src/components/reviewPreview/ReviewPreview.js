@@ -5,7 +5,13 @@ import { useHistory } from 'react-router-dom'
 import { grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
-import { Heading, Title, Icon, PlainOrRichText } from '../../../../shared'
+import {
+  Heading,
+  Title,
+  Icon,
+  PlainOrRichText,
+  WidthLimiter,
+} from '../../../../shared'
 import { color } from '../../../../../theme'
 
 const Page = styled.div`
@@ -13,6 +19,7 @@ const Page = styled.div`
   height: 100vh;
   overflow-y: scroll;
   padding: ${grid(2)};
+  width: 100%;
 `
 
 const IconLink = styled.div`
@@ -34,24 +41,26 @@ const ReviewPreview = ({
   const { t } = useTranslation()
   return (
     <Page>
-      <Heading>{t('reviewPreviewPage.Summary')}</Heading>
-      <Title>
-        <PlainOrRichText value={manuscript.submission.$title} />
-      </Title>
-      <ReadonlyFormTemplate
-        form={submissionForm}
-        formData={manuscript}
-        hideSpecialInstructions
-        manuscript={manuscript}
-        showEditorOnlyFields={false}
-        threadedDiscussionProps={threadedDiscussionProps}
-      />
-      <IconLink onClick={() => history.goBack()}>
-        <Icon color={color.brand1.base()} inline size={2}>
-          arrow-left
-        </Icon>
-        {t('reviewPreviewPage.Back')}
-      </IconLink>
+      <WidthLimiter>
+        <Heading>{t('reviewPreviewPage.Summary')}</Heading>
+        <Title>
+          <PlainOrRichText value={manuscript.submission.$title} />
+        </Title>
+        <ReadonlyFormTemplate
+          form={submissionForm}
+          formData={manuscript}
+          hideSpecialInstructions
+          manuscript={manuscript}
+          showEditorOnlyFields={false}
+          threadedDiscussionProps={threadedDiscussionProps}
+        />
+        <IconLink onClick={() => history.goBack()}>
+          <Icon color={color.brand1.base()} inline size={2}>
+            arrow-left
+          </Icon>
+          {t('reviewPreviewPage.Back')}
+        </IconLink>
+      </WidthLimiter>
     </Page>
   )
 }
