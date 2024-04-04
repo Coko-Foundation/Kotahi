@@ -35,6 +35,7 @@ const en = {
       Update: 'Update',
       Confirm: 'Confirm',
       Delete: 'Delete',
+      View: 'View',
       'Enter search terms...': 'Enter search terms...',
       surroundMultiword:
         'Surround multi-word phrases with quotes "". Exclude a term by prefixing with -. Specify alternate matches using OR. Use * as wildcard for word endings. Wrap subexpressions in parentheses ().',
@@ -187,6 +188,7 @@ const en = {
       Versions: 'Versions',
       'Anonymous Reviewer': 'Anonymous Reviewer',
       Submit: 'Submit',
+      neverSubmitted: 'This review was not submitted',
     },
     reviewVerdict: {
       accept: 'accept',

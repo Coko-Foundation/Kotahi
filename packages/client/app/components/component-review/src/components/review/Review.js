@@ -6,8 +6,8 @@ import { Icon } from '@pubsweet/ui/dist/atoms'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import { SectionHeader, Title } from '../style'
-import { SectionContent } from '../../../../shared'
-import { color } from '../../../../../theme'
+import { LooseRow, SectionContent } from '../../../../shared'
+import theme, { color } from '../../../../../theme'
 
 const Heading = styled.h4``
 
@@ -19,6 +19,17 @@ const Container = styled.div`
 
 const StyledStrong = styled.strong`
   color: ${color.gray40};
+`
+
+const UnsubmittedBannerBlock = styled.div`
+  background: ${color.warning.tint50};
+  border-radius: 8px;
+  color: ${color.warning.shade50};
+  font-size: ${theme.fontSizeBaseSmall};
+  font-style: italic;
+  line-height: ${theme.lineHeightBaseSmall};
+  padding: 2px 20px;
+  width: fit-content;
 `
 
 // Due to migration to new Data Model
@@ -41,6 +52,15 @@ const localizeReviewRecommendations = (jsonData, t) => {
   return clonedData
 }
 
+const UnsubmittedBanner = () => {
+  const { t } = useTranslation()
+  return (
+    <UnsubmittedBannerBlock>
+      {t('reviewPage.neverSubmitted')}
+    </UnsubmittedBannerBlock>
+  )
+}
+
 const Review = ({
   review,
   reviewForm,
@@ -50,6 +70,7 @@ const Review = ({
   threadedDiscussionProps,
   sharedReviews,
   isReview = false,
+  isOldUnsubmitted = false,
 }) => {
   const { t } = useTranslation()
   let localizedData
@@ -87,6 +108,19 @@ const Review = ({
     </div>
   )
 
+  if (isOldUnsubmitted)
+    return sharedReviews ? (
+      <SectionContent>
+        <SectionHeader>
+          <UnsubmittedBanner />
+        </SectionHeader>
+      </SectionContent>
+    ) : (
+      <Container>
+        <UnsubmittedBanner />
+      </Container>
+    )
+
   return (
     <>
       {!sharedReviews ? (
@@ -96,20 +130,13 @@ const Review = ({
             showUserInfo &&
             renderReviewerInfo()}
 
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginLeft: '-6px',
-            }}
-          >
+          <LooseRow>
             <Icon
               color="#9e9e9e"
               onClick={() => setOpen(prevOpen => !prevOpen)}
             >
               {open ? 'chevron-up' : 'chevron-down'}
             </Icon>
-
             {review?.isHiddenReviewerName && showUserInfo && (
               <section>
                 <StyledStrong>
@@ -117,7 +144,7 @@ const Review = ({
                 </StyledStrong>
               </section>
             )}
-          </div>
+          </LooseRow>
 
           {open && renderContent()}
         </Container>
