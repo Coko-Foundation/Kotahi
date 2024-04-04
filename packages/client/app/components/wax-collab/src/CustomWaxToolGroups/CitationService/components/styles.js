@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 import React from 'react'
 import styled from 'styled-components'
 import {
@@ -132,18 +133,18 @@ export const CitationVersionWrapper = styled.label`
     margin-right: 1em;
   }
 
+  & > p {
+    align-self: flex-end;
+    font-size: 75%;
+    margin: 0 0 0 16px;
+  }
+
   & > div {
     margin-right: auto;
 
     & > p.ref {
       margin: 0 10px;
     }
-  }
-
-  & > p {
-    align-self: flex-end;
-    font-size: 75%;
-    margin: 0 0 0 16px;
   }
 `
 

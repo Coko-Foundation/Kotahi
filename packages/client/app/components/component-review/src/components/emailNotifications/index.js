@@ -9,6 +9,7 @@ import SelectEmailTemplate from './SelectEmailTemplate'
 import ActionButton from '../../../../shared/ActionButton'
 import { sendEmail, sendEmailChannelMessage } from './emailUtils'
 import { ConfigContext } from '../../../../config/src'
+import { isReviewerInvitation } from '../../../../component-task-manager/src/notificationUtils'
 
 const UserEmailWrapper = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -64,6 +65,7 @@ const EmailNotifications = ({
   setExternalEmail,
   selectedEmailIsBlacklisted,
   emailTemplates,
+  addReviewer,
 }) => {
   const config = useContext(ConfigContext)
   const [externalName, setExternalName] = useState('')
@@ -113,6 +115,17 @@ const EmailNotifications = ({
         <ActionButton
           onClick={async () => {
             setNotificationStatus('pending')
+
+            if (isReviewerInvitation(selectedTemplate, emailTemplates)) {
+              const user = allUsers.find(u => u.email === selectedEmail)
+              if (user)
+                await addReviewer({
+                  variables: {
+                    userId: user.id,
+                    manuscriptId: manuscript.id,
+                  },
+                })
+            }
 
             const output = await sendEmail(
               manuscript,
