@@ -1,25 +1,12 @@
 import React from 'react'
 import { t } from 'i18next'
-import { CompactDetailLabel, ConfigurableStatus } from '../../../shared'
+import { ConfigurableStatus } from '../../../shared'
 import reviewStatuses from '../../../../../config/journal/review-status'
-import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
+import { findReviewerStatus } from './reviewStatusUtils'
 
 const ReviewerStatusBadge = ({ manuscript, currentUser }) => {
-  const members = getMembersOfTeam(manuscript, 'reviewer')
-
-  const memberRecord = members?.find(
-    member => member.user.id === currentUser.id,
-  )
-
-  if (!memberRecord)
-    return (
-      <CompactDetailLabel>
-        {t('reviewerStatus.notAssignedForThisVersion')}
-      </CompactDetailLabel>
-    )
-
-  const status = memberRecord?.status
+  const status = findReviewerStatus(manuscript, currentUser.id)
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,
@@ -29,6 +16,10 @@ const ReviewerStatusBadge = ({ manuscript, currentUser }) => {
   const statusConfig = LocalizedReviewFilterOptions.find(
     item => item.value === status,
   )
+
+  if (status === 'closed') {
+    return <ConfigurableStatus color="#eeeeee">Closed</ConfigurableStatus>
+  }
 
   return (
     <ConfigurableStatus

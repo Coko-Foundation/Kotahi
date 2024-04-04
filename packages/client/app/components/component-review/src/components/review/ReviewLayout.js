@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
-import moment from 'moment'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuid } from 'uuid'
 import { set } from 'lodash'
@@ -23,9 +22,6 @@ import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../../../config/src'
-
-const hasManuscriptFile = manuscript =>
-  !!manuscript?.files?.find(file => file.tags.includes('manuscript'))
 
 const ReviewLayout = ({
   currentUser,
@@ -53,7 +49,6 @@ const ReviewLayout = ({
 }) => {
   const config = useContext(ConfigContext) || {}
   const { urlFrag } = config
-  const reviewSections = []
   const priorVersions = versions.slice(1)
   priorVersions.reverse() // Convert to chronological order (was reverse-chron)
 
@@ -62,65 +57,6 @@ const ReviewLayout = ({
   const channelData = chatProps?.channelsData?.find(
     channel => channel?.channelId === channelId,
   )
-
-  const sharedReviews = manuscript.reviews.filter(
-    r =>
-      r.isSharedWithCurrentUser &&
-      r.user?.id !== currentUser.id &&
-      !r.isDecision,
-  )
-
-  priorVersions.forEach(msVersion => {
-    if (msVersion.reviews?.some(r => !r.user))
-      console.error(
-        `Malformed review objects in manuscript ${msVersion.id}:`,
-        msVersion.reviews,
-      )
-
-    const reviewForCurrentUser = msVersion.reviews?.find(
-      r => r.user?.id === currentUser.id && !r.isDecision,
-    )
-
-    const reviewData = reviewForCurrentUser?.jsonData || {}
-
-    const label = moment().format('YYYY-MM-DD')
-    reviewSections.push({
-      content: (
-        <div key={msVersion.id}>
-          {hasManuscriptFile(msVersion) && (
-            <EditorSection
-              currentUser={currentUser}
-              manuscript={msVersion}
-              readonly
-            />
-          )}
-          <ReadonlyFormTemplate
-            form={submissionForm}
-            formData={reviewData}
-            manuscript={msVersion}
-            showEditorOnlyFields={false}
-            threadedDiscussionProps={threadedDiscussionProps}
-          />
-          <SharedReviewerGroupReviews
-            manuscript={msVersion}
-            reviewerId={currentUser.id}
-            reviewForm={reviewForm}
-            sharedReviews={sharedReviews}
-            threadedDiscussionsProps={threadedDiscussionProps}
-          />
-          <Review
-            review={reviewForCurrentUser}
-            reviewForm={reviewForm}
-            threadedDiscussionProps={threadedDiscussionProps}
-          />
-        </div>
-      ),
-      key: msVersion.id,
-      label,
-    })
-  }, [])
-
-  let reviewTabs = []
 
   const createMetaDataSection = latestManuscript => {
     return (
@@ -248,10 +184,13 @@ const ReviewLayout = ({
       history.push(`${urlFrag}/dashboard`)
     }
 
+    const isLatestVersion = latestManuscript.id === versions[0].manuscript.id
+
     return (
       <div key={latestManuscript.id}>
-        {reviewerStatus === 'completed' ? (
+        {reviewerStatus === 'completed' || !isLatestVersion ? (
           <Review
+            isOldUnsubmitted={reviewerStatus !== 'completed'}
             isReview
             review={existingReview}
             reviewForm={reviewForm}
@@ -344,7 +283,7 @@ const ReviewLayout = ({
     )
   }
 
-  reviewTabs = versions
+  const reviewTabs = versions
     .filter(({ manuscript: version }) =>
       versionsOfManuscriptCurrentUserIsReviewerOf.includes(version.id),
     )
@@ -388,8 +327,6 @@ const ReviewLayout = ({
           key: 'decision-data',
           label: decisionForm.name,
         })
-
-      reviewSections.push(reviewSectionsData)
 
       // eslint-disable-next-line consistent-return
       return {
