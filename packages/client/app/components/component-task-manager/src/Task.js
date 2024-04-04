@@ -241,6 +241,7 @@ const Task = ({
   sendNotifyEmail,
   createTaskEmailNotificationLog,
   emailTemplates,
+  addReviewer,
 }) => {
   const config = useContext(ConfigContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
@@ -382,6 +383,7 @@ const Task = ({
             </ModalContainer>
           </Modal>
           <TaskEditModal
+            addReviewer={addReviewer}
             assigneeGroupedOptions={assigneeGroupedOptions}
             createTaskEmailNotificationLog={createTaskEmailNotificationLog}
             currentUser={currentUser}

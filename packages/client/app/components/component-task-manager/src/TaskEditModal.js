@@ -143,6 +143,7 @@ const TaskEditModal = ({
   onSave,
   onCancel,
   emailTemplates,
+  addReviewer,
 }) => {
   const { t } = useTranslation()
 
@@ -360,6 +361,7 @@ const TaskEditModal = ({
             <>
               {taskEmailNotifications.map((notification, key) => (
                 <TaskNotificationDetails
+                  addReviewer={addReviewer}
                   createTaskEmailNotificationLog={
                     createTaskEmailNotificationLog
                   }

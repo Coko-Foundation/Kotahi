@@ -156,18 +156,18 @@ const InviteReviewerModal = ({
                 }
 
                 teamMember = response.invitation
-              } else {
-                const { data } = await addReviewer({
-                  variables: {
-                    userId: identity.id,
-                    manuscriptId: manuscript.id,
-                  },
-                })
-
-                teamMember = data.addReviewer.members.find(
-                  member => member.user.id === identity.id,
-                )
               }
+
+              const { data } = await addReviewer({
+                variables: {
+                  userId: identity.id,
+                  manuscriptId: manuscript.id,
+                },
+              })
+
+              teamMember = data.addReviewer.members.find(
+                member => member.user.id === identity.id,
+              )
 
               if (condition?.value?.includes('shared')) {
                 toggleSharedStatus(isInvitation, {

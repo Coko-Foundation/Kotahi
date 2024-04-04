@@ -64,6 +64,7 @@ const TaskList = ({
   sendNotifyEmail,
   createTaskEmailNotificationLog,
   emailTemplates,
+  addReviewer,
 }) => {
   const config = useContext(ConfigContext)
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
@@ -252,6 +253,7 @@ const TaskList = ({
                     </HeaderRowContainer>
                     {tasks.map((task, index) => (
                       <Task
+                        addReviewer={addReviewer}
                         assigneeGroupedOptions={assigneeGroupedOptions}
                         createTaskEmailNotificationLog={
                           createTaskEmailNotificationLog

@@ -236,6 +236,7 @@ const DecisionVersion = ({
           {isCurrentVersion &&
             ['journal', 'prc'].includes(config.instanceName) && (
               <EmailNotifications
+                addReviewer={addReviewer}
                 allUsers={allUsers}
                 currentUser={currentUser}
                 emailTemplates={emailTemplates}
@@ -255,6 +256,7 @@ const DecisionVersion = ({
             </SectionHeader>
             <TaskSectionRow>
               <TaskList
+                addReviewer={addReviewer}
                 createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
