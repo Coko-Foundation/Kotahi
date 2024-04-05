@@ -132,6 +132,7 @@ const isPublicReviewFromPublishedManuscript = rule({ cache: 'strict' })(
   },
 )
 
+// TODO This appears only to check if the user is a reviewer of ANY manuscript!??
 const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
@@ -281,17 +282,25 @@ const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
 })(async (parent, args, ctx, info) => {
   if (!ctx.user || !args.id) return false
 
-  const reviewerRecord = await ctx.connectors.Team.model
-    .relatedQuery('members')
-    .for(
-      ctx.connectors.Team.model.query().where({
-        objectId: args.id,
-        role: 'reviewer',
-      }),
-    )
-    .findOne({ userId: ctx.user })
+  const parentId = (
+    await ctx.connectors.Manuscript.model
+      .query()
+      .findById(args.id)
+      .select('parentId')
+  )?.parentId
 
-  return !!reviewerRecord
+  const reviewerStatuses = await ctx.connectors.Manuscript.model
+    .query()
+    .where(builder =>
+      builder.where('manuscripts.id', parentId).orWhere({ parentId }),
+    )
+    .joinRelated('teams')
+    .join('team_members', 'team_members.teamId', 'teams.id') // joinRelated doesn't automate the 'teams.members' relation well, so we do it manually
+    .where('teams.role', 'reviewer')
+    .where('team_members.userId', ctx.user)
+    .select('team_members.status')
+
+  return !!reviewerStatuses.length
 })
 
 const userIsInvitedReviewer = rule({ cache: 'strict' })(
