@@ -1,8 +1,8 @@
+/* eslint-disable react/default-props-match-prop-types */
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { useTranslation } from 'react-i18next'
-import { v4 as uuid } from 'uuid'
 import { set } from 'lodash'
 import { gql } from '@apollo/client'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
@@ -25,6 +25,7 @@ import { ConfigContext } from '../../../../config/src'
 
 const ReviewLayout = ({
   currentUser,
+  currentUserReview,
   versions,
   reviewForm,
   onSubmit,
@@ -92,12 +93,8 @@ const ReviewLayout = ({
         !r.isDecision,
     )
 
-    const reviewForCurrentUserData = latestManuscript.reviews?.find(
-      r => r.user?.id === currentUser.id && !r.isDecision,
-    )
-
-    const reviewData = reviewForCurrentUserData
-      ? JSON.parse(reviewForCurrentUserData?.jsonData)
+    const reviewData = currentUserReview
+      ? JSON.parse(currentUserReview?.jsonData)
       : {}
 
     const reviewersTeam = latestManuscript.teams.find(
@@ -107,17 +104,6 @@ const ReviewLayout = ({
     const reviewerStatus = reviewersTeam.members.find(
       member => member.user.id === currentUser?.id,
     )?.status
-
-    const existingReview = latestManuscript.reviews?.find(
-      review => review.user?.id === currentUser.id && !review.isDecision,
-    ) || {
-      id: uuid(),
-      isDecision: false,
-      isHiddenReviewerName: true,
-      jsonData: {},
-      manuscriptId: latestManuscript?.id,
-      userId: currentUser.id,
-    }
 
     const updateReviewJsonData = (manuscriptId, review, value, path) => {
       const delta = {} // Only the changed fields
@@ -193,7 +179,7 @@ const ReviewLayout = ({
           <Review
             isOldUnsubmitted={reviewerStatus !== 'completed'}
             isReview
-            review={existingReview}
+            review={currentUserReview}
             reviewForm={reviewForm}
             sharedReviews={sharedReviewsData}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -204,6 +190,7 @@ const ReviewLayout = ({
               createFile={createFile}
               deleteFile={deleteFile}
               form={reviewForm}
+              formikOptions={{ enableReinitialize: true }}
               initialValues={reviewData}
               manuscriptId={latestManuscript.id}
               manuscriptShortId={latestManuscript.shortId}
@@ -211,7 +198,7 @@ const ReviewLayout = ({
               onChange={(value, path) =>
                 updateReviewJsonData(
                   latestManuscript.id,
-                  existingReview,
+                  currentUserReview,
                   value,
                   path,
                 )
@@ -415,7 +402,7 @@ ReviewLayout.propTypes = {
       ).isRequired,
     }).isRequired,
   ).isRequired,
-  review: PropTypes.shape({}),
+  currentUserReview: PropTypes.shape({}),
   onSubmit: PropTypes.func,
   uploadFile: PropTypes.func,
   channelId: PropTypes.string.isRequired,
@@ -437,6 +424,8 @@ ReviewLayout.propTypes = {
 ReviewLayout.defaultProps = {
   onSubmit: () => {},
   review: undefined,
+  currentUserReview: undefined,
+  status: undefined,
   uploadFile: undefined,
 }
 

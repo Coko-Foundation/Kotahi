@@ -2,6 +2,7 @@ const isEmpty = require('lodash/isEmpty')
 
 const { File } = require('@coko/server')
 
+const { pubsubManager } = require('@coko/server')
 const Review = require('../../../models/review/review.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const User = require('../../../models/user/user.model')
@@ -12,13 +13,20 @@ const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
 
 const {
+  getUserRolesInManuscript,
+} = require('../../model-user/src/userCommsUtils')
+
+const {
   convertFilesToIdsOnly,
   convertFilesToFullObjects,
 } = require('./reviewUtils')
 
+const { REVIEW_FORM_UPDATED } = require('./consts')
+
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
+      const pubsub = await pubsubManager.getPubsub()
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await Review.query().findById(id)) || {}
 
@@ -30,15 +38,27 @@ const resolvers = {
         ? await getDecisionForm(manuscript.groupId)
         : await getReviewForm(manuscript.groupId)
 
+      const roles = await getUserRolesInManuscript(
+        existingReview.userId || ctx.user,
+        existingReview.manuscriptId || input.manuscriptId,
+      )
+
+      const reviewUserId = !isEmpty(existingReview)
+        ? existingReview.userId
+        : ctx.user
+
+      const userId = roles.collaborativeReviewer ? null : reviewUserId
+
       await convertFilesToIdsOnly(reviewDelta, form)
 
       const mergedReview = {
         canBePublishedPublicly: false,
         isHiddenFromAuthor: false,
         isHiddenReviewerName: false,
+        isCollaborative: !!roles.collaborativeReviewer,
         ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
         // Prevent reassignment of userId or manuscriptId:
-        userId: !isEmpty(existingReview) ? existingReview.userId : ctx.user,
+        userId,
         manuscriptId: existingReview.manuscriptId || input.manuscriptId,
       }
 
@@ -63,7 +83,10 @@ const resolvers = {
 
       // We want to modify file URIs before return, so we'll use the parsed jsonData
       review.jsonData = mergedReview.jsonData
-      const reviewUser = await User.query().findById(review.userId)
+
+      const reviewUser = review.userId
+        ? await User.query().findById(review.userId)
+        : null
 
       await convertFilesToFullObjects(
         review,
@@ -72,7 +95,7 @@ const resolvers = {
         getFilesWithUrl,
       )
 
-      return {
+      const returnedReview = {
         id: review.id,
         created: review.created,
         updated: review.updated,
@@ -81,10 +104,17 @@ const resolvers = {
         user: reviewUser,
         isHiddenFromAuthor: review.isHiddenFromAuthor,
         isHiddenReviewerName: review.isHiddenReviewerName,
+        isCollaborative: review.isCollaborative,
         canBePublishedPublicly: review.canBePublishedPublicly,
         jsonData: JSON.stringify(review.jsonData),
         manuscriptId: review.manuscriptId,
       }
+
+      pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
+        reviewFormUpdated: returnedReview,
+      })
+
+      return returnedReview
     },
 
     async updateReviewerTeamMemberStatus(_, { manuscriptId, status }, ctx) {
@@ -109,16 +139,10 @@ const resolvers = {
   },
   Review: {
     async user(parent, { id }, ctx) {
+      if (parent.user) return parent.user
+
       // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
-      if (parent.user) {
-        return parent.user
-      }
-
-      if (parent.userId) {
-        return User.query().findById(parent.userId)
-      }
-
-      return null
+      return parent.userId ? User.query().findById(parent.userId) : null
     },
     async isSharedWithCurrentUser(parent, _, ctx) {
       if (
@@ -141,6 +165,14 @@ const resolvers = {
 
       if (sharedMembers.some(m => m.userId === ctx.user)) return true
       return false
+    },
+  },
+  Subscription: {
+    reviewFormUpdated: {
+      subscribe: async (_, { formId }) => {
+        const pubsub = await pubsubManager.getPubsub()
+        return pubsub.asyncIterator(`${REVIEW_FORM_UPDATED}_${formId}`)
+      },
     },
   },
 }
@@ -176,6 +208,10 @@ const typeDefs = `
     canBePublishedPublicly: Boolean
     jsonData: String
     userId: String
+  }
+
+  extend type Subscription {
+    reviewFormUpdated(formId: ID!): Review!
   }
 `
 

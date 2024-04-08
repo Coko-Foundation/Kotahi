@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'isomorphic-dompurify'
-import { RadioGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import {
@@ -18,6 +17,7 @@ import {
   TextInput,
   CheckboxGroup,
   RichTextEditor,
+  RadioGroup,
 } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -166,11 +166,13 @@ let lastChangedField = null
 
 const FormTemplate = ({
   form,
+  formikOptions,
   initialValues,
   manuscriptId,
   manuscriptShortId,
   manuscriptStatus,
   submissionButtonText,
+  hideSubmissionButton,
   onChange,
   republish,
   onSubmit,
@@ -250,6 +252,7 @@ const FormTemplate = ({
       }}
       validateOnBlur
       validateOnChange={false}
+      {...formikOptions}
     >
       {({
         handleSubmit,
@@ -350,7 +353,12 @@ const FormTemplate = ({
 
         // this is whether or not to show a submit button
 
-        const showSubmitButton =
+        let showSubmitButton = null
+
+        showSubmitButton = !!(!showSubmitButton && hideSubmissionButton)
+
+        showSubmitButton =
+          !showSubmitButton &&
           submissionButtonText &&
           (isSubmission
             ? !['submitted', 'revise'].includes(values.status) ||
@@ -594,6 +602,7 @@ const FormTemplate = ({
 }
 
 FormTemplate.propTypes = {
+  hideSubmissionButton: PropTypes.bool,
   form: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -618,6 +627,9 @@ FormTemplate.propTypes = {
     popupdescription: PropTypes.string,
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
+  formikOptions: PropTypes.shape({
+    enableReinitialize: PropTypes.bool,
+  }),
   manuscriptId: PropTypes.string.isRequired,
   manuscriptShortId: PropTypes.number.isRequired,
   manuscriptStatus: PropTypes.string,
@@ -643,6 +655,7 @@ FormTemplate.propTypes = {
   initializeReview: PropTypes.func,
 }
 FormTemplate.defaultProps = {
+  hideSubmissionButton: false,
   onSubmit: undefined,
   initialValues: null,
   republish: null,
@@ -651,6 +664,9 @@ FormTemplate.defaultProps = {
   shouldStoreFilesInForm: false,
   tagForFiles: null,
   initializeReview: null,
+  formikOptions: {
+    enableReinitialize: false,
+  },
 }
 
 export default FormTemplate

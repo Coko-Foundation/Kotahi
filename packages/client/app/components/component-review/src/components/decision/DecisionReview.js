@@ -58,6 +58,60 @@ const StyledCheckbox = styled(Checkbox)`
   margin-left: 10px;
 `
 
+const UsersList = styled.div`
+  flex-basis: 100%;
+  height: 0;
+`
+
+const UserDisplay = ({
+  review,
+  isControlPage,
+  user,
+  currentUserIsEditor,
+  currentUser,
+  canBePublishedPublicly,
+  config,
+}) => {
+  return (
+    <>
+      {review.user && (
+        <Name>
+          <UserCombo>
+            <UserAvatar
+              user={
+                review.isHiddenReviewerName && !isControlPage
+                  ? null
+                  : review.user || user
+              }
+            />
+            <UserInfo>
+              {review.isHiddenReviewerName && !isControlPage ? (
+                <Primary>
+                  {t('decisionPage.decisionTab.Anonmyous Reviewer')}
+                </Primary>
+              ) : (
+                <>
+                  <Primary>{user.username}</Primary>
+                  <Secondary>{user.defaultIdentity.identifier}</Secondary>
+                </>
+              )}
+            </UserInfo>
+          </UserCombo>
+          {(currentUserIsEditor ||
+            currentUser.groupRoles.includes('groupManager')) &&
+            canBePublishedPublicly &&
+            config.instanceName === 'prc' && (
+              <>
+                &nbsp;
+                <ShareIcon />
+              </>
+            )}
+        </Name>
+      )}
+    </>
+  )
+}
+
 const ReviewHeading = ({
   id,
   journal,
@@ -128,40 +182,15 @@ const ReviewHeading = ({
         {t('decisionPage.decisionTab.reviewNum', { num: ordinal })}
       </Ordinal>
       &nbsp;
-      {review.user && (
-        <Name>
-          <UserCombo>
-            <UserAvatar
-              user={
-                review.isHiddenReviewerName && !isControlPage
-                  ? null
-                  : review.user || user
-              }
-            />
-            <UserInfo>
-              {review.isHiddenReviewerName && !isControlPage ? (
-                <Primary>
-                  {t('decisionPage.decisionTab.Anonmyous Reviewer')}
-                </Primary>
-              ) : (
-                <>
-                  <Primary>{user.username}</Primary>
-                  <Secondary>{user.defaultIdentity.identifier}</Secondary>
-                </>
-              )}
-            </UserInfo>
-          </UserCombo>
-          {(currentUserIsEditor ||
-            currentUser.groupRoles.includes('groupManager')) &&
-            canBePublishedPublicly &&
-            config.instanceName === 'prc' && (
-              <>
-                &nbsp;
-                <ShareIcon />
-              </>
-            )}
-        </Name>
-      )}
+      <UserDisplay
+        canBePublishedPublicly={canBePublishedPublicly}
+        config={config}
+        currentUser={currentUser}
+        currentUserIsEditor={currentUserIsEditor}
+        isControlPage={isControlPage}
+        review={review}
+        user={user}
+      />
       {canHideReviews &&
         (currentUserIsEditor ||
           currentUser.groupRoles.includes('groupManager')) && (
@@ -186,6 +215,17 @@ const ReviewHeading = ({
       <Controls>
         <ToggleReview open={open} t={t} toggle={toggleOpen} />
       </Controls>
+      <UsersList>
+        <UserDisplay
+          canBePublishedPublicly={canBePublishedPublicly}
+          config={config}
+          currentUser={currentUser}
+          currentUserIsEditor={currentUserIsEditor}
+          isControlPage={isControlPage}
+          review={review}
+          user={user}
+        />
+      </UsersList>
     </ReviewHeadingRoot>
   )
 }
@@ -246,7 +286,6 @@ const DecisionReview = ({
         ordinal={ordinal}
         recommendation={recommendation}
         review={review}
-        reviewer={reviewer}
         reviewUserId={review.user?.id}
         teams={teams}
         toggleOpen={toggleOpen}

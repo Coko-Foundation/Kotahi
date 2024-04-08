@@ -264,6 +264,7 @@ const esLa = {
         notCurrentVersion:
           'Esta no es la versión actual, sino una versión archivada de solo lectura del manuscrito.',
         'Completed Reviews': 'Revisiones Completadas',
+        'Collaborative Reviews': 'Revisiones Collaborativas',
         noReviews: 'Aún no se han completado revisiones.',
         reviewNum: 'Revisión {{num}}',
         'Anonmyous Reviewer': 'Revisor Anónimo',

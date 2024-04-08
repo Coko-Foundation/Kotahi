@@ -267,6 +267,7 @@ const fr = {
         notCurrentVersion:
           "Ce n'est pas la version actuelle, mais une version archivée en lecture seule du manuscrit.",
         'Completed Reviews': 'Révisions terminées',
+        'Collaborative Reviews': 'Révisions collaboratives',
         noReviews: 'Aucune révision terminée pour le moment.',
         reviewNum: 'Révision {{num}}',
         'Anonmyous Reviewer': 'Réviseur anonyme',

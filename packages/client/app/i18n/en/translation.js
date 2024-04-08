@@ -262,6 +262,7 @@ const en = {
         notCurrentVersion:
           'This is not the current, but an archived read-only version of the manuscript.',
         'Completed Reviews': 'Completed Reviews',
+        'Collaborative Reviews': 'Collaborative Reviews',
         noReviews: 'No reviews completed yet.',
         reviewNum: 'Review {{num}}',
         'Anonmyous Reviewer': 'Anonmyous Reviewer',

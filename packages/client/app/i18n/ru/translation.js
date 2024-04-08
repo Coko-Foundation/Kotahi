@@ -268,6 +268,7 @@ const ru = {
         notCurrentVersion:
           'Это не текущая, а архивная версия рукописи, доступная только для чтения.',
         'Completed Reviews': 'Рецензирование завершено',
+        'Collaborative Reviews': 'Коллективные обзоры',
         noReviews: 'Нет завершенных рецензий.',
         reviewNum: 'Рецензия {{num}}',
         'Anonmyous Reviewer': 'Анонимный рецензент',

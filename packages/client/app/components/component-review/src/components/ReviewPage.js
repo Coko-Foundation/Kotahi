@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { useMutation, useQuery, gql } from '@apollo/client'
+import { useMutation, useQuery, useSubscription, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
@@ -17,6 +17,9 @@ import {
 import { UPDATE_REVIEWER_STATUS_MUTATION } from '../../../../queries/team'
 import useChat from '../../../../hooks/useChat'
 import mutations from '../../../component-dashboard/src/graphql/mutations'
+import { reviewFormUpdatedSubscription } from './reviewSubscriptions'
+
+import { getCurrentUserReview } from './review/util'
 
 const createFileMutation = gql`
   mutation ($file: Upload!, $meta: FileMetaInput!) {
@@ -50,6 +53,7 @@ const reviewFields = `
   jsonData
   isDecision
   isHiddenReviewerName
+  isCollaborative
   canBePublishedPublicly
   isSharedWithCurrentUser
   user {
@@ -257,6 +261,44 @@ const ReviewPage = ({ currentUser, history, match }) => {
     partialRefetch: true,
   })
 
+  // Count In the Collaborative Reviews and choose the correct one.
+  const currentUserReview = getCurrentUserReview(data?.manuscript, currentUser)
+
+  useSubscription(reviewFormUpdatedSubscription, {
+    variables: {
+      formId: currentUserReview.id,
+    },
+    onSubscriptionData: ({
+      subscriptionData: {
+        data: { reviewFormUpdated },
+      },
+      client,
+    }) => {
+      const id = client.cache.identify({
+        __typename: 'Review',
+        id: reviewFormUpdated.id,
+      })
+
+      client.cache.modify({
+        id,
+        fields: {
+          json_data() {
+            const newReviewRef = client.cache.writeFragment({
+              data: reviewFormUpdated,
+              fragment: gql`
+                fragment NewReview on Review {
+                  id
+                }
+              `,
+            })
+
+            return newReviewRef.jsonData
+          },
+        },
+      })
+    },
+  })
+
   let editorialChannelId
 
   if (
@@ -351,6 +393,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
       chatProps={chatProps}
       createFile={createFile}
       currentUser={currentUser}
+      currentUserReview={currentUserReview}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
       history={history}

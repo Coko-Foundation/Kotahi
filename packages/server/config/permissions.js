@@ -655,6 +655,7 @@ const permissions = {
     fileUpdated: isAuthenticated,
     filesDeleted: isAuthenticated,
     filesUploaded: isAuthenticated,
+    reviewFormUpdated: isAuthenticated,
     manuscriptsImportStatus: isAuthenticated,
     messageCreated: userIsAllowedToChat,
     uploadProgress: isAuthenticated,
