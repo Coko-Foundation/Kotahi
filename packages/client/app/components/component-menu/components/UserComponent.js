@@ -16,7 +16,7 @@ const UserComponent = ({ user, loginLink, profileLink, t, expanded }) => {
     <UserMenuContainer>
       {user && (
         <UserItem
-          expanded={expanded}
+          $expanded={expanded}
           title={t('leftMenu.Go to your profile')}
           to={profileLink}
         >
