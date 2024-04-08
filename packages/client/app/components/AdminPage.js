@@ -137,8 +137,8 @@ const AdminPage = () => {
 
   let notice = ''
 
-  if (error) {
-    if (error.networkError) {
+  if (error || !data.currentUser) {
+    if (error?.networkError) {
       notice = 'You are offline.'
     } else {
       localStorage.setItem('intendedPage', location.pathname + location.search)
