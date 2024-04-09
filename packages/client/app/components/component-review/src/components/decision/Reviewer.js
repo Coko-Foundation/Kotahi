@@ -67,7 +67,7 @@ Reviewer.propTypes = {
   user: PropTypes.object.isRequired,
   currentUserIsEditor: PropTypes.bool,
   // eslint-disable-next-line
-  currentUser:PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
   canBePublishedPublicly: PropTypes.bool,
 }
 Reviewer.defaultProps = {

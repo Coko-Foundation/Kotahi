@@ -175,7 +175,7 @@ const ReviewHeading = ({
 
 ReviewHeading.propTypes = {
   // eslint-disable-next-line
-    journal: PropTypes.object,
+  journal: PropTypes.object,
   open: PropTypes.bool.isRequired,
   ordinal: PropTypes.number.isRequired,
   recommendation: PropTypes.string,
@@ -189,7 +189,7 @@ ReviewHeading.defaultProps = { recommendation: null }
 
 Bullet.propTypes = {
   // eslint-disable-next-line
-    journal: PropTypes.object,
+  journal: PropTypes.object,
   recommendation: PropTypes.string.isRequired,
 }
 
