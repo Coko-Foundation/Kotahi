@@ -103,15 +103,10 @@ const ReviewDetailsModal = (
     updateSharedStatusForInvitedReviewer,
     updateTeamMember,
     updateReview,
-    currentUser,
   } = props
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
-
-  const isTheUserOfTheReview = currentUser?.id === review?.user?.id
-
-  const shouldNotSetUser = canEditReviews && !isTheUserOfTheReview
 
   const [createFile] = useMutation(createFileMutation)
 
@@ -133,7 +128,6 @@ const ReviewDetailsModal = (
         manuscriptId,
       },
       manuscriptId,
-      shouldNotSetUser,
     )
   }
 
@@ -180,7 +174,6 @@ const ReviewDetailsModal = (
             manuscriptId={manuscriptId}
             review={review}
             reviewerTeamMember={reviewerTeamMember}
-            shouldNotSetUser={shouldNotSetUser}
             updateReview={updateReview}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
@@ -257,7 +250,6 @@ const ReviewDetailsModal = (
           readOnly={readOnly}
           review={review}
           reviewForm={reviewForm}
-          shouldNotSetUser={shouldNotSetUser}
           showEditorOnlyFields={showEditorOnlyFields}
           threadedDiscussionProps={threadedDiscussionProps}
           updateReview={updateReview}
@@ -274,7 +266,6 @@ const ReviewDetailsModal = (
 const CheckboxActions = ({
   review,
   reviewerTeamMember,
-  shouldNotSetUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   isInvitation,
@@ -310,7 +301,6 @@ const CheckboxActions = ({
         manuscriptId,
       },
       manuscriptId,
-      shouldNotSetUser,
     )
   }
 
@@ -322,7 +312,6 @@ const CheckboxActions = ({
         manuscriptId,
       },
       manuscriptId,
-      shouldNotSetUser,
     )
   }
 
@@ -365,7 +354,6 @@ const ReviewData = ({
   createFile,
   deleteFile,
   handleFileChange,
-  shouldNotSetUser,
   review,
   reviewForm,
   threadedDiscussionProps,
@@ -403,16 +391,11 @@ const ReviewData = ({
         manuscriptId,
       },
       manuscriptId,
-      shouldNotSetUser,
     )
   }
 
   const fieldRenderer = element => {
-    if (
-      (element.name === 'comment' || element.name === 'confidentialComment') &&
-      !readOnly &&
-      canEditReviews
-    ) {
+    if (element.component === 'AbstractEditor' && !readOnly && canEditReviews) {
       return (
         <SimpleWaxEditor
           onChange={value => onBlurHandler(element.name, value)}
@@ -422,7 +405,7 @@ const ReviewData = ({
     }
 
     if (
-      (element.name === 'files' || element.name === 'confidentialFiles') &&
+      element.component === 'SupplementaryFiles' &&
       !readOnly &&
       canEditReviews
     ) {
