@@ -105,6 +105,7 @@ const resolvers = {
         isHiddenFromAuthor: review.isHiddenFromAuthor,
         isHiddenReviewerName: review.isHiddenReviewerName,
         isCollaborative: review.isCollaborative,
+        isLock: review.isLock,
         canBePublishedPublicly: review.canBePublishedPublicly,
         jsonData: JSON.stringify(review.jsonData),
         manuscriptId: review.manuscriptId,
@@ -117,6 +118,20 @@ const resolvers = {
       return returnedReview
     },
 
+    async lockUnlockCollaborativeReview(_, { id }) {
+      const review = await models.Review.query()
+        .where({
+          id,
+          isCollaborative: true,
+        })
+        .throwIfNotFound()
+
+      return models.Review.query()
+        .patch({ isLock: !review.lock })
+        .where({ id })
+        .returning('*')
+    },
+
     async updateReviewerTeamMemberStatus(_, { manuscriptId, status }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(manuscriptId)
@@ -124,7 +139,7 @@ const resolvers = {
 
       const team = await manuscript
         .$relatedQuery('teams')
-        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
+        .whereIn('role', ['reviewer'])
         .first()
 
       const member = await team
@@ -181,6 +196,7 @@ const typeDefs = `
   extend type Mutation {
     updateReview(id: ID, input: ReviewInput): Review!
     updateReviewerTeamMemberStatus(manuscriptId: ID!, status: String): TeamMember
+    lockUnlockCollaborativeReview(id: ID!): Review!
   }
 
   type Review {
@@ -194,6 +210,7 @@ const typeDefs = `
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
     isCollaborative: Boolean!
+    isLock: Boolean!
     canBePublishedPublicly: Boolean!
     jsonData: String
     userId: String

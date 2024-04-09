@@ -1,234 +1,12 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import { useTranslation } from 'react-i18next'
+
 import { JournalContext } from '../../../../xpub-journal/src'
-import { ConfigContext } from '../../../../config/src'
-import ShareIcon from '../../../../../shared/icons/share'
-import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
-import { UserAvatar } from '../../../../component-avatar/src'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
+import ReviewHeading from './ReviewHeading'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
-
-export const ToggleReview = ({ open, toggle, t }) => {
-  return (
-    <Button onClick={toggle} plain>
-      {open
-        ? t('decisionPage.decisionTab.reviewModalHide')
-        : t('decisionPage.decisionTab.reviewModalShow')}
-    </Button>
-  )
-}
-
-const Bullet = styled.span`
-  background-color: black;
-  background-color: ${props =>
-    props.recommendation
-      ? props.journal?.recommendations?.find(
-          item => item.value === props.recommendation,
-        )?.color
-      : 'black'};
-  border-radius: 100%;
-  display: inline-block;
-  height: 10px;
-  margin-right: 10px;
-  width: 10px;
-`
-
-export const ReviewHeadingRoot = styled.div`
-  align-items: center;
-  display: flex;
-`
-
-export const Ordinal = styled.span``
-
-export const Name = styled.span`
-  display: flex;
-  margin-left: 1em;
-`
-
-export const Controls = styled.span`
-  flex-grow: 1;
-  text-align: right;
-`
-
-const StyledCheckbox = styled(Checkbox)`
-  margin-left: 10px;
-`
-
-const UsersList = styled.div`
-  flex-basis: 100%;
-  height: 0;
-`
-
-const UserDisplay = ({
-  review,
-  isControlPage,
-  user,
-  currentUserIsEditor,
-  currentUser,
-  canBePublishedPublicly,
-  config,
-}) => {
-  return (
-    <>
-      {review.user && (
-        <Name>
-          <UserCombo>
-            <UserAvatar
-              user={
-                review.isHiddenReviewerName && !isControlPage
-                  ? null
-                  : review.user || user
-              }
-            />
-            <UserInfo>
-              {review.isHiddenReviewerName && !isControlPage ? (
-                <Primary>
-                  {t('decisionPage.decisionTab.Anonmyous Reviewer')}
-                </Primary>
-              ) : (
-                <>
-                  <Primary>{user.username}</Primary>
-                  <Secondary>{user.defaultIdentity.identifier}</Secondary>
-                </>
-              )}
-            </UserInfo>
-          </UserCombo>
-          {(currentUserIsEditor ||
-            currentUser.groupRoles.includes('groupManager')) &&
-            canBePublishedPublicly &&
-            config.instanceName === 'prc' && (
-              <>
-                &nbsp;
-                <ShareIcon />
-              </>
-            )}
-        </Name>
-      )}
-    </>
-  )
-}
-
-const ReviewHeading = ({
-  id,
-  journal,
-  open,
-  ordinal,
-  recommendation,
-  user,
-  isHiddenFromAuthor,
-  isHiddenReviewerName,
-  canEditReviews,
-  toggleOpen,
-  manuscriptId,
-  teams,
-  currentUser,
-  canBePublishedPublicly,
-  reviewUserId,
-  review,
-  isControlPage = false,
-  updateReview,
-  canHideReviews,
-}) => {
-  const config = useContext(ConfigContext)
-  const { t } = useTranslation()
-
-  if (!currentUser) return null
-
-  const editorTeam = teams.filter(team => {
-    return team.role.toLowerCase().includes('editor')
-  })
-
-  const currentUserIsEditor = editorTeam.length
-    ? !!editorTeam
-        .map(team => team.members)
-        .flat()
-        .filter(member => member.user.id === currentUser.id).length
-    : false
-
-  const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
-    updateReview(
-      reviewId,
-      {
-        isHiddenFromAuthor: reviewHiddenFromAuthor,
-        manuscriptId,
-      },
-      manuscriptId,
-    )
-  }
-
-  const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
-    reviewId,
-    reviewerNameHiddenFromPublishedAndAuthor,
-  ) => {
-    updateReview(
-      reviewId,
-      {
-        isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
-        manuscriptId,
-      },
-      manuscriptId,
-    )
-  }
-
-  // TODO: Display user's ORCID
-  return (
-    <ReviewHeadingRoot>
-      <Bullet journal={journal} recommendation={recommendation} />
-      <Ordinal>
-        {t('decisionPage.decisionTab.reviewNum', { num: ordinal })}
-      </Ordinal>
-      &nbsp;
-      <UserDisplay
-        canBePublishedPublicly={canBePublishedPublicly}
-        config={config}
-        currentUser={currentUser}
-        currentUserIsEditor={currentUserIsEditor}
-        isControlPage={isControlPage}
-        review={review}
-        user={user}
-      />
-      {canHideReviews &&
-        (currentUserIsEditor ||
-          currentUser.groupRoles.includes('groupManager')) && (
-          <>
-            <StyledCheckbox
-              checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
-              label={t('decisionPage.decisionTab.Hide review')}
-              onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
-            />
-            <StyledCheckbox
-              checked={isHiddenReviewerName || isHiddenReviewerName == null}
-              label={t('decisionPage.decisionTab.Hide reviewer name')}
-              onChange={() =>
-                toggleIsHiddenReviewerNameFromPublishedAndAuthor(
-                  id,
-                  !isHiddenReviewerName,
-                )
-              }
-            />
-          </>
-        )}
-      <Controls>
-        <ToggleReview open={open} t={t} toggle={toggleOpen} />
-      </Controls>
-      <UsersList>
-        <UserDisplay
-          canBePublishedPublicly={canBePublishedPublicly}
-          config={config}
-          currentUser={currentUser}
-          currentUserIsEditor={currentUserIsEditor}
-          isControlPage={isControlPage}
-          review={review}
-          user={user}
-        />
-      </UsersList>
-    </ReviewHeadingRoot>
-  )
-}
 
 const Root = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -238,8 +16,9 @@ const DecisionReview = ({
   canEditReviews,
   review,
   reviewForm,
-  reviewer,
+  ordinal,
   manuscriptId,
+  lockUnlockReview,
   teams,
   isControlPage,
   updateReview,
@@ -258,11 +37,15 @@ const DecisionReview = ({
     isHiddenReviewerName,
     id,
     canBePublishedPublicly,
+    user,
+    isCollaborative,
+    isLock,
   } = review
 
-  const recommendation = ensureJsonIsParsed(review.jsonData)?.$verdict
+  const collaborativeUsers = teams.find(t => t.role === 'collaborativeReviewer')
+  const users = review.user ? [user] : collaborativeUsers.members
 
-  const { user, ordinal } = reviewer
+  const recommendation = ensureJsonIsParsed(review.jsonData)?.$verdict
 
   const journal = useContext(JournalContext)
 
@@ -277,20 +60,21 @@ const DecisionReview = ({
         canHideReviews={canHideReviews}
         currentUser={currentUser}
         id={id}
+        isCollaborative={isCollaborative}
         isControlPage={isControlPage}
         isHiddenFromAuthor={isHiddenFromAuthor}
         isHiddenReviewerName={isHiddenReviewerName}
+        isLock={isLock}
         journal={journal}
+        lockUnlockReview={lockUnlockReview}
         manuscriptId={manuscriptId}
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
-        review={review}
-        reviewUserId={review.user?.id}
         teams={teams}
         toggleOpen={toggleOpen}
         updateReview={updateReview}
-        user={user}
+        users={users}
       />
       <ReviewDetailsModal
         canEditReviews={canEditReviews}
@@ -320,34 +104,10 @@ const DecisionReview = ({
 DecisionReview.propTypes = {
   // eslint-disable-next-line
   review: PropTypes.object,
-  // eslint-disable-next-line
-  reviewer: PropTypes.object,
+  ordinal: PropTypes.isRequired,
   currentUser: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }).isRequired,
-}
-
-ReviewHeading.propTypes = {
-  // eslint-disable-next-line
-  journal: PropTypes.object,
-  open: PropTypes.bool.isRequired,
-  ordinal: PropTypes.number.isRequired,
-  recommendation: PropTypes.string,
-  toggleOpen: PropTypes.func.isRequired,
-  // eslint-disable-next-line
-  user: PropTypes.object.isRequired,
-}
-ReviewHeading.defaultProps = { recommendation: null }
-
-ToggleReview.propTypes = {
-  open: PropTypes.bool.isRequired,
-  toggle: PropTypes.func.isRequired,
-}
-
-Bullet.propTypes = {
-  // eslint-disable-next-line
-  journal: PropTypes.object,
-  recommendation: PropTypes.string.isRequired,
 }
 
 export default DecisionReview

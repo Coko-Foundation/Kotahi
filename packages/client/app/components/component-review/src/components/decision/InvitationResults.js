@@ -8,12 +8,21 @@ import { SectionRow } from '../style'
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
 import { convertTimestampToDateString } from '../../../../../shared/dateUtils'
-import {
-  Controls,
-  Name,
-  ToggleReview,
-  ReviewHeadingRoot,
-} from './DecisionReview'
+
+export const InvitacionHeadingRoot = styled.div`
+  align-items: center;
+  display: flex;
+`
+
+const Controls = styled.span`
+  flex-grow: 1;
+  text-align: right;
+`
+
+const Name = styled.span`
+  display: flex;
+  margin-left: 1em;
+`
 
 const ToggleInvitation = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -147,7 +156,7 @@ const InvitationResult = ({ invitation }) => {
   return (
     <SectionRow>
       <Root>
-        <ReviewHeadingRoot>
+        <InvitacionHeadingRoot>
           <Bullet status={invitation.status} />
           <Ordinal status={invitation.status}>{ordinalString}</Ordinal>
           &nbsp;
@@ -164,10 +173,14 @@ const InvitationResult = ({ invitation }) => {
           </Name>
           {responseComment && (
             <Controls>
-              <ToggleReview open={open} t={t} toggle={toggleOpen} />
+              <Button onClick={toggleOpen} plain>
+                {open
+                  ? t('decisionPage.decisionTab.reviewModalHide')
+                  : t('decisionPage.decisionTab.reviewModalShow')}
+              </Button>
             </Controls>
           )}
-        </ReviewHeadingRoot>
+        </InvitacionHeadingRoot>
 
         {open && (
           <ToggleableArea>

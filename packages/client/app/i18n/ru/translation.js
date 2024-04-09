@@ -274,6 +274,7 @@ const ru = {
         'Anonmyous Reviewer': 'Анонимный рецензент',
         'Hide review': 'Скрыть рецензию',
         'Hide reviewer name': 'Скрыть имя рецензента',
+        lockReview: 'Проверка блокировки',
         reviewModalShow: 'Показать',
         reviewModalHide: 'Свернуть',
         Submit: 'Отправить',

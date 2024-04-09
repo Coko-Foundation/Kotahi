@@ -8,6 +8,7 @@ const reviewFields = `
   isDecision
   isHiddenFromAuthor
   isCollaborative
+  isLock
   isHiddenReviewerName
   canBePublishedPublicly
   user {
@@ -414,6 +415,14 @@ export const setShouldPublishFieldMutation = gql`
       shouldPublish: $shouldPublish
     ) {
       ${manuscriptFields}
+    }
+  }
+`
+
+export const lockUnlockCollaborativeReviewMutation = gql`
+  mutation($id: ID!) {
+    lockUnlockCollaborativeReview(id: $id) {
+      ${reviewFields}
     }
   }
 `

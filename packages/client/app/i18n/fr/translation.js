@@ -273,6 +273,7 @@ const fr = {
         'Anonmyous Reviewer': 'Réviseur anonyme',
         'Hide review': 'Masquer la révision',
         'Hide reviewer name': 'Masquer le nom du réviseur',
+        lockReview: 'Révision de verrouillage',
         reviewModalShow: 'Afficher',
         reviewModalHide: 'Masquer',
         Submit: 'Soumettre',

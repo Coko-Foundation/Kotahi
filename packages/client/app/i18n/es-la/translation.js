@@ -270,6 +270,7 @@ const esLa = {
         'Anonmyous Reviewer': 'Revisor Anónimo',
         'Hide review': 'Ocultar revisión',
         'Hide reviewer name': 'Ocultar nombre del revisor',
+        lockReview: 'Revisión de bloqueo',
         reviewModalShow: 'Mostrar',
         reviewModalHide: 'Ocultar',
         Submit: 'Enviar',

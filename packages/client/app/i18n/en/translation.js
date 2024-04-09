@@ -268,6 +268,7 @@ const en = {
         'Anonmyous Reviewer': 'Anonmyous Reviewer',
         'Hide review': 'Hide review',
         'Hide reviewer name': 'Hide reviewer name',
+        lockReview: 'Lock review',
         reviewModalShow: 'Show',
         reviewModalHide: 'Hide',
         Submit: 'Submit',

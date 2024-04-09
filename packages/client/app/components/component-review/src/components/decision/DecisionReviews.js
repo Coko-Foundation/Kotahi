@@ -6,13 +6,6 @@ import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 import InvitationResults from './InvitationResults'
 
-// TODO: read reviewer ordinal and name from project reviewer
-// const { status } =
-//     getUserFromTeam(manuscript, 'reviewer').filter(
-//       member => member.user.id === currentUser.id,
-//     )[0] || {}
-//   return status
-
 const getReviewerTeamMember = (
   manuscript,
   currentUser,
@@ -36,14 +29,13 @@ const getReviewerTeamMember = (
 
 const DecisionReviews = ({
   canEditReviews,
-  reviewers,
   reviewForm,
   manuscript,
+  lockUnlockReview,
   updateReview,
   canHideReviews,
   threadedDiscussionProps,
   invitations,
-  urlFrag,
   refetch,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
@@ -85,11 +77,11 @@ const DecisionReviews = ({
             canHideReviews={canHideReviews}
             currentUser={currentUser}
             isControlPage
+            lockUnlockReview={lockUnlockReview}
             manuscriptId={manuscript.id}
             open
+            ordinal="1"
             review={collaborativeReviewToShow}
-            reviewer={{ user: collaborativeReviewToShow?.user, ordinal: 1 }}
-            // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
             reviewForm={reviewForm}
             teams={manuscript.teams}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -98,6 +90,7 @@ const DecisionReviews = ({
               updateSharedStatusForInvitedReviewer
             }
             updateTeamMember={updateTeamMember}
+            // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
           />
         </SectionRow>
       ) : (
@@ -131,11 +124,12 @@ const DecisionReviews = ({
                 canHideReviews={canHideReviews}
                 currentUser={currentUser}
                 isControlPage
+                lockUnlockReview={lockUnlockReview}
                 manuscriptId={manuscript.id}
                 open
+                ordinal={index + 1}
                 refetchManuscript={refetch}
                 review={review}
-                reviewer={{ user: review?.user, ordinal: index + 1 }}
                 reviewerTeamMember={getReviewerTeamMember(
                   manuscript,
                   review.user,

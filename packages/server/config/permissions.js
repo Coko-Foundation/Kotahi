@@ -639,6 +639,10 @@ const permissions = {
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
+    lockUnlockCollaborativeReview: or(
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
+    ),
     updateUser: or(userIsGm, userIsAdmin),
     upload: isAuthenticated,
     uploadFile: isAuthenticated,

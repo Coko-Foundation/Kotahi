@@ -2280,6 +2280,7 @@ const typeDefs = `
     isHiddenReviewerName: Boolean
     isHiddenFromAuthor: Boolean
     isCollaborative: Boolean
+    isLock: Boolean
     jsonData: String
   }
 
@@ -2467,6 +2468,7 @@ const typeDefs = `
     user: ReviewUser
     isHiddenFromAuthor: Boolean
     isCollaborative: Boolean
+    isLock: Boolean
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
     canBePublishedPublicly: Boolean!

@@ -55,6 +55,7 @@ const DecisionVersion = ({
   updateManuscript, // To handle manuscript editing
   onChange, // To handle form editing
   makeDecision,
+  lockUnlockReview,
   sendNotifyEmail,
   sendChannelMessage,
   publishManuscript,
@@ -399,6 +400,24 @@ const DecisionVersion = ({
             />
           )}
           {isCurrentVersion && (
+            <DecisionReviews
+              canHideReviews={canHideReviews}
+              currentUser={currentUser}
+              invitations={invitations}
+              lockUnlockReview={lockUnlockReview}
+              manuscript={version}
+              reviewers={reviewers}
+              reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
+              updateReview={updateReview}
+              updateSharedStatusForInvitedReviewer={
+                updateSharedStatusForInvitedReviewer
+              }
+              updateTeamMember={updateTeamMember}
+              urlFrag={urlFrag}
+            />
+          )}
+          {isCurrentVersion && (
             <AdminSection key="decision-form">
               <SectionContent>
                 <FormTemplate
@@ -503,6 +522,7 @@ const DecisionVersion = ({
               canHideReviews={canHideReviews}
               currentUser={currentUser}
               invitations={invitations}
+              lockUnlockReview={lockUnlockReview}
               manuscript={version}
               refetch={refetch}
               reviewers={reviewers}

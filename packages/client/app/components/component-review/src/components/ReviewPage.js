@@ -54,6 +54,7 @@ const reviewFields = `
   isDecision
   isHiddenReviewerName
   isCollaborative
+  isLock
   canBePublishedPublicly
   isSharedWithCurrentUser
   user {

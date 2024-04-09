@@ -307,6 +307,7 @@ const exportFields = `
     isHiddenReviewerName
     isHiddenFromAuthor
     isCollaborative
+    isLock
     jsonData
   }
   teams {

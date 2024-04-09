@@ -8,6 +8,7 @@ const reviewFields = `
   isDecision
   isHiddenFromAuthor
   isCollaborative
+  isLock
   isHiddenReviewerName
   canBePublishedPublicly
   user {

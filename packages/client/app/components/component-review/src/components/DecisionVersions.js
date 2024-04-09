@@ -53,6 +53,7 @@ const DecisionVersions = ({
   setShouldPublishField,
   selectedEmailIsBlacklisted,
   updateSharedStatusForInvitedReviewer,
+  lockUnlockReview,
   dois,
   refetch,
   updateTask,
@@ -133,6 +134,7 @@ const DecisionVersions = ({
                 invitations={version.manuscript.invitations || []}
                 isCurrentVersion={index === 0}
                 key={version.manuscript.id}
+                lockUnlockReview={lockUnlockReview}
                 makeDecision={makeDecision}
                 manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}

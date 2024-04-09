@@ -18,6 +18,7 @@ import {
   sendEmail,
   setShouldPublishFieldMutation,
   updateReviewMutation,
+  lockUnlockCollaborativeReviewMutation,
 } from './queries'
 
 import {
@@ -168,6 +169,7 @@ const DecisionPage = ({ currentUser, match }) => {
   const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION)
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
   const [updateTeamMember] = useMutation(updateTeamMemberMutation)
+  const [lockUnlockReview] = useMutation(lockUnlockCollaborativeReviewMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
   const [createFile] = useMutation(createFileMutation)
   const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
@@ -455,6 +457,7 @@ const DecisionPage = ({ currentUser, match }) => {
       externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
+      lockUnlockReview={lockUnlockReview}
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}
