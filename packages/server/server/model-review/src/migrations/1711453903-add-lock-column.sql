@@ -1,1 +1,1 @@
-ALTER TABLE reviews ADD is_lock BOOLEAN;
+ALTER TABLE reviews ADD is_lock BOOLEAN DEFAULT FALSE;

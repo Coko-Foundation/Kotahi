@@ -169,7 +169,6 @@ const DecisionPage = ({ currentUser, match }) => {
   const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION)
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
   const [updateTeamMember] = useMutation(updateTeamMemberMutation)
-  const [lockUnlockReview] = useMutation(lockUnlockCollaborativeReviewMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
   const [createFile] = useMutation(createFileMutation)
   const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
@@ -177,6 +176,25 @@ const DecisionPage = ({ currentUser, match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+
+  const [lockUnlockReview] = useMutation(
+    lockUnlockCollaborativeReviewMutation,
+    {
+      update: (cache, { data: { lockUnlockCollaborativeReview } }) => {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Review',
+            id: lockUnlockCollaborativeReview.id,
+          }),
+          fields: {
+            isLock() {
+              return lockUnlockCollaborativeReview.isLock
+            },
+          },
+        })
+      },
+    },
+  )
 
   const [assignAuthorForProofing] = useMutation(ASSIGN_AUTHOR_FOR_PROOFING, {
     update: (cache, { data: { assignAuthoForProofingManuscript } }) => {

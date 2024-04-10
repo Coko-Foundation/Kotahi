@@ -191,6 +191,7 @@ const ReviewLayout = ({
               deleteFile={deleteFile}
               form={reviewForm}
               formikOptions={{ enableReinitialize: true }}
+              hideSubmissionButton={reviewData.isCollaborative}
               initialValues={reviewData}
               manuscriptId={latestManuscript.id}
               manuscriptShortId={latestManuscript.shortId}

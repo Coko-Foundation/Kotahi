@@ -140,9 +140,11 @@ const ReviewHeading = ({
             />
             {isCollaborative && (
               <StyledCheckbox
-                checked={isHiddenReviewerName || isHiddenReviewerName == null}
+                checked={isLock}
                 label={t('decisionPage.decisionTab.lockReview')}
-                onChange={() => lockUnlockReviewFn(id)}
+                onChange={() => {
+                  lockUnlockReviewFn(id)
+                }}
               />
             )}
           </>

@@ -120,16 +120,33 @@ const resolvers = {
 
     async lockUnlockCollaborativeReview(_, { id }) {
       const review = await models.Review.query()
-        .where({
+        .findOne({
           id,
           isCollaborative: true,
         })
         .throwIfNotFound()
 
-      return models.Review.query()
-        .patch({ isLock: !review.lock })
-        .where({ id })
+      const updatedReview = await models.Review.query()
+        .patch({ isLock: !review.isLock })
+        .findOne({ id })
         .returning('*')
+
+      const status = updatedReview.isLock ? 'closed' : 'inProgress'
+
+      const team = await models.Team.query().findOne({
+        role: 'collaborativeReviewer',
+        objectId: updatedReview.manuscriptId,
+        objectType: 'manuscript',
+      })
+
+      await models.TeamMember.query()
+        .patch({ status })
+        .where({ teamId: team.id })
+
+      return {
+        ...updatedReview,
+        jsonData: JSON.stringify(updatedReview.jsonData),
+      }
     },
 
     async updateReviewerTeamMemberStatus(_, { manuscriptId, status }, ctx) {
