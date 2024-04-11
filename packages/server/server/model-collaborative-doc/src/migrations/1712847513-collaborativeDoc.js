@@ -10,7 +10,7 @@ exports.up = async knex => {
       table.binary('docs_y_doc_state').notNullable()
       table.uuid('group_id').references('groups.id').notNullable()
       table.uuid('object_id')
-      table.string('object_type')
+      table.string('name')
       table
         .timestamp('created', { useTz: true })
         .notNullable()

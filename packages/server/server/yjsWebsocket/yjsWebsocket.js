@@ -78,10 +78,22 @@ module.exports = () => {
         userId = null
       }
 
-      const doc = getYDoc(id, userId)
+      const { objectId, name } = utils.extractParamsFromIdentifier(id)
+
+      const extraData = {
+        groupId: variables.groupId,
+        objectId,
+        name,
+        ...omit(variables, ['token']),
+      }
+
+      const doc = getYDoc(id, userId, extraData)
 
       if (userId) {
-        const docObject = await CollaborativeDoc.query().findOne({ id })
+        const docObject = await CollaborativeDoc.query().findOne({
+          objectId,
+          name,
+        })
 
         if (!docObject) {
           const state = Y.encodeStateAsUpdate(doc)
@@ -91,8 +103,7 @@ module.exports = () => {
             .insert({
               docs_prosemirror_delta: delta,
               docs_y_doc_state: state,
-              groupId: variables.groupId,
-              ...omit(variables, ['token']),
+              ...extraData,
             })
             .returning('*')
         }
@@ -156,9 +167,9 @@ module.exports = () => {
       }
     })
 
-    const getYDoc = (docName, userId) =>
+    const getYDoc = (docName, userId, extraData) =>
       map.setIfUndefined(utils.docs, docName, () => {
-        const doc = new WSSharedDoc(docName, userId)
+        const doc = new WSSharedDoc(docName, userId, extraData)
         doc.gc = true
 
         if (utils.persistence !== null) {

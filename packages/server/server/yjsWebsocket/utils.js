@@ -16,6 +16,15 @@ const wsReadyStateConnecting = 0
 const wsReadyStateOpen = 1
 const docs = new Map()
 
+const extractParamsFromIdentifier = id => {
+  const lastIndex = id.lastIndexOf('-')
+
+  // Split the input string at the last occurrence of '-' character
+  const objectId = id.slice(0, lastIndex)
+  const name = id.slice(lastIndex + 1)
+  return { objectId, name }
+}
+
 /**
  * @param {Uint8Array} update
  * @param {any} origin
@@ -87,7 +96,12 @@ const closeConn = (doc, conn) => {
 
 persistence = {
   bindState: async (id, doc) => {
-    const docInstance = await CollaborativeDoc.query().findOne({ id })
+    const { objectId, name } = extractParamsFromIdentifier(id)
+
+    const docInstance = await CollaborativeDoc.query().findOne({
+      objectId,
+      name,
+    })
 
     if (docInstance && docInstance.docsYDocState) {
       Y.applyUpdate(doc, docInstance.docsYDocState)
@@ -99,7 +113,8 @@ persistence = {
     const delta = ydoc.getText('prosemirror').toDelta()
     const timestamp = db.fn.now()
 
-    const docYjs = await CollaborativeDoc.query().findOne({ id })
+    const { objectId, name } = extractParamsFromIdentifier(id)
+    const docYjs = await CollaborativeDoc.query().findOne({ objectId, name })
 
     if (delta && delta.length > 0) {
       if (!docYjs) {
@@ -107,6 +122,7 @@ persistence = {
           await CollaborativeDoc.query().insert({
             docs_prosemirror_delta: delta,
             docs_y_doc_state: state,
+            ...ydoc.extraData,
           })
         } catch (e) {
           console.log(`Insert Query`)
@@ -120,7 +136,7 @@ persistence = {
               docs_y_doc_state: state,
               updated: timestamp,
             })
-            .findOne({ id })
+            .findOne({ objectId, name })
         } catch (e) {
           console.log(`Patch Query`)
           console.log(e)
@@ -144,4 +160,5 @@ module.exports = {
   send,
   closeConn,
   messageAwareness,
+  extractParamsFromIdentifier,
 }

@@ -19,10 +19,7 @@ import {
   RichTextEditor,
   RadioGroup,
 } from '../../../shared'
-import {
-  FullWaxField,
-  ThreadedDiscussion,
-} from '../../../component-formbuilder/src/components/builderComponents'
+import FormCollaborateComponent from '../../../component-formbuilder/src/components/FormCollaborativeComponent'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
@@ -30,6 +27,7 @@ import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
 import { validateFormField } from '../../../../shared/formValidation'
+import ThreadedDiscussion from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import { ConfigContext } from '../../../config/src'
@@ -128,13 +126,18 @@ const elements = {
   Keywords: TextInput,
   TextField: TextInput,
   AbstractEditor: RichTextEditor,
-  FullWaxField,
   RadioGroup: SafeRadioGroup,
   CheckboxGroup,
   AuthorsInput,
   Select,
   LinksInput,
   ThreadedDiscussion,
+}
+
+const collaborativeElements = {
+  ...elements,
+  Abstract: FormCollaborateComponent(RichTextEditor),
+  AbstractEditor: FormCollaborateComponent(RichTextEditor),
 }
 
 /** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */
@@ -522,7 +525,11 @@ const FormTemplate = ({
                           ])}
                           aria-label={element.placeholder || element.title}
                           collaborativeObject={collaborativeObject}
-                          component={elements[element.component]}
+                          component={
+                            collaborativeObject?.identifier
+                              ? collaborativeElements[element.component]
+                              : elements[element.component]
+                          }
                           data-testid={element.name} // TODO: Improve this
                           isClearable={
                             element.component === 'Select' &&

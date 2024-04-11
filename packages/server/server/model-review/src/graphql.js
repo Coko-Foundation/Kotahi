@@ -153,14 +153,18 @@ const resolvers = {
         .findById(manuscriptId)
         .withGraphFetched('[submitter.defaultIdentity, channels.members]')
 
-      const team = await manuscript
+      const teams = await manuscript
         .$relatedQuery('teams')
-        .whereIn('role', ['reviewer'])
-        .first()
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
 
-      const member = await team
-        .$relatedQuery('members')
-        .where('userId', ctx.user)
+      const member = await models.TeamMember.query()
+        .whereIn(
+          'teamId',
+          teams.map(t => t.id),
+        )
+        .andWhere(builder => {
+          builder.where({ userId: ctx.user })
+        })
         .first()
 
       member.status = status

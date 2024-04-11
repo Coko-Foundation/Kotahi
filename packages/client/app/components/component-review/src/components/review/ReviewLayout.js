@@ -172,7 +172,6 @@ const ReviewLayout = ({
     }
 
     const isLatestVersion = latestManuscript.id === versions[0].manuscript.id
-
     return (
       <div key={latestManuscript.id}>
         {reviewerStatus === 'completed' || !isLatestVersion ? (
@@ -187,6 +186,7 @@ const ReviewLayout = ({
         ) : (
           <SectionContent>
             <FormTemplate
+              collaborativeObject={{ identifier: currentUserReview.id }}
               createFile={createFile}
               deleteFile={deleteFile}
               form={reviewForm}

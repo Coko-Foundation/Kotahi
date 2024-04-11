@@ -16,6 +16,7 @@ const GET_CURRENT_USER = gql`
 
 const CollaborativeWax = ({
   editorMode,
+  component,
   user,
   collaborativeObject,
   identifier,
@@ -35,7 +36,7 @@ const CollaborativeWax = ({
     omit(collaborativeObject, ['identifier']),
   )
 
-  const Component = Editor[editorMode]
+  const Component = editorMode ? Editor[editorMode] : component
 
   useEffect(() => {
     if (user) {

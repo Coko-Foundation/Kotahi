@@ -158,7 +158,7 @@ const ReviewHeading = ({
       </Controls>
       {users.length > 0 && (
         <UsersList>
-          {users.map(({ user }) => (
+          {users.map(user => (
             <Reviewer
               canBePublishedPublicly={canBePublishedPublicly}
               currentUser={currentUser}

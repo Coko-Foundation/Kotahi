@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
+import yjsConfig from '../../../wax-collab/src/config/yjsConfig'
 import SimpleWaxEditorLayout from '../../../wax-collab/src/layout/SimpleWaxEditorLayout'
 import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
 
@@ -14,14 +15,21 @@ const FormWaxEditor = ({
   placeholder,
   spellCheck,
   'data-testid': dataTestid,
+  yjsProvider,
+  ydoc,
   ...rest
 }) => {
+  const config = yjsConfig(simpleWaxEditorConfig(), {
+    yjsProvider,
+    ydoc,
+  })
+
   return (
     <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
-        config={simpleWaxEditorConfig()}
+        config={config}
         layout={SimpleWaxEditorLayout(readonly, dataTestid)}
         onBlur={val => {
           onChange && onChange(val)

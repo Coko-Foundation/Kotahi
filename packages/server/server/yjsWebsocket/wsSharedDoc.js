@@ -9,10 +9,12 @@ class WSSharedDoc extends Y.Doc {
   /**
    * @param {string} name
    */
-  constructor(name, userId) {
+  constructor(name, userId, extraData) {
     super({ gc: gcEnabled })
     this.userId = userId
     this.name = name
+    this.extraData = extraData
+
     /**
      * Maps from conn to set of controlled user ids. Delete all user ids from awareness when this conn is closed
      * @type {Map<Object, Set<number>>}
