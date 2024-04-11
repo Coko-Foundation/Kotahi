@@ -116,7 +116,7 @@ const ReviewHeading = ({
           currentUserIsEditor={currentUserIsEditor}
           isControlPage={isControlPage}
           isHiddenReviewerName={isHiddenReviewerName}
-          user={users[0].user}
+          user={users[0]}
         />
       )}
       {canHideReviews &&

@@ -43,7 +43,10 @@ const DecisionReview = ({
   } = review
 
   const collaborativeUsers = teams.find(t => t.role === 'collaborativeReviewer')
-  const users = review.user ? [user] : collaborativeUsers.members
+
+  const users = review.user
+    ? [user]
+    : collaborativeUsers.members.map(member => member.user)
 
   const recommendation = ensureJsonIsParsed(review.jsonData)?.$verdict
 
