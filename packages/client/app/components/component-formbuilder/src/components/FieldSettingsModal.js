@@ -375,6 +375,7 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
     Object.entries(fieldProps)
       .map(([propName, prop]) => {
         let value = values[propName]
+
         if (!value) return null
 
         const props = prop?.props || {} // This is the preset properties for the given form property. E.g. the "Validation options" property has preset options ("required", "minChars" etc) and isMulti=true
@@ -384,8 +385,14 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
             value = value.filter(x =>
               props.options.some(opt => opt.value === x.value),
             )
-          } else if (!props.options.some(opt => opt.value === value))
+          } else if (
+            typeof value !== 'object' &&
+            !props.options.some(opt => opt.value === value)
+          ) {
             return null
+          } else if (typeof value === 'object') {
+            value = value.value
+          }
         }
 
         if (Array.isArray(value)) value = value.map(x => ({ id: uuid(), ...x }))
@@ -400,6 +407,7 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
   cleanedValues.validateValue = Object.keys(values.validateValue || {}).length
     ? values.validateValue
     : null
+
   return cleanedValues
 }
 
