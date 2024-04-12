@@ -31,7 +31,6 @@ const extractParamsFromIdentifier = id => {
  * @param {WSSharedDoc} doc
  */
 const updateHandler = (update, origin, doc) => {
-  console.log(update, doc)
   const encoder = encoding.createEncoder()
   encoding.writeVarUint(encoder, messageSync)
   syncProtocol.writeUpdate(encoder, update)

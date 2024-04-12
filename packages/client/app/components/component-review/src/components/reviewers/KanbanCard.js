@@ -1,9 +1,11 @@
 import { grid, th } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Mail } from 'react-feather'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { ConfigContext } from '../../../../config/src'
+import { isCurrentUserCollaborative } from '../review/util'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { UserAvatar } from '../../../../component-avatar/src'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
@@ -90,6 +92,12 @@ const KanbanCard = ({
 }) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+  const config = useContext(ConfigContext)
+
+  const isCollaborative =
+    reviewer.invitedPersonType === 'COLLABORATIVE_REVIEWER' ||
+    isCurrentUserCollaborative(manuscript, reviewer.user)
+
   return (
     <>
       <ReviewDetailsModal
@@ -138,9 +146,11 @@ const KanbanCard = ({
               </EmailDisplay>
             )}
           </InfoGrid>
-          {reviewer.invitedPersonType === 'COLLABORATIVE_REVIEWER' && (
+          {isCollaborative && (
             <CollaborativeBadge>
-              <ColorBadge color="green">Is collaborative review</ColorBadge>
+              <ColorBadge color={config.groupIdentity.primaryColor}>
+                Is collaborative review
+              </ColorBadge>
             </CollaborativeBadge>
           )}
         </LeftSide>

@@ -19,6 +19,7 @@ import {
   RichTextEditor,
   RadioGroup,
 } from '../../../shared'
+import { FullWaxField } from '../../../component-formbuilder/src/components/builderComponents'
 import FormCollaborateComponent from '../../../component-formbuilder/src/components/FormCollaborativeComponent'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -125,6 +126,7 @@ const elements = {
   Abstract: RichTextEditor,
   Keywords: TextInput,
   TextField: TextInput,
+  FullWaxField,
   AbstractEditor: RichTextEditor,
   RadioGroup: SafeRadioGroup,
   CheckboxGroup,
@@ -138,6 +140,7 @@ const collaborativeElements = {
   ...elements,
   Abstract: FormCollaborateComponent(RichTextEditor),
   AbstractEditor: FormCollaborateComponent(RichTextEditor),
+  FullWaxField: FormCollaborateComponent(FullWaxField),
 }
 
 /** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */

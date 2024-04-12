@@ -4,10 +4,12 @@ import AbstractField from './AbstractField'
 import CheckBox from './CheckBox'
 import RadioBox from './RadioBox'
 import TextArea from './TextArea'
+import FullWaxField from './FullWaxField'
 import ThreadedDiscussion from './ThreadedDiscussion/ThreadedDiscussion'
 import { Select } from '../../../../shared'
 
 export {
+  FullWaxField,
   OptionsField,
   TextField,
   AbstractField,

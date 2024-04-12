@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import { set } from 'lodash'
 import { gql } from '@apollo/client'
+import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
@@ -94,7 +95,7 @@ const ReviewLayout = ({
     )
 
     const reviewData = currentUserReview
-      ? JSON.parse(currentUserReview?.jsonData)
+      ? ensureJsonIsParsed(currentUserReview?.jsonData)
       : {}
 
     const reviewersTeam = latestManuscript.teams.find(
