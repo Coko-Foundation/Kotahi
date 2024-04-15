@@ -4,13 +4,11 @@ import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
 import { useTranslation } from 'react-i18next'
-import { Formik } from 'formik'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 import { ensureJsonIsParsed } from '../../../shared/objectUtils'
 import Modal, { SecondaryButton } from '../../component-modal/src/Modal'
 import {
   ConfigurableStatus,
-  FilesUpload,
   UserInfo,
   UserCombo,
   Primary,
@@ -21,10 +19,10 @@ import recommendations from '../../../../config/journal/recommendations'
 import { UserAvatar } from '../../component-avatar/src'
 import DeleteReviewerModal from '../../component-review/src/components/reviewers/DeleteReviewerModal'
 import ReadonlyFieldData from '../../component-review/src/components/metadata/ReadonlyFieldData'
+import FormTemplate from '../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../config/src'
 import localizeReviewFilterOptions from '../../../shared/localizeReviewFilterOptions'
 import localizeRecommendations from '../../../shared/localizeRecommendations'
-import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
 
 const createFileMutation = gql`
   mutation ($file: Upload!, $meta: FileMetaInput!) {
@@ -110,27 +108,6 @@ const ReviewDetailsModal = (
 
   const [createFile] = useMutation(createFileMutation)
 
-  const handleFileChange = (files, property) => {
-    const cleanData = files.map(file => {
-      if (typeof file === 'object' && file !== null) {
-        return file.id
-      }
-
-      return file
-    })
-
-    const currentData = JSON.parse(review.jsonData)
-    currentData[property] = cleanData
-    updateReview(
-      review.id,
-      {
-        jsonData: JSON.stringify(currentData),
-        manuscriptId,
-      },
-      manuscriptId,
-    )
-  }
-
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
       const id = cache.identify({
@@ -156,8 +133,18 @@ const ReviewDetailsModal = (
   const showRealReviewer = !review?.isHiddenReviewerName || isControlPage
 
   const reviewerName = showRealReviewer
-    ? `${reviewer?.username ?? reviewerTeamMember?.invitedPersonName}`
+    ? reviewer?.username || reviewerTeamMember?.invitedPersonName
     : 'Anonymous Reviewer'
+
+  const generateModalTitle = () => {
+    if (!showRealReviewer || !reviewer) {
+      return t('modals.reviewReport.anonymousReviewReport')
+    }
+
+    return t('modals.reviewReport.reviewReport', {
+      name: reviewerName,
+    })
+  }
 
   const timeString = convertTimestampToDateString(
     review ? review.updated : reviewerTeamMember.updated,
@@ -203,11 +190,7 @@ const ReviewDetailsModal = (
       subtitle={t(`modals.reviewReport.Last Updated`, {
         dateString: timeString,
       })}
-      title={
-        reviewerName
-          ? t('modals.reviewReport.reviewReport', { name: reviewerName })
-          : t('modals.reviewReport.anonymousReviewReport')
-      }
+      title={generateModalTitle()}
     >
       {reviewer && (
         <UserCombo style={{ marginBottom: '1em' }}>
@@ -220,7 +203,7 @@ const ReviewDetailsModal = (
           <UserInfo>
             <p>
               <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
-              {`${reviewerName}`}
+              {reviewerName}
             </p>
             {showRealReviewer && (
               <Secondary>
@@ -245,7 +228,6 @@ const ReviewDetailsModal = (
           canEditReviews={canEditReviews}
           createFile={createFile}
           deleteFile={deleteFile}
-          handleFileChange={handleFileChange}
           manuscriptId={manuscriptId}
           readOnly={readOnly}
           review={review}
@@ -353,7 +335,6 @@ const ReviewData = ({
   readOnly,
   createFile,
   deleteFile,
-  handleFileChange,
   review,
   reviewForm,
   threadedDiscussionProps,
@@ -383,65 +364,6 @@ const ReviewData = ({
     element => isViewable(element) && isFileField(element),
   )
 
-  const onBlurHandler = (key, value) => {
-    updateReview(
-      review.id,
-      {
-        jsonData: JSON.stringify({ [key]: value }),
-        manuscriptId,
-      },
-      manuscriptId,
-    )
-  }
-
-  const fieldRenderer = element => {
-    if (element.component === 'AbstractEditor' && !readOnly && canEditReviews) {
-      return (
-        <SimpleWaxEditor
-          onChange={value => onBlurHandler(element.name, value)}
-          value={reviewFormData[element.name]}
-        />
-      )
-    }
-
-    if (
-      element.component === 'SupplementaryFiles' &&
-      !readOnly &&
-      canEditReviews
-    ) {
-      return (
-        <Formik
-          initialValues={{ [element.name]: reviewFormData[element.name] }}
-          onSubmit={actions => {
-            actions.setSubmitting(false)
-          }}
-        >
-          <FilesUpload
-            acceptMultiple
-            confirmBeforeDelete
-            createFile={createFile}
-            deleteFile={deleteFile}
-            fieldName={element.name}
-            fileType="review"
-            manuscriptId={manuscriptId}
-            onChange={handleFileChange}
-            reviewId={review.id}
-            values={reviewFormData}
-          />
-        </Formik>
-      )
-    }
-
-    return (
-      <ReadonlyFieldData
-        fieldName={element.name}
-        form={reviewForm}
-        formData={reviewFormData}
-        threadedDiscussionProps={threadedDiscussionProps}
-      />
-    )
-  }
-
   return (
     <>
       {recommendationConfig && (
@@ -453,14 +375,44 @@ const ReviewData = ({
         </StatusContainer>
       )}
 
-      <ReviewItemsContainer>
-        {[...nonFileFields, ...fileFields].map((element, i) => (
-          <ReviewItemContainer key={element.id}>
-            <Header>{element.shortDescription || element.title}</Header>
-            {fieldRenderer(element)}
-          </ReviewItemContainer>
-        ))}
-      </ReviewItemsContainer>
+      {!readOnly && canEditReviews ? (
+        <FormTemplate
+          createFile={createFile}
+          deleteFile={deleteFile}
+          form={{ ...reviewForm, name: null, description: null }} // suppresses the form title and description
+          formData={reviewFormData}
+          initialValues={reviewFormData}
+          manuscriptId={manuscriptId}
+          onChange={(value, path) => {
+            updateReview(
+              review.id,
+              {
+                jsonData: JSON.stringify({ [path]: value }),
+                manuscriptId,
+              },
+              manuscriptId,
+            )
+          }}
+          shouldStoreFilesInForm
+          showEditorOnlyFields={false}
+          tagForFiles="review"
+          threadedDiscussionProps={threadedDiscussionProps}
+        />
+      ) : (
+        <ReviewItemsContainer>
+          {[...nonFileFields, ...fileFields].map((element, i) => (
+            <ReviewItemContainer key={element.id}>
+              <Header>{element.shortDescription || element.title}</Header>
+              <ReadonlyFieldData
+                fieldName={element.name}
+                form={reviewForm}
+                formData={reviewFormData}
+                threadedDiscussionProps={threadedDiscussionProps}
+              />
+            </ReviewItemContainer>
+          ))}
+        </ReviewItemsContainer>
+      )}
     </>
   )
 }

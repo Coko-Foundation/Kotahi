@@ -1,50 +1,13 @@
 const models = require('@pubsweet/models')
+const isEmpty = require('lodash/isEmpty')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
-const { cachedGet } = require('../../querycache')
 
 const {
   convertFilesToIdsOnly,
   convertFilesToFullObjects,
 } = require('./reviewUtils')
-
-const calculateShouldNotSetUser = async (ctx, manuscriptId) => {
-  const activeConfig = await models.Config.getCached(
-    ctx.req.headers['group-id'],
-  )
-
-  const { instanceName } = activeConfig?.formData
-
-  if (instanceName !== 'prc' && instanceName !== 'journal') {
-    return false
-  }
-
-  const user = await models.User.query().findById(ctx.user)
-
-  const reviewerQuery = await user
-    .$relatedQuery('teams')
-    .where({ role: 'reviewer' })
-    .andWhere({ objectId: manuscriptId, objectType: 'manuscript' })
-
-  const isReviewer = reviewerQuery.length > 0
-
-  if (isReviewer) {
-    return false
-  }
-
-  const isEditorOfManuscript = await cachedGet(
-    `userIsEditor:${ctx.user}:${manuscriptId}`,
-  )
-
-  const isGM = await cachedGet(
-    `userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`,
-  )
-
-  const isAdmin = await cachedGet(`userIsAdmin:${ctx.user}`)
-
-  return isAdmin || isGM || isEditorOfManuscript
-}
 
 const resolvers = {
   Mutation: {
@@ -53,11 +16,6 @@ const resolvers = {
       const existingReview = (await models.Review.query().findById(id)) || {}
 
       const manuscript = await models.Manuscript.query().findById(
-        existingReview.manuscriptId || input.manuscriptId,
-      )
-
-      const shouldNotSetUser = await calculateShouldNotSetUser(
-        ctx,
         existingReview.manuscriptId || input.manuscriptId,
       )
 
@@ -73,7 +31,7 @@ const resolvers = {
         isHiddenReviewerName: false,
         ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
         // Prevent reassignment of userId or manuscriptId:
-        userId: existingReview.userId || (shouldNotSetUser ? null : ctx.user),
+        userId: !isEmpty(existingReview) ? existingReview.userId : ctx.user,
         manuscriptId: existingReview.manuscriptId || input.manuscriptId,
       }
 
