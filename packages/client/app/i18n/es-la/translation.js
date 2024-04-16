@@ -107,7 +107,8 @@ const esLa = {
       Pages: 'Páginas',
       Layout: 'Diseño',
       'Go to your profile': 'Ir a tu perfil',
-      Article: 'Plantilla de Artículo',
+      Article: 'Plantilla de artículo',
+      FileBrowser: 'Explorador de archivos',
     },
     menuSettings: {
       KeepMenuVisible: 'Mantener menú visible',
@@ -350,6 +351,10 @@ const esLa = {
         MakeFlaxSitePrivate:
           'Su sitio web de publicación solo será visible para quienes tengan acceso al enlace Borrador.',
         DraftCheckbox: 'Borrador',
+      },
+      fileBrowser: {
+        confirmDelete: 'Eliminar',
+        deleteResource: '¿Estás seguro de que quieres eliminar este recurso?',
       },
     },
     authorsInput: {

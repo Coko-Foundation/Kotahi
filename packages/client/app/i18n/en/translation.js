@@ -105,8 +105,9 @@ const en = {
       CMS: 'CMS',
       Pages: 'Pages',
       Layout: 'Layout',
-      Article: 'Article Template',
+      Article: 'Article template',
       'Go to your profile': 'Go to your profile',
+      FileBrowser: 'File browser',
     },
     menuSettings: {
       KeepMenuVisible: 'Keep menu visible',
@@ -345,6 +346,10 @@ const en = {
         Partners: 'Partners',
         'Footer Text': 'Footer Text',
         'Footer Page links': 'Footer Page links',
+      },
+      fileBrowser: {
+        confirmDelete: 'Delete',
+        deleteResource: 'Are you sure you want to delete this resource ?',
       },
     },
     authorsInput: {

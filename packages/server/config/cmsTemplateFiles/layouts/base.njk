@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="{% if lang %}{{lang}}{% else %} {{site.lang}}{% endif %}" class="no-js">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+
+        <title>
+            {% if title %}
+                {{site.name}} - {{title}}
+            {% else %}
+                {{site.name}}
+            {% endif %}
+        </title>
+
+        <script type="module">
+            document
+                .documentElement
+                .classList
+                .remove('no-js');
+            document
+                .documentElement
+                .classList
+                .add('js');
+        </script>
+
+        <meta name="description" content="{{site.description}}">
+        <meta property="og:title" content="{{title}}">
+        <meta property="og:description" content="{% if description %}{{description}}{% else %}{{site.description}}{% endif %}">
+        <meta property="og:image" content="{{site.image}}">
+        <meta property="og:image:alt" content="{{site.imageAlt}}">
+        <meta property="og:locale" content="{{site.locale}}">
+        <meta property="og:type" content="website">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta property="og:url" content="site.url">
+
+        {% if cmsLayout.favicon %}<link rel="icon" href="{{cmsConfig.defaultImagesDirectory}}/favicon.png?{{cmsLayout.favicon.id}}">{% endif %}
+        <meta name="twitter:dnt" content="on">
+
+        {% block styles %}
+            <link rel="stylesheet" href="/{% if cmsLayout.hexCode %}{{cmsLayout.hexCode}}/{% endif %}assets/css/main.css?{{ [1,2,3,4,5,6,7,8,9] | random }}{{ [1,2,3,4,5,6,7,8,9] | random }}{{ [1,2,3,4,5,6,7,8,9] | random }}">
+        {% endblock %}
+
+    </head>
+
+    <body class="{{class}} {% block bodyclass %}{% endblock %}">
+
+        {% block topbar %}
+            {% include "_partials/menu.njk" %}
+        {% endblock %}
+
+        {% block side %}{% endblock %}
+
+        {% block content %}
+            {{content | safe}}
+        {% endblock %}
+
+        {% block partners %}
+            {% include "_partials/partners.njk" %}
+        {% endblock %}
+
+        {% block footer %}
+            {% include "_partials/footer.njk" %}
+        {% endblock %}
+
+        {# check instant #}
+        <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
+        {% block scripts %}
+            <script type="module" src="/assets/js/read.js"></script>
+        {% endblock %}
+
+        {% block printpreview %}{% endblock %}
+
+    </body>
+</html>

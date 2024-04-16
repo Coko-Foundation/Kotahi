@@ -1,0 +1,44 @@
+<div class="pagination">
+  {% if page.url != pagination.href.first %}
+    <a href="{{ pagination.href.first }}">1{{ pagination | shouldShowEllipses( "start")}}</a>
+  {% endif %}
+
+  {%- for pageEntry in pagination.pages %}
+    {%if page.url == pagination.hrefs[ loop.index0 ] %}
+
+      {%if loop.index > 3%}
+        <a href="{{ pagination.hrefs[ loop.index0 - 2] }}">
+          {{ loop.index - 2}}
+        </a>
+      {% endif %}
+
+      {%if loop.index > 2%}
+        <a href="{{ pagination.hrefs[ loop.index0 - 1] }}">
+          {{ loop.index - 1}}
+        </a>
+      {% endif %}
+
+      <a href="{{ pagination.hrefs[ loop.index0 ] }}"
+        class="active">
+        {{ loop.index }}
+      </a>
+
+     {% if loop.index < pagination.pages.length -1 %}
+        <a href="{{ pagination.hrefs[ loop.index0 + 1] }}">
+          {{ loop.index + 1}}
+        </a>
+      {%endif%}
+
+      {% if loop.index < pagination.pages.length -2%}
+        <a href="{{ pagination.hrefs[ loop.index0 + 2] }}">
+          {{ loop.index + 2}}
+        </a>
+      {%endif%}
+
+    {% endif %}
+  {%- endfor %}
+
+  {% if page.url != pagination.href.last %}
+    <a href="{{ pagination.href.last }}">{{ pagination | shouldShowEllipses( "end")}}{{pagination.pages.length }}</a>
+  {% endif %}
+</div>

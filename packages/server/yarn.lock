@@ -341,10 +341,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@coko/server@2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.5.3.tgz#263243fc7d96c36892b7b558d1c0939c19754ecb"
-  integrity sha512-h393zdjdaHh/ItCZf0kJr/s9JSrrOrBCAluOPv7ewTocOe2rM3+1PSf5gX9m8cPI2cCyZDqZ4I0J673seszq5A==
+"@coko/server@2.5.4":
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-2.5.4.tgz#a8d8e653af649d28871b2afa7be87b412a5fd2b9"
+  integrity sha512-FbTJXW303/r55up7welxAzR3sehdXhkBw6g/CBf0GEe6wxr+QAbUpFdHHyhxfyzxkz6xSZ99oBkynMnI2zZxOg==
   dependencies:
     "@pubsweet/base-model" "^4.0.10"
     "@pubsweet/component-send-email" "^0.4.13"

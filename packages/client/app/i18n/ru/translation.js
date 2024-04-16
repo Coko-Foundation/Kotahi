@@ -107,8 +107,9 @@ const ru = {
       CMS: 'Система управления контентом',
       Pages: 'Страницы',
       Layout: 'Макет',
-      Article: 'Шаблон Статьи',
+      Article: 'Шаблон cтатьи',
       'Go to your profile': 'Перейти в ваш профиль',
+      FileBrowser: 'Файловый браузер',
     },
     menuSettings: {
       KeepMenuVisible: 'оставить меню видимым',
@@ -352,6 +353,10 @@ const ru = {
         MakeFlaxSitePrivate:
           'Ваш веб-сайт публикации будет виден только тем, у кого есть доступ к ссылке на черновик.',
         DraftCheckbox: 'Черновик',
+      },
+      fileBrowser: {
+        confirmDelete: 'Удалить',
+        deleteResource: 'Вы уверены, что хотите удалить этот ресурс?',
       },
     },
     authorsInput: {
