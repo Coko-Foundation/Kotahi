@@ -1,0 +1,8 @@
+{
+  "webhook": "",
+  "cache": true,
+  "group": { "id": "", "name": "kotahi" },
+  "defaultImagesDirectory": "/assets/images/",
+  "defaultArticleDirectory": "/articles/",
+  "url": "http://client:4000/graphql"
+}

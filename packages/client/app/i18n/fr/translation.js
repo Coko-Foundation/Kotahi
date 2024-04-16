@@ -104,8 +104,9 @@ const fr = {
       CMS: 'CMS',
       Pages: 'Pages',
       Layout: 'Mise en page',
-      Article: "Modèle d' Article",
+      Article: "Modèle d' article",
       'Go to your profile': 'Accéder à votre profil',
+      FileBrowser: 'Explorateur de fichiers',
     },
     menuSettings: {
       KeepMenuVisible: 'Garder le menu visible',
@@ -349,6 +350,10 @@ const fr = {
         MakeFlaxSitePrivate:
           'Votre site Web de publication ne sera visible que par ceux qui ont accès au lien Draft.',
         DraftCheckbox: 'Brouillon',
+      },
+      fileBrowser: {
+        confirmDelete: 'Supprimer',
+        deleteResource: 'Êtes-vous sûr de vouloir supprimer cette ressource ?',
       },
     },
     authorsInput: {

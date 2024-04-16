@@ -1,0 +1,14 @@
+<div class="partnersTopContainer">
+    <div class="partners-file-container">
+        {% for partner in (cmsLayout.partners | reorderPages) %}
+            <div class="partner-file-item">
+                <div class="partner-file">
+                    <a href="{{ partner.url }}" target="_blank">
+                        <img src="{{partner.image.imageLocalUrl}}" onerror="this.onerror=null; this.src='/kotahi{{cmsConfig.defaultImagesDirectory}}placeholders/partners.png'"/>
+                    </a>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+</div>
