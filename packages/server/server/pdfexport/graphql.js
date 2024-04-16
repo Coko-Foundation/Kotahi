@@ -84,10 +84,14 @@ const getManuscriptById = async id => {
 }
 
 const getGroupAssets = async groupId => {
-  return models.ArticleTemplate.query()
+  const aData = await models.ArticleTemplate.query()
     .where({ groupId, isCms: false })
-    .withGraphFetched('[files]')
     .first()
+
+  const files = await models.File.query().where({ objectId: groupId })
+
+  aData.files = await getFilesWithUrl(files)
+  return aData
 }
 
 const pdfHandler = async manuscriptId => {
@@ -98,7 +102,9 @@ const pdfHandler = async manuscriptId => {
   // get article from Id
 
   const articleData = await getManuscriptById(manuscriptId)
+
   const groupData = await getGroupAssets(articleData.groupId)
+
   const activeConfig = await models.Config.getCached(articleData.groupId)
 
   const raw = await randomBytes(16)
