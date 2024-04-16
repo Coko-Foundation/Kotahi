@@ -76,3 +76,19 @@ export const updateTeamMemberMutation = gql`
     }
   }
 `
+
+export const updateCollaborativeTeamMemberMutation = gql`
+  mutation ($manuscriptId: ID!, $input: String) {
+    updateCollaborativeTeamMembers(manuscriptId: $manuscriptId, input: $input) {
+      id
+      user {
+        id
+        username
+        profilePicture
+        isOnline
+      }
+      status
+      isShared
+    }
+  }
+`

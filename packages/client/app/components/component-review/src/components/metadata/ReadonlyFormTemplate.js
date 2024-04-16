@@ -22,7 +22,6 @@ const StyledSectionContent = styled(SectionContent)`
 const ReadonlyFormTemplate = ({
   form,
   formData,
-  hideSpecialInstructions,
   manuscript,
   showEditorOnlyFields,
   title,
@@ -30,6 +29,7 @@ const ReadonlyFormTemplate = ({
   threadedDiscussionProps,
   allowAuthorsSubmitNewVersion,
   copyHandleBarsCode,
+  isCollaborativeForm,
 }) => {
   const { t } = useTranslation()
 
@@ -87,6 +87,7 @@ const ReadonlyFormTemplate = ({
                 fieldName={element.name}
                 form={form}
                 formData={formData}
+                isCollaborativeForm={isCollaborativeForm}
                 threadedDiscussionProps={threadedDiscussionProps}
               />
             </Cell>
@@ -131,12 +132,14 @@ ReadonlyFormTemplate.propTypes = {
   }),
   showEditorOnlyFields: PropTypes.bool,
   copyHandleBarsCode: PropTypes.bool,
+  isCollaborativeForm: PropTypes.bool,
 }
 
 ReadonlyFormTemplate.defaultProps = {
   manuscript: null,
   copyHandleBarsCode: false,
   showEditorOnlyFields: false,
+  isCollaborativeForm: false,
 }
 
 export default ReadonlyFormTemplate

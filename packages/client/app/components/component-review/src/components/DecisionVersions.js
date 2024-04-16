@@ -60,6 +60,7 @@ const DecisionVersions = ({
   updateTasks,
   teams,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   removeReviewer,
   updateTaskNotification,
   deleteTaskNotification,
@@ -155,6 +156,7 @@ const DecisionVersions = ({
                 teamLabels={teamLabels}
                 teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
+                updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
                 updateReviewJsonData={(value, path) =>

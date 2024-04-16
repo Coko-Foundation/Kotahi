@@ -30,6 +30,7 @@ const DecisionReview = ({
   readOnly,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   currentUser,
 }) => {
   const {
@@ -94,6 +95,7 @@ const DecisionReview = ({
         showEditorOnlyFields={showEditorOnlyFields}
         showUserInfo
         threadedDiscussionProps={threadedDiscussionProps}
+        updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
         updateSharedStatusForInvitedReviewer={
           updateSharedStatusForInvitedReviewer

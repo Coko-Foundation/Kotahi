@@ -100,6 +100,7 @@ const ReviewDetailsModal = (
     isInvitation = false,
     updateSharedStatusForInvitedReviewer,
     updateTeamMember,
+    updateCollaborativeTeamMember,
     updateReview,
   } = props
 
@@ -129,7 +130,16 @@ const ReviewDetailsModal = (
     item => item.value === (status ?? 'completed'),
   )
 
-  const reviewer = review ? review.user : reviewerTeamMember.user
+  let reviewer = null
+
+  if (review?.isCollaborative) {
+    reviewer = reviewerTeamMember?.user
+  } else if (review) {
+    reviewer = review.user
+  } else {
+    reviewer = reviewerTeamMember?.user
+  }
+
   const showRealReviewer = !review?.isHiddenReviewerName || isControlPage
 
   const reviewerName = showRealReviewer
@@ -139,6 +149,12 @@ const ReviewDetailsModal = (
   const generateModalTitle = () => {
     if (!showRealReviewer || !reviewer) {
       return t('modals.reviewReport.anonymousReviewReport')
+    }
+
+    if (review?.isCollaborative) {
+      return t('modals.reviewReport.collaborativeReview', {
+        name: reviewerName,
+      })
     }
 
     return t('modals.reviewReport.reviewReport', {
@@ -161,6 +177,7 @@ const ReviewDetailsModal = (
             manuscriptId={manuscriptId}
             review={review}
             reviewerTeamMember={reviewerTeamMember}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
@@ -250,6 +267,7 @@ const CheckboxActions = ({
   reviewerTeamMember,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   isInvitation,
   manuscriptId,
   updateReview,
@@ -263,6 +281,13 @@ const CheckboxActions = ({
         variables: {
           invitationId: reviewerTeamMember.id,
           isShared: !reviewerTeamMember.isShared,
+        },
+      })
+    } else if (review.isCollaborative) {
+      await updateCollaborativeTeamMember({
+        variables: {
+          manuscriptId,
+          input: JSON.stringify({ isShared: !reviewerTeamMember.isShared }),
         },
       })
     } else {
@@ -409,6 +434,7 @@ const ReviewData = ({
                 fieldName={element.name}
                 form={reviewForm}
                 formData={reviewFormData}
+                isCollaborativeForm={review.isCollaborative}
                 threadedDiscussionProps={threadedDiscussionProps}
               />
             </ReviewItemContainer>

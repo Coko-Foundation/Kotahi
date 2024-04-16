@@ -39,6 +39,7 @@ const DecisionReviews = ({
   refetch,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   currentUser,
 }) => {
   const collaborativeReviewToShow = manuscript?.reviews?.length
@@ -85,6 +86,7 @@ const DecisionReviews = ({
             reviewForm={reviewForm}
             teams={manuscript.teams}
             threadedDiscussionProps={threadedDiscussionProps}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
@@ -137,6 +139,7 @@ const DecisionReviews = ({
                 reviewForm={reviewForm}
                 teams={manuscript.teams}
                 threadedDiscussionProps={threadedDiscussionProps}
+                updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateReview={updateReview}
                 updateSharedStatusForInvitedReviewer={
                   updateSharedStatusForInvitedReviewer

@@ -941,6 +941,7 @@ const esLa = {
       },
       reviewReport: {
         reviewReport: 'Informe de revisión de {{name}}',
+        collaborativeReview: 'Revision Collaborativa de {{name}}',
         anonymousReviewReport: 'Informe de revisión',
         'Last Updated': 'Última Actualización: {{dateString}}',
         Reviewer: 'Revisor:',

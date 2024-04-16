@@ -920,6 +920,7 @@ const en = {
       },
       reviewReport: {
         reviewReport: '{{name}}’s review report',
+        collaborativeReview: '{{name}}’s Collaborative review',
         anonymousReviewReport: 'Review report',
         'Last Updated': 'Last Updated: {{dateString}}',
         Reviewer: 'Reviewer:',

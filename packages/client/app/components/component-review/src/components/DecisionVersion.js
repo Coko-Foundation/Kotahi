@@ -89,6 +89,7 @@ const DecisionVersion = ({
   teams,
   removeReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
@@ -328,6 +329,7 @@ const DecisionVersion = ({
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
@@ -409,6 +411,7 @@ const DecisionVersion = ({
               reviewers={reviewers}
               reviewForm={reviewForm}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
+              updateCollaborativeTeamMember={updateCollaborativeTeamMember}
               updateReview={updateReview}
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer

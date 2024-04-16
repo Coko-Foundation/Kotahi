@@ -35,6 +35,7 @@ import {
 import {
   CREATE_TEAM_MUTATION,
   updateTeamMemberMutation,
+  updateCollaborativeTeamMemberMutation,
   UPDATE_TEAM_MUTATION,
 } from '../../../../queries/team'
 import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
@@ -169,6 +170,11 @@ const DecisionPage = ({ currentUser, match }) => {
   const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION)
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
   const [updateTeamMember] = useMutation(updateTeamMemberMutation)
+
+  const [updateCollaborativeTeamMember] = useMutation(
+    updateCollaborativeTeamMemberMutation,
+  )
+
   const [doUpdateReview] = useMutation(updateReviewMutation)
   const [createFile] = useMutation(createFileMutation)
   const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
@@ -496,6 +502,7 @@ const DecisionPage = ({ currentUser, match }) => {
       teamLabels={config.teams}
       teams={data?.manuscript?.teams}
       threadedDiscussionProps={threadedDiscussionProps}
+      updateCollaborativeTeamMember={updateCollaborativeTeamMember}
       updateManuscript={updateManuscript}
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}

@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { useTranslation } from 'react-i18next'
-import { set } from 'lodash'
+import { set, flatten } from 'lodash'
 import { gql } from '@apollo/client'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
@@ -98,13 +98,13 @@ const ReviewLayout = ({
       ? ensureJsonIsParsed(currentUserReview?.jsonData)
       : {}
 
-    const reviewersTeam = latestManuscript.teams.find(
-      team => team.role === 'reviewer',
+    const reviewersTeams = latestManuscript.teams.filter(
+      team => team.role === 'reviewer' || team.role === 'collaborativeReviewer',
     ) || { members: [] }
 
-    const reviewerStatus = reviewersTeam.members.find(
-      member => member.user.id === currentUser?.id,
-    )?.status
+    const reviewerStatus = flatten(
+      reviewersTeams.map(team => team.members),
+    ).find(member => member.user.id === currentUser?.id)?.status
 
     const updateReviewJsonData = (manuscriptId, review, value, path) => {
       const delta = {} // Only the changed fields
@@ -173,11 +173,16 @@ const ReviewLayout = ({
     }
 
     const isLatestVersion = latestManuscript.id === versions[0].manuscript.id
+
     return (
       <div key={latestManuscript.id}>
-        {reviewerStatus === 'completed' || !isLatestVersion ? (
+        {reviewerStatus === 'completed' ||
+        reviewerStatus === 'closed' ||
+        !isLatestVersion ? (
           <Review
-            isOldUnsubmitted={reviewerStatus !== 'completed'}
+            isOldUnsubmitted={
+              reviewerStatus !== 'completed' && reviewerStatus !== 'closed'
+            }
             isReview
             review={currentUserReview}
             reviewForm={reviewForm}

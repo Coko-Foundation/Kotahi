@@ -52,6 +52,7 @@ const InviteReviewerModal = ({
   currentUser,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   emailTemplates,
 }) => {
   const config = useContext(ConfigContext)

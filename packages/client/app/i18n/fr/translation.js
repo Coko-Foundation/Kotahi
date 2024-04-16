@@ -951,6 +951,7 @@ const fr = {
       },
       reviewReport: {
         reviewReport: "Rapport d'évaluation de {{name}}",
+        collaborativeReview: 'Révision collaborative de {{name}}',
         anonymousReviewReport: "Rapport d'évaluation",
         'Last Updated': 'Dernière mise à jour : {{dateString}}',
         Reviewer: 'Évaluateur :',

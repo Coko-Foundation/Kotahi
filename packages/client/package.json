@@ -120,6 +120,7 @@
     "xpub-validators": "0.0.28",
     "y-prosemirror": "1.2.0",
     "y-protocols": "1.0.5",
+    "y-textarea": "^1.0.0",
     "y-webrtc": "10.2.0",
     "y-websocket": "1.4.5",
     "yjs": "13.5.38"

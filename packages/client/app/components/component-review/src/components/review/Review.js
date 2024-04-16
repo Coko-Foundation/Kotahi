@@ -69,7 +69,6 @@ const Review = ({
   showUserInfo = true,
   threadedDiscussionProps,
   sharedReviews,
-  isReview = false,
   isOldUnsubmitted = false,
 }) => {
   const { t } = useTranslation()
@@ -82,8 +81,7 @@ const Review = ({
     <ReadonlyFormTemplate
       form={reviewForm}
       formData={ensureJsonIsParsed(localizedData) ?? {}}
-      hideSpecialInstructions
-      isReview={isReview}
+      isCollaborativeForm={!!review?.isCollaborative}
       showEditorOnlyFields={
         showEditorOnlyFields || user.groupRoles.includes('groupManager')
       }

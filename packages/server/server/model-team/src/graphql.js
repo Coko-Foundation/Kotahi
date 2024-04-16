@@ -144,6 +144,20 @@ const resolvers = {
     async updateTeamMember(_, { id, input }, ctx) {
       return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
+    async updateCollaborativeTeamMembers(_, { manuscriptId, input }, ctx) {
+      const collaborativeReviewerTeam = await models.Team.query().findOne({
+        objectId: manuscriptId,
+        role: 'collaborativeReviewer',
+      })
+
+      await models.TeamMember.query()
+        .where({ teamId: collaborativeReviewerTeam.id })
+        .update(JSON.parse(input))
+
+      return models.TeamMember.query().where({
+        teamId: collaborativeReviewerTeam.id,
+      })
+    },
   },
   User: {
     teams: (parent, _, ctx) => User.relatedQuery('teams').for(parent.id),
@@ -179,6 +193,9 @@ const typeDefs = `
     deleteTeam(id: ID): Team
     updateTeam(id: ID, input: TeamInput): Team
     updateTeamMember(id: ID!, input: String): TeamMember
+	  addTeamMembers(teamId: ID!, members: [ID!]!, status: String): Team!
+	  removeTeamMember(teamId: ID!, userId: ID!): TeamMember!
+    updateCollaborativeTeamMembers(manuscriptId: ID!, input: String): [TeamMember!]
   }
 
   extend type User {

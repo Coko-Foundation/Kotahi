@@ -635,10 +635,6 @@ const permissions = {
     ),
     updateTeam: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     updateTeamMember: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
-    updateReviewerTeamMemberStatus: or(
-      userIsReviewAuthorAndReviewIsNotCompleted,
-      userIsEditorOfTheManuscriptOfTheReview,
-    ),
     lockUnlockCollaborativeReview: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,

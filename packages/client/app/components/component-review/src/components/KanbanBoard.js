@@ -77,6 +77,7 @@ const KanbanBoard = ({
   manuscript,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateReview,
 }) => {
   const reviewers = getMembersOfTeam(version, 'reviewer')
@@ -224,6 +225,9 @@ const KanbanBoard = ({
                         reviewer.isEmail && status.value === 'invited'
                       }
                       status={status.value}
+                      updateCollaborativeTeamMember={
+                        updateCollaborativeTeamMember
+                      }
                       updateReview={updateReview}
                       updateSharedStatusForInvitedReviewer={
                         updateSharedStatusForInvitedReviewer

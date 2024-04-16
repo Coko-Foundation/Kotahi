@@ -87,6 +87,7 @@ const KanbanCard = ({
   isCurrentVersion,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateReview,
   showEmailInvitation,
 }) => {
@@ -111,6 +112,7 @@ const KanbanCard = ({
         reviewerTeamMember={reviewer}
         reviewForm={reviewForm}
         status={status}
+        updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
         updateSharedStatusForInvitedReviewer={
           updateSharedStatusForInvitedReviewer
