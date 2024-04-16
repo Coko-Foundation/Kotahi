@@ -1,0 +1,19 @@
+---
+permalink: /assets/css/theme/default.css
+---
+
+:root {
+    --color-primary: {{ cmsLayout.primaryColor | valueOrDefault('#30ac66') | safe  }};
+    --color-secondary: {{ cmsLayout.secondaryColor | valueOrDefault('red') | safe  }};;
+    --color-background: #fff;
+    --color-grey: #999;
+    --color-grey-light: #ccc;
+    --color-highlight: #e6f2cd; 
+    --color-body: #3e3e3e;
+    --font-size: 1em;
+    --base-font-size: 16;
+    --font-meta: "Noto Sans";
+    --font-interface: "Noto Sans";
+    --font-content: "Noto Sans";
+
+}

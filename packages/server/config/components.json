@@ -36,5 +36,6 @@
   "./server/coar-notify/src",
   "./server/model-article-templates/src",
   "./server/asset-upload",
-  "./server/chat-gpt-service"
+  "./server/chat-gpt-service",
+  "./server/cms-upload"
 ]

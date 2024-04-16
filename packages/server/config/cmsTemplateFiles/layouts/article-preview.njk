@@ -1,10 +1,7 @@
 {% extends '../layouts/base.njk' %}
 {% set currentPage = article %}
-{% set title = article.headerInfo.title %}
+{% set title = article.meta.title %}
 {% block content %}
-<head>
-	<link rel="stylesheet" href="../../assets/css/index.css">
-</head>
     <main>
         <div class="article-preview-header">
             <span class="topics">
@@ -29,11 +26,9 @@
             </ul>
 
             <span class="header-doi-and-licenses">
-                {% if article.headerInfo.DOI %}
-                    <a href="https://doi.org/{{ article.headerInfo.DOI }}">
-                        https://doi.org/{{ article.headerInfo.DOI }}
-                    </a>
-                {% endif %}
+                <a href="{{ article.headerInfo.DOI }}">
+                    {{ article.headerInfo.DOI }}
+                </a>
                 {% if cmsLayout.publishConfig.licenseUrl %}
                     <a href="{{cmsLayout.publishConfig.licenseUrl}}">
                         {{cmsLayout.publishConfig.licenseUrl}}
@@ -86,7 +81,7 @@
                 <section class="manuscript">
                     {% if article.meta.source %}
                         <section id="article" class="article">
-                            {{ article.meta.source | addIDtoTitles | imagesHandler(article.shortId, 'articles', config.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}
+                            {{ article.meta.source | addIDtoTitles | imagesHandler(article.shortId, 'articles', cmsConfig.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}
                         </section>
                     {% endif %}
                     {% if article.supplementaryFiles.length >= 1 %}

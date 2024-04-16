@@ -10105,6 +10105,15 @@ react-fit@^1.4.0:
     prop-types "^15.6.0"
     tiny-warning "^1.0.0"
 
+react-folder-tree@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/react-folder-tree/-/react-folder-tree-5.1.1.tgz#ac578c4b769bee462e2011812636b935eadf5b3a"
+  integrity sha512-lqXSXxaf4KD3abV9W9DXSrGI1YtFxQSGm73jSBU25G7IK0BKfRv8FB+WHm2tTMK637mSnWVBirwt6LsE/Pmq8g==
+  dependencies:
+    prop-types "^15.7.2"
+    react-icons "^4.1.0"
+    use-tree-state "1.0.0"
+
 react-google-charts@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/react-google-charts/-/react-google-charts-4.0.1.tgz#b7713856a48009b77318f8951ddf2c3ba39f991b"
@@ -10131,6 +10140,11 @@ react-i18next@^13.0.3, react-i18next@^13.3.1:
   dependencies:
     "@babel/runtime" "^7.22.5"
     html-parse-stringify "^3.0.1"
+
+react-icons@^4.1.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.12.0.tgz#54806159a966961bfd5cdb26e492f4dafd6a8d78"
+  integrity sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==
 
 react-image@4.0.3:
   version "4.0.3"
@@ -11233,6 +11247,11 @@ speed-measure-webpack-plugin@1.3.3:
   dependencies:
     chalk "^2.0.1"
 
+split-pane-react@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/split-pane-react/-/split-pane-react-0.1.3.tgz#d9ddf70330873812a64a5f3fe51e450c70d29603"
+  integrity sha512-+50VW9+1yglO+2AgL7MhvJ3UazYTqJ4LBJTs44od/D/CTvsqQ9xoDlaHdIpJ5SbXxUqBxvdJD5zoIVnoG+mNTg==
+
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/split-string/-/split-string-3.1.0.tgz#7cb09dda3a86585705c64b39a6466038682e8fe2"
@@ -12146,6 +12165,11 @@ use-memo-one@^1.1.1:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/use-memo-one/-/use-memo-one-1.1.3.tgz#2fd2e43a2169eabc7496960ace8c79efef975e99"
   integrity sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==
+
+use-tree-state@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/use-tree-state/-/use-tree-state-1.0.0.tgz#78e1e629b55faa33e9fef9ee409b383612ff429c"
+  integrity sha512-MEHuUbZWGhekkFCboH0HKOhSHe5zm/l0C+GJdg0+vAuBr42VYmCTO9P2NfQMPU3Gkj7Zys93vtpl/fGReuOi5w==
 
 use@^3.1.0:
   version "3.1.1"
