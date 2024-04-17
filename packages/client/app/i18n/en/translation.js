@@ -495,6 +495,7 @@ const en = {
       authorProofingInvitationEmailTemplate: 'Author proof assigned invitation',
       authorProofingSubmittedEmailTemplate:
         'Author proof completed and submitted feedback',
+      'Editors edit reviews': 'Editors can edit submitted reviews',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
@@ -507,6 +508,7 @@ const en = {
       showTabs: {
         Team: 'Team',
         Decision: 'Decision',
+        Reviews: 'Reviews',
         'Manuscript text': 'Manuscript text',
         Metadata: 'Metadata',
         'Tasks & Notifications': 'Tasks & Notifications',

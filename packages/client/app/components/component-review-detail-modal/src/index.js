@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { gql, useMutation } from '@apollo/client'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
@@ -18,9 +19,35 @@ import recommendations from '../../../../config/journal/recommendations'
 import { UserAvatar } from '../../component-avatar/src'
 import DeleteReviewerModal from '../../component-review/src/components/reviewers/DeleteReviewerModal'
 import ReadonlyFieldData from '../../component-review/src/components/metadata/ReadonlyFieldData'
+import FormTemplate from '../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../config/src'
 import localizeReviewFilterOptions from '../../../shared/localizeReviewFilterOptions'
 import localizeRecommendations from '../../../shared/localizeRecommendations'
+
+const createFileMutation = gql`
+  mutation ($file: Upload!, $meta: FileMetaInput!) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
+    }
+  }
+`
+
+const deleteFileMutation = gql`
+  mutation ($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
 
 const Header = styled.div`
   font-size: 18px;
@@ -57,8 +84,10 @@ const ReviewDetailsModal = (
 ) => {
   const {
     status,
+    canEditReviews,
     review,
     reviewerTeamMember,
+    refetchManuscript,
     reviewForm,
     onClose,
     threadedDiscussionProps,
@@ -77,6 +106,20 @@ const ReviewDetailsModal = (
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
 
+  const [createFile] = useMutation(createFileMutation)
+
+  const [deleteFile] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile: fileToDelete } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: fileToDelete,
+      })
+
+      cache.evict({ id })
+    },
+    onCompleted: () => refetchManuscript(),
+  })
+
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,
     t,
@@ -90,8 +133,18 @@ const ReviewDetailsModal = (
   const showRealReviewer = !review?.isHiddenReviewerName || isControlPage
 
   const reviewerName = showRealReviewer
-    ? `${reviewer?.username ?? reviewerTeamMember?.invitedPersonName}`
+    ? reviewer?.username || reviewerTeamMember?.invitedPersonName
     : 'Anonymous Reviewer'
+
+  const generateModalTitle = () => {
+    if (!showRealReviewer || !reviewer) {
+      return t('modals.reviewReport.anonymousReviewReport')
+    }
+
+    return t('modals.reviewReport.reviewReport', {
+      name: reviewerName,
+    })
+  }
 
   const timeString = convertTimestampToDateString(
     review ? review.updated : reviewerTeamMember.updated,
@@ -99,7 +152,7 @@ const ReviewDetailsModal = (
 
   return (
     <Modal
-      contentStyles={{ width: '50%' }}
+      contentStyles={{ width: '70%' }}
       isOpen={isOpen}
       leftActions={
         !readOnly && (
@@ -137,11 +190,7 @@ const ReviewDetailsModal = (
       subtitle={t(`modals.reviewReport.Last Updated`, {
         dateString: timeString,
       })}
-      title={
-        reviewerName
-          ? t('modals.reviewReport.reviewReport', { name: reviewerName })
-          : t('modals.reviewReport.anonymousReviewReport')
-      }
+      title={generateModalTitle()}
     >
       {reviewer && (
         <UserCombo style={{ marginBottom: '1em' }}>
@@ -154,7 +203,7 @@ const ReviewDetailsModal = (
           <UserInfo>
             <p>
               <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
-              {`${reviewerName}`}
+              {reviewerName}
             </p>
             {showRealReviewer && (
               <Secondary>
@@ -176,10 +225,16 @@ const ReviewDetailsModal = (
       </StatusContainer>
       {review ? (
         <ReviewData
+          canEditReviews={canEditReviews}
+          createFile={createFile}
+          deleteFile={deleteFile}
+          manuscriptId={manuscriptId}
+          readOnly={readOnly}
           review={review}
           reviewForm={reviewForm}
           showEditorOnlyFields={showEditorOnlyFields}
           threadedDiscussionProps={threadedDiscussionProps}
+          updateReview={updateReview}
         />
       ) : (
         <ReviewItemsContainer>
@@ -221,17 +276,25 @@ const CheckboxActions = ({
   }
 
   const toggleIsHiddenFromAuthor = () => {
-    updateReview(review?.id, {
-      isHiddenFromAuthor: !review?.isHiddenFromAuthor,
+    updateReview(
+      review?.id,
+      {
+        isHiddenFromAuthor: !review?.isHiddenFromAuthor,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+    )
   }
 
   const toggleIsHiddenReviewerNameFromPublishedAndAuthor = () => {
-    updateReview(review?.id, {
-      isHiddenReviewerName: !review?.isHiddenReviewerName,
+    updateReview(
+      review?.id,
+      {
+        isHiddenReviewerName: !review?.isHiddenReviewerName,
+        manuscriptId,
+      },
       manuscriptId,
-    })
+    )
   }
 
   return (
@@ -266,6 +329,12 @@ const CheckboxActions = ({
 }
 
 const ReviewData = ({
+  canEditReviews,
+  manuscriptId,
+  updateReview,
+  readOnly,
+  createFile,
+  deleteFile,
   review,
   reviewForm,
   threadedDiscussionProps,
@@ -306,19 +375,44 @@ const ReviewData = ({
         </StatusContainer>
       )}
 
-      <ReviewItemsContainer>
-        {[...nonFileFields, ...fileFields].map((element, i) => (
-          <ReviewItemContainer key={element.id}>
-            <Header>{element.shortDescription || element.title}</Header>
-            <ReadonlyFieldData
-              fieldName={element.name}
-              form={reviewForm}
-              formData={reviewFormData}
-              threadedDiscussionProps={threadedDiscussionProps}
-            />
-          </ReviewItemContainer>
-        ))}
-      </ReviewItemsContainer>
+      {!readOnly && canEditReviews ? (
+        <FormTemplate
+          createFile={createFile}
+          deleteFile={deleteFile}
+          form={{ ...reviewForm, name: null, description: null }} // suppresses the form title and description
+          formData={reviewFormData}
+          initialValues={reviewFormData}
+          manuscriptId={manuscriptId}
+          onChange={(value, path) => {
+            updateReview(
+              review.id,
+              {
+                jsonData: JSON.stringify({ [path]: value }),
+                manuscriptId,
+              },
+              manuscriptId,
+            )
+          }}
+          shouldStoreFilesInForm
+          showEditorOnlyFields={false}
+          tagForFiles="review"
+          threadedDiscussionProps={threadedDiscussionProps}
+        />
+      ) : (
+        <ReviewItemsContainer>
+          {[...nonFileFields, ...fileFields].map((element, i) => (
+            <ReviewItemContainer key={element.id}>
+              <Header>{element.shortDescription || element.title}</Header>
+              <ReadonlyFieldData
+                fieldName={element.name}
+                form={reviewForm}
+                formData={reviewFormData}
+                threadedDiscussionProps={threadedDiscussionProps}
+              />
+            </ReviewItemContainer>
+          ))}
+        </ReviewItemsContainer>
+      )}
     </>
   )
 }

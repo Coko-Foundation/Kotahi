@@ -308,13 +308,15 @@ export const ControlPage = {
   getWorkflowTab() {
     return cy.get('[data-test-id=tab-container]').contains('Workflow')
   },
-  getDecisionTab() {
+  getControlPageTabs() {
     return cy.get('[data-test-id=tab-container]')
   },
-  clickDecisionTab(nth) {
-    this.getDecisionTab().eq(nth).click()
+  clickDecisionTab() {
+    this.getControlPageTabs().contains('Decision').click()
   },
-
+  clickReviewsTab() {
+    this.getControlPageTabs().contains('Reviews').click()
+  },
   // Decision Form
   getDecisionTextInput() {
     return cy.get(DECISION_TEXT_INPUT)

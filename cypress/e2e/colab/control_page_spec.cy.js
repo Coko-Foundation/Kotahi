@@ -293,7 +293,7 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.selectOptionWithText('Control')
-        ControlPage.clickDecisionTab(1)
+        ControlPage.clickReviewsTab()
         ControlPage.clickHideReviewToAuthor()
         ControlPage.clickHideReviewerNameToAuthor()
       })
@@ -312,7 +312,7 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
       })
-      ControlPage.clickDecisionTab(1)
+      ControlPage.clickReviewsTab()
       ControlPage.clickHideReviewToAuthor()
       ControlPage.clickHideReviewerNameToAuthor()
       cy.fixture('role_names').then(name => {

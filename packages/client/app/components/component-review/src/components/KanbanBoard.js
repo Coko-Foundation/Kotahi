@@ -119,7 +119,7 @@ const KanbanBoard = ({
   const findReview = reviewer => {
     return allReviews.find(
       review =>
-        review.user.id === reviewer.user.id && review.isDecision === false,
+        review.user?.id === reviewer.user?.id && review.isDecision === false,
     )
   }
 

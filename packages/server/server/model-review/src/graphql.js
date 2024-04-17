@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+const isEmpty = require('lodash/isEmpty')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
@@ -30,7 +31,7 @@ const resolvers = {
         isHiddenReviewerName: false,
         ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
         // Prevent reassignment of userId or manuscriptId:
-        userId: existingReview.userId || ctx.user,
+        userId: !isEmpty(existingReview) ? existingReview.userId : ctx.user,
         manuscriptId: existingReview.manuscriptId || input.manuscriptId,
       }
 
@@ -55,6 +56,7 @@ const resolvers = {
 
       // We want to modify file URIs before return, so we'll use the parsed jsonData
       review.jsonData = mergedReview.jsonData
+
       const reviewUser = await models.User.query().findById(review.userId)
 
       await convertFilesToFullObjects(
@@ -102,7 +104,15 @@ const resolvers = {
   Review: {
     async user(parent, { id }, ctx) {
       // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
-      return parent.user || models.User.query().findById(parent.userId)
+      if (parent.user) {
+        return parent.user
+      }
+
+      if (parent.userId) {
+        return models.User.query().findById(parent.userId)
+      }
+
+      return null
     },
     async isSharedWithCurrentUser(parent, _, ctx) {
       if (
