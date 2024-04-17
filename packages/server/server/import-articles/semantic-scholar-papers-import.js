@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const axios = require('axios')
 const models = require('@pubsweet/models')
 
@@ -36,7 +38,7 @@ const getData = async (groupId, ctx) => {
   const lastImportDate = await getLastImportDate(sourceId, groupId)
 
   const manuscripts = await models.Manuscript.query()
-    .where({ groupId })
+    .where({ groupId, isHidden: false })
     .orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
@@ -44,6 +46,10 @@ const getData = async (groupId, ctx) => {
   )
 
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
+
+  console.log(
+    `  Querying Semantic Scholar based on ${latestLimitedSelectedManuscripts.length} seed manuscripts...`,
+  )
 
   if (latestLimitedSelectedManuscripts.length > 0) {
     const importDOIParams = latestLimitedSelectedManuscripts.map(manuscript => {
@@ -69,6 +75,10 @@ const getData = async (groupId, ctx) => {
       },
     )
 
+    console.log(
+      `  ${data?.recommendedPapers?.length} papers were recommended...`,
+    )
+
     if (data) {
       Array.prototype.push.apply(imports, data.recommendedPapers)
     }
@@ -77,10 +87,19 @@ const getData = async (groupId, ctx) => {
       preprints => preprints.externalIds.DOI,
     )
 
+    console.log(`  ${importsOnlyWithDOI.length} of these have DOIs...`)
+
     /* The following code is commented, since semantic scholar now provides journal and publication date as well. In case there is any inconsistency in that data, we can reuse the following */
     // await fetchPublicationDatesFromEuropePmc(importsOnlyWithDOI)
 
-    const importsForPastSixWeeks = importsOnlyWithDOI.filter(preprint => {
+    const recencyPeriodDays = Number(
+      activeConfig.formData.semanticScholar
+        .semanticScholarImportsRecencyPeriodDays ?? 0,
+    )
+
+    const recentImports = importsOnlyWithDOI.filter(preprint => {
+      if (!recencyPeriodDays) return true
+
       if (preprint.publicationDate) {
         const currentDate = new Date().toISOString().split('T')[0]
 
@@ -90,28 +109,34 @@ const getData = async (groupId, ctx) => {
             (1000 * 60 * 60 * 24),
         )
 
-        return (
-          diffDays <
-          Number(
-            activeConfig.formData.semanticScholar
-              .semanticScholarImportsRecencyPeriodDays,
-          )
-        )
+        return diffDays < recencyPeriodDays
       }
 
       return false
     })
 
+    console.log(
+      `  ${
+        recentImports.length
+      } of these are within the configured recency period (${
+        recencyPeriodDays ? `${recencyPeriodDays} days` : 'no limit'
+      })`,
+    )
+
     const allowedPreprintServers =
       activeConfig.formData.semanticScholar.semanticScholarPublishingServers
 
-    const importsFromSpecificPreprintServers = importsForPastSixWeeks.filter(
+    const importsFromSpecificPreprintServers = recentImports.filter(
       preprint => {
         const venueLcTokens = preprint.venue.toLowerCase().split(/\s+/)
         return allowedPreprintServers.some(server =>
           venueLcTokens.includes(server.toLowerCase()),
         )
       },
+    )
+
+    console.log(
+      `  ${importsFromSpecificPreprintServers.length} of these are from the selected servers...`,
     )
 
     const currentDOIs = new Set(
@@ -126,6 +151,10 @@ const getData = async (groupId, ctx) => {
 
     const withoutUrlDuplicates = withoutDOIDuplicates.filter(
       preprints => !currentURLs.has(preprints.url),
+    )
+
+    console.log(
+      `  ${withoutUrlDuplicates.length} of these are new to this group.`,
     )
 
     const emptySubmission = getEmptySubmission(groupId)
@@ -193,6 +222,10 @@ const getData = async (groupId, ctx) => {
 
         Array.prototype.push.apply(result, inserted)
       }
+
+      console.log(
+        `  Saved ${newManuscripts.length} papers from Semantic Scholar.`,
+      )
 
       if (lastImportDate > 0) {
         await models.ArticleImportHistory.query()

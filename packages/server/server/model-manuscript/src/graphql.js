@@ -6,7 +6,12 @@ const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
 const { raw } = require('objection')
-const { importManuscripts } = require('./importManuscripts')
+
+const {
+  importManuscripts,
+  importManuscriptsFromSemanticScholar,
+} = require('./importManuscripts')
+
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 const { rebuildCMSSite } = require('../../flax-site/flax-api')
 
@@ -515,7 +520,12 @@ const resolvers = {
     },
 
     async importManuscripts(_, { groupId }, ctx) {
-      return importManuscripts(groupId, ctx)
+      const importsSucceeded = await importManuscripts(groupId, ctx)
+
+      const semanticScholarSucceeded =
+        await importManuscriptsFromSemanticScholar(groupId, ctx)
+
+      return importsSucceeded && semanticScholarSucceeded
     },
 
     async archiveManuscripts(_, { ids }, ctx) {
