@@ -22,6 +22,8 @@ const CollaborativeWax = ({
   identifier,
   ...rest
 }) => {
+  const fieldType = 'prosemirror'
+
   const [getUser, { loading }] = useLazyQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
     onCompleted: data => {
@@ -31,10 +33,10 @@ const CollaborativeWax = ({
     },
   })
 
-  const { yjsProvider, ydoc, createYjsProvider } = useYjs(
-    identifier,
-    omit(collaborativeObject, ['identifier']),
-  )
+  const { yjsProvider, ydoc, createYjsProvider } = useYjs(identifier, {
+    ...omit(collaborativeObject, ['identifier']),
+    fieldType,
+  })
 
   const Component = editorMode ? Editor[editorMode] : component
 

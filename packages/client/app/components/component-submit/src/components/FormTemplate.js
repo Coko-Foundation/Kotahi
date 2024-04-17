@@ -19,7 +19,10 @@ import {
   RichTextEditor,
   RadioGroup,
 } from '../../../shared'
-import { FullWaxField } from '../../../component-formbuilder/src/components/builderComponents'
+import {
+  FullWaxField,
+  CollaborativeTextField,
+} from '../../../component-formbuilder/src/components/builderComponents'
 import FormCollaborateComponent from '../../../component-formbuilder/src/components/FormCollaborativeComponent'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -141,6 +144,7 @@ const collaborativeElements = {
   Abstract: FormCollaborateComponent(RichTextEditor),
   AbstractEditor: FormCollaborateComponent(RichTextEditor),
   FullWaxField: FormCollaborateComponent(FullWaxField),
+  TextField: CollaborativeTextField,
 }
 
 /** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */

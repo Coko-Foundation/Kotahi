@@ -69,36 +69,6 @@ const DecisionReviews = ({
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>{t('decisionPage.decisionTab.Collaborative Reviews')}</Title>
-      </SectionHeader>
-      <InvitationResults invitations={invitations} />
-      {collaborativeReviewToShow ? (
-        <SectionRow key={collaborativeReviewToShow.id}>
-          <DecisionReview
-            canHideReviews={canHideReviews}
-            currentUser={currentUser}
-            isControlPage
-            lockUnlockReview={lockUnlockReview}
-            manuscriptId={manuscript.id}
-            open
-            ordinal="1"
-            review={collaborativeReviewToShow}
-            reviewForm={reviewForm}
-            teams={manuscript.teams}
-            threadedDiscussionProps={threadedDiscussionProps}
-            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
-            updateReview={updateReview}
-            updateSharedStatusForInvitedReviewer={
-              updateSharedStatusForInvitedReviewer
-            }
-            updateTeamMember={updateTeamMember}
-            // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
-          />
-        </SectionRow>
-      ) : (
-        <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
-      )}
-      <SectionHeader>
         <Title>{t('decisionPage.decisionTab.Completed Reviews')}</Title>
       </SectionHeader>
       <InvitationResults invitations={invitations} />
@@ -148,6 +118,36 @@ const DecisionReviews = ({
               />
             </SectionRow>
           ))
+      ) : (
+        <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
+      )}
+      <SectionHeader>
+        <Title>{t('decisionPage.decisionTab.Collaborative Reviews')}</Title>
+      </SectionHeader>
+      <InvitationResults invitations={invitations} />
+      {collaborativeReviewToShow ? (
+        <SectionRow key={collaborativeReviewToShow.id}>
+          <DecisionReview
+            canHideReviews={canHideReviews}
+            currentUser={currentUser}
+            isControlPage
+            lockUnlockReview={lockUnlockReview}
+            manuscriptId={manuscript.id}
+            open
+            ordinal="1"
+            review={collaborativeReviewToShow}
+            reviewForm={reviewForm}
+            teams={manuscript.teams}
+            threadedDiscussionProps={threadedDiscussionProps}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
+            updateReview={updateReview}
+            updateSharedStatusForInvitedReviewer={
+              updateSharedStatusForInvitedReviewer
+            }
+            updateTeamMember={updateTeamMember}
+            // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
+          />
+        </SectionRow>
       ) : (
         <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
       )}

@@ -6,9 +6,11 @@ import RadioBox from './RadioBox'
 import TextArea from './TextArea'
 import FullWaxField from './FullWaxField'
 import ThreadedDiscussion from './ThreadedDiscussion/ThreadedDiscussion'
+import CollaborativeTextField from './CollaborativeTextField'
 import { Select } from '../../../../shared'
 
 export {
+  CollaborativeTextField,
   FullWaxField,
   OptionsField,
   TextField,

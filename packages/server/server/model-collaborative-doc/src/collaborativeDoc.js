@@ -35,6 +35,7 @@ class CollaborativeDoc extends BaseModel {
         objectId: { type: ['string'], format: 'uuid' },
         name: { type: ['string'] },
         groupId: { type: ['string'], format: 'uuid' },
+        fieldType: { type: ['string'] },
         docs_prosemirror_delta: arrayOfObjectsNullable,
         docs_y_doc_state: {
           type: 'binary',

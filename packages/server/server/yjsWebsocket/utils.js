@@ -109,7 +109,7 @@ persistence = {
   writeState: async ydoc => {
     const id = ydoc.name
     const state = Y.encodeStateAsUpdate(ydoc)
-    const delta = ydoc.getText('prosemirror').toDelta()
+    const delta = ydoc.getText(ydoc.extraData.fieldType).toDelta()
     const timestamp = db.fn.now()
 
     const { objectId, name } = extractParamsFromIdentifier(id)

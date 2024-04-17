@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLazyQuery, gql } from '@apollo/client'
 import { omit } from 'lodash'
 import { TextField } from '@pubsweet/ui'
@@ -18,10 +18,11 @@ const GET_CURRENT_USER = gql`
 const CollaborativeTextFieldBuilder = ({
   user,
   collaborativeObject,
-  identifier,
   ...input
 }) => {
+  const fieldType = 'textInput'
   const inputRef = useRef(null)
+  // const [text, setText] = useState(input.value)
 
   const [getUser, { loading }] = useLazyQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
@@ -33,8 +34,8 @@ const CollaborativeTextFieldBuilder = ({
   })
 
   const { yjsProvider, ydoc, createYjsProvider } = useYjs(
-    identifier,
-    omit(collaborativeObject, ['identifier']),
+    `${collaborativeObject.identifier}-${input.name}`,
+    { ...omit(collaborativeObject, ['identifier']), fieldType },
   )
 
   useEffect(() => {
@@ -44,20 +45,46 @@ const CollaborativeTextFieldBuilder = ({
       getUser()
     }
 
-    if (yjsProvider && ydoc) {
-      const yTextInput = ydoc.getText('textInput')
-
-      // eslint-disable-next-line no-new
-      new TextAreaBinding(yTextInput, inputRef.current, {
-        awareness: yjsProvider.awareness,
-        clientName: 'wonder',
-      })
+    if (inputRef.current) {
+      console.log(inputRef.current)
     }
   }, [])
 
   if (loading || !yjsProvider || !ydoc) return <p>Loading...</p>
 
-  return <TextField ref={inputRef} {...input} />
+  // const yTextInput = ydoc.getText(fieldType)
+
+  yjsProvider.on('status', event => {
+    console.log(event, 1) // logs "connected" or "disconnected"
+  })
+
+  // console.log(inputRef.current)
+
+  // if (inputRef.current) {
+  //   console.log(yTextInput, inputRef.current)
+  //   // eslint-disable-next-line no-new
+  //   new TextAreaBinding(yTextInput, inputRef.current, {
+  //     awareness: yjsProvider.awareness,
+  //     clientName: 'wonder',
+  //   })
+  // }
+
+  return (
+    <input
+      // onChange={event => {
+      //   setText(event.currentTarget.value)
+      // }}
+      ref={inputRef}
+      type="text"
+      // value={text}
+    />
+  )
+  // return (
+  //   <TextField
+  //     innerRefProp={inputRef}
+  //     {...omit(input, ['value', 'onChange'])}
+  //   />
+  // )
 }
 
 export default CollaborativeTextFieldBuilder

@@ -23,8 +23,10 @@ const messageListener = (conn, doc, message) => {
       case utils.messageSync:
         utils.encoding.writeVarUint(encoder, utils.messageSync)
         utils.syncProtocol.readSyncMessage(decoder, encoder, doc, null)
+        // console.log(doc)
 
         if (utils.encoding.length(encoder) > 1) {
+          console.log(message.toString())
           utils.send(doc, conn, utils.encoding.toUint8Array(encoder))
         }
 
@@ -97,8 +99,7 @@ module.exports = () => {
 
         if (!docObject) {
           const state = Y.encodeStateAsUpdate(doc)
-          const delta = doc.getText('prosemirror').toDelta()
-
+          const delta = doc.getText(variables.fieldType).toDelta()
           await CollaborativeDoc.query()
             .insert({
               docs_prosemirror_delta: delta,
