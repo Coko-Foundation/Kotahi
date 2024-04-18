@@ -242,7 +242,7 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     .query()
     .findById(manuscriptId)
 
-  const team = await ctx.connectors.Team.model
+  const teams = await ctx.connectors.Team.model
     .query()
     .where({
       objectId: manuscript.id,
@@ -251,11 +251,20 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     .andWhere(builder => {
       builder.whereIn('role', ['reviewer', 'collaborativeReviewer'])
     })
-    .first()
 
-  if (!team) return false
-  const members = await team.$relatedQuery('members').where('userId', ctx.user)
-  if (members && members[0] && members[0].status !== 'completed') return true
+  if (!teams) return false
+
+  const member = await ctx.connectors.TeamMember.model.query()
+  .whereIn(
+    'teamId',
+    teams.map(t => t.id),
+  )
+  .andWhere(builder => {
+    builder.where({ userId: ctx.user })
+  })
+  .first()
+
+  if (member && member.status !== 'completed') return true
   return false
 })
 

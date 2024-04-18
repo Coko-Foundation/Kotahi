@@ -345,8 +345,8 @@ mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean) {
 `
 
 export const removeReviewerMutation = gql`
-mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean) {
-  removeReviewer(manuscriptId: $manuscriptId, userId: $userId, isCollaborative: $isCollaborative) {
+mutation($manuscriptId: ID!, $userId: ID!) {
+  removeReviewer(manuscriptId: $manuscriptId, userId: $userId) {
     ${teamFields}
   }
 }

@@ -1949,7 +1949,7 @@ const resolvers = {
       const collaborativeAssignments = await User.relatedQuery('teams')
         .for(ctx.user)
         .select('objectId')
-        .findOne({ role: 'collaborativeReviewer' })
+        .where({ role: 'collaborativeReviewer' })
         .whereIn('objectId', versionIds)
 
       assignments = assignments.concat(collaborativeAssignments)

@@ -123,7 +123,7 @@ const InviteReviewerModal = ({
               const isInvitation =
                 condition?.value?.includes('email-notification')
 
-              const isColaborative =
+              const isCollaborative =
                 condition?.value?.includes('isCollaborative')
 
               let teamMember
@@ -135,7 +135,7 @@ const InviteReviewerModal = ({
                   selectReviewerInvitationEmail(
                     config,
                     emailTemplates,
-                    isColaborative,
+                    isCollaborative,
                   )
 
                 const response = await sendEmail(
@@ -175,7 +175,7 @@ const InviteReviewerModal = ({
                   variables: {
                     userId: identity.id,
                     manuscriptId: manuscript.id,
-                    isColaborative,
+                    isCollaborative,
                   },
                 })
 
