@@ -221,6 +221,19 @@ const ManuscriptsPage = ({ currentUser, history }) => {
     })
   }
 
+  const unsetCustomStatus = id => {
+    update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            $customStatus: null,
+          },
+        }),
+      },
+    })
+  }
+
   const confirmBulkArchive = selectedNewManuscript => {
     archiveManuscripts({
       variables: { ids: selectedNewManuscript },
@@ -280,6 +293,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
+      unsetCustomStatus={unsetCustomStatus}
       uriQueryParams={uriQueryParams}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}

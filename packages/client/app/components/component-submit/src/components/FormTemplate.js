@@ -506,15 +506,19 @@ const FormTemplate = ({
                           aria-label={element.placeholder || element.title}
                           component={elements[element.component]}
                           data-testid={element.name} // TODO: Improve this
+                          isClearable={
+                            element.component === 'Select' &&
+                            element.name === 'submission.$customStatus'
+                          }
                           key={`validate-${element.id}`}
                           name={element.name}
                           onChange={value => {
                             // TODO: Perhaps split components remove conditions here
                             let val
 
-                            if (value.target) {
+                            if (value?.target) {
                               val = value.target.value
-                            } else if (value.value) {
+                            } else if (value?.value) {
                               val = value.value
                             } else {
                               val = value

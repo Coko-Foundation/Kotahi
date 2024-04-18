@@ -104,6 +104,7 @@ const Manuscripts = ({ history, ...props }) => {
     importManuscripts,
     isImporting,
     publishManuscript,
+    unsetCustomStatus,
     queryObject,
     sortDirection,
     sortName,
@@ -273,6 +274,7 @@ const Manuscripts = ({ history, ...props }) => {
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
+    unsetCustomStatus,
     urlFrag,
   }
 

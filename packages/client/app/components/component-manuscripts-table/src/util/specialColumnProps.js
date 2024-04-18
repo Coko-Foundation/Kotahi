@@ -39,6 +39,7 @@ const buildSpecialColumnProps = (
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
+    unsetCustomStatus,
     archiveManuscript,
     reviewerRespond,
     getMainActionLink,
@@ -220,8 +221,8 @@ const buildSpecialColumnProps = (
     },
     'submission.topics': { flex: '0 1 10em' },
     'submission.$customStatus': {
-      flex: '0 1 10em',
-      extraProps: { setReadyToEvaluateLabel },
+      flex: '0.25 1 15em',
+      extraProps: { setReadyToEvaluateLabel, unsetCustomStatus },
       component: config?.manuscript?.labelColumn
         ? props =>
             LabelsOrSelectButton({
