@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { ChevronUp, ChevronDown, X } from 'react-feather'
 import { LabelBadge } from '../../../shared'
 import { color } from '../../../../theme'
 
@@ -9,11 +9,13 @@ const BaseDropdown = styled.div`
   position: relative;
 `
 
-const DropdownButton = styled.button`
+const DropdownElement = styled.div`
   align-items: center;
+  background-color: lightgrey;
   border-radius: 8px;
   cursor: pointer;
   display: flex;
+  justify-content: center;
 `
 
 const DropdownMenu = styled.div`
@@ -22,30 +24,49 @@ const DropdownMenu = styled.div`
   border-radius: 4px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   left: 0;
+  margin-top: 2px;
   max-height: 250px;
   overflow-y: auto;
   position: absolute;
   top: 100%;
+  width: 152px;
   z-index: 1;
 `
 
-const CaretIcon = styled.div`
-  height: 18px;
-  margin-left: 8px;
-  width: 18px;
+const StatusLabel = styled.span`
+  margin-right: 5px;
+`
+
+const StyledButton = styled.button`
+  align-items: center;
+  background-color: lightgrey;
+  cursor: pointer;
+  display: flex;
 `
 
 const DropdownMenuItem = styled.div`
+  background-color: ${({ isSelected }) =>
+    isSelected ? `${color.gray95}` : 'white'};
   cursor: pointer;
   padding: 8px;
 
   &:hover {
-    background-color: ${color.gray97};
+    background-color: ${color.gray95};
   }
 `
 
-const LabelDropdown = ({ values, options, manuscript, doUpdateManuscript }) => {
+const LabelDropdown = ({
+  values,
+  options,
+  manuscript,
+  doUpdateManuscript,
+  unsetCustomStatus,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+
+  const [selectedOption, setSelectedOption] = useState(
+    values.length > 0 ? values[0]?.value : undefined,
+  )
 
   const dropdownRef = useRef(null)
 
@@ -59,6 +80,7 @@ const LabelDropdown = ({ values, options, manuscript, doUpdateManuscript }) => {
 
   const handleDropdownItemClick = newStatus => {
     setIsDropdownOpen(false)
+    setSelectedOption(newStatus)
 
     const manuscriptDelta = {
       submission: {
@@ -85,25 +107,41 @@ const LabelDropdown = ({ values, options, manuscript, doUpdateManuscript }) => {
 
   return (
     <BaseDropdown ref={dropdownRef}>
-      <DropdownButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+      <DropdownElement
+        aria-pressed="false"
+        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        role="button"
+        tabindex="0"
+      >
         <LabelBadge color={values[0]?.color}>
-          {values[0]?.displayValue}
+          <StatusLabel>{values[0]?.displayValue}</StatusLabel>
           {isDropdownOpen ? (
-            <CaretIcon>
-              <ChevronUp size={20} />
-            </CaretIcon>
+            <>
+              <StyledButton onClick={() => unsetCustomStatus(manuscript.id)}>
+                <X size={18} />
+              </StyledButton>
+              <StyledButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <ChevronUp size={18} />
+              </StyledButton>
+            </>
           ) : (
-            <CaretIcon>
-              <ChevronDown size={20} />
-            </CaretIcon>
+            <>
+              <StyledButton onClick={() => unsetCustomStatus(manuscript.id)}>
+                <X size={18} />
+              </StyledButton>
+              <StyledButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                <ChevronDown size={18} />
+              </StyledButton>
+            </>
           )}
         </LabelBadge>
-      </DropdownButton>
+      </DropdownElement>
 
       {isDropdownOpen && (
         <DropdownMenu>
           {options?.map(option => (
             <DropdownMenuItem
+              isSelected={selectedOption && selectedOption === option.value}
               key={option.value}
               onClick={() => handleDropdownItemClick(option.value)}
             >
