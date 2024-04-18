@@ -254,15 +254,16 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 
   if (!teams) return false
 
-  const member = await ctx.connectors.TeamMember.model.query()
-  .whereIn(
-    'teamId',
-    teams.map(t => t.id),
-  )
-  .andWhere(builder => {
-    builder.where({ userId: ctx.user })
-  })
-  .first()
+  const member = await ctx.connectors.TeamMember.model
+    .query()
+    .whereIn(
+      'teamId',
+      teams.map(t => t.id),
+    )
+    .andWhere(builder => {
+      builder.where({ userId: ctx.user })
+    })
+    .first()
 
   if (member && member.status !== 'completed') return true
   return false
