@@ -205,7 +205,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           manuscript: {
             labelColumn: true,
-            tableColumns: process.env.MANUSCRIPTS_TABLE_COLUMNS,
+            tableColumns:
+              process.env.MANUSCRIPTS_TABLE_COLUMNS ||
+              'submission.$title,status',
             manualImport: process.env.ALLOW_MANUAL_IMPORT === 'true',
             newSubmission: true,
             paginationCount: 50,

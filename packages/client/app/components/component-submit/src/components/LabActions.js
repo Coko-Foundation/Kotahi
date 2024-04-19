@@ -3,7 +3,12 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { grid } from '@pubsweet/ui-toolkit'
-import { ActionButton, SectionContent, SectionRow } from '../../../shared'
+import {
+  ActionButton,
+  RoundIconButton,
+  SectionContent,
+  SectionRow,
+} from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import Confirm from './Confirm'
 import Modal from '../../../component-modal/src/Modal'
@@ -58,13 +63,11 @@ const LabAction = ({ currentUser, form, manuscript, onSubmit }) => {
     <>
       <SectionContent>
         <StyledSectionRow>
-          <ActionButton
-            // disabled
+          <RoundIconButton
+            iconName="Users"
             onClick={() => setShowCollaborateModal(true)}
             primary
-          >
-            {t('manuscriptSubmit.Collaborate')}
-          </ActionButton>
+          />
           {manuscript.status !== articleStatuses.published &&
             manuscript.status !== articleStatuses.submitted &&
             isAuthor(manuscript, currentUser) && (
