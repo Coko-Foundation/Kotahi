@@ -25,13 +25,14 @@ export const Menu = styled.div`
   grid-area: menu;
   height: fit-content;
   max-width: 100%;
+  min-height: 40px;
   position: sticky;
   top: -20px;
   user-select: none;
   z-index: 5;
 
   & > div {
-    height: 36px;
+    /* height: 36px; */
   }
 `
 
