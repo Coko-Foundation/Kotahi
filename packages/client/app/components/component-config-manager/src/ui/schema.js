@@ -803,7 +803,7 @@ export const generateSchemas = (
             },
             reviewerCollaborativeInvitationPrimaryEmailTemplate: {
               description: t(
-                'configPage.reviewerInvitationPrimaryEmailTemplate',
+                'configPage.reviewerCollaborativeInvitationPrimaryEmailTemplate',
               ),
               type: ['string', 'null'],
               oneOf: emailNotificationOptions,
@@ -1662,7 +1662,7 @@ export const generateSchemas = (
             },
             reviewerCollaborativeInvitationPrimaryEmailTemplate: {
               description: t(
-                'configPage.reviewerInvitationPrimaryEmailTemplate',
+                'configPage.reviewerCollaborativeInvitationPrimaryEmailTemplate',
               ),
               type: ['string', 'null'],
               oneOf: emailNotificationOptions,
@@ -2527,7 +2527,7 @@ export const generateSchemas = (
             },
             reviewerCollaborativeInvitationPrimaryEmailTemplate: {
               description: t(
-                'configPage.reviewerInvitationPrimaryEmailTemplate',
+                'configPage.reviewerCollaborativeInvitationPrimaryEmailTemplate',
               ),
               type: ['string', 'null'],
               oneOf: emailNotificationOptions,
@@ -3399,7 +3399,7 @@ export const generateSchemas = (
             },
             reviewerCollaborativeInvitationPrimaryEmailTemplate: {
               description: t(
-                'configPage.reviewerInvitationPrimaryEmailTemplate',
+                'configPage.reviewerCollaborativeInvitationPrimaryEmailTemplate',
               ),
               type: ['string', 'null'],
               oneOf: emailNotificationOptions,

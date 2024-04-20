@@ -11,8 +11,10 @@ const StyledCheckbox = styled(Checkbox)`
 `
 
 const UsersList = styled.div`
+  display: flex;
   flex-basis: 100%;
-  height: 0;
+  flex-wrap: wrap;
+  height: 100%;
   margin-bottom: 10px;
   margin-top: 10px;
 `

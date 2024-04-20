@@ -26,7 +26,6 @@ const messageListener = (conn, doc, message) => {
         // console.log(doc)
 
         if (utils.encoding.length(encoder) > 1) {
-          console.log(message.toString())
           utils.send(doc, conn, utils.encoding.toUint8Array(encoder))
         }
 

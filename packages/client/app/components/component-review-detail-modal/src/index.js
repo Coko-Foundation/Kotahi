@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react'
-import { gql, useMutation } from '@apollo/client'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
@@ -23,31 +22,6 @@ import FormTemplate from '../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../config/src'
 import localizeReviewFilterOptions from '../../../shared/localizeReviewFilterOptions'
 import localizeRecommendations from '../../../shared/localizeRecommendations'
-
-const createFileMutation = gql`
-  mutation ($file: Upload!, $meta: FileMetaInput!) {
-    createFile(file: $file, meta: $meta) {
-      id
-      created
-      name
-      updated
-      name
-      tags
-      objectId
-      storedObjects {
-        key
-        mimetype
-        url
-      }
-    }
-  }
-`
-
-const deleteFileMutation = gql`
-  mutation ($id: ID!) {
-    deleteFile(id: $id)
-  }
-`
 
 const Header = styled.div`
   font-size: 18px;
@@ -83,11 +57,13 @@ const ReviewDetailsModal = (
   props, // main title in black
 ) => {
   const {
+    createFile,
+    currentUser,
+    deleteFile,
     status,
     canEditReviews,
     review,
     reviewerTeamMember,
-    refetchManuscript,
     reviewForm,
     onClose,
     threadedDiscussionProps,
@@ -97,38 +73,38 @@ const ReviewDetailsModal = (
     readOnly = false,
     removeReviewer,
     manuscriptId,
+    manuscriptShortId,
     isInvitation = false,
     updateSharedStatusForInvitedReviewer,
     updateTeamMember,
     updateCollaborativeTeamMember,
     updateReview,
+    updateReviewJsonData,
   } = props
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
-
-  const [createFile] = useMutation(createFileMutation)
-
-  const [deleteFile] = useMutation(deleteFileMutation, {
-    update(cache, { data: { deleteFile: fileToDelete } }) {
-      const id = cache.identify({
-        __typename: 'File',
-        id: fileToDelete,
-      })
-
-      cache.evict({ id })
-    },
-    onCompleted: () => refetchManuscript(),
-  })
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,
     t,
   )
 
-  const statusConfig = LocalizedReviewFilterOptions.find(
-    item => item.value === (status ?? 'completed'),
-  )
+  let statusConfig = null
+
+  // when the review is collaborative the status is not completed but closed
+  if (review?.isCollaborative && review?.isLock === true) {
+    statusConfig = {
+      color: '#eeeeee',
+      label: 'Closed',
+      value: 'closed',
+      lightText: false,
+    }
+  } else {
+    statusConfig = LocalizedReviewFilterOptions.find(
+      item => item.value === (status ?? 'completed'),
+    )
+  }
 
   let reviewer = null
 
@@ -165,6 +141,8 @@ const ReviewDetailsModal = (
   const timeString = convertTimestampToDateString(
     review ? review.updated : reviewerTeamMember.updated,
   )
+
+  const reviewData = review ? ensureJsonIsParsed(review?.jsonData) : {}
 
   return (
     <Modal
@@ -234,25 +212,56 @@ const ReviewDetailsModal = (
       <StatusContainer>
         <Header>{t('modals.reviewReport.Status')}</Header>
         <ConfigurableStatus
-          color={statusConfig.color}
-          lightText={statusConfig.lightText}
+          color={statusConfig?.color}
+          lightText={statusConfig?.lightText}
         >
-          {statusConfig.label}
+          {statusConfig?.label}
         </ConfigurableStatus>
       </StatusContainer>
       {review ? (
-        <ReviewData
-          canEditReviews={canEditReviews}
-          createFile={createFile}
-          deleteFile={deleteFile}
-          manuscriptId={manuscriptId}
-          readOnly={readOnly}
-          review={review}
-          reviewForm={reviewForm}
-          showEditorOnlyFields={showEditorOnlyFields}
-          threadedDiscussionProps={threadedDiscussionProps}
-          updateReview={updateReview}
-        />
+        <>
+          {(review.isCollaborative === false || review.isLock === true) && (
+            <ReviewData
+              canEditReviews={canEditReviews}
+              createFile={createFile}
+              deleteFile={deleteFile}
+              manuscriptId={manuscriptId}
+              readOnly={readOnly}
+              review={review}
+              reviewForm={reviewForm}
+              showEditorOnlyFields={showEditorOnlyFields}
+              threadedDiscussionProps={threadedDiscussionProps}
+              updateReview={updateReview}
+            />
+          )}
+          {review.isCollaborative === true && !review.isLock && (
+            <FormTemplate
+              collaborativeObject={{ identifier: review.id, currentUser }}
+              createFile={createFile}
+              deleteFile={deleteFile}
+              form={reviewForm}
+              formikOptions={{ enableReinitialize: true }}
+              initialValues={reviewData}
+              isCollaborative={review.isCollaborative}
+              manuscriptId={manuscriptId}
+              manuscriptShortId={manuscriptShortId}
+              onChange={(value, path) =>
+                updateReviewJsonData(
+                  review.id,
+                  value,
+                  path,
+                  false,
+                  manuscriptId,
+                )
+              }
+              shouldStoreFilesInForm
+              showEditorOnlyFields={false}
+              submissionButtonText={t('reviewPage.Submit')}
+              tagForFiles="review"
+              threadedDiscussionProps={threadedDiscussionProps}
+            />
+          )}
+        </>
       ) : (
         <ReviewItemsContainer>
           <i>{t('modals.reviewReport.reviewNotCompleted')}</i>

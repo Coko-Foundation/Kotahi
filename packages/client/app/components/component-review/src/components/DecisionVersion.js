@@ -323,14 +323,18 @@ const DecisionVersion = ({
             </SectionContent>
           )}
           <KanbanBoard
+            createFile={createFile}
+            deleteFile={deleteFile}
             invitations={invitations}
             isCurrentVersion={isCurrentVersion}
             manuscript={version}
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}
+            currentUser={currentUser}
             updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
+            updateReviewJsonData={updateReviewJsonData}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
             }
@@ -416,6 +420,7 @@ const DecisionVersion = ({
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer
               }
+              updateReviewJsonData={updateReviewJsonData}
               updateTeamMember={updateTeamMember}
               urlFrag={urlFrag}
             />
@@ -441,7 +446,15 @@ const DecisionVersion = ({
                   manuscriptId={version.id}
                   manuscriptShortId={version.shortId}
                   manuscriptStatus={version.status}
-                  onChange={updateReviewJsonData}
+                  onChange={(value, path) => {
+                    updateReviewJsonData(
+                      currentDecisionData?.id,
+                      value,
+                      path,
+                      true,
+                      version.id,
+                    )
+                  }}
                   onSubmit={async (values, actions) => {
                     await makeDecision({
                       variables: {

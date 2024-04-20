@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client'
+import {
+  gql,
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from '@apollo/client'
 import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
@@ -45,7 +51,11 @@ import {
   DELETE_PENDING_COMMENT,
   UPDATE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
+import { reviewFormUpdatedSubscription } from './reviewSubscriptions'
+
 import useChat from '../../../../hooks/useChat'
+
+import { getCurrentUserReview } from './review/util'
 
 export const updateManuscriptMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -329,6 +339,43 @@ const DecisionPage = ({ currentUser, match }) => {
     },
   })
 
+  // Count In the Collaborative Reviews and choose the correct one.
+  const currentUserReview = getCurrentUserReview(data?.manuscript, currentUser)
+
+  useSubscription(reviewFormUpdatedSubscription, {
+    variables: {
+      formId: currentUserReview.id,
+    },
+    onSubscriptionData: ({
+      subscriptionData: {
+        data: { reviewFormUpdated },
+      },
+    }) => {
+      const id = client.cache.identify({
+        __typename: 'Review',
+        id: reviewFormUpdated.id,
+      })
+
+      client.cache.modify({
+        id,
+        fields: {
+          json_data() {
+            const newReviewRef = client.cache.writeFragment({
+              data: reviewFormUpdated,
+              fragment: gql`
+                fragment NewReview on Review {
+                  id
+                }
+              `,
+            })
+
+            return newReviewRef.jsonData
+          },
+        },
+      })
+    },
+  })
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -433,13 +480,19 @@ const DecisionPage = ({ currentUser, match }) => {
   }
 
   /** This will only send the modified field, not the entire review object */
-  const updateReviewJsonData = (reviewId, value, path, manuscriptVersionId) => {
+  const updateReviewJsonData = (
+    reviewId,
+    value,
+    path,
+    isDecision,
+    manuscriptVersionId,
+  ) => {
     const reviewDelta = {} // Only the changed fields
     // E.g. if path is 'submission.$title' and value is 'Foo' this gives { submission: { $title: 'Foo' } }
     set(reviewDelta, path, value)
 
     const reviewPayload = {
-      isDecision: true,
+      isDecision,
       jsonData: JSON.stringify(reviewDelta),
       manuscriptId: manuscriptVersionId,
       userId: currentUser.id,

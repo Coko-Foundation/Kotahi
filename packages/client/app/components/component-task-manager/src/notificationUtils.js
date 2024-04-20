@@ -2,6 +2,10 @@ export const isReviewerInvitation = (emailTemplateId, emailTemplates) =>
   emailTemplates.find(et => et.id === emailTemplateId)?.emailTemplateType ===
   'reviewerInvitation'
 
+export const isCollaborativeReviewerInvitation = (emailTemplateId, emailTemplates) =>
+  emailTemplates.find(et => et.id === emailTemplateId)?.emailTemplateType ===
+  'collaborativeReviewerInvitation'
+
 const getTeamUsers = (teamType, teams) => {
   const filteredTeams = teams.filter(
     team =>
@@ -22,11 +26,11 @@ const getTeamUsers = (teamType, teams) => {
 const getRecipientUserIds = (recipientUser, recipientType, task, teams) => {
   if (recipientUser) return [recipientUser.id]
 
-  if (['editor', 'reviewer', 'author'].includes(recipientType))
+  if (['editor', 'reviewer', 'author', 'collaborativeReviewer'].includes(recipientType))
     return getTeamUsers(recipientType, teams)
 
   if (recipientType === 'assignee') {
-    if (['editor', 'reviewer', 'author'].includes(task.assigneeType))
+    if (['editor', 'reviewer', 'author', 'collaborativeReviewer'].includes(task.assigneeType))
       return getTeamUsers(task.assigneeType, teams)
     if (task.assigneeUserId) return [task.assigneeUserId]
     return []
@@ -48,7 +52,10 @@ export const ifReviewInviteThenAssignRecipientsAsReviewers = async (
   emailTemplates,
   addReviewer,
 ) => {
-  if (isReviewerInvitation(emailTemplateId, emailTemplates)) {
+  if (
+    isReviewerInvitation(emailTemplateId, emailTemplates) ||
+    isCollaborativeReviewerInvitation(emailTemplateId, emailTemplates)
+  ) {
     const recipients = getRecipientUserIds(
       recipientUser,
       recipientType,
@@ -62,6 +69,7 @@ export const ifReviewInviteThenAssignRecipientsAsReviewers = async (
           variables: {
             userId: r,
             manuscriptId: manuscript.id,
+            isCollaborative: !!isCollaborativeReviewerInvitation(emailTemplateId, emailTemplates)
           },
         }),
       ),

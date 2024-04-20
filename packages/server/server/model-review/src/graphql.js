@@ -120,6 +120,8 @@ const resolvers = {
     },
 
     async lockUnlockCollaborativeReview(_, { id }) {
+      const pubsub = await pubsubManager.getPubsub()
+
       const review = await Review.query()
         .findOne({
           id,
@@ -140,7 +142,29 @@ const resolvers = {
         objectType: 'manuscript',
       })
 
-      await TeamMember.query().patch({ status }).where({ teamId: team.id })
+      await TeamMember.query()
+        .patch({ status })
+        .where({ teamId: team.id })
+        .andWhere(builder => {
+          builder.whereIn('status', ['closed', 'inProgess'])
+        })
+
+      const manuscript = await Manuscript.query().findById(
+        updatedReview.manuscriptId,
+      )
+
+      const form = await getReviewForm(manuscript.groupId)
+
+      await convertFilesToFullObjects(
+        updatedReview,
+        form,
+        async ids => File.query().findByIds(ids),
+        getFilesWithUrl,
+      )
+
+      pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
+        reviewFormUpdated: updatedReview,
+      })
 
       return {
         ...updatedReview,
@@ -157,7 +181,7 @@ const resolvers = {
         .$relatedQuery('teams')
         .whereIn('role', ['reviewer', 'collaborativeReviewer'])
 
-      const member = await models.TeamMember.query()
+      const member = await TeamMember.query()
         .whereIn(
           'teamId',
           teams.map(t => t.id),

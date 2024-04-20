@@ -55,13 +55,15 @@ const useYjs = (identifier, object) => {
 
     const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
 
-    provider.awareness.setLocalStateField('user', {
-      id: currentUser.id || uuidv4(),
-      color,
-      displayName: currentUser
-        ? currentUser.username || currentUser.email
-        : 'Anonymous',
-    })
+    if (currentUser) {
+      provider.awareness.setLocalStateField('user', {
+        id: currentUser.id || uuidv4(),
+        color,
+        displayName: currentUser
+          ? currentUser.username || currentUser.email
+          : 'Anonymous',
+      })
+    }
 
     setYjsProvider(provider)
   }

@@ -30,6 +30,7 @@ const DecisionReview = ({
   readOnly,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateReviewJsonData,
   updateCollaborativeTeamMember,
   currentUser,
 }) => {
@@ -88,7 +89,6 @@ const DecisionReview = ({
         manuscriptId={manuscriptId}
         onClose={toggleOpen}
         readOnly={readOnly}
-        refetchManuscript={refetchManuscript}
         review={review}
         reviewerTeamMember={reviewerTeamMember}
         reviewForm={reviewForm}
@@ -97,6 +97,7 @@ const DecisionReview = ({
         threadedDiscussionProps={threadedDiscussionProps}
         updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
+        updateReviewJsonData={updateReviewJsonData}
         updateSharedStatusForInvitedReviewer={
           updateSharedStatusForInvitedReviewer
         }

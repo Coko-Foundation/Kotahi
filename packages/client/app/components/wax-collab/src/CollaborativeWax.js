@@ -1,18 +1,7 @@
 import React, { useEffect } from 'react'
-import { useLazyQuery, gql } from '@apollo/client'
 import { omit } from 'lodash'
 import Editor from '.'
 import useYjs from './hooks/useYjs'
-
-const GET_CURRENT_USER = gql`
-  query currentUser {
-    currentUser {
-      id
-      email
-      username
-    }
-  }
-`
 
 const CollaborativeWax = ({
   editorMode,
@@ -23,36 +12,24 @@ const CollaborativeWax = ({
   ...rest
 }) => {
   const fieldType = 'prosemirror'
-
-  const [getUser, { loading }] = useLazyQuery(GET_CURRENT_USER, {
-    fetchPolicy: 'network-only',
-    onCompleted: data => {
-      if (data && data.currentUser) {
-        createYjsProvider(data.currentUser)
-      }
-    },
-  })
+  const { currentUser } = collaborativeObject
 
   const { yjsProvider, ydoc, createYjsProvider } = useYjs(identifier, {
-    ...omit(collaborativeObject, ['identifier']),
+    ...omit(collaborativeObject, ['identifier', 'currentUser']),
     fieldType,
   })
 
   const Component = editorMode ? Editor[editorMode] : component
 
   useEffect(() => {
-    if (user) {
-      createYjsProvider(user)
-    } else {
-      getUser()
-    }
+      createYjsProvider(currentUser)   
   }, [])
 
-  if (loading || !yjsProvider || !ydoc) return <p>Loading...</p>
+  if (!yjsProvider || !ydoc) return <p>Loading...</p>
 
   if (Component) {
     return (
-      <Component {...rest} user={user} ydoc={ydoc} yjsProvider={yjsProvider} />
+      <Component {...rest} user={currentUser} ydoc={ydoc} yjsProvider={yjsProvider} />
     )
   }
 

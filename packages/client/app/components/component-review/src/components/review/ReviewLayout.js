@@ -29,17 +29,12 @@ const ReviewLayout = ({
   currentUserReview,
   versions,
   reviewForm,
-  onSubmit,
   // isValid,
   channels,
-  uploadFile,
   channelId,
   submissionForm,
   createFile,
   deleteFile,
-  manuscript,
-  validateDoi,
-  validateSuffix,
   decisionForm,
   threadedDiscussionProps,
   chatProps,
@@ -192,13 +187,16 @@ const ReviewLayout = ({
         ) : (
           <SectionContent>
             <FormTemplate
-              collaborativeObject={{ identifier: currentUserReview.id }}
+              collaborativeObject={{
+                identifier: currentUserReview.id,
+                currentUser,
+              }}
               createFile={createFile}
               deleteFile={deleteFile}
               form={reviewForm}
               formikOptions={{ enableReinitialize: true }}
-              hideSubmissionButton={reviewData.isCollaborative}
               initialValues={reviewData}
+              isCollaborative={currentUserReview.isCollaborative}
               manuscriptId={latestManuscript.id}
               manuscriptShortId={latestManuscript.shortId}
               manuscriptStatus={latestManuscript.status}
@@ -216,8 +214,6 @@ const ReviewLayout = ({
               submissionButtonText={t('reviewPage.Submit')}
               tagForFiles="review"
               threadedDiscussionProps={threadedDiscussionProps}
-              validateDoi={validateDoi}
-              validateSuffix={validateSuffix}
             />
           </SectionContent>
         )}
@@ -410,8 +406,6 @@ ReviewLayout.propTypes = {
     }).isRequired,
   ).isRequired,
   currentUserReview: PropTypes.shape({}),
-  onSubmit: PropTypes.func,
-  uploadFile: PropTypes.func,
   channelId: PropTypes.string.isRequired,
   submissionForm: PropTypes.shape({
     children: PropTypes.arrayOf(
@@ -429,11 +423,9 @@ ReviewLayout.propTypes = {
 }
 
 ReviewLayout.defaultProps = {
-  onSubmit: () => {},
   review: undefined,
   currentUserReview: undefined,
   status: undefined,
-  uploadFile: undefined,
 }
 
 export default ReviewLayout

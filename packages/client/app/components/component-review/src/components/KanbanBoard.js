@@ -67,6 +67,9 @@ const normalizeStatus = statusString =>
     .replace('unanswered', 'invited')
 
 const KanbanBoard = ({
+  createFile,
+  currentUser,
+  deleteFile,
   invitations,
   version,
   versionNumber,
@@ -79,13 +82,14 @@ const KanbanBoard = ({
   updateTeamMember,
   updateCollaborativeTeamMember,
   updateReview,
+  updateReviewJsonData,
 }) => {
   const reviewers = getMembersOfTeam(version, 'reviewer')
 
   const collaborativeReviewers = getMembersOfTeam(
     version,
     'collaborativeReviewer',
-  )
+  ).map(reviewer => ({ ...reviewer, isCollaborative: true }))
 
   const { t } = useTranslation()
 
@@ -95,6 +99,7 @@ const KanbanBoard = ({
     emailAndWebReviewers.push({
       ...reviewer,
       status: normalizeStatus(reviewer.status),
+      isCollaborative: !!reviewer.isCollaborative,
       isEmail: false, // This will be revised to true if we find a matching invitation below
       suggestedReviewers: invitations.find(
         invitation =>
@@ -152,12 +157,19 @@ const KanbanBoard = ({
       []
 
   const findReview = reviewer => {
-    return allReviews.find(
-      review =>
-        (review.isCollaborative === true ||
-          review?.user.id === reviewer.user?.id) &&
-        review.isDecision === false,
-    )
+    return allReviews
+      .filter(r => r.isCollaborative === reviewer.isCollaborative)
+      .find(review => {
+        if (review.isCollaborative === true && review?.user === null) {
+          return true
+        }
+
+        return (
+          review.isCollaborative === false &&
+          review?.user?.id === reviewer.user.id &&
+          review.isDecision === false
+        )
+      })
   }
 
   const getReviewersWithoutDuplicates = (status, someReviewers) =>
@@ -208,6 +220,9 @@ const KanbanBoard = ({
                     emailAndWebReviewers,
                   ).map(reviewer => (
                     <KanbanCard
+                      createFile={createFile}
+                      currentUser={currentUser}
+                      deleteFile={deleteFile}
                       isCurrentVersion={isCurrentVersion}
                       isInvitation={reviewer.isEmail}
                       key={reviewer.id}
@@ -215,7 +230,8 @@ const KanbanBoard = ({
                       removeReviewer={removeReviewer}
                       review={
                         status.value === 'completed' ||
-                        status.value === 'closed'
+                        (status.value === 'inProgress' &&
+                          reviewer.isCollaborative === true)
                           ? findReview(reviewer)
                           : null
                       }
@@ -229,6 +245,7 @@ const KanbanBoard = ({
                         updateCollaborativeTeamMember
                       }
                       updateReview={updateReview}
+                      updateReviewJsonData={updateReviewJsonData}
                       updateSharedStatusForInvitedReviewer={
                         updateSharedStatusForInvitedReviewer
                       }

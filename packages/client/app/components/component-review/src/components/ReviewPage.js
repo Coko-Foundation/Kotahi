@@ -398,7 +398,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
       decisionForm={decisionForm}
       deleteFile={deleteFile}
       history={history}
-      manuscript={manuscript}
       reviewForm={reviewForm}
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}

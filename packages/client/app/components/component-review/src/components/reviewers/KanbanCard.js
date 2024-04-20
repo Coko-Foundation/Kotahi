@@ -77,6 +77,9 @@ const CollaborativeBadge = styled.div`
 `
 
 const KanbanCard = ({
+  createFile,
+  currentUser,
+  deleteFile,
   reviewer,
   isInvitation,
   manuscript,
@@ -89,6 +92,7 @@ const KanbanCard = ({
   updateTeamMember,
   updateCollaborativeTeamMember,
   updateReview,
+  updateReviewJsonData,
   showEmailInvitation,
 }) => {
   const [open, setOpen] = useState(false)
@@ -102,9 +106,13 @@ const KanbanCard = ({
   return (
     <>
       <ReviewDetailsModal
+        createFile={createFile}
+        currentUser={currentUser}
+        deleteFile={deleteFile}
         isInvitation={isInvitation}
         isOpen={open}
         manuscriptId={manuscript.id}
+        manuscriptShortId={manuscript.shortId}
         onClose={() => setOpen(false)}
         readOnly={!isCurrentVersion}
         removeReviewer={removeReviewer}
@@ -114,6 +122,7 @@ const KanbanCard = ({
         status={status}
         updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
+        updateReviewJsonData={updateReviewJsonData}
         updateSharedStatusForInvitedReviewer={
           updateSharedStatusForInvitedReviewer
         }

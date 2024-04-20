@@ -159,14 +159,7 @@ const DecisionVersions = ({
                 updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
-                updateReviewJsonData={(value, path) =>
-                  updateReviewJsonData(
-                    initialValue.id,
-                    value,
-                    path,
-                    version.manuscript.id,
-                  )
-                }
+                updateReviewJsonData={updateReviewJsonData}
                 updateSharedStatusForInvitedReviewer={
                   updateSharedStatusForInvitedReviewer
                 }

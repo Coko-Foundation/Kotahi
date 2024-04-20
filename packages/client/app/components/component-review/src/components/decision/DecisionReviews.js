@@ -40,6 +40,7 @@ const DecisionReviews = ({
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   updateCollaborativeTeamMember,
+  updateReviewJsonData,
   currentUser,
 }) => {
   const collaborativeReviewToShow = manuscript?.reviews?.length
@@ -144,6 +145,7 @@ const DecisionReviews = ({
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
             }
+            updateReviewJsonData={updateReviewJsonData}
             updateTeamMember={updateTeamMember}
             // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
           />

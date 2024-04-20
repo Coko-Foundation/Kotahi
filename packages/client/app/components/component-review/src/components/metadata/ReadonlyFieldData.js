@@ -1,6 +1,7 @@
 import React from 'react'
 import { get } from 'lodash'
 import FormCollaborateComponent from '../../../../component-formbuilder/src/components/FormCollaborativeComponent'
+import CollaborativeTextFieldBuilder from '../../../../component-formbuilder/src/components/builderComponents/CollaborativeTextField'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Affiliation, Email, BadgeContainer } from '../style'
 import { Attachment, ColorBadge } from '../../../../shared'
@@ -147,10 +148,27 @@ const ReadonlyFieldData = ({
     ['AbstractEditor', 'FullWaxField'].includes(fieldDefinition?.component)
   )
     return isCollaborativeForm ? (
-      CollaborativeReadOnlyField(SimpleWaxEditor, data, fieldName)
+      CollaborativeReadOnlyField(SimpleWaxEditor, data)
     ) : (
       <SimpleWaxEditor readonly value={data} />
     )
+
+  if (
+    data &&
+    fieldDefinition?.component === 'TextField' &&
+    isCollaborativeForm
+  ) {
+    const { identifier, name } = extractParamsFromIdentifier(data)
+    return (
+      <CollaborativeTextFieldBuilder
+        collaborativeObject={{ identifier }}
+        disabled
+        identifier={data}
+        name={name}
+        onChange={() => {}}
+      />
+    )
+  }
 
   if (fieldDefinition?.options) {
     const items = Array.isArray(data) ? data : [data]

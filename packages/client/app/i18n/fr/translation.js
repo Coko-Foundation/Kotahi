@@ -899,6 +899,7 @@ const fr = {
         'Registered Users': 'Utilisateurs enregistrés',
         userRoles: {
           Reviewer: 'Évaluateur',
+          'Collaborative reviewer': 'Colaborative evaluateur',
           Editor: 'Éditeur',
           Author: 'Auteur',
         },

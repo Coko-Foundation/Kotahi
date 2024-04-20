@@ -889,6 +889,7 @@ const ru = {
         'Registered Users': 'Зарегистрированные пользователи',
         userRoles: {
           Reviewer: 'Рецензент',
+          'Collaborative reviewer': 'Коллективные pецензент',
           Editor: 'Редактор',
           Author: 'Автор',
         },

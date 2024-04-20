@@ -186,7 +186,6 @@ const FormTemplate = ({
   manuscriptShortId,
   manuscriptStatus,
   submissionButtonText,
-  hideSubmissionButton,
   onChange,
   republish,
   onSubmit,
@@ -198,6 +197,7 @@ const FormTemplate = ({
   createFile,
   deleteFile,
   isSubmission,
+  isCollaborative,
   reviewId,
   shouldStoreFilesInForm,
   initializeReview,
@@ -368,12 +368,10 @@ const FormTemplate = ({
 
         // this is whether or not to show a submit button
 
-        let showSubmitButton = null
-
-        showSubmitButton = !!(!showSubmitButton && hideSubmissionButton)
+        let showSubmitButton = !isCollaborative
 
         showSubmitButton =
-          !showSubmitButton &&
+          showSubmitButton &&
           submissionButtonText &&
           (isSubmission
             ? !['submitted', 'revise'].includes(values.status) ||
@@ -533,9 +531,7 @@ const FormTemplate = ({
                           aria-label={element.placeholder || element.title}
                           collaborativeObject={collaborativeObject}
                           component={
-                            collaborativeObject?.identifier
-                              ? collaborativeElements[element.component]
-                              : elements[element.component]
+                            isCollaborative ? collaborativeElements[element.component] : elements[element.component]
                           }
                           data-testid={element.name} // TODO: Improve this
                           isClearable={
@@ -622,7 +618,6 @@ const FormTemplate = ({
 }
 
 FormTemplate.propTypes = {
-  hideSubmissionButton: PropTypes.bool,
   form: PropTypes.shape({
     name: PropTypes.string.isRequired,
     description: PropTypes.string,
@@ -664,6 +659,7 @@ FormTemplate.propTypes = {
     ),
     status: PropTypes.string,
   }),
+  isCollaborative: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
   republish: PropTypes.func,
@@ -675,7 +671,7 @@ FormTemplate.propTypes = {
   initializeReview: PropTypes.func,
 }
 FormTemplate.defaultProps = {
-  hideSubmissionButton: false,
+  isCollaborative: false,
   onSubmit: undefined,
   initialValues: null,
   republish: null,

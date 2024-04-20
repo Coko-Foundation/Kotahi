@@ -586,6 +586,7 @@ const TaskNotificationDetails = ({
               break
             case 'editor':
             case 'reviewer':
+            case 'collaborativeReviewer':
             case 'author':
               responseStatus = handleManuscriptTeamInputForNotification(
                 task.assigneeType,
