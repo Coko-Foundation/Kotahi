@@ -23,7 +23,7 @@ import {
   FullWaxField,
   CollaborativeTextField,
 } from '../../../component-formbuilder/src/components/builderComponents'
-import FormCollaborateComponent from '../../../component-formbuilder/src/components/FormCollaborativeComponent'
+import FormCollaborateWax from '../../../component-formbuilder/src/components/FormCollaborativeWax'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
@@ -141,9 +141,9 @@ const elements = {
 
 const collaborativeElements = {
   ...elements,
-  Abstract: FormCollaborateComponent(RichTextEditor),
-  AbstractEditor: FormCollaborateComponent(RichTextEditor),
-  FullWaxField: FormCollaborateComponent(FullWaxField),
+  Abstract: FormCollaborateWax(RichTextEditor),
+  AbstractEditor: FormCollaborateWax(RichTextEditor),
+  FullWaxField: FormCollaborateWax(FullWaxField),
   TextField: CollaborativeTextField,
 }
 
@@ -531,7 +531,9 @@ const FormTemplate = ({
                           aria-label={element.placeholder || element.title}
                           collaborativeObject={collaborativeObject}
                           component={
-                            isCollaborative ? collaborativeElements[element.component] : elements[element.component]
+                            isCollaborative
+                              ? collaborativeElements[element.component]
+                              : elements[element.component]
                           }
                           data-testid={element.name} // TODO: Improve this
                           isClearable={

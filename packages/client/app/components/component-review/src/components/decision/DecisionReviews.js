@@ -142,10 +142,10 @@ const DecisionReviews = ({
             threadedDiscussionProps={threadedDiscussionProps}
             updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
+            updateReviewJsonData={updateReviewJsonData}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
             }
-            updateReviewJsonData={updateReviewJsonData}
             updateTeamMember={updateTeamMember}
             // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
           />

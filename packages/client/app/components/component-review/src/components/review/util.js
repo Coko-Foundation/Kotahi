@@ -20,11 +20,13 @@ export const getCurrentUserReview = (manuscript, currentUser) => {
   )
 
   return (
-    manuscript?.reviews?.filter(r => r.isCollaborative === isUserCollaborative).find(review =>
-      isUserCollaborative && !review.isDecision
-        ? true
-        : review.user?.id === currentUser.id && !review.isDecision,
-    ) || {
+    manuscript?.reviews
+      ?.filter(r => r.isCollaborative === isUserCollaborative)
+      .find(review =>
+        isUserCollaborative && !review.isDecision
+          ? true
+          : review.user?.id === currentUser.id && !review.isDecision,
+      ) || {
       id: uuid(),
       isDecision: false,
       isHiddenReviewerName: true,

@@ -324,6 +324,7 @@ const DecisionVersion = ({
           )}
           <KanbanBoard
             createFile={createFile}
+            currentUser={currentUser}
             deleteFile={deleteFile}
             invitations={invitations}
             isCurrentVersion={isCurrentVersion}
@@ -331,7 +332,6 @@ const DecisionVersion = ({
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}
-            currentUser={currentUser}
             updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
             updateReviewJsonData={updateReviewJsonData}
@@ -417,10 +417,10 @@ const DecisionVersion = ({
               threadedDiscussionProps={threadedDiscussionExtendedProps}
               updateCollaborativeTeamMember={updateCollaborativeTeamMember}
               updateReview={updateReview}
+              updateReviewJsonData={updateReviewJsonData}
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer
               }
-              updateReviewJsonData={updateReviewJsonData}
               updateTeamMember={updateTeamMember}
               urlFrag={urlFrag}
             />

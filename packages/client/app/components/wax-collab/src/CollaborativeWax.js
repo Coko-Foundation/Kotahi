@@ -22,14 +22,19 @@ const CollaborativeWax = ({
   const Component = editorMode ? Editor[editorMode] : component
 
   useEffect(() => {
-      createYjsProvider(currentUser)   
+    createYjsProvider(currentUser)
   }, [])
 
   if (!yjsProvider || !ydoc) return <p>Loading...</p>
 
   if (Component) {
     return (
-      <Component {...rest} user={currentUser} ydoc={ydoc} yjsProvider={yjsProvider} />
+      <Component
+        {...rest}
+        user={currentUser}
+        ydoc={ydoc}
+        yjsProvider={yjsProvider}
+      />
     )
   }
 

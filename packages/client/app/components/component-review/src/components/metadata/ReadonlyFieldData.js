@@ -1,6 +1,6 @@
 import React from 'react'
 import { get } from 'lodash'
-import FormCollaborateComponent from '../../../../component-formbuilder/src/components/FormCollaborativeComponent'
+import FormCollaborateWax from '../../../../component-formbuilder/src/components/FormCollaborativeWax'
 import CollaborativeTextFieldBuilder from '../../../../component-formbuilder/src/components/builderComponents/CollaborativeTextField'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Affiliation, Email, BadgeContainer } from '../style'
@@ -17,7 +17,7 @@ const extractParamsFromIdentifier = id => {
 }
 
 const CollaborativeReadOnlyField = (Component, data) => {
-  const RenderedComponent = FormCollaborateComponent(Component)
+  const RenderedComponent = FormCollaborateWax(Component)
   const { identifier, name } = extractParamsFromIdentifier(data)
   return (
     <RenderedComponent

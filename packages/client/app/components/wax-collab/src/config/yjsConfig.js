@@ -17,6 +17,7 @@ export default (config, { yjsProvider, ydoc }) => {
           cursor.insertBefore(userDiv, null)
           return cursor
         }
+
         return ''
       },
     }
