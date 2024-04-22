@@ -501,6 +501,11 @@ const resolvers = {
 
       return JSON.stringify({
         licenseUrl: formData.publishing.crossref.licenseUrl,
+        title: formData.groupIdentity.title,
+        description: formData.groupIdentity.description,
+        contact: formData.groupIdentity.contact,
+        issn: formData.groupIdentity.issn,
+        logoPath: formData.groupIdentity.logoPath,
       })
     },
 
@@ -527,6 +532,13 @@ const resolvers = {
       })
 
       return css ?? ''
+    },
+
+    async publishingCollection(parent) {
+      return models.PublishingCollection.query().where({
+        groupId: parent.groupId,
+        active: true,
+      })
     },
   },
 
@@ -622,6 +634,7 @@ const typeDefs = `
     publishConfig: String!
     article: String!
     css: String!
+    publishingCollection: PublishCollection! 
   }
 
   type CmsFileTree {

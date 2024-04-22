@@ -109,6 +109,8 @@ const ru = {
       Article: 'Шаблон cтатьи',
       'Go to your profile': 'Перейти в ваш профиль',
       FileBrowser: 'Файловый браузер',
+      Metadata: 'Metadannye publikatsii',
+      Collections: 'Коллекции',
     },
     menuSettings: {
       KeepMenuVisible: 'оставить меню видимым',
@@ -308,6 +310,21 @@ const ru = {
       article: {
         title: 'Шаблон Статьи',
       },
+      metadata: {
+        title: 'Заголовок',
+        description: 'Описание',
+        publicationDate: 'Дата публикации',
+        image: 'Изображение',
+        deleteImage: 'Удалить изображение',
+        issueNumber: 'Номер выпуска',
+        delete: 'Удалить',
+        create: 'Создать',
+        update: 'Обновить',
+        isActive: 'Активен',
+        noCollections: 'Нет коллекций',
+        addCollection: 'Добавить коллекцию',
+        copy: 'Копировать',
+      },
       pages: {
         addNew: 'Добавить новую страницу',
         'New Page': 'Новая страница',
@@ -418,6 +435,10 @@ const ru = {
       'Instance Type': 'Тип элемента',
       'Group Identity': 'Групповая идентификация',
       'Brand name': 'Название журнала',
+      title: 'Название',
+      description: 'Описание',
+      issn: 'ISSN',
+      contact: 'Контакт',
       'Brand primary colour': 'Основной фирменный цвет',
       'Brand secondary colour': 'Дополнительный фирменный цвет',
       Logo: 'Логотип',
@@ -985,6 +1006,9 @@ const ru = {
       deleteFile: {
         'Are you sure you want to delete this file?':
           'Вы уверены, что хотите удалить этот файл?',
+      },
+      metadata: {
+        deleteCollection: 'Вы уверены, что хотите удалить эту коллекцию?',
       },
     },
     newSubmission: {
