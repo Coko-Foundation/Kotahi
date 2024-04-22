@@ -108,6 +108,8 @@ const fr = {
       Article: "Modèle d' article",
       'Go to your profile': 'Accéder à votre profil',
       FileBrowser: 'Explorateur de fichiers',
+      Metadata: 'Métadonnées de Publication',
+      Collections: 'Colecciones',
     },
     menuSettings: {
       KeepMenuVisible: 'Garder le menu visible',
@@ -313,6 +315,22 @@ const fr = {
       article: {
         title: "Modèle d' Article",
       },
+      metadata: {
+        cmsMetadata: 'Métadonnées du CMS',
+        title: 'Titre',
+        description: 'Description',
+        publicationDate: 'Date de publication',
+        image: 'Image',
+        deleteImage: "Supprimer l'image",
+        issueNumber: 'Numéro de parution',
+        delete: 'Supprimer',
+        create: 'Créer',
+        update: 'Mettre à jour',
+        isActive: 'Est actif/active',
+        noCollections: 'Aucune collection',
+        addCollection: 'Ajouter une collection',
+        copy: 'Copier',
+      },
       pages: {
         addNew: 'Ajouter une nouvelle page',
         'New Page': 'Nouvelle Page',
@@ -423,6 +441,10 @@ const fr = {
       'Instance Type': "Type d'instance",
       'Group Identity': 'Identité du groupe',
       'Brand name': 'Nom de la marque',
+      title: 'Titre',
+      description: 'Decription',
+      issn: 'ISSN',
+      contact: 'Contact',
       'Brand primary colour': 'Couleur principale de la marque',
       'Brand secondary colour': 'Couleur secondaire de la marque',
       Logo: 'Logo',
@@ -1014,6 +1036,10 @@ const fr = {
       deleteFile: {
         'Are you sure you want to delete this file?':
           'Êtes-vous sûr de vouloir supprimer ce fichier ?',
+      },
+      metadata: {
+        deleteCollection:
+          'Êtes-vous sûr de vouloir supprimer cette collection ?',
       },
     },
 

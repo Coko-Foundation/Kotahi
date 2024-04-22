@@ -90,6 +90,10 @@ const seedConfig = async (group, instanceName, index, options) => {
     primaryColor: '#3aae2a',
     secondaryColor: '#9e9e9e',
     logoPath: '/assets/logo-kotahi.png',
+    title: '',
+    description: '',
+    contact: '',
+    issn: '',
   }
 
   const kotahiApiTokens =

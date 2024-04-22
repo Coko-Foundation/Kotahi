@@ -107,8 +107,10 @@ const esLa = {
       Pages: 'Páginas',
       Layout: 'Diseño',
       'Go to your profile': 'Ir a tu perfil',
-      Article: 'Plantilla de artículo',
       FileBrowser: 'Explorador de archivos',
+      Article: 'Plantilla de Publicación',
+      Metadata: 'Metadatos del Diario',
+      Collections: 'Colecciones',
     },
     menuSettings: {
       KeepMenuVisible: 'Mantener menú visible',
@@ -310,6 +312,21 @@ const esLa = {
       article: {
         title: 'Plantilla de Artículo',
       },
+      metadata: {
+        title: 'Título',
+        description: 'Descripción',
+        publicationDate: 'Fecha de publicación',
+        image: 'Imagen',
+        deleteImage: 'Eliminar imagen',
+        issueNumber: 'Número de edición',
+        delete: 'Eliminar',
+        create: 'Crear',
+        update: 'Actualizar',
+        isActive: 'Está activo',
+        noCollections: 'No hay colecciones',
+        addCollection: 'Agregar colección',
+        copy: 'Copiar',
+      },
       pages: {
         addNew: 'Agregar una nueva página',
         'New Page': 'Nueva Página',
@@ -419,6 +436,10 @@ const esLa = {
       'Instance Type': 'Tipo de Instancia',
       'Group Identity': 'Identidad del Grupo',
       'Brand name': 'Nombre de la Marca',
+      title: 'Título',
+      description: 'Descripción',
+      issn: 'ISSN',
+      contact: 'Contacto',
       'Brand primary colour': 'Color Primario de la Marca',
       'Brand secondary colour': 'Color Secundario de la Marca',
       Logo: 'Logotipo',
@@ -1010,6 +1031,10 @@ const esLa = {
       deleteFile: {
         'Are you sure you want to delete this file?':
           '¿Estás seguro/a de que deseas eliminar este archivo?',
+      },
+      metadata: {
+        deleteCollection:
+          '¿Estás seguro/a de que quieres eliminar esta colección?',
       },
     },
     newSubmission: {

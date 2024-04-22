@@ -140,6 +140,12 @@ const isCMSFile = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
   return parent.tags && parent.tags.includes('cms')
 })
 
+const isPublishingCollection = rule({ cache: 'strict' })(
+  async (parent, args, ctx, info) => {
+    return parent.tags && parent.tags.includes('publishingCollection')
+  },
+)
+
 const isLogoFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     return parent.tags && parent.tags.includes('brandLogo')
@@ -561,6 +567,7 @@ const permissions = {
     publishedArtifacts: allow,
     publishedManuscript: allow,
     publishedManuscripts: allow,
+    publishingCollection: allow,
     reviewersActivity: or(userIsGm, userIsAdmin),
     searchOnCrossref: deny, // Never used
     searchUsers: isAuthenticated,
@@ -594,6 +601,7 @@ const permissions = {
     // createDocxToHTMLJob seems to be exposed from xsweet???
     createFile: isAuthenticated,
     createForm: or(userIsGm, userIsAdmin),
+    createCollection: or(userIsGm, userIsAdmin),
     createManuscript: isAuthenticated,
     createMessage: userIsAllowedToChat,
     createNewTaskAlerts: or(userIsGm, userIsAdmin), // Only used when test code is enabled
@@ -605,6 +613,7 @@ const permissions = {
     ),
     createTeam: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
     createUser: deny, // Never used
+    deleteCollection: or(userIsGm, userIsAdmin),
     deleteFile: isAuthenticated,
     deleteFiles: isAuthenticated,
     deleteForm: or(userIsGm, userIsAdmin),
@@ -637,6 +646,7 @@ const permissions = {
       userIsAdmin,
     ),
     submitAuthorProofingFeedback: userIsAuthorOfManuscript,
+    updateCollection: or(userIsGm, userIsAdmin),
     updateEmail: or(userIsCurrentUser, userIsGm, userIsAdmin),
     updateConfig: or(userIsGm, userIsAdmin),
     updateUsername: or(userIsCurrentUser, userIsGm, userIsAdmin),
@@ -709,6 +719,7 @@ const permissions = {
   File: or(
     isExportTemplatingFile,
     isCMSFile,
+    isPublishingCollection,
     isLogoFile,
     isFaviconFile,
     isPublicFileFromPublishedManuscript,
