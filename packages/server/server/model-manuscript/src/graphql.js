@@ -1013,27 +1013,26 @@ const resolvers = {
 
       const activeConfig = await models.Config.getCached(manuscript.groupId)
 
-      const sender = await models.User.query().findById(ctx.user)
-
-      const receiverEmail = manuscript.submitter.email
-      /* eslint-disable-next-line */
-      const receiverName =
-        manuscript.submitter.username ||
-        manuscript.submitter.defaultIdentity.name ||
-        ''
-
       const selectedTemplate =
         activeConfig.formData.eventNotification
           ?.submissionConfirmationEmailTemplate
 
-      const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-      const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+      if (selectedTemplate && manuscript.submitter) {
+        const sender = await models.User.query().findById(ctx.user)
+        const receiverEmail = manuscript.submitter.email
+        /* eslint-disable-next-line */
+        const receiverName =
+          manuscript.submitter.username ||
+          manuscript.submitter.defaultIdentity.name ||
+          ''
 
-      if (!emailValidationResult || !receiverName) {
-        return commonUpdateManuscript(id, input, ctx)
-      }
+        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-      if (selectedTemplate) {
+        if (!emailValidationResult || !receiverName) {
+          return commonUpdateManuscript(id, input, ctx)
+        }
+
         const notificationInput = {
           manuscript,
           selectedEmail: receiverEmail,
