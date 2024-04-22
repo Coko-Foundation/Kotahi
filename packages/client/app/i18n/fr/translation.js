@@ -389,6 +389,7 @@ const fr = {
       'Previous Feedback Submissions':
         'Soumissions de commentaires précédentes',
       'No supported view of the file': 'Aucune vue supportée du fichier',
+      'No feedback submissions': 'Aucune soumission de commentaires',
       Download: 'Télécharger',
       Editor: 'Éditeur',
       'PDF CSS': 'CSS du PDF',

@@ -1,6 +1,5 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useHistory } from 'react-router-dom'
 import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
 import { ValidatedFieldFormik } from '@pubsweet/ui'
@@ -16,7 +15,6 @@ import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import { CREATE_FILE_MUTATION, DELETE_FILE_MUTATION } from '../../../../queries'
 import SubmittedStatus from './SubmittedStatus'
 import { Legend } from '../../../component-submit/src/style'
-import { ConfigContext } from '../../../config/src'
 
 // Kept the file changes minimal with this single file can be split into separate files in further iterations for code optimization
 
@@ -82,9 +80,6 @@ const AuthorFeedbackForm = ({
   submitAuthorProofingFeedback,
   isReadOnly,
 }) => {
-  const history = useHistory()
-  const config = useContext(ConfigContext)
-  const { urlFrag } = config
   const { authorFeedback, files: allFiles } = manuscript
   const { t } = useTranslation()
 
@@ -152,10 +147,6 @@ const AuthorFeedbackForm = ({
 
     setSubmitAuthorProofingFeedbackStatus('success')
     setReadOnly(true)
-
-    setTimeout(() => {
-      history.push(`${urlFrag}/dashboard`)
-    }, 2000)
   }
 
   // Initial data for the form

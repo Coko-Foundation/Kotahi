@@ -385,6 +385,7 @@ const esLa = {
       'read-only': ' (solo lectura)',
       'Previous Feedback Submissions': 'Envíos de comentarios anteriores',
       'No supported view of the file': 'No hay una vista admitida del archivo',
+      'No feedback submissions': 'No hay envíos de comentarios',
       Download: 'Descargar',
       Editor: 'Editor',
       'PDF CSS': 'CSS del PDF',
