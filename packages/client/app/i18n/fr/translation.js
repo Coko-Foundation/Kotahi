@@ -199,6 +199,7 @@ const fr = {
       'Anonymous Reviewer': 'Réviseur anonyme',
       Submit: 'Soumettre',
       neverSubmitted: "Cette évaluation n'a pas été soumise",
+      isCollaborative: 'Révision collaborative',
     },
     reviewVerdict: {
       accept: 'accepter',

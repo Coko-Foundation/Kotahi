@@ -36,3 +36,5 @@ export const getCurrentUserReview = (manuscript, currentUser) => {
     }
   )
 }
+
+export const updateReviewFormTitle = (reviewForm, isCollaborative) => {}

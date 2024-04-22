@@ -39,7 +39,7 @@ services:
       dockerfile: ./Dockerfile-development
     depends_on:
       - db
-      # - xsweet
+      - xsweet
       - fileHosting
     entrypoint:
       [
@@ -169,43 +169,43 @@ services:
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
 
-  # pagedjs:
-  #   depends_on:
-  #     - db-pagedjs
-  #   image: cokoapps/pagedjs:1.6.9
-  #   ports:
-  #     - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
-  #   environment:
-  #     - PUBSWEET_SECRET=pagedjs_dev_secret
-  #     - POSTGRES_USER=pagedjs_user_dev
-  #     - POSTGRES_PASSWORD=pagedjs_user_password
-  #     - POSTGRES_HOST=db-pagedjs
-  #     - POSTGRES_DB=pagedjs_dev
-  #     - POSTGRES_PORT=5432
-  #     - SERVER_PORT=${SERVICE_PAGEDJS_PORT:-3003}
-  #     - SERVER_PROTOCOL=http
-  #     - SERVER_HOST=localhost
-  #     - NODE_ENV=development
-  #   security_opt:
-  #     - seccomp:unconfined
-  #   entrypoint:
-  #     [
-  #       'node_modules/.bin/wait-for-it',
-  #       'db-pagedjs:5432',
-  #       '--',
-  #       'sh',
-  #       'scripts/setupDevServer.sh',
-  #     ]
-  #   command: ['node', './server/startServer.js']
+  pagedjs:
+    depends_on:
+      - db-pagedjs
+    image: cokoapps/pagedjs:1.6.9
+    ports:
+      - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
+    environment:
+      - PUBSWEET_SECRET=pagedjs_dev_secret
+      - POSTGRES_USER=pagedjs_user_dev
+      - POSTGRES_PASSWORD=pagedjs_user_password
+      - POSTGRES_HOST=db-pagedjs
+      - POSTGRES_DB=pagedjs_dev
+      - POSTGRES_PORT=5432
+      - SERVER_PORT=${SERVICE_PAGEDJS_PORT:-3003}
+      - SERVER_PROTOCOL=http
+      - SERVER_HOST=localhost
+      - NODE_ENV=development
+    security_opt:
+      - seccomp:unconfined
+    entrypoint:
+      [
+        'node_modules/.bin/wait-for-it',
+        'db-pagedjs:5432',
+        '--',
+        'sh',
+        'scripts/setupDevServer.sh',
+      ]
+    command: ['node', './server/startServer.js']
 
-  # db-pagedjs:
-  #   image: postgres:12-alpine
-  #   environment:
-  #     - POSTGRES_USER=pagedjs_user_dev
-  #     - POSTGRES_DB=pagedjs_dev
-  #     - POSTGRES_PASSWORD=pagedjs_user_password
-  #   volumes:
-  #     - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
+  db-pagedjs:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=pagedjs_user_dev
+      - POSTGRES_DB=pagedjs_dev
+      - POSTGRES_PASSWORD=pagedjs_user_password
+    volumes:
+      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   xsweet:
     depends_on:
@@ -233,14 +233,14 @@ services:
       ]
     command: ['node', 'server/startServer.js']
 
-  # db-xsweet:
-  #   image: postgres:14.4-alpine
-  #   environment:
-  #     - POSTGRES_USER=xsweet_user_dev
-  #     - POSTGRES_DB=xsweet_dev
-  #     - POSTGRES_PASSWORD=xsweet_user_password
-  #   volumes:
-  #     - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
+  db-xsweet:
+    image: postgres:14.4-alpine
+    environment:
+      - POSTGRES_USER=xsweet_user_dev
+      - POSTGRES_DB=xsweet_dev
+      - POSTGRES_PASSWORD=xsweet_user_password
+    volumes:
+      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   db:
     image: postgres:10-alpine
@@ -312,43 +312,43 @@ services:
       exit 0;
       "
 
-  # anystyle:
-  #   depends_on:
-  #     - db-anystyle
-  #   image: cokoapps/anystyle:1.1.1
-  #   ports:
-  #     - ${SERVICE_ANYSTYLE_PORT:-4567}:${SERVICE_ANYSTYLE_PORT:-4567}
-  #   environment:
-  #     - SERVER_PORT=${SERVICE_ANYSTYLE_PORT:-4567}
-  #     - SERVER_PROTOCOL=http
-  #     - SERVER_HOST=localhost
-  #     - PUBSWEET_SECRET=anystyle_dev_secret
-  #     - POSTGRES_USER=anystyle_user_dev
-  #     - POSTGRES_PASSWORD=anystyle_user_password
-  #     - POSTGRES_HOST=db-anystyle
-  #     - POSTGRES_DB=anystyle_dev
-  #     - POSTGRES_PORT=5432
-  #     - NODE_ENV=development
-  #   security_opt:
-  #     - seccomp:unconfined
-  #   entrypoint:
-  #     [
-  #       'node_modules/.bin/wait-for-it',
-  #       'db-anystyle:5432',
-  #       '--',
-  #       'sh',
-  #       'scripts/setupDevServer.sh',
-  #     ]
-  #   command: ['node', './server/startServer.js']
+  anystyle:
+    depends_on:
+      - db-anystyle
+    image: cokoapps/anystyle:1.1.1
+    ports:
+      - ${SERVICE_ANYSTYLE_PORT:-4567}:${SERVICE_ANYSTYLE_PORT:-4567}
+    environment:
+      - SERVER_PORT=${SERVICE_ANYSTYLE_PORT:-4567}
+      - SERVER_PROTOCOL=http
+      - SERVER_HOST=localhost
+      - PUBSWEET_SECRET=anystyle_dev_secret
+      - POSTGRES_USER=anystyle_user_dev
+      - POSTGRES_PASSWORD=anystyle_user_password
+      - POSTGRES_HOST=db-anystyle
+      - POSTGRES_DB=anystyle_dev
+      - POSTGRES_PORT=5432
+      - NODE_ENV=development
+    security_opt:
+      - seccomp:unconfined
+    entrypoint:
+      [
+        'node_modules/.bin/wait-for-it',
+        'db-anystyle:5432',
+        '--',
+        'sh',
+        'scripts/setupDevServer.sh',
+      ]
+    command: ['node', './server/startServer.js']
 
-  # db-anystyle:
-  #   image: postgres:12-alpine
-  #   environment:
-  #     - POSTGRES_USER=anystyle_user_dev
-  #     - POSTGRES_DB=anystyle_dev
-  #     - POSTGRES_PASSWORD=anystyle_user_password
-  #   volumes:
-  #     - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
+  db-anystyle:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=anystyle_user_dev
+      - POSTGRES_DB=anystyle_dev
+      - POSTGRES_PASSWORD=anystyle_user_password
+    volumes:
+      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
     image: cokoapps/kotahi-flax:0.2.45

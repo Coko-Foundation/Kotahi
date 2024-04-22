@@ -199,6 +199,7 @@ const ru = {
       'Anonymous Reviewer': 'Анонимный рецензент',
       Submit: 'Отправить',
       neverSubmitted: 'Этот отзыв не был отправлен',
+      isCollaborative: 'Коллективное обсуждение',
     },
     reviewVerdict: {
       accept: 'Принять',

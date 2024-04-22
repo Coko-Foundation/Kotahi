@@ -197,6 +197,7 @@ const esLa = {
       'Anonymous Reviewer': 'Revisor Anónimo',
       Submit: 'Enviar',
       neverSubmitted: 'Esta revisión no fue enviada',
+      isCollaborative: 'Revisión colaborativa',
     },
     reviewVerdict: {
       accept: 'aceptar',

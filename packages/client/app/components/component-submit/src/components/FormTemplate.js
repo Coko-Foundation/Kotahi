@@ -9,6 +9,7 @@ import { sanitize } from 'isomorphic-dompurify'
 import { th } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import {
+  ColorBadge,
   Section as Container,
   Select,
   FilesUpload,
@@ -117,6 +118,11 @@ const FieldHead = styled.div`
     /* this is to make "publish" on decision page go flush right */
     margin-left: auto;
   }
+`
+
+const CollaborativeBadge = styled.div`
+  flex-basis: 100%;
+  padding-top: 10px;
 `
 
 const filterFileManuscript = files =>
@@ -402,6 +408,13 @@ const FormTemplate = ({
                   ),
                 )}
               />
+              {isCollaborative && (
+                <CollaborativeBadge>
+                  <ColorBadge color={config.groupIdentity.primaryColor}>
+                    {t('reviewPage.isCollaborative')}
+                  </ColorBadge>
+                </CollaborativeBadge>
+              )}
             </header>
             <form>
               {(form.children || [])
