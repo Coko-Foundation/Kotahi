@@ -871,6 +871,26 @@ export const generateSchemas = (
               description: t('configPage.Brand name'),
               default: 'Kotahi',
             },
+            title: {
+              type: 'string',
+              description: t('configPage.title'),
+              default: '',
+            },
+            description: {
+              type: 'string',
+              description: t('configPage.description'),
+              default: '',
+            },
+            issn: {
+              type: 'string',
+              description: t('configPage.issn'),
+              default: '',
+            },
+            contact: {
+              type: 'string',
+              description: t('configPage.contact'),
+              default: '',
+            },
             primaryColor: {
               type: 'string',
               description: t('configPage.Brand primary colour'),
@@ -1674,6 +1694,26 @@ export const generateSchemas = (
               type: 'string',
               description: t('configPage.Brand name'),
               default: 'Kotahi',
+            },
+            title: {
+              type: 'string',
+              description: t('configPage.title'),
+              default: '',
+            },
+            description: {
+              type: 'string',
+              description: t('configPage.description'),
+              default: '',
+            },
+            issn: {
+              type: 'string',
+              description: t('configPage.issn'),
+              default: '',
+            },
+            contact: {
+              type: 'string',
+              description: t('configPage.contact'),
+              default: '',
             },
             primaryColor: {
               type: 'string',
@@ -2484,6 +2524,26 @@ export const generateSchemas = (
               type: 'string',
               description: t('configPage.Brand name'),
               default: 'Kotahi',
+            },
+            title: {
+              type: 'string',
+              description: t('configPage.title'),
+              default: '',
+            },
+            description: {
+              type: 'string',
+              description: t('configPage.description'),
+              default: '',
+            },
+            issn: {
+              type: 'string',
+              description: t('configPage.issn'),
+              default: '',
+            },
+            contact: {
+              type: 'string',
+              description: t('configPage.contact'),
+              default: '',
             },
             primaryColor: {
               type: 'string',

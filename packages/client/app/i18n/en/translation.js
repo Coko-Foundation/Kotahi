@@ -107,6 +107,8 @@ const en = {
       Article: 'Article template',
       'Go to your profile': 'Go to your profile',
       FileBrowser: 'File browser',
+      Metadata: 'Publication Metadata',
+      Collections: 'Collections',
     },
     menuSettings: {
       KeepMenuVisible: 'Keep menu visible',
@@ -301,6 +303,21 @@ const en = {
       article: {
         title: 'Article Template',
       },
+      metadata: {
+        title: 'Title',
+        description: 'Decription',
+        publicationDate: 'Date of publication',
+        image: 'Image',
+        deleteImage: 'Delete Image',
+        issueNumber: 'Issue number',
+        delete: 'Delete',
+        create: 'Create',
+        update: 'Update',
+        isActive: 'Is active',
+        noCollections: 'No Collections',
+        addCollection: 'Add Collection',
+        copy: 'Copy',
+      },
       pages: {
         addNew: 'Add a new page',
         'New Page': 'New Page',
@@ -410,6 +427,10 @@ const en = {
       'Instance Type': 'Instance Type',
       'Group Identity': 'Group Identity',
       'Brand name': 'Brand name',
+      title: 'Title',
+      description: 'Decription',
+      issn: 'ISSN',
+      contact: 'Contact',
       'Brand primary colour': 'Brand primary colour',
       'Brand secondary colour': 'Brand secondary colour',
       Logo: 'Logo',
@@ -962,6 +983,9 @@ const en = {
       deleteFile: {
         'Are you sure you want to delete this file?':
           'Are you sure you want to delete this file?',
+      },
+      metadata: {
+        deleteCollection: 'Are you sure you want to delete this collection?',
       },
     },
 

@@ -38,8 +38,9 @@ import EmailTemplatesPage from './component-email-templates/src/EmailTemplatesPa
 import CMSPagesPage from './component-cms-manager/src/CMSPagesPage'
 import CMSLayoutPage from './component-cms-manager/src/CMSLayoutPage'
 import CMSArticlePage from './component-cms-manager/src/CMSArticlePage'
+import CMSMetadataPage from './component-cms-manager/src/CMSMetadataPage'
+import CMSPublishingCollectionPage from './component-cms-manager/src/CMSPublishingCollectionPage'
 import CMSFileBrowserPage from './component-cms-manager/src/CMSFileBrowserPage'
-
 import QUERY from './adminPageQueries'
 
 import Menu from './Menu'
@@ -178,6 +179,8 @@ const AdminPage = () => {
   const CMSLayoutPageLink = `${urlFrag}/admin/cms/layout`
   const CMSArticlePageLink = `${urlFrag}/admin/cms/article`
   const CMSFileBrowserLink = `${urlFrag}/admin/cms/filebrowser`
+  const CMSMetadataPageLink = `${urlFrag}/admin/cms/metadata`
+  const CMSPublishingCollectionPageLink = `${urlFrag}/admin/cms/collections`
   const loginLink = `${urlFrag}/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `${urlFrag}/login?next=${homeLink}`
@@ -297,8 +300,19 @@ const AdminPage = () => {
               icon: '',
             },
             {
+              link: CMSMetadataPageLink,
+              name: i18next.t('leftMenu.Metadata'),
+              icon: '',
+            },
+            {
               link: CMSFileBrowserLink,
               name: i18next.t('leftMenu.FileBrowser'),
+
+              icon: '',
+            },
+            {
+              link: CMSPublishingCollectionPageLink,
+              name: i18next.t('leftMenu.Collections'),
               icon: '',
             },
           ],
@@ -536,6 +550,22 @@ const AdminPage = () => {
             currentUser={currentUser}
             key="CMSPagesPage"
             path={`${CMSFileBrowserLink}`}
+            redirectLink={redirectLink}
+          />,
+
+          <PrivateRoute
+            component={CMSMetadataPage}
+            currentUser={currentUser}
+            key="CMSPagesPage"
+            path={`${CMSMetadataPageLink}`}
+            redirectLink={redirectLink}
+          />,
+
+          <PrivateRoute
+            component={CMSPublishingCollectionPage}
+            currentUser={currentUser}
+            key="CMSPagesPage"
+            path={`${CMSPublishingCollectionPageLink}`}
             redirectLink={redirectLink}
           />,
 
