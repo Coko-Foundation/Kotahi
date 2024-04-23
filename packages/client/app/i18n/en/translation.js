@@ -401,6 +401,7 @@ const en = {
       submittedOn: '{{submitterName}} submitted on {{date}}',
       'read-only': ' (read-only)',
       'Previous Feedback Submissions': 'Previous Feedback Submissions',
+      'No feedback submissions': 'No feedback submissions',
       'No supported view of the file': 'No supported view of the file',
       Download: 'Download',
       Editor: 'Editor',
