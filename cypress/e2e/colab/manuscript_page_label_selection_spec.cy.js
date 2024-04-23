@@ -32,14 +32,14 @@ describe('manuscripts page label selection tests', () => {
       cy.wait(3000)
       // Click on article label and select 'Ready to evaluate'
       ManuscriptsPage.clickArticleLabel(-1)
-      cy.get('[class*=LabelDropdown__DropdownMenu]')
+      cy.get('[class*=LabelDropdown__DropdownElement]')
         .contains('Ready to evaluate')
         .click()
       ManuscriptsPage.getLabelDropdown().should('contain', 'Ready to evaluate')
       Menu.clickManuscriptsAndAssertPageLoad()
 
       // Click on article label and select 'Evaluated'
-      ManuscriptsPage.clickArticleLabel(-1)
+      cy.get('[class*=LabelDropdown__DropdownElement]').click()
       cy.get('[class*=LabelDropdown__DropdownMenu]')
         .contains('Evaluated')
         .click()
@@ -47,11 +47,17 @@ describe('manuscripts page label selection tests', () => {
       Menu.clickManuscriptsAndAssertPageLoad()
 
       // Click on article label and select 'Ready to publish'
-      ManuscriptsPage.clickArticleLabel(-1)
+      cy.get('[class*=LabelDropdown__DropdownElement]').click()
       cy.get('[class*=LabelDropdown__DropdownMenu]')
         .contains('Ready to publish')
         .click()
       ManuscriptsPage.getLabelDropdown().should('contain', 'Ready to publish')
+
+      Menu.clickManuscriptsAndAssertPageLoad()
+
+      // Unset the custom label
+      cy.get('[class*=LabelDropdown__StyledButton]').eq(0).click()
+      cy.get('[class*=style__StyledButton]').should('contain', 'Select')
     })
   })
 })

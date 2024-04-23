@@ -1,12 +1,19 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import { StyledButton } from '../style'
 import LabelDropdown from './LabelDropdown'
+
+const CustomStatusContainer = styled.div`
+  display: flex;
+  width: 100%;
+`
 
 const LabelsOrSelectButton = ({
   values,
   manuscript,
   setReadyToEvaluateLabel,
+  unsetCustomStatus,
   options,
   doUpdateManuscript,
 }) => {
@@ -14,12 +21,15 @@ const LabelsOrSelectButton = ({
 
   if (values?.length)
     return (
-      <LabelDropdown
-        doUpdateManuscript={doUpdateManuscript}
-        manuscript={manuscript}
-        options={options}
-        values={values}
-      />
+      <CustomStatusContainer>
+        <LabelDropdown
+          doUpdateManuscript={doUpdateManuscript}
+          manuscript={manuscript}
+          options={options}
+          unsetCustomStatus={unsetCustomStatus}
+          values={values}
+        />
+      </CustomStatusContainer>
     )
 
   return (
