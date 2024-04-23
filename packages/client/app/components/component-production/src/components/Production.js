@@ -284,25 +284,20 @@ const Production = ({
 
   const tabSections = []
 
+  tabSections.push(editorSection)
+
   // Only author in author proofing mode can have editor seciton and feedback section visible
   if (isAuthorProofingVersion) {
-    tabSections.push(editorSection, feedbackSection)
+    tabSections.push(feedbackSection)
   } else {
-    // The manuscript editor can only view editor section and feedback section in readonly mode
-    if (isReadOnlyVersion && currentUserRole.isEditor) {
-      tabSections.push(editorSection)
-    } else {
-      tabSections.push(
-        editorSection,
-        htmlTemplate,
-        cssPagedJS,
-        uploadAssets,
-        manuscriptMetadata,
-        cssAiAssistant,
-      )
-    }
-
     if (!isReadOnlyVersion && showFeedbackTab) tabSections.push(feedbackSection) // The manuscript versions should have one feedback submitted record to show feedback tab
+    tabSections.push(
+      htmlTemplate,
+      cssPagedJS,
+      uploadAssets,
+      manuscriptMetadata,
+      cssAiAssistant,
+    )
   }
 
   return (

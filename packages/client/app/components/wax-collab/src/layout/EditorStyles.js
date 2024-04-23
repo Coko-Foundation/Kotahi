@@ -28,14 +28,11 @@ export const Menu = styled.div`
   grid-area: menu;
   height: fit-content;
   max-width: 100%;
+  min-height: 40px;
   position: sticky;
   top: -20px;
   user-select: none;
   z-index: 5;
-
-  & > div {
-    height: 36px;
-  }
 `
 
 // export const ReadOnlyEditorWithCommentsWrapper = styled.div`
@@ -188,14 +185,11 @@ export const SimpleMenu = styled.div`
   margin: 0 -6px;
   max-width: 100%; /* this is to avoid spillover */
   /* overflow-x: scroll; this is not great! */
+  min-height: 40px;
   position: sticky;
   top: -20px;
   user-select: none;
   z-index: 1;
-
-  & > div {
-    height: 36px;
-  }
 
   :focus-within {
     z-index: 1000;

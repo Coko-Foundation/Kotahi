@@ -25,6 +25,7 @@ const Tabs = styled.div`
   background: #fff;
   display: flex;
   flex-direction: row;
+  padding-top: 3px;
 
   & > div {
     border-radius: 100%;

@@ -261,3 +261,82 @@ export const deleteFileMutation = gql`
     deleteFile(id: $id)
   }
 `
+
+export const updateCollectionMutation = gql`
+  mutation ($id: ID!, $input: PublishCollectionInput!) {
+    updateCollection(id: $id, input: $input) {
+      id
+      created
+      updated
+      formData {
+        title
+        description
+        publicationDate
+        image
+        issueNumber
+      }
+      active
+      manuscripts {
+        id
+        submission
+      }
+      groupId
+    }
+  }
+`
+
+export const createCollectionMutation = gql`
+  mutation ($input: PublishCollectionInput!) {
+    createCollection(input: $input) {
+      id
+      created
+      updated
+      formData {
+        title
+        description
+        publicationDate
+        image
+        issueNumber
+      }
+      active
+      manuscripts {
+        id
+        submission
+      }
+      groupId
+    }
+  }
+`
+
+export const deleteCollectionMutation = gql`
+  mutation ($id: ID!) {
+    deleteCollection(id: $id) {
+      success
+    }
+  }
+`
+
+export const getManuscriptData = gql`
+  query Manuscripts(
+    $sort: ManuscriptsSort
+    $filters: [ManuscriptsFilter!]!
+    $offset: Int
+    $limit: Int
+    $timezoneOffsetMinutes: Int
+    $groupId: ID!
+  ) {
+    paginatedManuscripts(
+      sort: $sort
+      filters: $filters
+      offset: $offset
+      limit: $limit
+      timezoneOffsetMinutes: $timezoneOffsetMinutes
+      groupId: $groupId
+    ) {
+      manuscripts {
+        id
+        submission
+      }
+    }
+  }
+`
