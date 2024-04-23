@@ -1,8 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
+import { color } from '../../../../theme'
 import ReadOnlyAuthorFeedback from '../../../component-author-feedback/src/components/ReadOnlyAuthorFeedback'
 import { SectionContent, SectionHeader, Title } from '../../../shared'
+
+const Info = styled.div`
+  border-radius: ${th('borderRadius')};
+  font-size: ${th('fontSizeBase')};
+  color: ${color.gray5};
+  margin: ${grid(3)};
+  padding: ${grid(2)} ${grid(2)};
+`
 
 const PreviousFeedbackSubmissions = ({ version }) => {
   const { t } = useTranslation()
@@ -26,7 +37,11 @@ const PreviousFeedbackSubmissions = ({ version }) => {
         ),
       )}
     </SectionContent>
-  ) : null
+  ) : (
+    <SectionContent>
+      <Info>{t('productionPage.No feedback submissions')}</Info>
+    </SectionContent>
+  )
 }
 
 PreviousFeedbackSubmissions.propTypes = {

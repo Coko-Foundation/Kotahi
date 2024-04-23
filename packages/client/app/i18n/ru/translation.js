@@ -391,6 +391,7 @@ const ru = {
       submittedOn: '{{submitterName}} представлены на {{date}}',
       'read-only': ' (только для чтения)',
       'Previous Feedback Submissions': 'Предыдущие отзывы',
+      'No feedback submissions': 'Нет отправок отзывов авторов',
       'No supported view of the file':
         'Нет поддерживаемого представления файла',
       Download: 'Загрузить',
