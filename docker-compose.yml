@@ -345,9 +345,11 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.41
+    image: cokoapps/kotahi-flax:0.2.42
     depends_on:
+      - server
       - client
+    entrypoint: /usr/local/bin/wait-for-it.sh server:${SERVER_PORT:-3000} --timeout=180 --strict -- yarn start
     ports:
       - ${FLAX_EXPRESS_PORT:-8082}:${FLAX_EXPRESS_PORT:-3000}
       - ${FLAX_SITE_PORT:-8081}:80
