@@ -2,9 +2,9 @@
 const { logger, verifyJWT } = require('@coko/server')
 const { omit } = require('lodash')
 const map = require('lib0/map')
-const Y = require('yjs')
+// const Y = require('yjs')
 const { WebSocketServer } = require('ws')
-const { CollaborativeDoc } = require('@pubsweet/models')
+// const { CollaborativeDoc } = require('@pubsweet/models')
 const config = require('config')
 
 const WSSharedDoc = require('./wsSharedDoc')
@@ -79,35 +79,13 @@ module.exports = () => {
         userId = null
       }
 
-      const { objectId, name } = utils.extractParamsFromIdentifier(id)
-
       const extraData = {
         groupId: variables.groupId,
-        objectId,
-        name,
+        objectId: id,
         ...omit(variables, ['token']),
       }
 
       const doc = getYDoc(id, userId, extraData)
-
-      if (userId) {
-        const docObject = await CollaborativeDoc.query().findOne({
-          objectId,
-          name,
-        })
-
-        if (!docObject) {
-          const state = Y.encodeStateAsUpdate(doc)
-          const delta = doc.getText(variables.fieldType).toDelta()
-          await CollaborativeDoc.query()
-            .insert({
-              docs_prosemirror_delta: delta,
-              docs_y_doc_state: state,
-              ...extraData,
-            })
-            .returning('*')
-        }
-      }
 
       doc.conns.set(injectedWS, new Set())
 

@@ -1,6 +1,4 @@
-const { modelTypes, BaseModel } = require('@coko/server')
-
-const { arrayOfObjectsNullable } = modelTypes
+const { BaseModel } = require('@coko/server')
 
 class CollaborativeDoc extends BaseModel {
   constructor(properties) {
@@ -33,11 +31,8 @@ class CollaborativeDoc extends BaseModel {
       type: 'object',
       properties: {
         objectId: { type: ['string'], format: 'uuid' },
-        name: { type: ['string'] },
         groupId: { type: ['string'], format: 'uuid' },
-        fieldType: { type: ['string'] },
-        docs_prosemirror_delta: arrayOfObjectsNullable,
-        docs_y_doc_state: {
+        yDocState: {
           type: 'binary',
         },
       },

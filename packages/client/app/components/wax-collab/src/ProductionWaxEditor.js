@@ -115,6 +115,7 @@ const ProductionWaxEditor = ({
   getDataFromDatacite,
   yjsProvider,
   ydoc,
+  name,
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
@@ -273,7 +274,7 @@ const ProductionWaxEditor = ({
         getDataFromDatacite || false,
       )
 
-  config = yjsConfig(config, { yjsProvider, ydoc })
+  config = yjsConfig(config, { yjsProvider, ydoc, yjsType: name })
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>

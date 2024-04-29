@@ -20,9 +20,9 @@ const arrayColor = [
 
 const useYjs = (identifier, object) => {
   const { groupId } = useContext(ConfigContext)
-  const [yjsProvider, setYjsProvider] = useState(null)
+  const [yjsProvider, setYjsProvider] = useState(object?.yjsProvider)
 
-  const [ydoc, setYDoc] = useState(null)
+  const [ydoc, setYDoc] = useState(object?.ydoc)
 
   const createYjsProvider = currentUser => {
     let ydocInstance = null
@@ -34,35 +34,41 @@ const useYjs = (identifier, object) => {
       setYDoc(ydocInstance)
     }
 
-    if (!identifier) {
-      // eslint-disable-next-line no-param-reassign
-      identifier = uuidv4()
-    }
+    let provider = null
 
-    // eslint-disable-next-line no-restricted-globals
-    const provider = new WebsocketProvider(
-      process.env.CLIENT_YJS_WEBSOCKET_URL,
-      identifier,
-      ydocInstance,
-      {
-        params: {
-          token: localStorage.getItem('token') || '',
-          groupId,
-          ...object,
+    if (yjsProvider) {
+      provider = yjsProvider
+    } else {
+      if (!identifier) {
+        // eslint-disable-next-line no-param-reassign
+        identifier = uuidv4()
+      }
+
+      // eslint-disable-next-line no-restricted-globals
+      provider = new WebsocketProvider(
+        process.env.CLIENT_YJS_WEBSOCKET_URL,
+        identifier,
+        ydocInstance,
+        {
+          params: {
+            token: localStorage.getItem('token') || '',
+            groupId,
+            ...object,
+          },
         },
-      },
-    )
+      )
 
-    const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
+      const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
 
-    if (currentUser) {
-      provider.awareness.setLocalStateField('user', {
-        id: currentUser.id || uuidv4(),
-        color,
-        displayName: currentUser
-          ? currentUser.username || currentUser.email
-          : 'Anonymous',
-      })
+      if (currentUser) {
+        provider.awareness.setLocalStateField('user', {
+          id: currentUser.id || uuidv4(),
+          color,
+          displayName: currentUser
+            ? currentUser.username || currentUser.email
+            : 'Anonymous',
+        })
+      }
     }
 
     setYjsProvider(provider)

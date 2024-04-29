@@ -17,12 +17,17 @@ const SimpleWaxEditor = ({
   spellCheck,
   yjsProvider,
   ydoc,
+  name,
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   useEffect(() => debounceChange.flush, [])
 
-  const config = yjsConfig(simpleWaxEditorConfig(), { yjsProvider, ydoc })
+  const config = yjsConfig(simpleWaxEditorConfig(), {
+    yjsProvider,
+    ydoc,
+    yjsType: name,
+  })
 
   return (
     <div className={validationStatus}>

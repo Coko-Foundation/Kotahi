@@ -11,12 +11,10 @@ const CollaborativeWax = ({
   identifier,
   ...rest
 }) => {
-  const fieldType = 'prosemirror'
   const { currentUser } = collaborativeObject
 
   const { yjsProvider, ydoc, createYjsProvider } = useYjs(identifier, {
     ...omit(collaborativeObject, ['identifier', 'currentUser']),
-    fieldType,
   })
 
   const Component = editorMode ? Editor[editorMode] : component

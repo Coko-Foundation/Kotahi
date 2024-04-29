@@ -6,12 +6,9 @@ exports.up = async knex => {
     return knex.schema.createTable('collaborative_docs', table => {
       table.uuid('id').primary()
       table.string('type')
-      table.json('docs_prosemirror_delta').defaultTo(null)
-      table.binary('docs_y_doc_state').notNullable()
+      table.binary('y_doc_state').notNullable()
       table.uuid('group_id').references('groups.id').notNullable()
       table.uuid('object_id')
-      table.string('field_type')
-      table.string('name')
       table
         .timestamp('created', { useTz: true })
         .notNullable()

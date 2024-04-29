@@ -17,11 +17,13 @@ const FormWaxEditor = ({
   'data-testid': dataTestid,
   yjsProvider,
   ydoc,
+  name,
   ...rest
 }) => {
   const config = yjsConfig(simpleWaxEditorConfig(), {
     yjsProvider,
     ydoc,
+    yjsType: name,
   })
 
   return (

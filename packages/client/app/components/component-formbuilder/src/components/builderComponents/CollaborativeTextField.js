@@ -54,7 +54,7 @@ function hexToRgb(h) {
 }
 
 const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
-  const fieldType = 'textInput'
+  const fieldType = `textInput-${input.name}`
 
   let currentUser = null
 
@@ -65,8 +65,8 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
   const [text, setText] = useState(null)
 
   const { yjsProvider, ydoc, createYjsProvider } = useYjs(
-    `${collaborativeObject.identifier}-${input.name}`,
-    { ...omit(collaborativeObject, ['identifier', 'currentUser']), fieldType },
+    collaborativeObject.identifier,
+    omit(collaborativeObject, ['identifier', 'currentUser']),
   )
 
   useEffect(() => {

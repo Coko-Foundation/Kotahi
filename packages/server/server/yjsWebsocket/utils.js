@@ -3,6 +3,7 @@ const syncProtocol = require('y-protocols/dist/sync.cjs')
 const awarenessProtocol = require('y-protocols/dist/awareness.cjs')
 const encoding = require('lib0/encoding')
 const decoding = require('lib0/decoding')
+
 const Y = require('yjs')
 const { CollaborativeDoc } = require('@pubsweet/models')
 
@@ -31,10 +32,12 @@ const extractParamsFromIdentifier = id => {
  * @param {WSSharedDoc} doc
  */
 const updateHandler = (update, origin, doc) => {
+  // console.log(update, origin, doc)
   const encoder = encoding.createEncoder()
   encoding.writeVarUint(encoder, messageSync)
   syncProtocol.writeUpdate(encoder, update)
   const message = encoding.toUint8Array(encoder)
+  // console.log({ message })
   doc.conns.forEach((_, conn) => send(doc, conn, message))
 }
 
@@ -95,51 +98,41 @@ const closeConn = (doc, conn) => {
 
 persistence = {
   bindState: async (id, doc) => {
-    const { objectId, name } = extractParamsFromIdentifier(id)
-
-    const docInstance = await CollaborativeDoc.query().findOne({
-      objectId,
-      name,
+    const { yDocState } = await CollaborativeDoc.query().findOne({
+      objectId: id,
     })
 
-    if (docInstance && docInstance.docsYDocState) {
-      Y.applyUpdate(doc, docInstance.docsYDocState)
-    }
+    Y.applyUpdate(doc, yDocState)
   },
   writeState: async ydoc => {
-    const id = ydoc.name
+    const objectId = ydoc.name
     const state = Y.encodeStateAsUpdate(ydoc)
-    const delta = ydoc.getText(ydoc.extraData.fieldType).toDelta()
+
     const timestamp = db.fn.now()
 
-    const { objectId, name } = extractParamsFromIdentifier(id)
-    const docYjs = await CollaborativeDoc.query().findOne({ objectId, name })
+    const docYjs = await CollaborativeDoc.query().findOne({ objectId })
 
-    if (delta && delta.length > 0) {
-      if (!docYjs) {
-        try {
-          await CollaborativeDoc.query().insert({
-            docs_prosemirror_delta: delta,
-            docs_y_doc_state: state,
-            ...ydoc.extraData,
+    if (!docYjs) {
+      try {
+        await CollaborativeDoc.query().insert({
+          yDocState: state,
+          ...ydoc.extraData,
+        })
+      } catch (e) {
+        console.log(`Insert Query`)
+        console.log(e)
+      }
+    } else {
+      try {
+        await CollaborativeDoc.query()
+          .patch({
+            yDocState: state,
+            updated: timestamp,
           })
-        } catch (e) {
-          console.log(`Insert Query`)
-          console.log(e)
-        }
-      } else {
-        try {
-          await CollaborativeDoc.query()
-            .patch({
-              docs_prosemirror_delta: delta,
-              docs_y_doc_state: state,
-              updated: timestamp,
-            })
-            .findOne({ objectId, name })
-        } catch (e) {
-          console.log(`Patch Query`)
-          console.log(e)
-        }
+          .findOne({ objectId })
+      } catch (e) {
+        console.log(`Patch Query`)
+        console.log(e)
       }
     }
   },

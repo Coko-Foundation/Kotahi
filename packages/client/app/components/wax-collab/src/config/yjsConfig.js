@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
-import { YjsService } from 'wax-prosemirror-services'
+// import { YjsService } from 'wax-prosemirror-services'
+import YjsService from './YjsService'
 
-export default (config, { yjsProvider, ydoc }) => {
+export default (config, { yjsProvider, ydoc, yjsType }) => {
   if (yjsProvider && ydoc) {
     config.YjsService = {
       provider: () => yjsProvider,
       ydoc: () => ydoc,
+      yjsType,
       cursorBuilder: user => {
         if (user) {
           const cursor = document.createElement('span')

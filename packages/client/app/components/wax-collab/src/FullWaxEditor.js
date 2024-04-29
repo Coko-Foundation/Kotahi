@@ -39,6 +39,7 @@ const FullWaxEditor = ({
   getActiveViewDom,
   yjsProvider,
   ydoc,
+  name,
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
@@ -69,6 +70,7 @@ const FullWaxEditor = ({
   const config = yjsConfig(fullWaxEditorConfig(handleAssetManager, readonly), {
     yjsProvider,
     ydoc,
+    yjsType: name,
   })
 
   return (

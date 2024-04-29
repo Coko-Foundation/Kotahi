@@ -3,18 +3,18 @@ import CollaborativeWax from '../../../wax-collab/src/CollaborativeWax'
 
 const FormCollaborateComponent =
   component =>
-  ({ onChange, collaborativeObject, name, ...rest }) => {
+  ({ onChange, collaborativeObject, ...rest }) => {
     const { identifier } = collaborativeObject
 
     return (
       <CollaborativeWax
         component={component}
         editorMode={null}
-        identifier={`${identifier}-${name}`}
+        identifier={`${identifier}`}
         {...rest}
         collaborativeObject={collaborativeObject}
         onChange={() => {
-          onChange(`${identifier}-${name}`)
+          onChange(`${identifier}-${rest.name}`)
         }}
       />
     )
