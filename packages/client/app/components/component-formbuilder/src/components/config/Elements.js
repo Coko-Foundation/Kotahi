@@ -656,7 +656,7 @@ const reviewFieldOptions = [
   {
     isCustom: true,
     fieldType: 'fullWax',
-    label: 'Full text editor',
+    label: 'Full wax editor',
     component: 'FullWaxField',
   },
   {

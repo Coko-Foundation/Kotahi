@@ -170,24 +170,13 @@ const InviteReviewerModal = ({
                 }
 
                 teamMember = response.invitation
-              } else {
-                const { data } = await addReviewer({
-                  variables: {
-                    userId: identity.id,
-                    manuscriptId: manuscript.id,
-                    isCollaborative,
-                  },
-                })
-
-                teamMember = data.addReviewer.members.find(
-                  member => member.user.id === identity.id,
-                )
               }
 
               const { data } = await addReviewer({
                 variables: {
                   userId: identity.id,
                   manuscriptId: manuscript.id,
+                  isCollaborative,
                 },
               })
 

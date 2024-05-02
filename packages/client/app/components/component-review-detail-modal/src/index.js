@@ -94,12 +94,9 @@ const ReviewDetailsModal = (
 
   // when the review is collaborative the status is not completed but closed
   if (review?.isCollaborative && review?.isLock === true) {
-    statusConfig = {
-      color: '#eeeeee',
-      label: 'Closed',
-      value: 'closed',
-      lightText: false,
-    }
+    statusConfig = LocalizedReviewFilterOptions.find(
+      item => item.value === 'closed',
+    )
   } else {
     statusConfig = LocalizedReviewFilterOptions.find(
       item => item.value === (status ?? 'completed'),
@@ -143,6 +140,14 @@ const ReviewDetailsModal = (
   )
 
   const reviewData = review ? ensureJsonIsParsed(review?.jsonData) : {}
+
+  let showForm = false
+
+  if (review?.isCollaborative === true) {
+    showForm = !readOnly && canEditReviews && !review.isLock
+  } else {
+    showForm = !readOnly && canEditReviews
+  }
 
   return (
     <Modal
@@ -220,26 +225,12 @@ const ReviewDetailsModal = (
       </StatusContainer>
       {review ? (
         <>
-          {(review.isCollaborative === false || review.isLock === true) && (
-            <ReviewData
-              canEditReviews={canEditReviews}
-              createFile={createFile}
-              deleteFile={deleteFile}
-              manuscriptId={manuscriptId}
-              readOnly={readOnly}
-              review={review}
-              reviewForm={reviewForm}
-              showEditorOnlyFields={showEditorOnlyFields}
-              threadedDiscussionProps={threadedDiscussionProps}
-              updateReview={updateReview}
-            />
-          )}
-          {review.isCollaborative === true && !review.isLock && (
+          {showForm ? (
             <FormTemplate
               collaborativeObject={{ identifier: review.id, currentUser }}
               createFile={createFile}
               deleteFile={deleteFile}
-              form={reviewForm}
+              form={{ ...reviewForm, name: null, description: null }}
               formikOptions={{ enableReinitialize: true }}
               initialValues={reviewData}
               isCollaborative={review.isCollaborative}
@@ -258,6 +249,13 @@ const ReviewDetailsModal = (
               showEditorOnlyFields={false}
               submissionButtonText={t('reviewPage.Submit')}
               tagForFiles="review"
+              threadedDiscussionProps={threadedDiscussionProps}
+            />
+          ) : (
+            <ReviewData
+              review={review}
+              reviewForm={reviewForm}
+              showEditorOnlyFields={showEditorOnlyFields}
               threadedDiscussionProps={threadedDiscussionProps}
             />
           )}
@@ -363,12 +361,6 @@ const CheckboxActions = ({
 }
 
 const ReviewData = ({
-  canEditReviews,
-  manuscriptId,
-  updateReview,
-  readOnly,
-  createFile,
-  deleteFile,
   review,
   reviewForm,
   threadedDiscussionProps,
@@ -409,47 +401,20 @@ const ReviewData = ({
         </StatusContainer>
       )}
 
-      {!readOnly && canEditReviews ? (
-        <FormTemplate
-          createFile={createFile}
-          deleteFile={deleteFile}
-          form={{ ...reviewForm, name: null, description: null }} // suppresses the form title and description
-          formData={reviewFormData}
-          initialValues={reviewFormData}
-          manuscriptId={manuscriptId}
-          noHeader
-          noPadding
-          onChange={(value, path) => {
-            updateReview(
-              review.id,
-              {
-                jsonData: JSON.stringify({ [path]: value }),
-                manuscriptId,
-              },
-              manuscriptId,
-            )
-          }}
-          shouldStoreFilesInForm
-          showEditorOnlyFields={false}
-          tagForFiles="review"
-          threadedDiscussionProps={threadedDiscussionProps}
-        />
-      ) : (
-        <ReviewItemsContainer>
-          {[...nonFileFields, ...fileFields].map((element, i) => (
-            <ReviewItemContainer key={element.id}>
-              <Header>{element.shortDescription || element.title}</Header>
-              <ReadonlyFieldData
-                fieldName={element.name}
-                form={reviewForm}
-                formData={reviewFormData}
-                isCollaborativeForm={review.isCollaborative}
-                threadedDiscussionProps={threadedDiscussionProps}
-              />
-            </ReviewItemContainer>
-          ))}
-        </ReviewItemsContainer>
-      )}
+      <ReviewItemsContainer>
+        {[...nonFileFields, ...fileFields].map((element, i) => (
+          <ReviewItemContainer key={element.id}>
+            <Header>{element.shortDescription || element.title}</Header>
+            <ReadonlyFieldData
+              fieldName={element.name}
+              form={reviewForm}
+              formData={reviewFormData}
+              isCollaborativeForm={review.isCollaborative}
+              threadedDiscussionProps={threadedDiscussionProps}
+            />
+          </ReviewItemContainer>
+        ))}
+      </ReviewItemsContainer>
     </>
   )
 }

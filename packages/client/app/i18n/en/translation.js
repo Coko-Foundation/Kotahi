@@ -21,6 +21,8 @@ const en = {
       accepted: 'Accepted',
       inProgress: 'In Progress',
       completed: 'Completed',
+      closed: 'Closed',
+      completedClosed: 'Completed / Closed',
       unanswered: 'Unanswered',
       notAssignedForThisVersion: 'Not a reviewer of the current version',
     },
@@ -1114,7 +1116,7 @@ const en = {
         links: 'List of links (URLs)',
         verdict: 'Verdict',
         discussion: 'Discussion',
-        fullWax: 'Full text editor',
+        fullWax: 'Full wax editor',
       },
       typeOptions: {
         Select: 'Select',

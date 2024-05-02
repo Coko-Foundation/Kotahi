@@ -406,26 +406,6 @@ const DecisionVersion = ({
             />
           )}
           {isCurrentVersion && (
-            <DecisionReviews
-              canHideReviews={canHideReviews}
-              currentUser={currentUser}
-              invitations={invitations}
-              lockUnlockReview={lockUnlockReview}
-              manuscript={version}
-              reviewers={reviewers}
-              reviewForm={reviewForm}
-              threadedDiscussionProps={threadedDiscussionExtendedProps}
-              updateCollaborativeTeamMember={updateCollaborativeTeamMember}
-              updateReview={updateReview}
-              updateReviewJsonData={updateReviewJsonData}
-              updateSharedStatusForInvitedReviewer={
-                updateSharedStatusForInvitedReviewer
-              }
-              updateTeamMember={updateTeamMember}
-              urlFrag={urlFrag}
-            />
-          )}
-          {isCurrentVersion && (
             <AdminSection key="decision-form">
               <SectionContent>
                 <FormTemplate
@@ -540,11 +520,12 @@ const DecisionVersion = ({
               invitations={invitations}
               lockUnlockReview={lockUnlockReview}
               manuscript={version}
-              refetch={refetch}
               reviewers={reviewers}
               reviewForm={reviewForm}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
+              updateCollaborativeTeamMember={updateCollaborativeTeamMember}
               updateReview={updateReview}
+              updateReviewJsonData={updateReviewJsonData}
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer
               }

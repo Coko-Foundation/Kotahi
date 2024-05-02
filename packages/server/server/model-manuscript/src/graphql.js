@@ -799,7 +799,7 @@ const resolvers = {
           isDecision: false,
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
-          userId: ctx.user,
+          userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
           manuscriptId: team.objectId,
           isCollaborative: team.role === 'collaborativeReviewer',
           jsonData: '{}',

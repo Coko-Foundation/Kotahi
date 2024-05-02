@@ -22,7 +22,6 @@ const DecisionReview = ({
   teams,
   isControlPage,
   updateReview,
-  refetchManuscript,
   canHideReviews,
   showEditorOnlyFields,
   threadedDiscussionProps,
@@ -61,7 +60,6 @@ const DecisionReview = ({
     <Root>
       <ReviewHeading
         canBePublishedPublicly={canBePublishedPublicly}
-        canEditReviews={canEditReviews}
         canHideReviews={canHideReviews}
         currentUser={currentUser}
         id={id}

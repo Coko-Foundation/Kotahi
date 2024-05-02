@@ -26,7 +26,7 @@ const Column = styled.div`
   height: 300px;
   margin-inline: 7.5px;
   /* stylelint-disable-next-line scss/operator-no-unspaced */
-  width: calc(${100 / (statuses.length - 1)}% - 15px);
+  width: calc(${100 / (statuses.length - 2)}% - 15px);
 `
 
 const StatusLabel = styled.div`
@@ -189,6 +189,12 @@ const KanbanBoard = ({
         return hasTheRightStatus && !isDuplicate
       })
 
+  const statusLabel = status => {
+    return status?.value === 'completed'
+      ? t('reviewerStatus.completedClosed')
+      : status?.label
+  }
+
   return (
     <AdminSection>
       <SectionContent>
@@ -205,14 +211,15 @@ const KanbanBoard = ({
         <SectionRow style={{ padding: 0 }}>
           <Kanban>
             {LocalizedReviewFilterOptions.filter(
-              status => status.value !== 'rejected',
+              status =>
+                !['rejected', 'closed'].includes(status.value.toLowerCase()),
             ).map(status => (
               <Column key={status.value}>
                 <StatusLabel
                   lightText={status.lightText}
                   statusColor={status.color}
                 >
-                  {status.label}
+                  {statusLabel(status)}
                 </StatusLabel>
                 <CardsWrapper>
                   {getReviewersWithoutDuplicates(

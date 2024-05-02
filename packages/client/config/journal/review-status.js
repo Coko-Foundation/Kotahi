@@ -24,6 +24,12 @@ module.exports = [
     lightText: false,
   },
   {
+    color: '#eeeeee',
+    label: 'Closed',
+    value: 'closed',
+    lightText: false,
+  },
+  {
     color: '#c23d20',
     label: 'Declined',
     value: 'rejected',

@@ -22,6 +22,8 @@ const esLa = {
       accepted: 'Aceptado',
       inProgress: 'En Progreso',
       completed: 'Completado',
+      closed: 'Cerrado',
+      completedClosed: 'Completado / Cerrado',
       unanswered: 'Sin Respuesta',
       notAssignedForThisVersion: 'No es revisor de la versión actual',
     },

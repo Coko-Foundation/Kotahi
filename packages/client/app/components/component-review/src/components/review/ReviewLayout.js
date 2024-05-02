@@ -45,7 +45,10 @@ const ReviewLayout = ({
   versionsOfManuscriptCurrentUserIsReviewerOf,
   chatExpand,
 }) => {
-  const { yjsProvider, ydoc, createYjsProvider } = useYjs(currentUserReview.id)
+  const { yjsProvider, ydoc, createYjsProvider } = useYjs(
+    currentUserReview.id,
+    {},
+  )
 
   useEffect(() => {
     createYjsProvider(currentUser)

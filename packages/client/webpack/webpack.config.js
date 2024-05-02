@@ -44,8 +44,6 @@ module.exports = webpackEnv => {
       publicPath: '/',
       watchOptions: {
         poll: true,
-        aggregateTimeout: 2000,
-        ignored: '**/node_modules',
       },
       proxy: {
         '/api': serverUrlWithProtocol,

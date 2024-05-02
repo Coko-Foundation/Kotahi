@@ -36,7 +36,6 @@ const DecisionReviews = ({
   canHideReviews,
   threadedDiscussionProps,
   invitations,
-  refetch,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   updateCollaborativeTeamMember,
@@ -101,7 +100,6 @@ const DecisionReviews = ({
                 manuscriptId={manuscript.id}
                 open
                 ordinal={index + 1}
-                refetchManuscript={refetch}
                 review={review}
                 reviewerTeamMember={getReviewerTeamMember(
                   manuscript,
@@ -129,6 +127,7 @@ const DecisionReviews = ({
       {collaborativeReviewToShow ? (
         <SectionRow key={collaborativeReviewToShow.id}>
           <DecisionReview
+            canEditReviews={canEditReviews}
             canHideReviews={canHideReviews}
             currentUser={currentUser}
             isControlPage

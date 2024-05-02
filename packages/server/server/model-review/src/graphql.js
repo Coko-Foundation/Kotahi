@@ -146,7 +146,7 @@ const resolvers = {
         .patch({ status })
         .where({ teamId: team.id })
         .andWhere(builder => {
-          builder.whereIn('status', ['closed', 'inProgess'])
+          builder.whereIn('status', ['closed', 'inProgress'])
         })
 
       const manuscript = await Manuscript.query().findById(

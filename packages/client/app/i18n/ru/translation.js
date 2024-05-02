@@ -21,6 +21,8 @@ const ru = {
       accepted: 'Принято',
       inProgress: 'В работе',
       completed: 'Завершено',
+      closed: 'Закрыто',
+      completedClosed: 'Завершено / Закрыто',
       unanswered: 'Без ответа',
       notAssignedForThisVersion: 'Не рецензент текущей версии',
     },

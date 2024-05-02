@@ -55,6 +55,7 @@ const EditorWrapper = styled.div`
       display: block; /* this turns off grid for full screen and allows for scrolling */
 
       & > div + div {
+        height: 100%;
         max-height: calc(100vh - 38px);
         overflow-y: scroll;
         position: fixed;

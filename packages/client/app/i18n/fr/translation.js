@@ -21,6 +21,8 @@ const fr = {
       accepted: 'Accepté',
       inProgress: 'En cours',
       completed: 'Terminé',
+      closed: 'Fermé',
+      completedClosed: 'Terminé / Fermé',
       unanswered: 'Sans réponse',
       notAssignedForThisVersion: "N'est pas évaluateur de la version actuelle",
     },
