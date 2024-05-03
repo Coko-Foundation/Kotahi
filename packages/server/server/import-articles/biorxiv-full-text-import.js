@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, consistent-return */
+/* eslint-disable camelcase, consistent-return, no-console */
 const axios = require('axios')
 const models = require('@pubsweet/models')
 const { dateToIso8601 } = require('../utils/dateUtils')
@@ -23,6 +23,67 @@ const formatSearchQueryWithoutCursor = (dateFrom, dateTo) => {
   return `${importUrl}&flag=any&date_from=${dateFrom}&date_to=${dateTo}`
 }
 
+const restrictToSubjects = (imports, subjects) =>
+  imports.filter(preprint => subjects.includes(preprint.category))
+
+const importAll = async (queryWithoutCursor, subjects) => {
+  const imports = []
+  let totalRetrievedCount = 0
+
+  for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
+    const queryString = `${queryWithoutCursor}&cursor=${cursor}`
+    // eslint-disable-next-line no-await-in-loop
+    const { data } = await axios.get(queryString)
+    if (!data || !data.collection || !data.collection.length) break
+    totalRetrievedCount += data.collection.length
+    imports.push(...restrictToSubjects(data.collection, subjects))
+    console.log(
+      `Retrieved ${totalRetrievedCount} of ${data.total_results} total papers from biorxiv (${imports.length} in desired subjects)`,
+    )
+    if (imports.length >= data.total_results) break
+  }
+
+  return imports
+}
+
+const populateUrlAndAbstract = imports =>
+  imports.map(item => ({
+    ...item,
+    url: `https://${item.server.toLowerCase()}.org/content/${item.doi}v${
+      item.version
+    }`,
+    abstract: rawAbstractToSafeHtml(item.abstract),
+  }))
+
+/** Make sure we don't have multiple preprints sharing the same DOI in this batch of imports.
+ * Where there are multiple versions of a preprint with the same DOI, keep only the latest.
+ */
+const stripInternalDuplicates = imports => {
+  const importsByDoi = {}
+
+  imports.forEach(preprint => {
+    // If the preprint isn't a DOI duplicate, keep it.
+    // If it's a DOI duplicate but a later version, keep it and discard the older version.
+    const doiDuplicate = importsByDoi[preprint.doi]
+    if (!doiDuplicate || preprint.version > doiDuplicate.version)
+      importsByDoi[preprint.doi] = preprint
+  })
+
+  return Object.values(importsByDoi)
+}
+
+/** Strip any preprints that share a DOI with a manuscript already belonging to the group */
+const stripDuplicates = async (imports, groupId) => {
+  // TODO retrieving all manuscripts to check DOIs is inefficient!
+  const manuscripts = await models.Manuscript.query().where({ groupId })
+
+  const currentDois = new Set(
+    manuscripts.map(m => m.submission.$doi).filter(Boolean),
+  )
+
+  return imports.filter(({ doi }) => !currentDois.has(doi))
+}
+
 const getData = async (groupId, ctx) => {
   const sourceId = await getServerId('biorxiv')
   const lastImportDate = await getLastImportDate(sourceId, groupId)
@@ -32,53 +93,18 @@ const getData = async (groupId, ctx) => {
 
   const queryWithoutCursor = formatSearchQueryWithoutCursor(dateFrom, dateTo)
 
-  const imports = []
-
-  for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
-    const queryString = `${queryWithoutCursor}&cursor=${cursor}`
-    // eslint-disable-next-line no-await-in-loop
-    const { data } = await axios.get(queryString)
-    if (!data || !data.collection || !data.collection.length) break
-    Array.prototype.push.apply(imports, data.collection)
-    if (imports.length >= data.total_results) break
-  }
-
-  // Adjust imports by generating url field and improving abstract formatting
-  const modifiedItems = imports.map(item => ({
-    ...item,
-    url: `https://${item.server.toLowerCase()}.org/content/${item.doi}v${
-      item.version
-    }`,
-    abstract: rawAbstractToSafeHtml(item.abstract),
-  }))
-
-  const filteredDataset = new Set()
-
-  const withoutBiorxivDuplicates = modifiedItems.filter(preprint => {
-    const isDuplicate = filteredDataset.has(preprint.url)
-    if (isDuplicate) return false
-
-    filteredDataset.add(preprint.url)
-    return true
-  })
-
-  // TODO retrieving all manuscripts to check URLs is inefficient!
-  const manuscripts = await models.Manuscript.query().where({ groupId })
-  const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
-
-  const withoutDuplicates = withoutBiorxivDuplicates.filter(
-    ({ url }) => !currentURLs.has(url),
-  )
-
-  const allowedSubjectMatterAreas = ['biophysics', 'biochemistry']
-
-  const importsWithDesiredCategoryOnly = withoutDuplicates.filter(preprint =>
-    allowedSubjectMatterAreas.includes(preprint.category),
-  )
+  console.log(`Requesting papers from biorxiv...`)
+  let imports = await importAll(queryWithoutCursor, [
+    'biophysics',
+    'biochemistry',
+  ])
+  imports = stripInternalDuplicates(imports)
+  imports = await stripDuplicates(imports, groupId)
+  imports = populateUrlAndAbstract(imports)
 
   const emptySubmission = getEmptySubmission(groupId)
 
-  const newManuscripts = importsWithDesiredCategoryOnly.map(
+  const newManuscripts = imports.map(
     ({
       doi,
       title,
@@ -132,8 +158,6 @@ const getData = async (groupId, ctx) => {
     }),
   )
 
-  if (!newManuscripts.length) return []
-
   try {
     const result = []
 
@@ -162,6 +186,10 @@ const getData = async (groupId, ctx) => {
         groupId,
       })
     }
+
+    console.log(
+      `Imported ${result.length} preprints from biorxiv (discarding duplicates).`,
+    )
 
     return result
   } catch (e) {
