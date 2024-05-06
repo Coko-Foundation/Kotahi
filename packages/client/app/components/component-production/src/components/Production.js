@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import { withRouter } from 'react-router-dom'
@@ -29,6 +29,7 @@ import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import PreviousFeedbackSubmissions from './PreviousFeedbackSubmissions'
 import { CssAssistantProvider } from '../../../component-ai-assistant/hooks/CssAssistantContext'
 import AiPDFDesigner from '../../../component-ai-assistant/AiPDFDesigner'
+import { ConfigContext } from '../../../config/src'
 
 const PreviousFeedBackSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -142,12 +143,15 @@ const Production = ({
 
   const { t } = useTranslation()
 
+  const config = useContext(ConfigContext)
+
   const editorSection = {
     content: (
       <>
-        {file &&
-        file.storedObjects[0].mimetype ===
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+        {(file &&
+          file.storedObjects[0].mimetype ===
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+        ['lab'].includes(config?.instanceName) ? (
           <SectionContent>
             {manuscript ? (
               <ProductionWaxEditor
