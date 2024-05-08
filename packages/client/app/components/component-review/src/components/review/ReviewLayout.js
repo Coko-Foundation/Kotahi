@@ -17,6 +17,7 @@ import {
   HiddenTabs,
   ErrorBoundary,
   VersionSwitcher,
+  Spinner,
 } from '../../../../shared'
 import { ChatButton, CollapseButton } from '../style'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
@@ -51,7 +52,9 @@ const ReviewLayout = ({
   )
 
   useEffect(() => {
-    createYjsProvider(currentUser)
+    if (currentUserReview.isCollaborative) {
+      createYjsProvider(currentUser)
+    }
   }, [])
   const config = useContext(ConfigContext) || {}
   const { urlFrag } = config
@@ -364,7 +367,8 @@ const ReviewLayout = ({
     }
   }
 
-  if (!yjsProvider || !ydoc) return <p>Loading...</p>
+  if (currentUserReview.isCollaborative && (!yjsProvider || !ydoc))
+    return <Spinner />
 
   return (
     <Columns>

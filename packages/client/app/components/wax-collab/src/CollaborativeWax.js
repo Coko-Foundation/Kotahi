@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react'
 import { omit } from 'lodash'
 import Editor from '.'
+
+import { Spinner } from '../../shared'
 import useYjs from './hooks/useYjs'
 
 const CollaborativeWax = ({
@@ -23,7 +25,7 @@ const CollaborativeWax = ({
     createYjsProvider(currentUser)
   }, [])
 
-  if (!yjsProvider || !ydoc) return <p>Loading...</p>
+  if (!yjsProvider || !ydoc) return <Spinner />
 
   if (Component) {
     return (

@@ -3,7 +3,6 @@ import { Service } from 'wax-prosemirror-core'
 import { yCursorPlugin, ySyncPlugin, yUndoPlugin } from 'y-prosemirror'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
-import './yjs.css'
 
 class YjsService extends Service {
   name = 'YjsService'

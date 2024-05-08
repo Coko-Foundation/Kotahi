@@ -3,6 +3,8 @@ import { omit } from 'lodash'
 import styled from 'styled-components'
 import { TextField } from '@pubsweet/ui'
 import { TextAreaBinding } from 'y-textarea'
+
+import { Spinner } from '../../../../shared'
 import useYjs from '../../../../wax-collab/src/hooks/useYjs'
 
 const TextFieldSyled = styled(TextField)`
@@ -92,7 +94,7 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
     [yjsProvider, ydoc],
   )
 
-  if (!yjsProvider || !ydoc) return <p>Loading...</p>
+  if (!yjsProvider || !ydoc) return <Spinner />
 
   return (
     <TextFieldSyled
