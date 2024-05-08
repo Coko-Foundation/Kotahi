@@ -125,7 +125,11 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const channels = [
     {
       id: channelId,
-      name: t('chat.Discussion with editorial team'),
+      name: t(
+        `chat.Discussion with ${
+          ['lab'].includes(config?.instanceName) ? 'author' : 'editorial'
+        } team`,
+      ),
       type: editorialChannel?.type,
     },
   ]
