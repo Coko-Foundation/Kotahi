@@ -9,6 +9,9 @@ const {
   rawAbstractToSafeHtml,
 } = require('./importTools')
 
+const semanticScholarServers = require('./semanitc-scholar-servers.json')
+const { getUrlByDoi } = require('../utils/crossrefCommsUtils')
+
 const SAVE_CHUNK_SIZE = 50
 
 const getData = async (groupId, ctx) => {
@@ -63,7 +66,7 @@ const getData = async (groupId, ctx) => {
     })
 
     const semanticSholarRequestUri =
-      'https://api.semanticscholar.org/recommendations/v1/papers?limit=500&fields=url,venue,year,externalIds,title,abstract,authors,journal,publicationDate,venue'
+      'https://api.semanticscholar.org/recommendations/v1/papers?limit=500&fields=url,venue,year,externalIds,title,abstract,authors,journal,publicationDate'
 
     const { data } = await axios.post(
       semanticSholarRequestUri,
@@ -84,7 +87,7 @@ const getData = async (groupId, ctx) => {
     }
 
     const importsOnlyWithDOI = imports.filter(
-      preprints => preprints.externalIds.DOI,
+      preprint => preprint.externalIds.DOI,
     )
 
     console.log(`  ${importsOnlyWithDOI.length} of these have DOIs...`)
@@ -123,48 +126,68 @@ const getData = async (groupId, ctx) => {
       })`,
     )
 
+    const currentDOIs = new Set(
+      manuscripts.map(({ submission }) => submission.$doi),
+    )
+
+    const withoutDoiDuplicates = recentImports.filter(
+      preprints => !currentDOIs.has(preprints.externalIds.DOI),
+    )
+
+    console.log(
+      `  ${withoutDoiDuplicates.length} of these don't match DOIs already in Kotahi.`,
+    )
+
+    const withSourceUris = await Promise.all(
+      withoutDoiDuplicates.map(async preprint => ({
+        ...preprint,
+        sourceUri: await getUrlByDoi(
+          preprint.externalIds.DOI,
+          activeConfig.formData.groupIdentity.contact,
+        ),
+      })),
+    )
+
     const allowedPreprintServers =
       activeConfig.formData.semanticScholar.semanticScholarPublishingServers
 
-    const importsFromSpecificPreprintServers = recentImports.filter(
-      preprint => {
-        const venueLcTokens = preprint.venue.toLowerCase().split(/\s+/)
-        return allowedPreprintServers.some(server =>
-          venueLcTokens.includes(server.toLowerCase()),
-        )
-      },
+    const allowedDomains = allowedPreprintServers
+      .map(server => semanticScholarServers[server] ?? [])
+      .flat()
+
+    // Regex to match any of the given domains in a URL
+    const domainsRegex = new RegExp(
+      `^https?://[^/]*\\b(${allowedDomains
+        .map(d => d.replaceAll('.', '\\.'))
+        .join('|')})/`,
+    )
+
+    const importsFromSpecificPreprintServers = withSourceUris.filter(preprint =>
+      domainsRegex.test(preprint.sourceUri ?? ''),
     )
 
     console.log(
       `  ${importsFromSpecificPreprintServers.length} of these are from the selected servers...`,
     )
 
-    const currentDOIs = new Set(
-      manuscripts.map(({ submission }) => submission.$doi),
-    )
+    const currentUris = new Set(manuscripts.map(m => m.submission.$sourceUri))
 
-    const currentURLs = new Set(manuscripts.map(m => m.submission.$sourceUri))
-
-    const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
-      preprints => !currentDOIs.has(preprints.externalIds.DOI),
-    )
-
-    const withoutUrlDuplicates = withoutDOIDuplicates.filter(
-      preprints => !currentURLs.has(preprints.url),
+    const withoutUriDuplicates = importsFromSpecificPreprintServers.filter(
+      preprints => !currentUris.has(preprints.sourceUri),
     )
 
     console.log(
-      `  ${withoutUrlDuplicates.length} of these are new to this group.`,
+      `  ${withoutUriDuplicates.length} of these are new to this group.`,
     )
 
     const emptySubmission = getEmptySubmission(groupId)
 
-    const newManuscripts = withoutUrlDuplicates.map(
+    const newManuscripts = withoutUriDuplicates.map(
       ({
         title,
         authors,
         abstract,
-        url,
+        sourceUri,
         externalIds,
         publicationDate,
         venue,
@@ -184,7 +207,7 @@ const getData = async (groupId, ctx) => {
           $abstract: rawAbstractToSafeHtml(abstract),
           datePublished: publicationDate,
           journal: venue,
-          $sourceUri: url,
+          $sourceUri: sourceUri,
           $doi: externalIds?.DOI || '',
         },
         meta: {},

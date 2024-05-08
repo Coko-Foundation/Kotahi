@@ -6,7 +6,6 @@ const {
 
 const { removeIllegalCharacters } = require('./htmlUtils')
 
-// TODO Move the following into a separate file crossrefUtils.js; shift some other functions here into htmlUtils.js.
 /** Get Crossref-style citation XML, treating each nonempty paragraph or list item as a separate citation */
 const getCrossrefCitationsFromList = html => {
   const items = getParagraphOrListItems(removeIllegalCharacters(html))
