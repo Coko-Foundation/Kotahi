@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -58,6 +58,7 @@ const CollaboratorRow = ({
   canChangeAccess,
   user,
 }) => {
+  const [loading, setLoading] = useState(false)
   const { t } = useTranslation()
 
   const dropdownItems = [
@@ -75,8 +76,20 @@ const CollaboratorRow = ({
       border: 'none',
       borderRadius: 0,
       minHeight: 'unset',
-      width: '8em',
+      minWidth: '10em',
     }),
+  }
+
+  const handleChange = async ({ value }) => {
+    setLoading(true)
+
+    if (value === 'remove') {
+      await onRemoveAccess({ teamId, userId })
+    } else {
+      await onChangeAccess({ teamMemberId: id, value })
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -95,13 +108,8 @@ const CollaboratorRow = ({
                 bordered={false}
                 customStyles={customStyles}
                 defaultValue={dropdownItems.find(v => v.value === status)}
-                onChange={({ value }) => {
-                  if (value === 'remove') {
-                    onRemoveAccess({ teamId, userId })
-                  } else {
-                    onChangeAccess({ teamMemberId: id, value })
-                  }
-                }}
+                isLoading={loading}
+                onChange={handleChange}
                 options={dropdownItems}
               />
             ) : (
