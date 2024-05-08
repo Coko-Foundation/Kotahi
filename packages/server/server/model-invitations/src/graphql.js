@@ -60,11 +60,30 @@ const resolvers = {
   },
   Mutation: {
     async updateInvitationStatus(_, { id, status, userId, responseDate }, ctx) {
-      const result = await models.Invitation.query().updateAndFetchById(id, {
-        status,
-        userId,
-        responseDate,
+      const [result] = await models.Invitation.query()
+        .patch({
+          status,
+          userId,
+          responseDate,
+        })
+        .where({ id, status: 'UNANSWERED' })
+        .returning('*')
+
+      const relatedUser = await models.User.query().findOne({
+        email: result.toEmail,
       })
+
+      if (relatedUser) {
+        await models.Team.relatedQuery('members')
+          .for(
+            models.Team.query().findOne({
+              objectId: result.manuscriptId,
+              role: result.invitedPersonType.toLowerCase(),
+            }),
+          )
+          .patch({ status: status.toLowerCase() })
+          .where({ userId: relatedUser.id, status: 'invited' })
+      }
 
       return result
     },
