@@ -594,14 +594,14 @@ const fr = {
         'BMJ Journals': 'BMJ Journals',
         'Cambridge University Press': 'Cambridge University Press',
         ChemRxiv: 'ChemRxiv',
-        CiteCeerX: 'CiteCeerX',
+        CiteCeerX: 'CiteSeerX',
         'Clinical Trials Transformation Initiative':
           'Clinical Trials Transformation Initiative',
         'DBLP Computer Science Bibliography':
           'DBLP Computer Science Bibliography',
         'De Gruyter academic publishing': 'De Gruyter academic publishing',
         Frontiers: 'Frontiers',
-        'HAL Open Sience': 'HAL Open Sience',
+        'HAL Open Sience': 'HAL Open Science',
         HighWire: 'HighWire',
         IEEE: 'IEEE',
         'IOP Publishing': 'IOP Publishing',
