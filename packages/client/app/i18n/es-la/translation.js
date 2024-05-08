@@ -545,12 +545,6 @@ const esLa = {
         'Se eliminó el acceso al artículo de colaborador',
       'Editors edit reviews':
         'Los editores pueden editar las reseñas enviadas.',
-      collaboratorAccessGrantedEmailTemplate:
-        'Acceso al artículo de colaborador concedido',
-      collaboratorAccessChangeEmailTemplate:
-        'Se cambió el tipo de acceso al artículo del colaborador',
-      collaboratorAccessRemovedEmailTemplate:
-        'Se eliminó el acceso al artículo de colaborador',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',
@@ -867,6 +861,7 @@ const esLa = {
       'Show admin discussion': 'Mostrar discusión de Administrador',
       'Show group manager discussion': 'Mostrar discusión de Gerente de Grupo',
       'Discussion with editorial team': 'Discusión con el equipo editorial',
+      'Discussion with author team': 'Discusión con el equipo de autores',
       'Show Chat': 'Mostrar Chat',
       'Hide Chat': 'Ocultar Chat',
       'Discussion with author': 'Discusión con el autor',

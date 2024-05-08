@@ -551,12 +551,6 @@ const fr = {
       collaboratorAccessRemovedEmailTemplate:
         'Accès aux articles des collaborateurs supprimé',
       'Editors edit reviews': 'Les éditeurs peuvent modifier les avis soumis',
-      collaboratorAccessChangeEmailTemplate:
-        "Le type d'accès aux articles des collaborateurs a été modifié",
-      collaboratorAccessGrantedEmailTemplate:
-        'Accès aux articles des collaborateurs accordé',
-      collaboratorAccessRemovedEmailTemplate:
-        'Accès aux articles des collaborateurs supprimé',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",
@@ -876,6 +870,7 @@ const fr = {
       'Hide Chat': 'Masquer le chat',
       'Discussion with author': "Discussion avec l'auteur",
       'Discussion with editorial team': "Discussion avec l'équipe éditoriale",
+      'Discussion with author team': "Discussion avec l'équipe d'auteur",
       'Editorial discussion': 'Discussion éditoriale',
       'Show Chat': 'Afficher le chat',
       edit: 'Modifier',

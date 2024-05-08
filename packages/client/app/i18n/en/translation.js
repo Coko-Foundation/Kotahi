@@ -528,12 +528,6 @@ const en = {
       collaboratorAccessRemovedEmailTemplate:
         'Collaborator article access removed',
       'Editors edit reviews': 'Editors can edit submitted reviews',
-      collaboratorAccessGrantedEmailTemplate:
-        'Collaborator article access granted',
-      collaboratorAccessChangeEmailTemplate:
-        'Collaborator article access type changed',
-      collaboratorAccessRemovedEmailTemplate:
-        'Collaborator article access removed',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
@@ -844,6 +838,7 @@ const en = {
       'Show admin discussion': 'Show admin discussion',
       'Show group manager discussion': 'Show group manager discussion',
       'Discussion with editorial team': 'Discussion with editorial team',
+      'Discussion with author team': 'Discussion with author team',
       'Show Chat': 'Show Chat',
       'Hide Chat': 'Hide Chat',
       'Discussion with author': 'Discussion with author',

@@ -544,12 +544,6 @@ const ru = {
         'Доступ к статьям соавторов закрыт',
       'Editors edit reviews':
         'Редакторы могут редактировать отправленные отзывы.',
-      collaboratorAccessGrantedEmailTemplate:
-        'Доступ к статье соавтора предоставлен',
-      collaboratorAccessChangeEmailTemplate:
-        'Тип доступа к статьям Collaborator изменен',
-      collaboratorAccessRemovedEmailTemplate:
-        'Доступ к статьям соавторов закрыт',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
@@ -868,6 +862,7 @@ const ru = {
       'Hide Chat': 'Скрыть чат',
       'Discussion with author': 'Чат с Автором',
       'Discussion with editorial team': 'Обсуждение с редакцией',
+      'Discussion with author team': 'Обсуждение с авторской командой',
       'Editorial discussion': 'Чат редакции',
       'Show Chat': 'Показать чат',
       edit: 'Редактировать',
