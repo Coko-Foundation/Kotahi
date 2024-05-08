@@ -134,6 +134,7 @@ AccessRightsInput.propTypes = {
 const InviteCollaborators = ({ currentUser, manuscript }) => {
   const [noAvailableUsers, setNoAvailableUsers] = useState(true)
   const [manuscriptTeams, setManuscriptTeams] = useState([])
+  const [addingUsers, setAddingUsers] = useState(false)
   const { t } = useTranslation()
 
   const manuscriptTeamsVariables = {
@@ -158,39 +159,9 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
 
   const [addTeamMembers] = useMutation(ADD_TEAM_MEMBERS)
 
-  const [updateTeamMemberStatus] = useMutation(UPDATE_TEAM_MEMBER, {
-    refetchQueries: [
-      { query: GET_MANUSCRIPT_TEAMS, variables: manuscriptTeamsVariables },
-    ],
-    update(cache, { data: { updateTeamMember: updatedTeamMember } }) {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'TeamMember',
-          id: updatedTeamMember.id,
-        }),
-        fields: {
-          status(currentStatus = '', { INVALIDATE }) {
-            return INVALIDATE
-            // return updatedTeamMember.status
-          },
-        },
-      })
-    },
-  })
+  const [updateTeamMemberStatus] = useMutation(UPDATE_TEAM_MEMBER)
 
-  const [removeTeamMember] = useMutation(REMOVE_TEAM_MEMBER, {
-    update(cache, { data: { removeTeamMember: removedTeamMember } }) {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'TeamMember',
-          id: removedTeamMember.id,
-        }),
-        fields(fieldValue, details) {
-          return details.DELETE
-        },
-      })
-    },
-  })
+  const [removeTeamMember] = useMutation(REMOVE_TEAM_MEMBER)
 
   const accessOptions = [
     {
@@ -220,7 +191,8 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
   }
 
   const handleFormikSubmit = async (inviteData, { resetForm }) => {
-    setNoAvailableUsers(true)
+    if (addingUsers) return false
+    setAddingUsers(true)
 
     if (inviteData.users.length < 1) {
       return false
@@ -242,6 +214,8 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
       resetForm()
       const { data } = await refetchManuscriptTeams()
       setManuscriptTeams(data.teams)
+      setNoAvailableUsers(true)
+      setAddingUsers(false)
       return addTeamData
     })
   }
@@ -281,7 +255,7 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
           initialValues={{ users: [], access: 'read' }}
           onSubmit={handleFormikSubmit}
         >
-          {({ handleSubmit, isSubmitting, isValid }) => (
+          {({ handleSubmit, isValid }) => (
             <form onSubmit={handleSubmit}>
               <RowGridStyled>
                 <SelectWrapper>
@@ -302,7 +276,7 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
                   <ActionButton
                     disabled={noAvailableUsers || !isValid}
                     primary
-                    status={isSubmitting ? 'pending' : ''}
+                    status={addingUsers ? 'pending' : ''}
                     type="submit"
                   >
                     {t('inviteCollaborator.addUser')}
