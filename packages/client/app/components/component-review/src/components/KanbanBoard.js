@@ -71,36 +71,38 @@ const KanbanBoard = ({
   const reviewers = getMembersOfTeam(version, 'reviewer')
   const { t } = useTranslation()
 
-  const emailAndWebReviewers = [
-    ...reviewers.map(reviewer => {
-      return {
-        ...reviewer,
-        // Set isEmail flag true if the reviewer has pending reviewer invitations
-        isEmail: !!invitations.find(
-          invitation =>
-            invitation.invitedPersonType === 'REVIEWER' &&
-            invitation.user?.id === reviewer.user.id,
-        ),
-      }
-    }),
-    ...invitations
-      .filter(invitation => {
-        const reviewerAlreadyExist = reviewers.find(
-          reviewer =>
-            invitation.invitedPersonType === 'REVIEWER' &&
-            invitation.user?.id === reviewer.user.id,
-        )
+  const emailAndWebReviewers = []
 
-        // Filter only REVIEWER invitations to avoid other invitedPersonType's to be listed here
-        // Exclude invitation record if user is already a reviewer to avoid duplicate kanban cards
-        return (
-          invitation.invitedPersonType === 'REVIEWER' && !reviewerAlreadyExist
-        )
-      })
-      .map(invitation => {
-        return { ...invitation, isEmail: true }
-      }),
-  ]
+  reviewers.forEach(reviewer => {
+    emailAndWebReviewers.push({
+      ...reviewer,
+      isEmail: false, // This will be revised to true if we find a matching invitation below
+    })
+  })
+
+  invitations
+    .filter(i => i.invitedPersonType === 'REVIEWER')
+    .map(i => ({ ...i, status: i.status.toLowerCase() }))
+    .forEach(invitation => {
+      const existingReviewer = emailAndWebReviewers.find(
+        r =>
+          r.user.id === invitation.user?.id ||
+          r.user.email === invitation.toEmail,
+      )
+      // TODO Currently, you can't reinvite someone who's already declined.
+      // If we do allow this, we'll need to make sure we only merge one invite with the teamMember record, and only if the dates are correct.
+
+      if (existingReviewer) {
+        existingReviewer.isEmail = true
+
+        const { id, isShared, user, userId, ...invitationChosenFields } =
+          invitation
+
+        Object.assign(existingReviewer, invitationChosenFields)
+      } else {
+        emailAndWebReviewers.push({ ...invitation, isEmail: true })
+      }
+    })
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(statuses, t)
 
