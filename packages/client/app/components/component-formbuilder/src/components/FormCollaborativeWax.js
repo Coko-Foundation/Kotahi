@@ -13,8 +13,8 @@ const FormCollaborateComponent =
         identifier={`${identifier}`}
         {...rest}
         collaborativeObject={collaborativeObject}
-        onChange={() => {
-          onChange(`${identifier}-${rest.name}`)
+        onChange={source => {
+          onChange(source)
         }}
       />
     )

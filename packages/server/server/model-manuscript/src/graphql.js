@@ -2163,13 +2163,29 @@ const resolvers = {
     },
   },
   PublishedReview: {
-    async user(parent) {
+    async users(parent) {
       if (parent.isHiddenReviewerName) {
-        return { id: '', username: 'Anonymous User' }
+        return [{ id: '', username: 'Anonymous User' }]
       }
 
-      const user = await User.query().findById(parent.userId)
-      return user
+      let users = []
+
+      if (parent.isCollaborative) {
+        const manuscript = await Manuscript.query().findById(
+          parent.manuscriptId,
+        )
+
+        const existingTeam = await manuscript
+          .$relatedQuery('teams')
+          .where('role', 'collaborativeReviewer')
+          .first()
+
+        users = await existingTeam.$relatedQuery('users')
+      } else {
+        users = await User.query().where({ id: parent.userId })
+      }
+
+      return users
     },
   },
 }
@@ -2465,7 +2481,7 @@ const typeDefs = `
     updated: DateTime
     isDecision: Boolean
     open: Boolean
-    user: ReviewUser
+    users: [ReviewUser]
     isHiddenFromAuthor: Boolean
     isCollaborative: Boolean
     isLock: Boolean
