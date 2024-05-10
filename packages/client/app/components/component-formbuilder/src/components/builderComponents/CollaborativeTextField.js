@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useState } from 'react'
 import { omit } from 'lodash'
 import styled from 'styled-components'
 import { TextField } from '@pubsweet/ui'
+import Color from 'color'
 import { TextAreaBinding } from 'y-textarea'
 
 import { Spinner } from '../../../../shared'
@@ -42,19 +43,6 @@ const arrayColor = [
   '#ba68c8',
 ]
 
-function hexToRgb(h) {
-  // Remove '#' if it exists
-  const hex = h.replace(/^#/, '')
-
-  // Parse the hex values for red, green, and blue components
-  const r = parseInt(hex.substring(0, 2), 16)
-  const g = parseInt(hex.substring(2, 4), 16)
-  const b = parseInt(hex.substring(4, 6), 16)
-
-  // Return the RGB values as an object
-  return { r, g, b }
-}
-
 const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
   const fieldType = `textInput-${input.name}`
 
@@ -71,20 +59,27 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
     omit(collaborativeObject, ['identifier', 'currentUser']),
   )
 
+  let areaBinding = null
+
   useEffect(() => {
     createYjsProvider(currentUser)
+
+    return () => {
+      areaBinding.destroy()
+    }
   }, [])
 
   const startTextYjs = useCallback(
     node => {
       if (node !== null) {
-        const color = hexToRgb(
+        const color = Color(
           arrayColor[Math.floor(Math.random() * arrayColor.length)],
         )
+          .rgb()
+          .object()
 
         const yTextInput = ydoc.getText(fieldType)
-        // eslint-disable-next-line no-new
-        new TextAreaBinding(yTextInput, node, {
+        areaBinding = new TextAreaBinding(yTextInput, node, {
           awareness: yjsProvider.awareness,
           clientName: currentUser ? currentUser.username : 'Anonymous',
           color,
