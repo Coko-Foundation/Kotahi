@@ -2071,6 +2071,22 @@ const resolvers = {
         parent.threadedDiscussions ||
         (await getThreadedDiscussionsForManuscript(parent, getUsersById))
 
+      // eslint-disable-next-line no-restricted-syntax
+      for (const review of reviews) {
+        const jsonData = JSON.parse(review.jsonData)
+
+        if (review.isCollaborative) {
+          const collaborativeFormData =
+            // eslint-disable-next-line no-await-in-loop
+            await models.CollaborativeDoc.getFormData(review.id, reviewForm)
+
+          review.jsonData = JSON.stringify({
+            ...jsonData,
+            ...collaborativeFormData,
+          })
+        }
+      }
+
       return getPublishableReviewFields(
         reviews,
         reviewForm,

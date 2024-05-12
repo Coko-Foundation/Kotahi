@@ -10,11 +10,11 @@ const FormCollaborateComponent =
       <CollaborativeWax
         component={component}
         editorMode={null}
-        identifier={`${identifier}`}
+        identifier={identifier}
         {...rest}
         collaborativeObject={collaborativeObject}
         onChange={source => {
-          onChange(source)
+          onChange(`${identifier}-${rest.name}`)
         }}
       />
     )

@@ -20,11 +20,11 @@ const getReviewerTeamMember = (
   }
 
   if (isCollaborative) {
-    const currentMember = team.members.find(m => m.user?.id === currentUser?.id)
-    return [currentMember]
+    return team.members
   }
 
-  return team.members
+  const currentMember = team.members.find(m => m.user?.id === currentUser?.id)
+  return currentMember
 }
 
 const DecisionReviews = ({
@@ -136,6 +136,11 @@ const DecisionReviews = ({
             open
             ordinal="1"
             review={collaborativeReviewToShow}
+            reviewerTeamMember={getReviewerTeamMember(
+              manuscript,
+              collaborativeReviewToShow.user,
+              collaborativeReviewToShow.isCollaborative,
+            )}
             reviewForm={reviewForm}
             teams={manuscript.teams}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -146,7 +151,6 @@ const DecisionReviews = ({
               updateSharedStatusForInvitedReviewer
             }
             updateTeamMember={updateTeamMember}
-            // reviewerTeamMember={getReviewerTeamMember(manuscript, review.user)}
           />
         </SectionRow>
       ) : (

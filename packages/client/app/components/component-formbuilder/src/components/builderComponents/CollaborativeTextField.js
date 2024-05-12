@@ -98,7 +98,7 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
       {...omit(input, ['value', 'onChange'])}
       onChange={event => {
         setText(event.currentTarget.value)
-        input.onChange(event.currentTarget.value)
+        input.onChange(`${collaborativeObject.identifier}-${input.name}`)
       }}
       value={text}
     />

@@ -98,11 +98,14 @@ const closeConn = (doc, conn) => {
 
 persistence = {
   bindState: async (id, doc) => {
-    const { yDocState } = await CollaborativeDoc.query().findOne({
+    const collaborativeForm = await CollaborativeDoc.query().findOne({
       objectId: id,
     })
 
-    Y.applyUpdate(doc, yDocState)
+    if (collaborativeForm) {
+      const { yDocState } = collaborativeForm
+      Y.applyUpdate(doc, yDocState)
+    }
   },
   writeState: async ydoc => {
     const objectId = ydoc.name
