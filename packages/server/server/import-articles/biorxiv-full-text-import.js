@@ -13,6 +13,37 @@ const {
 
 const CURSOR_LIMIT = 200 // This permits up to 10,000 matches, but prevents infinite loop
 const SAVE_CHUNK_SIZE = 50
+const TIMEOUT_MS = 30000
+const MAX_TRIES = 5
+const DELAY_INCREMENT_MS = 10000
+
+const doAxiosQueryWithRetry = async queryString => {
+  for (let i = 0; i < MAX_TRIES; i += 1) {
+    if (i > 0)
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(resolve => setTimeout(resolve, i * DELAY_INCREMENT_MS))
+
+    // eslint-disable-next-line no-await-in-loop
+    const result = await axios
+      .get(queryString, { timeout: TIMEOUT_MS })
+      .then(response => {
+        return response.data
+      })
+      .catch(error => {
+        if (i >= MAX_TRIES - 1) throw error
+        else
+          console.error(
+            `Attempt ${i + 1} of ${MAX_TRIES} to query bioRxiv failed: ${
+              error.message
+            }`,
+          )
+
+        return null
+      })
+
+    if (result) return result
+  }
+}
 
 /** Generate a query to retrieve all manuscripts from biorxiv within the given date range.
  *  The generated query does not include the cursor parameter, which should be added.
@@ -33,7 +64,7 @@ const importAll = async (queryWithoutCursor, subjects) => {
   for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
     const queryString = `${queryWithoutCursor}&cursor=${cursor}`
     // eslint-disable-next-line no-await-in-loop
-    const { data } = await axios.get(queryString)
+    const data = await doAxiosQueryWithRetry(queryString)
     if (!data || !data.collection || !data.collection.length) break
     totalRetrievedCount += data.collection.length
     imports.push(...restrictToSubjects(data.collection, subjects))
