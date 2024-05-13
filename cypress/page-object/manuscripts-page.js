@@ -31,7 +31,7 @@ const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = '[class*=style__ManuscriptsRow]'
 const TABLE_CELL = 'Table__Cell'
 const LABEL = '[name="submission.$customStatus"]'
-const BULKBUTTON = 'style__BulkActionModalButton'
+const CONFIRM_BUTTON = '[class*="ConfirmationModal"] button:nth-child(1)'
 
 const ARTICLE_CHECKBOX =
   '[class*=RowItemCheckbox__StyledCheckboxTable]label > [type*=checkbox]'
@@ -43,7 +43,10 @@ const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
 const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
-const CONFIRMATION_MESSAGE = '[class*=BulkActionModalContainer] > p'
+
+const CONFIRMATION_MESSAGE =
+  '[class*="ConfirmationModal"] [class*="MessageString"]'
+
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 // const CONTROL = '[href*=decision]'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
@@ -248,7 +251,7 @@ export const ManuscriptsPage = {
     this.getActionDropdown().contains('Archive').click()
   },
   getConfirmButton() {
-    return cy.getByContainsClass(BULKBUTTON).contains('Archive')
+    return cy.get(CONFIRM_BUTTON)
   },
   getLabelDropdown() {
     return cy.get(DROPDOWN_LABEL).eq(0)

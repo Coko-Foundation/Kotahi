@@ -6,11 +6,6 @@ export default {
       deleteManuscript(id: $id)
     }
   `,
-  archiveManuscriptMutation: gql`
-    mutation ($id: ID!) {
-      archiveManuscript(id: $id)
-    }
-  `,
   reviewerResponseMutation: gql`
     mutation ($currentUserId: ID!, $action: String, $teamId: ID!) {
       reviewerResponse(

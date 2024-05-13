@@ -20,9 +20,9 @@ import {
   IMPORT_MANUSCRIPTS,
   IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
   GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
-  ARCHIVE_MANUSCRIPT,
   ARCHIVE_MANUSCRIPTS,
   GET_MANUSCRIPTS_DATA,
+  UNARCHIVE_MANUSCRIPTS,
 } from '../../../queries'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
@@ -30,6 +30,7 @@ import Manuscripts from './Manuscripts'
 import {
   extractFilters,
   extractSortData,
+  extractArchived,
   URI_PAGENUM_PARAM,
   useQueryParams,
 } from '../../../shared/urlParamUtils'
@@ -59,6 +60,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   const sortName = extractSortData(uriQueryParams).name
   const sortDirection = extractSortData(uriQueryParams).direction
   const filters = extractFilters(uriQueryParams)
+  const archived = extractArchived(uriQueryParams)
   const limit = config?.manuscript?.paginationCount || 10
 
   const queryObject = useQuery(GET_MANUSCRIPTS_AND_FORM, {
@@ -69,6 +71,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       offset: (page - 1) * limit,
       limit,
       filters,
+      archived,
       timezoneOffsetMinutes: new Date().getTimezoneOffset(),
       groupId: config.groupId,
     },
@@ -167,22 +170,18 @@ const ManuscriptsPage = ({ currentUser, history }) => {
     saveAs(jsonBlob, fileName)
   }
 
-  const [archiveManuscriptMutation] = useMutation(ARCHIVE_MANUSCRIPT, {
-    update(cache, { data: { id } }) {
-      const cacheId = cache.identify({
+  const [doArchiveManuscripts] = useMutation(ARCHIVE_MANUSCRIPTS, {
+    update(cache, { data: { ids } }) {
+      const cacheIds = cache.identify({
         __typename: 'Manuscript',
-        id,
+        id: ids,
       })
 
-      cache.evict({ cacheId })
+      cache.evict({ cacheIds })
     },
   })
 
-  const archiveManuscriptMutations = id => {
-    archiveManuscriptMutation({ variables: { id } })
-  }
-
-  const [archiveManuscripts] = useMutation(ARCHIVE_MANUSCRIPTS, {
+  const [doUnarchiveManuscripts] = useMutation(UNARCHIVE_MANUSCRIPTS, {
     update(cache, { data: { ids } }) {
       const cacheIds = cache.identify({
         __typename: 'Manuscript',
@@ -234,8 +233,14 @@ const ManuscriptsPage = ({ currentUser, history }) => {
     })
   }
 
-  const confirmBulkArchive = selectedNewManuscript => {
-    archiveManuscripts({
+  const archiveManuscripts = selectedNewManuscript => {
+    doArchiveManuscripts({
+      variables: { ids: selectedNewManuscript },
+    })
+  }
+
+  const unarchiveManuscripts = selectedNewManuscript => {
+    doUnarchiveManuscripts({
       variables: { ids: selectedNewManuscript },
     })
   }
@@ -270,13 +275,13 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   return (
     <Manuscripts
       applyQueryParams={applyQueryParams}
-      archiveManuscriptMutations={archiveManuscriptMutations}
+      archived={archived}
+      archiveManuscripts={archiveManuscripts}
       channels={channels}
       chatExpand={chatExpand}
       chatProps={chatProps}
       chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
-      confirmBulkArchive={confirmBulkArchive}
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
       doUpdateManuscript={doUpdateManuscript}
@@ -293,6 +298,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
+      unarchiveManuscripts={unarchiveManuscripts}
       unsetCustomStatus={unsetCustomStatus}
       uriQueryParams={uriQueryParams}
       urlFrag={urlFrag}

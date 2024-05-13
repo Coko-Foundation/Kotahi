@@ -12,6 +12,7 @@ import { getNumVersions } from '../../component-dashboard/src/utils'
 
 const ManuscriptsTable = ({
   applyQueryParams,
+  archived,
   manuscripts,
   columnsProps,
   sortDirection,
@@ -34,7 +35,7 @@ const ManuscriptsTable = ({
 
   return (
     <ManuscriptsTableStyled>
-      <ManuscriptsHeaderRow>
+      <ManuscriptsHeaderRow $archived={archived}>
         {columnsProps.map(info => (
           <FilterSortHeader
             columnInfo={info}
@@ -65,6 +66,7 @@ const ManuscriptsTable = ({
 
           return (
             <ManuscriptRow
+              archived={archived}
               columnDefinitions={columnsProps}
               key={latestVersion.id}
               mainActionLink={mainActionLink}

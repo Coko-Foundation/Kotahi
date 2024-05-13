@@ -100,15 +100,15 @@ export const SEARCH_USERS = gql`
   }
 `
 
-export const ARCHIVE_MANUSCRIPT = gql`
-  mutation ($id: ID!) {
-    archiveManuscript(id: $id)
-  }
-`
-
 export const ARCHIVE_MANUSCRIPTS = gql`
   mutation ($ids: [ID!]!) {
     archiveManuscripts(ids: $ids)
+  }
+`
+
+export const UNARCHIVE_MANUSCRIPTS = gql`
+  mutation ($ids: [ID!]!) {
+    unarchiveManuscripts(ids: $ids)
   }
 `
 
@@ -131,6 +131,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
     $offset: Int
     $limit: Int
     $timezoneOffsetMinutes: Int
+    $archived: Boolean!
     $groupId: ID!
   ) {
     paginatedManuscripts(
@@ -139,6 +140,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
       offset: $offset
       limit: $limit
       timezoneOffsetMinutes: $timezoneOffsetMinutes
+      archived: $archived
       groupId: $groupId
     ) {
       totalCount

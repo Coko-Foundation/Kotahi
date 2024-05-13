@@ -69,12 +69,14 @@ const buildColumnDefinitions = (
   specialComponentValues,
   displayProps,
   doUpdateManuscript,
+  archived,
 ) => {
   const specialColumnProperties = buildSpecialColumnProps(
     specialComponentValues,
     config,
     fieldDefinitions,
     doUpdateManuscript,
+    archived,
   )
 
   return columnNames.map(columnName => {

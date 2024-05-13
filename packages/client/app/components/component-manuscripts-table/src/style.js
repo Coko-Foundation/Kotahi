@@ -31,7 +31,7 @@ export const InfoIcon = styled.div`
   font-weight: bold;
   height: 25px;
   justify-content: center;
-  line-height: 1.4ex;
+  line-height: 1ex;
   margin-left: 11px;
   min-height: 25px;
   min-width: 25px;
@@ -52,7 +52,8 @@ export const ManuscriptsTableStyled = styled.div`
 
 export const ManuscriptsRow = styled.div`
   align-items: center;
-  background-color: ${color.backgroundA};
+  background-color: ${props =>
+    props.$archived ? color.warning.tint90 : color.backgroundA};
   border-top: 1px solid ${color.gray90};
   column-gap: ${grid(2)};
   display: flex;
@@ -93,7 +94,8 @@ export const SnippetRow = styled.div`
 
 export const ManuscriptsHeaderRow = styled(ManuscriptsRow)`
   align-items: baseline;
-  background-color: ${th('colorSecondaryBackground')};
+  background-color: ${props =>
+    props.$archived ? color.warning.tint70 : color.backgroundB};
   font-variant: all-small-caps;
   line-height: 1.25em;
 `

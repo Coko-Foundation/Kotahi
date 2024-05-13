@@ -63,6 +63,7 @@ const EditorTable = ({
     fieldDefinitions,
     specialComponentValues,
     displayProps,
+    false,
   )
 
   const { t } = useTranslation()

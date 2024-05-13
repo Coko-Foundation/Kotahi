@@ -598,6 +598,7 @@ const permissions = {
       userIsAdmin,
     ),
     submitAuthorProofingFeedback: userIsAuthorOfManuscript,
+    unarchiveManuscripts: or(userIsGm, userIsAdmin),
     updateCollection: or(userIsGm, userIsAdmin),
     updateEmail: or(userIsCurrentUser, userIsGm, userIsAdmin),
     updateConfig: or(userIsGm, userIsAdmin),

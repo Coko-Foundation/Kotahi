@@ -16,6 +16,7 @@ const ManuscriptRow = ({
   columnDefinitions,
   setFilter,
   mainActionLink,
+  archived,
 }) => {
   const history = useHistory()
 
@@ -51,6 +52,7 @@ const ManuscriptRow = ({
     return (
       <>
         <ClickableManuscriptsRow
+          $archived={archived}
           onClick={onRowClick}
           onKeyDown={e => e.key === 'Enter' && onRowClick()}
           role="button"
@@ -65,7 +67,7 @@ const ManuscriptRow = ({
 
   return (
     <>
-      <ManuscriptsRow>{rowCells}</ManuscriptsRow>
+      <ManuscriptsRow $archived={archived}>{rowCells}</ManuscriptsRow>
       {manuscript.searchSnippet && (
         <SnippetRow
           dangerouslySetInnerHTML={{
