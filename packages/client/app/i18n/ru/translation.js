@@ -204,6 +204,9 @@ const ru = {
     },
     manuscriptsPage: {
       Manuscripts: 'Статьи',
+      archivedManuscripts: 'Архивированные статьи',
+      viewArchived: 'Просмотреть архивированные статьи',
+      viewUnarchived: 'Вернуться к неархивированным статьям',
       manuscriptInvalid:
         'Эта рукопись содержит неполные или недопустимые поля. Исправьте их и повторите попытку.',
       importPending: 'импорт',
@@ -215,6 +218,11 @@ const ru = {
       selectedArticles_few: '{{count}} статьи выбрано',
       selectedArticles_many: '{{count}} статей выбрано',
       Archive: 'Архивировать',
+      Unarchive: 'Восстановить из архива',
+      confirmArchive:
+        'Пожалуйста, подтвердите, что вы хотите архивировать выбранные манускрипты.',
+      confirmUnarchive:
+        'Пожалуйста, подтвердите, что вы хотите восстановить выбранные манускрипты из архива.',
       takeAction: 'действие',
       exportAsJson: 'Скачать JSON',
     },

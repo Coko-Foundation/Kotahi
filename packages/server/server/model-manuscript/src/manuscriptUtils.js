@@ -275,6 +275,8 @@ const applyFilters = (
         }
       } else if (filter.field === 'status') {
         addWhere('m.status = ?', filter.value)
+      } else if (filter.field === 'archived') {
+        // ignore: this is handled elsewhere
       } else {
         console.warn(
           `Could not filter on field "${filter.field}" by value "${filter.value}"`,
@@ -292,6 +294,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   offset,
   limit,
   filters,
+  archived,
   submissionForm,
   timezoneOffsetMinutes,
   manuscriptIDs = null,
@@ -308,7 +311,8 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   addSelect('id')
   addSelect('count(1) OVER() AS full_count') // Count of all results (not just this page)
   addWhere('m.created = sub.latest_created')
-  addWhere('m.is_hidden IS NOT TRUE')
+  if (archived) addWhere('m.is_hidden IS TRUE')
+  else addWhere('m.is_hidden IS NOT TRUE')
 
   let subQuery = `WITH subQuery AS (
     SELECT short_id, MAX(created) AS latest_created

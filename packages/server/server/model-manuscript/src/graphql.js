@@ -548,6 +548,24 @@ const resolvers = {
       return archivedManuscripts.map(m => m.id)
     },
 
+    async unarchiveManuscripts(_, { ids }, ctx) {
+      // finding the ids of the first versions of all manuscripts:
+      const selectedManuscripts = await models.Manuscript.query()
+        .select('parentId', 'id')
+        .whereIn('id', ids)
+
+      const firstVersionIds = selectedManuscripts.map(m => m.parentId || m.id)
+
+      // unarchiving manuscripts with either firstVersionID or parentID
+      const unarchivedManuscripts = await models.Manuscript.query()
+        .returning('id')
+        .update({ isHidden: false })
+        .whereIn('id', firstVersionIds)
+        .orWhereIn('parentId', firstVersionIds)
+
+      return unarchivedManuscripts.map(m => m.id)
+    },
+
     async archiveManuscript(_, { id }, ctx) {
       await deleteAlertsForManuscript(id)
       const manuscript = await models.Manuscript.find(id)
@@ -1583,6 +1601,7 @@ const resolvers = {
         offset,
         limit,
         filters,
+        false,
         submissionForm,
         timezoneOffsetMinutes || 0,
         Object.keys(userManuscriptsWithInfo),
@@ -1637,7 +1656,15 @@ const resolvers = {
 
     async paginatedManuscripts(
       _,
-      { sort, offset, limit, filters, timezoneOffsetMinutes, groupId },
+      {
+        sort,
+        offset,
+        limit,
+        filters,
+        timezoneOffsetMinutes,
+        archived,
+        groupId,
+      },
       ctx,
     ) {
       const groupIdFromHeader = ctx.req.headers['group-id']
@@ -1650,6 +1677,7 @@ const resolvers = {
         offset,
         limit,
         filters,
+        archived,
         submissionForm,
         timezoneOffsetMinutes || 0,
         null,
@@ -2131,7 +2159,7 @@ const typeDefs = `
     globalTeams: [Team]
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
-    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!): PaginatedManuscripts
+    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, archived: Boolean!, groupId: ID!): PaginatedManuscripts
     manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int, groupId: ID!, searchInAllVersions: Boolean!): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int, groupId: ID!): PaginatedManuscripts
     validateDOI(doiOrUrl: String): validateDOIResponse
@@ -2188,6 +2216,7 @@ const typeDefs = `
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
     archiveManuscript(id: ID!): ID!
     archiveManuscripts(ids: [ID]!): [ID!]!
+    unarchiveManuscripts(ids: [ID]!): [ID!]!
     assignAuthoForProofingManuscript(id: ID!): Manuscript!
   }
 

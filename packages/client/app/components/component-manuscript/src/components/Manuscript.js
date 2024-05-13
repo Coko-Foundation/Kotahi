@@ -17,7 +17,7 @@ const Info = styled.span`
   height: 500px;
   justify-content: center;
   list-style: none;
-  margin: 0;
+  margin: 0 2em;
   padding: 0;
 `
 

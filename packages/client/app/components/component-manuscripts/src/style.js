@@ -1,12 +1,17 @@
 import styled from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
+import { Action } from '../../shared'
+import theme, { color } from '../../../theme'
 
 export const SelectAllField = styled.div`
   align-items: center;
   display: flex;
+  font-size: ${theme.fontSizeBaseSmall};
+  line-height: ${theme.lineHeightBaseSmall};
 `
 export const SelectedManuscriptsNumber = styled.p`
+  color: ${props => (props.disabled ? color.gray60 : color.text)};
   font-weight: bold;
   margin-left: 10px;
   margin-right: 15px;
@@ -30,4 +35,8 @@ export const BulkActionModalButtons = styled.div`
 
 export const BulkActionModalButton = styled(Button)`
   cursor: pointer;
+`
+
+export const ViewArchivedAction = styled(Action)`
+  font-size: ${theme.fontSizeBaseSmall};
 `

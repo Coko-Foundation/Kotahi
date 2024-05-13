@@ -116,7 +116,8 @@ const Page = styled.div`
 `
 
 const Heading = styled.div`
-  color: ${color.brand1.base};
+  color: ${props =>
+    props.$warning ? color.warning.shade10 : color.brand1.base};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};

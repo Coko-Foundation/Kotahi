@@ -202,6 +202,9 @@ const esLa = {
     },
     manuscriptsPage: {
       Manuscripts: 'Manuscritos',
+      archivedManuscripts: 'Manuscritos archivados',
+      viewArchived: 'Ver manuscritos archivados',
+      viewUnarchived: 'Volver a los manuscritos no archivados',
       manuscriptInvalid:
         'Este manuscrito tiene campos incompletos o inválidos. Por favor, corrígelos e inténtalo de nuevo.',
       importPending: 'pendiente',
@@ -211,6 +214,11 @@ const esLa = {
       'Select All': 'Seleccionar Todo',
       selectedArticles: '{{count}} artículos seleccionados',
       Archive: 'Archivo',
+      Unarchive: 'Restaurar desde archivo',
+      confirmArchive:
+        'Por favor confirme que desea archivar los manuscritos seleccionados.',
+      confirmUnarchive:
+        'Por favor confirme que desea restaurar el estado no archivado de los manuscritos seleccionados.',
       takeAction: 'Acción',
       exportAsJson: 'Descargar JSON',
     },

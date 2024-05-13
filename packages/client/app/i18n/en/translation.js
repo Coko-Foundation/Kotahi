@@ -200,6 +200,9 @@ const en = {
     },
     manuscriptsPage: {
       Manuscripts: 'Manuscripts',
+      archivedManuscripts: 'Archived manuscripts',
+      viewArchived: 'View archived manuscripts',
+      viewUnarchived: 'Return to unarchived manuscripts',
       manuscriptInvalid:
         'This manuscript has incomplete or invalid fields. Please correct these and try again.',
       importPending: 'pending',
@@ -209,6 +212,11 @@ const en = {
       'Select All': 'Select All',
       selectedArticles: '{{count}} articles selected',
       Archive: 'Archive',
+      Unarchive: 'Restore from archive',
+      confirmArchive:
+        'Please confirm you wish to archive the selected manuscripts.',
+      confirmUnarchive:
+        'Please confirm you wish to restore the selected manuscripts to unarchived status.',
       takeAction: 'Action',
       exportAsJson: 'Download JSON',
     },

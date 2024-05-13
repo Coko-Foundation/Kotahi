@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 export const URI_SEARCH_PARAM = 'search'
 export const URI_PAGENUM_PARAM = 'pagenum'
 export const URI_SORT_PARAM = 'sort'
+export const URI_ARCHIVED_PARAM = 'archived'
 export const URI_REVIEWER_STATUS_PARAM = 'reviewerStatusBadge' // 'your status' column on reviews dashboard tab
 
 /**
@@ -24,6 +25,9 @@ export const extractFilters = params =>
   Array.from(params.keys())
     .filter(field => field !== URI_PAGENUM_PARAM && field !== URI_SORT_PARAM)
     .map(field => ({ field, value: params.get(field) }))
+
+/** Returns true if query params contains the archived flag */
+export const extractArchived = params => params.has(URI_ARCHIVED_PARAM)
 
 /**
  * Custom hook to return a function that can load a new page with certain URI query params
