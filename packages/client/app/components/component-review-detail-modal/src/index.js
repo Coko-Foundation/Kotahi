@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
@@ -58,6 +58,7 @@ const ReviewDetailsModal = (
 ) => {
   const {
     createFile,
+    createYjsProvider,
     currentUser,
     deleteFile,
     status,
@@ -84,6 +85,16 @@ const ReviewDetailsModal = (
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+
+  useEffect(() => {
+    if (review.isCollaborative) {
+      createYjsProvider({
+        currentUser,
+        identifier: review.id,
+        object: {},
+      })
+    }
+  }, [])
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,

@@ -1,5 +1,5 @@
 /* eslint-disable react/default-props-match-prop-types */
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { useTranslation } from 'react-i18next'
@@ -17,14 +17,12 @@ import {
   HiddenTabs,
   ErrorBoundary,
   VersionSwitcher,
-  Spinner,
 } from '../../../../shared'
 import { ChatButton, CollapseButton } from '../style'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../../../config/src'
-import useYjs from '../../../../wax-collab/src/hooks/useYjs'
 
 const ReviewLayout = ({
   currentUser,
@@ -46,16 +44,6 @@ const ReviewLayout = ({
   versionsOfManuscriptCurrentUserIsReviewerOf,
   chatExpand,
 }) => {
-  const { yjsProvider, ydoc, createYjsProvider } = useYjs(
-    currentUserReview.id,
-    {},
-  )
-
-  useEffect(() => {
-    if (currentUserReview.isCollaborative) {
-      createYjsProvider(currentUser)
-    }
-  }, [])
   const config = useContext(ConfigContext) || {}
   const { urlFrag } = config
   const priorVersions = versions.slice(1)
@@ -200,8 +188,6 @@ const ReviewLayout = ({
           <SectionContent>
             <FormTemplate
               collaborativeObject={{
-                yjsProvider,
-                ydoc,
                 identifier: currentUserReview.id,
                 currentUser,
               }}
@@ -366,9 +352,6 @@ const ReviewLayout = ({
       console.error('Error toggling submission discussion visibility:', error)
     }
   }
-
-  if (currentUserReview.isCollaborative && (!yjsProvider || !ydoc))
-    return <Spinner />
 
   return (
     <Columns>

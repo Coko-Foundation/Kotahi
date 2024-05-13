@@ -78,6 +78,7 @@ const CollaborativeBadge = styled.div`
 
 const KanbanCard = ({
   createFile,
+  createYjsProvider,
   currentUser,
   deleteFile,
   reviewer,
@@ -107,6 +108,7 @@ const KanbanCard = ({
     <>
       <ReviewDetailsModal
         createFile={createFile}
+        createYjsProvider={createYjsProvider}
         currentUser={currentUser}
         deleteFile={deleteFile}
         isInvitation={isInvitation}

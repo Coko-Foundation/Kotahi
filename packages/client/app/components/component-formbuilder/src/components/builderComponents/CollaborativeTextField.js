@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useContext, useCallback, useState } from 'react'
 import { omit } from 'lodash'
 import styled from 'styled-components'
 import { TextField } from '@pubsweet/ui'
@@ -6,7 +6,7 @@ import Color from 'color'
 import { TextAreaBinding } from 'y-textarea'
 
 import { Spinner } from '../../../../shared'
-import useYjs from '../../../../wax-collab/src/hooks/useYjs'
+import YjsContext from '../../../../provider-yjs/yjsProvider'
 
 const TextFieldSyled = styled(TextField)`
   position: relative;
@@ -44,6 +44,7 @@ const arrayColor = [
 ]
 
 const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
+  const { yjsProvider, ydoc } = useContext(YjsContext)
   const fieldType = `textInput-${input.name}`
 
   let currentUser = null
@@ -54,16 +55,9 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
 
   const [text, setText] = useState(null)
 
-  const { yjsProvider, ydoc, createYjsProvider } = useYjs(
-    collaborativeObject.identifier,
-    omit(collaborativeObject, ['identifier', 'currentUser']),
-  )
-
   let areaBinding = null
 
   useEffect(() => {
-    createYjsProvider(currentUser)
-
     return () => {
       areaBinding.destroy()
     }

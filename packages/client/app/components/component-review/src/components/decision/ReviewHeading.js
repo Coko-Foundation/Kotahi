@@ -187,7 +187,7 @@ ReviewHeading.propTypes = {
   isCollaborative: PropTypes.bool.isRequired,
   isLock: PropTypes.bool.isRequired,
   // eslint-disable-next-line
-  users: PropTypes.object.isRequired,
+  users: PropTypes.array.isRequired,
 }
 ReviewHeading.defaultProps = { recommendation: null }
 

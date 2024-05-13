@@ -29,6 +29,7 @@ const getReviewerTeamMember = (
 
 const DecisionReviews = ({
   canEditReviews,
+  createYjsProvider,
   reviewForm,
   manuscript,
   lockUnlockReview,
@@ -129,12 +130,13 @@ const DecisionReviews = ({
           <DecisionReview
             canEditReviews={canEditReviews}
             canHideReviews={canHideReviews}
+            createYjsProvider={createYjsProvider}
             currentUser={currentUser}
             isControlPage
             lockUnlockReview={lockUnlockReview}
             manuscriptId={manuscript.id}
             open
-            ordinal="1"
+            ordinal={1}
             review={collaborativeReviewToShow}
             reviewerTeamMember={getReviewerTeamMember(
               manuscript,
@@ -167,7 +169,7 @@ DecisionReviews.propTypes = {
       PropTypes.shape({
         user: PropTypes.shape({
           id: PropTypes.string.isRequired,
-        }).isRequired,
+        }),
       }).isRequired,
     ).isRequired,
     teams: PropTypes.arrayOf(

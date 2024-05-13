@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
-import { omit } from 'lodash'
+import React, { useContext } from 'react'
+import YjsContext from '../../provider-yjs/yjsProvider'
+
 import Editor from '.'
 
 import { Spinner } from '../../shared'
-import useYjs from './hooks/useYjs'
 
 const CollaborativeWax = ({
   editorMode,
@@ -15,15 +15,9 @@ const CollaborativeWax = ({
 }) => {
   const { currentUser } = collaborativeObject
 
-  const { yjsProvider, ydoc, createYjsProvider } = useYjs(identifier, {
-    ...omit(collaborativeObject, ['identifier', 'currentUser']),
-  })
+  const { yjsProvider, ydoc } = useContext(YjsContext)
 
   const Component = editorMode ? Editor[editorMode] : component
-
-  useEffect(() => {
-    createYjsProvider(currentUser)
-  }, [])
 
   if (!yjsProvider || !ydoc) return <Spinner />
 

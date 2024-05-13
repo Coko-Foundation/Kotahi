@@ -1,30 +1,60 @@
 /* eslint-disable react/prop-types */
-import { useState, useContext } from 'react'
+
+import React, { useState, useContext } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
+import { ConfigContext } from '../config/src'
 
-import { ConfigContext } from '../../../config/src'
+const YjsContext = React.createContext({})
+
+const { Provider, Consumer } = YjsContext
+
+const withYjs = Component => {
+  const C = props => (
+    <Consumer>
+      {providerProps => <Component {...providerProps} {...props} />}
+    </Consumer>
+  )
+
+  return C
+}
 
 const arrayColor = [
-  '#D9E3F0',
-  '#F47373',
-  '#697689',
-  '#37D67A',
-  '#2CCCE4',
-  '#555555',
-  '#dce775',
-  '#ff8a65',
-  '#ba68c8',
+  '#4363d8',
+  '#ffe119',
+  '#800000',
+  '#dcbeff',
+  '#000075',
+  '#f58231',
+  '#469990',
+  '#f032e6',
+  '#9a6324',
+  '#42d4f4',
+  '#e6194b',
+  '#fabed4',
+  '#3cb44b',
+  '#911eb4',
+  '#bfef45',
+  '#808000',
+  '#ffd8b1',
+  '#aaffc3',
 ]
 
-const useYjs = (identifier, object) => {
+const YjsProvider = ({ children }) => {
   const { groupId } = useContext(ConfigContext)
-  const [yjsProvider, setYjsProvider] = useState(object?.yjsProvider)
+  const [yjsProvider, setYjsProvider] = useState(null)
+  const [ydoc, setYDoc] = useState(null)
 
-  const [ydoc, setYDoc] = useState(object?.ydoc)
+  const createYjsProvider = ({ currentUser, object, identifier }) => {
+    if (!object) {
+      throw new Error('You need to specify a collaborativeObject')
+    }
 
-  const createYjsProvider = currentUser => {
+    if (!identifier) {
+      throw new Error('You need to specify a Identifier')
+    }
+
     let ydocInstance = null
 
     if (ydoc) {
@@ -74,19 +104,19 @@ const useYjs = (identifier, object) => {
     setYjsProvider(provider)
   }
 
-  if (!object) {
-    throw new Error('You need to specify a collaborativeObject')
-  }
-
-  if (!identifier) {
-    throw new Error('You need to specify a Identifier')
-  }
-
-  return {
-    yjsProvider,
-    ydoc,
-    createYjsProvider,
-  }
+  return (
+    <Provider
+      value={{
+        yjsProvider,
+        ydoc,
+        createYjsProvider,
+      }}
+    >
+      {children}
+    </Provider>
+  )
 }
 
-export default useYjs
+export { Consumer as YjsConsumer, YjsProvider, withYjs }
+
+export default YjsContext

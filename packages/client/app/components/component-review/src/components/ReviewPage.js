@@ -1,10 +1,12 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useQuery, useSubscription, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
+import YjsContext from '../../../provider-yjs/yjsProvider'
+
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
@@ -233,6 +235,9 @@ const updateReviewMutationQuery = gql`
 const ReviewPage = ({ currentUser, history, match }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
+
+  const { createYjsProvider } = useContext(YjsContext)
+
   const { urlFrag } = config
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS_MUTATION)
@@ -299,6 +304,16 @@ const ReviewPage = ({ currentUser, history, match }) => {
       })
     },
   })
+
+  useEffect(() => {
+    if (currentUserReview.isCollaborative) {
+      createYjsProvider({
+        currentUser,
+        identifier: currentUserReview.id,
+        object: {},
+      })
+    }
+  }, [])
 
   let editorialChannelId
 

@@ -634,7 +634,7 @@ const FormTemplate = ({
 
 FormTemplate.propTypes = {
   form: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     description: PropTypes.string,
     children: PropTypes.arrayOf(
       PropTypes.shape({
@@ -661,7 +661,7 @@ FormTemplate.propTypes = {
     enableReinitialize: PropTypes.bool,
   }),
   manuscriptId: PropTypes.string.isRequired,
-  manuscriptShortId: PropTypes.number.isRequired,
+  manuscriptShortId: PropTypes.number,
   manuscriptStatus: PropTypes.string,
   initialValues: PropTypes.shape({
     files: PropTypes.arrayOf(
@@ -692,6 +692,7 @@ FormTemplate.defaultProps = {
   republish: null,
   submissionButtonText: '',
   manuscriptStatus: null,
+  manuscriptShortId: 1,
   shouldStoreFilesInForm: false,
   tagForFiles: null,
   initializeReview: null,

@@ -68,6 +68,7 @@ const normalizeStatus = statusString =>
 
 const KanbanBoard = ({
   createFile,
+  createYjsProvider,
   currentUser,
   deleteFile,
   invitations,
@@ -228,6 +229,7 @@ const KanbanBoard = ({
                   ).map(reviewer => (
                     <KanbanCard
                       createFile={createFile}
+                      createYjsProvider={createYjsProvider}
                       currentUser={currentUser}
                       deleteFile={deleteFile}
                       isCurrentVersion={isCurrentVersion}

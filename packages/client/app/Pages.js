@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { ConfigProvider } from './components/config/src'
 import { DynamicThemeProvider } from './components/theme/src'
+import { YjsProvider } from './components/provider-yjs/yjsProvider'
 import theme, { setBrandColors } from './theme'
 import GlobalStyle from './theme/elements/GlobalStyle'
 import { Spinner, CommsErrorBanner } from './components/shared'
@@ -114,71 +115,73 @@ const Pages = () => {
       <DynamicFavicon config={config} />
       <GlobalStyle />
       <ConfigProvider config={config}>
-        <Switch>
-          {hasMultipleGroups ? (
-            <Route component={GroupPage} exact path="/" />
-          ) : (
+        <YjsProvider>
+          <Switch>
+            {hasMultipleGroups ? (
+              <Route component={GroupPage} exact path="/" />
+            ) : (
+              <Route
+                exact
+                path="/"
+                render={() => <Redirect to={`/${onlyGroupName}/login`} />}
+              />
+            )}
+
             <Route
               exact
-              path="/"
-              render={() => <Redirect to={`/${onlyGroupName}/login`} />}
+              path="/login"
+              render={() => (
+                <Redirect
+                  to={hasMultipleGroups ? '/' : `/${onlyGroupName}/login`}
+                />
+              )}
             />
-          )}
 
-          <Route
-            exact
-            path="/login"
-            render={() => (
-              <Redirect
-                to={hasMultipleGroups ? '/' : `/${onlyGroupName}/login`}
-              />
-            )}
-          />
+            <Route
+              exact
+              path={urlFrag}
+              render={() => (
+                <Redirect
+                  to={
+                    window.localStorage.getItem('token')
+                      ? `${urlFrag}/dashboard`
+                      : `${urlFrag}/login`
+                  }
+                />
+              )}
+            />
 
-          <Route
-            exact
-            path={urlFrag}
-            render={() => (
-              <Redirect
-                to={
-                  window.localStorage.getItem('token')
-                    ? `${urlFrag}/dashboard`
-                    : `${urlFrag}/login`
-                }
-              />
-            )}
-          />
+            {/* <Route component={Frontpage} exact path={`${urlFrag}`} /> */}
+            {/* <Route component={GroupPage} exact path="/" /> */}
 
-          {/* <Route component={Frontpage} exact path={`${urlFrag}`} /> */}
-          {/* <Route component={GroupPage} exact path="/" /> */}
+            <Route component={Login} exact path={`${urlFrag}/login`} />
 
-          <Route component={Login} exact path={`${urlFrag}/login`} />
-
-          <Route
-            component={ArticleArtifactPage}
-            exact
-            path={`${urlFrag}/versions/:version/artifacts/:artifactId`}
-          />
-          <Route
-            component={DeclineArticleOwnershipPage}
-            exact
-            path={`${urlFrag}/decline/:invitationId`}
-          />
-          <Route
-            component={AcceptArticleOwnershipPage}
-            exact
-            path={`${urlFrag}/acceptarticle/:invitationId`}
-          />
-          <Route
-            component={InvitationAcceptedPage}
-            exact
-            path={`${urlFrag}/invitation/accepted`}
-          />
-          {/* AdminPage has nested routes within */}
-          <Route path={`${urlFrag}`}>
-            <AdminPage />
-          </Route>
-        </Switch>
+            <Route
+              component={ArticleArtifactPage}
+              exact
+              path={`${urlFrag}/versions/:version/artifacts/:artifactId`}
+            />
+            <Route
+              component={DeclineArticleOwnershipPage}
+              exact
+              path={`${urlFrag}/decline/:invitationId`}
+            />
+            <Route
+              component={AcceptArticleOwnershipPage}
+              exact
+              path={`${urlFrag}/acceptarticle/:invitationId`}
+            />
+            <Route
+              component={InvitationAcceptedPage}
+              exact
+              path={`${urlFrag}/invitation/accepted`}
+            />
+            {/* AdminPage has nested routes within */}
+            <Route path={`${urlFrag}`}>
+              <AdminPage />
+            </Route>
+          </Switch>
+        </YjsProvider>
       </ConfigProvider>
     </DynamicThemeProvider>
   )
