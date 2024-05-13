@@ -86,7 +86,7 @@ const getUrlByDoi = async (doi, contactEmail) => {
     )
     return null
   } catch (error) {
-    if (error.response.status === 404) {
+    if (error.response?.status === 404) {
       // DataCite appears to be capable of retrieving URLs for all agencies, though it's slower than CrossRef.
       // If we have trouble with DataCite, we can determine the agency as follows and then use that agency's API:
       //
@@ -97,7 +97,7 @@ const getUrlByDoi = async (doi, contactEmail) => {
       return getUrlByDoiFromDataCite(doi)
     }
 
-    if (error.response.status === 429) {
+    if (error.response?.status === 429) {
       // TODO Consider implementing a backoff
       return getUrlByDoiFromDataCite(doi) // Get from alternative service that's generally slower, but shouldn't give 429 error
     }

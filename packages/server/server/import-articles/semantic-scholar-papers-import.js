@@ -41,11 +41,12 @@ const getData = async (groupId, ctx) => {
   const lastImportDate = await getLastImportDate(sourceId, groupId)
 
   const manuscripts = await models.Manuscript.query()
-    .where({ groupId, isHidden: false })
+    .where({ groupId })
     .orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
-    manuscript => manuscript.submission.$customStatus,
+    manuscript =>
+      manuscript.submission.$customStatus && !manuscript.submission.isHidden,
   )
 
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
