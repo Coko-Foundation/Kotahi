@@ -13,7 +13,7 @@ class CollaborativeDoc extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const Group = require('../../model-group/src/group')
+    const Group = require('../group/group.model')
 
     return {
       group: {

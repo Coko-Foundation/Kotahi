@@ -25,6 +25,7 @@ const User = require('../../../models/user/user.model')
 const Invitation = require('../../../models/invitation/invitation.model')
 const Config = require('../../../models/config/config.model')
 const ReviewModel = require('../../../models/review/review.model')
+const CollaborativeDoc = require('../../../models/collaborative-doc')
 
 const {
   sendAnnouncementNotification,
@@ -2078,7 +2079,7 @@ const resolvers = {
         if (review.isCollaborative) {
           const collaborativeFormData =
             // eslint-disable-next-line no-await-in-loop
-            await models.CollaborativeDoc.getFormData(review.id, reviewForm)
+            await CollaborativeDoc.getFormData(review.id, reviewForm)
 
           review.jsonData = JSON.stringify({
             ...jsonData,

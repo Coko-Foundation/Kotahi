@@ -2,10 +2,10 @@
 const { useTransaction, logger } = require('@coko/server')
 
 /* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../server/config/src/config')
+const Config = require('../models/config/config.model')
 
 /* eslint-disable-next-line import/no-unresolved, import/extensions */
-const EmailTemplate = require('../server/model-email-templates/src/emailTemplate')
+const EmailTemplate = require('../models/emailTemplate/emailTemplate.model')
 
 /* eslint-disable-next-line import/no-unresolved, import/extensions */
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')

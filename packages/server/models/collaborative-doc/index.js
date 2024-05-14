@@ -1,4 +1,4 @@
-const model = require('./collaborativeDoc')
+const model = require('./collaborativeDoc.model')
 
 module.exports = {
   model,
