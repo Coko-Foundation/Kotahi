@@ -145,16 +145,16 @@ const resolvers = {
       return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
     async updateCollaborativeTeamMembers(_, { manuscriptId, input }, ctx) {
-      const collaborativeReviewerTeam = await models.Team.query().findOne({
+      const collaborativeReviewerTeam = await Team.query().findOne({
         objectId: manuscriptId,
         role: 'collaborativeReviewer',
       })
 
-      await models.TeamMember.query()
+      await TeamMember.query()
         .where({ teamId: collaborativeReviewerTeam.id })
         .update(JSON.parse(input))
 
-      return models.TeamMember.query().where({
+      return TeamMember.query().where({
         teamId: collaborativeReviewerTeam.id,
       })
     },
