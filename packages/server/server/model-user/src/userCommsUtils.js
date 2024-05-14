@@ -1,12 +1,18 @@
-const models = require('@pubsweet/models')
 const config = require('config')
 const sendEmailNotification = require('../../email-notifications')
+
+const User = require('../../../models/user/user.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const Team = require('../../../models/team/team.model')
+const Group = require('../../../models/group/group.model')
+const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
+const Invitation = require('../../../models/invitation/invitation.model')
 
 const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
-const getUsersById = async userIds => models.User.query().findByIds(userIds)
+const getUsersById = async userIds => User.query().findByIds(userIds)
 
 /** Returns an object of boolean values corresponding to roles the user could hold:
  * groupManager, admin, author, reviewer, editor, handlingEditor, seniorEditor, managingEditor.
@@ -16,7 +22,7 @@ const getUsersById = async userIds => models.User.query().findByIds(userIds)
  * "anyEditorOrManager" indicates any editorial role or groupManager or admin. */
 const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
   const { trx } = options
-  const manuscript = await models.Manuscript.query(trx).findById(manuscriptId)
+  const manuscript = await Manuscript.query(trx).findById(manuscriptId)
   const { groupId } = manuscript
 
   const { groupRoles, globalRoles } = await getGroupAndGlobalRoles(
@@ -40,7 +46,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
 
   if (!userId || !manuscriptId) return result
 
-  const teams = await models.Team.query(trx)
+  const teams = await Team.query(trx)
     .select('role')
     .withGraphJoined('members')
     .where({ objectId: manuscriptId, userId })
@@ -77,10 +83,8 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
 const getSharedReviewersIds = async (manuscriptId, currentUserId) => {
   if (!currentUserId) return []
 
-  const reviewers = await models.Team.relatedQuery('members')
-    .for(
-      models.Team.query().where({ objectId: manuscriptId, role: 'reviewer' }),
-    )
+  const reviewers = await Team.relatedQuery('members')
+    .for(Team.query().where({ objectId: manuscriptId, role: 'reviewer' }))
     .select('userId')
     .where({ isShared: true })
     .where(builder =>
@@ -118,15 +122,15 @@ const sendEmailWithPreparedData = async (
     groupId,
   } = inputParsed
 
-  const selectedEmailTemplateData = await models.EmailTemplate.query(
-    trx,
-  ).findById(selectedTemplate)
+  const selectedEmailTemplateData = await EmailTemplate.query(trx).findById(
+    selectedTemplate,
+  )
 
   const receiverEmail = externalEmail || selectedEmail
 
   let receiverName = externalName
 
-  const group = await models.Group.query(trx).findById(groupId)
+  const group = await Group.query(trx).findById(groupId)
 
   const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
   let manuscriptPageUrl = `${appUrl}/versions/${manuscript.id}`
@@ -135,7 +139,7 @@ const sendEmailWithPreparedData = async (
   if (selectedEmail) {
     // If the email of a pre-existing user is selected
     // Get that user
-    const [userReceiver] = await models.User.query(trx)
+    const [userReceiver] = await User.query(trx)
       .where({ email: selectedEmail })
       .withGraphFetched('[defaultIdentity]')
 
@@ -161,9 +165,7 @@ const sendEmailWithPreparedData = async (
   const manuscriptProductionPageUrl = `${appUrl}/versions/${manuscript.id}/production` // manuscriptProductionPageUrl used only for author proofing flow
   const manuscriptId = manuscript.id
 
-  const manuscriptObject = await models.Manuscript.query(trx).findById(
-    manuscriptId,
-  )
+  const manuscriptObject = await Manuscript.query(trx).findById(manuscriptId)
 
   const author = await manuscriptObject.getManuscriptAuthor({ trx })
 
@@ -181,7 +183,7 @@ const sendEmailWithPreparedData = async (
   if (!ctx) {
     invitationSender = emailSender
   } else {
-    invitationSender = await models.User.find(ctx.user) // no trx!!
+    invitationSender = await User.find(ctx.user) // no trx!!
   }
 
   const toEmail = receiverEmail
@@ -203,7 +205,7 @@ const sendEmailWithPreparedData = async (
     if (selectedEmail) {
       // If the email of a pre-existing user is selected
       // Get that user
-      const [userReceiver] = await models.User.query(trx)
+      const [userReceiver] = await User.query(trx)
         .where({ email: selectedEmail })
         .withGraphFetched('[defaultIdentity]')
 
@@ -219,7 +221,7 @@ const sendEmailWithPreparedData = async (
         ? 'AUTHOR'
         : 'REVIEWER'
 
-    const newInvitation = await new models.Invitation({
+    const newInvitation = await new Invitation({
       manuscriptId,
       toEmail,
       purpose,
@@ -285,7 +287,7 @@ const getGroupAndGlobalRoles = async (userId, groupId, options = {}) => {
   const { trx } = options
   if (!userId) return { groupRoles: [], globalRoles: [] }
 
-  const groupAndGlobalTeams = await models.Team.query(trx)
+  const groupAndGlobalTeams = await Team.query(trx)
     .select('role', 'objectId')
     .withGraphJoined('members')
     .where({ userId })
@@ -317,7 +319,7 @@ const isAdminOrGroupManager = async (userId, groupId) => {
 const getEditorEmails = async (manuscriptId, options = {}) => {
   const { trx } = options
   const userIds = await getEditorIdsForManuscript(manuscriptId, { trx })
-  const users = await models.User.query(trx).whereIn('id', userIds)
+  const users = await User.query(trx).whereIn('id', userIds)
   return users.map(user => user.email)
 }
 

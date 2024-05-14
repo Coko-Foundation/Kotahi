@@ -1,12 +1,14 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 const TurndownService = require('turndown')
 const axios = require('axios')
-const models = require('@pubsweet/models')
+
+const Config = require('../../../models/config/config.model')
+const PublishedArtifact = require('../../../models/publishedArtifact/publishedArtifact.model')
+
 const { getUsersById } = require('../../model-user/src/userCommsUtils')
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 const { getPublishableFields, normalizeUri } = require('./hypothesisTools')
 const { upsertArtifact, deleteArtifact } = require('../publishingCommsUtils')
-const Config = require('../../config/src/config')
 
 const {
   getThreadedDiscussionsForManuscript,
@@ -167,7 +169,7 @@ const publishSpecificAnnotationToHypothesis = async (
 
   const turndownService = prepareTurndownService()
 
-  const existingArtifact = await models.PublishedArtifact.query().findOne({
+  const existingArtifact = await PublishedArtifact.query().findOne({
     manuscriptId,
     content: contentTemplate,
   })

@@ -111,7 +111,6 @@ services:
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
-
     volumes:
       - ./uploads:/home/node/app/uploads
       - ./packages/server/config:/home/node/app/config

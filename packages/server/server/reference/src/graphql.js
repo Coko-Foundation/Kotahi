@@ -8,7 +8,7 @@ const {
 
 const { formatCitation } = require('./formatting')
 
-const Config = require('../../config/src/config')
+const Config = require('../../../models/config/config.model')
 
 /* eslint-disable prefer-destructuring */
 const resolvers = {

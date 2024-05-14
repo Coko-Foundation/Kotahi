@@ -1,8 +1,9 @@
 const fetch = require('node-fetch')
 
-const models = require('@pubsweet/models')
+const Channel = require('../../../../models/channel/channel.model')
+const ChannelMember = require('../../../../models/channelMember/channelMember.model')
+
 const { updateChannelLastViewed } = require('../channelCommsUtils')
-const Channel = require('../channel')
 
 const resolvers = {
   Query: {
@@ -42,7 +43,7 @@ const resolvers = {
         .first(),
 
     channelMember: async (_, { channelId }, context) => {
-      return models.ChannelMember.query()
+      return ChannelMember.query()
         .where({
           channelId,
           userId: context.user,

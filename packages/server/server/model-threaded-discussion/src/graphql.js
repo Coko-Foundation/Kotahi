@@ -1,4 +1,5 @@
-const models = require('@pubsweet/models')
+const ThreadedDiscussion = require('../../../models/threadedDiscussion/threadedDiscussion.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
   getIdOfLatestVersionOfManuscript,
@@ -16,9 +17,7 @@ const {
 } = require('./threadedDiscussionUtils')
 
 const getOriginalVersionManuscriptId = async manuscriptId => {
-  const ms = await models.Manuscript.query()
-    .select('parentId')
-    .findById(manuscriptId)
+  const ms = await Manuscript.query().select('parentId').findById(manuscriptId)
 
   const parentId = ms ? ms.parentId : null
   return parentId || manuscriptId
@@ -58,7 +57,7 @@ const resolvers = {
     async threadedDiscussions(_, { manuscriptId: msVersionId }, ctx) {
       const manuscriptId = await getOriginalVersionManuscriptId(msVersionId)
 
-      const result = await models.ThreadedDiscussion.query()
+      const result = await ThreadedDiscussion.query()
         .where({ manuscriptId })
         .orderBy('created', 'desc')
 
@@ -87,7 +86,7 @@ const resolvers = {
       const now = new Date().toISOString()
       const manuscriptId = await getOriginalVersionManuscriptId(msVersionId)
 
-      let discussion = await models.ThreadedDiscussion.query().findById(
+      let discussion = await ThreadedDiscussion.query().findById(
         threadedDiscussionId,
       )
       if (!discussion)
@@ -133,7 +132,7 @@ const resolvers = {
       pendingVersion.updated = now
       pendingVersion.comment = comment
 
-      await models.ThreadedDiscussion.query().upsertGraphAndFetch(
+      await ThreadedDiscussion.query().upsertGraphAndFetch(
         { ...discussion, threads: JSON.stringify(discussion.threads) },
         { insertMissing: true },
       )
@@ -145,7 +144,7 @@ const resolvers = {
       const now = new Date().toISOString()
       let hasUpdated = false
 
-      const discussion = await models.ThreadedDiscussion.query().findById(
+      const discussion = await ThreadedDiscussion.query().findById(
         threadedDiscussionId,
       )
 
@@ -167,7 +166,7 @@ const resolvers = {
       }
 
       if (hasUpdated)
-        await models.ThreadedDiscussion.query()
+        await ThreadedDiscussion.query()
           .update({
             updated: discussion.updated,
             threads: JSON.stringify(discussion.threads),
@@ -184,7 +183,7 @@ const resolvers = {
     ) {
       const now = new Date().toISOString()
 
-      const discussion = await models.ThreadedDiscussion.query().findById(
+      const discussion = await ThreadedDiscussion.query().findById(
         threadedDiscussionId,
       )
 
@@ -204,7 +203,7 @@ const resolvers = {
         thread.updated = now
         discussion.updated = now
 
-        await models.ThreadedDiscussion.query()
+        await ThreadedDiscussion.query()
           .update({
             updated: discussion.updated,
             threads: JSON.stringify(discussion.threads),
@@ -219,7 +218,7 @@ const resolvers = {
       { threadedDiscussionId, threadId, commentId },
       ctx,
     ) {
-      const discussion = await models.ThreadedDiscussion.query().findById(
+      const discussion = await ThreadedDiscussion.query().findById(
         threadedDiscussionId,
       )
 
@@ -237,7 +236,7 @@ const resolvers = {
         pv => pv.userId !== ctx.user,
       )
 
-      await models.ThreadedDiscussion.query()
+      await ThreadedDiscussion.query()
         .update({
           updated: discussion.updated,
           threads: JSON.stringify(discussion.threads),

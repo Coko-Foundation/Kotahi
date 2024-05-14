@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid')
 const fs = require('fs')
 const citeproc = require('citeproc-js-node')
 const path = require('path')
-const Config = require('../../config/src/config')
+const Config = require('../../../models/config/config.model')
 
 // Big question about this: is it worth doing this as a microservice? My impulse has been no, but maybe this should be throught about?
 

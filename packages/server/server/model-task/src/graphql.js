@@ -1,12 +1,14 @@
 const moment = require('moment-timezone')
-const models = require('@pubsweet/models')
-const Task = require('./task')
-const TaskAlert = require('./taskAlert')
-const TaskEmailNotification = require('./taskEmailNotification')
-const taskConfigs = require('../../../config/journal/tasks.json')
 
+const Task = require('../../../models/task/task.model')
+const TaskAlert = require('../../../models/taskAlert/taskAlert.model')
+const TaskEmailNotification = require('../../../models/taskEmailNotification/taskEmailNotification.model')
+const TaskEmailNotificationLog = require('../../../models/taskEmailNotificationLog/taskEmailNotificationLog.model')
+const Config = require('../../../models/config/config.model')
+const User = require('../../../models/user/user.model')
+
+const taskConfigs = require('../../../config/journal/tasks.json')
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
-const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 const resolvers = {
   Mutation: {
@@ -144,7 +146,7 @@ const resolvers = {
       ) {
         const taskDurationDays = dbTask.defaultDurationDays
 
-        const activeConfig = await models.Config.getCached(dbTask.groupId)
+        const activeConfig = await Config.getCached(dbTask.groupId)
 
         data.dueDate =
           taskDurationDays !== null
@@ -197,9 +199,7 @@ const resolvers = {
   },
   Task: {
     assignee: async parent => {
-      return (
-        parent.assignee || models.User.query().findById(parent.assigneeUserId)
-      )
+      return parent.assignee || User.query().findById(parent.assigneeUserId)
     },
     emailNotifications: async parent => {
       return (
@@ -221,8 +221,7 @@ const resolvers = {
   TaskEmailNotification: {
     recipientUser: async parent => {
       return (
-        parent.recipientUser ||
-        models.User.query().findById(parent.recipientUserId)
+        parent.recipientUser || User.query().findById(parent.recipientUserId)
       )
     },
   },

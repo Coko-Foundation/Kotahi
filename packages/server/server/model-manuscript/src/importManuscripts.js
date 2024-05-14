@@ -1,6 +1,8 @@
-const models = require('@pubsweet/models')
 const config = require('config')
 const { pubsubManager } = require('@coko/server')
+
+const Config = require('../../../models/config/config.model')
+
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
@@ -29,7 +31,7 @@ const importManuscripts = async (groupId, ctx) => {
   try {
     importsInProgress.add(key)
 
-    const activeConfig = await models.Config.query().findOne({
+    const activeConfig = await Config.query().findOne({
       groupId,
       active: true,
     })
@@ -76,7 +78,7 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
   try {
     importsInProgress.add(key)
 
-    const activeConfig = await models.Config.query().findOne({
+    const activeConfig = await Config.query().findOne({
       groupId,
       active: true,
     })

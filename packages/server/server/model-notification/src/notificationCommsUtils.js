@@ -1,7 +1,15 @@
 const config = require('config')
-const models = require('@pubsweet/models')
 
 const sendEmailNotification = require('../../email-notifications')
+
+const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
+const NotificationUserOption = require('../../../models/notificationUserOption/notificationUserOption.model')
+const User = require('../../../models/user/user.model')
+const Message = require('../../../models/message/message.model')
+const Channel = require('../../../models/channel/channel.model')
+const Config = require('../../../models/config/config.model')
+const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
+const Group = require('../../../models/group/group.model')
 
 const {
   getUserRolesInManuscript,
@@ -10,7 +18,7 @@ const {
 const sendNotifications = async groupId => {
   // The following query results first row for every user and path string combination
   // in the notification digest, where max notification time is in the past.
-  const notificationDigestRows = await models.NotificationDigest.query()
+  const notificationDigestRows = await NotificationDigest.query()
     .distinctOn(['user_id', 'path_string'])
     .where('max_notification_time', '<', new Date())
     .where({ groupId })
@@ -31,7 +39,7 @@ const sendNotifications = async groupId => {
       notificationCount += 1
 
       // query to update all notificationdigest entries where user=user and path=path
-      await models.NotificationDigest.query()
+      await NotificationDigest.query()
         .update({
           actioned: true,
         })
@@ -60,14 +68,14 @@ const sendChatNotification = async ({
   currentUserId = null,
   isMentioned = false,
 }) => {
-  const recipient = await models.User.query().findById(recipientId)
-  const message = await models.Message.query().findById(messageId)
-  const channel = await models.Channel.query().findById(message.channelId)
+  const recipient = await User.query().findById(recipientId)
+  const message = await Message.query().findById(messageId)
+  const channel = await Channel.query().findById(message.channelId)
   if (channel.groupId !== groupId)
     throw new Error(
       `Attempt by group ${groupId} to send chat notification for group ${channel.groupId}`,
     )
-  const group = await models.Group.query().findById(groupId)
+  const group = await Group.query().findById(groupId)
 
   // send email notification
   const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
@@ -102,7 +110,7 @@ const sendChatNotification = async ({
   let currentUser
 
   if (currentUserId) {
-    currentUser = await models.User.query().findById(currentUserId)
+    currentUser = await User.query().findById(currentUserId)
   }
 
   const data = {
@@ -111,7 +119,7 @@ const sendChatNotification = async ({
     senderName: currentUser?.username || '',
   }
 
-  const activeConfig = await models.Config.getCached(groupId)
+  const activeConfig = await Config.getCached(groupId)
 
   const selectedTemplate = isMentioned
     ? activeConfig.formData.eventNotification.mentionNotificationTemplate
@@ -119,7 +127,7 @@ const sendChatNotification = async ({
 
   if (!selectedTemplate) return
 
-  const selectedEmailTemplate = await models.EmailTemplate.query().findById(
+  const selectedEmailTemplate = await EmailTemplate.query().findById(
     selectedTemplate,
   )
 
@@ -139,7 +147,7 @@ const getNotificationOptionForUser = async ({ userId, path, groupId }) => {
   // Get all records for this user in this group, that might relate to the current path,
   // skipping those set to 'inherit'.
   // A small number of non-relevant records may be included.
-  const records = await models.NotificationUserOption.query()
+  const records = await NotificationUserOption.query()
     .where({ userId, groupId })
     .where(builder =>
       builder.where({ objectId: lastPathSegment }).orWhere({ objectId: null }),
@@ -192,7 +200,7 @@ const notify = async (
       const maxNotificationTime = new Date(time)
       maxNotificationTime.setMinutes(maxNotificationTime.getMinutes() + 30)
 
-      return new models.NotificationDigest({
+      return new NotificationDigest({
         time,
         maxNotificationTime,
         pathString: path.join('/'),
@@ -210,7 +218,7 @@ const notify = async (
 const deleteActionedEntries = async (groupId, options = {}) => {
   const { trx } = options
 
-  await models.NotificationDigest.query(trx)
+  await NotificationDigest.query(trx)
     .delete()
     .where({ actioned: true, groupId })
 }

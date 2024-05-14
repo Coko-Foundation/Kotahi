@@ -1,9 +1,9 @@
-const models = require('@pubsweet/models')
+const PublishedArtifact = require('../../../models/publishedArtifact/publishedArtifact.model')
 
 const resolvers = {
   Query: {
     async publishedArtifacts(_, { manuscriptId }, ctx) {
-      return models.PublishedArtifact.query().where({ manuscriptId })
+      return PublishedArtifact.query().where({ manuscriptId })
     },
   },
 }

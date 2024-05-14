@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 const { LRUCache } = require('lru-cache')
 
 const cache = new LRUCache({
@@ -5,11 +7,11 @@ const cache = new LRUCache({
   ttl: 10000,
 })
 
-let models = null // Upon first use this will be set to require('@pubsweet/models')
-
 const queryFunctions = {
   userIsGM: async (userId, groupId) => {
-    const groupManagerRecord = await models.Team.query()
+    const Team = require('../../models/team/team.model')
+
+    const groupManagerRecord = await Team.query()
       .withGraphJoined('members')
       .findOne({ role: 'groupManager', objectId: groupId, userId })
 
@@ -20,7 +22,11 @@ const queryFunctions = {
    * such as CMS files.
    */
   msOfFile: async fileId => {
-    const file = await models.File.query().findById(fileId)
+    const { File } = require('@coko/server')
+    const Review = require('../../models/review/review.model')
+    const Manuscript = require('../../models/manuscript/manuscript.model')
+
+    const file = await File.query().findById(fileId)
 
     if (!file?.objectId) {
       console.error('File without objectId encountered:', file)
@@ -28,16 +34,18 @@ const queryFunctions = {
     }
 
     // The file may belong to a review or directly to a manuscript
-    const review = await models.Review.query().findById(file.objectId)
+    const review = await Review.query().findById(file.objectId)
 
-    const manuscript = await models.Manuscript.query().findById(
+    const manuscript = await Manuscript.query().findById(
       review ? review.manuscriptId : file.objectId,
     )
 
     return manuscript
   },
   userIsAdmin: async userId => {
-    const adminRecord = await models.Team.query()
+    const Team = require('../../models/team/team.model')
+
+    const adminRecord = await Team.query()
       .withGraphJoined('members')
       .findOne({ role: 'admin', global: true, userId })
 
@@ -45,7 +53,9 @@ const queryFunctions = {
     return isAdmin
   },
   userIsEditor: async (userId, manuscriptId) => {
-    const teamRecord = await models.User.relatedQuery('teams')
+    const User = require('../../models/user/user.model')
+
+    const teamRecord = await User.relatedQuery('teams')
       .for(userId)
       .findOne(builder =>
         builder
@@ -60,7 +70,9 @@ const queryFunctions = {
     return isEditor
   },
   userIsEditorOfAnyManuscript: async userId => {
-    const record = await models.User.relatedQuery('teams')
+    const User = require('../../models/user/user.model')
+
+    const record = await User.relatedQuery('teams')
       .for(userId)
       .findOne(builder =>
         builder
@@ -74,44 +86,52 @@ const queryFunctions = {
     return isEditor
   },
   defaultIdentityOfUser: async userId => {
-    return models.User.relatedQuery('defaultIdentity').for(userId).first()
+    const User = require('../../models/user/user.model')
+    return User.relatedQuery('defaultIdentity').for(userId).first()
   },
   profilePicFileOfUser: async userId => {
-    return models.User.relatedQuery('file').for(userId).first()
+    const User = require('../../models/user/user.model')
+    return User.relatedQuery('file').for(userId).first()
   },
   // TODO: rename this otherVersionsOfMs
   subVersionsOfMs: async manuscriptId => {
-    const thisMs = await models.Manuscript.query()
+    const Manuscript = require('../../models/manuscript/manuscript.model')
+
+    const thisMs = await Manuscript.query()
       .findById(manuscriptId)
       .select('parentId')
 
     if (!thisMs.parentId)
-      return models.Manuscript.relatedQuery('manuscriptVersions')
+      return Manuscript.relatedQuery('manuscriptVersions')
         .for(manuscriptId)
         .modify('orderByCreatedDesc')
 
     // The manuscript this request was made for is NOT a first version manuscript.
     // Find all OTHER versions than this one.
 
-    const parent = await models.Manuscript.query().findById(thisMs.parentId)
+    const parent = await Manuscript.query().findById(thisMs.parentId)
 
-    const children = await models.Manuscript.relatedQuery('manuscriptVersions')
+    const children = await Manuscript.relatedQuery('manuscriptVersions')
       .for(parent.id)
       .modify('orderByCreatedDesc')
 
     return [...children.filter(v => v.id !== manuscriptId), parent]
   },
   teamsForObject: async objectId => {
-    return models.Team.query().where({ objectId })
+    const Team = require('../../models/team/team.model')
+    return Team.query().where({ objectId })
   },
   membersOfTeam: async teamId => {
-    return models.Team.relatedQuery('members').for(teamId)
+    const Team = require('../../models/team/team.model')
+    return Team.relatedQuery('members').for(teamId)
   },
   userForTeamMember: async teamMemberId => {
-    return models.TeamMember.relatedQuery('user').for(teamMemberId).first()
+    const TeamMember = require('../../models/teamMember/teamMember.model')
+    return TeamMember.relatedQuery('user').for(teamMemberId).first()
   },
   submitterOfMs: async manuscriptId => {
-    return models.Manuscript.relatedQuery('submitter').for(manuscriptId).first()
+    const Manuscript = require('../../models/manuscript/manuscript.model')
+    return Manuscript.relatedQuery('submitter').for(manuscriptId).first()
   },
 }
 
@@ -122,9 +142,6 @@ const fetchMethod = async key => {
   // The following logic prevents multiple simultaneous duplicate queries.
   const pendingPromise = pendingFetchPromises[key]
   if (pendingPromise) return pendingPromise // Another await on the same promise!
-
-  // eslint-disable-next-line global-require
-  if (!models) models = require('@pubsweet/models') // Ensure models are loaded before queries run
 
   const [queryType, ...params] = key.split(':')
   const queryFunction = queryFunctions[queryType]

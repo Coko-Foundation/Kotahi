@@ -1,6 +1,9 @@
 /* eslint-disable camelcase, consistent-return, no-console */
 const axios = require('axios')
-const models = require('@pubsweet/models')
+
+const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
+const Manuscript = require('../../models/manuscript/manuscript.model')
+
 const { dateToIso8601 } = require('../utils/dateUtils')
 
 const {
@@ -106,7 +109,7 @@ const stripInternalDuplicates = imports => {
 /** Strip any preprints that share a DOI with a manuscript already belonging to the group */
 const stripDuplicates = async (imports, groupId) => {
   // TODO retrieving all manuscripts to check DOIs is inefficient!
-  const manuscripts = await models.Manuscript.query().where({ groupId })
+  const manuscripts = await Manuscript.query().where({ groupId })
 
   const currentDois = new Set(
     manuscripts.map(m => m.submission.$doi).filter(Boolean),
@@ -196,22 +199,21 @@ const getData = async (groupId, ctx) => {
       const chunk = newManuscripts.slice(i, i + SAVE_CHUNK_SIZE)
 
       // eslint-disable-next-line no-await-in-loop
-      const inserted = await models.Manuscript.query().upsertGraphAndFetch(
-        chunk,
-        { relate: true },
-      )
+      const inserted = await Manuscript.query().upsertGraphAndFetch(chunk, {
+        relate: true,
+      })
 
       Array.prototype.push.apply(result, inserted)
     }
 
     if (lastImportDate > 0) {
-      await models.ArticleImportHistory.query()
+      await ArticleImportHistory.query()
         .update({
           date: new Date().toISOString(),
         })
         .where({ sourceId, groupId })
     } else {
-      await models.ArticleImportHistory.query().insert({
+      await ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId,
         groupId,

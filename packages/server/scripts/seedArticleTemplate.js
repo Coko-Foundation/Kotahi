@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 
 const { useTransaction } = require('@coko/server')
-const { ArticleTemplate } = require('@pubsweet/models')
 const fs = require('fs-extra').promises
+
+const ArticleTemplate = require('../models/articleTemplate/articleTemplate.model')
 
 // TODO: come up with predefined generic forms based on workflows
 const ARTICLE_TEMPLATE_PATH = './config/cmsTemplateFiles/article-preview.njk'

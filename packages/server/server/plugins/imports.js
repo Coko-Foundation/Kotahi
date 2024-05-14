@@ -1,8 +1,11 @@
 /* eslint-disable global-require, no-console, import/no-dynamic-require, no-await-in-loop, no-continue, no-plusplus */
 
 const { uuid } = require('@coko/server')
-const models = require('@pubsweet/models')
 const { chunk } = require('lodash')
+
+const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
+const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
+const Manuscript = require('../../models/manuscript/manuscript.model')
 
 const importWorkersByGroup = {}
 
@@ -39,7 +42,7 @@ const saveImportedManuscripts = async (
 
     // eslint-disable-next-line no-restricted-syntax
     for (const ch of chunks) {
-      await models.Manuscript.query(trx).upsertGraphAndFetch(ch, {
+      await Manuscript.query(trx).upsertGraphAndFetch(ch, {
         relate: true,
         insertMissing: true,
       })
@@ -71,18 +74,16 @@ const runImports = async (
     let importSource, lastImportDate
 
     try {
-      let [sourceRecord] = await models.ArticleImportSources.query().where({
+      let [sourceRecord] = await ArticleImportSources.query().where({
         server: worker.name,
       })
       if (!sourceRecord)
-        sourceRecord = await models.ArticleImportSources.query().insertAndFetch(
-          {
-            server: worker.name,
-          },
-        )
+        sourceRecord = await ArticleImportSources.query().insertAndFetch({
+          server: worker.name,
+        })
       importSource = sourceRecord.id
 
-      const lastImportRecord = await models.ArticleImportHistory.query()
+      const lastImportRecord = await ArticleImportHistory.query()
         .select('date')
         .findOne({ sourceId: importSource, groupId })
 
@@ -172,11 +173,11 @@ const runImports = async (
     saveImportedManuscripts(allNewManuscripts, groupId, submitterId, {})
 
     if (lastImportDate) {
-      await models.ArticleImportHistory.query()
+      await ArticleImportHistory.query()
         .patch({ date: new Date().toISOString() })
         .where({ sourceId: importSource, groupId })
     } else {
-      await models.ArticleImportHistory.query().insert({
+      await ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId: importSource,
         groupId,

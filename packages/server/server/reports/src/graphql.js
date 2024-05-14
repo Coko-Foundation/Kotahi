@@ -1,4 +1,5 @@
-const models = require('@pubsweet/models')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+
 const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 const generateMovingAverages = require('./movingAverages')
 
@@ -175,7 +176,7 @@ const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
 const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreatedDesc).[teams, reviews]]',
     )
@@ -235,7 +236,7 @@ const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
 const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
 
-  const query = models.Manuscript.query()
+  const query = Manuscript.query()
     .where({ groupId })
     .whereNot({ isHidden: true })
     .where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
@@ -244,7 +245,7 @@ const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
 }
 
 const getRevisingNowCount = async (groupId, ctx) => {
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreatedDesc)]')
     .where({ parentId: null, groupId })
     .whereNot({ isHidden: true })
@@ -260,7 +261,7 @@ const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
 
   const dataStart = startDate - windowSizeForAvg / 2
 
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[reviews, manuscriptVersions(orderByCreatedDesc).[reviews]]',
     )
@@ -309,7 +310,7 @@ const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
 const getDailyAverageStats = async (startDate, endDate, groupId, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[reviews, manuscriptVersions(orderByCreatedDesc).[reviews]]',
     )
@@ -432,7 +433,7 @@ const getVersionReviewDurations = ms => {
 }
 
 const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members]]]',
     )
@@ -466,7 +467,7 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
 }
 
 const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
     )
@@ -517,7 +518,7 @@ const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
 }
 
 const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members], reviews]]',
     )
@@ -609,7 +610,7 @@ const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
 }
 
 const getAuthorsActivity = async (startDate, endDate, groupId, ctx) => {
-  const query = models.Manuscript.query()
+  const query = Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
     )

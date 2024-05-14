@@ -28,7 +28,8 @@ const upload = multer({
 
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const CMSFileTemplate = require('../model-cms/src/cmsFileTemplate')
+  const CMSFileTemplate = require('../../models/cmsFileTemplate/cmsFileTemplate.model')
+
   app.post(
     '/api/cmsUploadFiles',
     authBearer,

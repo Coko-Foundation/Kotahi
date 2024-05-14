@@ -1,5 +1,5 @@
 const { formatCitation } = require('../src/formatting')
-const Config = require('../../config/src/config')
+const Config = require('../../../models/config/config.model')
 
 const doiResult = {
   doi: '10.1159/000345136',

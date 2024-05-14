@@ -2,14 +2,17 @@ const Handlebars = require('handlebars')
 const { transform, isObject, isArray } = require('lodash')
 const config = require('config')
 const fnv = require('fnv-plus')
-const models = require('@pubsweet/models')
+
+const Group = require('../../../models/group/group.model')
+const Config = require('../../../models/config/config.model')
+const Docmap = require('../../../models/docmap/docmap.model')
+
 const { publishSpecificAnnotationToHypothesis } = require('../hypothesis')
+const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 const {
   getFieldsMapForTemplating,
 } = require('../../model-manuscript/src/manuscriptUtils')
-
-const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 let allDocmapsScheme
 
@@ -66,7 +69,7 @@ const expandTemplatesAndRemoveDirectivesRecursive = (
 
 const tryPublishDocMaps = async manuscript => {
   if (!allDocmapsScheme) return false
-  const group = await models.Group.query().findById(manuscript.groupId)
+  const group = await Group.query().findById(manuscript.groupId)
 
   // Checks if docmapsScheme has been configured for that group
   const docmapsSchemeExists = allDocmapsScheme.find(
@@ -77,7 +80,7 @@ const tryPublishDocMaps = async manuscript => {
 
   const { docmapsScheme } = docmapsSchemeExists
 
-  const activeConfig = await models.Config.getCached(group.id)
+  const activeConfig = await Config.getCached(group.id)
 
   const { submissionForm, reviewForm, decisionForm } = await getActiveForms(
     group.id,
@@ -172,17 +175,17 @@ const tryPublishDocMaps = async manuscript => {
 
   const content = JSON.stringify(docmap)
 
-  const existingDocmap = await models.Docmap.query().findOne({
+  const existingDocmap = await Docmap.query().findOne({
     externalId: uri,
     groupId: group.id,
   })
 
   if (existingDocmap)
-    await models.Docmap.query()
+    await Docmap.query()
       .update({ content, manuscriptId: manuscript.id })
       .where({ externalId: uri, groupId: group.id })
   else
-    await models.Docmap.query().insert({
+    await Docmap.query().insert({
       externalId: uri,
       content,
       manuscriptId: manuscript.id,

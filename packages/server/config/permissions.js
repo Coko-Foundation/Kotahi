@@ -1,12 +1,4 @@
-/* eslint-disable no-unused-vars */
-const {
-  rule,
-  and,
-  or,
-  not,
-  allow,
-  deny,
-} = require('@coko/server/authorization')
+const { rule, and, or, allow, deny } = require('@coko/server/authorization')
 
 const { cachedGet } = require('../server/querycache')
 
@@ -354,39 +346,39 @@ const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
   },
 )
 
-const userIsAuthorOfFilesAssociatedManuscript = rule({
-  cache: 'no_cache',
-})(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
-  let manuscriptId
+// const userIsAuthorOfFilesAssociatedManuscript = rule({
+//   cache: 'no_cache',
+// })(async (parent, args, ctx, info) => {
+//   if (!ctx.user) return false
+//   let manuscriptId
 
-  if (args.meta && args.meta.manuscriptId) {
-    // Meta is supplied for createFile
-    // eslint-disable-next-line prefer-destructuring
-    manuscriptId = args.meta.manuscriptId
-  } else if (args.id) {
-    // id is supplied for deletion
-    const file = await ctx.connectors.File.model.query().findById(args.id)
-    const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
-    manuscriptId = manuscript && manuscript.id
-  }
+//   if (args.meta && args.meta.manuscriptId) {
+//     // Meta is supplied for createFile
+//     // eslint-disable-next-line prefer-destructuring
+//     manuscriptId = args.meta.manuscriptId
+//   } else if (args.id) {
+//     // id is supplied for deletion
+//     const file = await ctx.connectors.File.model.query().findById(args.id)
+//     const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
+//     manuscriptId = manuscript && manuscript.id
+//   }
 
-  if (!manuscriptId) return false
+//   if (!manuscriptId) return false
 
-  const team = await ctx.connectors.Team.model
-    .query()
-    .where({
-      objectId: manuscriptId,
-      objectType: 'manuscript',
-      role: 'author',
-    })
-    .first()
+//   const team = await ctx.connectors.Team.model
+//     .query()
+//     .where({
+//       objectId: manuscriptId,
+//       objectType: 'manuscript',
+//       role: 'author',
+//     })
+//     .first()
 
-  if (!team) return false
-  const members = await team.$relatedQuery('members').where('userId', ctx.user)
-  if (members && members[0]) return true
-  return false
-})
+//   if (!team) return false
+//   const members = await team.$relatedQuery('members').where('userId', ctx.user)
+//   if (members && members[0]) return true
+//   return false
+// })
 
 const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {

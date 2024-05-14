@@ -1,10 +1,16 @@
 const axios = require('axios')
 const { Readable } = require('stream')
 
-const models = require('@pubsweet/models')
 const { createFile, fileStorage } = require('@coko/server')
-const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
 const File = require('@coko/server/src/models/file/file.model')
+const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
+
+const CMSFileTemplate = require('../../../models/cmsFileTemplate/cmsFileTemplate.model')
+const CMSPage = require('../../../models/cmsPage/cmsPage.model')
+const CMSLayout = require('../../../models/cmsLayout/cmsLayout.model')
+const Config = require('../../../models/config/config.model')
+const ArticleTemplate = require('../../../models/articleTemplate/articleTemplate.model')
+const PublishingCollection = require('../../../models/publishingCollection/publishingCollection.model')
 
 const {
   replaceImageSrc,
@@ -15,10 +21,10 @@ const {
 } = require('../../utils/fileStorageUtils')
 
 const setInitialLayout = async groupId => {
-  const { formData } = await models.Config.getCached(groupId)
+  const { formData } = await Config.getCached(groupId)
   const { primaryColor, secondaryColor } = formData.groupIdentity
 
-  const layout = await new models.CMSLayout({
+  const layout = await new CMSLayout({
     primaryColor,
     secondaryColor,
     groupId,
@@ -28,7 +34,7 @@ const setInitialLayout = async groupId => {
 }
 
 const getFlaxPageConfig = async (configKey, groupId) => {
-  const pages = await models.CMSPage.query()
+  const pages = await CMSPage.query()
     .where('groupId', groupId)
     .select(['id', 'title', 'url', configKey])
     .orderBy('title')
@@ -72,16 +78,13 @@ const cleanCMSPageInput = inputData => {
 }
 
 const cmsFileTree = async (groupId, folderId) => {
-  const AllFiles = await models.CMSFileTemplate.query().where(
-    'groupId',
-    groupId,
-  )
+  const AllFiles = await CMSFileTemplate.query().where('groupId', groupId)
 
   const fileIds = AllFiles.filter(file => file.fileId !== null).map(
     f => f.fileId,
   )
 
-  const files = await models.File.query().whereIn('id', fileIds)
+  const files = await File.query().whereIn('id', fileIds)
   const filesWithUrl = await getFilesWithUrl(files)
 
   const getChildren = children =>
@@ -122,7 +125,7 @@ const resolvers = {
     async cmsPages(_, vars, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      const cmsPages = await models.CMSPage.query()
+      const cmsPages = await CMSPage.query()
         .where('groupId', groupId)
         .orderBy('title')
 
@@ -130,15 +133,13 @@ const resolvers = {
     },
 
     async cmsPage(_, { id }, _ctx) {
-      const cmsPage = await models.CMSPage.query().findById(id)
+      const cmsPage = await CMSPage.query().findById(id)
       return cmsPage
     },
 
     async cmsLayout(_, _vars, ctx) {
       const groupId = ctx.req.headers['group-id']
-      let layout = await models.CMSLayout.query()
-        .where('groupId', groupId)
-        .first()
+      let layout = await CMSLayout.query().where('groupId', groupId).first()
 
       if (!layout) {
         layout = await setInitialLayout(groupId) // TODO move this to seedArticleTemplate.js or similar
@@ -156,7 +157,7 @@ const resolvers = {
     async getActiveCmsFilesTree(_, _vars, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      const cmsFileTemplate = await models.CMSFileTemplate.query().findOne({
+      const cmsFileTemplate = await CMSFileTemplate.query().findOne({
         groupId,
         rootFolder: true,
       })
@@ -164,7 +165,7 @@ const resolvers = {
       return JSON.stringify(await cmsFileTree(groupId, cmsFileTemplate.id))
     },
     async getCmsFileContent(_, { id }, ctx) {
-      const file = await models.File.query().findById(id)
+      const file = await File.query().findById(id)
 
       const { storedObjects } = await getFileWithUrl(file)
 
@@ -190,7 +191,7 @@ const resolvers = {
 
       let folderArray = []
 
-      const AllFiles = await models.CMSFileTemplate.query().where({ groupId })
+      const AllFiles = await CMSFileTemplate.query().where({ groupId })
       const folders = AllFiles.filter(file => file.fileId === null)
 
       const rootNodes = AllFiles.filter(f => f.parentId === null).map(f => ({
@@ -224,11 +225,11 @@ const resolvers = {
       try {
         const groupId = ctx.req.headers['group-id']
 
-        const savedCmsPage = await new models.CMSPage(
+        const savedCmsPage = await new CMSPage(
           cleanCMSPageInput({ ...input, groupId }),
         ).save()
 
-        const cmsPage = await models.CMSPage.query().findById(savedCmsPage.id)
+        const cmsPage = await CMSPage.query().findById(savedCmsPage.id)
         return { success: true, error: null, cmsPage }
       } catch (e) {
         if (e.constraint === 'cms_pages_url_group_id_key') {
@@ -251,13 +252,13 @@ const resolvers = {
         attrs.creatorId = ctx.user
       }
 
-      const cmsPage = await models.CMSPage.query().updateAndFetchById(id, attrs)
+      const cmsPage = await CMSPage.query().updateAndFetchById(id, attrs)
       return cmsPage
     },
 
     async deleteCMSPage(_, { id }, ctx) {
       try {
-        const response = await models.CMSPage.query().where({ id }).delete()
+        const response = await CMSPage.query().where({ id }).delete()
 
         if (response) {
           return {
@@ -280,21 +281,17 @@ const resolvers = {
     async updateCMSLayout(_, { _id, input }, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      const layout = await models.CMSLayout.query()
-        .where('groupId', groupId)
-        .first()
+      const layout = await CMSLayout.query().where('groupId', groupId).first()
 
       if (!layout) {
-        const savedCmsLayout = await new models.CMSLayout(input).save()
+        const savedCmsLayout = await new CMSLayout(input).save()
 
-        const cmsLayout = await models.CMSLayout.query().findById(
-          savedCmsLayout.id,
-        )
+        const cmsLayout = await CMSLayout.query().findById(savedCmsLayout.id)
 
         return cmsLayout
       }
 
-      const cmsLayout = await models.CMSLayout.query().updateAndFetchById(
+      const cmsLayout = await CMSLayout.query().updateAndFetchById(
         layout.id,
         input,
       )
@@ -303,11 +300,11 @@ const resolvers = {
     },
 
     async addResourceToFolder(_, { id, type }, ctx) {
-      const parent = await models.CMSFileTemplate.query().findOne({ id })
+      const parent = await CMSFileTemplate.query().findOne({ id })
 
       const name = type ? 'new folder' : 'new file'
 
-      const insertedResource = await models.CMSFileTemplate.query()
+      const insertedResource = await CMSFileTemplate.query()
         .insertGraph({
           name,
           parentId: parent.id,
@@ -329,7 +326,7 @@ const resolvers = {
 
         fileId = insertedFile.id
 
-        await models.CMSFileTemplate.query()
+        await CMSFileTemplate.query()
           .update({ fileId })
           .where({ id: insertedResource.id })
         return {
@@ -348,11 +345,11 @@ const resolvers = {
     },
 
     async deleteResource(_, { id }, ctx) {
-      const item = await models.CMSFileTemplate.query().findOne({ id })
+      const item = await CMSFileTemplate.query().findOne({ id })
 
       if (item.fileId) {
-        await models.CMSFileTemplate.query().findOne({ id }).delete()
-        const file = await models.File.query().findOne({ id: item.fileId })
+        await CMSFileTemplate.query().findOne({ id }).delete()
+        const file = await File.query().findOne({ id: item.fileId })
         const keys = file.storedObjects.map(f => f.key)
 
         try {
@@ -364,12 +361,12 @@ const resolvers = {
           throw new Error('The was a problem deleting the file')
         }
       } else {
-        const hasChildren = await models.CMSFileTemplate.query().where({
+        const hasChildren = await CMSFileTemplate.query().where({
           parentId: item.id,
         })
 
         if (hasChildren.length === 0) {
-          await models.CMSFileTemplate.query().findOne({ id }).delete()
+          await CMSFileTemplate.query().findOne({ id }).delete()
         }
       }
 
@@ -382,22 +379,22 @@ const resolvers = {
     },
 
     async renameResource(_, { id, name }, ctx) {
-      const item = await models.CMSFileTemplate.query().findOne({ id })
+      const item = await CMSFileTemplate.query().findOne({ id })
 
-      const updatedItem = await models.CMSFileTemplate.query()
+      const updatedItem = await CMSFileTemplate.query()
         .patch({ name })
         .findOne({ id })
         .returning('*')
 
       if (item.fileId) {
-        await models.File.query().patch({ name }).findOne({ id: item.fileId })
+        await File.query().patch({ name }).findOne({ id: item.fileId })
       }
 
       return updatedItem
     },
 
     async updateResource(_, { id, content }, ctx) {
-      const file = await models.File.query().findOne({ id })
+      const file = await File.query().findOne({ id })
 
       const { key, mimetype } = file.storedObjects.find(
         obj => obj.type === 'original',
@@ -411,11 +408,11 @@ const resolvers = {
     async updateFlaxRootFolder(_, { id }, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      await models.CMSFileTemplate.query()
+      await CMSFileTemplate.query()
         .patch({ rootFolder: false })
         .where({ groupId })
 
-      return models.CMSFileTemplate.query()
+      return CMSFileTemplate.query()
         .patch({ rootFolder: true })
         .findOne({ id, groupId })
         .returning('*')
@@ -440,13 +437,13 @@ const resolvers = {
         return null
       }
 
-      return models.CMSPage.relatedQuery('creator').for(parent.id).first()
+      return CMSPage.relatedQuery('creator').for(parent.id).first()
     },
 
     async content(parent) {
       if (!parent.content) return parent.content
 
-      let files = await models.File.query().where('object_id', parent.id)
+      let files = await File.query().where('object_id', parent.id)
       files = await getFilesWithUrl(files)
 
       return replaceImageSrc(parent.content, files, 'medium')
@@ -459,7 +456,7 @@ const resolvers = {
         return null
       }
 
-      const logoFile = await models.CMSLayout.relatedQuery('logo')
+      const logoFile = await CMSLayout.relatedQuery('logo')
         .for(parent.id)
         .first()
 
@@ -472,7 +469,7 @@ const resolvers = {
       try {
         const { groupId } = parent
 
-        const activeConfig = await models.Config.query().findOne({
+        const activeConfig = await Config.query().findOne({
           groupId,
           active: true,
         })
@@ -497,7 +494,7 @@ const resolvers = {
     },
 
     async publishConfig(parent) {
-      const { formData } = await models.Config.getCached(parent.groupId)
+      const { formData } = await Config.getCached(parent.groupId)
 
       return JSON.stringify({
         licenseUrl: formData.publishing.crossref.licenseUrl,
@@ -512,12 +509,12 @@ const resolvers = {
     async article(parent) {
       if (parent.article || parent.article === '') return parent.article
 
-      const { article } = await models.ArticleTemplate.query().findOne({
+      const { article } = await ArticleTemplate.query().findOne({
         groupId: parent.groupId,
         isCms: true,
       })
 
-      let files = await models.File.query().where({ objectId: parent.groupId })
+      let files = await File.query().where({ objectId: parent.groupId })
       files = await getFilesWithUrl(files)
 
       return replaceImageFromNunjucksTemplate(article, files, 'medium') ?? ''
@@ -526,7 +523,7 @@ const resolvers = {
     async css(parent) {
       if (parent.css || parent.css === '') return parent.css
 
-      const { css } = await models.ArticleTemplate.query().findOne({
+      const { css } = await ArticleTemplate.query().findOne({
         groupId: parent.groupId,
         isCms: true,
       })
@@ -535,7 +532,7 @@ const resolvers = {
     },
 
     async publishingCollection(parent) {
-      return models.PublishingCollection.query().where({
+      return PublishingCollection.query().where({
         groupId: parent.groupId,
         active: true,
       })

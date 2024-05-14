@@ -1,4 +1,9 @@
-const models = require('@pubsweet/models')
+const Team = require('../../../models/team/team.model')
+const TeamMember = require('../../../models/teamMember/teamMember.model')
+const User = require('../../../models/user/user.model')
+const Message = require('../../../models/message/message.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
 
 const {
   updateAlertsUponTeamUpdate,
@@ -14,16 +19,16 @@ const { evictFromCacheByPrefix, cachedGet } = require('../../querycache')
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return models.Team.query().findById(id)
+      return Team.query().findById(id)
     },
     teams(_, { where }, ctx) {
-      return models.Team.query().where(where || {})
+      return Team.query().where(where || {})
     },
   },
   Mutation: {
     async deleteTeam(_, { id }, ctx) {
       evictFromCacheByPrefix('userIs')
-      return models.Team.query().deleteById(id)
+      return Team.query().deleteById(id)
     },
     async createTeam(_, { input }, ctx) {
       // TODO Only the relate option appears to be used by insertGraphAndFetch, according to Objection docs?
@@ -49,19 +54,19 @@ const resolvers = {
         }),
       )
 
-      return models.Team.query().insertGraphAndFetch(input, options)
+      return Team.query().insertGraphAndFetch(input, options)
     },
     async updateTeam(_, { id, input }, ctx) {
       evictFromCacheByPrefix('userIs')
       evictFromCacheByPrefix('membersOfTeam')
-      const existing = await models.Team.query().select('role').findById(id)
+      const existing = await Team.query().select('role').findById(id)
 
       if (
         existing &&
         ['editor', 'handlingEditor', 'seniorEditor'].includes(existing.role)
       ) {
         const existingMemberIds = (
-          await models.TeamMember.query().select('userId').where({ teamId: id })
+          await TeamMember.query().select('userId').where({ teamId: id })
         ).map(m => m.userId)
 
         const newMemberIds = input.members.map(m => m.user.id)
@@ -74,20 +79,16 @@ const resolvers = {
           userId => !newMemberIds.includes(userId),
         )
 
-        const { objectId } = await models.Team.query()
-          .select('objectId')
-          .findById(id)
+        const { objectId } = await Team.query().select('objectId').findById(id)
 
         await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
 
-        const channels = await models.Manuscript.relatedQuery('channels').for(
-          objectId,
-        )
+        const channels = await Manuscript.relatedQuery('channels').for(objectId)
 
         await Promise.all(
           membersRemoved.map(async userId => {
             // Check if the user has any messages in the channels before removing them from the channelMember
-            const hasPostedToChannel = await models.Message.query()
+            const hasPostedToChannel = await Message.query()
               .where({ userId })
               .whereIn(
                 'channelId',
@@ -107,7 +108,7 @@ const resolvers = {
                 type: 'editorial',
               })
               const pathStrings = channels.map(channel => `chat/${channel.id}`)
-              await models.NotificationDigest.query()
+              await NotificationDigest.query()
                 .delete()
                 .where({ user_id: userId })
                 .whereIn('path_string', pathStrings)
@@ -131,7 +132,7 @@ const resolvers = {
         )
       }
 
-      return models.Team.query().upsertGraphAndFetch(
+      return Team.query().upsertGraphAndFetch(
         { id, ...input },
         {
           relate: ['members.user'],
@@ -141,11 +142,11 @@ const resolvers = {
       )
     },
     async updateTeamMember(_, { id, input }, ctx) {
-      return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
+      return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
   User: {
-    teams: (parent, _, ctx) => models.User.relatedQuery('teams').for(parent.id),
+    teams: (parent, _, ctx) => User.relatedQuery('teams').for(parent.id),
   },
   Team: {
     async members(team, { where }, ctx) {
@@ -161,7 +162,7 @@ const resolvers = {
       return teamMember.user ?? cachedGet(`userForTeamMember:${teamMember.id}`)
     },
     async alias(teamMember, vars, ctx) {
-      const member = await models.TeamMember.query().findById(teamMember.id)
+      const member = await TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('alias') : null
     },
   },

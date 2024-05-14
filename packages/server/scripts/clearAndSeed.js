@@ -1,5 +1,4 @@
 const { logger, db } = require('@coko/server')
-// const { Journal, User } = require('@pubsweet/models')
 const { createTables } = require('@pubsweet/db-manager')
 
 const clearDb = async () => {
@@ -41,7 +40,7 @@ const seed = async (dumpSql, opts) => {
     // eslint-disable-next-line
     const result = await db.raw(`set search_path to 'public';`)
     // eslint-disable-next-line global-require
-    const { User } = require('@pubsweet/models')
+    const User = require('../models/user/user.model')
 
     try {
       // eslint-disable-next-line

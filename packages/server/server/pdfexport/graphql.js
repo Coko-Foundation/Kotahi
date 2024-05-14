@@ -6,8 +6,13 @@ const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
 const { promisify } = require('util')
-const models = require('@pubsweet/models')
+
 const { createFile, File, fileStorage } = require('@coko/server')
+
+const Manuscript = require('../../models/manuscript/manuscript.model')
+const ArticleTemplate = require('../../models/articleTemplate/articleTemplate.model')
+const Config = require('../../models/config/config.model')
+
 const { applyTemplate, generateCss } = require('./applyTemplate')
 const makeZip = require('./ziputils')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
@@ -80,15 +85,15 @@ const serviceHandshake = async () => {
 }
 
 const getManuscriptById = async id => {
-  return models.Manuscript.query().findById(id).withGraphFetched('[files]')
+  return Manuscript.query().findById(id).withGraphFetched('[files]')
 }
 
 const getGroupAssets = async groupId => {
-  const aData = await models.ArticleTemplate.query()
+  const aData = await ArticleTemplate.query()
     .where({ groupId, isCms: false })
     .first()
 
-  const files = await models.File.query().where({ objectId: groupId })
+  const files = await File.query().where({ objectId: groupId })
 
   aData.files = await getFilesWithUrl(files)
   return aData
@@ -104,8 +109,7 @@ const pdfHandler = async manuscriptId => {
   const articleData = await getManuscriptById(manuscriptId)
 
   const groupData = await getGroupAssets(articleData.groupId)
-
-  const activeConfig = await models.Config.getCached(articleData.groupId)
+  const activeConfig = await Config.getCached(articleData.groupId)
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`

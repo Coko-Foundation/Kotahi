@@ -3,7 +3,7 @@ const logger = require('winston')
 const { deferConfig } = require('config/defer')
 
 const permissions = require('./permissions')
-const components = require('./components.json')
+const components = require('./components')
 const journal = require('./journal')
 
 module.exports = {

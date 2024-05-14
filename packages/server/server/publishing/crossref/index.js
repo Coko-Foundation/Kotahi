@@ -15,7 +15,7 @@ const {
   getCrossrefCitationsFromList,
 } = require('../../utils/jatsUtils')
 
-const Config = require('../../config/src/config')
+const Config = require('../../../models/config/config.model')
 
 const DOI_PATH_PREFIX = 'https://doi.org/'
 const ABSTRACT_PLACEHOLDER = '‖ABSTRACT‖'

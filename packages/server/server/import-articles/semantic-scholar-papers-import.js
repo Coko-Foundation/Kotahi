@@ -1,7 +1,11 @@
 /* eslint-disable no-console */
 
 const axios = require('axios')
-const models = require('@pubsweet/models')
+
+const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
+const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
+const Manuscript = require('../../models/manuscript/manuscript.model')
+const Config = require('../../models/config/config.model')
 
 const {
   getLastImportDate,
@@ -15,22 +19,20 @@ const { getUrlByDoi } = require('../utils/crossrefCommsUtils')
 const SAVE_CHUNK_SIZE = 50
 
 const getData = async (groupId, ctx) => {
-  const activeConfig = await models.Config.getCached(groupId)
+  const activeConfig = await Config.getCached(groupId)
 
-  const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
-    {
-      server: 'semantic-scholar',
-    },
-  )
+  const [checkIfSourceExists] = await ArticleImportSources.query().where({
+    server: 'semantic-scholar',
+  })
 
   if (!checkIfSourceExists) {
-    await models.ArticleImportSources.query().insert({
+    await ArticleImportSources.query().insert({
       server: 'semantic-scholar',
     })
   }
 
   const [semanticScholarImportSourceId] =
-    await models.ArticleImportSources.query().where({
+    await ArticleImportSources.query().where({
       server: 'semantic-scholar',
     })
 
@@ -40,7 +42,7 @@ const getData = async (groupId, ctx) => {
 
   const lastImportDate = await getLastImportDate(sourceId, groupId)
 
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
     .where({ groupId })
     .orderBy('created', 'desc')
 
@@ -239,10 +241,9 @@ const getData = async (groupId, ctx) => {
         const chunk = newManuscripts.slice(i, i + SAVE_CHUNK_SIZE)
 
         // eslint-disable-next-line no-await-in-loop
-        const inserted = await models.Manuscript.query().upsertGraphAndFetch(
-          chunk,
-          { relate: true },
-        )
+        const inserted = await Manuscript.query().upsertGraphAndFetch(chunk, {
+          relate: true,
+        })
 
         Array.prototype.push.apply(result, inserted)
       }
@@ -252,13 +253,13 @@ const getData = async (groupId, ctx) => {
       )
 
       if (lastImportDate > 0) {
-        await models.ArticleImportHistory.query()
+        await ArticleImportHistory.query()
           .update({
             date: new Date().toISOString(),
           })
           .where({ sourceId, groupId })
       } else {
-        await models.ArticleImportHistory.query().insert({
+        await ArticleImportHistory.query().insert({
           date: new Date().toISOString(),
           sourceId,
           groupId,

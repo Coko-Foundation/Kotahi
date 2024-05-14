@@ -34,7 +34,7 @@ const upload = multer({
 
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const User = require('../model-user/src/user')
+  const User = require('../../models/user/user.model')
   app.post(
     '/api/uploadProfile',
     authBearer,

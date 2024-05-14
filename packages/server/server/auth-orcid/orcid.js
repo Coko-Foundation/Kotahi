@@ -10,7 +10,9 @@ const orcidBackURL = config['pubsweet-client'].baseUrl
 
 const addUserToAdminAndGroupManagerTeams = async (userId, groupId) => {
   // eslint-disable-next-line global-require
-  const { Team, TeamMember } = require('@pubsweet/models')
+  const Team = require('../../models/team/team.model')
+  // eslint-disable-next-line global-require
+  const TeamMember = require('../../models/teamMember/teamMember.model')
 
   const groupManagerTeam = await Team.query().findOne({
     role: 'groupManager',
@@ -25,7 +27,9 @@ const addUserToAdminAndGroupManagerTeams = async (userId, groupId) => {
 
 const addUserToUserTeam = async (userId, groupId) => {
   // eslint-disable-next-line global-require
-  const { Team, TeamMember } = require('@pubsweet/models')
+  const Team = require('../../models/team/team.model')
+  // eslint-disable-next-line global-require
+  const TeamMember = require('../../models/teamMember/teamMember.model')
 
   const userTeam = await Team.query().findOne({
     role: 'user',
@@ -38,7 +42,11 @@ const addUserToUserTeam = async (userId, groupId) => {
 
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const { Config, Group, User } = require('@pubsweet/models')
+  const Config = require('../../models/config/config.model')
+  // eslint-disable-next-line global-require
+  const Group = require('../../models/group/group.model')
+  // eslint-disable-next-line global-require
+  const User = require('../../models/user/user.model')
 
   // set up OAuth client
   passport.use(
@@ -164,7 +172,7 @@ module.exports = app => {
         await addUserToAdminAndGroupManagerTeams(req.user.id, groupId)
 
       // eslint-disable-next-line global-require
-      const { Team } = require('@pubsweet/models')
+      const Team = require('../../models/team/team.model')
 
       const groupManagerTeam = await Team.query()
         .withGraphJoined('members')

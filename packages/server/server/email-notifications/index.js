@@ -1,8 +1,10 @@
-const models = require('@pubsweet/models')
 const nodemailer = require('nodemailer')
 const config = require('config')
 // eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
+
+const Config = require('../../models/config/config.model')
+const Group = require('../../models/group/group.model')
 
 const renderTemplate = async (templateContent, data) => {
   // Compile the template
@@ -15,8 +17,8 @@ const renderTemplate = async (templateContent, data) => {
 }
 
 const sendEmailNotification = async (receiver, template, data, groupId) => {
-  const activeConfig = await models.Config.getCached(groupId)
-  const group = await models.Group.query().findById(groupId)
+  const activeConfig = await Config.getCached(groupId)
+  const group = await Group.query().findById(groupId)
 
   let ccEmails = template.emailContent?.cc || ''
 

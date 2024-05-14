@@ -1,17 +1,18 @@
-const models = require('@pubsweet/models')
+const Group = require('../../../models/group/group.model')
+
 const { getConfigJsonString } = require('../../config/src/configObject')
 const { stripSensitiveInformation } = require('../../utils/configUtils')
 
 const resolvers = {
   Query: {
     group: async (_, { id }, ctx) => {
-      return models.Group.query().findById(id)
+      return Group.query().findById(id)
     },
     groups: async (_, vars, ctx) => {
-      return models.Group.query().where({ isArchived: false })
+      return Group.query().where({ isArchived: false })
     },
     groupByName: async (_, { name }, ctx) => {
-      const group = await models.Group.query().findOne({
+      const group = await Group.query().findOne({
         name,
       })
 
@@ -27,8 +28,7 @@ const resolvers = {
   Group: {
     async configs(parent) {
       const configs =
-        parent.configs ||
-        (await models.Group.relatedQuery('configs').for(parent.id))
+        parent.configs || (await Group.relatedQuery('configs').for(parent.id))
 
       return configs.map(async config => {
         const strippedConfig = await stripSensitiveInformation(config)

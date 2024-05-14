@@ -60,6 +60,8 @@ services:
         'config',
         '--',
         'scripts',
+        '--',
+        'models',
         '--ext',
         'js,graphql',
       ]
@@ -157,9 +159,9 @@ services:
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
-
     volumes:
       - ./packages/server/config:/home/node/app/config
+      - ./packages/server/models:/home/node/app/models
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
 

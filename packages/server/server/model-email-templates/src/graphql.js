@@ -1,4 +1,5 @@
-const models = require('@pubsweet/models')
+const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
+const TaskEmailNotification = require('../../../models/taskEmailNotification/taskEmailNotification.model')
 
 const resolvers = {
   EmailTemplate: {
@@ -29,7 +30,7 @@ const resolvers = {
     async emailTemplates(_, __, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      const emailTemplates = await models.EmailTemplate.query().where({
+      const emailTemplates = await EmailTemplate.query().where({
         groupId,
       })
 
@@ -57,7 +58,7 @@ const resolvers = {
           ccEditors: input.emailContent.ccEditors,
         }
 
-        const newEmailTemplate = new models.EmailTemplate({
+        const newEmailTemplate = new EmailTemplate({
           emailContent: emailContents,
           groupId,
         })
@@ -76,13 +77,11 @@ const resolvers = {
     },
     async deleteEmailTemplate(_, { id }, ctx) {
       try {
-        await models.TaskEmailNotification.query()
+        await TaskEmailNotification.query()
           .where('email_template_id', id)
           .delete()
 
-        const response = await models.EmailTemplate.query()
-          .where({ id })
-          .delete()
+        const response = await EmailTemplate.query().where({ id }).delete()
 
         if (response) {
           return {
@@ -105,7 +104,7 @@ const resolvers = {
       try {
         // Update the EmailTemplate in the database based on the provided ID and input
         const updatedEmailTemplate =
-          await models.EmailTemplate.query().updateAndFetchById(input.id, {
+          await EmailTemplate.query().updateAndFetchById(input.id, {
             emailContent: {
               cc: input.emailContent.cc,
               subject: input.emailContent.subject,

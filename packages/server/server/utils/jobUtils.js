@@ -1,4 +1,7 @@
-const models = require('@pubsweet/models')
+const NotificationDigest = require('../../models/notificationDigest/notificationDigest.model')
+const Config = require('../../models/config/config.model')
+const Group = require('../../models/group/group.model')
+
 const ScheduleManager = require('./scheduleManager')
 
 const {
@@ -122,10 +125,10 @@ const getJobs = async (activeConfig, groupId) => {
 
 const sendAutomatedNotifications = async groupId => {
   try {
-    const upcomingNotificationDigest = await models.NotificationDigest.query()
+    const upcomingNotificationDigest = await NotificationDigest.query()
       .select('maxNotificationTime')
       .from(
-        models.NotificationDigest.query()
+        NotificationDigest.query()
           .distinctOn(['userId', 'pathString'])
           .where({ groupId })
           .orderBy([
@@ -191,11 +194,11 @@ const sendAutomatedNotifications = async groupId => {
 }
 
 const initiateJobSchedules = async () => {
-  const groups = await models.Group.query().where({ isArchived: false })
+  const groups = await Group.query().where({ isArchived: false })
 
   await Promise.all(
     groups.map(async group => {
-      const activeConfig = await models.Config.getCached(group.id)
+      const activeConfig = await Config.getCached(group.id)
       const jobs = await getJobs(activeConfig, group.id)
 
       // eslint-disable-next-line no-console

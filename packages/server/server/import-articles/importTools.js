@@ -1,6 +1,6 @@
 const he = require('he')
-const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
-const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
+const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
+const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 
 const getServerId = async serverLabel => {

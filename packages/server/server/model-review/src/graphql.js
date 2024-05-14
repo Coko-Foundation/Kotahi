@@ -1,5 +1,12 @@
-const models = require('@pubsweet/models')
 const isEmpty = require('lodash/isEmpty')
+
+const { File } = require('@coko/server')
+
+const Review = require('../../../models/review/review.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const User = require('../../../models/user/user.model')
+const Team = require('../../../models/team/team.model')
+
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
@@ -13,9 +20,9 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       const reviewDelta = { jsonData: {}, ...input }
-      const existingReview = (await models.Review.query().findById(id)) || {}
+      const existingReview = (await Review.query().findById(id)) || {}
 
-      const manuscript = await models.Manuscript.query().findById(
+      const manuscript = await Manuscript.query().findById(
         existingReview.manuscriptId || input.manuscriptId,
       )
 
@@ -45,7 +52,7 @@ const resolvers = {
       mergedReview.isHiddenFromAuthor = !!mergedReview.isHiddenFromAuthor
       mergedReview.isHiddenReviewerName = !!mergedReview.isHiddenReviewerName
 
-      const review = await models.Review.query().upsertGraphAndFetch(
+      const review = await Review.query().upsertGraphAndFetch(
         {
           id,
           ...mergedReview,
@@ -56,13 +63,12 @@ const resolvers = {
 
       // We want to modify file URIs before return, so we'll use the parsed jsonData
       review.jsonData = mergedReview.jsonData
-
-      const reviewUser = await models.User.query().findById(review.userId)
+      const reviewUser = await User.query().findById(review.userId)
 
       await convertFilesToFullObjects(
         review,
         form,
-        async ids => models.File.query().findByIds(ids),
+        async ids => File.query().findByIds(ids),
         getFilesWithUrl,
       )
 
@@ -82,7 +88,7 @@ const resolvers = {
     },
 
     async updateReviewerTeamMemberStatus(_, { manuscriptId, status }, ctx) {
-      const manuscript = await models.Manuscript.query()
+      const manuscript = await Manuscript.query()
         .findById(manuscriptId)
         .withGraphFetched('[submitter.defaultIdentity, channels.members]')
 
@@ -109,7 +115,7 @@ const resolvers = {
       }
 
       if (parent.userId) {
-        return models.User.query().findById(parent.userId)
+        return User.query().findById(parent.userId)
       }
 
       return null
@@ -121,9 +127,9 @@ const resolvers = {
       )
         return !!parent.isSharedWithCurrentUser
 
-      const sharedMembers = await models.Team.relatedQuery('members')
+      const sharedMembers = await Team.relatedQuery('members')
         .for(
-          models.Team.query().where({
+          Team.query().where({
             role: 'reviewer',
             objectId: parent.manuscriptId,
           }),

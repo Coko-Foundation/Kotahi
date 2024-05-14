@@ -1,7 +1,11 @@
-const models = require('@pubsweet/models')
-const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
 const axios = require('axios')
 const { Readable } = require('stream')
+
+const File = require('@coko/server/src/models/file/file.model')
+const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
+
+const ArticleTemplate = require('../../../models/articleTemplate/articleTemplate.model')
+const CMSFileTemplate = require('../../../models/cmsFileTemplate/cmsFileTemplate.model')
 
 const {
   getFilesWithUrl,
@@ -9,7 +13,7 @@ const {
 } = require('../../utils/fileStorageUtils')
 
 const searchArticleTemplate = async groupId => {
-  const groupFiles = await models.CMSFileTemplate.query().where({
+  const groupFiles = await CMSFileTemplate.query().where({
     groupId,
   })
 
@@ -30,14 +34,14 @@ const searchArticleTemplate = async groupId => {
 const resolvers = {
   Query: {
     articleTemplate: async (_, { groupId, isCms = false }) => {
-      return models.ArticleTemplate.query()
+      return ArticleTemplate.query()
         .findOne({ groupId, isCms })
         .throwIfNotFound()
     },
   },
   Mutation: {
     async updateTemplate(_, { id, input }) {
-      const result = await models.ArticleTemplate.query().findOne({ id })
+      const result = await ArticleTemplate.query().findOne({ id })
 
       // Needs to be revisited. This is a temp Solution
       // In case we want to update the article template of the CMS we need to do that on the S3
@@ -46,7 +50,7 @@ const resolvers = {
         const articleFile = await searchArticleTemplate(result.groupId)
 
         if (articleFile) {
-          const file = await models.File.query().findById(articleFile.fileId)
+          const file = await File.query().findById(articleFile.fileId)
 
           const { key, mimetype } = file.storedObjects.find(
             obj => obj.type === 'original',
@@ -59,7 +63,7 @@ const resolvers = {
         input.article = ''
       }
 
-      return models.ArticleTemplate.query()
+      return ArticleTemplate.query()
         .patchAndFetchById(id, input)
         .throwIfNotFound()
     },
@@ -67,14 +71,14 @@ const resolvers = {
   ArticleTemplate: {
     async files(articleTemplate) {
       return getFilesWithUrl(
-        await models.File.query().where({ objectId: articleTemplate.groupId }),
+        await File.query().where({ objectId: articleTemplate.groupId }),
       )
     },
     async article(articleTemplate) {
       if (articleTemplate.isCms === true) {
         const articleFile = await searchArticleTemplate(articleTemplate.groupId)
         if (!articleFile) return ''
-        const file = await models.File.query().findById(articleFile.fileId)
+        const file = await File.query().findById(articleFile.fileId)
 
         const { storedObjects } = await getFileWithUrl(file)
 
