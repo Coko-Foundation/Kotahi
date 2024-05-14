@@ -1,23 +1,25 @@
-const models = require('@pubsweet/models')
 const { getCrossrefDataViaDoi } = require('./crossRef')
 const makeAnnouncementOnCOAR = require('./announcement')
+
+const Manuscript = require('../../models/manuscript/manuscript.model')
+const Config = require('../../models/config/config.model')
+const CoarNotification = require('../../models/coarNotification/coarNotification.model')
 
 const sendAnnouncementNotification = (notification, manuscript) => {
   return makeAnnouncementOnCOAR(notification, manuscript)
 }
 
 const createNotification = async (payload, groupId) => {
-  const notification =
-    await models.CoarNotification.query().upsertGraphAndFetch({
-      payload,
-      groupId,
-    })
+  const notification = await CoarNotification.query().upsertGraphAndFetch({
+    payload,
+    groupId,
+  })
 
   return notification
 }
 
 const getManuscriptByDoi = async doi => {
-  const manuscript = await models.Manuscript.query().findOne({ doi })
+  const manuscript = await Manuscript.query().findOne({ doi })
   return manuscript
 }
 
@@ -51,9 +53,7 @@ const extractManuscriptFromNotification = async (notification, groupId) => {
     doi,
   }
 
-  const manuscript = await models.Manuscript.query().upsertGraphAndFetch(
-    newManuscript,
-  )
+  const manuscript = await Manuscript.query().upsertGraphAndFetch(newManuscript)
 
   return manuscript
 }
@@ -61,7 +61,7 @@ const extractManuscriptFromNotification = async (notification, groupId) => {
 const validateIPs = async (requestIP, group) => {
   const groupId = group.id
 
-  const activeConfig = await models.Config.query().findOne({
+  const activeConfig = await Config.query().findOne({
     groupId,
     active: true,
   })
@@ -84,7 +84,7 @@ const validateIPs = async (requestIP, group) => {
 
 const linkManuscriptToNotification = async (notification, manuscript) => {
   const manuscriptId = manuscript.id
-  await models.CoarNotification.query()
+  await CoarNotification.query()
     .findById(notification.id)
     .patch({ manuscriptId })
 }
@@ -99,7 +99,7 @@ const filterNotification = payload => payload.type.includes('Offer')
 const processNotification = async (group, payload) => {
   const groupId = group.id
 
-  const existingNotification = await models.CoarNotification.query().findOne({
+  const existingNotification = await CoarNotification.query().findOne({
     payload,
     groupId,
   })
@@ -123,7 +123,7 @@ const processNotification = async (group, payload) => {
   )
 
   if (!manuscript) {
-    await models.CoarNotification.query()
+    await CoarNotification.query()
       .findById(notification.id)
       .patch({ status: false })
   } else {

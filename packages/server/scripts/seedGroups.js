@@ -7,14 +7,12 @@ const fs = require('fs-extra').promises
 
 const { useTransaction } = require('@coko/server')
 
-const {
-  Channel,
-  Group,
-  Team,
-  EmailTemplate,
-  ArticleTemplate,
-  Config,
-} = require('@pubsweet/models')
+const Channel = require('../models/channel/channel.model')
+const Group = require('../models/group/group.model')
+const Team = require('../models/team/team.model')
+const EmailTemplate = require('../models/emailTemplate/emailTemplate.model')
+const ArticleTemplate = require('../models/articleTemplate/articleTemplate.model')
+const Config = require('../models/config/config.model')
 
 const seedConfig = require('./seedConfig')
 const seedForms = require('./seedForms')

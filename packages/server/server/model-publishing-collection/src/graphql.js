@@ -1,14 +1,16 @@
-const models = require('@pubsweet/models')
-const { createFile, deleteFiles } = require('@coko/server')
+const { createFile, deleteFiles, File } = require('@coko/server')
+
+const PublishingCollection = require('../../../models/publishingCollection/publishingCollection.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+
 const { getFileWithUrl } = require('../../utils/fileStorageUtils')
 
 const resolvers = {
   Query: {
     publishingCollection: async (_, { groupId }, ctx) => {
-      const publishingCollection =
-        await models.PublishingCollection.query().where({
-          groupId,
-        })
+      const publishingCollection = await PublishingCollection.query().where({
+        groupId,
+      })
 
       return publishingCollection.map(col => {
         return { ...col, formData: { ...col.formData, active: col.active } }
@@ -17,7 +19,7 @@ const resolvers = {
   },
   Mutation: {
     createCollection: async (_, { input }, ctx) => {
-      let publishingCollection = await models.PublishingCollection.query()
+      let publishingCollection = await PublishingCollection.query()
         .insert({
           active: input.active,
           formData: {
@@ -42,7 +44,7 @@ const resolvers = {
           publishingCollection.id,
         )
 
-        publishingCollection = await models.PublishingCollection.query()
+        publishingCollection = await PublishingCollection.query()
           .patch({
             formData: {
               ...publishingCollection.formData,
@@ -60,7 +62,7 @@ const resolvers = {
 
     deleteCollection: async (_, { id }) => {
       try {
-        const collection = await models.PublishingCollection.query()
+        const collection = await PublishingCollection.query()
           .delete()
           .findOne({ id })
           .returning('*')
@@ -73,7 +75,7 @@ const resolvers = {
     },
 
     updateCollection: async (_, { id, input }) => {
-      const collection = await models.PublishingCollection.query().findOne({
+      const collection = await PublishingCollection.query().findOne({
         id,
       })
 
@@ -100,7 +102,7 @@ const resolvers = {
       }
 
       const publishingCollection =
-        await models.PublishingCollection.query().updateAndFetchById(id, {
+        await PublishingCollection.query().updateAndFetchById(id, {
           ...input,
           formData: {
             ...input.formData,
@@ -116,7 +118,7 @@ const resolvers = {
   PublishCollection: {
     manuscripts: async parent => {
       if (parent.manuscripts?.length) {
-        const manuscripts = await models.Manuscript.query().whereIn(
+        const manuscripts = await Manuscript.query().whereIn(
           'id',
           parent.manuscripts,
         )
@@ -130,7 +132,7 @@ const resolvers = {
   PublishingCollectionFormData: {
     image: async parent => {
       // Return the image field from the formData object within the parent (metadata) object
-      const file = await models.File.query().findOne({ id: parent.image })
+      const file = await File.query().findOne({ id: parent.image })
 
       if (file) {
         const data = await getFileWithUrl(file)
@@ -143,7 +145,7 @@ const resolvers = {
       let file = null
 
       if (parent.image !== '') {
-        file = await models.File.query().findOne({ id: parent.image })
+        file = await File.query().findOne({ id: parent.image })
       }
 
       return file

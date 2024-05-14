@@ -1,11 +1,12 @@
-const models = require('@pubsweet/models')
+const Group = require('../../models/group/group.model')
+
 const { processNotification, validateIPs } = require('./coar-notify')
 
 module.exports = async app => {
   app.post('/api/coar/inbox/:group', async (req, res) => {
     const payload = req.body
     const groupName = req.params.group
-    const group = await models.Group.query().findOne({ name: groupName })
+    const group = await Group.query().findOne({ name: groupName })
     const requestIP = req.socket.localAddress.split(':').pop()
 
     if (!group) {

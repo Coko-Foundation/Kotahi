@@ -1,12 +1,11 @@
-const models = require('@pubsweet/models')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const Config = require('../../../models/config/config.model')
+const Team = require('../../../models/team/team.model')
 
 /** For a given versionId, find the first/original version of that manuscript and return its ID */
 const getIdOfFirstVersionOfManuscript = async (versionId, options = {}) =>
-  (
-    await models.Manuscript.query(options.trx)
-      .select('parentId')
-      .findById(versionId)
-  ).parentId || versionId
+  (await Manuscript.query(options.trx).select('parentId').findById(versionId))
+    .parentId || versionId
 
 /** For a given versionId, find the latest version of that manuscript and return its ID */
 const getIdOfLatestVersionOfManuscript = async (versionId, options = {}) => {
@@ -17,7 +16,7 @@ const getIdOfLatestVersionOfManuscript = async (versionId, options = {}) => {
   })
 
   return (
-    await models.Manuscript.query(trx)
+    await Manuscript.query(trx)
       .select('id')
       .where({ parentId: firstVersionId })
       .orWhere({ id: firstVersionId })
@@ -37,7 +36,7 @@ const isLatestVersionOfManuscript = async (versionId, options = {}) => {
 }
 
 const archiveOldManuscripts = async groupId => {
-  const activeConfig = await models.Config.getCached(groupId)
+  const activeConfig = await Config.getCached(groupId)
 
   const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
@@ -46,7 +45,7 @@ const archiveOldManuscripts = async groupId => {
     new Date().valueOf() - archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
   )
 
-  const archivedCount = await models.Manuscript.query()
+  const archivedCount = await Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
     .where('status', 'new')
@@ -93,7 +92,7 @@ const manuscriptHasOverdueTasksForUser = (manuscript, userId) => {
 const manuscriptIsActive = async (manuscriptId, options = {}) => {
   const { trx } = options
 
-  const manuscript = await models.Manuscript.query(trx)
+  const manuscript = await Manuscript.query(trx)
     .select('isHidden')
     .findById(manuscriptId)
 
@@ -113,7 +112,7 @@ const manuscriptIsActive = async (manuscriptId, options = {}) => {
 const getEditorIdsForManuscript = async (manuscriptId, options = {}) => {
   const { trx } = options
 
-  const teams = await models.Team.query(trx)
+  const teams = await Team.query(trx)
     .where({ objectId: manuscriptId })
     .whereIn('role', ['editor', 'handlingEditor', 'seniorEditor'])
     .withGraphFetched('members')

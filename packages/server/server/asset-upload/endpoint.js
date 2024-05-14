@@ -29,7 +29,8 @@ const upload = multer({
 
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const ArticleTemplate = require('../model-article-templates/src/articleTemplate')
+  const ArticleTemplate = require('../../models/articleTemplate/articleTemplate.model')
+
   app.post(
     '/api/uploadAsset',
     authBearer,

@@ -1,6 +1,10 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
-const models = require('@pubsweet/models')
+
+const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
+const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
+const Manuscript = require('../../models/manuscript/manuscript.model')
+
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 
 // Not sure if this code is used anymore could not find any relevant import triggers for europepmc?
@@ -8,24 +12,21 @@ const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
-  const [checkIfSourceExists] = await models.ArticleImportSources.query().where(
-    {
-      server: 'europepmc',
-    },
-  )
+  const [checkIfSourceExists] = await ArticleImportSources.query().where({
+    server: 'europepmc',
+  })
 
   if (!checkIfSourceExists) {
-    await models.ArticleImportSources.query().insert({
+    await ArticleImportSources.query().insert({
       server: 'europepmc',
     })
   }
 
-  const [europepmcImportSourceId] =
-    await models.ArticleImportSources.query().where({
-      server: 'europepmc',
-    })
+  const [europepmcImportSourceId] = await ArticleImportSources.query().where({
+    server: 'europepmc',
+  })
 
-  const lastImportDate = await models.ArticleImportHistory.query()
+  const lastImportDate = await ArticleImportHistory.query()
     .select('date')
     .where({
       sourceId: europepmcImportSourceId.id,
@@ -117,7 +118,7 @@ const getData = async (groupId, ctx) => {
 
   const articlesDetailedInfo = await Promise.all(articlesDetailedInfoPromises)
 
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await Manuscript.query()
 
   const currentDOIs = manuscripts.map(({ submission }) => {
     return submission.doi
@@ -178,13 +179,13 @@ const getData = async (groupId, ctx) => {
   if (!newManuscripts.length) return []
 
   try {
-    const inserted = await models.Manuscript.query().upsertGraphAndFetch(
+    const inserted = await Manuscript.query().upsertGraphAndFetch(
       newManuscripts,
       { relate: true },
     )
 
     if (lastImportDate.length) {
-      await models.ArticleImportHistory.query()
+      await ArticleImportHistory.query()
         .update({
           date: new Date().toISOString(),
         })
@@ -193,7 +194,7 @@ const getData = async (groupId, ctx) => {
           groupId,
         })
     } else {
-      await models.ArticleImportHistory.query().insert({
+      await ArticleImportHistory.query().insert({
         date: new Date().toISOString(),
         sourceId: europepmcImportSourceId.id,
         groupId,

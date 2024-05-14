@@ -3,7 +3,7 @@
  * when running migrations or restoring from dump.
  */
 const waitForDbToSettle = async () => {
-  const { User } = require('@pubsweet/models')
+  const User = require('../models/user/user.model')
   let ready
 
   while (!ready) {

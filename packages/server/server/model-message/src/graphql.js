@@ -7,7 +7,8 @@ const MESSAGE_CREATED = 'MESSAGE_CREATED'
 const MESSAGE_UPDATED = 'MESSAGE_UPDATED'
 const MESSAGE_DELETED = 'MESSAGE_DELETED'
 
-const models = require('@pubsweet/models')
+const Message = require('../../../models/message/message.model')
+const ChannelMember = require('../../../models/channelMember/channelMember.model')
 
 const {
   getChannelMemberByChannel,
@@ -21,17 +22,17 @@ const {
 const resolvers = {
   Query: {
     message: async (_, { messageId }) => {
-      models.Message.find(messageId)
+      Message.find(messageId)
     },
     messages: async (_, { channelId, first = 20, before }, context) => {
-      let messagesQuery = models.Message.query()
+      let messagesQuery = Message.query()
         .where({ channelId })
         .withGraphJoined('user')
         .limit(first)
         .orderBy('messages.created', 'desc')
 
       if (before) {
-        const firstMessage = await models.Message.query().findById(before)
+        const firstMessage = await Message.query().findById(before)
         messagesQuery = messagesQuery.where(
           'messages.created',
           '<',
@@ -51,12 +52,12 @@ const resolvers = {
       let firstUnreadMessage = null
 
       if (channelMember) {
-        unreadMessagesCount = await models.Message.query()
+        unreadMessagesCount = await Message.query()
           .where({ channelId })
           .where('created', '>', channelMember.lastViewed)
           .count()
 
-        firstUnreadMessage = await models.Message.query()
+        firstUnreadMessage = await Message.query()
           .select('id')
           .where({ channelId })
           .where('created', '>', channelMember.lastViewed)
@@ -83,7 +84,7 @@ const resolvers = {
         })
 
         if (channelMember) {
-          const unreadMessagesCount = await models.Message.query()
+          const unreadMessagesCount = await Message.query()
             .where({ channelId })
             .where('created', '>', channelMember.lastViewed)
             .count()
@@ -109,13 +110,13 @@ const resolvers = {
       const pubsub = await getPubsub()
       const currentUserId = context.user
 
-      const savedMessage = await new models.Message({
+      const savedMessage = await new Message({
         content,
         userId: currentUserId,
         channelId,
       }).save()
 
-      const message = await models.Message.query()
+      const message = await Message.query()
         .findById(savedMessage.id)
         .withGraphJoined('[user, channel]')
 
@@ -135,7 +136,7 @@ const resolvers = {
         taggedUserIds.add(taggedUserId)
       }
 
-      const channelMembers = await models.ChannelMember.query()
+      const channelMembers = await ChannelMember.query()
         .where({
           channelId: message.channelId,
         })
@@ -165,7 +166,7 @@ const resolvers = {
       return message
     },
     updateMessage: async (_, { messageId, content }) => {
-      const updatedMessage = await models.Message.query().patchAndFetchById(
+      const updatedMessage = await Message.query().patchAndFetchById(
         messageId,
         { content },
       )
@@ -179,9 +180,7 @@ const resolvers = {
       return updatedMessage
     },
     deleteMessage: async (_, { messageId }) => {
-      const deleteMessage = await models.Message.query()
-        .findById(messageId)
-        .first()
+      const deleteMessage = await Message.query().findById(messageId).first()
 
       if (!deleteMessage) {
         throw new Error('Message not found')
@@ -189,7 +188,7 @@ const resolvers = {
 
       const pubsub = await getPubsub()
 
-      await models.Message.query().deleteById(messageId)
+      await Message.query().deleteById(messageId)
 
       pubsub.publish(
         `${MESSAGE_DELETED}.${deleteMessage.channelId}`,
@@ -202,7 +201,7 @@ const resolvers = {
   Subscription: {
     messageCreated: {
       resolve: async (messageId, _, context) => {
-        const message = await models.Message.query()
+        const message = await Message.query()
           .findById(messageId)
           .withGraphJoined('user')
 
@@ -215,7 +214,7 @@ const resolvers = {
     },
     messageUpdated: {
       resolve: async (messageId, _, context) => {
-        const message = await models.Message.query()
+        const message = await Message.query()
           .findById(messageId)
           .withGraphJoined('user')
 

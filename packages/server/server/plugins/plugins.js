@@ -1,7 +1,7 @@
 /* eslint-disable global-require, no-console, import/no-dynamic-require */
-const models = require('@pubsweet/models')
 const { getBroker } = require('./broker')
-// const { }
+
+const Group = require('../../models/group/group.model')
 
 /** Read the plugin manifest and do some basic validation; throw an error if there's a problem */
 const readPluginGroupsFromManifestFile = async () => {
@@ -50,7 +50,7 @@ const registerPlugins = async () => {
         const { groupName, plugins } = pluginGroup
 
         try {
-          const group = await models.Group.query().findOne({ name: groupName })
+          const group = await Group.query().findOne({ name: groupName })
           if (!group) throw new Error('No such group found.')
 
           plugins.forEach(plugin => {

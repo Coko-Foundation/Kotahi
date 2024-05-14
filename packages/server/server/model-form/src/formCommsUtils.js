@@ -1,8 +1,10 @@
-const models = require('@pubsweet/models')
 const { ref } = require('objection')
 
+const Form = require('../../../models/form/form.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+
 const getActiveForms = async groupId => {
-  const forms = await models.Form.query()
+  const forms = await Form.query()
     .where({ category: 'submission', purpose: 'submit', groupId })
     .orWhere({ category: 'review', purpose: 'review', groupId })
     .orWhere({ category: 'decision', purpose: 'decision', groupId })
@@ -19,7 +21,7 @@ const getActiveForms = async groupId => {
  * old manuscripts that contain different fields to the current form).
  */
 const migrateFieldName = async (formId, oldFieldName, newFieldName) => {
-  const form = await models.Form.query().findById(formId)
+  const form = await Form.query().findById(formId)
   if (!form)
     throw new Error(
       `Cannot change field name in form ${formId}: the form was not found`,
@@ -57,15 +59,15 @@ const migrateFieldName = async (formId, oldFieldName, newFieldName) => {
     const pgOldField = oldFieldName.replace('.', ':')
     const pgNewField = newFieldName.replace('.', ':')
 
-    await models.Manuscript.query()
+    await Manuscript.query()
       .patch({
         [pgNewField]: ref(pgOldField),
         [pgOldField]: null,
       })
       .where({ groupId })
   } else if (form.purpose === 'review') {
-    await models.Manuscript.relatedQuery('reviews')
-      .for(models.Manuscript.query().where({ groupId }))
+    await Manuscript.relatedQuery('reviews')
+      .for(Manuscript.query().where({ groupId }))
       .patch({
         [newFieldName]: ref(oldFieldName),
         [oldFieldName]: null,
@@ -73,8 +75,8 @@ const migrateFieldName = async (formId, oldFieldName, newFieldName) => {
       .whereNot({ isDecision: true })
   } else {
     // form.purpose === 'decision'
-    await models.Manuscript.relatedQuery('reviews')
-      .for(models.Manuscript.query().where({ groupId }))
+    await Manuscript.relatedQuery('reviews')
+      .for(Manuscript.query().where({ groupId }))
       .patch({
         [newFieldName]: ref(oldFieldName),
         [oldFieldName]: null,

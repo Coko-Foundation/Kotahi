@@ -1,6 +1,14 @@
 const moment = require('moment-timezone')
-const models = require('@pubsweet/models')
 const taskConfigs = require('../../../config/journal/tasks.json')
+
+const Task = require('../../../models/task/task.model')
+const TaskAlert = require('../../../models/taskAlert/taskAlert.model')
+const TaskEmailNotification = require('../../../models/taskEmailNotification/taskEmailNotification.model')
+const TaskEmailNotificationLog = require('../../../models/taskEmailNotificationLog/taskEmailNotificationLog.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const Team = require('../../../models/team/team.model')
+const Config = require('../../../models/config/config.model')
+const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
 
 const {
   sendEmailWithPreparedData,
@@ -13,16 +21,16 @@ const {
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
-  const manuscript = await models.Manuscript.query().findById(manuscriptId)
-  const activeConfig = await models.Config.getCached(manuscript.groupId)
+  const manuscript = await Manuscript.query().findById(manuscriptId)
+  const activeConfig = await Config.getCached(manuscript.groupId)
 
-  const newTasks = await models.Task.query()
+  const newTasks = await Task.query()
     .whereNull('manuscriptId')
     .where({ groupId: manuscript.groupId })
     .orderBy('sequenceIndex')
     .withGraphFetched('emailNotifications(orderByCreated)')
 
-  const existingTasks = await models.Task.query()
+  const existingTasks = await Task.query()
     .where({ manuscriptId, groupId: manuscript.groupId })
     .orderBy('sequenceIndex')
 
@@ -30,7 +38,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
     .endOf('day')
 
-  return models.Task.transaction(async trx => {
+  return Task.transaction(async trx => {
     const promises = []
 
     for (let i = 0; i < newTasks.length; i += 1) {
@@ -45,8 +53,9 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
 
       delete task.id
       promises.push(
+        /* eslint-disable-next-line no-loop-func */
         new Promise((resolve, reject) => {
-          models.Task.query(trx)
+          Task.query(trx)
             .insertAndFetch(task)
             .withGraphFetched('assignee')
             .then(taskObject => {
@@ -71,7 +80,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
                   // eslint-disable-next-line no-loop-func, no-shadow
                   (resolve, reject) => {
                     setTimeout(() => {
-                      models.TaskEmailNotification.query(trx)
+                      TaskEmailNotification.query(trx)
                         .insertAndFetch(taskEmailNotification)
                         .then(result => resolve(result))
                         .catch(error => reject(error))
@@ -107,7 +116,7 @@ const updateAlertsUponTeamUpdate = async (
 ) => {
   if (!(await manuscriptIsActive(manuscriptId))) return
   const now = new Date()
-  const tasks = await models.Task.query().where({ manuscriptId })
+  const tasks = await Task.query().where({ manuscriptId })
 
   const overdueTaskIds = tasks
     .filter(
@@ -123,12 +132,12 @@ const updateAlertsUponTeamUpdate = async (
         userId,
       }))
 
-      await models.TaskAlert.query()
+      await TaskAlert.query()
         .insert(alertsToAdd)
         .onConflict(['taskId', 'userId'])
         .ignore()
 
-      await models.TaskAlert.query()
+      await TaskAlert.query()
         .delete()
         .where({ taskId })
         .whereIn('userId', userIdsToRemove)
@@ -153,19 +162,19 @@ const updateAlertsForTask = async (task, trx) => {
   if (needsAlert) {
     const editorIds = await getEditorIdsForManuscript(task.manuscriptId)
 
-    await models.TaskAlert.query(trx)
+    await TaskAlert.query(trx)
       .insert(editorIds.map(userId => ({ taskId: task.id, userId })))
       .onConflict(['taskId', 'userId'])
       .ignore()
   } else {
-    await models.TaskAlert.query(trx).delete().where({ taskId: task.id })
+    await TaskAlert.query(trx).delete().where({ taskId: task.id })
   }
 }
 
 /** For all tasks that have gone overdue during the previous calendar day, create alerts as appropriate.
  * Don't look further than yesterday, to avoid regenerating alerts that have already been seen. */
 const createNewTaskAlerts = async groupId => {
-  const activeConfig = await models.Config.getCached(groupId)
+  const activeConfig = await Config.getCached(groupId)
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -173,7 +182,7 @@ const createNewTaskAlerts = async groupId => {
 
   const startOfYesterday = moment(startOfToday).subtract(1, 'days')
 
-  const overdueTasks = await models.Task.query()
+  const overdueTasks = await Task.query()
     .whereNotNull('dueDate')
     .where('dueDate', '<', startOfToday.toDate())
     .where('dueDate', '>=', startOfYesterday.toDate()) // Don't look earlier than yesterday, so we don't recreate alerts that are already dismissed.
@@ -207,16 +216,16 @@ const createNewTaskAlerts = async groupId => {
     })
   })
 
-  await models.TaskAlert.query()
+  await TaskAlert.query()
     .insert(alertsToInsert)
     .onConflict(['taskId', 'userId'])
     .ignore()
 }
 
 const deleteAlertsForManuscript = async manuscriptId => {
-  await models.TaskAlert.query()
+  await TaskAlert.query()
     .delete()
-    .whereIn('taskId', models.Task.query().select('id').where({ manuscriptId }))
+    .whereIn('taskId', Task.query().select('id').where({ manuscriptId }))
 }
 
 const getTaskEmailNotifications = async (
@@ -224,13 +233,13 @@ const getTaskEmailNotifications = async (
   options = {},
 ) => {
   const { trx } = options
-  let taskQuery = models.Task.query(trx) // no await here because it's a sub-query
+  let taskQuery = Task.query(trx) // no await here because it's a sub-query
 
   if (status) {
     taskQuery = taskQuery.where({ status, groupId })
   }
 
-  return models.Task.relatedQuery('emailNotifications')
+  return Task.relatedQuery('emailNotifications')
     .for(taskQuery)
     .withGraphFetched('task')
     .withGraphFetched('recipientUser')
@@ -367,7 +376,7 @@ const sendNotification = async n => {
         const emailTemplateOption = n.emailTemplateId.replace(/([A-Z])/g, ' $1')
 
         // eslint-disable-next-line no-await-in-loop
-        const emailTemplate = await models.EmailTemplate.query().findById(
+        const emailTemplate = await EmailTemplate.query().findById(
           emailTemplateOption,
         )
 
@@ -395,7 +404,7 @@ const sendNotification = async n => {
 }
 
 const sendAutomatedTaskEmailNotifications = async groupId => {
-  const activeConfig = await models.Config.getCached(groupId)
+  const activeConfig = await Config.getCached(groupId)
 
   const startOfToday = moment()
     .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
@@ -436,14 +445,14 @@ const getTeamRecipients = async (emailNotification, roles, options = {}) => {
     { trx },
   )
 
-  const teamQuery = models.Team.query(trx)
+  const teamQuery = Team.query(trx)
     .where({
       objectType: 'manuscript',
       objectId: latestManuscriptVersionId,
     })
     .whereIn('role', roles) // no await here because it's a sub-query
 
-  const teamMembers = await models.Team.relatedQuery('members')
+  const teamMembers = await Team.relatedQuery('members')
     .where(builder => {
       builder
         .whereNull('status')
@@ -460,9 +469,9 @@ const getTeamRecipients = async (emailNotification, roles, options = {}) => {
 
 const logTaskEmailNotificationData = async (logData, options = {}) => {
   const { trx } = options
-  await models.TaskEmailNotificationLog.query(trx).insert(logData)
+  await TaskEmailNotificationLog.query(trx).insert(logData)
 
-  const associatedTask = await models.Task.query(trx)
+  const associatedTask = await Task.query(trx)
     .findById(logData.taskId)
     .withGraphFetched('[emailNotifications.recipientUser, notificationLogs]')
 

@@ -1,15 +1,17 @@
-const models = require('@pubsweet/models')
+const ChannelMember = require('../../../models/channelMember/channelMember.model')
+const Channel = require('../../../models/channel/channel.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const getChannelMemberByChannel = async ({ channelId, userId }) => {
-  return models.ChannelMember.query().findOne({ channelId, userId })
+  return ChannelMember.query().findOne({ channelId, userId })
 }
 
 const updateChannelLastViewed = async ({ channelId, userId }) => {
-  await models.ChannelMember.query()
+  await ChannelMember.query()
     .patch({ lastViewed: new Date(), lastAlertTriggeredTime: null })
     .where({ channelId, userId })
 
-  return models.ChannelMember.query().findOne({ channelId, userId })
+  return ChannelMember.query().findOne({ channelId, userId })
 }
 
 const addUsersToChatChannel = async (channelId, userIds) => {
@@ -21,7 +23,7 @@ const addUsersToChatChannel = async (channelId, userIds) => {
     lastViewed: new Date(),
   }))
 
-  await models.ChannelMember.query()
+  await ChannelMember.query()
     .insert(records)
     .onConflict(['channelId', 'userId'])
     .ignore()
@@ -32,16 +34,16 @@ const addUserToManuscriptChatChannel = async ({
   userId,
   type = 'all',
 }) => {
-  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+  const manuscript = await Manuscript.query().findById(manuscriptId)
 
-  const channel = await models.Channel.query()
+  const channel = await Channel.query()
     .where({
       manuscriptId: manuscript.parentId || manuscriptId,
       type,
     })
     .first()
 
-  const channelMember = await models.ChannelMember.query()
+  const channelMember = await ChannelMember.query()
     .where({
       channelId: channel.id,
       userId,
@@ -49,7 +51,7 @@ const addUserToManuscriptChatChannel = async ({
     .first()
 
   if (!channelMember) {
-    await new models.ChannelMember({
+    await new ChannelMember({
       channelId: channel.id,
       userId,
       lastViewed: new Date(),
@@ -62,8 +64,8 @@ const removeUserFromManuscriptChatChannel = async ({
   userId = null,
   type = 'all',
 }) => {
-  await models.ChannelMember.query().delete().where({ userId }).whereExists(
-    models.ChannelMember.relatedQuery('channel').where({
+  await ChannelMember.query().delete().where({ userId }).whereExists(
+    ChannelMember.relatedQuery('channel').where({
       manuscriptId,
       type,
     }),

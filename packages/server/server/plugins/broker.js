@@ -1,8 +1,10 @@
 const { logger } = require('@coko/server')
-const models = require('@pubsweet/models')
+
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 const { importWorkersByGroup } = require('./imports')
 const { DoiExistenceChecker } = require('./doiExistenceChecker')
+
+const Manuscript = require('../../models/manuscript/manuscript.model')
 
 const assertArgTypes = (args, ...typeSpecs) => {
   for (let i = 0; i < args.length; i += 1) {
@@ -66,7 +68,7 @@ const getBroker = (groupId, workerName) => {
     },
     findManuscriptWithDoi: async doi =>
       doi
-        ? models.Manuscript.query()
+        ? Manuscript.query()
             .where({ groupId })
             // eslint-disable-next-line func-names
             .where(function () {
@@ -79,7 +81,7 @@ const getBroker = (groupId, workerName) => {
         : null,
     findManuscriptWithUri: async uri =>
       uri
-        ? models.Manuscript.query()
+        ? Manuscript.query()
             .where({ groupId })
             // eslint-disable-next-line func-names
             .where(function () {

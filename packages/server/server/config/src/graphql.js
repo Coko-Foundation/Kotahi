@@ -1,5 +1,7 @@
-const models = require('@pubsweet/models')
 const File = require('@coko/server/src/models/file/file.model')
+
+const Config = require('../../../models/config/config.model')
+
 const { getConfigJsonString } = require('./configObject')
 
 const {
@@ -27,17 +29,16 @@ const getFile = async (config, fieldName) => {
 const resolvers = {
   Query: {
     config: async (_, { id }, ctx) => {
-      let config = await models.Config.query().findById(id)
+      let config = await Config.query().findById(id)
       config = await hideSensitiveInformation(config)
       config.formData = JSON.stringify(config.formData)
-
       return config
     },
     oldConfig: async () => getConfigJsonString(),
   },
   Mutation: {
     updateConfig: async (_, { id, input }) => {
-      const existingConfig = await models.Config.query().findById(id)
+      const existingConfig = await Config.query().findById(id)
       const inputFormData = JSON.parse(input.formData)
 
       const formData = await revertHiddenSensitiveInformation(
@@ -50,10 +51,7 @@ const resolvers = {
         active: input.active,
       }
 
-      let config = await models.Config.query().updateAndFetchById(
-        id,
-        configInput,
-      )
+      let config = await Config.query().updateAndFetchById(id, configInput)
       await rescheduleJobsOnChange(existingConfig, config)
       config = await hideSensitiveInformation(config)
       config.formData = JSON.stringify(config.formData)

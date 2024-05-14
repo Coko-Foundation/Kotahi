@@ -1,25 +1,24 @@
 const { v4: uuid } = require('uuid')
-const models = require('@pubsweet/models')
+
+const PublishedArtifact = require('../../models/publishedArtifact/publishedArtifact.model')
 
 const upsertArtifact = async artifact => {
   let priorArtifact = null
 
   if (artifact.externalId)
-    priorArtifact = await models.PublishedArtifact.query()
-      .select('id')
-      .findOne({
-        manuscriptId: artifact.manuscriptId,
-        externalId: artifact.externalId,
-      })
+    priorArtifact = await PublishedArtifact.query().select('id').findOne({
+      manuscriptId: artifact.manuscriptId,
+      externalId: artifact.externalId,
+    })
 
   const artifactId = priorArtifact ? priorArtifact.id : uuid()
 
   if (priorArtifact)
-    await models.PublishedArtifact.query()
+    await PublishedArtifact.query()
       .findById(artifactId)
       .patch({ ...artifact, id: artifactId })
   else
-    await models.PublishedArtifact.query().insert({
+    await PublishedArtifact.query().insert({
       ...artifact,
       id: artifactId,
     })
@@ -28,7 +27,7 @@ const upsertArtifact = async artifact => {
 }
 
 const deleteArtifact = async (manuscriptId, externalId) => {
-  await models.PublishedArtifact.query().delete().where({
+  await PublishedArtifact.query().delete().where({
     manuscriptId,
     externalId,
   })

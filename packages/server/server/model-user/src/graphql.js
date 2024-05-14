@@ -2,7 +2,16 @@ const { logger, fileStorage } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { parseISO, addSeconds } = require('date-fns')
 const { chunk } = require('lodash')
-const models = require('@pubsweet/models')
+
+const Invitation = require('../../../models/invitation/invitation.model')
+const Team = require('../../../models/team/team.model')
+const TeamMember = require('../../../models/teamMember/teamMember.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const Task = require('../../../models/task/task.model')
+const TaskEmailNotification = require('../../../models/taskEmailNotification/taskEmailNotification.model')
+const User = require('../../../models/user/user.model')
+const Channel = require('../../../models/channel/channel.model')
+const Identity = require('../../../models/identity/identity.model')
 
 const {
   sendEmailWithPreparedData,
@@ -25,13 +34,13 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
   const teamId = team.id
 
   if (shouldBeMember) {
-    await models.TeamMember.query()
+    await TeamMember.query()
       .insert({ userId, teamId })
-      .whereNotExists(models.TeamMember.query().where({ userId, teamId }))
+      .whereNotExists(TeamMember.query().where({ userId, teamId }))
   } else {
-    await models.TeamMember.transaction(async trx => {
+    await TeamMember.transaction(async trx => {
       if (team.role === 'user') {
-        const manuscripts = await models.Manuscript.query(trx)
+        const manuscripts = await Manuscript.query(trx)
           .where({ groupId })
           .withGraphFetched('[teams, invitations, tasks]')
 
@@ -42,7 +51,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
         // Remove user from assigned manuscript teams be it author, seniorEditor, handlingEditor, editor, reviewer which are not completed
         await Promise.all(
           manuscriptTeams.map(async manuscriptTeam => {
-            const member = await models.TeamMember.query(trx).findOne({
+            const member = await TeamMember.query(trx).findOne({
               userId,
               teamId: manuscriptTeam.id,
             })
@@ -61,7 +70,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
         // Remove user UNANSWERED invitations and sent out invitations
         await Promise.all(
           manuscriptInvitations.map(async manuscriptInvitation => {
-            const invitation = await models.Invitation.query(trx).findById(
+            const invitation = await Invitation.query(trx).findById(
               manuscriptInvitation.id,
             )
 
@@ -72,7 +81,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
               invitation.delete()
             } else if (invitation.senderId === userId) {
               // TODO: Fix database validation error sender_id is set not null 1647493905-invitations.sql
-              // await models.Invitation.query(
+              // await Invitation.query(
               //   trx,
               // ).patchAndFetchById(invitation.id, { senderId: null })
             }
@@ -80,7 +89,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
         )
 
         // Remove user from assignee tasks
-        await models.Task.query(trx)
+        await Task.query(trx)
           .patch({ assigneeUserId: null, assigneeType: null })
           .where({ assigneeUserId: userId, groupId })
 
@@ -91,24 +100,22 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
         // Remove user from task email notifications
         await Promise.all(
           manuscriptTasks.map(async manuscriptTask => {
-            const task = await models.Task.query(trx).findById(
-              manuscriptTask.id,
-            )
+            const task = await Task.query(trx).findById(manuscriptTask.id)
 
-            await models.TaskEmailNotification.query(trx)
+            await TaskEmailNotification.query(trx)
               .delete()
               .where({ recipientUserId: userId, taskId: task.id })
           }),
         )
 
         // Remove user from submitted manuscripts
-        await models.Manuscript.query(trx)
+        await Manuscript.query(trx)
           .update({ submitterId: null })
           .where({ submitterId: userId, groupId })
 
-        await models.TeamMember.query(trx).delete().where({ userId, teamId })
+        await TeamMember.query(trx).delete().where({ userId, teamId })
       } else {
-        await models.TeamMember.query(trx).delete().where({ userId, teamId })
+        await TeamMember.query(trx).delete().where({ userId, teamId })
       }
     })
   }
@@ -118,13 +125,13 @@ const resolvers = {
   Query: {
     async user(_, { id, username }, ctx) {
       if (id) {
-        const user = await models.User.query().findById(id)
+        const user = await User.query().findById(id)
         await addGlobalAndGroupRolesToUserObject(ctx, user)
         return user
       }
 
       if (username) {
-        const user = await models.User.query().findOne({ username })
+        const user = await User.query().findOne({ username })
         await addGlobalAndGroupRolesToUserObject(ctx, user)
         return user
       }
@@ -132,21 +139,21 @@ const resolvers = {
       return null
     },
     async users(_, vars, ctx) {
-      return models.User.query().joinRelated('teams').where({
+      return User.query().joinRelated('teams').where({
         role: 'user',
         objectId: ctx.req.headers['group-id'],
       })
     },
     async paginatedUsers(_, { sort, offset, limit }, ctx) {
-      const currentUser = await models.User.query().findById(ctx.user)
+      const currentUser = await User.query().findById(ctx.user)
       await addGlobalAndGroupRolesToUserObject(ctx, currentUser)
 
       let query
 
       if (currentUser.globalRoles.includes('admin')) {
-        query = models.User.query()
+        query = User.query()
       } else {
-        query = models.User.query().joinRelated('teams').where({
+        query = User.query().joinRelated('teams').where({
           role: 'user',
           objectId: ctx.req.headers['group-id'],
         })
@@ -197,7 +204,7 @@ const resolvers = {
         throw new Error('Channel ID is required.')
       }
 
-      const channelWithUsers = await models.Channel.query()
+      const channelWithUsers = await Channel.query()
         .findById(channelId)
         .withGraphFetched('users(orderByUsername)')
 
@@ -210,9 +217,9 @@ const resolvers = {
       if (channelWithUsers.type !== 'all') {
         const groupId = ctx.req.headers['group-id']
 
-        const groupManagers = await models.Team.relatedQuery('users')
+        const groupManagers = await Team.relatedQuery('users')
           .for(
-            models.Team.query().where({
+            Team.query().where({
               role: 'groupManager',
               objectId: groupId,
               objectType: 'Group',
@@ -234,7 +241,7 @@ const resolvers = {
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
 
-      const user = await models.User.query().patchAndFetchById(ctx.user, {
+      const user = await User.query().patchAndFetchById(ctx.user, {
         lastOnline: new Date(Date.now()),
       })
 
@@ -244,13 +251,13 @@ const resolvers = {
     },
     searchUsers(_, { teamId, query }, ctx) {
       if (teamId) {
-        return models.User.model
+        return User.model
           .query()
           .where({ teamId })
           .where('username', 'ilike', `${query}%`)
       }
 
-      return models.User.model.query().where('username', 'ilike', `${query}%`)
+      return User.model.query().where('username', 'ilike', `${query}%`)
     },
   },
   Mutation: {
@@ -258,7 +265,7 @@ const resolvers = {
       const user = {
         username: input.username,
         email: input.email,
-        passwordHash: await models.User.hashPassword(input.password),
+        passwordHash: await User.hashPassword(input.password),
       }
 
       const identity = {
@@ -271,7 +278,7 @@ const resolvers = {
       user.defaultIdentity = identity
 
       try {
-        const result = await models.User.create(user, ctx, {
+        const result = await User.create(user, ctx, {
           eager: 'defaultIdentity',
         })
 
@@ -287,17 +294,17 @@ const resolvers = {
       }
     },
     async deleteUser(_, { id }, ctx) {
-      return models.User.transaction(async trx => {
-        const user = await models.User.query(trx).findById(id)
-        await models.Manuscript.query(trx)
+      return User.transaction(async trx => {
+        const user = await User.query(trx).findById(id)
+        await Manuscript.query(trx)
           .update({ submitterId: null })
           .where({ submitterId: id })
-        await models.Invitation.query(trx).where({ userId: id }).delete()
+        await Invitation.query(trx).where({ userId: id }).delete()
         // TODO: Fix database validation error sender_id is set not null 1647493905-invitations.sql
-        await models.Invitation.query(trx)
+        await Invitation.query(trx)
           .update({ senderId: null })
           .where({ senderId: id })
-        await models.User.query(trx).where({ id }).delete()
+        await User.query(trx).where({ id }).delete()
         // eslint-disable-next-line no-console
         console.info(`User ${id} (${user.username}) deleted.`)
         return user
@@ -306,7 +313,7 @@ const resolvers = {
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
         // eslint-disable-next-line no-param-reassign
-        input.passwordHash = await models.User.hashPassword(input.password)
+        input.passwordHash = await User.hashPassword(input.password)
         // eslint-disable-next-line no-param-reassign
         delete input.password
       }
@@ -314,12 +321,12 @@ const resolvers = {
       const updatedUser = JSON.parse(input)
       delete updatedUser.globalRoles
       delete updatedUser.groupRoles
-      return models.User.query().updateAndFetchById(id, updatedUser)
+      return User.query().updateAndFetchById(id, updatedUser)
     },
     async setGlobalRole(_, { userId, role, shouldEnable }, ctx) {
-      const team = await models.Team.query().findOne({ role, global: true })
+      const team = await Team.query().findOne({ role, global: true })
       await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
-      const user = await models.User.find(userId)
+      const user = await User.find(userId)
       await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
@@ -327,13 +334,13 @@ const resolvers = {
     async setGroupRole(_, { userId, role, shouldEnable }, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      const team = await models.Team.query().findOne({
+      const team = await Team.query().findOne({
         role,
         objectId: groupId,
       })
 
       await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
-      const user = await models.User.find(userId)
+      const user = await User.find(userId)
       await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
@@ -347,7 +354,7 @@ const resolvers = {
       let user
 
       try {
-        user = await models.User.findByUsername(input.username)
+        user = await User.findByUsername(input.username)
         isValid = await user.validPassword(input.password)
       } catch (err) {
         logger.debug(err)
@@ -363,19 +370,19 @@ const resolvers = {
       }
     },
     async updateUsername(_, { id, username }, ctx) {
-      const user = await models.User.find(id)
+      const user = await User.find(id)
       user.username = username
       await user.save()
       return user
     },
     async updateLanguage(_, { id, preferredLanguage }, ctx) {
-      const user = await models.User.find(id)
+      const user = await User.find(id)
       user.preferredLanguage = preferredLanguage
       await user.save()
       return user
     },
     async updateEmail(_, { id, email }, ctx) {
-      const user = await models.User.find(id)
+      const user = await User.find(id)
 
       if (user.email === email) {
         return { success: true }
@@ -390,14 +397,14 @@ const resolvers = {
         return { success: false, error: 'invalidEmail' }
       }
 
-      const userWithSuchEmail = await models.User.query().findOne({ email })
+      const userWithSuchEmail = await User.query().findOne({ email })
 
       if (userWithSuchEmail) {
         return { success: false, error: 'emailTaken' }
       }
 
       try {
-        const updatedUser = await models.User.query().updateAndFetchById(id, {
+        const updatedUser = await User.query().updateAndFetchById(id, {
           email,
         })
 
@@ -407,7 +414,7 @@ const resolvers = {
       }
     },
     async updateRecentTab(_, { tab }, ctx) {
-      const user = await models.User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.user, {
         recentTab: tab,
       })
 
@@ -434,14 +441,14 @@ const resolvers = {
       }
     },
     async expandChat(_, { state }, ctx) {
-      const user = await models.User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.user, {
         chatExpanded: state,
       })
 
       return user
     },
     async updateMenuUI(_, { expanded }, ctx) {
-      const user = await models.User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.user, {
         menuPinned: expanded,
       })
 
@@ -460,7 +467,7 @@ const resolvers = {
       return cachedGet(`defaultIdentityOfUser:${userId}`)
     },
     async identities(parent, args, ctx) {
-      const identities = await models.Identity.query().where({
+      const identities = await Identity.query().where({
         userId: parent.id,
       })
 
@@ -489,7 +496,7 @@ const resolvers = {
 
           profilePicture = await fileStorage.getURL(objectKey)
 
-          await models.User.query().patchAndFetchById(userId, {
+          await User.query().patchAndFetchById(userId, {
             profilePicture,
           })
         }
@@ -501,7 +508,7 @@ const resolvers = {
 
       if (profilePicture !== avatarPlaceholder) {
         profilePicture = avatarPlaceholder
-        await models.User.query().patchAndFetchById(userId, { profilePicture })
+        await User.query().patchAndFetchById(userId, { profilePicture })
       }
 
       return profilePicture

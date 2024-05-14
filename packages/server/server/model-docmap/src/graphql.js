@@ -1,16 +1,18 @@
-const models = require('@pubsweet/models')
 const { GraphQLError } = require('graphql')
+
+const Group = require('../../../models/group/group.model')
+const Docmap = require('../../../models/docmap/docmap.model')
 
 const resolvers = {
   Query: {
     async docmap(_, { externalId, groupName = null }, ctx) {
-      const groups = await models.Group.query().where({ isArchived: false })
+      const groups = await Group.query().where({ isArchived: false })
       let group = null
       if (groupName) group = groups.find(g => g.name === groupName)
       else if (groups.length === 1) [group] = groups
       if (!group) throw new Error(`Group with name '${groupName}' not found`)
 
-      const record = await models.Docmap.query().findOne({
+      const record = await Docmap.query().findOne({
         externalId,
         groupId: group.id,
       })

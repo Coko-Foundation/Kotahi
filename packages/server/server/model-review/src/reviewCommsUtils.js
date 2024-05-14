@@ -1,9 +1,9 @@
-const models = require('@pubsweet/models')
-
 const getForm = async (categoryAndPurpose, options = {}) => {
+  /* eslint-disable-next-line global-require */
+  const Form = require('../../../models/form/form.model')
   const { trx } = options
 
-  const form = await models.Form.query(trx).where(categoryAndPurpose)
+  const form = await Form.query(trx).where(categoryAndPurpose)
 
   if (!form || !form.length)
     throw new Error(`No form found for "${categoryAndPurpose.purpose}"`)

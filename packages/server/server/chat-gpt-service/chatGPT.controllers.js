@@ -1,13 +1,12 @@
 const axios = require('axios')
-const models = require('@pubsweet/models')
 
-// const logger = require('@coko/server')
+const Config = require('../../models/config/config.model')
 
 const chatGPT = async (input, history = [], groupId) => {
   try {
     const CHAT_GPT_URL = 'https://api.openai.com/v1/chat/completions'
     // const CHAT_GPT_URL = config.has('chatGPT.url') && config.get('chatGPT.url')
-    const activeConfig = await models.Config.getCached(groupId)
+    const activeConfig = await Config.getCached(groupId)
 
     const { apiKey } = activeConfig.formData.aiDesignStudio ?? {}
 

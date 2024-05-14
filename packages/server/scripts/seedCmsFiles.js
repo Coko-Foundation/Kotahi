@@ -1,13 +1,14 @@
 /* eslint-disable no-await-in-loop */
 const fs = require('fs')
 const path = require('path')
-const { createFile } = require('@coko/server')
 
-const { CMSFileTemplate } = require('@pubsweet/models')
+const { createFile } = require('@coko/server')
 
 const {
   connectToFileStorage,
 } = require('@coko/server/src/services/fileStorage')
+
+const CMSFileTemplate = require('../models/cmsFileTemplate/cmsFileTemplate.model')
 
 const readDirectoryRecursively = async (directoryPath, parentId, callBack) => {
   const files = fs.readdirSync(directoryPath)

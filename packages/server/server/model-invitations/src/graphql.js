@@ -1,4 +1,9 @@
-const models = require('@pubsweet/models')
+const Invitation = require('../../../models/invitation/invitation.model')
+const BlacklistEmail = require('../../../models/blacklistEmail/blacklistEmail.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
+const User = require('../../../models/user/user.model')
+const Team = require('../../../models/team/team.model')
+const TeamMember = require('../../../models/teamMember/teamMember.model')
 
 const {
   isLatestVersionOfManuscript,
@@ -11,11 +16,11 @@ const {
 const resolvers = {
   Query: {
     async invitationManuscriptId(_, { id }, ctx) {
-      const invitation = await models.Invitation.query().findById(id)
+      const invitation = await Invitation.query().findById(id)
       return invitation
     },
     async invitationStatus(_, { id }, ctx) {
-      const invitation = await models.Invitation.query().findById(id)
+      const invitation = await Invitation.query().findById(id)
 
       const isLatestVersion = await isLatestVersionOfManuscript(
         invitation.manuscriptId,
@@ -30,7 +35,7 @@ const resolvers = {
     async getInvitationsForManuscript(_, { id }, ctx) {
       if (!id) return []
 
-      const invitations = await models.Invitation.query()
+      const invitations = await Invitation.query()
         .where({
           manuscriptId: id,
         })
@@ -39,7 +44,7 @@ const resolvers = {
       return invitations
     },
     async getBlacklistInformation(_, { email, groupId }, ctx) {
-      const blacklistData = await models.BlacklistEmail.query().where({
+      const blacklistData = await BlacklistEmail.query().where({
         email,
         groupId,
       })
@@ -49,7 +54,7 @@ const resolvers = {
     async getEmailInvitedReviewers(_, { manuscriptId }, ctx) {
       if (!manuscriptId) return []
 
-      const invitedReviewer = await models.Invitation.query()
+      const invitedReviewer = await Invitation.query()
         .where({
           manuscriptId,
         })
@@ -60,7 +65,7 @@ const resolvers = {
   },
   Mutation: {
     async updateInvitationStatus(_, { id, status, userId, responseDate }, ctx) {
-      const [result] = await models.Invitation.query()
+      const [result] = await Invitation.query()
         .patch({
           status,
           userId,
@@ -69,14 +74,14 @@ const resolvers = {
         .where({ id, status: 'UNANSWERED' })
         .returning('*')
 
-      const relatedUser = await models.User.query().findOne({
+      const relatedUser = await User.query().findOne({
         email: result.toEmail,
       })
 
       if (relatedUser) {
-        await models.Team.relatedQuery('members')
+        await Team.relatedQuery('members')
           .for(
-            models.Team.query().findOne({
+            Team.query().findOne({
               objectId: result.manuscriptId,
               role: result.invitedPersonType.toLowerCase(),
             }),
@@ -92,7 +97,7 @@ const resolvers = {
       { id, responseComment, declinedReason },
       ctx,
     ) {
-      const result = await models.Invitation.query().updateAndFetchById(id, {
+      const result = await Invitation.query().updateAndFetchById(id, {
         responseComment,
         declinedReason,
       })
@@ -100,12 +105,12 @@ const resolvers = {
       return result
     },
     async addEmailToBlacklist(_, { email, groupId }, ctx) {
-      const result = await new models.BlacklistEmail({ email, groupId }).save()
+      const result = await new BlacklistEmail({ email, groupId }).save()
 
       return result
     },
     async assignUserAsAuthor(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await models.Manuscript.query().findById(manuscriptId)
+      const manuscript = await Manuscript.query().findById(manuscriptId)
 
       await addUserToManuscriptChatChannel({
         manuscriptId,
@@ -126,7 +131,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!authorExists) {
-          await new models.TeamMember({
+          await new TeamMember({
             teamId: existingTeam.id,
             userId,
           }).save()
@@ -136,7 +141,7 @@ const resolvers = {
       }
 
       // Create a new team of authors if it doesn't exist
-      const newTeam = await new models.Team({
+      const newTeam = await new Team({
         objectId: manuscriptId,
         objectType: 'manuscript',
         members: [{ userId }],
@@ -152,19 +157,16 @@ const resolvers = {
       { invitationId, isShared },
       ctx,
     ) {
-      const result = await models.Invitation.query().updateAndFetchById(
-        invitationId,
-        {
-          isShared,
-        },
-      )
+      const result = await Invitation.query().updateAndFetchById(invitationId, {
+        isShared,
+      })
 
       return result
     },
   },
   Invitation: {
     async user(parent) {
-      return parent.user || models.User.query().findById(parent.userId)
+      return parent.user || User.query().findById(parent.userId)
     },
   },
 }

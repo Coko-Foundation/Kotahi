@@ -1,6 +1,8 @@
 const axios = require('axios')
-const models = require('@pubsweet/models')
 const config = require('config')
+
+const Group = require('../../models/group/group.model')
+const Review = require('../../models/review/review.model')
 
 const { protocol, publicHost, port } = config['pubsweet-client']
 const flaxConfig = config['flax-site']
@@ -32,7 +34,7 @@ const getFlaxUrl = async (groupName, shortId) => {
 
 const getRequestData = async (notification, manuscript) => {
   const { payload, groupId } = notification
-  const group = await models.Group.query().findById(groupId).first()
+  const group = await Group.query().findById(groupId).first()
   const reviewer = await getReviewer(manuscript)
   const currentApiUrl = `${protocol}//${publicHost}${port ? `:${port}` : ''}`
   const flaxReviewUrl = await getFlaxUrl(group.name, manuscript.shortId)
@@ -82,7 +84,7 @@ const getRequestData = async (notification, manuscript) => {
 const getReviewer = async manuscript => {
   const manuscriptId = manuscript.id
 
-  const latestReview = await models.Review.query()
+  const latestReview = await Review.query()
     .findOne({ manuscriptId, is_decision: false })
     .orderBy('updated', 'desc')
     .first()

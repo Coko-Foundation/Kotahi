@@ -1,5 +1,5 @@
 const { NotFoundError } = require('@pubsweet/errors')
-const Form = require('./form')
+const Form = require('../../../models/form/form.model')
 
 const notFoundError = (property, value, className) =>
   new NotFoundError(`Object not found: ${className} with ${property} ${value}`)
