@@ -77,106 +77,104 @@ const ThreadedComment = ({
   }
 
   return (
-    <>
-      <CommentContainer
+    <CommentContainer
+      commentBelongsToDifferentManuscriptVersion={
+        commentBelongsToDifferentManuscriptVersion
+      }
+    >
+      <CommentWrapper
         commentBelongsToDifferentManuscriptVersion={
           commentBelongsToDifferentManuscriptVersion
         }
+        key={comment.id}
       >
-        <CommentWrapper
-          commentBelongsToDifferentManuscriptVersion={
-            commentBelongsToDifferentManuscriptVersion
-          }
-          key={comment.id}
-        >
-          <CommentMetaWrapper>
-            <UserMetaWrapper>
-              <UserAvatar user={author} />
-              {author.username}
-            </UserMetaWrapper>
-          </CommentMetaWrapper>
-          <ActionWrapper>
-            <div>
-              <Moment format="YYYY-MM-DD">{createdAt}</Moment>
-              <Tooltip
-                content={
-                  <>
-                    Created at &nbsp;
-                    <Moment format="YYYY-MM-DD HH:mm:ss">{createdAt}</Moment>
-                    <br />
-                    Updated at &nbsp;
-                    <Moment format="YYYY-MM-DD HH:mm:ss">{updatedAt}</Moment>
-                  </>
-                }
-              />
-            </div>
-            {setShouldPublish && isLatestVersionOfManuscript && (
-              <FieldPublishingSelector
-                onChange={setShouldPublish}
-                value={shouldPublish}
-              />
-            )}
-            {shouldShowEditIcon && (
-              <Icon noPadding onClick={() => setOpenModal(true)}>
-                edit
-              </Icon>
-            )}
+        <CommentMetaWrapper>
+          <UserMetaWrapper>
+            <UserAvatar user={author} />
+            {author.username}
+          </UserMetaWrapper>
+        </CommentMetaWrapper>
+        <ActionWrapper>
+          <div>
+            <Moment format="YYYY-MM-DD">{createdAt}</Moment>
+            <Tooltip
+              content={
+                <>
+                  Created at &nbsp;
+                  <Moment format="YYYY-MM-DD HH:mm:ss">{createdAt}</Moment>
+                  <br />
+                  Updated at &nbsp;
+                  <Moment format="YYYY-MM-DD HH:mm:ss">{updatedAt}</Moment>
+                </>
+              }
+            />
+          </div>
+          {setShouldPublish && isLatestVersionOfManuscript && (
+            <FieldPublishingSelector
+              onChange={setShouldPublish}
+              value={shouldPublish}
+            />
+          )}
+          {shouldShowEditIcon && (
+            <Icon noPadding onClick={() => setOpenModal(true)}>
+              edit
+            </Icon>
+          )}
 
-            <Collapse
-              onClick={event => {
-                setCollapse(!collapse)
-              }}
-              value={collapse}
-            >
-              <Icon noPadding>{collapse ? 'chevron-down' : 'chevron-up'}</Icon>
-            </Collapse>
-          </ActionWrapper>
-        </CommentWrapper>
-        <SimpleWaxEditorWrapper collapse={collapse}>
+          <Collapse
+            onClick={event => {
+              setCollapse(!collapse)
+            }}
+            value={collapse}
+          >
+            <Icon noPadding>{collapse ? 'chevron-down' : 'chevron-up'}</Icon>
+          </Collapse>
+        </ActionWrapper>
+      </CommentWrapper>
+      <SimpleWaxEditorWrapper collapse={collapse}>
+        <SimpleWaxEditor
+          {...simpleWaxEditorProps}
+          key={counter}
+          readonly
+          value={
+            hasValue(submittedValue)
+              ? submittedValue
+              : 'Comment is either deleted or is unsubmitted'
+          }
+        />
+        <CollapseOverlay collapse={collapse} />
+      </SimpleWaxEditorWrapper>
+      <Modal isOpen={openModal}>
+        <ModalContainer>
           <SimpleWaxEditor
             {...simpleWaxEditorProps}
-            key={counter}
-            readonly
-            value={
-              hasValue(submittedValue)
-                ? submittedValue
-                : 'Comment is either deleted or is unsubmitted'
-            }
+            onChange={data => {
+              setModalFieldValue(data)
+              onChange(data)
+            }}
+            value={modalFieldValue}
           />
-          <CollapseOverlay collapse={collapse} />
-        </SimpleWaxEditorWrapper>
-        <Modal isOpen={openModal}>
-          <ModalContainer>
-            <SimpleWaxEditor
-              {...simpleWaxEditorProps}
-              onChange={data => {
-                setModalFieldValue(data)
-                onChange(data)
-              }}
-              value={modalFieldValue}
-            />
-            <Button
-              onClick={event => {
-                onSubmitClick()
-              }}
-              primary
-            >
-              Edit
-            </Button>
-            &nbsp;
-            <CancelButton
-              onClick={() => {
-                setOpenModal(false)
-                setModalFieldValue(existingComment?.comment || value)
-                onCancel()
-              }}
-            >
-              Cancel
-            </CancelButton>
-          </ModalContainer>
-        </Modal>
-      </CommentContainer>
-    </>
+          <Button
+            onClick={event => {
+              onSubmitClick()
+            }}
+            primary
+          >
+            Edit
+          </Button>
+          &nbsp;
+          <CancelButton
+            onClick={() => {
+              setOpenModal(false)
+              setModalFieldValue(existingComment?.comment || value)
+              onCancel()
+            }}
+          >
+            Cancel
+          </CancelButton>
+        </ModalContainer>
+      </Modal>
+    </CommentContainer>
   )
 }
 

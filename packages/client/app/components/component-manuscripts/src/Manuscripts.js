@@ -45,7 +45,7 @@ const OuterContainer = styled(Container)`
 
 const ManuscriptsPane = styled.div`
   overflow-y: scroll;
-  padding: 16px 16px 0 16px;
+  padding: 16px 16px 0;
 `
 
 const FlexRow = styled.div`

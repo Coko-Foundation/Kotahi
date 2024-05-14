@@ -20,7 +20,7 @@ import PageHeader from '../../component-cms-manager/src/components/PageHeader'
 const AddNewEmailTemplate = styled(RoundIconButton)`
   margin-left: ${grid(1)};
   margin-top: ${grid(2)};
-  min-width: 0px;
+  min-width: 0;
 `
 
 const EmailTemplates = ({

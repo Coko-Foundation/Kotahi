@@ -174,21 +174,20 @@ const SuperChatInput = props => {
   const sendTooltip = t('chat.Send') // For accessibility
 
   return (
-    <>
-      <ChatInputContainer>
-        {photoSizeError && ( // TODO Dead code?
-          <PhotoSizeError>
-            <p>{photoSizeError}</p>
-            <Icon
-              color="warn.default"
-              glyph="view-close"
-              onClick={() => setPhotoSizeError('')}
-              size={16}
-            />
-          </PhotoSizeError>
-        )}
-        <ChatInputWrapper>
-          {/* {props.currentUser && (
+    <ChatInputContainer>
+      {photoSizeError && ( // TODO Dead code?
+        <PhotoSizeError>
+          <p>{photoSizeError}</p>
+          <Icon
+            color="warn.default"
+            glyph="view-close"
+            onClick={() => setPhotoSizeError('')}
+            size={16}
+          />
+        </PhotoSizeError>
+      )}
+      <ChatInputWrapper>
+        {/* {props.currentUser && (
             <MediaUploader
               currentUser={props.currentUser}
               isSendingMediaMessage={isSendingMediaMessage}
@@ -196,63 +195,62 @@ const SuperChatInput = props => {
               onValidated={previewMedia}
             />
           )} */}
-          <Form onSubmit={submit}>
-            <InputWrapper
+        <Form onSubmit={submit}>
+          <InputWrapper
+            hasAttachment={!!props.quotedMessage || !!mediaPreview}
+            networkDisabled={networkDisabled}
+          >
+            {mediaPreview && (
+              <PreviewWrapper>
+                <img alt="" src={mediaPreview} />
+                <RemovePreviewButton onClick={() => setMediaPreview(null)}>
+                  <Icon glyph="view-close-small" size="16" />
+                </RemovePreviewButton>
+              </PreviewWrapper>
+            )}
+            {props.quotedMessage && (
+              <PreviewWrapper data-cy="staged-quoted-message">
+                <QuotedMessage
+                  id={props.quotedMessage}
+                  threadId={props.threadId}
+                />
+                <RemovePreviewButton
+                  data-cy="remove-staged-quoted-message"
+                  onClick={removeQuotedMessage}
+                >
+                  <Icon glyph="view-close-small" size="16" />
+                </RemovePreviewButton>
+              </PreviewWrapper>
+            )}
+            <EditorMention
+              autoFocus={chatInputFocus}
+              editorRef={editorRef}
+              field={{
+                name: 'comment',
+              }}
               hasAttachment={!!props.quotedMessage || !!mediaPreview}
+              id={`comment-editor-${props.channelId}`}
+              mentionsList={mentionsList}
+              messageSentCount={messageSentCount}
               networkDisabled={networkDisabled}
-            >
-              {mediaPreview && (
-                <PreviewWrapper>
-                  <img alt="" src={mediaPreview} />
-                  <RemovePreviewButton onClick={() => setMediaPreview(null)}>
-                    <Icon glyph="view-close-small" size="16" />
-                  </RemovePreviewButton>
-                </PreviewWrapper>
-              )}
-              {props.quotedMessage && (
-                <PreviewWrapper data-cy="staged-quoted-message">
-                  <QuotedMessage
-                    id={props.quotedMessage}
-                    threadId={props.threadId}
-                  />
-                  <RemovePreviewButton
-                    data-cy="remove-staged-quoted-message"
-                    onClick={removeQuotedMessage}
-                  >
-                    <Icon glyph="view-close-small" size="16" />
-                  </RemovePreviewButton>
-                </PreviewWrapper>
-              )}
-              <EditorMention
-                autoFocus={chatInputFocus}
-                editorRef={editorRef}
-                field={{
-                  name: 'comment',
-                }}
-                hasAttachment={!!props.quotedMessage || !!mediaPreview}
-                id={`comment-editor-${props.channelId}`}
-                mentionsList={mentionsList}
-                messageSentCount={messageSentCount}
-                networkDisabled={networkDisabled}
-                onEnterPress={onEnterPress}
-                placeholder={t('chat.Your message here...')}
-                searchUsersCallBack={searchUsers} // props.participants is currently undefined
-                staticSuggestions={props.participants}
-              />
-            </InputWrapper>
-            <SendButton
-              aria-label={sendTooltip}
-              data-cy="chat-input-send-button"
-              onClick={submit}
-              primary
-              title={sendTooltip}
-            >
-              <Send color="white" size={18} />
-            </SendButton>
-          </Form>
-        </ChatInputWrapper>
-      </ChatInputContainer>
-    </>
+              onEnterPress={onEnterPress}
+              placeholder={t('chat.Your message here...')}
+              searchUsersCallBack={searchUsers} // props.participants is currently undefined
+              staticSuggestions={props.participants}
+            />
+          </InputWrapper>
+          <SendButton
+            aria-label={sendTooltip}
+            data-cy="chat-input-send-button"
+            onClick={submit}
+            primary
+            title={sendTooltip}
+          >
+            <Send color="white" size={18} />
+          </SendButton>
+        </Form>
+      </ChatInputWrapper>
+    </ChatInputContainer>
   )
 }
 

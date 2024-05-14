@@ -1,3 +1,5 @@
+/* eslint-disable default-param-last */
+
 import * as validators from 'xpub-validators'
 import { validateAuthors } from './authorsFieldDefinitions'
 

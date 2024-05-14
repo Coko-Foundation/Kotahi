@@ -1,4 +1,4 @@
-/* stylelint-disable no-descending-specificity */
+/* stylelint-disable no-descending-specificity, string-quotes */
 import React from 'react'
 import styled from 'styled-components'
 import {

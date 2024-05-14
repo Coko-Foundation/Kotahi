@@ -105,20 +105,18 @@ const EmailTemplatesPage = ({ match, history, ...props }) => {
   }
 
   return (
-    <>
-      <EmailTemplates
-        activeTemplate={emailTemplate}
-        createEmailTemplate={createEmailTemplate}
-        deleteEmailTemplate={deleteEmailTemplate}
-        emailTemplates={emailTemplates}
-        isNewEmailTemplate={isNewEmailTemplate}
-        onItemClick={selectedCmsPage => showEmailTemplate(selectedCmsPage)}
-        onNewItemButtonClick={() => addNewPage()}
-        setIsNewEmailTemplate={setIsNewEmailTemplate}
-        showEmailTemplate={showEmailTemplate}
-        updateEmailTemplate={updateEmailTemplate}
-      />
-    </>
+    <EmailTemplates
+      activeTemplate={emailTemplate}
+      createEmailTemplate={createEmailTemplate}
+      deleteEmailTemplate={deleteEmailTemplate}
+      emailTemplates={emailTemplates}
+      isNewEmailTemplate={isNewEmailTemplate}
+      onItemClick={selectedCmsPage => showEmailTemplate(selectedCmsPage)}
+      onNewItemButtonClick={() => addNewPage()}
+      setIsNewEmailTemplate={setIsNewEmailTemplate}
+      showEmailTemplate={showEmailTemplate}
+      updateEmailTemplate={updateEmailTemplate}
+    />
   )
 }
 

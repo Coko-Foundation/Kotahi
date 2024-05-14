@@ -1,3 +1,5 @@
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { ChevronUp, ChevronDown, X } from 'react-feather'
@@ -23,7 +25,7 @@ const DropdownMenu = styled.div`
   background-color: ${color.backgroundA};
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
   left: 0;
   margin-top: 2px;
   max-height: 250px;

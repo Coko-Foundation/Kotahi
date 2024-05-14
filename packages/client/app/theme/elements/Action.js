@@ -1,14 +1,16 @@
+/* stylelint-disable string-quotes */
+
 import { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import color from '../color'
 
 const underlineFade = css`
-  &:before {
+  &::before {
     opacity: 0;
     transition: ${th('transitionDuration')} ease;
   }
 
-  &:hover:before {
+  &:hover::before {
     opacity: 1;
   }
 `
@@ -33,7 +35,7 @@ const underlineAnimation = css`
     text-decoration: none;
   }
 
-  &:before {
+  &::before {
     background-color: ${color.brand1.base};
     bottom: 0;
     content: '';
@@ -44,7 +46,7 @@ const underlineAnimation = css`
     width: 100%;
   }
 
-  &:hover:before {
+  &:hover::before {
     visibility: visible;
   }
 
@@ -55,7 +57,7 @@ const underlineAnimation = css`
 const active = css`
   font-weight: normal;
 
-  &:before {
+  &::before {
     opacity: 1;
     visibility: visible;
   }

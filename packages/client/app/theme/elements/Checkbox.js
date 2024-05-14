@@ -28,7 +28,7 @@ export default {
       color: blue;
       color: ${color.brand1.base};
 
-      &:before {
+      &::before {
         animation: ${checking} 0.5s;
         box-shadow: 0 0 0 ${localBorderTwoSize} ${color.brand1.base};
       }

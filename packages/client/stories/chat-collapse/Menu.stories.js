@@ -10,6 +10,7 @@ import config from '../../config/sampleConfigFormData'
 
 const Root = styled.div`
   display: grid;
+  /* stylelint-disable-next-line string-quotes */
   grid-template-areas: 'menu main';
   grid-template-columns: 200px auto;
   height: 100vh;

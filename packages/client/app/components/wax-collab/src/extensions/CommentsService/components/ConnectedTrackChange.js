@@ -12,11 +12,13 @@ const ConnectedTrackChangeStyled = styled.div`
   margin-left: ${props => (props.active ? `${-20}px` : `${50}px`)};
   position: absolute;
   width: 200px;
+
   @media (max-width: 600px) {
     margin-left: 15px;
   }
 `
 
+/* eslint-disable-next-line react/function-component-definition */
 export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
   const context = useContext(WaxContext)
   const { app, activeView, pmViews } = context
@@ -136,5 +138,6 @@ export default ({ trackChangeId, top, recalculateTops, trackChange }) => {
     [isActive, top],
   )
 
+  /* eslint-disable-next-line react/jsx-no-useless-fragment */
   return <>{MemorizedTrackChange}</>
 }

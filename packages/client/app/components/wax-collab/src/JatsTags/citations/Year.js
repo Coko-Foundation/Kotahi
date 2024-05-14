@@ -17,6 +17,7 @@ class Year extends Tools {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   select = state => {
     const {
       selection: { from },

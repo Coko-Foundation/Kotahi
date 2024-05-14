@@ -28,6 +28,7 @@ const GetUserByUsername = props => {
   return (
     <ConditionalWrap
       condition={showHoverProfile}
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       wrap={() => (
         <UserHoverProfile username={username}>
           <Avatar user={data.user} {...props} />
@@ -73,6 +74,7 @@ const Avatar = props => {
       )}
       <ConditionalWrap
         condition={!!user?.username && isClickable}
+        /* eslint-disable-next-line react/no-unstable-nested-components */
         wrap={() => (
           <AvatarLink to={`${urlFrag}/profile/${user?.id}`}>
             <AvatarImage
@@ -108,6 +110,7 @@ const AvatarHandler = props => {
     return (
       <ConditionalWrap
         condition={showHoverProfile}
+        /* eslint-disable-next-line react/no-unstable-nested-components */
         wrap={() => (
           <UserHoverProfile username={user.username}>
             <Avatar size={size} {...props} />

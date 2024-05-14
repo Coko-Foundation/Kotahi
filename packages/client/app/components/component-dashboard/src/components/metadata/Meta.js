@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
@@ -8,7 +10,7 @@ const Meta = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
   white-space: nowrap;
 
-  > :not(:last-child):after {
+  > :not(:last-child)::after {
     content: '-';
   }
 `

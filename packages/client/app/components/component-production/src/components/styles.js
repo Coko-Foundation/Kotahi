@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import styled, { css } from 'styled-components'
 import { grid } from '@pubsweet/ui-toolkit'
 import { color } from '../../../../theme'
@@ -79,13 +81,14 @@ export const CloseButton = styled.span`
   top: 10px;
   user-select: none;
   width: var(--size);
+
   --size: 24px;
 
   &:hover {
     cursor: pointer;
   }
 
-  &:before {
+  &::before {
     content: '×';
     font-size: var(--size);
     position: relative;

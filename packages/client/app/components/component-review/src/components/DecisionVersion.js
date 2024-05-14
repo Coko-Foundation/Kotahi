@@ -171,6 +171,7 @@ const DecisionVersion = ({
 
     return {
       content: (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
           {!isCurrentVersion ? (
             <ReadonlyFormTemplate

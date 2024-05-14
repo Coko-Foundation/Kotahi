@@ -2,6 +2,7 @@ const axios = require('axios')
 
 const Config = require('../../models/config/config.model')
 
+/* eslint-disable-next-line default-param-last */
 const chatGPT = async (input, history = [], groupId) => {
   try {
     const CHAT_GPT_URL = 'https://api.openai.com/v1/chat/completions'

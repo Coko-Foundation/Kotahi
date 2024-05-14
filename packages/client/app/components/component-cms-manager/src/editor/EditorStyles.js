@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes, declaration-block-no-redundant-longhand-properties */
+
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from '../../../wax-collab/src/layout/waxDefaultStyles'
@@ -51,7 +53,7 @@ export const FullWaxEditorGrid = styled.div`
 export const EditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   border: 1px solid ${color.gray80};
-  border-width: 0px 1px 1px 1px;
+  border-width: 0 1px 1px;
   grid-column-start: editorCol;
   grid-row-start: editorRow;
   height: 100%;

@@ -34,6 +34,7 @@ class AwardId extends Tools {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   select = (state, activeViewId) => {
     if (activeViewId !== 'main') return false
     return true

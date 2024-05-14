@@ -96,7 +96,7 @@ Cypress.Commands.add('awaitDisappearSpinner', () => {
   )
 })
 
-// eslint-disable-next-line handle-callback-err
+/* eslint-disable-next-line node/handle-callback-err */
 Cypress.on('uncaught:exception', (err, runnable, promise) => {
   if (promise) {
     return false

@@ -20,6 +20,7 @@ const StyledSpinner = styled.svg`
       transform: rotate(360deg);
     }
   }
+
   @keyframes dash {
     0% {
       stroke-dasharray: 1, 150;

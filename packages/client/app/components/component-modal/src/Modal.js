@@ -89,7 +89,7 @@ const PrimaryActionButton = styled(ActionButton)`
   border-radius: 6px;
   color: ${color.textReverse};
   cursor: pointer;
-  margin: 0px 5px;
+  margin: 0 5px;
 `
 
 const SecondaryActionButton = styled(ActionButton)`

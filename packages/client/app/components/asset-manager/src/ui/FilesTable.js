@@ -222,14 +222,12 @@ const FilesTable = ({
             return (
               <TableHeadCell key={label} width={width}>
                 {sortable && (
-                  <>
-                    <IconButton
-                      icon={sortingState[label] ? ascIcon : descIcon}
-                      onClick={e => {
-                        sortingHandler(label)
-                      }}
-                    />
-                  </>
+                  <IconButton
+                    icon={sortingState[label] ? ascIcon : descIcon}
+                    onClick={e => {
+                      sortingHandler(label)
+                    }}
+                  />
                 )}
                 <HeaderLabel>{columnName}</HeaderLabel>
               </TableHeadCell>

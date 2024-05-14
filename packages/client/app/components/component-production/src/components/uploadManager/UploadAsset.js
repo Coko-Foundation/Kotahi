@@ -217,6 +217,7 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       name: 'tag',
       centered: false,
       title: 'Used For',
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       component: ({ file }) => (
         <TagDropdown tags={file.tags} updateFileFn={updateFileFn(file)} />
       ),
@@ -225,6 +226,7 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       name: 'copy-as-image',
       centered: false,
       title: 'Copy as',
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       component: ({ file }) => {
         const { mimetype } = file.storedObjects[0]
 
@@ -267,6 +269,7 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       name: 'copy-as-url',
       centered: false,
       title: 'Copy as Url',
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       component: ({ file }) => (
         <ActionButton onClick={onCopyAsUrl(file)}>Create URL</ActionButton>
       ),
@@ -275,12 +278,11 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       name: 'delete',
       centered: false,
       title: 'Delete',
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       component: ({ file }) => (
-        <>
-          <ActionButton onClick={() => setFileBeingDeletedId(file.id)}>
-            Delete
-          </ActionButton>
-        </>
+        <ActionButton onClick={() => setFileBeingDeletedId(file.id)}>
+          Delete
+        </ActionButton>
       ),
     },
   ]

@@ -17,7 +17,7 @@ const UnbulletedList = styled.div`
 `
 
 const Spacing = styled.div`
-  padding: 15px 0px;
+  padding: 15px 0;
 `
 
 const Link = styled.div`

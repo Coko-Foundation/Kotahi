@@ -55,6 +55,7 @@ const CreateANewVersion = ({
                     }),
                     fields: {
                       manuscriptVersions(
+                        /* eslint-disable-next-line default-param-last */
                         existingVersionRefs = [],
                         { readField },
                       ) {

@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React from 'react'
 import styled from 'styled-components'
 import theme, { color } from '../../theme'
@@ -6,7 +8,7 @@ const StyledInput = styled.input`
   background: ${color.gray99};
   border: 1px solid ${color.gray80};
   border-radius: ${theme.borderRadius};
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.07);
   font-size: ${theme.fontSizeBaseSmall};
   padding: 14px 9px;
   width: 100%;

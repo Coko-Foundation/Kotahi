@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-/* stylelint-disable declaration-no-important */
+/* stylelint-disable declaration-no-important, string-quotes */
 
 import styled, { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
@@ -96,7 +96,7 @@ export const QuoteWrapper = styled.div`
 `
 
 export const monoStack = css`
-  font-family: 'Input Mono', 'Menlo', 'Inconsolata', 'Roboto Mono', monospace;
+  font-family: 'Input Mono', Menlo, Inconsolata, 'Roboto Mono', monospace;
 `
 
 export const FlexRow = styled.div`
@@ -127,7 +127,7 @@ export const ChatInputWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: ${th('gridUnit')};
-  padding: 8px 4px 0 4px;
+  padding: 8px 4px 0;
   width: 100%;
 
   @media (max-width: ${MEDIA_BREAK}px) {

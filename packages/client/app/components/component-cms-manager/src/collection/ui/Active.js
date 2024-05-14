@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import React from 'react'
 import styled from 'styled-components'
 
@@ -15,7 +17,7 @@ const Label = styled.label`
     background-color: #3aae2a;
   }
 
-  input:checked + span:before {
+  input:checked + span::before {
     transform: translateX(26px);
   }
 
@@ -39,7 +41,7 @@ const SpanSlider = styled.span`
   top: 0;
   transition: 0.4s;
 
-  :before {
+  ::before {
     background-color: white;
     border-radius: 50%;
     bottom: 4px;

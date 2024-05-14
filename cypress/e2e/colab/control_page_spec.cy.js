@@ -1,5 +1,5 @@
 /* eslint-disable jest/no-commented-out-tests */
-/* eslint-disable prettier/prettier,jest/valid-expect-in-promise */
+/* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 
 import { dashboard, manuscripts } from '../../support/routes1'

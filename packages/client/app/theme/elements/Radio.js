@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import { css, keyframes } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import color from '../color'
@@ -26,7 +28,7 @@ export default {
       span {
         color: ${props => (props.checked ? 'inherit' : color.brand1.base)};
 
-        &:before {
+        &::before {
           animation-duration: ${th('transitionDuration')};
           animation-name: ${props => (props.checked ? 'none' : checking)};
           box-shadow: 0 0 0 ${th('borderWidth')}
@@ -38,7 +40,7 @@ export default {
   Label: css`
     font-style: italic;
 
-    &:before {
+    &::before {
       background: ${props => (props.checked ? 'currentColor' : 'transparent')};
 
       /* This is not a real border (box-shadow provides that), so not themed as such */

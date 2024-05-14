@@ -4,6 +4,7 @@ import React from 'react'
 import ConnectedComment from './ConnectedComment'
 import ConnectedTrackChange from './ConnectedTrackChange'
 
+/* eslint-disable-next-line react/function-component-definition */
 export default ({ commentsTracks, view, position, recalculateTops }) => {
   if (!position) return null
   return (

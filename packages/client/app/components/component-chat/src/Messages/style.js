@@ -1,4 +1,5 @@
 /* stylelint-disable property-no-vendor-prefix */
+/* stylelint-disable color-function-notation, alpha-value-notation */
 
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -31,7 +32,7 @@ export const MessagesGroup = styled.div`
   flex-direction: column;
   flex-shrink: 1;
   grid-area: read;
-  height: 0px;
+  height: 0;
   justify-content: flex-end;
   max-width: 100%;
   overflow: hidden auto;
@@ -105,7 +106,7 @@ export const InnerMessageContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  padding: 4px 0px;
+  padding: 4px 0;
   position: relative;
 
   &:hover {
@@ -213,7 +214,7 @@ export const UnreadLabelContainer = styled(ChatLabelContainer)`
 `
 export const UnreadLabel = styled(ChatLabel)`
   background-color: ${th('color.brand1.tint25')};
-  color: #ffffff;
+  color: #fff;
 `
 
 export const DateLabelContainer = styled(ChatLabelContainer)`
@@ -221,12 +222,12 @@ export const DateLabelContainer = styled(ChatLabelContainer)`
   margin: 40px 0 30px;
 `
 export const DateLabel = styled(ChatLabel)`
-  background-color: #ffffff;
+  background-color: #fff;
   color: #6c6c6c;
   padding: 2px 12px;
 `
 export const Ellipsis = styled(MoreVertical)`
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 50%;
   cursor: pointer;
   height: 20.25px;

@@ -32,6 +32,7 @@ const DisabledButton = styled(BaseButton)`
 const Button = styled(BaseButton)`
   background-color: ${props =>
     props.bgColor || (props.primary ? color.brand1.base : color.gray90)};
+  /* stylelint-disable-next-line color-function-notation, alpha-value-notation */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   color: ${props =>
     props.fgColor || (props.primary ? color.text : color.textReverse)};
@@ -61,13 +62,14 @@ const Spinner = styled.div`
   padding-left: ${grid(1)};
   vertical-align: -2px;
 
-  &:after {
+  &::after {
     animation: ${rotate360} 1s linear infinite;
     border: 2.5px solid ${props => props.fgColor};
     border-color: ${props => props.fgColor} transparent
       ${props => props.fgColor} transparent;
     border-radius: 50%;
     box-sizing: border-box;
+    /* stylelint-disable-next-line string-quotes */
     content: '';
     display: block;
     height: ${grid(2)};

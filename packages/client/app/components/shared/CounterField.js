@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
+/* stylelint-disable alpha-value-notation, color-function-notation */
 
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
@@ -16,7 +17,7 @@ const LabelContainer = styled.div`
   background: ${color.backgroundA};
   border: 1.5px solid ${color.gray70};
   border-radius: 10px;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
   display: flex;
   justify-content: center;
   padding-right: ${props => (props.showResetIcon ? '15px' : '0')};

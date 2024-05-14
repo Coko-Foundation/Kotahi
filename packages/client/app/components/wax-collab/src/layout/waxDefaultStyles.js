@@ -14,7 +14,7 @@ export default css`
 */
 
   .hljs {
-    background: #ffffff;
+    background: #fff;
     color: #24292e;
   }
 
@@ -109,7 +109,7 @@ export default css`
 
   .hljs-addition {
     /* prettylights-syntax-markup-inserted */
-    background: #ffffff;
+    background: #fff;
     color: #22863a;
   }
 

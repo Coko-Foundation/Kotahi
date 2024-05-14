@@ -118,6 +118,7 @@ const getSubExpressionWithParenthesesIfNeeded = (outerExType, ex, maxDepth) => {
 
   if (!ex.terms.length) return null
 
+  /* eslint-disable-next-line no-unreachable-loop */
   while (ex.type !== 'not' && ex.terms.length <= 1)
     return getSubExpressionWithParenthesesIfNeeded(
       outerExType,

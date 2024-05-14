@@ -1,4 +1,6 @@
-/* stylelint-disable selector-type-no-unknown, no-descending-specificity */
+/* stylelint-disable selector-type-no-unknown, no-descending-specificity, string-quotes */
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import { css } from 'styled-components'
 import { color } from '../../../../../theme'
 
@@ -50,7 +52,7 @@ export default css`
     padding: 8px 16px;
     position: relative;
 
-    &:before {
+    &::before {
       color: white;
       content: 'FRONT MATTER';
       font-weight: bold;
@@ -68,7 +70,7 @@ export default css`
     padding: 8px 16px;
     position: relative;
 
-    &:before {
+    &::before {
       color: white;
       content: 'ABSTRACT';
       font-weight: bold;
@@ -86,7 +88,7 @@ export default css`
     padding: 8px 16px;
     position: relative;
 
-    &:before {
+    &::before {
       color: white;
       content: 'REFERENCE LIST';
       font-weight: bold;
@@ -98,7 +100,7 @@ export default css`
 
     & p:not(.ref),
     & li {
-      &:before {
+      &::before {
         content: '§ ';
       }
     }
@@ -111,7 +113,7 @@ export default css`
     padding: 8px 16px;
     position: relative;
 
-    &:before {
+    &::before {
       color: black;
       content: 'ACKNOWLEDGEMENTS';
       font-weight: bold;
@@ -129,7 +131,7 @@ export default css`
     padding: 8px 16px;
     position: relative;
 
-    &:before {
+    &::before {
       color: white;
       content: 'APPENDIX';
       font-weight: bold;
@@ -160,7 +162,7 @@ export default css`
     top: -1.25rem;
   }
 
-  figure:hover:before {
+  figure:hover::before {
     content: 'Click to add a caption';
   }
 

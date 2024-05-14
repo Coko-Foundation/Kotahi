@@ -57,6 +57,7 @@ const MinimalDatePicker = ({
       closeOnEscape
       on="click"
       position={position || 'bottom center'}
+      /* eslint-disable-next-line react/no-unstable-nested-components */
       trigger={open => (
         <div>
           <MinimalButton type="button">

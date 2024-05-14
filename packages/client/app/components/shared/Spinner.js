@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import React from 'react'
 import styled from 'styled-components'
 import { rotate360, th } from '@pubsweet/ui-toolkit'
@@ -9,7 +11,7 @@ const SpinnerAnimation = styled.div`
   height: 64px;
   width: 64px;
 
-  &:after {
+  &::after {
     animation: ${rotate360} 1s linear infinite;
     border: 5px solid ${color.brand1.base};
     border-color: ${color.brand1.base} transparent ${color.brand1.base}

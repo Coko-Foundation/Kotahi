@@ -67,6 +67,7 @@ class ReferenceTool extends Tools {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   select = (state, activeViewId) => {
     if (activeViewId !== 'main' && activeViewId.indexOf('note-') !== 0) {
       return false

@@ -26,7 +26,7 @@ const secondary = css`
       background: none;
     }
 
-    &:hover:before {
+    &:hover::before {
       visibility: hidden;
     }
   }

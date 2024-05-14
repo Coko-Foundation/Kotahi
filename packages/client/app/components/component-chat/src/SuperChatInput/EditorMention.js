@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import ChatWaxEditor from '../ChatWaxEditor'

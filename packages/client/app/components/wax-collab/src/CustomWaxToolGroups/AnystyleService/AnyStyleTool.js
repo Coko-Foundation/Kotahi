@@ -18,6 +18,7 @@ class AnyStyleTool extends Tools {
     return true
   }
 
+  // eslint-disable-next-line class-methods-use-this
   select = activeView => {
     return true
   }

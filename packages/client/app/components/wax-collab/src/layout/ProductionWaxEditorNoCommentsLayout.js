@@ -32,6 +32,7 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 
 const ProductionWaxEditorNoCommentsLayout =
   readOnly =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) => {
     const getNotes = main => {
       const notes = DocumentHelpers.findChildrenByType(

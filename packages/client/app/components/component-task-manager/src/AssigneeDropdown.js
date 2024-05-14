@@ -37,7 +37,7 @@ const UnregisteredFieldsAlignColumn = styled.div`
   flex-direction: column;
 
   & > input {
-    margin: 10px 10px 0px 0px;
+    margin: 10px 10px 0 0;
   }
 `
 

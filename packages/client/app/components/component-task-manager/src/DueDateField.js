@@ -1,3 +1,5 @@
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import moment from 'moment-timezone'
@@ -12,7 +14,7 @@ const BaseDueDateCell = styled.div`
   background: ${color.gray99} !important;
   border: 1px solid ${color.gray80};
   border-radius: ${theme.borderRadius};
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.07);
   display: flex;
   justify-content: flex-start;
   line-height: 1em;
@@ -73,31 +75,29 @@ const DueDateField = ({
       {task.status === status.NOT_STARTED || task.dueDate === null ? (
         <CompactDetailLabel>{displayDefaultDurationDays}</CompactDetailLabel>
       ) : (
-        <>
-          <MinimalDatePicker
-            clearIcon={null}
-            format="yyyy-MM-dd"
-            minDate={transposedEndOfToday}
-            onChange={val =>
-              updateTask(task.id, {
-                ...task,
-                dueDate: moment
-                  .tz(
-                    transposeFromLocalToTimezone(
-                      val,
-                      config?.taskManager?.teamTimezone,
-                    ),
+        <MinimalDatePicker
+          clearIcon={null}
+          format="yyyy-MM-dd"
+          minDate={transposedEndOfToday}
+          onChange={val =>
+            updateTask(task.id, {
+              ...task,
+              dueDate: moment
+                .tz(
+                  transposeFromLocalToTimezone(
+                    val,
                     config?.taskManager?.teamTimezone,
-                  )
-                  .endOf('day')
-                  .toDate(),
-              })
-            }
-            position={position || 'top center'}
-            suppressTodayHighlight
-            value={transposedDueDate}
-          />
-        </>
+                  ),
+                  config?.taskManager?.teamTimezone,
+                )
+                .endOf('day')
+                .toDate(),
+            })
+          }
+          position={position || 'top center'}
+          suppressTodayHighlight
+          value={transposedDueDate}
+        />
       )}
     </DueDateCell>
   )

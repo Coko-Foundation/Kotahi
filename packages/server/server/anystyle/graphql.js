@@ -180,6 +180,7 @@ const parseCitations = async (references, startNumber = 0) => {
   })
 }
 
+/* eslint-disable-next-line default-param-last */
 const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
   // check to see if we have an access token. If not, wait for one.
 

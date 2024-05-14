@@ -130,6 +130,7 @@ const ThreadedDiscussion = ({
   }, [updated])
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {comments &&
         comments.map((comment, index) => {

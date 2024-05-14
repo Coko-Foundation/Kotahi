@@ -28,7 +28,9 @@ export default createGlobalStyle`
     width: 100%;
   }
 
-  *, *:before, *:after {
+  *,
+  *::before,
+  *::after {
     box-sizing: inherit;
   }
 
@@ -47,7 +49,8 @@ export default createGlobalStyle`
     color: ${color.brand1.base};
   }
 
-  strong, b {
+  strong,
+  b {
     font-weight: bold;
   }
 `

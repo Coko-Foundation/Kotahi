@@ -139,21 +139,21 @@ export const AssignedAuthorForProofingLogsToggle = styled.button`
   border: none;
   color: ${color.brand1.base};
   font-size: ${theme.fontSizeBaseSmall};
-  padding: 10px 10px;
+  padding: 10px;
   text-decoration: underline;
 `
 
 export const AssignedAuthorForProofingLogs = styled.div`
   color: ${color.text};
   font-size: ${theme.fontSizeBaseSmall};
-  margin: 10px 10px;
+  margin: 10px;
   text-align: right;
 `
 
 export const AssignedAuthorForProofingInfo = styled.div`
   color: ${color.text};
   font-size: ${theme.fontSizeBaseSmall};
-  margin: 8px 0px;
+  margin: 8px 0;
 `
 
 export {

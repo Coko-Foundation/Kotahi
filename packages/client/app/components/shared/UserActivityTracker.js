@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from 'react'
 import { throttle } from 'lodash'
 
+/* eslint-disable-next-line react/function-component-definition */
 function UserActivityTracker({ reportUserIsActive, children }) {
   const throttledReportUserIsActive = useCallback(
     throttle(reportUserIsActive, 60000, { leading: true }),
@@ -18,7 +19,8 @@ function UserActivityTracker({ reportUserIsActive, children }) {
       reportUserIsActive()
     }
   }, [])
-  // eslint-disable-next-line react/react-in-jsx-scope
+
+  // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{children}</>
 }
 

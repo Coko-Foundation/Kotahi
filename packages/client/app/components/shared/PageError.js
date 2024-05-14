@@ -5,7 +5,7 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 const ErrorBox = styled.div`
   background-color: ${th('colorFurniture')};
   border-radius: ${th('borderRadius')};
-  color: #ee3333;
+  color: #e33;
   font-size: ${th('fontSizeHeading5')};
   margin: ${grid(3)};
   padding: ${grid(2)} ${grid(3)};

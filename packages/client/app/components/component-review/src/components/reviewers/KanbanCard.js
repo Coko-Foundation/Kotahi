@@ -22,7 +22,7 @@ const Card = styled.div`
   width: 100%;
 
   &:hover {
-    box-shadow: 0px 9px 5px -6px ${color.gray70};
+    box-shadow: 0 9px 5px -6px ${color.gray70};
     cursor: pointer;
     transition: 0.3s ease;
     z-index: 1;

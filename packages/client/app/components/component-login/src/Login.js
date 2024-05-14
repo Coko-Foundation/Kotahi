@@ -12,6 +12,7 @@ const getNextUrl = config => {
   const url = new URL(window.location.href)
 
   const redirectLink = `${
+    /* eslint-disable-next-line no-unsafe-optional-chaining */
     config?.urlFrag + config?.dashboard?.loginRedirectUrl
   }`
 
@@ -19,8 +20,8 @@ const getNextUrl = config => {
 }
 
 const RegisterLinkButton = styled.button`
-  border: 0px;
-  border-radius: 0px;
+  border: 0;
+  border-radius: 0;
   display: block;
   font-size: 1em;
   font-weight: 500;

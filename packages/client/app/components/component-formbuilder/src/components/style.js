@@ -54,6 +54,7 @@ const DetailText = styled.div`
 const CommentMetaWrapper = styled.div`
   align-items: center;
   display: flex;
+
   @media (max-width: 768px) {
     align-items: flex-start;
     flex-direction: column;
@@ -67,7 +68,7 @@ const UserMetaWrapper = styled.div`
 `
 
 const UserName = styled.span`
-  margin-bottom: 0px;
+  margin-bottom: 0;
 `
 
 const ButtonWrapper = styled.div`
@@ -111,14 +112,14 @@ const SimpleWaxEditorWrapper = styled.div`
   p {
     font-family: ${th('fontWriting')};
     font-size: ${th('fontSizeBase')};
-    margin: 0px;
+    margin: 0;
   }
   padding-bottom: 20px;
   position: relative;
 `
 
 const CollapseOverlay = styled.div`
-  bottom: 0px;
+  bottom: 0;
   height: 50px;
   ${props =>
     props.collapse

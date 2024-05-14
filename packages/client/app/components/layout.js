@@ -1,3 +1,5 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties, string-quotes */
+
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
@@ -36,6 +38,7 @@ export const ViewGrid = styled.main.attrs({
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
+
   @media (max-width: ${MEDIA_BREAK}px) {
     max-height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
@@ -187,8 +190,8 @@ export const SecondaryColumn = styled.section`
 
   &::-webkit-scrollbar {
     background: transparent; /* make scrollbar transparent */
-    height: 0px;
-    width: 0px;
+    height: 0;
+    width: 0;
   }
 
   @media (max-width: ${MEDIA_BREAK}px) {

@@ -14,11 +14,7 @@ const CollectionTable = ({ columnDefinitions, collection }) => {
     )
   })
 
-  return (
-    <>
-      <StyledFileRow>{rowCells}</StyledFileRow>
-    </>
-  )
+  return <StyledFileRow>{rowCells}</StyledFileRow>
 }
 
 export default CollectionTable

@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'

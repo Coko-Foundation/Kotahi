@@ -154,7 +154,7 @@ const cokoTheme = {
         padding: 0;
       `,
       SpecialCharactersGroup: css`
-        padding: 0px;
+        padding: 0;
       `,
       GroupTitle: css`
         font-size: 85%;

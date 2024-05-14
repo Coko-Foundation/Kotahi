@@ -89,9 +89,7 @@ const AssignAuthorForProofing = ({
             </AssignedAuthorForProofingLogs>
           )}
         </AssignedAuthorForProofingLogsContainer>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </SectionContent>
   )
 }

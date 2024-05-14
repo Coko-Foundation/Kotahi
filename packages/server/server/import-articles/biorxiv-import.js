@@ -54,6 +54,7 @@ const getData = async (groupId, ctx) => {
       groupId,
     })
 
+  /* eslint-disable-next-line default-param-last */
   const requests = async (cursor = 0, minDate, results = []) => {
     const { data } = await axios.get(
       `https://api.biorxiv.org/covid19/${cursor}`,

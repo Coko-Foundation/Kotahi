@@ -14,6 +14,7 @@ const ChartCard = styled(Card)`
   align-items: center;
   display: flex;
   flex-direction: column;
+  /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   flex-wrap: wrap;
   justify-content: center;
 `

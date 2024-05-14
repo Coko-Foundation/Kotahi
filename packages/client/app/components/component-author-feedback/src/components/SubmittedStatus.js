@@ -5,9 +5,9 @@ import { th } from '@pubsweet/ui-toolkit'
 import { convertTimestampToDateTimeString } from '../../../../shared/dateUtils'
 
 export const VerticalBar = styled.div`
-  border-right: 1px solid #111111;
+  border-right: 1px solid #111;
   height: 16px;
-  margin: 0px 10px 0px 10px;
+  margin: 0 10px;
 `
 
 export const FlexCenter = styled.div`

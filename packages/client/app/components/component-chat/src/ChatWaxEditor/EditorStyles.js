@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes, declaration-block-no-redundant-longhand-properties */
+
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from './layout/waxDefaultStyles'

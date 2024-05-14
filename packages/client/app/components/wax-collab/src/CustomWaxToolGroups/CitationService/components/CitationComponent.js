@@ -307,6 +307,7 @@ const CitationComponent = ({ node, getPos }) => {
     }
   }, [currentText])
 
+  /* eslint-disable-next-line react/no-unstable-nested-components */
   const CitationPopUp = () => {
     const areOtherComponentsLoading = () => {
       // console.log('Running areOtherComponentsLoading')
