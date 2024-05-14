@@ -1,4 +1,7 @@
 /* stylelint-disable selector-type-no-unknown, no-descending-specificity */
+/* stylelint-disable color-function-notation, alpha-value-notation */
+/* stylelint-disable string-quotes, custom-property-pattern */
+
 import { css } from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'
@@ -74,7 +77,7 @@ const EditorStyles = css`
   }
 
   /* Give selected cells a blue overlay */
-  .selectedCell:after {
+  .selectedCell::after {
     background: rgba(200, 200, 255, 0.4);
     bottom: 0;
     content: '';
@@ -105,7 +108,7 @@ const EditorStyles = css`
     user-select: none;
   }
 
-  .invisible:before {
+  .invisible::before {
     caret-color: inherit;
     color: ${color.gray50};
     display: inline-block;
@@ -115,15 +118,15 @@ const EditorStyles = css`
     width: 0;
   }
 
-  .invisible--space:before {
+  .invisible--space::before {
     content: '·';
   }
 
-  .invisible--break:before {
+  .invisible--break::before {
     content: '¬';
   }
 
-  .invisible--par:after {
+  .invisible--par::after {
     content: '¶';
   }
 
@@ -193,7 +196,7 @@ const EditorStyles = css`
 
   .math-node {
     cursor: auto;
-    font-family: 'Consolas', 'Ubuntu Mono', monospace;
+    font-family: Consolas, 'Ubuntu Mono', monospace;
     font-size: 16px;
     min-height: 1em;
     min-width: 1em;
@@ -327,14 +330,14 @@ const EditorStyles = css`
     font-weight: 500;
   }
 
-  span[data-type='inline']:before {
+  span[data-type='inline']::before {
     color: #006f19;
     content: ' | ';
     font-weight: 600;
     margin-left: 0;
   }
 
-  span[data-type='inline']:after {
+  span[data-type='inline']::after {
     color: #006f19;
     content: ' | ';
     display: inline;
@@ -346,7 +349,7 @@ const EditorStyles = css`
     margin-top: 1em;
   }
 
-  p[data-type='block']:before {
+  p[data-type='block']::before {
     color: #006f19;
     content: '⌜';
     display: inline;
@@ -357,7 +360,7 @@ const EditorStyles = css`
     top: 2px;
   }
 
-  p[data-type='block']:after {
+  p[data-type='block']::after {
     color: #006f19;
     content: '⌟';
     display: inline;
@@ -382,7 +385,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorFrontMatter')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -407,7 +410,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorAbstract')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -432,7 +435,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorCitation')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -462,7 +465,7 @@ const EditorStyles = css`
         outline: none;
       }
 
-      &:before {
+      &::before {
         /* content: '§ '; */
       }
     }
@@ -476,7 +479,7 @@ const EditorStyles = css`
   .reflist h6 {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
 
   section.acknowledgementsSection {
@@ -487,7 +490,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorAcknowledgements')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -512,7 +515,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorAppendix')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -537,7 +540,7 @@ const EditorStyles = css`
   .appendix h6 {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
 
   /* added for figure weirdness */
@@ -560,7 +563,7 @@ const EditorStyles = css`
     top: -1.25rem;
   }
 
-  figure:hover:before {
+  figure:hover::before {
     content: 'Click to add a caption';
   }
 
@@ -722,7 +725,7 @@ const EditorStyles = css`
     outline-offset: var(--citationOffset);
     position: relative;
 
-    &:before {
+    &::before {
       background-color: var(--citationColorValues);
       border-radius: 100%;
       content: '';
@@ -812,7 +815,7 @@ const EditorStyles = css`
     outline-offset: var(--keywordOffset);
     position: relative;
 
-    &:before {
+    &::before {
       background-color: var(--keywordColorValues);
       border-radius: 100%;
       content: '';
@@ -839,7 +842,7 @@ const EditorStyles = css`
     padding: 4px 8px;
     position: relative;
 
-    &:before {
+    &::before {
       background-color: ${th('colorGlossary')};
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -864,7 +867,7 @@ const EditorStyles = css`
   .glossary h6 {
     font-size: 18px;
     font-weight: bold;
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
   }
 
   .glossary-term {

@@ -3,11 +3,9 @@ import Collapse from '../../app/components/shared/Collapse'
 import DesignEmbed from '../common/utils'
 
 export const Base = args => (
-  <>
-    <Collapse defaultWidth={300}>
-      <p>hello</p>
-    </Collapse>
-  </>
+  <Collapse defaultWidth={300}>
+    <p>hello</p>
+  </Collapse>
 )
 
 export default {

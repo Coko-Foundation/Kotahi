@@ -69,6 +69,7 @@ const ValueWrapper = styled.div`
 
 const getValueContainer =
   dataTestid =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ children, ...props }) => {
     return (
       <components.ValueContainer {...props}>

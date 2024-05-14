@@ -88,6 +88,7 @@ const seed = async (group, { trx }) => {
     )
 
     await readDirectoryRecursively(
+      /* eslint-disable-next-line node/no-path-concat */
       `${__dirname}/../config/cmsTemplateFiles`,
       insertedFolderId,
       insertResource,

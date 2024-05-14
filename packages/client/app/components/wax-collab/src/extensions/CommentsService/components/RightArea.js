@@ -7,7 +7,7 @@ import { each, uniqBy, sortBy } from 'lodash'
 import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
 import BoxList from './BoxList'
 
-export default ({ area }) => {
+const RightArea = ({ area }) => {
   const {
     pmViews,
     pmViews: { main },
@@ -189,8 +189,10 @@ export default ({ area }) => {
     [marksNodes[area] || [], position],
   )
 
-  return <>{CommentTrackComponent}</>
+  return CommentTrackComponent
 }
+
+export default RightArea
 
 const updateMarks = views => {
   if (views.main) {

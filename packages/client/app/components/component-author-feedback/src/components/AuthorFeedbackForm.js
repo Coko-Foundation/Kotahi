@@ -164,105 +164,103 @@ const AuthorFeedbackForm = ({
   }
 
   return (
-    <>
-      <Formik
-        initialValues={setInitialData(authorFeedback)}
-        onSubmit={async values => submit(values)}
-      >
-        {formikProps => {
-          const [selectedFiles, setSelectedFiles] = useState(
-            formikProps.values.fileIds,
-          )
+    <Formik
+      initialValues={setInitialData(authorFeedback)}
+      onSubmit={async values => submit(values)}
+    >
+      {formikProps => {
+        const [selectedFiles, setSelectedFiles] = useState(
+          formikProps.values.fileIds,
+        )
 
-          const onDataChanged = (name, value) => {
-            formikProps.setFieldValue(name, value)
-            triggerAutoSave({ [name]: value })
-          }
+        const onDataChanged = (name, value) => {
+          formikProps.setFieldValue(name, value)
+          triggerAutoSave({ [name]: value })
+        }
 
-          const onFileAdded = file => {
-            setSelectedFiles(current => {
-              const currentFiles = [...current]
-              currentFiles.push(file.id)
-              onDataChanged('fileIds', currentFiles)
-              return currentFiles
-            })
-          }
+        const onFileAdded = file => {
+          setSelectedFiles(current => {
+            const currentFiles = [...current]
+            currentFiles.push(file.id)
+            onDataChanged('fileIds', currentFiles)
+            return currentFiles
+          })
+        }
 
-          const onFileRemoved = file => {
-            setSelectedFiles(current => {
-              const currentFiles = current.filter(id => id !== file.id)
-              onDataChanged('fileIds', currentFiles)
-              return currentFiles
-            })
-          }
+        const onFileRemoved = file => {
+          setSelectedFiles(current => {
+            const currentFiles = current.filter(id => id !== file.id)
+            onDataChanged('fileIds', currentFiles)
+            return currentFiles
+          })
+        }
 
-          return (
-            <>
-              <PaddedContent>
-                <Legend>{t('productionPage.Feedback')}</Legend>
+        return (
+          <>
+            <PaddedContent>
+              <Legend>{t('productionPage.Feedback')}</Legend>
+              <ValidatedFieldFormik
+                component={textInput.component}
+                key={textInput.name}
+                name={textInput.name}
+                onChange={value => onDataChanged(textInput.name, value)}
+                readonly={readOnly}
+                setFieldValue={formikProps.setFieldValue}
+                setTouched={formikProps.setTouched}
+                type={textInput.type}
+                validate={required}
+                {...textInput.otherProps}
+              />
+            </PaddedContent>
+            <PaddedContent key={filesInput.name}>
+              <Legend>{t('productionPage.Attachments')}</Legend>
+              {readOnly ? (
+                authorFeedbackFiles.map(file => (
+                  <Attachment
+                    file={file}
+                    key={file.storedObjects[0].url}
+                    uploaded
+                  />
+                ))
+              ) : (
                 <ValidatedFieldFormik
-                  component={textInput.component}
-                  key={textInput.name}
-                  name={textInput.name}
-                  onChange={value => onDataChanged(textInput.name, value)}
-                  readonly={readOnly}
+                  component={filesInput.component}
+                  confirmBeforeDelete
+                  createFile={createFile}
+                  deleteFile={deleteFile}
+                  entityId={manuscript.id}
+                  key={selectedFiles.length}
+                  name={filesInput.name}
+                  onFileAdded={onFileAdded}
+                  onFileRemoved={onFileRemoved}
                   setFieldValue={formikProps.setFieldValue}
                   setTouched={formikProps.setTouched}
-                  type={textInput.type}
-                  validate={required}
-                  {...textInput.otherProps}
+                  type={filesInput.type}
+                  values={{
+                    files: selectedFiles,
+                  }}
+                  {...filesInput.otherProps}
                 />
-              </PaddedContent>
-              <PaddedContent key={filesInput.name}>
-                <Legend>{t('productionPage.Attachments')}</Legend>
-                {readOnly ? (
-                  authorFeedbackFiles.map(file => (
-                    <Attachment
-                      file={file}
-                      key={file.storedObjects[0].url}
-                      uploaded
-                    />
-                  ))
-                ) : (
-                  <ValidatedFieldFormik
-                    component={filesInput.component}
-                    confirmBeforeDelete
-                    createFile={createFile}
-                    deleteFile={deleteFile}
-                    entityId={manuscript.id}
-                    key={selectedFiles.length}
-                    name={filesInput.name}
-                    onFileAdded={onFileAdded}
-                    onFileRemoved={onFileRemoved}
-                    setFieldValue={formikProps.setFieldValue}
-                    setTouched={formikProps.setTouched}
-                    type={filesInput.type}
-                    values={{
-                      files: selectedFiles,
-                    }}
-                    {...filesInput.otherProps}
-                  />
-                )}
-              </PaddedContent>
-              <ActionButtonContainer>
-                <div>
-                  <FormActionButton
-                    disabled={readOnly}
-                    onClick={formikProps.handleSubmit}
-                    primary
-                    status={submitAuthorProofingFeedbackStatus}
-                    type="button"
-                  >
-                    {submitButtonText}
-                  </FormActionButton>
-                </div>
-                <SubmittedStatus authorFeedback={authorFeedback} />
-              </ActionButtonContainer>
-            </>
-          )
-        }}
-      </Formik>
-    </>
+              )}
+            </PaddedContent>
+            <ActionButtonContainer>
+              <div>
+                <FormActionButton
+                  disabled={readOnly}
+                  onClick={formikProps.handleSubmit}
+                  primary
+                  status={submitAuthorProofingFeedbackStatus}
+                  type="button"
+                >
+                  {submitButtonText}
+                </FormActionButton>
+              </div>
+              <SubmittedStatus authorFeedback={authorFeedback} />
+            </ActionButtonContainer>
+          </>
+        )
+      }}
+    </Formik>
   )
 }
 

@@ -1,4 +1,4 @@
-/* stylelint-disable declaration-no-important */
+/* stylelint-disable declaration-no-important, string-quotes */
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui/dist/atoms'
 import { Link } from 'react-router-dom'
@@ -88,7 +88,7 @@ export const StyledPinButton = styled(PinButton)`
   max-width: ${p => (p.$menuIsMinimal ? '0' : '100%')};
   opacity: ${p => (p.$menuIsMinimal ? '0' : '1')};
   overflow: hidden;
-  padding: 1px 2px 2px 2px;
+  padding: 1px 2px 2px;
   position: absolute;
   right: 4px;
   top: 1px;
@@ -131,7 +131,6 @@ export const StyledLink = styled(Link)`
     display: flex;
 
     line-height: 1;
-    overflow: ${p => (p.submenu ? 'hidden' : 'unset')};
     overflow: ${p => (p.submenu ? 'hidden' : 'unset')};
     width: 100%;
   }

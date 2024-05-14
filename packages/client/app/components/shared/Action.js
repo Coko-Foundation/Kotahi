@@ -35,13 +35,14 @@ const Spinner = styled.div`
   display: inline-block;
   vertical-align: -2px;
 
-  &:after {
+  &::after {
     animation: ${rotate360} 1s linear infinite;
     border: 2.5px solid ${color.brand1.base};
     border-color: ${color.brand1.base} transparent ${color.brand1.base}
       transparent;
     border-radius: 50%;
     box-sizing: border-box;
+    /* stylelint-disable-next-line string-quotes */
     content: '';
     display: block;
     height: ${grid(2)};
@@ -99,45 +100,42 @@ const Action = ({
   const [isInProgress, setIsInProgress] = useState(false)
 
   return (
-    <>
-      <ActionLink
-        className={className}
-        data-testid={dataTestId}
-        disabled={isInProgress || isDisabled || typeof onClick !== 'function'}
-        onClick={async e => {
-          setIsInProgress(true)
-          const result = await onClick(e)
-          if (onActionCompleted)
-            setResultStatus(await onActionCompleted(result))
-          setIsInProgress(false)
-        }}
-        title={title}
-        type="button"
-      >
-        {children}
-        {isInProgress && <Spinner />}
-        {!isInProgress && resultStatus === 'success' && (
-          <IconContainer>
-            <Check
-              color={color.brand1.base}
-              data-testid="check-svg"
-              size={16}
-              strokeWidth={2}
-            />
-          </IconContainer>
-        )}
-        {!isInProgress && resultStatus === 'failure' && (
-          <IconContainer>
-            <AlertCircle
-              color={color.warning.base}
-              data-testid="alert-circle-svg"
-              size={16}
-              strokeWidth={2}
-            />
-          </IconContainer>
-        )}
-      </ActionLink>
-    </>
+    <ActionLink
+      className={className}
+      data-testid={dataTestId}
+      disabled={isInProgress || isDisabled || typeof onClick !== 'function'}
+      onClick={async e => {
+        setIsInProgress(true)
+        const result = await onClick(e)
+        if (onActionCompleted) setResultStatus(await onActionCompleted(result))
+        setIsInProgress(false)
+      }}
+      title={title}
+      type="button"
+    >
+      {children}
+      {isInProgress && <Spinner />}
+      {!isInProgress && resultStatus === 'success' && (
+        <IconContainer>
+          <Check
+            color={color.brand1.base}
+            data-testid="check-svg"
+            size={16}
+            strokeWidth={2}
+          />
+        </IconContainer>
+      )}
+      {!isInProgress && resultStatus === 'failure' && (
+        <IconContainer>
+          <AlertCircle
+            color={color.warning.base}
+            data-testid="alert-circle-svg"
+            size={16}
+            strokeWidth={2}
+          />
+        </IconContainer>
+      )}
+    </ActionLink>
   )
 }
 

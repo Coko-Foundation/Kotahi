@@ -74,6 +74,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 // eslint-disable-next-line react/prop-types
 const FullWaxEditorCommentsLayout =
   (readOnly, authorComments) =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) => {
     const {
       pmViews: { main },

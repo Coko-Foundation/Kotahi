@@ -17,11 +17,11 @@ const SelectWrapper = styled.div`
   }
 
   > div > div {
-    border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0 0 4px;
   }
 
   > button {
-    border-radius: 0 6px 6px 0px;
+    border-radius: 0 6px 6px 0;
     min-height: 34px;
   }
 `

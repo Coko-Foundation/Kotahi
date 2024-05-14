@@ -92,24 +92,22 @@ const InviteReviewer = ({
         }}
       >
         {formikProps => (
-          <>
-            <SectionContent>
-              <SectionHeader>
-                <Title>{t('decisionPage.Invite Reviewers')}</Title>
-              </SectionHeader>
-              <SectionRow>
-                <ReviewerForm
-                  {...formikProps}
-                  isNewUser={isNewUser}
-                  notificationStatus={notificationStatus}
-                  optedOut={selectedEmailIsBlacklisted}
-                  reviewerUsers={reviewerUsers}
-                  setExternalEmail={setExternalEmail}
-                  setIsNewUser={setIsNewUser}
-                />
-              </SectionRow>
-            </SectionContent>
-          </>
+          <SectionContent>
+            <SectionHeader>
+              <Title>{t('decisionPage.Invite Reviewers')}</Title>
+            </SectionHeader>
+            <SectionRow>
+              <ReviewerForm
+                {...formikProps}
+                isNewUser={isNewUser}
+                notificationStatus={notificationStatus}
+                optedOut={selectedEmailIsBlacklisted}
+                reviewerUsers={reviewerUsers}
+                setExternalEmail={setExternalEmail}
+                setIsNewUser={setIsNewUser}
+              />
+            </SectionRow>
+          </SectionContent>
         )}
       </Formik>
       <InviteReviewerModal

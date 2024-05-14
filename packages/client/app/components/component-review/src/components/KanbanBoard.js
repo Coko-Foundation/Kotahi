@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
@@ -23,6 +25,7 @@ const Column = styled.div`
   display: inline-block;
   height: 300px;
   margin-inline: 7.5px;
+  /* stylelint-disable-next-line scss/operator-no-unspaced */
   width: calc(${100 / (statuses.length - 1)}% - 15px);
 `
 
@@ -33,7 +36,7 @@ const StatusLabel = styled.div`
   display: inline-block;
   font-weight: bold;
   margin-block: 4px;
-  padding: 4px 10px 4px 10px;
+  padding: 4px 10px;
 `
 
 const CardsWrapper = styled.div`

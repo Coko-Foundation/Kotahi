@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import styled, { css } from 'styled-components'
 import { Button, Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'

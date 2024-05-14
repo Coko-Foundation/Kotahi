@@ -12,7 +12,7 @@ class DoiExistenceChecker {
     if (this.timeoutId) clearTimeout(this.timeoutId)
 
     while (this.doiSet === 'wait')
-      // eslint-disable-next-line no-await-in-loop
+      // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
       await new Promise(resolve => setTimeout(resolve, 50))
 
     if (!this.doiSet) {

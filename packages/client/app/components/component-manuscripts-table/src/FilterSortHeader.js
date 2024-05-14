@@ -93,6 +93,7 @@ const FilterSortHeader = ({
           closeOnEscape
           on="click"
           position="bottom center"
+          /* eslint-disable-next-line react/no-unstable-nested-components */
           trigger={open => (
             <IconButton type="button">
               <CalendarIcon isActive={!!columnInfo.filterValue} />

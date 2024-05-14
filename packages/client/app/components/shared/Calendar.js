@@ -1,4 +1,5 @@
-/* eslint-disable prettier/prettier */
+/* stylelint-disable indentation, selector-descendant-combinator-no-non-space */
+/* stylelint-disable selector-pseudo-class-parentheses-space-inside */
 
 import styled, { css } from 'styled-components'
 import UnstyledCalendar from 'react-calendar'
@@ -96,8 +97,7 @@ const Calendar = styled(UnstyledCalendar)`
     background: ${color.brand1.tint70};
   }
 
-  &
-    .react-calendar__tile--rangeStart:not(
+  &.react-calendar__tile--rangeStart:not(
       .react-calendar__tile--hover:not(.react-calendar__tile--hoverStart)
     ),
   & .react-calendar__tile--hoverStart {
@@ -105,8 +105,7 @@ const Calendar = styled(UnstyledCalendar)`
     border-top-left-radius: ${grid(2)};
   }
 
-  &
-    .react-calendar__tile--rangeEnd:not(
+  &.react-calendar__tile--rangeEnd:not(
       .react-calendar__tile--hover:not(.react-calendar__tile--hoverEnd)
     ),
   & .react-calendar__tile--hoverEnd {

@@ -41,23 +41,12 @@ build:
       docker build --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
 
-lint js:
+lint:
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
-  variables:
-    GIT_STRATEGY: none
   script:
-    - cd ${HOME}
-    - yarn lint:js
-
-lint style:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - cd ${HOME}
-    - yarn lint:style
+    - cd /home/node/app
+    - yarn coko-lint run
 
 .test_template: &run_test_template
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
@@ -84,10 +73,10 @@ lint style:
   - ./mc admin policy attach cokoServer/ readwrite --user=$S3_ACCESS_KEY_ID
 
 .test_script: &run_test_script
-  - cd ${HOME}/packages/server
+  - cd /home/node/app/packages/server
   - sh ./scripts/setupProdServer.sh &&
   - sh ./scripts/wait-for-it.sh 127.0.0.1:3000 --timeout=60 &&
-  - cd ${HOME}
+  - cd /home/node/app
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 test-chrome:

@@ -36,7 +36,7 @@ module.exports = {
   },
   mailer: {
     from: 'dev@example.com',
-    path: `${__dirname}/mailer`,
+    path: `${__dirname}/mailer`, // eslint-disable-line node/no-path-concat
   },
   'client-features': {
     displayShortIdAsIdentifier: 'false',

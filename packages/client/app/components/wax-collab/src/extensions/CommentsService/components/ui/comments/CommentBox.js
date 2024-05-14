@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   ${props => !props.active && inactive}
 
   /* stylelint-disable order/properties-alphabetical-order */
-	  ${override(
+  ${override(
     'Wax.CommentWrapper',
   )} /* stylelint-enable order/properties-alphabetical-order */
 `

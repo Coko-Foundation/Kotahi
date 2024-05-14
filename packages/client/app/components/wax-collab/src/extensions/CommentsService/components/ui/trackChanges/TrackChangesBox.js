@@ -1,4 +1,6 @@
 /* eslint react/prop-types: 0 */
+/* stylelint-disable string-quotes */
+
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { DateParser, Icon } from 'wax-prosemirror-core'
@@ -48,7 +50,7 @@ const Label = styled.span`
   margin-right: 4px;
   text-transform: capitalize;
 
-  &:after {
+  &::after {
     content: ':';
   }
 `

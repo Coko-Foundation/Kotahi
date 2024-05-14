@@ -38,7 +38,9 @@ const UsersTable = ({
   totalCount,
   users,
 }) => {
+  /* eslint-disable-next-line react/no-unstable-nested-components */
   const SortHeader = ({ thisSortName, children }) => {
+    /* eslint-disable-next-line react/no-unstable-nested-components */
     const UpDown = () => {
       if (thisSortName !== sortName) return null
       return sortDirection === 'ASC' ? <SortDown /> : <SortUp />

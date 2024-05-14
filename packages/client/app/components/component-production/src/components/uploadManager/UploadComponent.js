@@ -20,7 +20,7 @@ const Message = styled.div`
 const DropZoneContainer = styled.div`
   align-items: center;
   background-color: #fafafa;
-  border-color: #eeeeee;
+  border-color: #eee;
   border-radius: 2px;
   border-style: dashed;
   border-width: 2px;

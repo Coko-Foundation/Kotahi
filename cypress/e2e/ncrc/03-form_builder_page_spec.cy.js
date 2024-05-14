@@ -187,7 +187,7 @@ describe.skip('form builder tests', () => {
       SubmissionFormPage.getFormOptionList(19).should('contain', 'Required')
     })
 
-    it('message for DOI invalid should not exist ', () => {
+    it('message for DOI invalid should not exist', () => {
       SubmissionFormPage.fillInDoi('google.com')
       SubmissionFormPage.fillInTitle('2')
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(

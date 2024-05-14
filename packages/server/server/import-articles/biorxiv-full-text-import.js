@@ -23,7 +23,7 @@ const DELAY_INCREMENT_MS = 10000
 const doAxiosQueryWithRetry = async queryString => {
   for (let i = 0; i < MAX_TRIES; i += 1) {
     if (i > 0)
-      // eslint-disable-next-line no-await-in-loop
+      // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
       await new Promise(resolve => setTimeout(resolve, i * DELAY_INCREMENT_MS))
 
     // eslint-disable-next-line no-await-in-loop

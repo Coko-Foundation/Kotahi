@@ -19,6 +19,6 @@ module.exports = {
   },
   mailer: {
     from: 'simplej@example.com',
-    path: `${__dirname}/test-mailer`,
+    path: `${__dirname}/test-mailer`, // eslint-disable-line node/no-path-concat
   },
 }

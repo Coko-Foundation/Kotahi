@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Icon() {
+const Icon = () => {
   return (
     <svg
       fill="none"

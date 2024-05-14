@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-object-spread */
 
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -153,25 +155,23 @@ const Container = ({
           sections={tabs}
         />
       ) : (
-        <>
-          <Chat
-            channelId={channelId}
-            chatRoomId={chatRoomId}
-            currentUser={currentUser}
-            fetchMoreData={fetchMoreData}
-            firstUnreadMessageId={channelData?.firstUnreadMessageId}
-            manuscriptId={manuscriptId}
-            notificationOptionData={channelData?.notificationOptionData}
-            queryData={channelData?.queryResult}
-            reportUserIsActiveMutation={reportUserIsActiveMutation}
-            searchUsers={searchUsers}
-            sendChannelMessages={sendChannelMessages}
-            unreadMessagesCount={channelData?.unreadMessagesCount}
-            updateChannelViewed={updateChannelViewed}
-            updateNotificationOptionData={updateNotificationOptionData}
-            usersData={channelData?.usersData}
-          />
-        </>
+        <Chat
+          channelId={channelId}
+          chatRoomId={chatRoomId}
+          currentUser={currentUser}
+          fetchMoreData={fetchMoreData}
+          firstUnreadMessageId={channelData?.firstUnreadMessageId}
+          manuscriptId={manuscriptId}
+          notificationOptionData={channelData?.notificationOptionData}
+          queryData={channelData?.queryResult}
+          reportUserIsActiveMutation={reportUserIsActiveMutation}
+          searchUsers={searchUsers}
+          sendChannelMessages={sendChannelMessages}
+          unreadMessagesCount={channelData?.unreadMessagesCount}
+          updateChannelViewed={updateChannelViewed}
+          updateNotificationOptionData={updateNotificationOptionData}
+          usersData={channelData?.usersData}
+        />
       )}
     </MessageContainer>
   )

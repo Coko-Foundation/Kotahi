@@ -379,10 +379,13 @@ const AiPDFDesigner = ({
             selectedCtx.history.push({ role: 'assistant', content: feedback })
           updatePreview()
         } catch (err) {
+          /* eslint-disable-next-line camelcase */
           if (finishReasons[finish_reason]) {
+            /* eslint-disable-next-line camelcase */
             setFeedback(finishReasons[finish_reason])
             selectedCtx.history.push({
               role: 'assistant',
+              /* eslint-disable-next-line camelcase */
               content: finishReasons[finish_reason],
             })
           }

@@ -46,6 +46,7 @@ const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout =
   readOnly =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) => {
     const {
       pmViews: { main },

@@ -13,7 +13,7 @@ import { Img, FallbackImg, LoadingImg } from './style'
 //   isClickable?: boolean,
 // };
 
-export default function Image(props) {
+const Image = props => {
   const { type, size, mobilesize, src } = props
 
   const fallbackSrc =
@@ -53,3 +53,5 @@ export default function Image(props) {
     </VisibilitySensor>
   )
 }
+
+export default Image

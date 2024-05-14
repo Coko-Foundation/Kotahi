@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 
 import { manuscripts } from '../../support/routes'

@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation, string-quotes */
+
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled, { ThemeContext } from 'styled-components'
@@ -31,14 +33,14 @@ const DisabledButton = styled(BaseButton)`
 
 const Button = styled(BaseButton)`
   background-color: white;
-  box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.2);
   color: ${color.brand1.base};
 
   &:hover,
   &:active,
   &:focus {
     background-color: rgba(58, 174, 42, 0.03);
-    box-shadow: 0px 3px 5px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.3);
   }
 `
 
@@ -51,7 +53,7 @@ const Spinner = styled.div`
   padding-left: ${grid(1)};
   vertical-align: -2px;
 
-  &:after {
+  &::after {
     animation: ${rotate360} 1s linear infinite;
     border: 2.5px solid ${props => props.fgColor};
     border-color: ${props => props.fgColor} transparent

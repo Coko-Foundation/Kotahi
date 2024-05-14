@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 
 import { dashboard } from '../../support/routes1'

@@ -1,3 +1,5 @@
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { useMutation } from '@apollo/client'
@@ -12,7 +14,7 @@ import { LooseColumn } from '../../../shared'
 
 const DropdownContainer = styled.div`
   background-color: ${color.backgroundA};
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: absolute;
   right: 0;
   top: -4px;
@@ -26,7 +28,7 @@ const DropdownItem = styled.div`
   font-size: 16px;
   font-weight: 400;
   line-height: 24px;
-  padding: 6px 14px 6px 14px;
+  padding: 6px 14px;
 
   &:hover {
     background-color: ${color.gray97};

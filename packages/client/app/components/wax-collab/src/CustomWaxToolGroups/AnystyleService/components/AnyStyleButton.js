@@ -1,4 +1,6 @@
 /* eslint react/prop-types: 0 */
+/* stylelint-disable string-quotes */
+
 import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
 import {
@@ -11,7 +13,7 @@ const AnyStyleDiv = styled(MenuButton)`
   margin-top: 8px;
   outline: 1px solid #ccc;
 
-  &:after {
+  &::after {
     background: #fff;
     border-radius: 4px;
     content: '';
@@ -27,7 +29,7 @@ const AnyStyleDiv = styled(MenuButton)`
   }
 
   &:hover {
-    &:after {
+    &::after {
       background: #f1f5ff;
     }
 

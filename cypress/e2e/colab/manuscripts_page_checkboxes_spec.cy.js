@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { dashboard, manuscripts } from '../../support/routes1'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'

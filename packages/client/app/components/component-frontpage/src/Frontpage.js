@@ -36,8 +36,8 @@ const Subheading = styled.h3`
 `
 
 const LoginLink = styled.a`
-  border: 0px;
-  border-radius: 0px;
+  border: 0;
+  border-radius: 0;
   display: block;
   font-size: 1em;
   font-weight: 500;

@@ -46,6 +46,7 @@ const getData = async (groupId, ctx) => {
 
   const requestUrl = `https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=${query}&format=${format}&sort=${sort}&pageSize=${pageSize}&resultType=${resultType}`
 
+  /* eslint-disable-next-line default-param-last */
   const requests = async (cursor = '', minDate, results = []) => {
     const { data } = await axios.get(`${requestUrl}&cursorMark=${cursor}`)
 

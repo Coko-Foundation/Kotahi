@@ -14,8 +14,9 @@ const ConnectedCommentStyled = styled.div`
   transition: ${props =>
     props.active && props.length
       ? `none!important`
-      : `all 0.25s`}; /* was 1.3s*/
+      : `all 0.25s`}; /* was 1.3s */
   width: 200px;
+
   @media (max-width: 600px) {
     margin-left: 15px;
   }
@@ -25,6 +26,7 @@ const ConnectedCommentStyled = styled.div`
   )}/* stylelint-enable order/properties-alphabetical-order */
 `
 
+/* eslint-disable-next-line react/function-component-definition */
 export default ({ comment, top, commentId, recalculateTops }) => {
   const context = useContext(WaxContext)
 
@@ -204,5 +206,6 @@ export default ({ comment, top, commentId, recalculateTops }) => {
     [isActive, top, comment.attrs.conversation.length],
   )
 
+  /* eslint-disable-next-line react/jsx-no-useless-fragment */
   return <>{MemorizedComponent}</>
 }

@@ -47,7 +47,7 @@ const AuthorProofingLink = ({ manuscript, urlFrag, currentUser }) => {
     ) : null
   }
 
-  return <></>
+  return null
 }
 
 AuthorProofingLink.propTypes = {

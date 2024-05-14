@@ -69,29 +69,25 @@ const EditorTable = ({
   const { t } = useTranslation()
 
   return (
-    <>
-      <SectionContent>
-        <SectionHeader>
-          <Title>{t("dashboardPage.Manuscripts I'm editor of")}</Title>
-        </SectionHeader>
-        <ManuscriptsTable
-          applyQueryParams={applyQueryParams}
-          columnsProps={columnsProps}
-          manuscripts={manuscriptsUserHasCurrentRoleIn.manuscripts}
-          sortDirection={sortDirection}
-          sortName={sortName}
-        />
-        <Pagination
-          limit={limit}
-          page={page}
-          PaginationContainer={PaginationContainerShadowed}
-          setPage={newPage =>
-            applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
-          }
-          totalCount={totalCount}
-        />
-      </SectionContent>
-    </>
+    <SectionContent>
+      <SectionHeader>
+        <Title>{t("dashboardPage.Manuscripts I'm editor of")}</Title>
+      </SectionHeader>
+      <ManuscriptsTable
+        applyQueryParams={applyQueryParams}
+        columnsProps={columnsProps}
+        manuscripts={manuscriptsUserHasCurrentRoleIn.manuscripts}
+        sortDirection={sortDirection}
+        sortName={sortName}
+      />
+      <Pagination
+        limit={limit}
+        page={page}
+        PaginationContainer={PaginationContainerShadowed}
+        setPage={newPage => applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })}
+        totalCount={totalCount}
+      />
+    </SectionContent>
   )
 }
 

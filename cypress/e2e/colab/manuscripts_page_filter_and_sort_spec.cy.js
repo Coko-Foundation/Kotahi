@@ -1,6 +1,4 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/valid-expect-in-promise */
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { dashboard } from '../../support/routes1'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -117,7 +115,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getSelectButton().should('be.visible')
       // ManuscriptsPage.getLabelRow(1).should('not.exist') // line needs update to check that the only label visible is select.
     })
-    it('after click on Select new status is displayed ', () => {
+    it('after click on Select new status is displayed', () => {
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 2)
       ManuscriptsPage.getSelectAllCheckbox().click()

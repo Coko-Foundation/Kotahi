@@ -1,3 +1,5 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties */
+
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'

@@ -3,7 +3,7 @@ import { State } from 'react-powerplug'
 
 import ModalContext from './ModalContext'
 
-function ModalProvider({ children, modals: modalsVal }) {
+const ModalProvider = ({ children, modals: modalsVal }) => {
   return (
     <State
       initial={{
@@ -34,6 +34,7 @@ function ModalProvider({ children, modals: modalsVal }) {
 
         return (
           <ModalContext.Provider
+            /* eslint-disable-next-line react/jsx-no-constructed-context-values */
             value={{
               ...modalState,
               modals,

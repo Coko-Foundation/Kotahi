@@ -16,6 +16,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 // eslint-disable-next-line react/prop-types
 const SimpleWaxEditorLayout =
   (readonly, dataTestid = null) =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) =>
     (
       <div>

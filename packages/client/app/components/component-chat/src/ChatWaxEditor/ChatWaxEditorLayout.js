@@ -18,6 +18,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 // eslint-disable-next-line react/prop-types
 const ChatWaxEditorLayout =
   readonly =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) => {
     const [isTopBarOpen, setIsTopBarOpen] = React.useState(false)
 

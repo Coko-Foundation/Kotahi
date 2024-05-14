@@ -11,7 +11,7 @@ export default {
     margin-bottom: 1px;
   `,
   LogoLink: css`
-    &:hover:before {
+    &:hover::before {
       visibility: hidden;
     }
   `,

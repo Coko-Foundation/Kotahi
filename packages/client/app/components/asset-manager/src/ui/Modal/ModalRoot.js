@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+/* stylelint-disable alpha-value-notation, color-function-notation */
 
 import React from 'react'
 import ReactModal from 'react-modal'
@@ -14,7 +15,7 @@ ReactModal.setAppElement('#root')
   This is to make react modal and styled components play nice
   See https://github.com/styled-components/styled-components/issues/1494#issuecomment-363362709
 */
-function ReactModalAdapter({ className, modalClassName, ...props }) {
+const ReactModalAdapter = ({ className, modalClassName, ...props }) => {
   return (
     <ReactModal
       className={modalClassName}

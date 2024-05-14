@@ -1,3 +1,5 @@
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React from 'react'
 import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
@@ -16,7 +18,7 @@ const StartButton = styled.button`
   align-items: center;
   background: ${color.brand1.base};
   border-radius: 6px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
   color: white;
   display: flex;
   font-family: ${theme.fontHeading};
@@ -33,7 +35,7 @@ const StartButton = styled.button`
 
 const BaseDropdown = styled(Dropdown)`
   border-radius: 4px;
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.25);
   font-family: ${theme.fontHeading};
   font-size: 14.5px;
   font-style: normal;
@@ -148,7 +150,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
     )
   }
 
-  let DropdownComponent = <></>
+  let DropdownComponent = null
 
   const PauseLabel = (
     <DropdownLabel>

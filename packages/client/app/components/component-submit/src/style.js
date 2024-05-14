@@ -16,6 +16,7 @@ export const Section = styled.section`
     cssOverrides && cssOverrides['flex-direction']
       ? cssOverrides['flex-direction']
       : 'column'};
+  /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   flex-wrap: ${({ cssOverrides }) =>
     cssOverrides && cssOverrides.wrap ? cssOverrides.wrap : 'nowrap'};
   justify-content: space-between;

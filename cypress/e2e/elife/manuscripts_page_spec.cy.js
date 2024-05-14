@@ -1,5 +1,4 @@
 /* eslint-disable jest/valid-expect-in-promise */
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'

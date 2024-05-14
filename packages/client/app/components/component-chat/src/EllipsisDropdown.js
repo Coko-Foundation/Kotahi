@@ -1,12 +1,14 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { color } from '../../../theme'
 
 const DropdownContainer = styled.div`
   background-color: ${color.backgroundA};
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: absolute;
-  right: 0px;
+  right: 0;
   width: 176px;
   z-index: 1000;
 `
@@ -44,6 +46,7 @@ const EllipsisDropdown = ({
   }, [show])
 
   return (
+    /* eslint-disable-next-line react/jsx-no-useless-fragment */
     <>
       {show && (
         <DropdownContainer ref={dropdownRef}>

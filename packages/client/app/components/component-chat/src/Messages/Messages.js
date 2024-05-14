@@ -116,6 +116,7 @@ const Messages = ({
 
   const { hasPreviousPage } = data.messages.pageInfo
 
+  /* eslint-disable-next-line react/no-unstable-nested-components */
   const DateWithUnreadLabelElement = ({ message }) => (
     <UnreadLabelContainer>
       <UnreadLabel>
@@ -125,6 +126,7 @@ const Messages = ({
     </UnreadLabelContainer>
   )
 
+  /* eslint-disable-next-line react/no-unstable-nested-components */
   const DateLabelElement = ({ message }) => (
     <DateLabelContainer>
       <DateLabel>
@@ -133,6 +135,7 @@ const Messages = ({
     </DateLabelContainer>
   )
 
+  /* eslint-disable-next-line react/no-unstable-nested-components */
   const UnreadLabelElement = () => (
     <UnreadLabelContainer>
       <UnreadLabel>{t('chat.Unread messages')}</UnreadLabel>
@@ -171,10 +174,10 @@ const Messages = ({
       )
     }
 
-    return <></>
+    return null
   }
 
-  // eslint-disable-next-line no-shadow
+  // eslint-disable-next-line no-shadow, react/no-unstable-nested-components
   const MessageRenderer = ({ message }) => {
     return (
       // eslint-disable-next-line react/no-danger

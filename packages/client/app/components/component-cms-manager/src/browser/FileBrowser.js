@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 
@@ -29,7 +31,7 @@ const FolderTreeContainer = styled.div`
   }
 
   flex: 1;
-  margin: 0px 10px 0px 10px;
+  margin: 0 10px;
   overflow-y: auto;
 
   .FolderTree {
@@ -61,7 +63,7 @@ const FolderTreeContainer = styled.div`
     .iconContainer.TreeNodeToolBar {
       background: white;
       font-size: 22px;
-      padding: 0 3px 3px 3px;
+      padding: 0 3px 3px;
       position: absolute;
       right: 0;
 
@@ -124,7 +126,7 @@ const SpanUrl = styled.span`
 `
 
 const RootFolder = styled.div`
-  margin: 20px 10px 0px 10px;
+  margin: 20px 10px 0;
 `
 
 const FormActionButtonStyled = styled(FormActionButton)`

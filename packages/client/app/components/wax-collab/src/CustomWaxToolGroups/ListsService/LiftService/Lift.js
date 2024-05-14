@@ -8,6 +8,7 @@ export default class Lift extends Tools {
   icon = 'indentDecrease'
   name = 'Lift'
 
+  // eslint-disable-next-line class-methods-use-this
   select = (state, activeViewId, activeView) => {
     const { disallowedTools } = activeView.props
     if (disallowedTools.includes('lift')) return false

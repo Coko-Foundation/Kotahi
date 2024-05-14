@@ -1,3 +1,5 @@
+/* stylelint-disable string-quotes */
+
 import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
@@ -144,6 +146,7 @@ const Production = ({
 
   const editorSection = {
     content: (
+      // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
         {file &&
         file.storedObjects[0].mimetype ===

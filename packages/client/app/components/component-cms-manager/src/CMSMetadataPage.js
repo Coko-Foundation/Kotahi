@@ -25,8 +25,8 @@ const FieldWrapper = styled.div`
 `
 
 const ActionButtonStyled = styled(ActionButton)`
-  border-bottom-left-radius: 0px;
-  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
   font-size: ${th('fontSizeBaseSmall')};
   left: -2px;
   min-height: 5px;
@@ -34,26 +34,28 @@ const ActionButtonStyled = styled(ActionButton)`
   position: relative;
 `
 
-const FieldTemplate = t => props => {
-  const { classNames, description, children, label, id } = props
+const FieldTemplate = t =>
+  /* eslint-disable-next-line func-names */
+  function (props) {
+    const { classNames, description, children, label, id } = props
 
-  const onCopy = () =>
-    navigator.clipboard.writeText(`{{cmsLayout.publishConfig.${label}}}`)
+    const onCopy = () =>
+      navigator.clipboard.writeText(`{{cmsLayout.publishConfig.${label}}}`)
 
-  return (
-    <div className={classNames}>
-      <b>{description}</b>
-      <FieldWrapper>
-        {children}
-        {id !== 'journalMetadata' && (
-          <ActionButtonStyled onClick={onCopy} primary type="button">
-            {t('cmsPage.metadata.copy')}
-          </ActionButtonStyled>
-        )}
-      </FieldWrapper>
-    </div>
-  )
-}
+    return (
+      <div className={classNames}>
+        <b>{description}</b>
+        <FieldWrapper>
+          {children}
+          {id !== 'journalMetadata' && (
+            <ActionButtonStyled onClick={onCopy} primary type="button">
+              {t('cmsPage.metadata.copy')}
+            </ActionButtonStyled>
+          )}
+        </FieldWrapper>
+      </div>
+    )
+  }
 
 const CmsMetadataPage = () => {
   const { t } = useTranslation()

@@ -147,6 +147,7 @@ const ReviewLayout = ({
           cache.modify({
             id: cache.identify(latestManuscript.id),
             fields: {
+              /* eslint-disable-next-line default-param-last */
               reviews(existingReviewRefs = [], { readField }) {
                 const newReviewRef = cache.writeFragment({
                   data: updateReviewTemp,

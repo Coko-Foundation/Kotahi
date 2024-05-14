@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
@@ -19,7 +21,7 @@ const Container = styled.div`
 const Content = styled.div`
   background: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.25);
   margin-bottom: 1rem;
   max-width: 40em;
   min-width: 20em;

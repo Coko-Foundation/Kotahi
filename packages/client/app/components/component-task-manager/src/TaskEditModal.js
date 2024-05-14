@@ -398,35 +398,33 @@ const TaskEditModal = ({
             {t('modals.taskEdit.Add Notification Recipient')}
           </SecondaryActionButton>
         </TaskActionContainer>
-        {!editAsTemplate ? (
-          task.notificationLogs &&
-          task.notificationLogs.length !== 0 && (
-            <TaskNotificationLogsContainer>
-              <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
-                {isToggled
-                  ? t('modals.taskEdit.Hide all notifications sent', {
-                      count: task.notificationLogs?.length,
-                    })
-                  : t('modals.taskEdit.Show all notifications sent', {
-                      count: task.notificationLogs?.length,
-                    })}
-              </NotificationLogsToggle>
-              {isToggled && (
-                <NotificationLogs>
-                  {task.notificationLogs.map(log => (
-                    <>
-                      <div>{convertTimestampToDateString(log.created)}</div>
-                      <div>{log.content}</div>
-                      <br />
-                    </>
-                  ))}
-                </NotificationLogs>
-              )}
-            </TaskNotificationLogsContainer>
-          )
-        ) : (
-          <></>
-        )}
+        {!editAsTemplate
+          ? task.notificationLogs &&
+            task.notificationLogs.length !== 0 && (
+              <TaskNotificationLogsContainer>
+                <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
+                  {isToggled
+                    ? t('modals.taskEdit.Hide all notifications sent', {
+                        count: task.notificationLogs?.length,
+                      })
+                    : t('modals.taskEdit.Show all notifications sent', {
+                        count: task.notificationLogs?.length,
+                      })}
+                </NotificationLogsToggle>
+                {isToggled && (
+                  <NotificationLogs>
+                    {task.notificationLogs.map(log => (
+                      <>
+                        <div>{convertTimestampToDateString(log.created)}</div>
+                        <div>{log.content}</div>
+                        <br />
+                      </>
+                    ))}
+                  </NotificationLogs>
+                )}
+              </TaskNotificationLogsContainer>
+            )
+          : null}
       </TaskSectionContainer>
     </Modal>
   )

@@ -1,3 +1,5 @@
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import React, {
   useState,
   useEffect,
@@ -44,7 +46,7 @@ const TaskRow = styled.div`
 `
 
 const TaskRowContainer = styled.div`
-  padding: 10px 8px 15px 8px;
+  padding: 10px 8px 15px;
 
   & + div {
     border-top: 2px solid rgba(191, 191, 191, 0.5);
@@ -124,7 +126,7 @@ const ModalContainer = styled(LooseColumn)`
 const ActionDialog = styled.div`
   background: ${color.backgroundA};
   border-radius: 6px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.25);
   left: -80px;
   position: absolute;
   top: 15px;

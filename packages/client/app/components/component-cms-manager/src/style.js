@@ -1,3 +1,4 @@
+/* stylelint-disable string-quotes */
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { ChevronRight } from 'react-feather'
@@ -6,7 +7,7 @@ import { TextInput, Heading, ActionButton } from '../../shared'
 import { SecondaryButton } from '../../component-modal/src/Modal'
 
 export const Section = styled.div`
-  margin: 8px 8px 0px 0px;
+  margin: 8px 8px 0 0;
   ${props =>
     props.flexGrow &&
     css`
@@ -28,9 +29,9 @@ export const Page = styled.div`
 `
 
 export const VerticalBar = styled.div`
-  border-right: 1px solid #111111;
+  border-right: 1px solid #111;
   height: 16px;
-  margin: 0px 10px 0px 10px;
+  margin: 0 10px;
 `
 
 export const NewEditText = styled.p`
@@ -62,7 +63,7 @@ export const FormTextInput = styled(TextInput)`
 
 export const ColorInput = styled(TextInput)`
   background: white;
-  padding: 0px;
+  padding: 0;
 `
 
 export const EditPageContainer = styled.div`
@@ -109,7 +110,7 @@ export const FormActionButton = styled(ActionButton)`
 `
 
 export const FormActionDelete = styled(SecondaryButton)`
-  min-width: 0px;
+  min-width: 0;
 `
 
 export const FullWidthAndHeightContainer = styled.div`

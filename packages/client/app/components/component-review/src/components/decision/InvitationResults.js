@@ -104,41 +104,38 @@ const InvitationResult = ({ invitation }) => {
   }
 
   return (
-    <>
-      <SectionRow>
-        <Root>
-          <ReviewHeadingRoot>
-            <Bullet status={invitation.status} />
-            <Ordinal status={invitation.status}>{ordinalString}</Ordinal>
-            &nbsp;
-            <Name>
-              <UserCombo>
-                <UserAvatar user={user} />
-                <UserInfo>
-                  <>
-                    <Primary>
-                      {user ? user?.username : invitedPersonName}
-                    </Primary>
-                    <Secondary>{dateToDisplay}</Secondary>
-                  </>
-                </UserInfo>
-              </UserCombo>
-            </Name>
-            {responseComment && (
-              <Controls>
-                <ToggleReview open={open} t={t} toggle={toggleOpen} />
-              </Controls>
-            )}
-          </ReviewHeadingRoot>
-          {open && <ResponseComment>{responseComment}</ResponseComment>}
-        </Root>
-      </SectionRow>
-    </>
+    <SectionRow>
+      <Root>
+        <ReviewHeadingRoot>
+          <Bullet status={invitation.status} />
+          <Ordinal status={invitation.status}>{ordinalString}</Ordinal>
+          &nbsp;
+          <Name>
+            <UserCombo>
+              <UserAvatar user={user} />
+              <UserInfo>
+                <>
+                  <Primary>{user ? user?.username : invitedPersonName}</Primary>
+                  <Secondary>{dateToDisplay}</Secondary>
+                </>
+              </UserInfo>
+            </UserCombo>
+          </Name>
+          {responseComment && (
+            <Controls>
+              <ToggleReview open={open} t={t} toggle={toggleOpen} />
+            </Controls>
+          )}
+        </ReviewHeadingRoot>
+        {open && <ResponseComment>{responseComment}</ResponseComment>}
+      </Root>
+    </SectionRow>
   )
 }
 
 const InvitationResults = ({ invitations }) => {
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {invitations &&
         invitations.map(invitation => {

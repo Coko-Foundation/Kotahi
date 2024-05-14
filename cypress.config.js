@@ -51,6 +51,7 @@ module.exports = defineConfig({
           }
 
           // Wait long enough for server-side cache to clear
+          /* eslint-disable-next-line no-promise-executor-return */
           await new Promise(resolve => setTimeout(resolve, 10500))
           return result
         },

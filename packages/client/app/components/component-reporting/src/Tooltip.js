@@ -11,7 +11,7 @@ const Placeholder = styled.div`
   width: 0;
 
   *:hover > & {
-    opacity: 100%;
+    opacity: 1;
     transition-delay: 0.8s;
     visibility: visible;
   }

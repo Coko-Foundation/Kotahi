@@ -241,6 +241,7 @@ const DecisionPage = ({ currentUser, match }) => {
           id: updatedTask.manuscriptId,
         }),
         fields: {
+          /* eslint-disable-next-line default-param-last */
           tasks(existingTaskRefs = [], { readField }) {
             const newTaskRef = cache.writeFragment({
               data: updatedTask,
@@ -326,6 +327,7 @@ const DecisionPage = ({ currentUser, match }) => {
             id: manuscriptId,
           }),
           fields: {
+            /* eslint-disable-next-line default-param-last */
             reviews(existingReviewRefs = [], { readField }) {
               const newReviewRef = cache.writeFragment({
                 data: updatedReview,

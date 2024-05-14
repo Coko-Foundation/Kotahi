@@ -1,3 +1,5 @@
+/* stylelint-disable custom-property-pattern */
+
 import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'

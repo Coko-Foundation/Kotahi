@@ -9,7 +9,7 @@ import { RoundIconButton } from '../../../shared'
 const AddNewPage = styled(RoundIconButton)`
   margin-left: ${grid(1)};
   margin-top: ${grid(2)};
-  min-width: 0px;
+  min-width: 0;
 `
 
 const CMSPageEditSidebar = ({

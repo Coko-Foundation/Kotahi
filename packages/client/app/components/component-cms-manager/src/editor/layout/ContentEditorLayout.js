@@ -9,6 +9,7 @@ const TopBar = ComponentPlugin('topBar')
 
 const ContentEditorLayout =
   readOnly =>
+  /* eslint-disable-next-line react/function-component-definition */
   ({ editor }) => {
     const { options } = useContext(WaxContext)
 

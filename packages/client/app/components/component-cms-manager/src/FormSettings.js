@@ -15,6 +15,7 @@ import { hasValue } from '../../../shared/htmlUtils'
 import { ColorPicker } from '../../shared'
 
 const createEditorComponent = (EditorComponent, shouldWrap = true) => {
+  /* eslint-disable-next-line react/function-component-definition */
   return ({ validationStatus, setTouched, onChange, ...rest }) => {
     const editorComponent = (
       <EditorComponent

@@ -1,3 +1,5 @@
+/* stylelint-disable alpha-value-notation, color-function-notation */
+
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
@@ -41,7 +43,7 @@ const FormContainer = styled(Container)`
     flex-direction: column;
     justify-content: center;
     /* account for <NoteRight> */
-    padding: 28px 28px 44px 28px;
+    padding: 28px 28px 44px;
 
     h1 {
       font-weight: 700;
@@ -54,7 +56,7 @@ const FormContainer = styled(Container)`
     padding: ${({ noPadding }) => (noPadding ? 0 : '30px')};
 
     section {
-      margin: 0 0 44px 0;
+      margin: 0 0 44px;
     }
   }
 `

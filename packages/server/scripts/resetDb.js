@@ -12,6 +12,7 @@ const waitForDbToSettle = async () => {
       ready = !!users
     } catch (e) {
       console.error(e)
+      /* eslint-disable-next-line no-promise-executor-return */
       await new Promise(resolve => setTimeout(resolve, 1000))
     }
   }

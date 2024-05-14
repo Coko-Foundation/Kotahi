@@ -1,3 +1,6 @@
+/* stylelint-disable string-quotes */
+/* stylelint-disable color-function-notation, alpha-value-notation */
+
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import waxDefaultStyles from './waxDefaultStyles'
@@ -9,6 +12,7 @@ export const Grid = styled.div`
   display: grid;
   grid-template-areas: 'menu' 'editor';
   grid-template-columns: 100%;
+  /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
   ${props => props.production && 'min-height: calc(100vh - 142px);'}
   position: relative;
@@ -200,7 +204,7 @@ export const SimpleEditorDiv = styled.div`
   background-color: ${color.gray99};
   border: 1px solid ${color.gray80};
   border-radius: ${th('borderRadius')};
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.07);
   grid-area: editor;
   overflow: auto;
   padding: 16px;
@@ -234,7 +238,7 @@ export const SimpleInfoContainer = styled.div`
   position: relative;
   width: 100%;
 
-  & > div > div:before {
+  & > div > div::before {
     display: none;
   }
 

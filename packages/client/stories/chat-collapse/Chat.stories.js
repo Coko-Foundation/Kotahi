@@ -10,6 +10,7 @@ import * as journal from '../../config/journal'
 import config from '../../config/sampleConfigFormData'
 
 const MessageContainer = styled.section`
+  /* stylelint-disable-next-line color-function-notation */
   background: rgb(255, 255, 255);
   display: block;
   min-width: 100%;

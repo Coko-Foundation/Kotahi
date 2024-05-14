@@ -14,7 +14,7 @@ import { ifReviewInviteThenAssignRecipientsAsReviewers } from './notificationUti
 
 const TaskTitle = styled.div`
   color: ${color.gray20};
-  font-family: 'Roboto', sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: ${theme.fontSizeBase};
   font-style: normal;
   font-weight: 500;
@@ -72,7 +72,7 @@ const RoundIconButtonContainer = styled.div`
   & > button {
     height: 25px;
     margin-top: 25px;
-    min-width: 0px;
+    min-width: 0;
     width: 25px;
   }
 
@@ -89,7 +89,7 @@ const NotificationDeadlineCell = styled.div`
 
   /* stylelint-disable-next-line no-descending-specificity */
   & > div {
-    margin: 0px 10px;
+    margin: 0 10px;
   }
 `
 

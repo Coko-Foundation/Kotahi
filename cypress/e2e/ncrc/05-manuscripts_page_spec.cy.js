@@ -1,5 +1,4 @@
 /* eslint-disable jest/valid-expect-in-promise,cypress/no-unnecessary-waiting */
-/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -629,7 +628,7 @@ describe.skip('manuscripts page tests', () => {
       ManuscriptsPage.getSelectButton().should('be.visible')
       ManuscriptsPage.getArticleLabel().should('not.exist')
     })
-    it('after click on Select new status is displayed ', () => {
+    it('after click on Select new status is displayed', () => {
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 2)
       ManuscriptsPage.getSelectAllCheckbox().click()
