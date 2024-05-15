@@ -234,44 +234,42 @@ const ReviewDetailsModal = (
           {statusConfig?.label}
         </ConfigurableStatus>
       </StatusContainer>
-      {review ? (
-        <>
-          {showForm ? (
-            <FormTemplate
-              collaborativeObject={{ identifier: review.id, currentUser }}
-              createFile={createFile}
-              deleteFile={deleteFile}
-              form={{ ...reviewForm, name: null, description: null }}
-              formikOptions={{ enableReinitialize: true }}
-              initialValues={reviewData}
-              isCollaborative={review.isCollaborative}
-              manuscriptId={manuscriptId}
-              manuscriptShortId={manuscriptShortId}
-              onChange={(value, path) =>
-                updateReviewJsonData(
-                  review.id,
-                  value,
-                  path,
-                  false,
-                  manuscriptId,
-                )
-              }
-              shouldStoreFilesInForm
-              showEditorOnlyFields={false}
-              submissionButtonText={t('reviewPage.Submit')}
-              tagForFiles="review"
-              threadedDiscussionProps={threadedDiscussionProps}
-            />
-          ) : (
-            <ReviewData
-              review={review}
-              reviewForm={reviewForm}
-              showEditorOnlyFields={showEditorOnlyFields}
-              threadedDiscussionProps={threadedDiscussionProps}
-            />
-          )}
-        </>
-      ) : (
+      {review && showForm && (
+        <FormTemplate
+          collaborativeObject={{ identifier: review.id, currentUser }}
+          createFile={createFile}
+          deleteFile={deleteFile}
+          form={{ ...reviewForm, name: null, description: null }}
+          formikOptions={{ enableReinitialize: true }}
+          initialValues={reviewData}
+          isCollaborative={review.isCollaborative}
+          manuscriptId={manuscriptId}
+          manuscriptShortId={manuscriptShortId}
+          onChange={(value, path) =>
+            updateReviewJsonData(
+              review.id,
+              value,
+              path,
+              false,
+              manuscriptId,
+            )
+          }
+          shouldStoreFilesInForm
+          showEditorOnlyFields={false}
+          submissionButtonText={t('reviewPage.Submit')}
+          tagForFiles="review"
+          threadedDiscussionProps={threadedDiscussionProps}
+        />
+      )}
+      {review && !showForm && (
+        <ReviewData
+          review={review}
+          reviewForm={reviewForm}
+          showEditorOnlyFields={showEditorOnlyFields}
+          threadedDiscussionProps={threadedDiscussionProps}
+        />
+      )}
+      {!review && (
         <ReviewItemsContainer>
           <i>{t('modals.reviewReport.reviewNotCompleted')}</i>
         </ReviewItemsContainer>

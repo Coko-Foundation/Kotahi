@@ -27,7 +27,7 @@ const TextFieldSyled = styled(TextField)`
 
   input:disabled {
     background-color: unset;
-    border: 0px;
+    border: 0;
   }
 `
 

@@ -23,9 +23,7 @@ const Reviewer = ({
 }) => {
   const config = useContext(ConfigContext)
   const { t } = useTranslation()
-  return (
-    <>
-      {user && (
+  return user && (
         <Name>
           <UserCombo>
             <UserAvatar
@@ -54,9 +52,7 @@ const Reviewer = ({
               </>
             )}
         </Name>
-      )}
-    </>
-  )
+      )
 }
 
 Reviewer.propTypes = {

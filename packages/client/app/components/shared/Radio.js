@@ -19,11 +19,11 @@ const Input = styled.input`
 `
 
 const Root = styled.label`
-  cursor: pointer;
   align-items: center;
+  color: ${props => (props.color ? props.color : props.theme.colorText)};
+  cursor: pointer;
   display: ${props => (props.inline ? 'inline-flex' : 'flex')};
   min-height: calc(${th('gridUnit')} * 3);
-  color: ${props => (props.color ? props.color : props.theme.colorText)};
 
   ${override('ui.Radio')};
 `
