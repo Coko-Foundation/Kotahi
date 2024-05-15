@@ -1,7 +1,8 @@
 import React from 'react'
 import CollaborativeWax from '../../../wax-collab/src/CollaborativeWax'
 
-const FormCollaborateComponent = component => function({ onChange, collaborativeObject, ...rest }) {
+const FormCollaborateComponent = component =>
+  function ({ onChange, collaborativeObject, ...rest }) {
     const { identifier } = collaborativeObject
 
     return (
@@ -18,4 +19,4 @@ const FormCollaborateComponent = component => function({ onChange, collaborative
     )
   }
 
-export default  FormCollaborateComponent
+export default FormCollaborateComponent

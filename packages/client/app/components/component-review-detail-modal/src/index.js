@@ -246,13 +246,7 @@ const ReviewDetailsModal = (
           manuscriptId={manuscriptId}
           manuscriptShortId={manuscriptShortId}
           onChange={(value, path) =>
-            updateReviewJsonData(
-              review.id,
-              value,
-              path,
-              false,
-              manuscriptId,
-            )
+            updateReviewJsonData(review.id, value, path, false, manuscriptId)
           }
           shouldStoreFilesInForm
           showEditorOnlyFields={false}

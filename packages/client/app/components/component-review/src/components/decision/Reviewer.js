@@ -23,36 +23,38 @@ const Reviewer = ({
 }) => {
   const config = useContext(ConfigContext)
   const { t } = useTranslation()
-  return user && (
-        <Name>
-          <UserCombo>
-            <UserAvatar
-              user={isHiddenReviewerName && !isControlPage ? null : user}
-            />
-            <UserInfo>
-              {isHiddenReviewerName && !isControlPage ? (
-                <Primary>
-                  {t('decisionPage.decisionTab.Anonmyous Reviewer')}
-                </Primary>
-              ) : (
-                <>
-                  <Primary>{user.username}</Primary>
-                  <Secondary>{user.defaultIdentity.identifier}</Secondary>
-                </>
-              )}
-            </UserInfo>
-          </UserCombo>
-          {(currentUserIsEditor ||
-            currentUser.groupRoles.includes('groupManager')) &&
-            canBePublishedPublicly &&
-            config.instanceName === 'prc' && (
+  return (
+    user && (
+      <Name>
+        <UserCombo>
+          <UserAvatar
+            user={isHiddenReviewerName && !isControlPage ? null : user}
+          />
+          <UserInfo>
+            {isHiddenReviewerName && !isControlPage ? (
+              <Primary>
+                {t('decisionPage.decisionTab.Anonmyous Reviewer')}
+              </Primary>
+            ) : (
               <>
-                &nbsp;
-                <ShareIcon />
+                <Primary>{user.username}</Primary>
+                <Secondary>{user.defaultIdentity.identifier}</Secondary>
               </>
             )}
-        </Name>
-      )
+          </UserInfo>
+        </UserCombo>
+        {(currentUserIsEditor ||
+          currentUser.groupRoles.includes('groupManager')) &&
+          canBePublishedPublicly &&
+          config.instanceName === 'prc' && (
+            <>
+              &nbsp;
+              <ShareIcon />
+            </>
+          )}
+      </Name>
+    )
+  )
 }
 
 Reviewer.propTypes = {
