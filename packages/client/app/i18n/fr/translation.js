@@ -565,7 +565,6 @@ const fr = {
         'Accès aux articles des collaborateurs accordé',
       collaboratorAccessRemovedEmailTemplate:
         'Accès aux articles des collaborateurs supprimé',
-      'Editors edit reviews': 'Les éditeurs peuvent modifier les avis soumis',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",
