@@ -24,7 +24,7 @@ const Dashboard = ({ currentUser, history }) => {
         {t(
           `newSubmission.New ${
             ['lab'].includes(configurationContext.instanceName)
-              ? 'post'
+              ? 'Article'
               : 'submission'
           }`,
         )}

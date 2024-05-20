@@ -72,22 +72,15 @@ const DashboardLayout = ({
         <FlexRow>
           <Heading>{t('dashboardPage.Dashboard')}</Heading>
           <ControlsContainer>
-            <SearchControl
-              applySearchQuery={newQuery =>
-                applyQueryParams({
-                  [URI_SEARCH_PARAM]: newQuery,
-                  [URI_PAGENUM_PARAM]: 1,
-                })
-              }
-              currentSearchQuery={currentSearchQuery}
-            />
             <Button
               onClick={() => history.push(`${urlFrag}/newSubmission`)}
               primary
             >
               {t(
                 `dashboardPage.New ${
-                  ['lab'].includes(config.instanceName) ? 'post' : 'submission'
+                  ['lab'].includes(config.instanceName)
+                    ? 'Article'
+                    : 'submission'
                 }`,
               )}
             </Button>
@@ -97,6 +90,15 @@ const DashboardLayout = ({
                 {t('dashboardPage.New Alerts')}
               </Button>
             )}
+            <SearchControl
+              applySearchQuery={newQuery =>
+                applyQueryParams({
+                  [URI_SEARCH_PARAM]: newQuery,
+                  [URI_PAGENUM_PARAM]: 1,
+                })
+              }
+              currentSearchQuery={currentSearchQuery}
+            />
           </ControlsContainer>
         </FlexRow>
       </HeadingWithAction>
