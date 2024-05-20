@@ -12,6 +12,9 @@ import {
   ReadOnlyEditorWithCommentsEditor,
   Menu,
   InfoContainer,
+  EditorArea,
+  EditorContainer,
+  WaxSurfaceScroll,
 } from './EditorStyles'
 import {
   NotesAreaContainer,
@@ -90,88 +93,110 @@ const FullWaxEditorCommentsLayout =
     const trackBlockNodesCount =
       main && DocumentHelpers.getTrackBlockNodesCount(main)
 
+    // added to bring in full screen
+
+    let fullScreenStyles = {}
+
+    if (options.fullScreen) {
+      fullScreenStyles = {
+        backgroundColor: '#fff',
+        height: '100%',
+        left: '0',
+        margin: '0',
+        padding: '0',
+        position: 'fixed',
+        top: '0',
+        width: '100%',
+        zIndex: '99999',
+      }
+    }
+
     return (
       <EditorWrapper
         className={options.fullScreen ? 'fullscreen' : ''}
         id="wax-container"
       >
-        {readOnly ? (
-          <Grid readonly>
-            <FullWaxEditorGrid noScroll useComments>
-              <ReadOnlyEditorWithCommentsEditor className="panelWrapper">
-                {editor}
-              </ReadOnlyEditorWithCommentsEditor>
-              <FullCommentsContainer authorComments={authorComments}>
-                <CommentTrackToolsContainer authorComments={authorComments}>
-                  {authorComments ? null : (
-                    <CommentTrackTools>
-                      {commentsTracksCount + trackBlockNodesCount} COMMENT
-                      {commentsTracksCount + trackBlockNodesCount !== 1
-                        ? 'S AND SUGGESTIONS'
-                        : ' OR SUGGESTION'}
-                      <CommentTrackOptions>
-                        <CommentTrackToolBar />
-                      </CommentTrackOptions>
-                    </CommentTrackTools>
-                  )}
-                </CommentTrackToolsContainer>
-                <RightArea area="main" />
-              </FullCommentsContainer>
-              {notes.length > 0 && (
-                <ReadOnlyNotesAreaContainer className="panelWrapper">
-                  <NotesContainer id="notes-container">
-                    <NotesHeading>Notes</NotesHeading>
-                    <NotesArea view={main} />
-                  </NotesContainer>
-                </ReadOnlyNotesAreaContainer>
-              )}
-              <InfoContainer>
-                <CounterInfo />
-              </InfoContainer>
-            </FullWaxEditorGrid>
-          </Grid>
-        ) : (
-          <Grid>
-            <Menu className="waxmenu">
-              <TopBar />
-            </Menu>
-            <FullWaxEditorGrid useComments>
-              <EditorDiv className="wax-surface-scroll panelWrapper">
-                {editor}
-              </EditorDiv>
-              <FullCommentsContainer>
-                <CommentTrackToolsContainer>
-                  <CommentTrackTools>
-                    {commentsTracksCount + trackBlockNodesCount} COMMENT
-                    {commentsTracksCount + trackBlockNodesCount !== 1
-                      ? 'S AND SUGGESTIONS'
-                      : ' OR SUGGESTION'}
-                    <CommentTrackOptions>
-                      <CommentTrackToolBar />
-                    </CommentTrackOptions>
-                  </CommentTrackTools>
-                </CommentTrackToolsContainer>
-                <RightArea area="main" />
-              </FullCommentsContainer>
-              {notes.length > 0 && (
-                <>
-                  <NotesAreaContainer className="panelWrapper">
+        <div style={fullScreenStyles}>
+          <Grid fullHeight readOnly={readOnly}>
+            {readOnly ? (
+              <FullWaxEditorGrid noScroll useComments>
+                <ReadOnlyEditorWithCommentsEditor className="panelWrapper">
+                  {editor}
+                </ReadOnlyEditorWithCommentsEditor>
+                <FullCommentsContainer authorComments={authorComments}>
+                  <CommentTrackToolsContainer authorComments={authorComments}>
+                    {authorComments ? null : (
+                      <CommentTrackTools>
+                        {commentsTracksCount + trackBlockNodesCount} COMMENT
+                        {commentsTracksCount + trackBlockNodesCount !== 1
+                          ? 'S AND SUGGESTIONS'
+                          : ' OR SUGGESTION'}
+                        <CommentTrackOptions>
+                          <CommentTrackToolBar />
+                        </CommentTrackOptions>
+                      </CommentTrackTools>
+                    )}
+                  </CommentTrackToolsContainer>
+                  <RightArea area="main" />
+                </FullCommentsContainer>
+                {notes.length > 0 && (
+                  <ReadOnlyNotesAreaContainer className="panelWrapper">
                     <NotesContainer id="notes-container">
                       <NotesHeading>Notes</NotesHeading>
                       <NotesArea view={main} />
                     </NotesContainer>
-                  </NotesAreaContainer>
-                  <CommentsContainerNotes>
-                    <RightArea area="notes" />
-                  </CommentsContainerNotes>
-                </>
-              )}
-              <InfoContainer>
-                <CounterInfo />
-              </InfoContainer>
-            </FullWaxEditorGrid>
+                  </ReadOnlyNotesAreaContainer>
+                )}
+              </FullWaxEditorGrid>
+            ) : (
+              <>
+                <Menu className="waxmenu">
+                  <TopBar />
+                </Menu>
+                <EditorDiv className="wax-surface-scroll panelWrapper">
+                  <EditorArea className="editorArea">
+                    <div>
+                      <WaxSurfaceScroll className="panelWrapper">
+                        <EditorContainer>{editor}</EditorContainer>
+                        <FullCommentsContainer>
+                          <CommentTrackToolsContainer>
+                            <CommentTrackTools>
+                              {commentsTracksCount + trackBlockNodesCount}{' '}
+                              COMMENT
+                              {commentsTracksCount + trackBlockNodesCount !== 1
+                                ? 'S AND SUGGESTIONS'
+                                : ' OR SUGGESTION'}
+                              <CommentTrackOptions>
+                                <CommentTrackToolBar />
+                              </CommentTrackOptions>
+                            </CommentTrackTools>
+                          </CommentTrackToolsContainer>
+                          <RightArea area="main" />
+                        </FullCommentsContainer>
+                      </WaxSurfaceScroll>
+                      {notes.length > 0 && (
+                        <>
+                          <NotesAreaContainer className="panelWrapper">
+                            <NotesContainer id="notes-container">
+                              <NotesHeading>Notes</NotesHeading>
+                              <NotesArea view={main} />
+                            </NotesContainer>
+                          </NotesAreaContainer>
+                          <CommentsContainerNotes>
+                            <RightArea area="notes" />
+                          </CommentsContainerNotes>
+                        </>
+                      )}
+                    </div>
+                  </EditorArea>
+                </EditorDiv>
+              </>
+            )}
           </Grid>
-        )}
+          <InfoContainer>
+            <CounterInfo />
+          </InfoContainer>
+        </div>
       </EditorWrapper>
     )
   }
