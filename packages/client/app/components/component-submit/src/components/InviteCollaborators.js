@@ -149,7 +149,7 @@ const InviteCollaborators = ({ currentUser, manuscript }) => {
     refetch: refetchManuscriptTeams,
   } = useQuery(GET_MANUSCRIPT_TEAMS, {
     variables: manuscriptTeamsVariables,
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'no-cache',
     onCompleted: ({ teams }) => {
       setManuscriptTeams(teams)
     },

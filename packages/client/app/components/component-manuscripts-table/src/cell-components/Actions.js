@@ -1,15 +1,26 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Link } from '@pubsweet/ui'
 import { Action, LinkAction } from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
 import Modal from '../../../component-modal/src/Modal'
 import PublishingResponse from '../../../component-review/src/components/publishing/PublishingResponse'
+import { color } from '../../../../theme'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+`
+
+const FlaxLink = styled(Link)`
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    border-bottom: 2px solid ${color.brand1.base};
+    transition: border-bottom 0.2s;
+  }
 `
 
 const Actions = ({
@@ -27,6 +38,9 @@ const Actions = ({
 
   const [publishingResponse, setPublishingResponse] = useState([])
   const { t } = useTranslation()
+
+  const flaxSiteUrlForArticle = `${process.env.FLAX_SITE_URL}/${config.groupName}/articles`
+
   return (
     <Container>
       {['preprint1', 'preprint2'].includes(config.instanceName) &&
@@ -56,6 +70,16 @@ const Actions = ({
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
         {t('manuscriptsTable.actions.Production')}
       </LinkAction>
+      {['lab'].includes(config.instanceName) &&
+        manuscript.status === articleStatuses.published && (
+          <FlaxLink
+            rel="noopener noreferrer"
+            target="_blank"
+            to={`${flaxSiteUrlForArticle}/${manuscript.shortId}/`}
+          >
+            {t('manuscriptsTable.actions.openOnline')}
+          </FlaxLink>
+        )}
       {['preprint1', 'preprint2'].includes(config.instanceName) &&
         manuscript.status === articleStatuses.evaluated && (
           <Action
