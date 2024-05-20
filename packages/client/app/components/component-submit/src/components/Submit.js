@@ -1,5 +1,6 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
@@ -26,8 +27,10 @@ import {
   ChatButton,
   CollapseButton,
 } from '../../../component-review/src/components/style'
-import LabAction from './LabActions'
 import { hasEditAccess } from '../../../../shared/userPermissions'
+import Modal from '../../../component-modal/src/Modal'
+import Confirm from './Confirm'
+import InviteCollaborators from './InviteCollaborators'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -35,6 +38,10 @@ export const createBlankSubmissionBasedOnForm = form => {
   fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
   return allBlankedFields.submission ?? {}
 }
+
+const StyledModal = styled(Modal)`
+  width: 680px;
+`
 
 const Submit = ({
   versions = [],
@@ -68,7 +75,7 @@ const Submit = ({
   )
 
   const [isSubmisionDiscussionVisible, setIsSubmisionDiscussionVisible] =
-    React.useState(currentUser.chatExpanded)
+    useState(currentUser.chatExpanded)
 
   const allowAuthorsSubmitNewVersion =
     config?.submission?.allowAuthorsSubmitNewVersion
@@ -211,16 +218,6 @@ const Submit = ({
                 manuscript={version}
               />
             )}
-          {isLabInstance && (
-            <LabAction
-              currentUser={currentUser}
-              form={submissionForm}
-              manuscript={version}
-              onSubmit={async () => {
-                await onSubmit(version.id)
-              }}
-            />
-          )}
           <HiddenTabs
             defaultActiveKey={isLabInstance ? 'editor' : version.id}
             sections={tabSections}
@@ -229,6 +226,8 @@ const Submit = ({
       ),
       key: version.id,
       label,
+      status: version.status,
+      manuscript: version,
     })
   })
 
@@ -256,7 +255,14 @@ const Submit = ({
       <Manuscript>
         <ErrorBoundary>
           <VersionSwitcher
+            Confirm={Confirm}
+            currentUser={currentUser}
+            InviteCollaborators={InviteCollaborators}
+            isLabInstance={isLabInstance}
             key={decisionSections.length}
+            Modal={StyledModal}
+            onSubmit={onSubmit}
+            submissionForm={submissionForm}
             versions={decisionSections}
           />
         </ErrorBoundary>

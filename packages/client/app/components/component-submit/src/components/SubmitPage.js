@@ -23,6 +23,7 @@ import {
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 import useChat from '../../../../hooks/useChat'
 import mutations from '../../../component-dashboard/src/graphql/mutations'
+import AuthErrorBanner from '../../../shared/AuthErrorBanner'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -136,7 +137,17 @@ const SubmitPage = ({ currentUser, match, history }) => {
 
   const chatProps = useChat(channels)
 
-  const [update] = useMutation(updateMutation)
+  const [update] = useMutation(updateMutation, {
+    onError: updateError => {
+      if (updateError.message === 'Not Authorised!') {
+        setAuthError(updateError)
+        setTimeout(() => {
+          history.push(`${urlFrag}/dashboard`)
+        }, 5000)
+      }
+    },
+  })
+
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
@@ -162,10 +173,13 @@ const SubmitPage = ({ currentUser, match, history }) => {
     submission: {},
   })
 
+  const [authError, setAuthError] = useState(null)
+
   const client = useApolloClient()
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
+  if (authError) return <AuthErrorBanner error={authError} />
 
   const manuscript = data?.manuscript
   const submissionForm = data?.submissionForm?.structure
