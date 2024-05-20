@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 const ErrorBox = styled.div`
   background-color: ${th('colorFurniture')};
   border-radius: ${th('borderRadius')};
-  color: #ee3333;
+  color: #e33;
   font-size: ${th('fontSizeHeading5')};
   gap: ${grid(2)};
   margin: ${grid(3)};

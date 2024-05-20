@@ -459,7 +459,7 @@ const resolvers = {
         return []
       }
 
-      return models.User.query()
+      return User.query()
         .where({ email: search.toLowerCase() })
         .whereNotIn('id', exclude || [])
     },

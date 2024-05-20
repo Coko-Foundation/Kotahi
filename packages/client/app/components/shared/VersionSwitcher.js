@@ -59,7 +59,7 @@ const StyledSelect = styled(Select)`
 
 const ConfirmWrapper = styled.div`
   align-items: center;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgb(255 255 255 / 95%);
   bottom: 0;
   display: flex;
   justify-content: center;

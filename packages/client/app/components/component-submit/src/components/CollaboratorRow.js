@@ -102,7 +102,7 @@ const CollaboratorRow = ({
         {isAuthor ? (
           <AccessLabel>{t('collaborateForm.author')}</AccessLabel>
         ) : (
-          <>
+          <div>
             {canChangeAccess ? (
               <StyledSelect
                 bordered={false}
@@ -117,7 +117,7 @@ const CollaboratorRow = ({
                 {dropdownItems.find(v => v.value === status).label}
               </AccessLabel>
             )}
-          </>
+          </div>
         )}
       </UserRow>
     </StyledListItem>
