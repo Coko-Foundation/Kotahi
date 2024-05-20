@@ -87,6 +87,11 @@ const fr = {
         day_plural: 'jours',
       },
     },
+    error: {
+      authError: "Erreur d'authentification!",
+      noEditRights: "Vous n'avez pas le droit de modifier cet article.",
+      redirectToDashboard: 'Redirection vers le tableau de bord',
+    },
     leftMenu: {
       'Summary Info': 'Résumé des infos',
       Manuscript: 'Manuscrit',
@@ -177,12 +182,13 @@ const fr = {
         'Publishing error': "Erreur d'édition",
         'Some targets failed to publish':
           'Certains objectifs ont échoué à publier.',
+        openOnline: 'Ouvrir en ligne',
       },
     },
     dashboardPage: {
       Dashboard: 'Tableau de bord',
       'New submission': '+ Nouvelle soumission',
-      'New post': '+ Nouveau poste',
+      'New Article': '+ Nouveau poste',
       'New Alerts': 'Nouvelles alertes',
       'My Submissions': 'Mes soumissions',
       'To Review': 'Affectations de révision',
@@ -862,7 +868,7 @@ const fr = {
       submitForPublishing: 'Soumettre pour publication',
     },
     inviteCollaborator: {
-      selectPlaceholder: 'E-mail, séparé par des virgules',
+      selectPlaceholder: 'E-mail',
       addUser: 'Ajouter',
     },
     chat: {
@@ -1056,7 +1062,7 @@ const fr = {
 
     newSubmission: {
       'New submission': 'Nouvelle soumission',
-      'New post': 'Nouveau poste',
+      'New Article': 'Nouveau poste',
       'Submission created': 'Soumission créée',
       'Creating article': "Création d'article",
       'Article created': 'Article créé',

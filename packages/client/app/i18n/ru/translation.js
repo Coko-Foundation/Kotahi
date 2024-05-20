@@ -89,6 +89,11 @@ const ru = {
         day_many: 'дней',
       },
     },
+    error: {
+      authError: 'Ошибка аутентификации!',
+      noEditRights: 'У вас нет прав на редактирование этой статьи.',
+      redirectToDashboard: 'Перенаправление на панель управления',
+    },
     leftMenu: {
       'Summary Info': 'Сводная информация',
       Manuscript: 'Рукопись',
@@ -179,12 +184,13 @@ const ru = {
         'Publishing error': 'Ошибка публикации',
         'Some targets failed to publish':
           'Не удалось опубликовать некоторые рукописи.',
+        openOnline: 'Открыть онлайн',
       },
     },
     dashboardPage: {
       Dashboard: 'Панель управления',
       'New submission': 'Загрузить новую статью',
-      'New post': 'Новый пост',
+      'New Article': 'Новый пост',
       'New Alerts': 'Новые оповещения',
       'My Submissions': 'Мои статьи',
       'To Review': 'Обзор назначений',
@@ -856,7 +862,7 @@ const ru = {
       submitForPublishing: 'Отправить для публикации',
     },
     inviteCollaborator: {
-      selectPlaceholder: 'Электронная почта, через запятую',
+      selectPlaceholder: 'Электронная почта',
       addUser: 'Добавить пользователя',
     },
     chat: {
@@ -1045,7 +1051,7 @@ const ru = {
     },
     newSubmission: {
       'New submission': 'Загрузить новую статью',
-      'New post': 'Новый пост',
+      'New Article': 'Новый пост',
       'Submission created': 'Загружено',
       'Creating article': 'Создание статьи',
       'Article created': 'Статья создана',

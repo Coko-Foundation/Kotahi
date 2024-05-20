@@ -88,6 +88,11 @@ const esLa = {
         day_plural: 'días',
       },
     },
+    error: {
+      authError: '¡Error de autenticación!',
+      noEditRights: 'No tienes derechos para editar este artículo.',
+      redirectToDashboard: 'Redirigir al panel',
+    },
     leftMenu: {
       'Summary Info': 'Información Resumen',
       Manuscript: 'Manuscrito',
@@ -177,12 +182,13 @@ const esLa = {
         'Publishing error': 'Error de Publicación',
         'Some targets failed to publish':
           'Algunos objetivos no pudieron ser publicados.',
+        openOnline: 'Abrir en línea',
       },
     },
     dashboardPage: {
       Dashboard: 'Tablero',
       'New submission': '+ Nueva presentación',
-      'New post': '+ Nueva publicación',
+      'New Article': '+ Nueva publicación',
       'New Alerts': 'Nuevas Alertas',
       'My Submissions': 'Mis presentaciones',
       'To Review': 'Asignaciones de revisión',
@@ -857,7 +863,7 @@ const esLa = {
       submitForPublishing: 'Enviar para publicación',
     },
     inviteCollaborator: {
-      selectPlaceholder: 'Correo electrónico, separado por comas',
+      selectPlaceholder: 'Correo electrónico',
       addUser: 'Agregar usuario',
     },
     chat: {
@@ -1051,7 +1057,7 @@ const esLa = {
     },
     newSubmission: {
       'New submission': 'Nueva presentación',
-      'New post': 'Nueva publicación',
+      'New Article': 'Nueva publicación',
       'Submission created': 'Presentación creada',
       'Creating article': 'Creando artículo',
       'Article created': 'Artículo creado',

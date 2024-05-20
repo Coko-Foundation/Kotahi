@@ -328,7 +328,7 @@ const Manuscripts = ({ history, ...props }) => {
         >
           {t(
             `dashboardPage.New ${
-              ['lab'].includes(config.instanceName) ? 'post' : 'submission'
+              ['lab'].includes(config.instanceName) ? 'Article' : 'submission'
             }`,
           )}
         </ActionButton>

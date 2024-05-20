@@ -247,7 +247,13 @@ const AdminPage = () => {
           links: [
             {
               link: submissionFormBuilderLink,
-              name: i18next.t('leftMenu.Submission'),
+              name: i18next.t(
+                `leftMenu.${
+                  ['lab'].includes(config.instanceName)
+                    ? 'Metadata'
+                    : 'Submission'
+                }`,
+              ),
             },
             {
               link: reviewFormBuilderLink,

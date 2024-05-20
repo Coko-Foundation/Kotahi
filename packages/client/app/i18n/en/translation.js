@@ -87,6 +87,11 @@ const en = {
         day_plural: 'days',
       },
     },
+    error: {
+      authError: 'Authentication error!',
+      noEditRights: 'You do not have rights to edit this article.',
+      redirectToDashboard: 'Redirecting to Dashboard',
+    },
     leftMenu: {
       'Summary Info': 'Summary Info',
       Manuscript: 'Manuscript',
@@ -175,12 +180,13 @@ const en = {
         cancelArchiveButton: 'Cancel',
         'Publishing error': 'Publishing error',
         'Some targets failed to publish': 'Some targets failed to publish.',
+        openOnline: 'Open online',
       },
     },
     dashboardPage: {
       Dashboard: 'Dashboard',
       'New submission': '+ New submission',
-      'New post': '+ New post',
+      'New Article': '+ New Article',
       'New Alerts': 'New Alerts',
       'My Submissions': 'My Submissions',
       'To Review': 'Review Assignments',
@@ -833,7 +839,7 @@ const en = {
       submitForPublishing: 'Submit for publishing',
     },
     inviteCollaborator: {
-      selectPlaceholder: 'Email, comma separated',
+      selectPlaceholder: 'Email',
       addUser: 'Add user',
     },
     chat: {
@@ -1022,7 +1028,7 @@ const en = {
 
     newSubmission: {
       'New submission': 'New submission',
-      'New post': 'New post',
+      'New Article': 'New Article',
       'Submission created': 'Submission created',
       'Creating article': 'Creating article',
       'Article created': 'Article created',
