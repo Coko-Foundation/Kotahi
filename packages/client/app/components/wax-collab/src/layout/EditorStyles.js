@@ -14,7 +14,7 @@ export const Grid = styled.div`
   grid-template-columns: 100%;
   /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
-  ${props => props.production && 'min-height: calc(100vh - 142px);'}
+  ${props => props.fullHeight && 'min-height: calc(100vh - 142px);'}
   position: relative;
   /* :focus-within {
     z-index: 10000;
@@ -75,31 +75,28 @@ export const FullWaxEditorGrid = styled.div`
   grid-area: editor;
   grid-template-columns: [editorCol] auto [commentsCol] ${props =>
       props.useComments ? 'auto' : 0};
-  grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
   ${waxDefaultStyles}
-  position: relative;
   z-index: 0;
 `
 
 export const EditorDiv = styled.div`
   background-color: ${color.backgroundA};
   border: 1px solid ${color.gray60};
+  /* border-bottom-left-radius: 6px; */
   border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
   border-top: none;
-  grid-column-start: editorCol;
-  grid-row-start: editorRow;
-  min-height: 50vh;
+  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
+  display: flex;
+  flex-grow: 1;
   ${props => !props.hideComments && 'min-width: 800px'};
-  padding: 16px;
-  position: relative;
 
   .error & {
     border: 1px solid ${th('colorError')};
   }
 
-  & > div {
+  /* & > div {
     ${props => !props.hideComments && 'max-width: 800px'};
-  }
+  } */
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${EditorElements}
