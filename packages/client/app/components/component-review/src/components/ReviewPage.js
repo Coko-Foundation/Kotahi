@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useQuery, useSubscription, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
@@ -305,16 +305,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
     },
   })
 
-  useEffect(() => {
-    if (currentUserReview.isCollaborative) {
-      createYjsProvider({
-        currentUser,
-        identifier: currentUserReview.id,
-        object: {},
-      })
-    }
-  }, [])
-
   let editorialChannelId
 
   if (
@@ -339,6 +329,14 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const chatProps = useChat(channels)
 
   if (loading || currentUser === null) return <Spinner />
+
+  if (currentUserReview && currentUserReview.isCollaborative) {
+    createYjsProvider({
+      currentUser,
+      identifier: currentUserReview.id,
+      object: {},
+    })
+  }
 
   if (error) {
     console.warn(error.message)

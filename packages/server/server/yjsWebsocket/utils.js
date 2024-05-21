@@ -17,15 +17,6 @@ const wsReadyStateConnecting = 0
 const wsReadyStateOpen = 1
 const docs = new Map()
 
-const extractParamsFromIdentifier = id => {
-  const lastIndex = id.lastIndexOf('-')
-
-  // Split the input string at the last occurrence of '-' character
-  const objectId = id.slice(0, lastIndex)
-  const name = id.slice(lastIndex + 1)
-  return { objectId, name }
-}
-
 /**
  * @param {Uint8Array} update
  * @param {any} origin
@@ -155,5 +146,4 @@ module.exports = {
   send,
   closeConn,
   messageAwareness,
-  extractParamsFromIdentifier,
 }

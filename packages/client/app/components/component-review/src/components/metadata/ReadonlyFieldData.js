@@ -7,7 +7,7 @@ import { Affiliation, Email, BadgeContainer } from '../style'
 import { Attachment, ColorBadge } from '../../../../shared'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 
-const extractParamsFromIdentifier = id => {
+const parseIdentifierAndName = id => {
   const lastIndex = id.lastIndexOf('-')
 
   // Split the input string at the last occurrence of '-' character
@@ -18,7 +18,7 @@ const extractParamsFromIdentifier = id => {
 
 const CollaborativeReadOnlyField = (Component, data) => {
   const RenderedComponent = FormCollaborateWax(Component)
-  const { identifier, name } = extractParamsFromIdentifier(data)
+  const { identifier, name } = parseIdentifierAndName(data)
   return (
     <RenderedComponent
       collaborativeObject={{ identifier }}
@@ -158,7 +158,7 @@ const ReadonlyFieldData = ({
     fieldDefinition?.component === 'TextField' &&
     isCollaborativeForm
   ) {
-    const { identifier, name } = extractParamsFromIdentifier(data)
+    const { identifier, name } = parseIdentifierAndName(data)
     return (
       <CollaborativeTextFieldBuilder
         collaborativeObject={{ identifier }}

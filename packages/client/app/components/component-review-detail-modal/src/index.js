@@ -87,7 +87,7 @@ const ReviewDetailsModal = (
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (review.isCollaborative) {
+    if (review?.isCollaborative) {
       createYjsProvider({
         currentUser,
         identifier: review.id,

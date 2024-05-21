@@ -7,7 +7,7 @@ const FormCollaborateComponent = component =>
 
     return (
       <CollaborativeWax
-        component1={component}
+        component={component}
         editorMode={null}
         identifier={identifier}
         {...rest}

@@ -21,18 +21,14 @@ const CollaborativeWax = ({
 
   if (!yjsProvider || !ydoc) return <Spinner />
 
-  if (Component) {
-    return (
-      <Component
-        {...rest}
-        user={currentUser}
-        ydoc={ydoc}
-        yjsProvider={yjsProvider}
-      />
-    )
-  }
-
-  throw new Error(`There is no Editor by the name: ${editorMode}`)
+  return Component ? (
+    <Component
+      {...rest}
+      user={currentUser}
+      ydoc={ydoc}
+      yjsProvider={yjsProvider}
+    />
+  ) : null
 }
 
 export default CollaborativeWax
