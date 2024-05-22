@@ -26,7 +26,8 @@ const SiteStatus = ({ cmsLayout, flaxSiteUrlForGroup, triggerAutoSave }) => {
   return (
     <>
       <LayoutMainHeading>{t('cmsPage.layout.Status')}</LayoutMainHeading>
-      <div>
+      {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+      <label>
         <input
           checked={cmsLayout.isPrivate}
           name="isPrivate"
@@ -36,7 +37,7 @@ const SiteStatus = ({ cmsLayout, flaxSiteUrlForGroup, triggerAutoSave }) => {
           value={false}
         />
         {t('cmsPage.layout.DraftCheckbox')}
-      </div>
+      </label>
       <LayoutSecondaryHeading>
         {t('cmsPage.layout.MakeFlaxSitePrivate')}
       </LayoutSecondaryHeading>

@@ -103,7 +103,9 @@ const Branding = ({
             <ValidatedFieldFormik
               component={item.component}
               name={item.name}
-              onChange={value => onDataChanged(item.name, value.target.value)}
+              onChange={value =>
+                onDataChanged(item.name, value.target?.value ?? value)
+              }
               setFieldValue={formikProps.setFieldValue}
               setTouched={formikProps.setTouched}
               type={item.type}
