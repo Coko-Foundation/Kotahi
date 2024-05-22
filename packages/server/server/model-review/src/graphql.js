@@ -18,7 +18,7 @@ const {
 
 const resolvers = {
   Mutation: {
-    async updateReview(_, { id, input, shouldNotSetUser }, ctx) {
+    async updateReview(_, { id, input }, ctx) {
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await Review.query().findById(id)) || {}
 
