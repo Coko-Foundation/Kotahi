@@ -331,6 +331,7 @@ export const getManuscriptData = gql`
       offset: $offset
       limit: $limit
       timezoneOffsetMinutes: $timezoneOffsetMinutes
+      archived: false
       groupId: $groupId
     ) {
       manuscripts {
