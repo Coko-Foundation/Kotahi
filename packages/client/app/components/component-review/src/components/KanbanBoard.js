@@ -98,8 +98,15 @@ const KanbanBoard = ({
       if (existingReviewer) {
         existingReviewer.isEmail = true
 
-        const { id, isShared, user, userId, ...invitationChosenFields } =
-          invitation
+        const {
+          id,
+          isShared,
+          user,
+          userId,
+          status,
+          updated,
+          ...invitationChosenFields
+        } = invitation
 
         Object.assign(existingReviewer, invitationChosenFields)
       } else {
