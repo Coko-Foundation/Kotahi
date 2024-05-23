@@ -10,9 +10,13 @@ const StyledListItem = styled.div`
 
 const getInitials = fullname => {
   const deconstructName = fullname.split(' ')
-  return `${deconstructName[0][0].toUpperCase()}${
-    deconstructName[1][0] && deconstructName[1][0].toUpperCase()
-  }`
+  const firstInitial = deconstructName[0][0].toUpperCase()
+
+  const lastInitial =
+    deconstructName.length > 1 &&
+    deconstructName[deconstructName.length - 1][0].toUpperCase()
+
+  return `${firstInitial}${lastInitial || ''}`
 }
 
 const UserRow = styled.div`

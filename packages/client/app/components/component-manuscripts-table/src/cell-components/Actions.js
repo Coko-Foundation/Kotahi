@@ -35,7 +35,12 @@ const Actions = ({
   const [publishingResponse, setPublishingResponse] = useState([])
   const { t } = useTranslation()
 
-  const flaxSiteUrlForArticle = `${process.env.FLAX_SITE_URL}/${config.groupName}/articles`
+  const { FLAX_SITE_URL } = process.env
+
+  const flaxSiteUrlForArticle =
+    FLAX_SITE_URL && FLAX_SITE_URL !== ''
+      ? `${FLAX_SITE_URL}/${config.groupName}/articles`
+      : null
 
   return (
     <Container>
@@ -87,7 +92,8 @@ const Actions = ({
               </Action>
             )}
           {['lab'].includes(config.instanceName) &&
-            manuscript.status === articleStatuses.published && (
+            manuscript.status === articleStatuses.published &&
+            flaxSiteUrlForArticle && (
               <FlaxLink
                 rel="noopener noreferrer"
                 target="_blank"
