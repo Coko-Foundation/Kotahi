@@ -27,7 +27,10 @@ import {
   ChatButton,
   CollapseButton,
 } from '../../../component-review/src/components/style'
-import { hasEditAccess } from '../../../../shared/userPermissions'
+import {
+  isAuthor,
+  isCollaboratorWithWriteAccess,
+} from '../../../../shared/userPermissions'
 import Modal from '../../../component-modal/src/Modal'
 import Confirm from './Confirm'
 import InviteCollaborators from './InviteCollaborators'
@@ -102,7 +105,9 @@ const Submit = ({
       ((['new', 'revising'].includes(version.status) && !isLabInstance) ||
         (currentUser.groupRoles.includes('groupManager') &&
           version.status !== 'rejected') ||
-        hasEditAccess(version, currentUser))
+        (isLabInstance &&
+          (isAuthor(version, currentUser) ||
+            isCollaboratorWithWriteAccess(version, currentUser))))
 
     const editorSection = {
       content: (

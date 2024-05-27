@@ -18,11 +18,8 @@ const isCollaborator = (manuscript, user) =>
 
 const isAdmin = user => user.globalRoles.includes('admin')
 
-const hasEditAccess = (manuscript, user) => {
+const isCollaboratorWithWriteAccess = (manuscript, user) => {
   const { teams } = manuscript
-  if (isAdmin(user)) return true
-
-  if (hasRole(user, 'author', manuscript)) return true
 
   const manuscriptTeam = teams?.find(
     team => team.objectId === manuscript.id && team.role === 'collaborator',
@@ -39,6 +36,6 @@ module.exports = {
   hasRole,
   isAuthor,
   isCollaborator,
-  hasEditAccess,
+  isCollaboratorWithWriteAccess,
   isAdmin,
 }
