@@ -326,10 +326,11 @@ The `unreviewedPreprints` query returns an `id` and `shortId`, and the following
 
 ### How do I modify wording or add languages?
 
-You can customise UI wording by supplying the `packages/client/config/translation/translationOverrides.js` file. Copy the structure provided in `packages/client/config/translation/translationOverrides.example.js`.
-This allows you to modify terminology as appropriate for your organisation, e.g. changing 'editor' to 'curator'. You can also use this file to add new languages.
+You can customise UI wording by supplying the `packages/client/config/translation/translationOverrides.js` file to affect all multitenancy groups, or else by supplying `packages/client/config/translation/<groupName>/translationOverrides.js` to affect just the named group (use the same group name supplied in the `INSTANCE_GROUPS` setting in your `.env` file). Copy the template provided in `packages/client/config/translation/translationOverrides.example.js`.
 
-Note that changes in this file will affect _all_ groups you have running. Also note, this file does not let you translate forms, tasks, email templates or templates for exporting manuscripts to PDF or Flax: all of these should instead be modified directly via the UI.
+This allows you to modify terminology as appropriate for your organisation, e.g. changing 'editor' to 'curator'. You can also use this file to add new languages. Further instructions are in the template file.
+
+Note that this file does not let you translate forms, tasks, email templates or templates for exporting manuscripts to PDF or Flax: all of these should instead be modified directly via the UI.
 
 To see what languages are currently available in Kotahi, visit your profile page.
 

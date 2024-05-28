@@ -1,6 +1,6 @@
 import i18next from 'i18next'
 import moment from 'moment-timezone'
-import { languagesLabels } from '../i18n/index'
+import { getLanguages } from '../i18n'
 
 const tzOffset = new Date().getTimezoneOffset()
 
@@ -147,7 +147,7 @@ export const monthAbbrevs = [
 ]
 
 export const convertTimestampToDateString = timestamp => {
-  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  const curLang = getLanguages().find(elem => elem.value === i18next.language)
   const date = new Date(timestamp)
   const day = date.getDate()
   let month = monthAbbrevs[date.getMonth()]
@@ -166,7 +166,7 @@ export const convertTimestampToDateString = timestamp => {
 }
 
 export const convertTimestampToDateWithoutTimeString = timestamp => {
-  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  const curLang = getLanguages().find(elem => elem.value === i18next.language)
   const date = new Date(timestamp)
   const day = date.getDate()
   let month = monthAbbrevs[date.getMonth()]

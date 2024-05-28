@@ -1,6 +1,14 @@
-/** Use this structure to override translations in the various translation files
- *  under the packages/client/app/i18n folder.
- *  This file should be named packages/client/config/translation/translationOverrides.js
+/** Use this file as a template to override default translations.
+ *  Default translations can be found in the packages/client/app/i18n folder.
+ *
+ *  You can override translations for individual groups, or for all groups
+ *  universally (group-specific overrides take precedence over universal
+ *  overrides, if the same translation key appears in both).
+ *
+ *  Create a separate version of this file for each group or universal override,
+ *  insert your desired translation changes, and save to:
+ *  - packages/client/config/translation/<groupName>/translationOverrides.js (AFFECTS ONE GROUP) or
+ *  - packages/client/config/translation/translationOverrides.js (AFFECTS ALL GROUPS)
  */
 const translationOverrides = {
   resources: {

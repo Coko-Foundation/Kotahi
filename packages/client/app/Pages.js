@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Route, Switch, useLocation, Redirect } from 'react-router-dom'
 import { grid } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
@@ -21,6 +21,7 @@ import InvitationAcceptedPage from './components/component-dashboard/src/compone
 import AdminPage from './components/AdminPage'
 
 import GroupPage from './components/component-frontpage/src/GroupPage'
+import { reloadTranslationsForGroup } from './i18n'
 
 const Container = styled.div`
   display: grid;
@@ -48,8 +49,6 @@ const Pages = () => {
 
   const { loading, error, data } = useQuery(GET_GROUPS)
 
-  if (loading && !data) return <Spinner />
-
   const groups = data?.groups ? data.groups : []
 
   const hasMultipleGroups = groups && groups.length > 1
@@ -65,6 +64,12 @@ const Pages = () => {
   if (name) {
     currentGroup = groups.find(group => group.name === name)
   }
+
+  useEffect(() => {
+    reloadTranslationsForGroup(currentGroup?.name)
+  }, [currentGroup?.id])
+
+  if (loading && !data) return <Spinner />
 
   if (error)
     return (

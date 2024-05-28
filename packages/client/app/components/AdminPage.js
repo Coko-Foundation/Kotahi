@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom'
 import styled from 'styled-components'
 import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 import { ConfigContext } from './config/src'
@@ -114,6 +115,7 @@ const AdminPage = () => {
   const config = useContext(ConfigContext)
   const { urlFrag, instanceName } = config
   const location = useLocation()
+  const { t } = useTranslation()
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
     fetchPolicy: 'network-only',
@@ -129,6 +131,8 @@ const AdminPage = () => {
       updateLanguage({
         variables: { id: currentUser.id, preferredLanguage: i18next.language },
       })
+    } else {
+      i18next.changeLanguage(currentUser.preferredLanguage)
     }
   }, [data?.currentUser])
 
@@ -152,10 +156,6 @@ const AdminPage = () => {
   const currentUser = data?.currentUser
   journal.textStyles = data?.builtCss.css
   const hasAlert = data?.userHasTaskAlerts
-
-  if (currentUser?.preferredLanguage) {
-    i18next.changeLanguage(currentUser.preferredLanguage)
-  }
 
   previousDataRef.current = data
 
@@ -194,10 +194,10 @@ const AdminPage = () => {
 
     links = showLinks
       ? [
-          { link: submitLink, name: i18next.t('leftMenu.Summary Info') },
+          { link: submitLink, name: t('leftMenu.Summary Info') },
           {
             link: manuscriptLink,
-            name: i18next.t('leftMenu.Manuscript'),
+            name: t('leftMenu.Manuscript'),
           },
         ]
       : null
@@ -214,7 +214,7 @@ const AdminPage = () => {
   ) {
     links.push({
       link: homeLink,
-      name: i18next.t('leftMenu.Dashboard'),
+      name: t('leftMenu.Dashboard'),
       icon: 'home',
       hasAlert,
     })
@@ -223,13 +223,13 @@ const AdminPage = () => {
   if (isGroupManager) {
     links.push({
       link: manuscriptsLink,
-      name: i18next.t('leftMenu.Manuscripts'),
+      name: t('leftMenu.Manuscripts'),
       icon: 'file-text',
     })
     if (config?.report?.showInMenu)
       links.push({
         link: reportsLink,
-        name: i18next.t('leftMenu.Reports'),
+        name: t('leftMenu.Reports'),
         icon: 'activity',
       })
   }
@@ -237,17 +237,17 @@ const AdminPage = () => {
   if (isGroupManager || isAdmin) {
     links.push({
       menu: 'Settings',
-      name: i18next.t('leftMenu.Settings'),
+      name: t('leftMenu.Settings'),
       icon: 'settings',
       links: [
         {
           menu: 'Forms',
-          name: i18next.t('leftMenu.Forms'),
+          name: t('leftMenu.Forms'),
           icon: 'check-square',
           links: [
             {
               link: submissionFormBuilderLink,
-              name: i18next.t(
+              name: t(
                 `leftMenu.${
                   ['lab'].includes(config.instanceName)
                     ? 'Metadata'
@@ -257,68 +257,68 @@ const AdminPage = () => {
             },
             {
               link: reviewFormBuilderLink,
-              name: i18next.t('leftMenu.Review'),
+              name: t('leftMenu.Review'),
             },
             {
               link: decisionFormBuilderLink,
-              name: i18next.t('leftMenu.Decision'),
+              name: t('leftMenu.Decision'),
             },
           ],
         },
         {
           link: tasksTemplateLink,
-          name: i18next.t('leftMenu.Tasks'),
+          name: t('leftMenu.Tasks'),
           icon: 'list',
         },
         {
           link: userAdminLink,
-          name: i18next.t('leftMenu.Users'),
+          name: t('leftMenu.Users'),
           icon: 'users',
         },
         {
           link: configurationLink,
-          name: i18next.t('leftMenu.Configuration'),
+          name: t('leftMenu.Configuration'),
           icon: 'sliders',
         },
         {
           link: emailTemplatesLink,
-          name: i18next.t('leftMenu.Emails'),
+          name: t('leftMenu.Emails'),
           icon: 'mail',
         },
         {
           menu: 'CMS',
-          name: i18next.t('leftMenu.CMS'),
+          name: t('leftMenu.CMS'),
           icon: 'layout',
           links: [
             {
               link: CMSPagesPageLink,
-              name: i18next.t('leftMenu.Pages'),
+              name: t('leftMenu.Pages'),
               icon: '',
             },
             {
               link: CMSLayoutPageLink,
-              name: i18next.t('leftMenu.Layout'),
+              name: t('leftMenu.Layout'),
               icon: '',
             },
             {
               link: CMSArticlePageLink,
-              name: i18next.t('leftMenu.Article'),
+              name: t('leftMenu.Article'),
               icon: '',
             },
             {
               link: CMSMetadataPageLink,
-              name: i18next.t('leftMenu.Metadata'),
+              name: t('leftMenu.Metadata'),
               icon: '',
             },
             {
               link: CMSFileBrowserLink,
-              name: i18next.t('leftMenu.FileBrowser'),
+              name: t('leftMenu.FileBrowser'),
 
               icon: '',
             },
             {
               link: CMSPublishingCollectionPageLink,
-              name: i18next.t('leftMenu.Collections'),
+              name: t('leftMenu.Collections'),
               icon: '',
             },
           ],

@@ -22,8 +22,12 @@ const userIsEditorOfAnyManuscript = rule({
 const userIsGm = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
-  return cachedGet(`userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`)
+  const groupId = ctx.req.headers['group-id']
+  // An 'undefined' groupId header can occasionally be obtained, especially
+  // in development. If we don't deal with it gracefully, it will cause
+  // a crash and prevent its replacement with a correct value.
+  if (!ctx.user || !groupId || groupId === 'undefined') return false
+  return cachedGet(`userIsGM:${ctx.user}:${groupId}`)
 })
 
 const userIsAdmin = rule({

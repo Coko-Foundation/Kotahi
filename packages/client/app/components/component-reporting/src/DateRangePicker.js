@@ -9,7 +9,7 @@ import {
   transposeUtcToLocal,
   transposeLocalToUtc,
 } from '../../../shared/dateUtils'
-import { languagesLabels } from '../../../i18n/index'
+import { getLanguages } from '../../../i18n'
 
 const InlineBlock = styled.div`
   display: inline-block;
@@ -20,10 +20,12 @@ const minDate = new Date('2020-01-01')
 // max specifies the latest date allowed, but as the date-range returned extends until
 // 23:59:59 UTC at the end of the endDate, it can overshoot max by some hours
 const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
+  const languages = getLanguages()
+
   const trueMax = getEndOfDay(max)
   const trueStart = getStartOfDay(startDate)
   const trueEnd = getEndOfDay(endDate)
-  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  const curLang = languages.find(elem => elem.value === i18next.language)
   let dateFormat = 'yyyy-MM-dd'
   if (!!curLang && !!curLang.dateFormat) dateFormat = curLang.dateFormat
 
