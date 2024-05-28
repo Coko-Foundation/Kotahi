@@ -12,7 +12,7 @@ import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { monthAbbrevs } from '../../../shared/dateUtils'
-import { languagesLabels } from '../../../i18n/index'
+import { getLanguages } from '../../../i18n'
 
 const Container = styled.div`
   height: 300px;
@@ -63,7 +63,7 @@ const day = 24 * 60 * 60 * 1000
 const dateFormatter = timestamp => {
   const date = new Date(timestamp)
   let monthNames = monthAbbrevs
-  const curLang = languagesLabels.find(elem => elem.value === i18next.language)
+  const curLang = getLanguages().find(elem => elem.value === i18next.language)
   if (curLang?.monthAbbrevs) monthNames = curLang.monthAbbrevs
 
   return `${monthNames[date.getUTCMonth()]} ${date.getUTCDate()}`

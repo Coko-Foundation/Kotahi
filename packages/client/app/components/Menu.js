@@ -49,7 +49,7 @@ const Menu = ({
         ),
       )
     )
-  }, [menuIsMinimal])
+  }, [menuIsMinimal, navLinkComponents])
 
   const handlers = {
     pinNavbar: e => {

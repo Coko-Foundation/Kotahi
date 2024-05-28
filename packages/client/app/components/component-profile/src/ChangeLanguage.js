@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import i18next from 'i18next'
 import { Select } from '../../shared'
-import { languagesLabels } from '../../../i18n/index'
+import { getLanguages } from '../../../i18n'
 
 const Container = styled.div`
   max-width: 300px;
@@ -11,17 +11,19 @@ const Container = styled.div`
 `
 
 const ChangeLanguage = ({ user, updateLanguage }) => {
+  const languages = getLanguages()
+
   const [lang, setLang] = useState({ value: 'en', label: 'English' })
 
   const update = async (id, e) => {
     await updateLanguage({ variables: { id, preferredLanguage: e.value } })
-    setLang(languagesLabels.find(elem => elem.value === e.value))
+    setLang(languages.find(elem => elem.value === e.value))
     i18next.changeLanguage(e.value)
   }
 
   useEffect(() => {
     const curLang = i18next.language
-    const foundLang = languagesLabels.find(elem => elem.value === curLang)
+    const foundLang = languages.find(elem => elem.value === curLang)
 
     if (foundLang) {
       setLang(foundLang)
@@ -32,7 +34,7 @@ const ChangeLanguage = ({ user, updateLanguage }) => {
     <Container>
       <Select
         onChange={e => update(user.id, e)}
-        options={languagesLabels}
+        options={languages}
         placeholder="Choose language"
         value={lang.value}
       />

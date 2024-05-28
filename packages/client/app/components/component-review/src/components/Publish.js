@@ -13,17 +13,16 @@ import {
 import { SectionContent } from '../../../shared'
 import Alert from './publishing/Alert'
 import PublishingResponse from './publishing/PublishingResponse'
-
-import { languagesLabels } from '../../../../i18n/index'
+import { getLanguages } from '../../../../i18n'
 
 const Publish = ({ manuscript, publishManuscript, dois }) => {
   // Hooks from the old world
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishResponse, setPublishResponse] = useState(null)
   const [publishingError, setPublishingError] = useState(null)
+  const { t } = useTranslation()
 
   const notAccepted = !['accepted', 'published'].includes(manuscript.status)
-  const { t } = useTranslation()
 
   const doiMessage =
     dois !== null &&
@@ -38,9 +37,7 @@ const Publish = ({ manuscript, publishManuscript, dois }) => {
     ))
 
   const formatPublishedDate = date => {
-    const curLang = languagesLabels.find(
-      elem => elem.value === i18next.language,
-    )
+    const curLang = getLanguages().find(elem => elem.value === i18next.language)
 
     return !!curLang && !!curLang.funcs?.formatDate
       ? curLang.funcs?.formatDate(date, true, false)
