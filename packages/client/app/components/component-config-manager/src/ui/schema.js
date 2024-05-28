@@ -3361,6 +3361,519 @@ export const generateSchemas = (
           },
         },
       },
+      lab: {
+        instanceName: {
+          enum: ['lab'],
+        },
+        groupIdentity: {
+          type: 'object',
+          title: t('configPage.Group Identity'),
+          properties: {
+            brandName: {
+              type: 'string',
+              description: t('configPage.Brand name'),
+              default: 'Kotahi',
+            },
+            primaryColor: {
+              type: 'string',
+              description: t('configPage.Brand primary colour'),
+              default: '#3aae2a',
+            },
+            secondaryColor: {
+              type: 'string',
+              description: t('configPage.Brand secondary colour'),
+              default: '#9e9e9e',
+            },
+            // Default logo
+            logoPath: {
+              type: 'string',
+              default: '/assets/logo-kotahi.png',
+            },
+            logoId: {
+              description: t('configPage.Logo'),
+              type: ['string', 'null'],
+            },
+            favicon: {
+              description: t('configPage.Favicon'),
+              type: ['string', 'null'],
+            },
+          },
+        },
+        dashboard: {
+          type: 'object',
+          title: t('configPage.Dashboard'),
+          properties: {
+            loginRedirectUrl: {
+              type: 'string',
+              description: t('configPage.landingPage'),
+              default: '/dashboard',
+              oneOf: [
+                {
+                  const: '/dashboard',
+                  title: t('configPage.Dashboard Page'),
+                },
+                {
+                  const: '/admin/manuscripts',
+                  title: t('configPage.Manuscript Page'),
+                },
+              ],
+            },
+            showSections: {
+              type: 'array',
+              description: t('configPage.pagesVisibleToRegistered'),
+              minItems: 1,
+              default: ['submission'],
+              items: {
+                type: 'string',
+                oneOf: [
+                  {
+                    const: 'submission',
+                    title: t('configPage.My Submissions'),
+                  },
+                ],
+              },
+              uniqueItems: true,
+            },
+          },
+        },
+        manuscript: {
+          type: 'object',
+          title: t('configPage.Manuscripts page'),
+          properties: {
+            tableColumns: {
+              type: 'string',
+              description: t(
+                'configPage.List columns to display on the Manuscripts page',
+              ),
+              default:
+                'shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author',
+            },
+            paginationCount: {
+              type: 'number',
+              description: t('configPage.numberOfManuscripts'),
+              enum: [10, 20, 50, 100],
+              default: 10,
+            },
+            autoImportHourUtc: {
+              type: 'integer',
+              description: t('configPage.hourManuscriptsImported'),
+              $ref: '#/definitions/hours',
+            },
+            archivePeriodDays: {
+              type: 'integer',
+              description: t('configPage.daysManuscriptRemain'),
+              minimum: 1,
+              maximum: 90,
+            },
+            semanticScholarImportsRecencyPeriodDays: {
+              type: 'integer',
+              description: t('configPage.importFromSematic'),
+              minimum: 1,
+              maximum: 90,
+            },
+            newSubmission: {
+              type: 'boolean',
+              title: t('configPage.newSubmissionActionVisisble'),
+              default: true,
+            },
+            labelColumn: {
+              type: 'boolean',
+              title: t('configPage.displayActionToSelect'),
+              default: false,
+            },
+            manualImport: {
+              type: 'boolean',
+              title: t('configPage.importManuscriptsManually'),
+              default: false,
+            },
+          },
+        },
+        controlPanel: {
+          type: 'object',
+          title: t('configPage.Control panel'),
+          properties: {
+            displayManuscriptShortId: {
+              type: 'boolean',
+              title: t('configPage.Display manuscript short id'),
+              default: true,
+            },
+            showTabs: {
+              type: 'array',
+              description: t('configPage.Control pages visible to editors'),
+              minItems: 1,
+              default: ['Metadata'],
+              items: {
+                type: 'string',
+                oneOf: [
+                  {
+                    const: 'Team',
+                    title: t('configPage.showTabs.Team'),
+                  },
+                  {
+                    const: 'Decision',
+                    title: t('configPage.showTabs.Decision'),
+                  },
+                  {
+                    const: 'Manuscript text',
+                    title: t('configPage.showTabs.Manuscript text'),
+                  },
+                  {
+                    const: 'Metadata',
+                    title: t('configPage.showTabs.Metadata'),
+                  },
+                  {
+                    const: 'Tasks & Notifications',
+                    title: t('configPage.showTabs.Tasks & Notifications'),
+                  },
+                ],
+              },
+              uniqueItems: true,
+            },
+          },
+        },
+        submission: {
+          type: 'object',
+          title: t('configPage.Submission'),
+          properties: {
+            allowAuthorsSubmitNewVersion: {
+              type: 'boolean',
+              title: t('configPage.allowToSubmitNewVersion'),
+              default: false,
+            },
+          },
+        },
+        review: {
+          type: 'object',
+          title: t('configPage.Review page'),
+          properties: {
+            showSummary: {
+              type: 'boolean',
+              title: t('configPage.showSummary'),
+              default: false,
+            },
+          },
+        },
+        production: {
+          type: 'object',
+          title: t('configPage.production.Production'),
+          properties: {
+            crossrefRetrievalEmail: {
+              type: ['string', 'null'],
+              description: t(
+                'configPage.production.Email to use for citation search',
+              ),
+              default: '',
+            },
+            crossrefSearchResultCount: {
+              type: 'number',
+              description: t(
+                'configPage.production.Number of results to return from citation search',
+              ),
+              default: 3,
+            },
+            styleName: {
+              type: ['string', 'null'],
+              description: t(
+                'configPage.production.Select style formatting for citations',
+              ),
+              oneOf: [
+                {
+                  const: 'apa',
+                  title: t('configPage.production.apa'),
+                },
+                {
+                  const: 'chicago-note-bibliography',
+                  title: t('configPage.production.cmos'),
+                },
+                {
+                  const: 'council-of-science-editors-alphabetical',
+                  title: t('configPage.production.cse'),
+                },
+              ],
+              default: 'apa',
+            },
+            localeName: {
+              type: ['string', 'null'],
+              description: t(
+                'configPage.production.Select locale for citations',
+              ),
+              enum: ['en-US', 'en-GB'],
+              default: 'en-US',
+            },
+          },
+        },
+        publishing: {
+          type: 'object',
+          title: t('configPage.Publishing'),
+          properties: {
+            hypothesis: {
+              type: 'object',
+              title: t('configPage.Hypothesis'),
+              properties: {
+                apiKey: {
+                  type: ['string', 'null'],
+                  description: t('configPage.Hypothesis API key'),
+                },
+                group: {
+                  type: ['string', 'null'],
+                  description: t('configPage.Hypothesis group id'),
+                },
+                shouldAllowTagging: {
+                  type: 'boolean',
+                  title: t('configPage.shouldAllowTagging'),
+                  default: false,
+                },
+                reverseFieldOrder: {
+                  type: 'boolean',
+                  title: t('configPage.reverseFieldOrder'),
+                  default: false,
+                },
+              },
+            },
+            crossref: {
+              type: 'object',
+              title: t('configPage.Crossref'),
+              properties: {
+                journalName: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalName'),
+                },
+                journalAbbreviatedName: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalAbbreviatedName'),
+                },
+                journalHomepage: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalHomepage'),
+                },
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.crossrefLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.crossrefPassword'),
+                },
+                registrant: {
+                  type: ['string', 'null'],
+                  description: t('configPage.crossrefRegistrant'),
+                },
+                depositorName: {
+                  type: ['string', 'null'],
+                  description: t('configPage.crossrefDepositorName'),
+                },
+                depositorEmail: {
+                  type: ['string', 'null'],
+                  description: t('configPage.crossrefDepositorEmail'),
+                  // format: 'email',
+                },
+                publicationType: {
+                  type: ['string', 'null'],
+                  description: t('configPage.publicationType'),
+                  // enum: ['article', 'peer review'],
+                  oneOf: [
+                    {
+                      const: 'article',
+                      title: t('configPage.article'),
+                    },
+                    {
+                      const: 'peer review',
+                      title: t('configPage.peer review'),
+                    },
+                  ],
+                },
+                doiPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doiPrefix'),
+                },
+                publishedArticleLocationPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.publishedArticleLocationPrefix'),
+                },
+                licenseUrl: {
+                  type: ['string', 'null'],
+                  description: t('configPage.licenseUrl'),
+                },
+                useSandbox: {
+                  type: 'boolean',
+                  title: t('configPage.useSandbox'),
+                  default: false,
+                },
+              },
+            },
+            webhook: {
+              type: 'object',
+              title: t('configPage.Webhook'),
+              properties: {
+                url: {
+                  type: ['string', 'null'],
+                  description: t('configPage.webhookUrl'),
+                },
+                token: {
+                  type: ['string', 'null'],
+                  description: t('configPage.webhookToken'),
+                },
+                ref: {
+                  type: ['string', 'null'],
+                  description: t('configPage.webhookRef'),
+                },
+              },
+            },
+          },
+        },
+        taskManager: {
+          type: 'object',
+          title: t('configPage.Task Manager'),
+          properties: {
+            teamTimezone: {
+              type: 'string',
+              description: t('configPage.teamTimezone'),
+              default: 'Etc/UTC',
+              $ref: '#/definitions/timezones',
+            },
+          },
+        },
+        notification: {
+          type: 'object',
+          title: t('configPage.Emails'),
+          properties: {
+            gmailAuthEmail: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailAuthEmail'),
+              // format: 'email',
+            },
+            gmailSenderEmail: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailSenderEmail'),
+              // format: 'email',
+            },
+            gmailAuthPassword: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailAuthPassword'),
+            },
+          },
+        },
+        eventNotification: {
+          type: 'object',
+          title: t('configPage.eventNotification'),
+          properties: {
+            reviewerInvitationPrimaryEmailTemplate: {
+              description: t(
+                'configPage.reviewerInvitationPrimaryEmailTemplate',
+              ),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+              default: defaultReviewerInvitationTemplate.const,
+            },
+            authorProofingInvitationEmailTemplate: {
+              description: t(
+                'configPage.authorProofingInvitationEmailTemplate',
+              ),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+              default: defaultAuthorProofingInvitationTemplate.const,
+            },
+            authorProofingSubmittedEmailTemplate: {
+              description: t('configPage.authorProofingSubmittedEmailTemplate'),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+              default: defaultAuthorProofingSubmittedTemplate.const,
+            },
+            alertUnreadMessageDigestTemplate: {
+              description: t('configPage.alertUnreadMessageDigestTemplate'),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+            },
+            mentionNotificationTemplate: {
+              description:
+                'Immediate Notification for users @mentioned in a message',
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+            },
+            collaboratorAccessGrantedEmailTemplate: {
+              description: t(
+                'configPage.collaboratorAccessGrantedEmailTemplate',
+              ),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+            },
+            collaboratorAccessChangeEmailTemplate: {
+              description: t(
+                'configPage.collaboratorAccessChangeEmailTemplate',
+              ),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+            },
+            collaboratorAccessRemovedEmailTemplate: {
+              description: t(
+                'configPage.collaboratorAccessRemovedEmailTemplate',
+              ),
+              type: ['string', 'null'],
+              oneOf: emailNotificationOptions,
+              uniqueItems: true,
+            },
+          },
+        },
+        report: {
+          type: 'object',
+          title: t('configPage.Reports'),
+          properties: {
+            showInMenu: {
+              type: 'boolean',
+              title: t('configPage.reportShowInMenu'),
+              default: true,
+            },
+          },
+        },
+        user: {
+          type: 'object',
+          title: t('configPage.User Management'),
+          properties: {
+            isAdmin: {
+              type: 'boolean',
+              title: t('configPage.userIsAdmin'),
+              default: false,
+            },
+          },
+        },
+        kotahiApis: {
+          type: 'object',
+          title: t('configPage.kotahiApis'),
+          properties: {
+            tokens: {
+              type: ['string', 'null'],
+              description: t('configPage.tokens'),
+            },
+          },
+        },
+        coarNotify: {
+          type: 'object',
+          title: t('configPage.api'),
+          properties: {
+            repoIpAddress: {
+              type: ['string', 'null'],
+              description: t('configPage.allowedIPs'),
+            },
+          },
+        },
+        aiDesignStudio: {
+          type: 'object',
+          title: t('configPage.aiDesignStudio'),
+          properties: {
+            apiKey: {
+              type: ['string', 'null'],
+              description: t('configPage.openAiApiKey'),
+            },
+          },
+        },
+      },
     }
 
     const updatedProperties = properties
@@ -3920,7 +4433,7 @@ export const generateSchemas = (
       properties: {
         instanceName: {
           type: 'string',
-          enum: ['preprint1', 'preprint2', 'prc', 'journal'],
+          enum: ['preprint1', 'preprint2', 'prc', 'journal', 'lab'],
           default: 'journal',
         },
       },
@@ -3948,6 +4461,9 @@ export const generateSchemas = (
                 'journal',
                 propsToInclude,
               ),
+            },
+            {
+              properties: limitInstanceNameProperties('lab', propsToInclude),
             },
           ],
         },

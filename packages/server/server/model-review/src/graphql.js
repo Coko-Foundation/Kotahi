@@ -147,7 +147,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Mutation {
-    updateReview(id: ID, input: ReviewInput): Review!
+    updateReview(id: ID, input: ReviewInput, shouldNotSetUser: Boolean): Review!
     updateReviewerTeamMemberStatus(manuscriptId: ID!, status: String): TeamMember
   }
 

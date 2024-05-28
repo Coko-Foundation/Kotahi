@@ -11,6 +11,9 @@ import {
   Menu,
   InfoContainer,
   FullWaxEditorGrid,
+  EditorContainer,
+  EditorArea,
+  WaxSurfaceScroll,
 } from './EditorStyles'
 import {
   NotesAreaContainer,
@@ -73,7 +76,7 @@ const FullWaxEditorLayout =
 
     return (
       <div id="wax-container" style={fullScreenStyles}>
-        <Grid readonly={readOnly} readOnlyComments>
+        <Grid fullHeight readonly={readOnly}>
           {readOnly ? (
             <FullWaxEditorGrid useComments={false}>
               <ReadOnlyEditorDiv className="wax-surface-scroll panelWrapper">
@@ -87,9 +90,6 @@ const FullWaxEditorLayout =
                   </NotesContainer>
                 </ReadOnlyNotesAreaContainer>
               )}
-              <InfoContainer>
-                <CounterInfo />
-              </InfoContainer>
             </FullWaxEditorGrid>
           ) : (
             <>
@@ -101,7 +101,11 @@ const FullWaxEditorLayout =
                   className="wax-surface-scroll panelWrapper"
                   hideComments
                 >
-                  {editor}
+                  <EditorArea className="editorArea">
+                    <WaxSurfaceScroll className="panelWrapper">
+                      <EditorContainer>{editor}</EditorContainer>
+                    </WaxSurfaceScroll>
+                  </EditorArea>
                 </EditorDiv>
                 {notes.length > 0 && (
                   <NotesAreaContainer className="panelWrapper">
@@ -111,13 +115,13 @@ const FullWaxEditorLayout =
                     </NotesContainer>
                   </NotesAreaContainer>
                 )}
-                <InfoContainer>
-                  <CounterInfo />
-                </InfoContainer>
               </FullWaxEditorGrid>
             </>
           )}
         </Grid>
+        <InfoContainer>
+          <CounterInfo />
+        </InfoContainer>
       </div>
     )
   }

@@ -1,5 +1,6 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
@@ -26,6 +27,13 @@ import {
   ChatButton,
   CollapseButton,
 } from '../../../component-review/src/components/style'
+import {
+  isAuthor,
+  isCollaboratorWithWriteAccess,
+} from '../../../../shared/userPermissions'
+import Modal from '../../../component-modal/src/Modal'
+import Confirm from './Confirm'
+import InviteCollaborators from './InviteCollaborators'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -33,6 +41,10 @@ export const createBlankSubmissionBasedOnForm = form => {
   fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
   return allBlankedFields.submission ?? {}
 }
+
+const StyledModal = styled(Modal)`
+  width: 680px;
+`
 
 const Submit = ({
   versions = [],
@@ -66,10 +78,12 @@ const Submit = ({
   )
 
   const [isSubmisionDiscussionVisible, setIsSubmisionDiscussionVisible] =
-    React.useState(currentUser.chatExpanded)
+    useState(currentUser.chatExpanded)
 
   const allowAuthorsSubmitNewVersion =
     config?.submission?.allowAuthorsSubmitNewVersion
+
+  const isLabInstance = ['lab'].includes(config?.instanceName)
 
   const decisionSections = []
 
@@ -88,13 +102,17 @@ const Submit = ({
   versions.forEach(({ manuscript: version, label }, index) => {
     const userCanEditManuscriptAndFormData =
       index === 0 &&
-      (['new', 'revising'].includes(version.status) ||
+      ((['new', 'revising'].includes(version.status) && !isLabInstance) ||
         (currentUser.groupRoles.includes('groupManager') &&
-          version.status !== 'rejected'))
+          version.status !== 'rejected') ||
+        (isLabInstance &&
+          (isAuthor(version, currentUser) ||
+            isCollaboratorWithWriteAccess(version, currentUser))))
 
     const editorSection = {
       content: (
         <EditorSection
+          allowEmptyManuscript={isLabInstance}
           currentUser={currentUser}
           manuscript={version}
           readonly={!userCanEditManuscriptAndFormData}
@@ -104,7 +122,9 @@ const Submit = ({
         />
       ),
       key: `editor`,
-      label: t('manuscriptSubmit.Manuscript text'),
+      label: t(
+        `manuscriptSubmit.${isLabInstance ? 'Article' : 'Manuscript text'}`,
+      ),
     }
 
     let decisionSection
@@ -144,7 +164,11 @@ const Submit = ({
       decisionSection = {
         content: <SubmissionForm {...submissionProps} />,
         key: version.id,
-        label: t('manuscriptSubmit.Edit submission info'),
+        label: t(
+          `manuscriptSubmit.${
+            isLabInstance ? 'Metadata' : 'Edit submission info'
+          }`,
+        ),
       }
     } else {
       decisionSection = {
@@ -175,7 +199,11 @@ const Submit = ({
 
     const tabSections = []
 
-    tabSections.push(decisionSection, editorSection)
+    if (isLabInstance) {
+      tabSections.push(editorSection, decisionSection)
+    } else {
+      tabSections.push(decisionSection, editorSection)
+    }
 
     decisionSections.push({
       content: (
@@ -195,11 +223,16 @@ const Submit = ({
                 manuscript={version}
               />
             )}
-          <HiddenTabs defaultActiveKey={version.id} sections={tabSections} />
+          <HiddenTabs
+            defaultActiveKey={isLabInstance ? 'editor' : version.id}
+            sections={tabSections}
+          />
         </>
       ),
       key: version.id,
       label,
+      status: version.status,
+      manuscript: version,
     })
   })
 
@@ -227,7 +260,14 @@ const Submit = ({
       <Manuscript>
         <ErrorBoundary>
           <VersionSwitcher
+            Confirm={Confirm}
+            currentUser={currentUser}
+            InviteCollaborators={InviteCollaborators}
+            isLabInstance={isLabInstance}
             key={decisionSections.length}
+            Modal={StyledModal}
+            onSubmit={onSubmit}
+            submissionForm={submissionForm}
             versions={decisionSections}
           />
         </ErrorBoundary>

@@ -547,7 +547,7 @@ const redirectPromise = (
 
   // redirect after a new submission path
   const route = `${urlFrag}/versions/${data.createManuscript.id}/${
-    ['preprint1', 'preprint2'].includes(config.instanceName)
+    ['preprint1', 'preprint2', 'lab'].includes(config.instanceName)
       ? 'evaluation'
       : 'submit'
   }`

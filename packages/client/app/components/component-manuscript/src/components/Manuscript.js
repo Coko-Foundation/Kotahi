@@ -1,6 +1,6 @@
 /* stylelint-disable string-quotes */
 
-import React from 'react'
+import React, { useContext } from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
@@ -8,6 +8,7 @@ import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
 
 import MessageContainer from '../../../component-chat/src/MessageContainer'
 import { Spinner } from '../../../shared'
+import { ConfigContext } from '../../../config/src'
 
 // const options = {
 //   //  schema: new CreateSchema(XpubSchema),
@@ -59,11 +60,13 @@ const Manuscript = ({
   channel,
   chatProps,
 }) => {
+  const config = useContext(ConfigContext)
   return (
     <Columns>
-      {file &&
-      file.storedObjects[0].mimetype ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+      {(file &&
+        file.storedObjects[0].mimetype ===
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+      ['lab'].includes(config?.instanceName) ? (
         <ManuscriptContainer>
           {content ? (
             <FullWaxEditor readonly user={currentUser} value={content} />

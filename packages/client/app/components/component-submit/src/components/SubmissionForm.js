@@ -57,7 +57,7 @@ const SubmissionForm = ({
             ? onSubmit(manuscript.id, values) // values are currently ignored!
             : setSubmitting(false)
         }}
-        republish={submitButtonShouldRepublish && republish}
+        republish={submitButtonShouldRepublish ? republish : null}
         setShouldPublishField={async (fieldName, shouldPublish) =>
           setShouldPublishField({
             variables: {
