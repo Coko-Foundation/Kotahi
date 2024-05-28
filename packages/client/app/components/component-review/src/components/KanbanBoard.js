@@ -89,8 +89,9 @@ const KanbanBoard = ({
     .forEach(invitation => {
       const existingReviewer = emailAndWebReviewers.find(
         r =>
-          r.user.id === invitation.user?.id ||
-          r.user.email === invitation.toEmail,
+          r.user &&
+          (r.user.id === invitation.user?.id ||
+            r.user.email === invitation.toEmail),
       )
       // TODO Currently, you can't reinvite someone who's already declined.
       // If we do allow this, we'll need to make sure we only merge one invite with the teamMember record, and only if the dates are correct.
@@ -141,9 +142,11 @@ const KanbanBoard = ({
         (a, b) => (a.isEmail ? 0 : 1) - (b.isEmail ? 0 : 1), // to prioritize those with email sent
       )
       .filter((reviewer, index) => {
+        const reviewerStatusLc = reviewer.status.toLowerCase() // TODO standardise all statuses to camelCase
+
         const hasTheRightStatus =
-          reviewer.status === status.value ||
-          (reviewer.status === 'UNANSWERED' && status.value === 'invited')
+          reviewerStatusLc === status.value ||
+          (reviewerStatusLc === 'unanswered' && status.value === 'invited')
 
         const isDuplicate =
           !!reviewer.user &&
