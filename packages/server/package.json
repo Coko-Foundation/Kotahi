@@ -47,7 +47,6 @@
     "he": "^1.2.0",
     "html-to-text": "^8.0.0",
     "htmlparser2": "^7.2.0",
-    "libxmljs2-xsd": "^0.28.0",
     "list-contents": "^4.0.3",
     "lodash": "^4.17.20",
     "lru-cache": "^10.1.0",
@@ -70,7 +69,8 @@
     "uuid": "^8.3.2",
     "winston": "2.4.5",
     "xml-js": "^1.6.11",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.4.23",
+    "xsd-validator": "^1.1.1"
   },
   "devDependencies": {
     "jest": "^27.1.0",
