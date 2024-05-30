@@ -55,7 +55,7 @@ const jatsHandler = async manuscriptId => {
 
     // if we have valid XML, then check for valid jats
 
-    const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
+    const jatsResult = await validateJats(jats) // this returns empty array if it's valid, array of errors if not
 
     if (jatsResult.length) {
       parseError = jatsResult
