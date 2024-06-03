@@ -231,6 +231,11 @@ const EditorMention = ({
         const item = filteredList[currentIndex]
         const oldFrom = action.range.from
 
+        if (!item) {
+          setFilter('')
+          return false
+        }
+
         const tr = action.view.state.tr
           .deleteRange(action.range.from, action.range.to)
           .insertText(`@${item.username} `)

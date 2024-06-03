@@ -509,8 +509,6 @@ const permissions = {
   Query: {
     authorsActivity: or(userIsGm, userIsAdmin),
     builtCss: isAuthenticated,
-    channels: deny, // Never used
-    channelsByTeamName: deny, // Never used
     config: isAuthenticated,
     convertToJats: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
     convertToPdf: or(userIsEditorOfAnyManuscript, userIsGm, userIsAdmin),
@@ -519,7 +517,6 @@ const permissions = {
     editorsActivity: or(userIsGm, userIsAdmin),
     file: deny, // Never used
     files: deny, // Never used
-    findByDOI: deny, // Never used
     form: isAuthenticated,
     formForPurposeAndCategory: allow,
     forms: allow,
@@ -551,7 +548,6 @@ const permissions = {
       userIsEditingCollaborator,
       userIsViewingCollaborator,
     ),
-    manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
     manuscriptsActivity: or(userIsGm, userIsAdmin),
     manuscriptsPublishedSinceDate: allow,
@@ -565,13 +561,11 @@ const permissions = {
     publishedManuscripts: allow,
     publishingCollection: allow,
     reviewersActivity: or(userIsGm, userIsAdmin),
-    searchOnCrossref: deny, // Never used
     searchUsers: isAuthenticated,
     summaryActivity: or(userIsGm, userIsAdmin),
     systemWideDiscussionChannel: or(userIsGm, userIsAdmin),
     tasks: or(userIsGm, userIsAdmin),
     team: deny, // Never used
-    teamByName: deny, // Never used
     teams: isAuthenticated,
     threadedDiscussions: isAuthenticated,
     unreviewedPreprints: allow, // This has its own token-based authentication.
@@ -589,11 +583,8 @@ const permissions = {
     archiveManuscripts: or(userIsGm, userIsAdmin),
     assignTeamEditor: deny, // Never used
     assignUserAsAuthor: isAuthenticated, // TODO require the invitation ID to be sent in this mutation
-    changeTopic: deny, // Never used
     completeComment: isAuthenticated,
     completeComments: isAuthenticated,
-    createChannel: deny, // Never used
-    createChannelFromDOI: deny, // Never used
     // createDocxToHTMLJob seems to be exposed from xsweet???
     createFile: isAuthenticated,
     createForm: or(userIsGm, userIsAdmin),

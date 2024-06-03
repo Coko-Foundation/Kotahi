@@ -147,10 +147,12 @@ const runImports = async (
           {
             topic: 'Manuscript discussion',
             type: 'all',
+            groupId,
           },
           {
             topic: 'Editorial discussion',
             type: 'editorial',
+            groupId,
           },
         ]
       }
