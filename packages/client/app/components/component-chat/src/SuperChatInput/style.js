@@ -211,36 +211,6 @@ export const MediaLabel = styled.label`
   }
 `
 
-export const PhotoSizeError = styled.div`
-  align-content: center;
-  align-items: center;
-  background: ${theme.special.wash};
-  border-top: 1px solid ${theme.special.border};
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
-  width: 100%;
-
-  p {
-    color: ${theme.special.default};
-    font-size: 14px;
-    line-height: 1.4;
-    max-width: calc(100% - 48px);
-  }
-
-  div {
-    align-self: center;
-  }
-
-  &:hover {
-    cursor: pointer;
-
-    p {
-      color: ${theme.brand.default};
-    }
-  }
-`
-
 export const RemovePreviewButton = styled.button`
   background-color: ${theme.text.placeholder};
   border: none;

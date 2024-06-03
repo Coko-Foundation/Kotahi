@@ -432,6 +432,8 @@ const resolvers = {
     async createManuscript(_, vars, ctx) {
       const { meta, files, groupId } = vars.input
       const group = await Group.query().findById(groupId)
+      if (!group)
+        throw new Error(`Cannot create manuscript for unknown group ${groupId}`)
       const activeConfig = await Config.getCached(groupId)
       const submissionForm = await getSubmissionForm(group.id)
 
