@@ -787,8 +787,8 @@ const esLa = {
     },
     invitationAcceptedPage: {
       error:
-        'Esta invitación no pudo ser aceptada, tal vez porque ya has rechazado una invitación para el mismo manuscrito.',
-      returnToDashboard: 'Regresar al tablero',
+        'Esta invitación no pudo ser aceptada, porque ya has rechazado una invitación para este manuscrito.',
+      returnToDashboard: 'Regresar al Tablero',
     },
     reviewPreviewPage: {
       Summary: 'Resumen',

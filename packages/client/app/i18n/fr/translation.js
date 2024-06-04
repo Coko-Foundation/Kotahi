@@ -793,8 +793,8 @@ const fr = {
     },
     invitationAcceptedPage: {
       error:
-        "Cette invitation n'a pas pu être acceptée, peut-être parce que vous avez déjà refusé une invitation pour le même manuscrit.",
-      returnToDashboard: 'Retour au tableau de bord',
+        "Cette invitation n'a pas pu être acceptée, parce que vous avez déjà refusé une invitation pour ce manuscrit.",
+      returnToDashboard: 'Retour au Tableau de Bord',
     },
     reviewPreviewPage: {
       Summary: 'Résumé',

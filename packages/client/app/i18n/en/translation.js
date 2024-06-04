@@ -763,8 +763,8 @@ const en = {
     },
     invitationAcceptedPage: {
       error:
-        'This invitation could not be accepted, perhaps because you have already declined an invitation for the same manuscript.',
-      returnToDashboard: 'Return to dashboard',
+        'This invitation could not be accepted, because you have already declined an invitation for this manuscript.',
+      returnToDashboard: 'Return to Dashboard',
     },
     reviewPreviewPage: {
       Summary: 'Summary',
