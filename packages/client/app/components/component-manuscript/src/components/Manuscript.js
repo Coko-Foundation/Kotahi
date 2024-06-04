@@ -1,18 +1,8 @@
-/* stylelint-disable string-quotes */
-
 import React, { useContext } from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
-
-import MessageContainer from '../../../component-chat/src/MessageContainer'
-import { Spinner } from '../../../shared'
 import { ConfigContext } from '../../../config/src'
-
-// const options = {
-//   //  schema: new CreateSchema(XpubSchema),
-// }
 
 const Info = styled.span`
   align-items: center;
@@ -25,41 +15,24 @@ const Info = styled.span`
 `
 
 const Columns = styled.div`
-  display: grid;
-  grid-template-areas: 'manuscript chat';
-  grid-template-columns: ${({ chatProps }) => (chatProps ? '3fr 2fr' : '3fr')};
-  height: 100vh;
-  justify-content: center;
+  height: 100%;
   overflow: hidden;
+  width: 100%;
 `
 
 const ManuscriptContainer = styled.div`
   grid-area: manuscript;
+  height: 100%;
   overflow-y: scroll;
+  padding: 2em;
 
-  .wax-container {
-    height: 90%;
-    top: 10%;
+  #wax-container > div {
+    max-width: 1200px;
+    min-height: 0;
   }
 `
 
-const Chat = styled.div`
-  border-left: 1px solid ${th('colorFurniture')};
-  display: flex;
-  grid-area: chat;
-  height: 100vh;
-`
-
-const Manuscript = ({
-  file,
-  content,
-  currentUser,
-  // fileUpload,
-  history,
-  // updateManuscript,
-  channel,
-  chatProps,
-}) => {
+const Manuscript = ({ file, content, currentUser }) => {
   const config = useContext(ConfigContext)
   return (
     <Columns>
@@ -68,23 +41,10 @@ const Manuscript = ({
           'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
       ['lab'].includes(config?.instanceName) ? (
         <ManuscriptContainer>
-          {content ? (
-            <FullWaxEditor readonly user={currentUser} value={content} />
-          ) : (
-            <Spinner />
-          )}
+          <FullWaxEditor readonly user={currentUser} value={content} />
         </ManuscriptContainer>
       ) : (
         <Info>No supported view of the file</Info>
-      )}
-      {chatProps && (
-        <Chat>
-          <MessageContainer
-            channelId={channel.id}
-            chatProps={chatProps}
-            currentUser={currentUser}
-          />
-        </Chat>
       )}
     </Columns>
   )
