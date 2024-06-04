@@ -791,6 +791,11 @@ const fr = {
       'Decline Invitation': "Refuser l'invitation",
       thanks: "Merci d'avoir soumis vos commentaires.",
     },
+    invitationAcceptedPage: {
+      error:
+        "Cette invitation n'a pas pu être acceptée, peut-être parce que vous avez déjà refusé une invitation pour le même manuscrit.",
+      returnToDashboard: 'Retour au tableau de bord',
+    },
     reviewPreviewPage: {
       Summary: 'Résumé',
       Back: 'Retour',

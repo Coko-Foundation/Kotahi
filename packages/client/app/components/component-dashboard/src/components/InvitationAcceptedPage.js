@@ -1,6 +1,7 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
+import { useTranslation } from 'react-i18next'
 
 import { Spinner } from '@pubsweet/ui/dist/atoms'
 import {
@@ -13,6 +14,7 @@ import {
 } from '../../../../queries/invitation'
 import mutations from '../graphql/mutations'
 import { ConfigContext } from '../../../config/src'
+import { LinkAction, PaddedContent } from '../../../shared'
 
 const GET_CURRENT_USER = gql`
   query currentUser {
@@ -23,7 +25,9 @@ const GET_CURRENT_USER = gql`
 `
 
 const InvitationAcceptedPage = () => {
+  const [hasError, setHasError] = useState(false)
   const config = useContext(ConfigContext)
+  const { t } = useTranslation()
   const { urlFrag } = config
 
   const invitationId = window.localStorage.getItem('invitationId')
@@ -57,6 +61,10 @@ const InvitationAcceptedPage = () => {
         },
       })
     },
+    onError: () => {
+      localStorage.removeItem('invitationId')
+      setHasError(true)
+    },
   })
 
   const [assignUserAsReviewer] = useMutation(ASSIGN_USER_AS_REVIEWER, {
@@ -83,6 +91,10 @@ const InvitationAcceptedPage = () => {
             responseDate: currentDate,
           },
         })
+      },
+      onError: () => {
+        localStorage.removeItem('invitationId')
+        setHasError(true)
       },
     },
   )
@@ -112,6 +124,17 @@ const InvitationAcceptedPage = () => {
       }
     }
   }, [data, invitedUserId])
+
+  if (hasError) {
+    return (
+      <PaddedContent>
+        <p>{t('invitationAcceptedPage.error')}</p>
+        <LinkAction to={`${urlFrag}/dashboard`}>
+          {t('invitationAcceptedPage.returnToDashboard')}
+        </LinkAction>
+      </PaddedContent>
+    )
+  }
 
   return <Spinner />
 }

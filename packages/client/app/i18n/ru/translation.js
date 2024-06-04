@@ -785,6 +785,11 @@ const ru = {
       'Decline Invitation': 'Отклонить приглашение',
       thanks: 'Благодарим Вас за ответ.',
     },
+    invitationAcceptedPage: {
+      error:
+        'Это приглашение не удалось принять, возможно, потому что вы уже отклонили приглашение на тот же самый рукопись.',
+      returnToDashboard: 'Вернуться на панель управления',
+    },
     reviewPreviewPage: {
       Summary: 'Содержание',
       Back: 'Назад',
