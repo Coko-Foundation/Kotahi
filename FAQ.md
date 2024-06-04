@@ -161,17 +161,20 @@ If a submission to Crossref fails basic schema validation (e.g. if required fiel
 #### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
-| Field type | Internal field name | Purpose |
-| --------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Title | `submission.$title` | Article title |
-| Authors | `submission.$authors` | Ordered list of authors |
-| Abstract | `submission.$abstract` | Article abstract |
-| Rich text | `submission.references` | Citations in separate paragraphs |
-| Text | `submission.volumeNumber` | (Optional) Journal volume number |
-| Text | `submission.issueNumber` | (Optional) Journal issue number |
-| Text | `submission.issueYear` | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
-| DOI suffix | `submission.$doiSuffix` | (Optional) The custom DOI suffix for the article |
 
+<!-- prettier-ignore -->
+| Field type | Internal field name       | Purpose                                                                                                                            |
+| ---------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Title      | `submission.$title`       | Article title                                                                                                                      |
+| Authors    | `submission.$authors`     | Ordered list of authors                                                                                                            |
+| Abstract   | `submission.$abstract`    | Article abstract                                                                                                                   |
+| Rich text  | `submission.references`   | Citations in separate paragraphs                                                                                                   |
+| Text       | `submission.volumeNumber` | (Optional) Journal volume number                                                                                                   |
+| Text       | `submission.issueNumber`  | (Optional) Journal issue number                                                                                                    |
+| Text       | `submission.issueYear`    | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| DOI suffix | `submission.$doiSuffix`   | (Optional) The custom DOI suffix for the article                                                                                   |
+
+<!-- prettier-ignore -->
 #### Registering article evaluations via Crossref
 
 Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The following environment variables are required for this:
@@ -294,6 +297,20 @@ SERVICE_ANYSTYLE_PORT=4567
 ```
 
 For a non-local AnyStyle server, the host will be its `subdomain.domain`, and protocol will typically be `http`.
+
+## Setting up XSweet (optional)
+
+By default in development mode, the XSweet microservice is set up to run locally. To make XSweet run in production, you must provide the following environment variables in your `.env` file:
+
+```
+SERVICE_XSWEET_CLIENT_ID=59a3392b-0c4f-4318-bbe2-f86eff6d3de4
+SERVICE_XSWEET_SECRET=asldkjLKJLaslkdf897kjhKUJH
+SERVICE_XSWEET_PROTOCOL=http
+SERVICE_XSWEET_HOST=xsweet
+SERVICE_XSWEET_PORT=3004
+```
+
+These are the default dev values, as found in `.env.example`. In production, `PROTOCOL`, `HOST` and `PORT` should be set to the values of the XSweet server; `PORT` should probably be 443. If you're running XSweet as its own server, you'll need to generate a new client and secret as described here: https://gitlab.coko.foundation/cokoapps/xsweet/#creating-clients-credentials
 
 ## API
 
