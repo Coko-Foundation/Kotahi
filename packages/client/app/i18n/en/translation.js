@@ -761,6 +761,11 @@ const en = {
       'Decline Invitation': 'Decline Invitation',
       thanks: 'Thank you for submitting the feedback.',
     },
+    invitationAcceptedPage: {
+      error:
+        'This invitation could not be accepted, because you have already declined an invitation for this manuscript.',
+      returnToDashboard: 'Return to Dashboard',
+    },
     reviewPreviewPage: {
       Summary: 'Summary',
       Back: 'Back',

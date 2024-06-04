@@ -785,6 +785,11 @@ const esLa = {
       'Decline Invitation': 'Declinar Invitación',
       thanks: 'Gracias por enviar los comentarios.',
     },
+    invitationAcceptedPage: {
+      error:
+        'Esta invitación no pudo ser aceptada, porque ya has rechazado una invitación para este manuscrito.',
+      returnToDashboard: 'Regresar al Tablero',
+    },
     reviewPreviewPage: {
       Summary: 'Resumen',
       Back: 'Atrás',
