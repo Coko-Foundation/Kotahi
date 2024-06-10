@@ -30,7 +30,7 @@ services:
     volumes:
       - ./packages/client/app:/home/node/app/app
       - ./packages/client/certs:/home/node/app/certs
-      - ./packages/client/config/translation:/home/node/app/config/translation
+      - ./packages/client/config:/home/node/app/config
 
   server:
     build:

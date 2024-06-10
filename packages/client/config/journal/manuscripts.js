@@ -19,7 +19,6 @@ const ownerColumns = [
   'created',
   'updated',
   'authorProofingLink',
-  'submitChevron',
 ]
 
 const reviewerColumns = [
