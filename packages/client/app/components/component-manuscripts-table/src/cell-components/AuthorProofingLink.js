@@ -34,6 +34,15 @@ const statusMapper = {
   published: {
     text: 'View',
   },
+  assigned: {
+    text: 'View',
+  },
+  inProgress: {
+    text: 'View',
+  },
+  completed: {
+    text: 'View',
+  },
 }
 
 const AuthorProofingLink = props => {
