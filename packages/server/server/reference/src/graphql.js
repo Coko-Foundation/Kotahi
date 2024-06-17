@@ -2,9 +2,12 @@ const { logger } = require('@coko/server')
 
 const {
   getMatchingReferencesFromCrossRef,
-  getFormattedReferencesFromCrossRef,
   getReferenceWithDoi,
 } = require('./validation')
+
+const {
+  getFormattedReferencesFromCrossRef,
+} = require('../../utils/crossrefCommsUtils')
 
 const { formatCitation } = require('./formatting')
 

@@ -3,6 +3,7 @@ const fs = require('fs')
 const citeproc = require('citeproc-js-node')
 const path = require('path')
 const Config = require('../../../models/config/config.model')
+const { pluckAuthors, pluckTitle, pluckJournalTitle } = require('./helpers')
 
 // Big question about this: is it worth doing this as a microservice? My impulse has been no, but maybe this should be throught about?
 
@@ -143,6 +144,46 @@ If we can't format it, we're not showing it as a choice on the front end. It wou
 // because some of the citations might be just strings of text that haven't gone through Crossref or Anystyle. If we fed those in,
 // they'd come out in the wrong place because Citeproc won't know how to deal with them.
 
+const createFormattedReference = async (data, groupId) => {
+  const {
+    DOI: doi,
+    author,
+    page,
+    title,
+    issue,
+    volume,
+    'container-title': journalTitle,
+  } = data
+
+  // console.log('issued data:', data.issued)
+
+  const rawDate = data.issued?.raw ? data.issued.raw : false
+
+  const yearFromDateParts = data.issued['date-parts']?.length
+    ? String(data.issued['date-parts'][0][0] || '')
+    : ''
+
+  const year = rawDate || yearFromDateParts
+
+  const outputData = {
+    doi,
+    DOI: doi,
+    author: pluckAuthors(author),
+    page,
+    issue,
+    volume,
+    issued: { raw: String(year) },
+    title: pluckTitle(title),
+    journalTitle: pluckJournalTitle(journalTitle),
+  }
+
+  const formattedCitation = await formatCitation(outputData, groupId)
+
+  outputData.formattedCitation = formattedCitation.result
+  return outputData
+}
+
 module.exports = {
   formatCitation,
+  createFormattedReference,
 }
