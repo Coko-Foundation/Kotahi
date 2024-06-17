@@ -1,5 +1,6 @@
 const { default: axios } = require('axios')
 const rateLimit = require('axios-rate-limit')
+const { createFormattedReference } = require('../reference/src/formatting')
 
 const http = rateLimit(axios.create(), {
   maxRequests: 10,
@@ -109,4 +110,57 @@ const getUrlByDoi = async (doi, contactEmail) => {
   }
 }
 
-module.exports = { getUrlByDoi }
+const getFormattedReferencesFromCrossRef = async (
+  reference,
+  count,
+  crossrefRetrievalEmail,
+  groupId,
+) => {
+  try {
+    const response = await http.get('https://api.crossref.org/v1/works', {
+      params: {
+        'query.bibliographic': reference,
+        rows: count,
+        select: 'DOI,author,issue,page,title,volume,container-title,issued',
+        mailto: crossrefRetrievalEmail || defaultMailTo,
+        order: 'desc',
+        sort: 'score',
+      },
+      timeout: 15000,
+      headers: {
+        'User-Agent': `Kotahi (Axios 0.21; mailto:${
+          crossrefRetrievalEmail || defaultMailTo
+        })`,
+      },
+    })
+
+    updateRateLimit(response)
+
+    if (response.status === 200)
+      return response.data.message.items.reduce(
+        (accumulator, current, index) => {
+          accumulator.push(createFormattedReference(current, groupId))
+          return accumulator
+        },
+        [],
+      )
+
+    console.error('Crossref failure!', response)
+    return []
+  } catch (error) {
+    if (error.response?.status === 404) {
+      console.error('Crossref 404 error!')
+    }
+
+    if (error.response?.status === 429) {
+      // TODO Consider implementing a backoff
+      // return getUrlByDoiFromDataCite(doi) // Get from alternative service that's generally slower, but shouldn't give 429 error
+      console.error('Crossref rate limit error!!!')
+    }
+
+    console.error('Crossref failure!', error.message)
+    return []
+  }
+}
+
+module.exports = { getUrlByDoi, getFormattedReferencesFromCrossRef }
