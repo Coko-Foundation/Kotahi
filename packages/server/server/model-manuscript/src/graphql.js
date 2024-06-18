@@ -2261,7 +2261,7 @@ const typeDefs = `
     deleteManuscripts(ids: [ID]!): [ID]!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
-    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID, isCollaborative: Boolean): Team
+    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID, isCollaborative: Boolean!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript

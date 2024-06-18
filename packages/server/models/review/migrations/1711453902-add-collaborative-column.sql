@@ -1,1 +1,1 @@
-ALTER TABLE reviews ADD is_collaborative BOOLEAN DEFAULT FALSE;
+ALTER TABLE reviews ADD is_collaborative BOOLEAN NOT NULL DEFAULT FALSE;

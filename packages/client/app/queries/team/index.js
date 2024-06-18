@@ -43,7 +43,7 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 }`
 
 export const ASSIGN_USER_AS_REVIEWER = gql`
-mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID, $isCollaborative: Boolean) {
+mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID, $isCollaborative: Boolean!) {
   addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId, isCollaborative: $isCollaborative ) {
     ${teamFields}
   }
