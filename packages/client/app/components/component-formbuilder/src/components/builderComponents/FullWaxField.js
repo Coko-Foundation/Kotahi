@@ -8,8 +8,8 @@ const FullWaxEditorStyled = styled(FullWaxEditor)`
   }
 `
 
-const FullWaxFieldBuilder = input => {
+const FullWaxField= input => {
   return <FullWaxEditorStyled {...input} useComments />
 }
 
-export default FullWaxFieldBuilder
+export default FullWaxField
