@@ -16,6 +16,7 @@ import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import statuses from '../../../../../config/journal/review-status'
 import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 import KanbanCard from './reviewers/KanbanCard'
+import { findReviewFromReviewer } from './reviewers/util'
 
 const Kanban = styled.div`
   margin: 15px 7.5px;
@@ -157,22 +158,6 @@ const KanbanBoard = ({
         manuscript.reviews.filter(review => !review.isDecision)) ||
       []
 
-  const findReview = reviewer => {
-    return allReviews
-      .filter(r => r.isCollaborative === reviewer.isCollaborative)
-      .find(review => {
-        if (review.isCollaborative === true && review?.user === null) {
-          return true
-        }
-
-        return (
-          review.isCollaborative === false &&
-          review?.user?.id === reviewer.user.id &&
-          review.isDecision === false
-        )
-      })
-  }
-
   const getReviewersWithoutDuplicates = (status, someReviewers) =>
     someReviewers
       .sort(
@@ -241,7 +226,7 @@ const KanbanBoard = ({
                         status.value === 'completed' ||
                         (status.value === 'inProgress' &&
                           reviewer.isCollaborative === true)
-                          ? findReview(reviewer)
+                          ? findReviewFromReviewer(reviewer, allReviews)
                           : null
                       }
                       reviewer={reviewer}
