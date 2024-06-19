@@ -227,6 +227,16 @@ const EditorStyles = css`
     cursor: help;
   }
 
+  [data-mml-node='merror'] > g {
+    fill: red;
+    stroke: red;
+  }
+
+  [data-mml-node='merror'] > rect[data-background] {
+    fill: yellow;
+    stroke: none;
+  }
+
   /* -- Inline Math --------------------------------------- */
 
   math-inline {
