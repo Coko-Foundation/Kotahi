@@ -12,44 +12,44 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const statusMapper = {
-  new: {
-    text: 'Continue submission',
-  },
-  submitted: {
-    text: 'View',
-  },
-  revise: {
-    text: 'Revise',
-  },
-  revising: {
-    text: 'Continue revision',
-  },
-  accepted: {
-    text: 'View',
-  },
-  rejected: {
-    text: 'View',
-  },
-  published: {
-    text: 'View',
-  },
-  assigned: {
-    text: 'View',
-  },
-  inProgress: {
-    text: 'View',
-  },
-  completed: {
-    text: 'View',
-  },
-}
-
 const AuthorProofingLink = props => {
   const { manuscript, urlFrag, currentUser } = props
   const history = useHistory()
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
+
+  const statusMapper = {
+    new: {
+      text: t('manuscriptsTable.actions.continueSubmission'),
+    },
+    submitted: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    revise: {
+      text: t('manuscriptsTable.actions.revise'),
+    },
+    revising: {
+      text: t('manuscriptsTable.actions.continueRevision'),
+    },
+    accepted: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    rejected: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    published: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    assigned: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    inProgress: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    completed: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+  }
 
   // #region action
   const actionText = statusMapper[manuscript.status]?.text

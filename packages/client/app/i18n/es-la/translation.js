@@ -183,6 +183,9 @@ const esLa = {
         'Some targets failed to publish':
           'Algunos objetivos no pudieron ser publicados.',
         openOnline: 'Abrir en línea',
+        continueSubmission: 'Continuar con el envío',
+        revise: 'Revisar',
+        continueRevision: 'Continuar con la revisión',
       },
     },
     dashboardPage: {

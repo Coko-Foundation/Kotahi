@@ -183,6 +183,9 @@ const fr = {
         'Some targets failed to publish':
           'Certains objectifs ont échoué à publier.',
         openOnline: 'Ouvrir en ligne',
+        continueSubmission: 'Continuer la soumission',
+        revise: 'Réviser',
+        continueRevision: 'Continuer la révision',
       },
     },
     dashboardPage: {
