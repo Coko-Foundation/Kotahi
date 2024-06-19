@@ -1,125 +1,129 @@
-import React, { useRef, useEffect, useContext, useCallback } from 'react'
-import PropTypes from 'prop-types'
-import { ThemeProvider } from 'styled-components'
-import { debounce } from 'lodash'
-import { Wax } from 'wax-prosemirror-core'
-import { JournalContext } from '../../xpub-journal/src'
-import waxTheme from './layout/waxTheme'
-import fullWaxEditorConfig from './config/FullWaxEditorConfig'
-import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
-import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
+import React, { useContext, useEffect } from 'react'
+import {
+  WaxContext,
+  ComponentPlugin,
+  DocumentHelpers,
+} from 'wax-prosemirror-core'
+import {
+  Grid,
+  EditorDiv,
+  ReadOnlyEditorDiv,
+  Menu,
+  InfoContainer,
+  FullWaxEditorGrid,
+  EditorContainer,
+  EditorArea,
+  WaxSurfaceScroll,
+} from './layout/EditorStyles'
+import {
+  NotesAreaContainer,
+  ReadOnlyNotesAreaContainer,
+  NotesContainer,
+  NotesHeading,
+} from './layout/NotesStyles'
+import 'wax-prosemirror-core/dist/index.css'
+import 'wax-prosemirror-services/dist/index.css'
 
-// TODO Save this image via the server
-const renderImage = file => {
-  const reader = new FileReader()
-  return new Promise((resolve, reject) => {
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = () => reject(reader.error)
-    // Some extra delay to make the asynchronicity visible
-    setTimeout(() => {
-      reader.readAsDataURL(file)
-    }, 150)
-  })
-}
-
-const FullWaxEditor = ({
-  onAssetManager,
-  value,
-  validationStatus,
-  readonly,
-  autoFocus,
-  saveSource,
-  placeholder,
-  useComments,
-  authorComments,
-  fileUpload,
-  user,
-  manuscriptId,
-  getActiveViewDom,
-  ...rest
-}) => {
-  const handleAssetManager = () => onAssetManager(manuscriptId)
-  const journal = useContext(JournalContext)
-
-  const debouncedSave = useCallback(
-    debounce(source => {
-      if (saveSource) saveSource(source)
-    }, 6000),
-    [],
+const getNotes = main => {
+  const notes = DocumentHelpers.findChildrenByType(
+    main.state.doc,
+    main.state.schema.nodes.footnote,
+    true,
   )
 
-  useEffect(() => {
-    return () => debouncedSave.flush()
-  }, [])
+  return notes
+}
 
-  const waxUser = {
-    userId: user.id || '-',
-    userColor: {
-      addition: 'royalblue',
-      deletion: 'indianred',
-    },
-    username: user.username || 'demo',
+const TopBar = ComponentPlugin('topBar')
+const NotesArea = ComponentPlugin('notesArea')
+const CounterInfo = ComponentPlugin('bottomRightInfo')
+
+const FullWaxEditorLayout =
+  (readOnly, getActiveViewDom) =>
+  /* eslint-disable-next-line react/function-component-definition */
+  ({ editor }) => {
+    const {
+      pmViews: { main },
+      options,
+      activeView,
+    } = useContext(WaxContext)
+
+    useEffect(() => {
+      activeView.dom?.outerHTML &&
+        getActiveViewDom &&
+        getActiveViewDom(activeView.dom?.outerHTML)
+    }, [activeView.dom, activeView])
+
+    const notes = (main && getNotes(main)) ?? []
+
+    // added to bring in full screen
+
+    let fullScreenStyles = {}
+
+    if (options.fullScreen) {
+      fullScreenStyles = {
+        backgroundColor: '#fff',
+        height: '100%',
+        left: '0',
+        margin: '0',
+        padding: '0',
+        position: 'fixed',
+        top: '0',
+        width: '100%',
+        zIndex: '99999',
+      }
+    }
+
+    return (
+      <div id="wax-container" style={fullScreenStyles}>
+        <Grid fullHeight readonly={readOnly}>
+          {readOnly ? (
+            <FullWaxEditorGrid useComments={false}>
+              <ReadOnlyEditorDiv className="wax-surface-scroll panelWrapper">
+                {editor}
+              </ReadOnlyEditorDiv>
+              {notes.length > 0 && (
+                <ReadOnlyNotesAreaContainer className="panelWrapper">
+                  <NotesContainer id="notes-container">
+                    <NotesHeading>Notes</NotesHeading>
+                    <NotesArea view={main} />
+                  </NotesContainer>
+                </ReadOnlyNotesAreaContainer>
+              )}
+            </FullWaxEditorGrid>
+          ) : (
+            <>
+              <Menu className="waxmenu">
+                <TopBar />
+              </Menu>
+              <FullWaxEditorGrid useComments={false}>
+                <EditorDiv
+                  className="wax-surface-scroll panelWrapper"
+                  hideComments
+                >
+                  <EditorArea className="editorArea">
+                    <WaxSurfaceScroll className="panelWrapper">
+                      <EditorContainer>{editor}</EditorContainer>
+                    </WaxSurfaceScroll>
+                  </EditorArea>
+                </EditorDiv>
+                {notes.length > 0 && (
+                  <NotesAreaContainer className="panelWrapper">
+                    <NotesContainer id="notes-container">
+                      <NotesHeading>Notes</NotesHeading>
+                      <NotesArea view={main} />
+                    </NotesContainer>
+                  </NotesAreaContainer>
+                )}
+              </FullWaxEditorGrid>
+            </>
+          )}
+        </Grid>
+        <InfoContainer>
+          <CounterInfo />
+        </InfoContainer>
+      </div>
+    )
   }
 
-  const editorRef = useRef(null)
-
-  return (
-    <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
-      <div className={validationStatus} style={{ width: '100%' }}>
-        <Wax
-          autoFocus={autoFocus}
-          config={fullWaxEditorConfig(handleAssetManager, readonly)}
-          fileUpload={file => renderImage(file)}
-          key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
-          layout={
-            useComments
-              ? FullWaxEditorCommentsLayout(readonly, authorComments)
-              : FullWaxEditorLayout(readonly, getActiveViewDom)
-          }
-          onChange={source => debouncedSave(source)}
-          placeholder={placeholder}
-          readonly={readonly}
-          ref={editorRef}
-          user={waxUser}
-          value={value}
-          {...rest}
-        />
-      </div>
-    </ThemeProvider>
-  )
-}
-
-FullWaxEditor.propTypes = {
-  value: PropTypes.string,
-  validationStatus: PropTypes.string,
-  readonly: PropTypes.bool,
-  autoFocus: PropTypes.bool,
-  saveSource: PropTypes.func,
-  placeholder: PropTypes.string,
-  fileUpload: PropTypes.func,
-  authorComments: PropTypes.bool,
-  useComments: PropTypes.bool,
-  user: PropTypes.shape({
-    userId: PropTypes.string,
-    userName: PropTypes.string,
-    userColor: PropTypes.shape({
-      addition: PropTypes.string,
-      deletion: PropTypes.string,
-    }),
-  }),
-}
-
-FullWaxEditor.defaultProps = {
-  value: '',
-  validationStatus: undefined,
-  readonly: false,
-  autoFocus: false,
-  saveSource: () => {},
-  placeholder: '',
-  authorComments: false,
-  fileUpload: () => {},
-  useComments: false,
-  user: {},
-}
-
-export default FullWaxEditor
+export default FullWaxEditorLayout

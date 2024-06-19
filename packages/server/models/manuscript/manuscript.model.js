@@ -420,6 +420,10 @@ class Manuscript extends BaseModel {
               items: { type: 'object' },
               type: ['array', 'null'],
             },
+            previousVersions: {
+              items: { type: 'object' },
+              type: ['array', 'null'],
+            },
           },
         },
         submission: {},

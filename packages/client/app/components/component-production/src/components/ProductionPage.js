@@ -121,21 +121,29 @@ const fragmentFields = `
   id
   created
   status
-	teams {
-		role
-		members {
-			user {
-				id
-				created
-			}
+  teams {
+    role
+    members {
+      user {
+        id
+        created
+      }
       created
-		}
-	}
+    }
+  }
   ${fileFragment}
-	submission
+  submission
   meta {
     source
     manuscriptId
+    previousVersions {
+      source
+      created
+      user {
+        id
+        userName
+      }
+    }
   }
   authorFeedback {
     text
@@ -187,16 +195,16 @@ const query = gql`
       article
       css
     }
-	}
+  }
 `
 
 export const updateMutation = gql`
-  mutation($id: ID!, $input: String) {
-    updateManuscript(id: $id, input: $input) {
-      id
-      ${fragmentFields}
-    }
+mutation($id: ID!, $input: String) {
+  updateManuscript(id: $id, input: $input) {
+    id
+    ${fragmentFields}
   }
+}
 `
 
 const submitAuthorProofingFeedbackMutation = gql`
@@ -300,6 +308,36 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
     manuscript: unparsedManuscript,
   } = data
 
+  const addNewVersion = async newVersion => {
+    // This adds a new version to the top of the previousVersions stack
+    // console.log('in update version list!')
+    // get current manuscript version list
+    const existing = manuscript?.meta?.previousVersions || []
+
+    if (existing[0]?.source && existing[0].source === newVersion.source) {
+      // if this is the same as the last version, don't resave
+      return false
+    }
+
+    // add new version to the top to the stack
+    const updateDelta = {
+      meta: { previousVersions: [newVersion, ...existing] },
+    }
+
+    // console.log('Delta to send: ', updateDelta)
+
+    // save this as a mutation to the manuscript
+    const newQuery = await update({
+      variables: {
+        id: manuscript.id,
+        input: JSON.stringify(updateDelta),
+      },
+    })
+
+    // console.log('saved!', newQuery)
+    return newQuery
+  }
+
   // Get 'currentUserRole' for the manuscript version isAdmin, isGroupManager, isAuthor, isEditor
   const currentUserRole = {}
 
@@ -383,6 +421,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
             />
           ) : null}
           <Production
+            addNewVersion={addNewVersion}
             articleTemplate={articleTemplate}
             client={client}
             currentUser={currentUser}

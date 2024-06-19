@@ -595,6 +595,7 @@ const ru = {
         cmos: 'Руководство стиля Чикаго (CMOS)',
         cse: 'Совет редакторов науки (CSE)',
         'Select locale for citations': 'Выберите локаль для цитирования',
+        historyIntervalInMinutes: 'Интервал истории в минутах',
       },
       allowedIPs: 'Список IP-адресов репозитория, которым разрешен доступ',
       api: 'Один API',

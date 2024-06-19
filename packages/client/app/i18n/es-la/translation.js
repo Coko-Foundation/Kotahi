@@ -596,6 +596,7 @@ const esLa = {
         cse: 'Consejo de Editores Científicos (CSE)',
         'Select locale for citations':
           'Seleccionar configuración regional para citas',
+        historyIntervalInMinutes: 'Intervalo de historia en minutos',
       },
       allowedIPs: 'Lista de IP del repositorio a las que se permite el acceso',
       api: 'API de Kotahi',
