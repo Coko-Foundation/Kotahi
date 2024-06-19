@@ -575,6 +575,7 @@ const en = {
         cmos: 'Chicago Manual of Style (CMOS)',
         cse: 'Council of Science Editors (CSE)',
         'Select locale for citations': 'Select locale for citations',
+        historyIntervalInMinutes: 'History interval in minutes',
       },
       allowedIPs: 'List of repository IPs allowed access',
       api: 'COAR Notify',

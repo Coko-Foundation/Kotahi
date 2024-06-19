@@ -5,16 +5,35 @@ import { ConfigContext } from '../config/src'
 import { color } from '../../theme'
 
 const Tab = styled.div`
-  background-color: ${({ active }) =>
-    active ? color.brand1.tint70 : color.gray90};
-  border-bottom: 2px solid
-    ${({ active }) => (active ? color.brand1.base : color.gray90)};
+  --bg-active: ${color.backgroundA};
+  --bg-inactive: linear-gradient(
+    180deg,
+    #ececec 0%,
+    #ececec 40.1%,
+    #d6d6d6 100%
+  );
+
+  background: ${({ active }) =>
+    active ? `var(--bg-active)` : `var(--bg-inactive)`};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;
+  box-shadow: ${({ active }) =>
+    active
+      ? '-4px 0 7px -4px rgba(0, 0, 0, 0.1), 4px 0 7px -4px rgba(0, 0, 0, 0.1), 0 -4px 7px -4px rgba(0, 0, 0, 0.1)'
+      : 'none'};
   color: ${color.text};
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
+  margin-right: ${props => props.theme.spacing.e};
   padding: calc(${th('gridUnit')} - 1px) 1em;
+  padding-bottom: 2px;
+
+  & > div {
+    border-bottom: 3px solid
+      ${({ active }) => (active ? color.brand1.base : 'none')};
+    margin-bottom: -2px;
+    padding-bottom: 4px;
+  }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${override('ui.Tab')}
@@ -44,11 +63,23 @@ export const TabsContainer = styled.div`
     css`
       grid-area: ${props.gridArea};
     `};
+
+  ${props => props.sticky && `background-color: ${color.backgroundC};`}
+  ${props => props.sticky && 'position: sticky;'}
+  ${props => props.sticky && 'top: -16px;'}
+  ${props => props.sticky && 'z-index: 999;'}
+
+  & ~ div .waxmenu {
+    ${props => props.sticky && 'top: 23px;'};
+  }
 `
 
 const TabContainer = styled.div.attrs(props => ({
   'data-test-id': props['data-test-id'] || 'tab-container',
-}))``
+}))`
+  align-items: stretch;
+  display: flex;
+`
 
 const HideChatButton = styled.button`
   align-items: center;
@@ -106,7 +137,9 @@ const Tabs = ({
               key={key}
               onClick={() => setActiveKeyAndCallOnChange(key)}
             >
-              <Tab active={activeKey === key}>{label || key}</Tab>
+              <Tab active={activeKey === key}>
+                <div>{label || key}</div>
+              </Tab>
             </TabContainer>
           ))}
         </div>

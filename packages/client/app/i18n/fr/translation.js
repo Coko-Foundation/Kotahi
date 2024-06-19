@@ -603,6 +603,7 @@ const fr = {
         cse: 'Conseil des éditeurs scientifiques (CSE)',
         'Select locale for citations':
           'Sélectionnez la langue pour les citations',
+        historyIntervalInMinutes: 'Intervalle d’historique en minutes',
       },
       allowedIPs: 'Liste des adresses IP du référentiel autorisées à accéder',
       api: 'API Kotahi',

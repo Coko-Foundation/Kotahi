@@ -14,7 +14,7 @@ import { DownloadDropdown } from './DownloadDropdown'
 import {
   Heading,
   HeadingWithAction,
-  HiddenTabs,
+  Tabs,
   Manuscript,
   ErrorBoundary,
   SectionContent,
@@ -32,6 +32,9 @@ import PreviousFeedbackSubmissions from './PreviousFeedbackSubmissions'
 import { CssAssistantProvider } from '../../../component-ai-assistant/hooks/CssAssistantContext'
 import AiPDFDesigner from '../../../component-ai-assistant/AiPDFDesigner'
 import { ConfigContext } from '../../../config/src'
+import Versioning from './Versioning'
+
+const useVersioning = true
 
 const PreviousFeedBackSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -101,12 +104,20 @@ const Production = ({
   onAssetManager,
   isAuthorProofingVersion,
   isReadOnlyVersion,
+  authorList,
+  addNewVersion,
 }) => {
   const versions = gatherManuscriptVersions(unparsedManuscript)
 
   const showFeedbackTab = versions.some(
     v => v.manuscript?.authorFeedback?.previousSubmissions?.length > 0,
   )
+
+  const saveCurrentVersion = async source => {
+    // This just saves the current version of the manuscript on demand
+    // Right now, this is just saving the source of the manuscript
+    updateManuscript(manuscript.id, { meta: { source } })
+  }
 
   const debouncedSave = useCallback(
     debounce(source => {
@@ -291,12 +302,40 @@ const Production = ({
 
   const tabSections = []
 
-  tabSections.push(editorSection)
+  const versioningSection = {
+    key: 'versioning',
+    label: 'History',
+    content: (
+      <Versioning
+        addNewVersion={addNewVersion} // this is basically the same
+        authorList={authorList}
+        currentUser={currentUser}
+        manuscript={manuscript}
+        saveCurrentVersion={saveCurrentVersion}
+      />
+    ),
+  }
 
   // Only author in author proofing mode can have editor seciton and feedback section visible
   if (isAuthorProofingVersion) {
     tabSections.push(feedbackSection)
   } else {
+    // The manuscript editor can only view editor section and feedback section in readonly mode
+    if (isReadOnlyVersion && currentUserRole.isEditor) {
+      tabSections.push(editorSection)
+    } else {
+      tabSections.push(editorSection)
+      if (useVersioning) tabSections.push(versioningSection)
+
+      tabSections.push(
+        htmlTemplate,
+        cssPagedJS,
+        uploadAssets,
+        manuscriptMetadata,
+        cssAiAssistant,
+      )
+    }
+
     if (!isReadOnlyVersion && showFeedbackTab) tabSections.push(feedbackSection) // The manuscript versions should have one feedback submitted record to show feedback tab
     tabSections.push(
       htmlTemplate,
@@ -328,7 +367,7 @@ const Production = ({
         </FlexRow>
       </HeadingWithAction>
       <ErrorBoundary>
-        <HiddenTabs defaultActiveKey="editor" sections={tabSections} />
+        <Tabs defaultActiveKey="editor" sections={tabSections} />
       </ErrorBoundary>
     </StyledManuscript>
   )
