@@ -83,6 +83,7 @@ const ru = {
       kanban: {
         'Last updated': 'Последнее обновление',
         'Invited via email': 'Приглашен по email',
+        isCollaborative: 'Совместный обзор',
       },
       days: {
         day: 'день',

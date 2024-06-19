@@ -43,9 +43,7 @@ const DecisionReviews = ({
   updateReviewJsonData,
   currentUser,
 }) => {
-  const collaborativeReviewToShow = manuscript?.reviews?.length
-    ? manuscript.reviews.find(r => r.isCollaborative)
-    : null
+  const collaborativeReviewToShow = manuscript.reviews.find(r => r.isCollaborative) ?? null
 
   const reviewsToShow = manuscript?.reviews?.length
     ? manuscript.reviews

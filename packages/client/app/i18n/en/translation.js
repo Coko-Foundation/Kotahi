@@ -82,6 +82,7 @@ const en = {
       kanban: {
         'Last updated': 'Last updated',
         'Invited via email': 'Invited via email',
+        isCollaborative: 'Collaborative review',
       },
       days: {
         day: 'day',

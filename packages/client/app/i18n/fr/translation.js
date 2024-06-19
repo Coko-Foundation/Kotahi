@@ -82,6 +82,7 @@ const fr = {
       kanban: {
         'Last updated': 'Dernière mise à jour',
         'Invited via email': 'Invité par email',
+        isCollaborative: 'Revue collaborative',
       },
       days: {
         day: 'jour',

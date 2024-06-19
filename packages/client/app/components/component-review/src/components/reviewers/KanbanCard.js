@@ -162,7 +162,7 @@ const KanbanCard = ({
           {isCollaborative && (
             <CollaborativeBadge>
               <ColorBadge color={config.groupIdentity.primaryColor}>
-                Is collaborative review
+                t('common.kanban.isCollaborative')
               </ColorBadge>
             </CollaborativeBadge>
           )}

@@ -83,6 +83,7 @@ const esLa = {
       kanban: {
         'Last updated': 'Última actualización',
         'Invited via email': 'Invitado por correo electrónico',
+        isCollaborative: 'Revisión colaborativa',
       },
       days: {
         day: 'día',
