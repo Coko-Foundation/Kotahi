@@ -69,7 +69,6 @@ const normalizeStatus = statusString =>
 
 const KanbanBoard = ({
   createFile,
-  createYjsProvider,
   currentUser,
   deleteFile,
   invitations,
@@ -112,8 +111,11 @@ const KanbanBoard = ({
   })
 
   invitations
-    .filter(i => i.invitedPersonType === 'REVIEWER' ||
-      i.invitedPersonType === 'COLLABORATIVE_REVIEWER')
+    .filter(
+      i =>
+        i.invitedPersonType === 'REVIEWER' ||
+        i.invitedPersonType === 'COLLABORATIVE_REVIEWER',
+    )
     .map(i => ({ ...i, status: normalizeStatus(i.status) }))
     .forEach(invitation => {
       const existingReviewer = emailAndWebReviewers.find(
@@ -165,7 +167,8 @@ const KanbanBoard = ({
       )
       .filter((reviewer, index) => {
         const hasTheRightStatus =
-          reviewer.status === normalizeStatus(status.value) || (reviewer.status === 'çlosed' && status.value === 'completed')
+          reviewer.status === normalizeStatus(status.value) ||
+          (reviewer.status === 'çlosed' && status.value === 'completed')
 
         const isDuplicate =
           !!reviewer.user &&
@@ -214,7 +217,6 @@ const KanbanBoard = ({
                   ).map(reviewer => (
                     <KanbanCard
                       createFile={createFile}
-                      createYjsProvider={createYjsProvider}
                       currentUser={currentUser}
                       deleteFile={deleteFile}
                       isCurrentVersion={isCurrentVersion}

@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
-import YjsContext from '../../../provider-yjs/yjsProvider'
+import YjsContext from '../../../provider-yjs/YjsProvider'
 
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'

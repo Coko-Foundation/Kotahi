@@ -2,10 +2,10 @@
 // import { YjsService } from 'wax-prosemirror-services'
 import YjsService from './YjsService'
 
-export default (config, { yjsProvider, ydoc, yjsType }) => {
-  if (yjsProvider && ydoc) {
+export default (config, { wsProvider, ydoc, yjsType }) => {
+  if (wsProvider && ydoc) {
     config.YjsService = {
-      provider: () => yjsProvider,
+      provider: () => wsProvider,
       ydoc: () => ydoc,
       yjsType,
       cursorBuilder: user => {

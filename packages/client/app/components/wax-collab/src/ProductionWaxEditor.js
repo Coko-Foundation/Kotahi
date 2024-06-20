@@ -114,6 +114,7 @@ const ProductionWaxEditor = ({
   isAuthorProofingVersion,
   getDataFromDatacite,
   yjsProvider,
+  wsProvider,
   ydoc,
   name,
   ...rest
@@ -274,7 +275,7 @@ const ProductionWaxEditor = ({
         getDataFromDatacite || false,
       )
 
-  config = yjsConfig(config, { yjsProvider, ydoc, yjsType: name })
+  config = yjsConfig(config, { wsProvider, ydoc, yjsType: name })
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>

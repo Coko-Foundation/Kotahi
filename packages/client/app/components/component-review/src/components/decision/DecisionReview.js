@@ -14,7 +14,6 @@ const Root = styled.div`
 
 const DecisionReview = ({
   canEditReviews,
-  createYjsProvider,
   review,
   reviewForm,
   ordinal,
@@ -82,7 +81,6 @@ const DecisionReview = ({
       />
       <ReviewDetailsModal
         canEditReviews={canEditReviews}
-        createYjsProvider={createYjsProvider}
         currentUser={currentUser}
         isControlPage={isControlPage}
         isOpen={open}

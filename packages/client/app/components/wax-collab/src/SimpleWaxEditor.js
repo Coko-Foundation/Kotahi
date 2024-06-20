@@ -15,7 +15,7 @@ const SimpleWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
-  yjsProvider,
+  wsProvider,
   ydoc,
   name,
   ...rest
@@ -24,7 +24,7 @@ const SimpleWaxEditor = ({
   useEffect(() => debounceChange.flush, [])
 
   const config = yjsConfig(simpleWaxEditorConfig(), {
-    yjsProvider,
+    wsProvider,
     ydoc,
     yjsType: name,
   })

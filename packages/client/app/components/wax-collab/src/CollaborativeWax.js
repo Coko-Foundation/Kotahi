@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import YjsContext from '../../provider-yjs/yjsProvider'
+import YjsContext from '../../provider-yjs/YjsProvider'
 
 import Editor from '.'
 
@@ -15,18 +15,18 @@ const CollaborativeWax = ({
 }) => {
   const { currentUser } = collaborativeObject
 
-  const { yjsProvider, ydoc } = useContext(YjsContext)
+  const { wsProvider, ydoc } = useContext(YjsContext)
 
   const Component = editorMode ? Editor[editorMode] : component
 
-  if (!yjsProvider || !ydoc) return <Spinner />
+  if (!wsProvider || !ydoc) return <Spinner />
 
   return Component ? (
     <Component
       {...rest}
       user={currentUser}
       ydoc={ydoc}
-      yjsProvider={yjsProvider}
+      wsProvider={wsProvider}
     />
   ) : null
 }

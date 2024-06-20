@@ -29,7 +29,6 @@ const getReviewerTeamMember = (
 
 const DecisionReviews = ({
   canEditReviews,
-  createYjsProvider,
   reviewForm,
   manuscript,
   lockUnlockReview,
@@ -43,7 +42,8 @@ const DecisionReviews = ({
   updateReviewJsonData,
   currentUser,
 }) => {
-  const collaborativeReviewToShow = manuscript.reviews.find(r => r.isCollaborative) ?? null
+  const collaborativeReviewToShow =
+    manuscript.reviews.find(r => r.isCollaborative) ?? null
 
   const reviewsToShow = manuscript?.reviews?.length
     ? manuscript.reviews
@@ -128,7 +128,6 @@ const DecisionReviews = ({
           <DecisionReview
             canEditReviews={canEditReviews}
             canHideReviews={canHideReviews}
-            createYjsProvider={createYjsProvider}
             currentUser={currentUser}
             isControlPage
             lockUnlockReview={lockUnlockReview}

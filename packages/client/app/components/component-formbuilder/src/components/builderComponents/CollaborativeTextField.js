@@ -6,7 +6,7 @@ import Color from 'color'
 import { TextAreaBinding } from 'y-textarea'
 
 import { Spinner } from '../../../../shared'
-import YjsContext from '../../../../provider-yjs/yjsProvider'
+import YjsContext from '../../../../provider-yjs/YjsProvider'
 
 const TextFieldSyled = styled(TextField)`
   position: relative;
@@ -32,19 +32,28 @@ const TextFieldSyled = styled(TextField)`
 `
 
 const arrayColor = [
-  '#D9E3F0',
-  '#F47373',
-  '#697689',
-  '#37D67A',
-  '#2CCCE4',
-  '#555555',
-  '#dce775',
-  '#ff8a65',
-  '#ba68c8',
+  '#4363d8',
+  '#ffe119',
+  '#800000',
+  '#dcbeff',
+  '#000075',
+  '#f58231',
+  '#469990',
+  '#f032e6',
+  '#9a6324',
+  '#42d4f4',
+  '#e6194b',
+  '#fabed4',
+  '#3cb44b',
+  '#911eb4',
+  '#bfef45',
+  '#808000',
+  '#ffd8b1',
+  '#aaffc3',
 ]
 
 const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
-  const { yjsProvider, ydoc } = useContext(YjsContext)
+  const { wsProvider, ydoc } = useContext(YjsContext)
   const fieldType = `textInput-${input.name}`
 
   let currentUser = null
@@ -74,16 +83,16 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
 
         const yTextInput = ydoc.getText(fieldType)
         areaBinding = new TextAreaBinding(yTextInput, node, {
-          awareness: yjsProvider.awareness,
+          awareness: wsProvider.awareness,
           clientName: currentUser ? currentUser.username : 'Anonymous',
           color,
         })
       }
     },
-    [yjsProvider, ydoc],
+    [wsProvider, ydoc],
   )
 
-  if (!yjsProvider || !ydoc) return <Spinner />
+  if (!wsProvider || !ydoc) return <Spinner />
 
   return (
     <TextFieldSyled

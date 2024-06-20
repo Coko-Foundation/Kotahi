@@ -37,7 +37,7 @@ const FullWaxEditor = ({
   user,
   manuscriptId,
   getActiveViewDom,
-  yjsProvider,
+  wsProvider,
   ydoc,
   name,
   ...rest
@@ -68,7 +68,7 @@ const FullWaxEditor = ({
   const editorRef = useRef(null)
 
   const config = yjsConfig(fullWaxEditorConfig(handleAssetManager, readonly), {
-    yjsProvider,
+    wsProvider,
     ydoc,
     yjsType: name,
   })

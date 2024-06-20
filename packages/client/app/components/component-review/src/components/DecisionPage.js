@@ -11,7 +11,6 @@ import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
-import YjsContext from '../../../provider-yjs/yjsProvider'
 import { CommsErrorBanner, Spinner } from '../../../shared'
 import DecisionVersions from './DecisionVersions'
 import { roles } from '../../../../globals'
@@ -95,8 +94,6 @@ const deleteFileMutation = gql`
 let debouncers = {}
 
 const DecisionPage = ({ currentUser, match }) => {
-  const { createYjsProvider } = useContext(YjsContext)
-
   const { t } = useTranslation()
   // start of code from submit page to handle possible form changes
   const client = useApolloClient()
@@ -525,7 +522,6 @@ const DecisionPage = ({ currentUser, match }) => {
       createFile={createFile}
       createTaskEmailNotificationLog={createTaskEmailNotificationLog}
       createTeam={createTeam}
-      createYjsProvider={createYjsProvider}
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}

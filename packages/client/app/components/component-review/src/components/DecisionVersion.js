@@ -48,7 +48,6 @@ const DecisionVersion = ({
   form,
   currentDecisionData,
   currentUser,
-  createYjsProvider,
   version,
   versionNumber,
   isCurrentVersion,
@@ -325,7 +324,6 @@ const DecisionVersion = ({
           )}
           <KanbanBoard
             createFile={createFile}
-            createYjsProvider={createYjsProvider}
             currentUser={currentUser}
             deleteFile={deleteFile}
             invitations={invitations}
@@ -518,7 +516,6 @@ const DecisionVersion = ({
             <DecisionReviews
               canEditReviews={config?.controlPanel?.editorsEditReviewsEnabled}
               canHideReviews={canHideReviews}
-              createYjsProvider={createYjsProvider}
               currentUser={currentUser}
               invitations={invitations}
               lockUnlockReview={lockUnlockReview}

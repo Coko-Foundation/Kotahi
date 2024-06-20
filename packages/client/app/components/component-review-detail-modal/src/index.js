@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { get } from 'lodash'
 import { Checkbox } from '@pubsweet/ui/dist/atoms'
 import { useTranslation } from 'react-i18next'
+import YjsContext from '../../provider-yjs/YjsProvider'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 import { ensureJsonIsParsed } from '../../../shared/objectUtils'
 import Modal, { SecondaryButton } from '../../component-modal/src/Modal'
@@ -58,7 +59,6 @@ const ReviewDetailsModal = (
 ) => {
   const {
     createFile,
-    createYjsProvider,
     currentUser,
     deleteFile,
     status,
@@ -82,6 +82,8 @@ const ReviewDetailsModal = (
     updateReview,
     updateReviewJsonData,
   } = props
+
+  const { createYjsProvider } = useContext(YjsContext)
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()

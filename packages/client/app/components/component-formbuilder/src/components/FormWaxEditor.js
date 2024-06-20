@@ -15,13 +15,13 @@ const FormWaxEditor = ({
   placeholder,
   spellCheck,
   'data-testid': dataTestid,
-  yjsProvider,
+  wsProvider,
   ydoc,
   name,
   ...rest
 }) => {
   const config = yjsConfig(simpleWaxEditorConfig(), {
-    yjsProvider,
+    wsProvider,
     ydoc,
     yjsType: name,
   })

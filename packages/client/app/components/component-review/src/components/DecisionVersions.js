@@ -20,7 +20,6 @@ const DecisionVersions = ({
   assignAuthorForProofing,
   roles,
   currentUser,
-  createYjsProvider,
   decisionForm,
   chatProps,
   channels,
@@ -123,7 +122,6 @@ const DecisionVersions = ({
                 createFile={createFile}
                 createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 createTeam={createTeam}
-                createYjsProvider={createYjsProvider}
                 currentDecisionData={initialValue}
                 currentUser={currentUser}
                 decisionForm={decisionForm}

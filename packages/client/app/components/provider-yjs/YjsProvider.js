@@ -6,19 +6,13 @@ import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 import { ConfigContext } from '../config/src'
 
-const YjsContext = React.createContext({})
+const YjsContext = React.createContext({
+  jsProvider: null,
+  ydoc: null,
+  createYjsProvider: () => {},
+})
 
 const { Provider, Consumer } = YjsContext
-
-const withYjs = Component => {
-  const C = props => (
-    <Consumer>
-      {providerProps => <Component {...providerProps} {...props} />}
-    </Consumer>
-  )
-
-  return C
-}
 
 const arrayColor = [
   '#4363d8',
@@ -43,7 +37,7 @@ const arrayColor = [
 
 const YjsProvider = ({ children }) => {
   const { groupId } = useContext(ConfigContext)
-  const [yjsProvider, setYjsProvider] = useState(null)
+  const [wsProvider, setWsProvider] = useState(null)
   const [ydoc, setYDoc] = useState(null)
 
   const createYjsProvider = ({ currentUser, object, identifier }) => {
@@ -66,8 +60,8 @@ const YjsProvider = ({ children }) => {
 
     let provider = null
 
-    if (yjsProvider) {
-      provider = yjsProvider
+    if (wsProvider) {
+      provider = wsProvider
     } else {
       if (!identifier) {
         // eslint-disable-next-line no-param-reassign
@@ -101,13 +95,13 @@ const YjsProvider = ({ children }) => {
       }
     }
 
-    setYjsProvider(provider)
+    setWsProvider(provider)
   }
 
   return (
     <Provider
       value={{
-        yjsProvider,
+        wsProvider,
         ydoc,
         createYjsProvider,
       }}
@@ -117,6 +111,6 @@ const YjsProvider = ({ children }) => {
   )
 }
 
-export { Consumer as YjsConsumer, YjsProvider, withYjs }
+export { Consumer as YjsConsumer, YjsProvider }
 
 export default YjsContext

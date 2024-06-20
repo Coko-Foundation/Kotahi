@@ -78,7 +78,6 @@ const CollaborativeBadge = styled.div`
 
 const KanbanCard = ({
   createFile,
-  createYjsProvider,
   currentUser,
   deleteFile,
   reviewer,
@@ -108,7 +107,6 @@ const KanbanCard = ({
     <>
       <ReviewDetailsModal
         createFile={createFile}
-        createYjsProvider={createYjsProvider}
         currentUser={currentUser}
         deleteFile={deleteFile}
         isInvitation={isInvitation}
@@ -162,7 +160,7 @@ const KanbanCard = ({
           {isCollaborative && (
             <CollaborativeBadge>
               <ColorBadge color={config.groupIdentity.primaryColor}>
-                t('common.kanban.isCollaborative')
+                {t('common.kanban.isCollaborative')}
               </ColorBadge>
             </CollaborativeBadge>
           )}
