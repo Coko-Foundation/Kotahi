@@ -181,6 +181,9 @@ const en = {
         'Publishing error': 'Publishing error',
         'Some targets failed to publish': 'Some targets failed to publish.',
         openOnline: 'Open online',
+        continueSubmission: 'Continue Submission',
+        revise: 'Revise',
+        continueRevision: 'Continue Revision',
       },
     },
     dashboardPage: {

@@ -185,6 +185,9 @@ const ru = {
         'Some targets failed to publish':
           'Не удалось опубликовать некоторые рукописи.',
         openOnline: 'Открыть онлайн',
+        continueSubmission: 'Продолжить подачу',
+        revise: 'Редактировать',
+        continueRevision: 'Продолжить редактирование',
       },
     },
     dashboardPage: {

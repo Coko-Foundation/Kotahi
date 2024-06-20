@@ -15,17 +15,17 @@ describe('Editor assigning reviewers', () => {
   it('can assign 3 reviewers', () => {
     // login as seniorEditor
     cy.login(seniorEditor, dashboard)
-
     cy.url().should('eq', `${Cypress.config().baseUrl}/journal/dashboard`)
     cy.reload()
     cy.awaitDisappearSpinner()
+
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // login as seniorEditor
-      // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
       cy.reload()
       DashboardPage.clickDashboardTab(2)
+
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(2000)
       DashboardPage.clickControl() // Navigate to Control Page
@@ -38,6 +38,7 @@ describe('Editor assigning reviewers', () => {
         ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
       })
     })
+
     // Go to dashboard and verify number of invited reviewer
     Menu.clickDashboard()
     cy.get('.ReviewStatusDonut__CenterLabel-sc-76zxfe-1').contains('6')
