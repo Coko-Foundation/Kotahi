@@ -72,11 +72,11 @@
     "uuid": "^8.3.2",
     "winston": "2.4.5",
     "ws": "^8.12.1",
-    "y-protocols": "^1.0.5",
-    "yjs": "^13.5.42",
     "xml-js": "^1.6.11",
     "xml2js": "^0.4.23",
-    "xsd-validator": "^1.1.1"
+    "xsd-validator": "^1.1.1",
+    "y-protocols": "^1.0.5",
+    "yjs": "^13.5.42"
   },
   "devDependencies": {
     "jest": "^27.1.0",

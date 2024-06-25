@@ -196,7 +196,7 @@ const DecisionPage = ({ currentUser, match }) => {
   const [lockUnlockReview] = useMutation(
     lockUnlockCollaborativeReviewMutation,
     {
-      update: (cache, { data: { lockUnlockCollaborativeReview } }) => {
+      update: async (cache, { data: { lockUnlockCollaborativeReview } }) => {
         cache.modify({
           id: cache.identify({
             __typename: 'Review',
@@ -208,6 +208,32 @@ const DecisionPage = ({ currentUser, match }) => {
             },
           },
         })
+
+        const team =
+          data.manuscript.teams.find(
+            tm =>
+              tm.objectId === data.manuscript.id &&
+              tm.objectType === 'manuscript' &&
+              tm.role === 'collaborativeReviewer',
+          ) || {}
+
+        if (team.members) {
+          team.members.forEach(member => {
+            cache.modify({
+              id: cache.identify({
+                __typename: 'TeamMember',
+                id: member.id,
+              }),
+              fields: {
+                status() {
+                  return lockUnlockCollaborativeReview.isLock
+                    ? 'closed'
+                    : 'inProgress'
+                },
+              },
+            })
+          })
+        }
       },
     },
   )

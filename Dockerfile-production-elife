@@ -12,7 +12,7 @@ ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
 ARG flax_site_url
-
+ARG client_yjs_websocket_urL
 
 ENV USE_COLAB_EMAIL $use_colab_email
 ENV NODE_ENV "production"
@@ -26,7 +26,7 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV FLAX_SITE_URL $flax_site_url
-
+ENV CLIENT_YJS_WEBSOCKET_URL $client_yjs_websocket_url
 
 RUN apk add --no-cache git python3 make g++ bash tar
 
