@@ -34,7 +34,6 @@ export const selectReviewerInvitationEmail = (
   return reviewerInvitationEmailTemplate
 }
 
-
 export const findReviewFromReviewer = (allReviews, reviewer) => {
   return allReviews
     .filter(r => r.isCollaborative === reviewer.isCollaborative)

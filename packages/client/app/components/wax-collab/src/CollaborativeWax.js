@@ -25,8 +25,8 @@ const CollaborativeWax = ({
     <Component
       {...rest}
       user={currentUser}
-      ydoc={ydoc}
       wsProvider={wsProvider}
+      ydoc={ydoc}
     />
   ) : null
 }
