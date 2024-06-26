@@ -118,6 +118,7 @@ const InvitationAcceptedPage = () => {
             manuscriptId,
             userId: invitedUserId,
             invitationId,
+            isCollaborative: false,
             isShared: !!data.invitationManuscriptId.isShared,
           },
         })
