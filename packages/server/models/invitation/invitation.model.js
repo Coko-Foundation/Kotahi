@@ -1,5 +1,23 @@
 const { BaseModel } = require('@coko/server')
 
+const suggestedReviewerItem = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    firstName: { type: ['string', 'null'] },
+    lastName: { type: ['string', 'null'] },
+    email: { type: ['string', 'null'], format: 'email' },
+    affiliation: { type: ['string', 'null'] },
+  },
+}
+
+const suggestedReviewers = {
+  type: ['array'],
+  default: [],
+  additionalProperties: false,
+  items: suggestedReviewerItem,
+}
+
 class Invitation extends BaseModel {
   static get tableName() {
     return 'invitations'
@@ -22,6 +40,7 @@ class Invitation extends BaseModel {
         },
         responseComment: { type: ['string', 'null'] },
         declinedReason: { type: ['string', 'null'] },
+        suggestedReviewers,
         userId: { type: ['string', 'null'], format: 'uuid' },
         isShared: { type: ['boolean'] },
       },

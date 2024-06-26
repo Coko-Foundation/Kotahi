@@ -89,6 +89,11 @@ const KanbanBoard = ({
       ...reviewer,
       status: normalizeStatus(reviewer.status),
       isEmail: false, // This will be revised to true if we find a matching invitation below
+      suggestedReviewers: invitations.find(
+        invitation =>
+          invitation.invitedPersonType === 'REVIEWER' &&
+          invitation.user?.id === reviewer.user.id,
+      )?.suggestedReviewers,
     })
   })
 

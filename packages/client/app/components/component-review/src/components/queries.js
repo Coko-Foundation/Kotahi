@@ -45,6 +45,12 @@ const manuscriptFields = `
     declinedReason
     responseComment
     responseDate
+    suggestedReviewers {
+      firstName
+      lastName
+      email
+      affiliation
+    }
     toEmail
     invitedPersonName
     updated

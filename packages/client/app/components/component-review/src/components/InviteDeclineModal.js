@@ -19,6 +19,36 @@ const ResponseCommentRow = styled.div`
   gap: 10px;
 `
 
+const SuggestedReviewerRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`
+
+const SuggestedReviewerContainer = styled.div`
+  display: flex;
+`
+
+const SuggestedReviewerFieldLabel = styled.span`
+  font-weight: bold;
+  margin-right: 5px;
+`
+
+const SuggestedReviewerFieldValue = styled.span`
+  margin-right: 8px;
+`
+
+const SuggestedReviewerInnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
+
+const SuggestedReviewerInnerRow = styled.div`
+  display: flex;
+  width: 100%;
+`
+
 const ModalBodyRow = styled.div`
   align-items: center;
   display: flex;
@@ -85,6 +115,38 @@ const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {
               t('modals.inviteDeclined.No reason provided')}
           </TextChange>
         </ResponseCommentRow>
+        <SuggestedReviewerRow>
+          <StyledH4>Suggested Reviewers</StyledH4>
+          {invitation.suggestedReviewers.map((reviewer, i) => (
+            /* eslint-disable react/no-array-index-key */
+            <SuggestedReviewerContainer key={`suggestedReviewer-${i}`}>
+              <SuggestedReviewerInnerContainer>
+                <SuggestedReviewerInnerRow>
+                  <SuggestedReviewerFieldLabel>
+                    Full Name:
+                  </SuggestedReviewerFieldLabel>
+                  <SuggestedReviewerFieldValue>
+                    {`${reviewer.firstName} ${reviewer.lastName}`}
+                  </SuggestedReviewerFieldValue>
+                  <SuggestedReviewerFieldLabel>
+                    Email:
+                  </SuggestedReviewerFieldLabel>
+                  <SuggestedReviewerFieldValue>
+                    {reviewer.email}
+                  </SuggestedReviewerFieldValue>
+                </SuggestedReviewerInnerRow>
+                <SuggestedReviewerInnerRow>
+                  <SuggestedReviewerFieldLabel>
+                    Affiliation:
+                  </SuggestedReviewerFieldLabel>
+                  <SuggestedReviewerFieldValue>
+                    {reviewer.affiliation}
+                  </SuggestedReviewerFieldValue>
+                </SuggestedReviewerInnerRow>
+              </SuggestedReviewerInnerContainer>
+            </SuggestedReviewerContainer>
+          ))}
+        </SuggestedReviewerRow>
       </ModalBody>
     </Modal>
   )
