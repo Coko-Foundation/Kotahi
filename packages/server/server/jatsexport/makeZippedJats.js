@@ -81,6 +81,16 @@ const makeZipFile = async (manuscriptId, jats) => {
   })
 
   // TODO: this is screwing up my source tags!
+
+  // added to keep titles with tags from screwing up
+
+  $('title').replaceWith((index, el) => {
+    const $elem = $(el)
+    const titleText = $elem.text()
+    const outHtml = `<title>${titleText}</title>`
+    return outHtml
+  })
+
   let outJats = $.html()
 
   // 3. check if there are supplementary files
@@ -124,7 +134,6 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   // console.log(outJats)
   const { svgedSource, svgList } = await makeSvgsFromLatex(outJats)
-
   // This replace all is to make sure that the JATS tag <source> isn't turned into the empty HTML tag <source>
 
   const cleanedSource = replaceAll(

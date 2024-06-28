@@ -18,13 +18,32 @@ const sectionRegexes = [
 
 const insertSections = markup => {
   let result = markup
+  // TODO: we need to run html to JATS on what's inside the title tag!
   sectionRegexes.forEach(regex => {
     result = result.replace(regex, '<sec><title>$1</title>$2</sec>')
   })
+  const firstTitleContent = /<title>((?:(?!<\/title>)[\s\S])*)<\/title>/
+
+  if (result.match(firstTitleContent)) {
+    const replacementTitle = convertRemainingTags(
+      result.match(firstTitleContent)[1],
+    )
+
+    result = result.replace(
+      firstTitleContent,
+      `<title>${replacementTitle}</title>`,
+    )
+    // console.log(
+    //   'firstTitleContent',
+    //   convertRemainingTags(result.match(firstTitleContent)[1]),
+    // )
+  }
+
   return result
 }
 
 const convertImages = html => {
+  // Note that this will destroy any non-HTML tags that happen before this!
   const dom = htmlparser2.parseDocument(html)
 
   const $ = cheerio.load(dom, {
