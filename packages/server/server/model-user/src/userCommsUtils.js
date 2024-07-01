@@ -120,7 +120,6 @@ const sendEmailWithPreparedData = async (
     externalName, // New User username
     currentUser, // Name of the currentUser or senderName
     groupId,
-    teamMemberStatus = '', // updated team member status
   } = inputParsed
 
   const selectedEmailTemplateData = await EmailTemplate.query(trx).findById(
@@ -159,8 +158,6 @@ const sendEmailWithPreparedData = async (
     manuscriptPageUrl += '/review'
   } else if (roles.author) {
     manuscriptPageUrl += '/submit'
-  } else if (roles.collaborator) {
-    manuscriptPageUrl += '/evaluation'
   } else {
     manuscriptPageUrl = `${appUrl}/dashboard`
   }
@@ -253,14 +250,6 @@ const sendEmailWithPreparedData = async (
     instance = 'generic'
   }
 
-  let accessType = teamMemberStatus
-
-  if (teamMemberStatus === 'read') {
-    accessType = 'view'
-  } else if (teamMemberStatus === 'write') {
-    accessType = 'edit'
-  }
-
   const ccEmails = await getEditorEmails(manuscriptId, { trx })
 
   try {
@@ -278,7 +267,6 @@ const sendEmailWithPreparedData = async (
         purpose,
         status,
         senderId,
-        accessType,
         manuscriptNumber: manuscript.shortId,
         manuscriptLink: manuscriptPageUrl,
         manuscriptTitle: manuscript.submission.$title,

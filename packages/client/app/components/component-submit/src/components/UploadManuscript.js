@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import styled, { css, keyframes, withTheme } from 'styled-components'
 import { Icon } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
@@ -173,14 +173,6 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
     config,
   })
 
-  const isLabInstance = ['lab'].includes(config.instanceName)
-
-  useEffect(() => {
-    if (isLabInstance) {
-      uploadManuscript()
-    }
-  }, [])
-
   // const status = completed
   //   ? 'completed'
   //   : error
@@ -224,40 +216,26 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
               ) : (
                 <Info completed={completed}>
                   {completed
-                    ? t(
-                        `newSubmission.${
-                          isLabInstance ? 'Article' : 'Submission'
-                        } created`,
-                      )
-                    : t(
-                        `newSubmission.${
-                          isLabInstance
-                            ? 'Creating article'
-                            : 'Upload Manuscript'
-                        }`,
-                      )}
+                    ? t('newSubmission.Submission created')
+                    : t('newSubmission.Upload Manuscript')}
                 </Info>
               )}
             </Main>
-            {!isLabInstance && (
-              <SubInfo>
-                {converting && t('newSubmission.converting')}
-                {!converting && (
-                  <>
-                    <p>{t('newSubmission.dragNDrop')}</p>
-                    <em>{t('newSubmission.acceptedFiletypes')}</em>
-                  </>
-                )}
-              </SubInfo>
-            )}
+            <SubInfo>
+              {converting && t('newSubmission.converting')}
+              {!converting && (
+                <>
+                  <p>{t('newSubmission.dragNDrop')}</p>
+                  <em>{t('newSubmission.acceptedFiletypes')}</em>
+                </>
+              )}
+            </SubInfo>
           </Root>
         )}
       </Dropzone>
-      {!isLabInstance && (
-        <Action data-testid="submitUrl" onClick={() => uploadManuscript()}>
-          {t('newSubmission.Submit a URL instead')}
-        </Action>
-      )}
+      <Action data-testid="submitUrl" onClick={() => uploadManuscript()}>
+        {t('newSubmission.Submit a URL instead')}
+      </Action>
     </>
   )
 }

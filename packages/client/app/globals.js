@@ -90,7 +90,6 @@ export const articleStatuses = {
   evaluated: 'evaluated',
   new: 'new',
   published: 'published',
-  unpublished: 'unpublished',
 }
 
 export const roles = [

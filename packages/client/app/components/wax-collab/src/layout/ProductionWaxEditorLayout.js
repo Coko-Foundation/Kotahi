@@ -100,7 +100,7 @@ const ProductionWaxEditorLayout =
 
     return (
       <div style={fullScreenStyles}>
-        <Grid fullHeight readonly={readOnly}>
+        <Grid production readonly={readOnly}>
           {readOnly ? (
             <ProductionEditorDiv>
               <SideMenu />

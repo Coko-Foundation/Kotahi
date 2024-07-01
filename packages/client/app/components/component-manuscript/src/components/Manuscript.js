@@ -1,8 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
-import { ConfigContext } from '../../../config/src'
 
 const Info = styled.span`
   align-items: center;
@@ -33,13 +32,11 @@ const ManuscriptContainer = styled.div`
 `
 
 const Manuscript = ({ file, content, currentUser }) => {
-  const config = useContext(ConfigContext)
   return (
     <Columns>
-      {(file &&
-        file.storedObjects[0].mimetype ===
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
-      ['lab'].includes(config?.instanceName) ? (
+      {file &&
+      file.storedObjects[0].mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
         <ManuscriptContainer>
           <FullWaxEditor readonly user={currentUser} value={content} />
         </ManuscriptContainer>

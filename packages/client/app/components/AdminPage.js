@@ -210,7 +210,7 @@ const AdminPage = () => {
   if (
     currentUser &&
     (isUser || isGroupManager || isAdmin) &&
-    ['journal', 'prc', 'preprint2', 'lab'].includes(instanceName) // TODO: remove instance based logic and refactor it to be enabled and disabled from config manager
+    ['journal', 'prc', 'preprint2'].includes(instanceName) // TODO: remove instance based logic and refactor it to be enabled and disabled from config manager
   ) {
     links.push({
       link: homeLink,
@@ -247,13 +247,7 @@ const AdminPage = () => {
           links: [
             {
               link: submissionFormBuilderLink,
-              name: t(
-                `leftMenu.${
-                  ['lab'].includes(config.instanceName)
-                    ? 'Metadata'
-                    : 'Submission'
-                }`,
-              ),
+              name: t('leftMenu.Submission'),
             },
             {
               link: reviewFormBuilderLink,
@@ -421,7 +415,7 @@ const AdminPage = () => {
             exact
             key="submit"
             path={`${urlFrag}/versions/:version/${
-              ['preprint1', 'preprint2', 'lab'].includes(config.instanceName)
+              ['preprint1', 'preprint2'].includes(config.instanceName)
                 ? 'evaluation'
                 : 'submit'
             }`} // TODO: Remove instance based custom submit page and refactor it use config manager flag in future

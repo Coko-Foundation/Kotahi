@@ -189,48 +189,6 @@ const seedConfig = async (group, instanceName, index, options) => {
         type: 'Config',
       }
       break
-    case 'lab':
-      config = {
-        active: true,
-        formData: {
-          instanceName: 'lab',
-          user: {
-            isAdmin: false,
-          },
-          report: { showInMenu: true },
-          review: { showSummary: false },
-          dashboard: {
-            showSections: ['submission'],
-            loginRedirectUrl: '/dashboard',
-          },
-          manuscript: {
-            labelColumn: true,
-            tableColumns:
-              process.env.MANUSCRIPTS_TABLE_COLUMNS ||
-              'submission.$title,status',
-            manualImport: process.env.ALLOW_MANUAL_IMPORT === 'true',
-            newSubmission: true,
-            paginationCount: 50,
-          },
-          submission: {
-            allowAuthorsSubmitNewVersion: false,
-          },
-          publishing,
-          taskManager: {
-            teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
-          },
-          controlPanel: {
-            showTabs: ['Metadata'],
-            displayManuscriptShortId: true,
-          },
-          notification,
-          eventNotification: {},
-          groupIdentity,
-          kotahiApis: {},
-        },
-        type: 'Config',
-      }
-      break
     case 'prc':
       config = {
         active: true,

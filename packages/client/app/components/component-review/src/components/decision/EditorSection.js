@@ -58,7 +58,6 @@ const mapProps = args => ({
 const Composed = adopt(mapper, mapProps)
 
 const EditorSection = ({
-  allowEmptyManuscript,
   manuscript,
   saveSource,
   onChange,
@@ -72,17 +71,15 @@ const EditorSection = ({
 
   const { t } = useTranslation()
 
-  if (!allowEmptyManuscript) {
-    if (!manuscriptFile) {
-      return <Info>{t('editorSection.noFileLoaded')}</Info>
-    }
-
-    if (
-      manuscriptFile.storedObjects[0].mimetype !==
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    )
-      return <Info>{t('editorSection.noSupportedView')}</Info>
+  if (!manuscriptFile) {
+    return <Info>{t('editorSection.noFileLoaded')}</Info>
   }
+
+  if (
+    manuscriptFile.storedObjects[0].mimetype !==
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  )
+    return <Info>{t('editorSection.noSupportedView')}</Info>
 
   // React.useEffect(() => {
   //   // If we have an onBlur function specified, fire it when there's a dismount
@@ -99,10 +96,6 @@ const EditorSection = ({
     return team.role.toLowerCase().includes('author')
   })
 
-  const collaboratorTeam = manuscript?.teams?.find(team => {
-    return team.role.toLowerCase().includes('collaborator')
-  })
-
   const currentUserIsAuthor =
     authorTeam && currentUser
       ? authorTeam.members.find(member => member.user.id === currentUser.id)
@@ -113,13 +106,6 @@ const EditorSection = ({
       ? editorTeam.members.find(member => member.user.id === currentUser.id)
       : false
 
-  const currentUserIsCollaborator =
-    collaboratorTeam && currentUser
-      ? collaboratorTeam.members.find(
-          member => member.user.id === currentUser.id,
-        )
-      : false
-
   const isAuthorMode = !!(currentUserIsAuthor && readonly)
 
   return (
@@ -127,7 +113,6 @@ const EditorSection = ({
       currentUser={currentUser}
       isAuthorMode={isAuthorMode}
       isCurrentUserAuthor={currentUserIsAuthor}
-      isCurrentUserCollaborator={currentUserIsCollaborator}
       isCurrentUserEditor={currentUserIsEditor}
       manuscript={manuscript}
       readonly={readonly}
@@ -147,8 +132,7 @@ const EditorSection = ({
               !!(
                 currentUserIsEditor ||
                 currentUser.groupRoles.includes('groupManager') ||
-                (currentUserIsAuthor && readonly) ||
-                currentUserIsCollaborator
+                (currentUserIsAuthor && readonly)
               )
             }
             user={currentUser}
@@ -161,7 +145,6 @@ const EditorSection = ({
 }
 
 EditorSection.propTypes = {
-  allowEmptyManuscript: PropTypes.bool,
   manuscript: PropTypes.shape({
     files: PropTypes.arrayOf(
       PropTypes.shape({
@@ -179,7 +162,6 @@ EditorSection.propTypes = {
 }
 
 EditorSection.defaultProps = {
-  allowEmptyManuscript: false,
   onChange: undefined,
   onBlur: undefined,
   readonly: false,
