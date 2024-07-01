@@ -75,6 +75,7 @@ export const FullWaxEditorGrid = styled.div`
   grid-area: editor;
   grid-template-columns: [editorCol] auto [commentsCol] ${props =>
       props.useComments ? 'auto' : 0};
+  grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
   ${waxDefaultStyles}
   z-index: 0;
 `
