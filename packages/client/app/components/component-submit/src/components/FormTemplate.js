@@ -353,10 +353,9 @@ const FormTemplate = ({
         const showSubmitButton =
           submissionButtonText &&
           (isSubmission
-            ? (!['submitted', 'revise'].includes(values.status) ||
-                (['preprint1', 'preprint2'].includes(config.instanceName) &&
-                  values.status === 'submitted')) &&
-              !['lab'].includes(config.instanceName)
+            ? !['submitted', 'revise'].includes(values.status) ||
+              (['preprint1', 'preprint2'].includes(config.instanceName) &&
+                values.status === 'submitted')
             : true)
 
         const manuscriptFiles = filterFileManuscript(values.files || [])

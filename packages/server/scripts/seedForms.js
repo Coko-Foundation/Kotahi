@@ -12,7 +12,6 @@ const SUBMISSION_FORM_PATHS = {
   prc: '../config/storage/forms-prc/submit.json',
   preprint1: '../config/storage/forms/submit.json',
   preprint2: '../config/storage/forms-preprint2/submit.json',
-  lab: '../config/storage/forms-lab/submit.json',
 }
 
 const REVIEW_FORM_PATH = '../config/storage/forms/review.json'

@@ -1,25 +1,14 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { Link } from '@pubsweet/ui'
 import { Action, LinkAction } from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import Modal from '../../../component-modal/src/Modal'
 import PublishingResponse from '../../../component-review/src/components/publishing/PublishingResponse'
-import { color } from '../../../../theme'
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-const FlaxLink = styled(Link)`
-  border-bottom: 2px solid transparent;
-
-  &:hover {
-    border-bottom: 2px solid ${color.brand1.base};
-    transition: border-bottom 0.2s;
-  }
 `
 
 const Actions = ({
@@ -34,14 +23,6 @@ const Actions = ({
 
   const [publishingResponse, setPublishingResponse] = useState([])
   const { t } = useTranslation()
-
-  const { FLAX_SITE_URL } = process.env
-
-  const flaxSiteUrlForArticle =
-    FLAX_SITE_URL && FLAX_SITE_URL !== ''
-      ? `${FLAX_SITE_URL}/${config.groupName}/articles`
-      : null
-
   return (
     <Container>
       {!archived && (
@@ -90,17 +71,6 @@ const Actions = ({
               >
                 {t('manuscriptsTable.actions.Publish')}
               </Action>
-            )}
-          {['lab'].includes(config.instanceName) &&
-            manuscript.status === articleStatuses.published &&
-            flaxSiteUrlForArticle && (
-              <FlaxLink
-                rel="noopener noreferrer"
-                target="_blank"
-                to={`${flaxSiteUrlForArticle}/${manuscript.shortId}/`}
-              >
-                {t('manuscriptsTable.actions.openOnline')}
-              </FlaxLink>
             )}
         </>
       )}

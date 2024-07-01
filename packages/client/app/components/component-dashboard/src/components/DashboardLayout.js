@@ -72,24 +72,6 @@ const DashboardLayout = ({
         <FlexRow>
           <Heading>{t('dashboardPage.Dashboard')}</Heading>
           <ControlsContainer>
-            <Button
-              onClick={() => history.push(`${urlFrag}/newSubmission`)}
-              primary
-            >
-              {t(
-                `dashboardPage.New ${
-                  ['lab'].includes(config.instanceName)
-                    ? 'Article'
-                    : 'submission'
-                }`,
-              )}
-            </Button>
-
-            {createNewTaskAlerts && (
-              <Button onClick={createNewTaskAlerts}>
-                {t('dashboardPage.New Alerts')}
-              </Button>
-            )}
             <SearchControl
               applySearchQuery={newQuery =>
                 applyQueryParams({
@@ -99,6 +81,18 @@ const DashboardLayout = ({
               }
               currentSearchQuery={currentSearchQuery}
             />
+            <Button
+              onClick={() => history.push(`${urlFrag}/newSubmission`)}
+              primary
+            >
+              {t('dashboardPage.New submission')}
+            </Button>
+
+            {createNewTaskAlerts && (
+              <Button onClick={createNewTaskAlerts}>
+                {t('dashboardPage.New Alerts')}
+              </Button>
+            )}
           </ControlsContainer>
         </FlexRow>
       </HeadingWithAction>
@@ -109,11 +103,9 @@ const DashboardLayout = ({
           {dashboardPages.map(({ href, label }) => (
             <TabContainer key={href}>
               <TabLink to={urlFrag + href}>
-                {!['lab'].includes(config.instanceName) && (
-                  <Tab active={location.pathname.endsWith(href)}>
-                    <div>{label}</div>
-                  </Tab>
-                )}
+                <Tab active={location.pathname.endsWith(href)}>
+                  <div>{label}</div>
+                </Tab>
               </TabLink>
             </TabContainer>
           ))}

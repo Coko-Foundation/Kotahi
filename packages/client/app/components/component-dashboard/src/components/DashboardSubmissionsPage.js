@@ -14,11 +14,7 @@ import { CommsErrorBanner, Spinner } from '../../../shared'
 
 const DashboardSubmissionsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
-
-  const wantedRoles = [
-    'author',
-    ...(['lab'].includes(config?.instanceName) ? ['collaborator'] : []),
-  ]
+  const wantedRoles = ['author']
 
   const applyQueryParams = useQueryParams()
 

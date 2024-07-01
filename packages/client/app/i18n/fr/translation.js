@@ -9,7 +9,6 @@ const fr = {
       revise: 'Réviser',
       revising: 'En révision',
       published: 'Publié',
-      unpublished: 'Inédit',
       assigned: "Epreuve d'auteur attribuée",
       inProgress: "Révision de l'auteur en cours",
       completed: "Epreuve d'auteur complétée",
@@ -86,11 +85,6 @@ const fr = {
         day: 'jour',
         day_plural: 'jours',
       },
-    },
-    error: {
-      authError: "Erreur d'authentification!",
-      noEditRights: "Vous n'avez pas le droit de modifier cet article.",
-      redirectToDashboard: 'Redirection vers le tableau de bord',
     },
     leftMenu: {
       'Summary Info': 'Résumé des infos',
@@ -174,7 +168,6 @@ const fr = {
         Archive: 'Archiver',
         Production: 'Production',
         Publish: 'Publier',
-        Republish: 'Republier',
         confirmArchive:
           'Veuillez confirmer que vous souhaitez archiver ce manuscrit',
         confirmArchiveButton: 'Archiver',
@@ -182,7 +175,6 @@ const fr = {
         'Publishing error': "Erreur d'édition",
         'Some targets failed to publish':
           'Certains objectifs ont échoué à publier.',
-        openOnline: 'Ouvrir en ligne',
         continueSubmission: 'Continuer la soumission',
         revise: 'Réviser',
         continueRevision: 'Continuer la révision',
@@ -191,12 +183,10 @@ const fr = {
     dashboardPage: {
       Dashboard: 'Tableau de bord',
       'New submission': '+ Nouvelle soumission',
-      'New Article': '+ Nouveau poste',
       'New Alerts': 'Nouvelles alertes',
       'My Submissions': 'Mes soumissions',
       'To Review': 'Affectations de révision',
       "Manuscripts I'm editor of": "File d'attente d'édition",
-      Articles: 'Des articles',
       mySubmissions: {
         'Provide production feedback':
           'Fournir des commentaires sur la production',
@@ -562,12 +552,6 @@ const fr = {
       authorProofingSubmittedEmailTemplate:
         "Preuve d'auteur complétée et commentaires soumis",
       'Editors edit reviews': 'Les éditeurs peuvent modifier les avis soumis',
-      collaboratorAccessChangeEmailTemplate:
-        "Le type d'accès aux articles des collaborateurs a été modifié",
-      collaboratorAccessGrantedEmailTemplate:
-        'Accès aux articles des collaborateurs accordé',
-      collaboratorAccessRemovedEmailTemplate:
-        'Accès aux articles des collaborateurs supprimé',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",
@@ -868,16 +852,6 @@ const fr = {
       'No reviews to show': 'Aucun avis à afficher.',
       'No completed reviews': 'Aucun avis terminé.',
       Metadata: 'Métadonnées',
-      Article: 'Article',
-      Publish: 'Publier',
-      Share: 'Partager',
-      Collaborate: 'Collaborer',
-      collaborateArticle: 'Article Collaborer',
-      submitForPublishing: 'Soumettre pour publication',
-    },
-    inviteCollaborator: {
-      selectPlaceholder: 'E-mail',
-      addUser: 'Ajouter',
     },
     chat: {
       'Your message here...': 'Votre message ici...',
@@ -893,7 +867,6 @@ const fr = {
       'Hide Chat': 'Masquer le chat',
       'Discussion with author': "Discussion avec l'auteur",
       'Discussion with editorial team': "Discussion avec l'équipe éditoriale",
-      'Discussion with author team': "Discussion avec l'équipe d'auteur",
       'Editorial discussion': 'Discussion éditoriale',
       'Show Chat': 'Afficher le chat',
       edit: 'Modifier',
@@ -1070,12 +1043,8 @@ const fr = {
 
     newSubmission: {
       'New submission': 'Nouvelle soumission',
-      'New Article': 'Nouveau poste',
       'Submission created': 'Soumission créée',
-      'Creating article': "Création d'article",
-      'Article created': 'Article créé',
       'Upload Manuscript': 'Télécharger le manuscrit',
-      'Upload Article': "Télécharger l'article",
       dragNDrop: 'Glisser-déposer ou cliquer pour sélectionner un fichier',
       acceptedFiletypes:
         'Types de fichiers acceptés : pdf, epub, zip, docx, latex',
@@ -1083,12 +1052,6 @@ const fr = {
         "Votre manuscrit est en train d'être converti en une version directement éditable. Cela peut prendre quelques secondes.",
       'Submit a URL instead': 'Soumettre une URL à la place',
       errorUploading: '{{error}}',
-    },
-    collaborateForm: {
-      author: 'Auteur(e)',
-      canView: 'Peut voir',
-      canEdit: 'Peut éditer',
-      removeAccess: "Supprimer l'accès",
     },
     formBuilder: {
       'New Form': 'Nouveau formulaire',

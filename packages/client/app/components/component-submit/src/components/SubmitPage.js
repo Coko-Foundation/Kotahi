@@ -5,7 +5,7 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
-import { fragmentFields, GET_MANUSCRIPT_AND_FORMS } from '../graphql/queries'
+import query, { fragmentFields } from '../userManuscriptFormQuery'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import {
@@ -23,7 +23,6 @@ import {
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 import useChat from '../../../../hooks/useChat'
 import mutations from '../../../component-dashboard/src/graphql/mutations'
-import AuthErrorBanner from '../../../shared/AuthErrorBanner'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -97,7 +96,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const reviewPurpose = 'review'
 
   const { data, loading, error } = useQuery(
-    GET_MANUSCRIPT_AND_FORMS,
+    query,
     {
       variables: {
         id: match.params.version,
@@ -126,28 +125,14 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const channels = [
     {
       id: channelId,
-      name: t(
-        `chat.Discussion with ${
-          ['lab'].includes(config?.instanceName) ? 'author' : 'editorial'
-        } team`,
-      ),
+      name: t('chat.Discussion with editorial team'),
       type: editorialChannel?.type,
     },
   ]
 
   const chatProps = useChat(channels)
 
-  const [update] = useMutation(updateMutation, {
-    onError: updateError => {
-      if (updateError.message === 'Not Authorised!') {
-        setAuthError(updateError)
-        setTimeout(() => {
-          history.push(`${urlFrag}/dashboard`)
-        }, 5000)
-      }
-    },
-  })
-
+  const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
@@ -173,13 +158,10 @@ const SubmitPage = ({ currentUser, match, history }) => {
     submission: {},
   })
 
-  const [authError, setAuthError] = useState(null)
-
   const client = useApolloClient()
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  if (authError) return <AuthErrorBanner error={authError} />
 
   const manuscript = data?.manuscript
   const submissionForm = data?.submissionForm?.structure
@@ -245,32 +227,20 @@ const SubmitPage = ({ currentUser, match, history }) => {
 
     if (result?.steps?.some(step => !step.succeeded)) return result
 
-    if (['journal', 'prc', 'lab'].includes(config.instanceName)) {
+    if (['journal', 'prc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
-    } else if (
-      ['preprint1', 'preprint2', 'lab'].includes(config.instanceName)
-    ) {
+    } else if (['preprint1', 'preprint2'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
 
     return null
   }
 
-  const publishArticle = async manuscriptId => {
-    return publishManuscript({
-      variables: { id: manuscriptId },
-    })
-  }
-
   const onSubmit = async versionId => {
     await updateManuscript(versionId, manuscriptChangedFields)
 
     const delta = {
-      status:
-        match.url.includes('/evaluation') &&
-        !['lab'].includes(config.instanceName)
-          ? 'evaluated'
-          : 'submitted',
+      status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted',
     }
 
     await submit({
@@ -280,7 +250,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       },
     })
 
-    if (['journal', 'prc', 'lab'].includes(config.instanceName)) {
+    if (['journal', 'prc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
     }
 
@@ -322,7 +292,6 @@ const SubmitPage = ({ currentUser, match, history }) => {
       onChange={handleChange}
       onSubmit={onSubmit}
       parent={manuscript}
-      publishArticle={publishArticle}
       republish={republish}
       reviewForm={reviewForm}
       setShouldPublishField={

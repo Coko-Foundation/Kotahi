@@ -199,26 +199,17 @@ const createGroupAndRelatedData = async (
   })
 
   if (existingEmailTemplates.length === 0) {
-    const emailTemplatesData = defaultEmailTemplates
-      .map(template => ({
-        emailTemplateType: template.type,
-        emailContent: {
-          subject: template.subject,
-          cc: template.cc,
-          ccEditors: template.ccEditors,
-          body: template.body,
-          description: template.description,
-        },
-        groupId: group.id,
-      }))
-      .filter(
-        template =>
-          ![
-            'collaboratorAccessRemoved',
-            'collaboratorAccessChanged',
-            'collaboratorAccessGranted',
-          ].includes(template.emailTemplateType) || instanceName === 'lab',
-      )
+    const emailTemplatesData = defaultEmailTemplates.map(template => ({
+      emailTemplateType: template.type,
+      emailContent: {
+        subject: template.subject,
+        cc: template.cc,
+        ccEditors: template.ccEditors,
+        body: template.body,
+        description: template.description,
+      },
+      groupId: group.id,
+    }))
 
     // Insert default email templates into the database for group
     const insertedEmailTemplates = await EmailTemplate.query(trx).insertGraph(
@@ -247,41 +238,13 @@ const createGroupAndRelatedData = async (
         e.emailTemplateType === 'authorProofingSubmitted',
     )
 
-    const collaboratorAccessGrantedEmailTemplate = insertedEmailTemplates.find(
-      e =>
-        e.groupId === group.id &&
-        e.emailTemplateType === 'collaboratorAccessGranted',
-    )
-
-    const collaboratorAccessChangeEmailTemplate = insertedEmailTemplates.find(
-      e =>
-        e.groupId === group.id &&
-        e.emailTemplateType === 'collaboratorAccessChanged',
-    )
-
-    const collaboratorAccessRemovedEmailTemplate = insertedEmailTemplates.find(
-      e =>
-        e.groupId === group.id &&
-        e.emailTemplateType === 'collaboratorAccessRemoved',
-    )
-
     const newConfig = config
-
     newConfig.formData.eventNotification.reviewerInvitationPrimaryEmailTemplate =
       reviewerInvitationEmailTemplate.id
     newConfig.formData.eventNotification.authorProofingInvitationEmailTemplate =
       authorProofingInvitationTemplate.id
     newConfig.formData.eventNotification.authorProofingSubmittedEmailTemplate =
       authorProofingSubmittedTemplate.id
-
-    if (instanceName === 'lab') {
-      newConfig.formData.eventNotification.collaboratorAccessGrantedEmailTemplate =
-        collaboratorAccessGrantedEmailTemplate.id
-      newConfig.formData.eventNotification.collaboratorAccessChangeEmailTemplate =
-        collaboratorAccessChangeEmailTemplate.id
-      newConfig.formData.eventNotification.collaboratorAccessRemovedEmailTemplate =
-        collaboratorAccessRemovedEmailTemplate.id
-    }
 
     await Config.query(trx).updateAndFetchById(config.id, newConfig)
 
