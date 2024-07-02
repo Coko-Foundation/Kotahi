@@ -110,15 +110,13 @@ const resolvers = {
       return result
     },
     async assignUserAsAuthor(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await Manuscript.query().findById(manuscriptId)
-
       await addUserToManuscriptChatChannel({
         manuscriptId,
         userId,
       })
 
-      const existingTeam = await manuscript
-        .$relatedQuery('teams')
+      const existingTeam = await Manuscript.relatedQuery('teams')
+        .for(manuscriptId)
         .where('role', 'author')
         .first()
 

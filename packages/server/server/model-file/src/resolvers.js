@@ -115,7 +115,9 @@ const resolvers = {
       )
 
       if (includeInUse) {
-        const manuscript = await Manuscript.query().findById(entityId)
+        const manuscript = await Manuscript.query()
+          .findById(entityId)
+          .select('id', 'meta')
 
         if (manuscript) {
           imageFiles.forEach(file => {

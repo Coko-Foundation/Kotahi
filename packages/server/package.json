@@ -43,6 +43,7 @@
     "fs-extra": "4.0.3",
     "google-spreadsheet": "^3.1.15",
     "graphql": "15.5.0",
+    "graphql-shield": "^7.4.1",
     "handlebars": "^4.7.7",
     "he": "^1.2.0",
     "html-to-text": "^8.0.0",
