@@ -198,7 +198,7 @@ const en = {
       'Anonymous Reviewer': 'Anonymous Reviewer',
       Submit: 'Submit',
       neverSubmitted: 'This review was not submitted',
-      isCollaborative: 'Is collaborative review',
+      isCollaborative: 'Collaborative review',
     },
     reviewVerdict: {
       accept: 'accept',

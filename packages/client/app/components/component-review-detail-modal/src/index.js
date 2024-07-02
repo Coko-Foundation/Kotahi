@@ -103,18 +103,14 @@ const ReviewDetailsModal = (
     t,
   )
 
-  let statusConfig = null
+  const fallbackStatus =
+    review?.isCollaborative && review?.isLock === true ? 'closed' : 'completed'
 
-  // when the review is collaborative the status is not completed but closed
-  if (review?.isCollaborative && review?.isLock === true) {
-    statusConfig = LocalizedReviewFilterOptions.find(
-      item => item.value === 'closed',
-    )
-  } else {
-    statusConfig = LocalizedReviewFilterOptions.find(
-      item => item.value === (status ?? 'completed'),
-    )
-  }
+  const statusToDisplay = status ?? fallbackStatus
+
+  const statusConfig = LocalizedReviewFilterOptions.find(
+    item => item.value === statusToDisplay,
+  )
 
   let reviewer = null
 
@@ -230,8 +226,8 @@ const ReviewDetailsModal = (
       <StatusContainer>
         <Header>{t('modals.reviewReport.Status')}</Header>
         <ConfigurableStatus
-          color={statusConfig?.color}
-          lightText={statusConfig?.lightText}
+          color={statusConfig.color}
+          lightText={statusConfig.lightText}
         >
           {statusConfig?.label}
         </ConfigurableStatus>

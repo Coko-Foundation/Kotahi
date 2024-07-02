@@ -1941,19 +1941,11 @@ const resolvers = {
 
       const versionIds = [manuscriptId, ...otherVersions.map(v => v.id)]
 
-      let assignments = await User.relatedQuery('teams')
+      const assignments = await User.relatedQuery('teams')
         .for(ctx.user)
         .select('objectId')
-        .where({ role: 'reviewer' })
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
         .whereIn('objectId', versionIds)
-
-      const collaborativeAssignments = await User.relatedQuery('teams')
-        .for(ctx.user)
-        .select('objectId')
-        .where({ role: 'collaborativeReviewer' })
-        .whereIn('objectId', versionIds)
-
-      assignments = assignments.concat(collaborativeAssignments)
 
       return [...new Set(assignments.map(a => a.objectId))]
     },
@@ -2312,8 +2304,8 @@ const typeDefs = `
     isDecision: Boolean
     isHiddenReviewerName: Boolean
     isHiddenFromAuthor: Boolean
-    isCollaborative: Boolean
-    isLock: Boolean
+    isCollaborative: Boolean!
+    isLock: Boolean!
     jsonData: String
   }
 
@@ -2498,7 +2490,7 @@ const typeDefs = `
     updated: DateTime
     isDecision: Boolean
     open: Boolean
-    users: [ReviewUser]
+    users: [ReviewUser!]!
     isHiddenFromAuthor: Boolean
     isCollaborative: Boolean
     isLock: Boolean

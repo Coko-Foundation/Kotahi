@@ -186,9 +186,7 @@ const resolvers = {
           'teamId',
           teams.map(t => t.id),
         )
-        .andWhere(builder => {
-          builder.where({ userId: ctx.user })
-        })
+        .andWhere({ userId: ctx.user })
         .first()
 
       member.status = status
