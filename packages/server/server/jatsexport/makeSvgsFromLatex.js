@@ -139,6 +139,15 @@ const makeSvgsFromLatex = async (source, replaceHtml = false) => {
 
   const svgList = [...displayList, ...inlineList]
 
+  // added to keep titles with tags from screwing up
+
+  $('title').replaceWith((index, el) => {
+    const $elem = $(el)
+    const titleText = $elem.text()
+    const outHtml = `<title>${titleText}</title>`
+    return outHtml
+  })
+
   const finalXml = $.html()
   const output = { svgedSource: finalXml, svgList }
   // console.log('returning!')

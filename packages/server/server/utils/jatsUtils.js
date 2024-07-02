@@ -379,7 +379,15 @@ const fixMath = html => {
     return replacement
   })
 
+  // This keeps the tags in title safe.
+  $('title').replaceWith((index, el) => {
+    const titleText = $(el).text()
+    const replacement = `<title>${titleText}</title>`
+    return replacement
+  })
+
   const output = $.html()
+
   return output
 }
 
