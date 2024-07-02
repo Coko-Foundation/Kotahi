@@ -72,7 +72,7 @@ const resolvers = {
         groupId,
       }),
 
-    /** Returns the specific requested form, with any incomplete fields omitted */
+    /** Returns the specific requested form */
     formForPurposeAndCategory: async (_, { purpose, category, groupId }) => {
       const form = await Form.query().findOne({
         purpose,

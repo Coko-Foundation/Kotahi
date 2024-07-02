@@ -1,3 +1,5 @@
+// Shield's `race` rule is misnamed, as it doesn't race the different rules but applies them sequentially until one succeeds. `or`, on the other hand, applies all rules in parallel.
+const { race: lazyOr } = require('graphql-shield')
 const { rule, and, or, allow, deny } = require('@coko/server/authorization')
 
 const { cachedGet } = require('../server/querycache')
@@ -459,6 +461,19 @@ const userIsCurrentUser = rule({ cache: 'strict' })(
   },
 )
 
+const isForManuscriptsPublishedSinceDateQuery = rule()(
+  async (parent, args, ctx, info) => {
+    let { path } = info
+
+    while (path) {
+      if (path.key === 'manuscriptsPublishedSinceDate') return true
+      path = path.prev
+    }
+
+    return false
+  },
+)
+
 const permissions = {
   Query: {
     authorsActivity: or(userIsGm, userIsAdmin),
@@ -650,7 +665,8 @@ const permissions = {
   Config: allow,
   PaginatedManuscripts: allow,
   Manuscript: allow,
-  File: or(
+  File: lazyOr(
+    isForManuscriptsPublishedSinceDateQuery,
     isExportTemplatingFile,
     isCMSFile,
     isPublishingCollection,

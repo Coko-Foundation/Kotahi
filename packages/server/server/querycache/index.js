@@ -133,6 +133,12 @@ const queryFunctions = {
     const Manuscript = require('../../models/manuscript/manuscript.model')
     return Manuscript.relatedQuery('submitter').for(manuscriptId).first()
   },
+  form: async (category, purpose, groupId) => {
+    const Form = require('../../models/form/form.model')
+    const form = await Form.query().where({ category, purpose, groupId })
+    if (!form || !form.length) throw new Error(`No form found for "${purpose}"`)
+    return form[0]
+  },
 }
 
 const pendingFetchPromises = {}

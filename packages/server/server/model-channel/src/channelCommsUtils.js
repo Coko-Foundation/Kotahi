@@ -34,7 +34,9 @@ const addUserToManuscriptChatChannel = async ({
   userId,
   type = 'all',
 }) => {
-  const manuscript = await Manuscript.query().findById(manuscriptId)
+  const manuscript = await Manuscript.query()
+    .findById(manuscriptId)
+    .select('parentId')
 
   const channel = await Channel.query()
     .where({

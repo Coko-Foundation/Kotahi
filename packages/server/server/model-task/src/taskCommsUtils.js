@@ -21,7 +21,10 @@ const {
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
-  const manuscript = await Manuscript.query().findById(manuscriptId)
+  const manuscript = await Manuscript.query()
+    .findById(manuscriptId)
+    .select('groupId')
+
   const activeConfig = await Config.getCached(manuscript.groupId)
 
   const newTasks = await Task.query()

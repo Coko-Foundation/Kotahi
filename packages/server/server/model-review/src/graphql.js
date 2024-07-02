@@ -22,9 +22,9 @@ const resolvers = {
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await Review.query().findById(id)) || {}
 
-      const manuscript = await Manuscript.query().findById(
-        existingReview.manuscriptId || input.manuscriptId,
-      )
+      const manuscript = await Manuscript.query()
+        .findById(existingReview.manuscriptId || input.manuscriptId)
+        .select('groupId')
 
       const form = existingReview.isDecision
         ? await getDecisionForm(manuscript.groupId)
