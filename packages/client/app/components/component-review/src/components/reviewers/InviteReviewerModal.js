@@ -124,7 +124,7 @@ const InviteReviewerModal = ({
                 condition?.value?.includes('email-notification')
 
               const isCollaborative =
-                condition?.value?.includes('isCollaborative')
+                condition?.value?.includes('isCollaborative') ?? false
 
               let teamMember
 
