@@ -67,10 +67,13 @@ const ToggleableArea = styled.div`
 
 const SectionHeader = styled.h4`
   font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 10px;
 `
 
 const SuggestedReviewerContainer = styled.div`
   display: flex;
+  margin-bottom: 8px;
 `
 
 const SuggestedReviewerFieldLabel = styled.span`
