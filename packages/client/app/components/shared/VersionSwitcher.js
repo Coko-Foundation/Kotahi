@@ -9,13 +9,13 @@ const Container = styled.div`
   margin-top: ${grid(2)};
 `
 
-const VerisonLabelWrapper = styled.div`
+export const VerisonLabelWrapper = styled.div`
   display: flex;
   flex-wrap: no-wrap;
   width: 100%;
 `
 
-const Title = styled.p`
+export const VersionTitle = styled.p`
   flex-shrink: 1;
   margin: 0 5px;
   overflow: hidden;
@@ -23,7 +23,7 @@ const Title = styled.p`
   white-space: nowrap;
 `
 
-const VersionIndicator = styled.p`
+export const VersionIndicator = styled.p`
   flex-basis: fit-content;
   flex-shrink: 0;
   margin: 0 5px;
@@ -42,9 +42,9 @@ const StyledSelect = styled(Select)`
 const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
   return (
     <VerisonLabelWrapper>
-      <Title>
+      <VersionTitle>
         <PlainOrRichText value={manuscriptName} />
-      </Title>
+      </VersionTitle>
       <VersionIndicator>
         {versionNumber >= count
           ? `— ${t('decisionPage.Current version')} (${versionNumber})`
