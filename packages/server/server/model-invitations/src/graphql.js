@@ -83,7 +83,11 @@ const resolvers = {
           .for(
             Team.query().findOne({
               objectId: result.manuscriptId,
-              role: result.invitedPersonType.toLowerCase(),
+              // TODO this is a temporary solution until we have a proper
+              // solution for status with CAPITAL and UNDERSCORES.
+              role: result.invitedPersonType
+                .toLowerCase()
+                .replace('collaborative_reviewer', 'collaborativeReviewer'),
             }),
           )
           .patch({ status: status.toLowerCase() })
