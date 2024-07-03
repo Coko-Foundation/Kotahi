@@ -88,6 +88,7 @@ const SuggestedReviewerFieldValue = styled.span`
 const SuggestedReviewerInnerContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding-left: 4px;
   width: 100%;
 `
 
