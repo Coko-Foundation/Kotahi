@@ -195,7 +195,7 @@ const typeDefs = `
     updateTeamMember(id: ID!, input: String): TeamMember
 	  addTeamMembers(teamId: ID!, members: [ID!]!, status: String): Team!
 	  removeTeamMember(teamId: ID!, userId: ID!): TeamMember!
-    updateCollaborativeTeamMembers(manuscriptId: ID!, input: String): [TeamMember!]
+    updateCollaborativeTeamMembers(manuscriptId: ID!, input: String): [TeamMember!]!
   }
 
   extend type User {
