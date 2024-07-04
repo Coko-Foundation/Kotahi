@@ -194,7 +194,9 @@ const ReviewLayout = ({
               createFile={createFile}
               deleteFile={deleteFile}
               form={reviewForm}
-              formikOptions={{ enableReinitialize: true }}
+              formikOptions={{
+                enableReinitialize: currentUserReview.isCollaborative,
+              }}
               initialValues={reviewData}
               isCollaborative={currentUserReview.isCollaborative}
               manuscriptId={latestManuscript.id}
