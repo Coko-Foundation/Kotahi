@@ -40,8 +40,12 @@ const formatCitation = async (cslObject, groupId) => {
   if (csl.doi && !csl.DOI) csl.DOI = csl.doi
 
   const activeConfig = await Config.query().findOne({ groupId, active: true })
-  const localeName = activeConfig.formData.production?.localeName || 'en-US'
-  const styleName = activeConfig.formData.production?.styleName || 'apa'
+
+  const localeName =
+    activeConfig.formData.production?.citationStyles?.localeName || 'en-US'
+
+  const styleName =
+    activeConfig.formData.production?.citationStyles?.styleName || 'apa'
 
   // const styleName = getStyleNameFromTitle(styleTitle)
 
@@ -144,7 +148,7 @@ If we can't format it, we're not showing it as a choice on the front end. It wou
 // because some of the citations might be just strings of text that haven't gone through Crossref or Anystyle. If we fed those in,
 // they'd come out in the wrong place because Citeproc won't know how to deal with them.
 
-const createFormattedReference = async (data, groupId) => {
+const createFormattedReference = async (data, groupId, isDatacite = false) => {
   const {
     DOI: doi,
     author,
@@ -177,7 +181,10 @@ const createFormattedReference = async (data, groupId) => {
     journalTitle: pluckJournalTitle(journalTitle),
   }
 
-  const formattedCitation = await formatCitation(outputData, groupId)
+  const formattedCitation = await formatCitation(
+    isDatacite ? data : outputData,
+    groupId,
+  )
 
   outputData.formattedCitation = formattedCitation.result
   return outputData

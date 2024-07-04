@@ -316,7 +316,7 @@ const en = {
       },
       metadata: {
         title: 'Title',
-        description: 'Decription',
+        description: 'Description',
         publicationDate: 'Date of publication',
         image: 'Image',
         deleteImage: 'Delete Image',
@@ -440,7 +440,7 @@ const en = {
       'Group Identity': 'Group Identity',
       'Brand name': 'Brand name',
       title: 'Title',
-      description: 'Decription',
+      description: 'Description',
       issn: 'ISSN',
       contact: 'Contact',
       'Brand primary colour': 'Brand primary colour',
@@ -552,17 +552,21 @@ const en = {
       crossrefStyleName: 'Select style formatting for citations',
       crossrefLocaleName: 'Select locale for citations',
       production: {
-        Production: 'Production',
-        'Email to use for citation search': 'Email to use for citation search',
+        Production: 'Citation parsing',
+        'Email to use for citation search':
+          'Email address for Crossref search and data retrieval correspondence',
         'Number of results to return from citation search':
-          'Number of results to return from citation search',
-        'Select style formatting for citations':
-          'Select style formatting for citations',
+          'Number of results to return from Crossref search',
+        citationStyles: 'Citation styles',
+        'Select style formatting for citations': 'Select citation style',
         apa: 'American Psychological Association (APA)',
         cmos: 'Chicago Manual of Style (CMOS)',
         cse: 'Council of Science Editors (CSE)',
-        'Select locale for citations': 'Select locale for citations',
-        historyIntervalInMinutes: 'History interval in minutes',
+        'Select locale for citations': 'Select citation locale',
+        getDataFromDatacite: 'Get citation data from Datacite',
+        manuscriptVersionHistory: 'Manuscript Version History',
+        historyIntervalInMinutes:
+          'Interval to automatically save a manuscript version in minutes',
       },
       allowedIPs: 'List of repository IPs allowed access',
       api: 'COAR Notify',

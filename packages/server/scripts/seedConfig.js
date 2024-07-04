@@ -97,6 +97,19 @@ const seedConfig = async (group, instanceName, index, options) => {
     issn: '',
   }
 
+  const production = {
+    crossrefRetrievalEmail: 'test@coko.foundation',
+    getDataFromDatacite: false,
+    citationStyles: {
+      styleName: 'apa',
+      localeName: 'en-US',
+    },
+    crossrefSearchResultCount: 3,
+    manuscriptVersionHistory: {
+      historyIntervalInMinutes: 10,
+    },
+  }
+
   const kotahiApiTokens =
     index === 0 ? process.env.KOTAHI_API_TOKENS || null : null
 
@@ -219,6 +232,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             allowAuthorsSubmitNewVersion: false,
           },
           publishing,
+          production,
           taskManager: {
             teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
           },
@@ -272,6 +286,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             allowAuthorsSubmitNewVersion: false,
           },
           publishing,
+          production,
           taskManager: {
             teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
           },

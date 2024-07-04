@@ -37,6 +37,7 @@ const CitationVersion = ({ text, type, selected, editThis, select }) => {
           {type === 'original' && 'Original'}
           {type === 'anystyle' && 'AnyStyle'}
           {type === 'crossref' && 'CrossRef'}
+          {type === 'datacite' && 'Datacite'}
           {type === 'custom' && 'Custom'}
         </strong>
       </p>

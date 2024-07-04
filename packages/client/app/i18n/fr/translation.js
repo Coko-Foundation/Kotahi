@@ -578,19 +578,24 @@ const fr = {
       crossrefStyleName: 'Sélectionnez le format pour les citations',
       crossrefLocaleName: 'Sélectionnez la langue pour les citations',
       production: {
-        Production: 'Production',
+        Production: 'Analyse des citations',
         'Email to use for citation search':
-          'E-mail à utiliser pour la recherche de citations',
+          'Adresse e-mail pour la correspondance de recherche Crossref et de récupération de données',
         'Number of results to return from citation search':
-          'Nombre de résultats à retourner de la recherche de citations',
+          'Nombre de résultats à renvoyer à partir d’une recherche Crossref',
         'Select style formatting for citations':
-          'Sélectionnez le format pour les citations',
+          'Sélectionnez le style de citation',
         apa: 'American Psychological Association (APA)',
         cmos: 'Manuel de style de Chicago (CMOS)',
         cse: 'Conseil des éditeurs scientifiques (CSE)',
         'Select locale for citations':
-          'Sélectionnez la langue pour les citations',
-        historyIntervalInMinutes: 'Intervalle d’historique en minutes',
+          'Sélectionnez les paramètres régionaux de la citation',
+        citationStyles: 'Styles de citations',
+        manuscriptVersionHistory: 'Historique des versions du manuscrit',
+        getDataFromDatacite:
+          'Obtenez des données de citation à partir de Datacite',
+        historyIntervalInMinutes:
+          'Intervalle pour enregistrer automatiquement une version manuscrite en quelques minutes',
       },
       allowedIPs: 'Liste des adresses IP du référentiel autorisées à accéder',
       api: 'API Kotahi',

@@ -48,6 +48,32 @@ const getCrossRefQuery = gql`
   }
 `
 
+const getDatasiteQuery = gql`
+  query ($input: CitationSearchInput) {
+    getDatasiteCslFromDOI(input: $input) {
+      success
+      message
+      matches {
+        doi
+        author {
+          given
+          family
+          sequence
+        }
+        issue
+        issued {
+          raw
+        }
+        page
+        title
+        volume
+        journalTitle
+        formattedCitation
+      }
+    }
+  }
+`
+
 const getCiteProcQuery = gql`
   query ($citation: String!) {
     formatCitation(citation: $citation) {
@@ -84,6 +110,7 @@ const ProductionWaxEditor = ({
   manuscriptId,
   onAssetManager,
   isAuthorProofingVersion,
+  getDataFromDatacite,
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
@@ -143,13 +170,14 @@ const ProductionWaxEditor = ({
       })
   }
 
-  const updateCrossRef = async text => {
+  const updateCrossRef = async (text, useDatacite = false) => {
     // eslint-disable-next-line no-console
-    // console.log('Coming in for CrossRef: ', text, count)
+    // console.log('Coming in for CrossRef: ', text)
+    // console.log('use DataCite: ', useDatacite)
     return text
       ? client
           .query({
-            query: getCrossRefQuery,
+            query: useDatacite ? getDatasiteQuery : getCrossRefQuery,
             variables: {
               input: {
                 text,
@@ -171,9 +199,22 @@ const ProductionWaxEditor = ({
               return result.data.getFormattedReferences.matches
             }
 
+            if (
+              result?.data?.getDatasiteCslFromDOI?.success &&
+              result.data.getDatasiteCslFromDOI.matches &&
+              result.data.getDatasiteCslFromDOI.matches.length
+            ) {
+              return result.data.getDatasiteCslFromDOI.matches
+            }
+
+            if (result?.data?.getDatasiteCslFromDOI?.message) {
+              console.error('DOI not found at Datacite!')
+              return []
+            }
+
             console.error(
-              'Server-side error: ',
-              result.data.getFormattedReferences.message,
+              'Crossref error: ',
+              result.data.getFormattedReferences?.message || result.data,
             )
             return []
           })
@@ -231,6 +272,7 @@ const ProductionWaxEditor = ({
                   updateCrossRef,
                   updateCiteProc,
                   readonly,
+                  getDataFromDatacite || false,
                 )
           }
           fileUpload={file => renderImage(file)}

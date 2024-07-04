@@ -571,18 +571,21 @@ const ru = {
       crossrefStyleName: 'Выбор стиля форматирования цитат',
       crossrefLocaleName: 'Выберите язык для цитирования',
       production: {
-        Production: 'Редактирование',
+        Production: 'Парсинг цитирования',
         'Email to use for citation search':
-          'Электронная почта для поиска цитирований',
+          'ЭлАдрес электронной почты для переписки по поиску и получению данных Crossrefектронная почта для поиска цитирований',
         'Number of results to return from citation search':
-          'Количество результатов для возврата из поиска цитирований',
-        'Select style formatting for citations':
-          'Выберите формат стиля для цитирования',
+          'Количество результатов, возвращаемых при поиске по перекрестным ссылкам',
+        'Select style formatting for citations': 'Выберите стиль цитирования',
         apa: 'Американская психологическая ассоциация (APA)',
         cmos: 'Руководство стиля Чикаго (CMOS)',
         cse: 'Совет редакторов науки (CSE)',
-        'Select locale for citations': 'Выберите локаль для цитирования',
-        historyIntervalInMinutes: 'Интервал истории в минутах',
+        'Select locale for citations': 'Выберите локаль цитирования',
+        citationStyles: 'Стили цитирования',
+        manuscriptVersionHistory: 'История версий рукописи',
+        getDataFromDatacite: 'Получить данные цитирования из Datacite',
+        historyIntervalInMinutes:
+          'Интервал автоматического сохранения версии рукописи в минутах.',
       },
       allowedIPs: 'Список IP-адресов репозитория, которым разрешен доступ',
       api: 'Один API',
