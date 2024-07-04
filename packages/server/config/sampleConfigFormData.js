@@ -23,9 +23,15 @@ module.exports = {
   },
   production: {
     crossrefRetrievalEmail: 'test@coko.foundation',
-    styleName: 'apa',
-    localeName: 'en-US',
+    getDataFromDatacite: false,
+    citationStyles: {
+      styleName: 'apa',
+      localeName: 'en-US',
+    },
     crossrefSearchResultCount: 3,
+    manuscriptVersionHistory: {
+      historyIntervalInMinutes: 10,
+    },
   },
   publishing: {
     hypothesis: {

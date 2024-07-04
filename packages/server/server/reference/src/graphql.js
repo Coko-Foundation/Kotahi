@@ -9,6 +9,10 @@ const {
   getFormattedReferencesFromCrossRef,
 } = require('../../utils/crossrefCommsUtils')
 
+const {
+  getFormattedReferencesFromDatacite,
+} = require('../../utils/dataciteCommusUtils')
+
 const { formatCitation } = require('./formatting')
 
 const Config = require('../../../models/config/config.model')
@@ -46,6 +50,34 @@ const resolvers = {
         return { matches, success: true, message: '' }
       } catch (error) {
         logger.error('Citeproc response error:', error.message)
+        return { matches: [], success: false, message: 'error' }
+      }
+    },
+    async getDatasiteCslFromDOI(_, { input }, ctx) {
+      const groupId = ctx.req.headers['group-id']
+
+      // const activeConfig = await Config.query().findOne({
+      //   groupId,
+      //   active: true,
+      // })
+
+      // const crossrefRetrievalEmail =
+      //   activeConfig.formData.production?.crossrefRetrievalEmail
+
+      try {
+        const matches = await getFormattedReferencesFromDatacite(
+          input.text,
+          groupId,
+        )
+
+        if (matches.length === 0) {
+          logger.error('Datasite timed out.')
+          return { matches: [], success: false, message: 'error' }
+        }
+
+        return { matches, success: true, message: '' }
+      } catch (error) {
+        logger.error('Datasite response error:', error.message)
         return { matches: [], success: false, message: 'error' }
       }
     },
@@ -129,6 +161,7 @@ const typeDefs = `
 
   extend type Query {
     getMatchingReferences(input: CitationSearchInput): CitationSearchResult
+		getDatasiteCslFromDOI(input: CitationSearchInput): FormattedCitationSearchResult
     getFormattedReferences(input: CitationSearchInput): FormattedCitationSearchResult
     getReferenceFromDoi(doi:String!): CitationSearchSingleResult
 		formatCitation(citation: String!): CitationFormatResult

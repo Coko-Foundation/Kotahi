@@ -571,19 +571,21 @@ const esLa = {
       crossrefStyleName: 'Seleccionar formato de estilo para citas',
       crossrefLocaleName: 'Seleccionar configuración regional para citas',
       production: {
-        Production: 'Producción',
+        Production: 'Análisis de citas',
         'Email to use for citation search':
-          'Correo electrónico para búsqueda de citas',
+          'Dirección de correo electrónico para correspondencia de búsqueda y recuperación de datos de Crossref',
         'Number of results to return from citation search':
-          'Número de resultados a devolver de la búsqueda de citas',
-        'Select style formatting for citations':
-          'Seleccionar formato de estilo para citas',
+          'Número de resultados a devolver de la búsqueda Crossref',
+        'Select style formatting for citations': 'Seleccionar estilo de cita',
         apa: 'American Psychological Association (APA)',
         cmos: 'Manual de Estilo de Chicago (CMOS)',
         cse: 'Consejo de Editores Científicos (CSE)',
-        'Select locale for citations':
-          'Seleccionar configuración regional para citas',
-        historyIntervalInMinutes: 'Intervalo de historia en minutos',
+        'Select locale for citations': 'Seleccione la ubicación de la cita',
+        citationStyles: 'Estilos de citas',
+        manuscriptVersionHistory: 'Historial de versiones del manuscrito',
+        getDataFromDatacite: 'Obtener datos de citas de Datacite',
+        historyIntervalInMinutes:
+          'Intervalo para guardar automáticamente una versión manuscrita en minutos',
       },
       allowedIPs: 'Lista de IP del repositorio a las que se permite el acceso',
       api: 'API de Kotahi',

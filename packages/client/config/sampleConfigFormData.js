@@ -21,10 +21,16 @@ module.exports = {
     allowAuthorsSubmitNewVersion: true,
   },
   production: {
-    styleName: 'apa',
-    localeName: 'en-US',
     crossrefRetrievalEmail: 'test@coko.foundation',
+    getDataFromDatacite: false,
+    citationStyles: {
+      styleName: 'apa',
+      localeName: 'en-US',
+    },
     crossrefSearchResultCount: 3,
+    manuscriptVersionHistory: {
+      historyIntervalInMinutes: 10,
+    },
   },
   publishing: {
     hypothesis: {

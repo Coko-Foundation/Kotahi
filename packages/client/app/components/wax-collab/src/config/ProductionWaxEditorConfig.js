@@ -46,6 +46,7 @@ const productionWaxEditorConfig = (
   updateCrossRef,
   styleReference,
   isReadOnly,
+  getDataFromDatacite = false,
 ) => ({
   EnableTrackChangeService: {
     enabled: false,
@@ -130,6 +131,7 @@ const productionWaxEditorConfig = (
     CrossRefTransformation: updateCrossRef,
     CiteProcTransformation: styleReference,
     readOnly: false,
+    getDataFromDatacite,
   },
   services: [
     new BaseService(),

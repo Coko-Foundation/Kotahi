@@ -158,7 +158,7 @@ const Versioning = ({
   addNewVersion,
 }) => {
   // const { production } = useContext(ConfigContext)
-  // const historyIntervalInMinutes = production.historyIntervalInMinutes || 10
+  // const historyIntervalInMinutes = production.manuscriptVersionHistory.historyIntervalInMinutes || 10
   const { username } = currentUser
 
   const versionList = [

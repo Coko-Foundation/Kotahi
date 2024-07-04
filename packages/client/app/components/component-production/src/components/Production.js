@@ -1,6 +1,6 @@
 /* stylelint-disable string-quotes */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import { withRouter } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import CodeMirror from '@uiw/react-codemirror'
 import { html } from '@codemirror/lang-html'
 import { css } from '@codemirror/lang-css'
+import { ConfigContext } from '../../../config/src'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
 import { DownloadDropdown } from './DownloadDropdown'
 import {
@@ -155,6 +156,9 @@ const Production = ({
 
   const { t } = useTranslation()
 
+  const config = useContext(ConfigContext)
+  const getDataFromDatacite = config?.production?.getDataFromDatacite
+
   const editorSection = {
     content: (
       // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -169,6 +173,7 @@ const Production = ({
                 //   updateManuscript(manuscript.id, { meta: { source } })
                 // }}
                 client={client}
+                getDataFromDatacite={getDataFromDatacite}
                 isAuthorProofingVersion={isAuthorProofingVersion}
                 manuscriptId={manuscript.id}
                 onAssetManager={onAssetManager}

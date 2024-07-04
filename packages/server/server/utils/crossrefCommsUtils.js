@@ -139,7 +139,7 @@ const getFormattedReferencesFromCrossRef = async (
     if (response.status === 200)
       return response.data.message.items.reduce(
         (accumulator, current, index) => {
-          accumulator.push(createFormattedReference(current, groupId))
+          accumulator.push(createFormattedReference(current, groupId, false))
           return accumulator
         },
         [],

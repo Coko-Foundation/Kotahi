@@ -36,6 +36,8 @@ const decodeEntities = s => {
   return str
 }
 
+const matchDoi = /(10.(\d)+\/([^(\s>"<)])+)/i
+
 const serializer = schema => {
   const WaxSerializer = DOMSerializer.fromSchema(schema)
 
@@ -66,6 +68,7 @@ const CitationComponent = ({ node, getPos }) => {
     CrossRefTransformation,
     CiteProcTransformation,
     readOnly,
+    getDataFromDatacite,
   } = citationConfig
 
   const {
@@ -104,6 +107,7 @@ const CitationComponent = ({ node, getPos }) => {
     original: possibleStructures?.original || formattedOriginalText,
     anyStyle: possibleStructures?.anyStyle || '',
     crossRef: possibleStructures?.crossRef || [],
+    datacite: possibleStructures?.datacite || '',
     custom: possibleStructures?.custom || '',
   })
 
@@ -213,37 +217,58 @@ const CitationComponent = ({ node, getPos }) => {
     return { anyStyle: thisResponse }
   }
 
-  const sendToCrossRef = async text => {
-    const response = await CrossRefTransformation(text)
+  const sendToCrossRef = async (text, useDatacite) => {
+    if (useDatacite) {
+      // console.log('datacite being used!')
+      const response = await CrossRefTransformation(text, true)
+      // console.log('response from datacite: ', response)
+
+      if (response.length) {
+        // console.log('setting!')
+        setPotentialCsl(response[0])
+        setPotentialText(response[0].formattedCitation)
+        setCurrentText(response[0].formattedCitation)
+        setInternalNeedsValidation(false)
+        setInternalNeedsReview(false)
+      }
+
+      return { datacite: response[0] || [] }
+    }
+
+    const response = await CrossRefTransformation(text, false)
     // Note: if this is failing, the function should return an empty array
     return { crossRef: response || [] }
   }
 
   useEffect(() => {
     // This is where we send things off to Anystyle/Crossref if it needs to be validated
-    const getVersions = async () => {
+    const getVersions = async (
+      currentStructures,
+      dataciteHasBeenRun = false,
+    ) => {
       // console.log('Getting versions from CrossRef and AnyStyle')
       setLoading(true)
 
       await Promise.all([
         await sendToAnystyle(formattedOriginalText),
-        await sendToCrossRef(formattedOriginalText),
+        await sendToCrossRef(formattedOriginalText, false),
       ]).then(data => {
         const newStructures = {
-          ...structures,
+          ...currentStructures,
           ...data[0],
           ...data[1],
         }
 
         setStructures(newStructures)
         // console.log("Versions found. Setting status to 'needs review'")
-        setInternalNeedsValidation(false)
-        setInternalNeedsReview(true)
+        setInternalNeedsValidation(!!dataciteHasBeenRun)
+        setInternalNeedsReview(dataciteHasBeenRun)
         setContent(
           {
-            needsValidation: false,
-            needsReview: true,
-            valid: false,
+            // TODO: turn this off if we have successfully completed the datacite call
+            needsValidation: !!dataciteHasBeenRun,
+            needsReview: !!dataciteHasBeenRun,
+            valid: dataciteHasBeenRun,
             originalText: formattedOriginalText,
             possibleStructures: newStructures,
           },
@@ -254,14 +279,47 @@ const CitationComponent = ({ node, getPos }) => {
       })
     }
 
-    if (
-      needsValidation &&
-      !loading &&
-      !structures.crossRef.length &&
-      !(JSON.stringify(structures.anyStyle).length > 2)
-    ) {
-      // we shouldn't do this if we already have crossref/anystyle versions
-      getVersions()
+    const getDataciteData = async doi => {
+      setLoading(true)
+      // console.log('in getdatacitedata')
+      const result = await sendToCrossRef(doi, true) // .then(data => {
+
+      if (result.datacite) {
+        const newStructures = {
+          ...structures,
+          ...result,
+        }
+
+        setStructures(newStructures)
+
+        if (
+          !loading &&
+          !structures.crossRef.length &&
+          !(JSON.stringify(structures.anyStyle).length > 2)
+        ) {
+          getVersions(newStructures, true)
+        }
+      }
+    }
+
+    if (needsValidation) {
+      if (getDataFromDatacite) {
+        // If we're doing this, try to get the DOI from the text.
+        if (formattedOriginalText.match(matchDoi)) {
+          const thisDoi = formattedOriginalText.match(matchDoi)[0]
+          // console.log('DOI found in originalText', thisDoi)
+          getDataciteData(thisDoi)
+        } else {
+          console.error('No DOI in this citation:', formattedOriginalText)
+        }
+      } else if (
+        !loading &&
+        !structures.crossRef.length &&
+        !(JSON.stringify(structures.anyStyle).length > 2)
+      ) {
+        // we shouldn't do this if we already have crossref/anystyle versions
+        getVersions(structures)
+      }
     }
   }, [formattedOriginalText, internalNeedsValidation])
 
@@ -340,7 +398,6 @@ const CitationComponent = ({ node, getPos }) => {
       // console.log('Other loading has been turned off.')
       return undefined
     }, [otherLoading])
-
     return (
       <PopUpWrapper>
         {editing ? (
@@ -416,6 +473,20 @@ const CitationComponent = ({ node, getPos }) => {
                 type="anystyle"
               />
             )}
+            {structures.datacite?.formattedCitation ? (
+              <CitationVersion
+                select={() => {
+                  setPotentialCsl(structures.datacite)
+                  setPotentialText(structures.datacite.formattedCitation)
+                }}
+                selected={
+                  decodeEntities(structures.datacite.formattedCitation) ===
+                  decodeEntities(potentialText)
+                }
+                text={structures.datacite.formattedCitation}
+                type="datacite"
+              />
+            ) : null}
             {structures.crossRef
               ? structures.crossRef.map(
                   (crossRefVersion, crossRefId) =>
@@ -507,6 +578,8 @@ const CitationComponent = ({ node, getPos }) => {
       </PopUpWrapper>
     )
   }
+
+  // console.log('currentText: ', currentText)
 
   return (
     <CitationOuterWrapper>

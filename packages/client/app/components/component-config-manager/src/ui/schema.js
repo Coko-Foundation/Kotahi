@@ -577,41 +577,60 @@ export const generateSchemas = (
               ),
               default: 3,
             },
-            styleName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select style formatting for citations',
-              ),
-              oneOf: [
-                {
-                  const: 'apa',
-                  title: t('configPage.production.apa'),
-                },
-                {
-                  const: 'chicago-note-bibliography',
-                  title: t('configPage.production.cmos'),
-                },
-                {
-                  const: 'council-of-science-editors-alphabetical',
-                  title: t('configPage.production.cse'),
-                },
-              ],
-              default: 'apa',
+            getDataFromDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.getDataFromDatacite'),
+              default: false,
             },
-            localeName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select locale for citations',
-              ),
-              enum: ['en-US', 'en-GB'],
-              default: 'en-US',
+            citationStyles: {
+              type: 'object',
+              title: t('configPage.production.citationStyles'),
+              properties: {
+                styleName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select style formatting for citations',
+                  ),
+                  oneOf: [
+                    {
+                      const: 'apa',
+                      title: t('configPage.production.apa'),
+                    },
+                    {
+                      const: 'chicago-note-bibliography',
+                      title: t('configPage.production.cmos'),
+                    },
+                    {
+                      const: 'council-of-science-editors-alphabetical',
+                      title: t('configPage.production.cse'),
+                    },
+                  ],
+                  default: 'apa',
+                },
+                localeName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select locale for citations',
+                  ),
+                  enum: ['en-US', 'en-GB'],
+                  default: 'en-US',
+                },
+              },
             },
-            historyIntervalInMinutes: {
-              type: 'integer',
-              description: t('configPage.production.historyIntervalInMinutes'),
-              default: 10,
-              minimum: 1,
-              maximum: 1440,
+            manuscriptVersionHistory: {
+              type: 'object',
+              title: t('configPage.production.manuscriptVersionHistory'),
+              properties: {
+                historyIntervalInMinutes: {
+                  type: 'integer',
+                  description: t(
+                    'configPage.production.historyIntervalInMinutes',
+                  ),
+                  default: 10,
+                  minimum: 1,
+                  maximum: 1440,
+                },
+              },
             },
           },
         },
@@ -1410,41 +1429,60 @@ export const generateSchemas = (
               ),
               default: 3,
             },
-            styleName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select style formatting for citations',
-              ),
-              oneOf: [
-                {
-                  const: 'apa',
-                  title: t('configPage.production.apa'),
-                },
-                {
-                  const: 'chicago-note-bibliography',
-                  title: t('configPage.production.cmos'),
-                },
-                {
-                  const: 'council-of-science-editors-alphabetical',
-                  title: t('configPage.production.cse'),
-                },
-              ],
-              default: 'apa',
+            getDataFromDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.getDataFromDatacite'),
+              default: false,
             },
-            localeName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select locale for citations',
-              ),
-              enum: ['en-US', 'en-GB'],
-              default: 'en-US',
+            citationStyles: {
+              type: 'object',
+              title: t('configPage.production.citationStyles'),
+              properties: {
+                styleName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select style formatting for citations',
+                  ),
+                  oneOf: [
+                    {
+                      const: 'apa',
+                      title: t('configPage.production.apa'),
+                    },
+                    {
+                      const: 'chicago-note-bibliography',
+                      title: t('configPage.production.cmos'),
+                    },
+                    {
+                      const: 'council-of-science-editors-alphabetical',
+                      title: t('configPage.production.cse'),
+                    },
+                  ],
+                  default: 'apa',
+                },
+                localeName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select locale for citations',
+                  ),
+                  enum: ['en-US', 'en-GB'],
+                  default: 'en-US',
+                },
+              },
             },
-            historyIntervalInMinutes: {
-              type: 'integer',
-              description: t('configPage.production.historyIntervalInMinutes'),
-              default: 10,
-              minimum: 1,
-              maximum: 1440,
+            manuscriptVersionHistory: {
+              type: 'object',
+              title: t('configPage.production.manuscriptVersionHistory'),
+              properties: {
+                historyIntervalInMinutes: {
+                  type: 'integer',
+                  description: t(
+                    'configPage.production.historyIntervalInMinutes',
+                  ),
+                  default: 10,
+                  minimum: 1,
+                  maximum: 1440,
+                },
+              },
             },
           },
         },
@@ -2247,41 +2285,60 @@ export const generateSchemas = (
               ),
               default: 3,
             },
-            styleName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select style formatting for citations',
-              ),
-              oneOf: [
-                {
-                  const: 'apa',
-                  title: t('configPage.production.apa'),
-                },
-                {
-                  const: 'chicago-note-bibliography',
-                  title: t('configPage.production.cmos'),
-                },
-                {
-                  const: 'council-of-science-editors-alphabetical',
-                  title: t('configPage.production.cse'),
-                },
-              ],
-              default: 'apa',
+            getDataFromDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.getDataFromDatacite'),
+              default: false,
             },
-            localeName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select locale for citations',
-              ),
-              enum: ['en-US', 'en-GB'],
-              default: 'en-US',
+            citationStyles: {
+              type: 'object',
+              title: t('configPage.production.citationStyles'),
+              properties: {
+                styleName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select style formatting for citations',
+                  ),
+                  oneOf: [
+                    {
+                      const: 'apa',
+                      title: t('configPage.production.apa'),
+                    },
+                    {
+                      const: 'chicago-note-bibliography',
+                      title: t('configPage.production.cmos'),
+                    },
+                    {
+                      const: 'council-of-science-editors-alphabetical',
+                      title: t('configPage.production.cse'),
+                    },
+                  ],
+                  default: 'apa',
+                },
+                localeName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select locale for citations',
+                  ),
+                  enum: ['en-US', 'en-GB'],
+                  default: 'en-US',
+                },
+              },
             },
-            historyIntervalInMinutes: {
-              type: 'integer',
-              description: t('configPage.production.historyIntervalInMinutes'),
-              default: 10,
-              minimum: 1,
-              maximum: 1440,
+            manuscriptVersionHistory: {
+              type: 'object',
+              title: t('configPage.production.manuscriptVersionHistory'),
+              properties: {
+                historyIntervalInMinutes: {
+                  type: 'integer',
+                  description: t(
+                    'configPage.production.historyIntervalInMinutes',
+                  ),
+                  default: 10,
+                  minimum: 1,
+                  maximum: 1440,
+                },
+              },
             },
           },
         },
@@ -3084,41 +3141,60 @@ export const generateSchemas = (
               ),
               default: 3,
             },
-            styleName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select style formatting for citations',
-              ),
-              oneOf: [
-                {
-                  const: 'apa',
-                  title: t('configPage.production.apa'),
-                },
-                {
-                  const: 'chicago-note-bibliography',
-                  title: t('configPage.production.cmos'),
-                },
-                {
-                  const: 'council-of-science-editors-alphabetical',
-                  title: t('configPage.production.cse'),
-                },
-              ],
-              default: 'apa',
+            getDataFromDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.getDataFromDatacite'),
+              default: false,
             },
-            localeName: {
-              type: ['string', 'null'],
-              description: t(
-                'configPage.production.Select locale for citations',
-              ),
-              enum: ['en-US', 'en-GB'],
-              default: 'en-US',
+            citationStyles: {
+              type: 'object',
+              title: t('configPage.production.citationStyles'),
+              properties: {
+                styleName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select style formatting for citations',
+                  ),
+                  oneOf: [
+                    {
+                      const: 'apa',
+                      title: t('configPage.production.apa'),
+                    },
+                    {
+                      const: 'chicago-note-bibliography',
+                      title: t('configPage.production.cmos'),
+                    },
+                    {
+                      const: 'council-of-science-editors-alphabetical',
+                      title: t('configPage.production.cse'),
+                    },
+                  ],
+                  default: 'apa',
+                },
+                localeName: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.production.Select locale for citations',
+                  ),
+                  enum: ['en-US', 'en-GB'],
+                  default: 'en-US',
+                },
+              },
             },
-            historyIntervalInMinutes: {
-              type: 'integer',
-              description: t('configPage.production.historyIntervalInMinutes'),
-              default: 10,
-              minimum: 1,
-              maximum: 1440,
+            manuscriptVersionHistory: {
+              type: 'object',
+              title: t('configPage.production.manuscriptVersionHistory'),
+              properties: {
+                historyIntervalInMinutes: {
+                  type: 'integer',
+                  description: t(
+                    'configPage.production.historyIntervalInMinutes',
+                  ),
+                  default: 10,
+                  minimum: 1,
+                  maximum: 1440,
+                },
+              },
             },
           },
         },
