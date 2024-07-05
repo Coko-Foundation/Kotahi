@@ -38,7 +38,7 @@ const DECISION_FIELD = '[contenteditable="true"]'
 // Review
 const REVIEW_MESSAGE = '[class*=EditorStyles__ReadOnlySimpleEditorDiv]'
 const REVIEW_OPTION_CHECKBOX =
-  '[class*=DecisionReview__StyledCheckbox] > [type=checkbox]'
+  '[class*=ReviewHeading__StyledCheckbox] > [type=checkbox]'
 const REVIEWER_NAME = '[class*=Review__Heading]'
 const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
 const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] img'
