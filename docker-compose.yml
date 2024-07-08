@@ -206,7 +206,7 @@ services:
   xsweet:
     depends_on:
       - db-xsweet
-    image: cokoapps/xsweet:2.3.2
+    image: cokoapps/xsweet:2.3.3
     ports:
       - ${SERVICE_XSWEET_PORT:-3004}:${SERVICE_XSWEET_PORT:-3004}
     environment:
