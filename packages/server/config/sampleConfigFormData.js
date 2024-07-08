@@ -22,7 +22,7 @@ module.exports = {
     allowAuthorsSubmitNewVersion: true,
   },
   production: {
-    crossrefRetrievalEmail: 'test@coko.foundation',
+    crossrefRetrievalEmail: '',
     getDataFromDatacite: false,
     citationStyles: {
       styleName: 'apa',

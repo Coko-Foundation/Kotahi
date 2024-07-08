@@ -98,7 +98,7 @@ const seedConfig = async (group, instanceName, index, options) => {
   }
 
   const production = {
-    crossrefRetrievalEmail: 'test@coko.foundation',
+    crossrefRetrievalEmail: '',
     getDataFromDatacite: false,
     citationStyles: {
       styleName: 'apa',

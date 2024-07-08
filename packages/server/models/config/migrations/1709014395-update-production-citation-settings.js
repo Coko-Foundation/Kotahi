@@ -16,6 +16,10 @@ exports.up = async knex => {
         configs.map(async config => {
           const newConfig = config
 
+          if (!newConfig.production) {
+            newConfig.production = {}
+          }
+
           if (!newConfig.production.citationStyles) {
             newConfig.production.citationStyles = {}
           }
