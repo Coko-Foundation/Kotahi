@@ -9,7 +9,10 @@ import SelectEmailTemplate from './SelectEmailTemplate'
 import ActionButton from '../../../../shared/ActionButton'
 import { sendEmail, sendEmailChannelMessage } from './emailUtils'
 import { ConfigContext } from '../../../../config/src'
-import { isReviewerInvitation } from '../../../../component-task-manager/src/notificationUtils'
+import {
+  isReviewerInvitation,
+  isCollaborativeReviewerInvitation,
+} from '../../../../component-task-manager/src/notificationUtils'
 
 const UserEmailWrapper = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -116,13 +119,23 @@ const EmailNotifications = ({
           onClick={async () => {
             setNotificationStatus('pending')
 
-            if (isReviewerInvitation(selectedTemplate, emailTemplates)) {
+            if (
+              isReviewerInvitation(selectedTemplate, emailTemplates) ||
+              isCollaborativeReviewerInvitation(
+                selectedTemplate,
+                emailTemplates,
+              )
+            ) {
               const user = allUsers.find(u => u.email === selectedEmail)
               if (user)
                 await addReviewer({
                   variables: {
                     userId: user.id,
                     manuscriptId: manuscript.id,
+                    isCollaborative: !!isCollaborativeReviewerInvitation(
+                      selectedTemplate,
+                      emailTemplates,
+                    ),
                   },
                 })
             }

@@ -5,6 +5,12 @@ const findReviewerTeamMember = (version, userId) =>
     m => m.user.id === userId,
   )
 
+const findCollaborativeReviewerTeamMember = (version, userId) =>
+  (
+    (version.teams ?? []).find(t => t.role === 'collaborativeReviewer')
+      ?.members ?? []
+  ).find(m => m.user.id === userId)
+
 /** Find the user's reviewer status in the most recent manuscript-version in which
  *  they were assigned as reviewer. If this was not the current version, then the
  *  statuses 'invited', 'accepted' and 'inProgress' are reported as 'closed'
@@ -12,6 +18,10 @@ const findReviewerTeamMember = (version, userId) =>
 export const findReviewerStatus = (manuscript, userId) => {
   let memberIsCurrent = true
   let member = findReviewerTeamMember(manuscript, userId)
+
+  if (!member) {
+    member = findCollaborativeReviewerTeamMember(manuscript, userId)
+  }
 
   if (!member) {
     memberIsCurrent = false

@@ -79,7 +79,7 @@ module.exports = webpackEnv => {
         ? 'js/[name].[contenthash:8].chunk.js'
         : isEnvDevelopment && 'js/[name].chunk.js',
     },
-    devtool: 'cheap-module-source-map',
+    devtool: 'eval',
     module: {
       rules,
     },

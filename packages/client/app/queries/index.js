@@ -296,6 +296,7 @@ const exportFields = `
     isDecision
     isHiddenReviewerName
     isHiddenFromAuthor
+    isCollaborative
     jsonData
   }
   decisions {
@@ -305,6 +306,8 @@ const exportFields = `
     isDecision
     isHiddenReviewerName
     isHiddenFromAuthor
+    isCollaborative
+    isLock
     jsonData
   }
   teams {

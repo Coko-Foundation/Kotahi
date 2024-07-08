@@ -6,6 +6,7 @@ import { Wax } from 'wax-prosemirror-core'
 import { JournalContext } from '../../xpub-journal/src'
 import waxTheme from './layout/waxTheme'
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
+import yjsConfig from './config/yjsConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
 import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
 
@@ -36,6 +37,9 @@ const FullWaxEditor = ({
   user,
   manuscriptId,
   getActiveViewDom,
+  wsProvider,
+  ydoc,
+  name,
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
@@ -63,12 +67,18 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
+  const config = yjsConfig(fullWaxEditorConfig(handleAssetManager, readonly), {
+    wsProvider,
+    ydoc,
+    yjsType: name,
+  })
+
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div className={validationStatus} style={{ width: '100%' }}>
         <Wax
           autoFocus={autoFocus}
-          config={fullWaxEditorConfig(handleAssetManager, readonly)}
+          config={config}
           fileUpload={file => renderImage(file)}
           key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
           layout={

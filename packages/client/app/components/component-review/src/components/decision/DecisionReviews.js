@@ -6,18 +6,21 @@ import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 import InvitationResults from './InvitationResults'
 
-// TODO: read reviewer ordinal and name from project reviewer
-// const { status } =
-//     getUserFromTeam(manuscript, 'reviewer').filter(
-//       member => member.user.id === currentUser.id,
-//     )[0] || {}
-//   return status
+const getReviewerTeamMember = (
+  manuscript,
+  currentUser,
+  isCollaborative = false,
+) => {
+  const role = isCollaborative ? 'collaborativeReviewer' : 'reviewer'
 
-const getReviewerTeamMember = (manuscript, currentUser) => {
-  const team = manuscript.teams.find(team_ => team_.role === 'reviewer') || {}
+  const team = manuscript.teams.find(team_ => team_.role === role) || {}
 
   if (!team.members) {
     return null
+  }
+
+  if (isCollaborative) {
+    return team.members
   }
 
   const currentMember = team.members.find(m => m.user?.id === currentUser?.id)
@@ -26,34 +29,39 @@ const getReviewerTeamMember = (manuscript, currentUser) => {
 
 const DecisionReviews = ({
   canEditReviews,
-  reviewers,
   reviewForm,
   manuscript,
+  lockUnlockReview,
   updateReview,
   canHideReviews,
   threadedDiscussionProps,
   invitations,
-  urlFrag,
-  refetch,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
+  updateReviewJsonData,
   currentUser,
 }) => {
+  const collaborativeReviewToShow =
+    manuscript.reviews.find(r => r.isCollaborative) ?? null
+
   const reviewsToShow = manuscript?.reviews?.length
-    ? manuscript.reviews.filter(review => {
-        if (review.user) {
-          const reviewerTeamMember = getReviewerTeamMember(
-            manuscript,
-            review.user,
-          )
+    ? manuscript.reviews
+        .filter(r => !r.isCollaborative)
+        .filter(review => {
+          if (review.user) {
+            const reviewerTeamMember = getReviewerTeamMember(
+              manuscript,
+              review.user,
+            )
 
-          return (
-            reviewerTeamMember?.status === 'completed' && !review.isDecision
-          )
-        }
+            return (
+              reviewerTeamMember?.status === 'completed' && !review.isDecision
+            )
+          }
 
-        return !review.isDecision
-      })
+          return !review.isDecision
+        })
     : []
 
   const { t } = useTranslation()
@@ -87,11 +95,11 @@ const DecisionReviews = ({
                 canHideReviews={canHideReviews}
                 currentUser={currentUser}
                 isControlPage
+                lockUnlockReview={lockUnlockReview}
                 manuscriptId={manuscript.id}
                 open
-                refetchManuscript={refetch}
+                ordinal={index + 1}
                 review={review}
-                reviewer={{ user: review?.user, ordinal: index + 1 }}
                 reviewerTeamMember={getReviewerTeamMember(
                   manuscript,
                   review.user,
@@ -99,6 +107,7 @@ const DecisionReviews = ({
                 reviewForm={reviewForm}
                 teams={manuscript.teams}
                 threadedDiscussionProps={threadedDiscussionProps}
+                updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateReview={updateReview}
                 updateSharedStatusForInvitedReviewer={
                   updateSharedStatusForInvitedReviewer
@@ -107,6 +116,42 @@ const DecisionReviews = ({
               />
             </SectionRow>
           ))
+      ) : (
+        <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
+      )}
+      <SectionHeader>
+        <Title>{t('decisionPage.decisionTab.Collaborative Reviews')}</Title>
+      </SectionHeader>
+      <InvitationResults invitations={invitations} />
+      {collaborativeReviewToShow ? (
+        <SectionRow key={collaborativeReviewToShow.id}>
+          <DecisionReview
+            canEditReviews={canEditReviews}
+            canHideReviews={canHideReviews}
+            currentUser={currentUser}
+            isControlPage
+            lockUnlockReview={lockUnlockReview}
+            manuscriptId={manuscript.id}
+            open
+            ordinal={1}
+            review={collaborativeReviewToShow}
+            reviewerTeamMember={getReviewerTeamMember(
+              manuscript,
+              collaborativeReviewToShow.user,
+              collaborativeReviewToShow.isCollaborative,
+            )}
+            reviewForm={reviewForm}
+            teams={manuscript.teams}
+            threadedDiscussionProps={threadedDiscussionProps}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
+            updateReview={updateReview}
+            updateReviewJsonData={updateReviewJsonData}
+            updateSharedStatusForInvitedReviewer={
+              updateSharedStatusForInvitedReviewer
+            }
+            updateTeamMember={updateTeamMember}
+          />
+        </SectionRow>
       ) : (
         <SectionRow>{t('decisionPage.decisionTab.noReviews')}</SectionRow>
       )}
@@ -121,7 +166,7 @@ DecisionReviews.propTypes = {
       PropTypes.shape({
         user: PropTypes.shape({
           id: PropTypes.string.isRequired,
-        }).isRequired,
+        }),
       }).isRequired,
     ).isRequired,
     teams: PropTypes.arrayOf(

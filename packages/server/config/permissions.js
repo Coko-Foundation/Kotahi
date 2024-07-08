@@ -242,18 +242,30 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     .query()
     .findById(manuscriptId)
 
-  const team = await ctx.connectors.Team.model
+  const teams = await ctx.connectors.Team.model
     .query()
     .where({
       objectId: manuscript.id,
       objectType: 'manuscript',
-      role: 'reviewer',
+    })
+    .andWhere(builder => {
+      builder.whereIn('role', ['reviewer', 'collaborativeReviewer'])
+    })
+
+  if (!teams) return false
+
+  const member = await ctx.connectors.TeamMember.model
+    .query()
+    .whereIn(
+      'teamId',
+      teams.map(t => t.id),
+    )
+    .andWhere(builder => {
+      builder.where({ userId: ctx.user })
     })
     .first()
 
-  if (!team) return false
-  const members = await team.$relatedQuery('members').where('userId', ctx.user)
-  if (members && members[0] && members[0].status !== 'completed') return true
+  if (member && member.status !== 'completed') return true
   return false
 })
 
@@ -637,6 +649,10 @@ const permissions = {
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
+    lockUnlockCollaborativeReview: or(
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
+    ),
     updateUser: or(userIsGm, userIsAdmin),
     upload: isAuthenticated,
     uploadFile: isAuthenticated,
@@ -653,6 +669,7 @@ const permissions = {
     fileUpdated: isAuthenticated,
     filesDeleted: isAuthenticated,
     filesUploaded: isAuthenticated,
+    reviewFormUpdated: isAuthenticated,
     manuscriptsImportStatus: isAuthenticated,
     messageCreated: userIsAllowedToChat,
     uploadProgress: isAuthenticated,

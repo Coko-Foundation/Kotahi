@@ -112,7 +112,7 @@
                         <h3 id="reviews">Reviews</h3>
                         {% for review in article.reviews %}
                             <section class="content">
-                                <p class="user-name">{{ review.user.username }}</p>
+                                <p class="user-name">{{ review.users | map('username') | sort | join(', ') }}</p>
                                 {% for reviewData in review.jsonData%}
                                     <div class="review-field">
                                         {{ reviewData.text |safe }}
@@ -125,7 +125,7 @@
                         <h3 id="decisions">Summary</h3>
                         {% for decision in article.decisions %}
                             <section class="content">
-                                <p class="user-name">{{ decision.user.username }}</p>
+                                <p class="user-name">{{ decision.users | map('username') | sort | join(', ') }}</p>
                                 {% for decisionData in decision.jsonData%}
                                     <div class="review-field">
                                         {{ decisionData.text |safe }}

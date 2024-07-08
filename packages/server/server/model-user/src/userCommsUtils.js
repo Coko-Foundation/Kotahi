@@ -35,6 +35,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
     groupManager: userIsGM,
     author: false,
     reviewer: false,
+    collaborativeReviewer: false,
     editor: false,
     handlingEditor: false,
     seniorEditor: false,
@@ -153,7 +154,7 @@ const sendEmailWithPreparedData = async (
   // manuscriptPageUrl based on user roles
   if (roles.groupManager || roles.anyEditor) {
     manuscriptPageUrl += '/decision?tab=decision'
-  } else if (roles.reviewer) {
+  } else if (roles.reviewer || roles.collaborativeReviewer) {
     manuscriptPageUrl += '/review'
   } else if (roles.author) {
     manuscriptPageUrl += '/submit'
@@ -194,9 +195,11 @@ const sendEmailWithPreparedData = async (
 
   // authorInvitation, reviewerInvitation create Invitation
   if (
-    ['authorInvitation', 'reviewerInvitation'].includes(
-      selectedEmailTemplateData.emailTemplateType,
-    )
+    [
+      'authorInvitation',
+      'reviewerInvitation',
+      'collaborativeReviewerInvitation',
+    ].includes(selectedEmailTemplateData.emailTemplateType)
   ) {
     let userId = null
     let invitedPersonName = ''
@@ -215,10 +218,16 @@ const sendEmailWithPreparedData = async (
       invitedPersonName = externalName
     }
 
-    const invitedPersonType =
-      selectedEmailTemplateData.emailTemplateType === 'authorInvitation'
-        ? 'AUTHOR'
-        : 'REVIEWER'
+    let invitedPersonType = 'REVIEWER'
+
+    if (selectedEmailTemplateData.emailTemplateType === 'authorInvitation') {
+      invitedPersonType = 'AUTHOR'
+    } else if (
+      selectedEmailTemplateData.emailTemplateType ===
+      'collaborativeReviewerInvitation'
+    ) {
+      invitedPersonType = 'COLLABORATIVE_REVIEWER'
+    }
 
     const newInvitation = await new Invitation({
       manuscriptId,
@@ -229,7 +238,7 @@ const sendEmailWithPreparedData = async (
       invitedPersonType,
       invitedPersonName,
       userId,
-    }).saveGraph() // no trx!!
+    }).saveGraph()
 
     invitationId = newInvitation.id
   }

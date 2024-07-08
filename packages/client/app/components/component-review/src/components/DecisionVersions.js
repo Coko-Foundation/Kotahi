@@ -53,12 +53,14 @@ const DecisionVersions = ({
   setShouldPublishField,
   selectedEmailIsBlacklisted,
   updateSharedStatusForInvitedReviewer,
+  lockUnlockReview,
   dois,
   refetch,
   updateTask,
   updateTasks,
   teams,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   removeReviewer,
   updateTaskNotification,
   deleteTaskNotification,
@@ -133,6 +135,7 @@ const DecisionVersions = ({
                 invitations={version.manuscript.invitations || []}
                 isCurrentVersion={index === 0}
                 key={version.manuscript.id}
+                lockUnlockReview={lockUnlockReview}
                 makeDecision={makeDecision}
                 manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
@@ -153,16 +156,10 @@ const DecisionVersions = ({
                 teamLabels={teamLabels}
                 teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
+                updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
-                updateReviewJsonData={(value, path) =>
-                  updateReviewJsonData(
-                    initialValue.id,
-                    value,
-                    path,
-                    version.manuscript.id,
-                  )
-                }
+                updateReviewJsonData={updateReviewJsonData}
                 updateSharedStatusForInvitedReviewer={
                   updateSharedStatusForInvitedReviewer
                 }

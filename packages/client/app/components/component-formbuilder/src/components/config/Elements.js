@@ -655,6 +655,12 @@ const reviewFieldOptions = [
   ...genericFieldOptions,
   {
     isCustom: true,
+    fieldType: 'fullWax',
+    label: 'Full wax editor',
+    component: 'FullWaxField',
+  },
+  {
+    isCustom: true,
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',

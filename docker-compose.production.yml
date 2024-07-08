@@ -20,8 +20,10 @@ services:
         - use_colab_email=${USE_COLAB_EMAIL:-false}
         - flax_site_url=${FLAX_SITE_URL:-https://site.kotahidev.cloud68.co/}
         - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
+        - client_yjs_websocket_urL=${CLIENT_YJS_WEBSOCKET_URL:-https://localhost:5010}
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
+      - ${WS_YJS_SERVER_PORT:-5010}:${WS_YJS_SERVER_PORT:-5010}
     environment:
       - NODE_ENV=${NODE_ENV:-production}
       - POSTGRES_HOST=${POSTGRES_HOST}
@@ -111,6 +113,8 @@ services:
       - USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL}
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
+      - WS_YJS_SERVER_PORT=${WS_YJS_SERVER_PORT:-5010}
+
     volumes:
       - ./uploads:/home/node/app/uploads
       - ./packages/server/config:/home/node/app/config
@@ -152,7 +156,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.45
+    image: cokoapps/kotahi-flax:0.2.46
     depends_on:
       - server
     ports:

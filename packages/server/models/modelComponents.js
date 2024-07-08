@@ -37,6 +37,7 @@ const modelPaths = [
   'teamMember',
   'threadedDiscussion',
   'user',
+  'collaborative-doc',
 ].map(name => `./models/${name}`)
 
 module.exports = modelPaths

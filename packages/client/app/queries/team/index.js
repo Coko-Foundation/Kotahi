@@ -43,8 +43,8 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 }`
 
 export const ASSIGN_USER_AS_REVIEWER = gql`
-mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
-  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
+mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID, $isCollaborative: Boolean!) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId, isCollaborative: $isCollaborative ) {
     ${teamFields}
   }
 }`
@@ -64,6 +64,22 @@ export const UPDATE_REVIEWER_STATUS_MUTATION = gql`
 export const updateTeamMemberMutation = gql`
   mutation ($id: ID!, $input: String) {
     updateTeamMember(id: $id, input: $input) {
+      id
+      user {
+        id
+        username
+        profilePicture
+        isOnline
+      }
+      status
+      isShared
+    }
+  }
+`
+
+export const updateCollaborativeTeamMemberMutation = gql`
+  mutation ($manuscriptId: ID!, $input: String) {
+    updateCollaborativeTeamMembers(manuscriptId: $manuscriptId, input: $input) {
       id
       user {
         id

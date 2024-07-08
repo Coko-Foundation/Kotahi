@@ -21,6 +21,8 @@ const ru = {
       accepted: 'Принято',
       inProgress: 'В работе',
       completed: 'Завершено',
+      closed: 'Закрыто',
+      completedClosed: 'Завершено / Закрыто',
       unanswered: 'Без ответа',
       notAssignedForThisVersion: 'Не рецензент текущей версии',
     },
@@ -81,6 +83,7 @@ const ru = {
       kanban: {
         'Last updated': 'Последнее обновление',
         'Invited via email': 'Приглашен по email',
+        isCollaborative: 'Совместный обзор',
       },
       days: {
         day: 'день',
@@ -199,6 +202,7 @@ const ru = {
       'Anonymous Reviewer': 'Анонимный рецензент',
       Submit: 'Отправить',
       neverSubmitted: 'Этот отзыв не был отправлен',
+      isCollaborative: 'Коллективное обсуждение',
     },
     reviewVerdict: {
       accept: 'Принять',
@@ -252,6 +256,7 @@ const ru = {
       inviteUser: {
         Email: 'Email',
         Name: 'ФИО',
+        Collaborate: 'Сотрудничать',
       },
       declinedInvitation: 'Отклонено {{dateString}}',
       'Invited via email': 'Приглашен по email',
@@ -267,11 +272,13 @@ const ru = {
         notCurrentVersion:
           'Это не текущая, а архивная версия рукописи, доступная только для чтения.',
         'Completed Reviews': 'Рецензирование завершено',
+        'Collaborative Reviews': 'Коллективные обзоры',
         noReviews: 'Нет завершенных рецензий.',
         reviewNum: 'Рецензия {{num}}',
         'Anonmyous Reviewer': 'Анонимный рецензент',
         'Hide review': 'Скрыть рецензию',
         'Hide reviewer name': 'Скрыть имя рецензента',
+        lockReview: 'Проверка блокировки',
         reviewModalShow: 'Показать',
         reviewModalHide: 'Свернуть',
         Submit: 'Отправить',
@@ -536,6 +543,8 @@ const ru = {
       eventNotification: 'Уведомления',
       reviewRejectedEmailTemplate: 'Рецензент отклонил приглашение',
       reviewerInvitationPrimaryEmailTemplate: 'Приглашение рецензента',
+      reviewerCollaborativeInvitationPrimaryEmailTemplate:
+        'Приглашение Сотрудничать рецензента',
       evaluationCompleteEmailTemplate: 'Рецензия отправлена',
       submissionConfirmationEmailTemplate: 'Рукопись подана',
       alertUnreadMessageDigestTemplate: 'Непрочитанные сообщения в обсуждении',
@@ -884,6 +893,7 @@ const ru = {
         'Registered Users': 'Зарегистрированные пользователи',
         userRoles: {
           Reviewer: 'Рецензент',
+          'Collaborative reviewer': 'Коллективные pецензент',
           Editor: 'Редактор',
           Author: 'Автор',
         },
@@ -936,6 +946,7 @@ const ru = {
       },
       reviewReport: {
         reviewReport: 'Отчет о рецензировании от {{name}}',
+        collaborativeReview: 'Коллективные обзоры от {{name}}',
         anonymousReviewReport: 'Отчет о рецензировании',
         'Last Updated': 'Последнее обновление: {{dateString}}',
         Reviewer: 'Рецензент:',
@@ -951,6 +962,7 @@ const ru = {
         'Invite Reviewer': 'Пригласить рецензента',
         Shared: 'Показывать другим рецензентам',
         'Email Notification': 'Уведомления по Email',
+        Collaborate: 'Сотрудничать',
         Cancel: 'Отменить',
         Invite: 'Пригласить',
       },
@@ -1127,6 +1139,7 @@ const ru = {
         links: 'Список ссылок (URL)',
         verdict: 'Вердикт',
         discussion: 'Обсуждение',
+        fullWax: 'Расширенный текстовый редактор',
       },
       typeOptions: {
         Select: 'Выбор',

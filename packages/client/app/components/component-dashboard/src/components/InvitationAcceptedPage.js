@@ -118,6 +118,22 @@ const InvitationAcceptedPage = () => {
             manuscriptId,
             userId: invitedUserId,
             invitationId,
+            isCollaborative: false,
+            isShared: !!data.invitationManuscriptId.isShared,
+          },
+        })
+      }
+
+      if (
+        data.invitationManuscriptId.invitedPersonType ===
+        'COLLABORATIVE_REVIEWER'
+      ) {
+        assignUserAsReviewer({
+          variables: {
+            manuscriptId,
+            userId: invitedUserId,
+            invitationId,
+            isCollaborative: true,
             isShared: !!data.invitationManuscriptId.isShared,
           },
         })

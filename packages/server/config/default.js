@@ -23,6 +23,9 @@ module.exports = {
     reviewer: {
       name: 'Reviewer',
     },
+    collaborativeReviewer: {
+      name: 'Collaborative Reviewer',
+    },
     author: {
       name: 'Author',
     },
@@ -84,6 +87,7 @@ module.exports = {
       const { protocol, host, port } = cfg['pubsweet-server']
       return `${protocol}://${host}${port ? `:${port}` : ''}`
     }),
+    wsYjsServerPort: '5010',
   },
   'pubsweet-client': {
     API_ENDPOINT: '/api',

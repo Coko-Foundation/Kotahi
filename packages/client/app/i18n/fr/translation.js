@@ -21,6 +21,8 @@ const fr = {
       accepted: 'Accepté',
       inProgress: 'En cours',
       completed: 'Terminé',
+      closed: 'Fermé',
+      completedClosed: 'Terminé / Fermé',
       unanswered: 'Sans réponse',
       notAssignedForThisVersion: "N'est pas évaluateur de la version actuelle",
     },
@@ -80,6 +82,7 @@ const fr = {
       kanban: {
         'Last updated': 'Dernière mise à jour',
         'Invited via email': 'Invité par email',
+        isCollaborative: 'Revue collaborative',
       },
       days: {
         day: 'jour',
@@ -199,6 +202,7 @@ const fr = {
       'Anonymous Reviewer': 'Réviseur anonyme',
       Submit: 'Soumettre',
       neverSubmitted: "Cette évaluation n'a pas été soumise",
+      isCollaborative: 'Révision collaborative',
     },
     reviewVerdict: {
       accept: 'accepter',
@@ -250,6 +254,7 @@ const fr = {
       inviteUser: {
         Email: 'Email',
         Name: 'Nom',
+        Collaborate: 'Collaborer',
       },
       declinedInvitation: 'Refusé {{dateString}}',
       'Invited via email': 'Invité par email',
@@ -266,11 +271,13 @@ const fr = {
         notCurrentVersion:
           "Ce n'est pas la version actuelle, mais une version archivée en lecture seule du manuscrit.",
         'Completed Reviews': 'Révisions terminées',
+        'Collaborative Reviews': 'Révisions collaboratives',
         noReviews: 'Aucune révision terminée pour le moment.',
         reviewNum: 'Révision {{num}}',
         'Anonmyous Reviewer': 'Réviseur anonyme',
         'Hide review': 'Masquer la révision',
         'Hide reviewer name': 'Masquer le nom du réviseur',
+        lockReview: 'Révision de verrouillage',
         reviewModalShow: 'Afficher',
         reviewModalHide: 'Masquer',
         Submit: 'Soumettre',
@@ -544,6 +551,8 @@ const fr = {
       reviewRejectedEmailTemplate:
         "L'évaluateur rejette une invitation à évaluer",
       reviewerInvitationPrimaryEmailTemplate: "Invitation à l'évaluation",
+      reviewerCollaborativeInvitationPrimaryEmailTemplate:
+        'Invitación al revisor collaborer',
       evaluationCompleteEmailTemplate: 'Évaluation soumise',
       submissionConfirmationEmailTemplate: 'Manuscrit soumis',
       alertUnreadMessageDigestTemplate: 'Message de discussion non lu',
@@ -894,6 +903,7 @@ const fr = {
         'Registered Users': 'Utilisateurs enregistrés',
         userRoles: {
           Reviewer: 'Évaluateur',
+          'Collaborative reviewer': 'Colaborative evaluateur',
           Editor: 'Éditeur',
           Author: 'Auteur',
         },
@@ -946,6 +956,7 @@ const fr = {
       },
       reviewReport: {
         reviewReport: "Rapport d'évaluation de {{name}}",
+        collaborativeReview: 'Révision collaborative de {{name}}',
         anonymousReviewReport: "Rapport d'évaluation",
         'Last Updated': 'Dernière mise à jour : {{dateString}}',
         Reviewer: 'Évaluateur :',
@@ -961,6 +972,7 @@ const fr = {
         'Invite Reviewer': 'Inviter un évaluateur',
         Shared: 'Partagé',
         'Email Notification': 'Notification par email',
+        Collaborate: 'Collaborer',
         Cancel: 'Annuler',
         Invite: 'Inviter',
       },
@@ -1143,6 +1155,7 @@ const fr = {
         links: 'Liste de liens (URL)',
         verdict: 'Verdict',
         discussion: 'Discussion',
+        fullWax: 'Éditeur de texte complet',
       },
       typeOptions: {
         Select: 'Sélection',

@@ -7,6 +7,8 @@ const reviewFields = `
   jsonData
   isDecision
   isHiddenFromAuthor
+  isCollaborative
+  isLock
   isHiddenReviewerName
   canBePublishedPublicly
   user {
@@ -335,8 +337,8 @@ export const query = gql`
 `
 
 export const addReviewerMutation = gql`
-mutation($manuscriptId: ID!, $userId: ID!) {
-  addReviewer(manuscriptId: $manuscriptId, userId: $userId) {
+mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean!) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, isCollaborative: $isCollaborative) {
     ${teamFields}
   }
 }
@@ -413,6 +415,14 @@ export const setShouldPublishFieldMutation = gql`
       shouldPublish: $shouldPublish
     ) {
       ${manuscriptFields}
+    }
+  }
+`
+
+export const lockUnlockCollaborativeReviewMutation = gql`
+  mutation($id: ID!) {
+    lockUnlockCollaborativeReview(id: $id) {
+      ${reviewFields}
     }
   }
 `

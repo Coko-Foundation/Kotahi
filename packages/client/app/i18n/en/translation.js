@@ -21,6 +21,8 @@ const en = {
       accepted: 'Accepted',
       inProgress: 'In Progress',
       completed: 'Completed',
+      closed: 'Closed',
+      completedClosed: 'Completed / Closed',
       unanswered: 'Unanswered',
       notAssignedForThisVersion: 'Not a reviewer of the current version',
     },
@@ -80,6 +82,7 @@ const en = {
       kanban: {
         'Last updated': 'Last updated',
         'Invited via email': 'Invited via email',
+        isCollaborative: 'Collaborative review',
       },
       days: {
         day: 'day',
@@ -195,6 +198,7 @@ const en = {
       'Anonymous Reviewer': 'Anonymous Reviewer',
       Submit: 'Submit',
       neverSubmitted: 'This review was not submitted',
+      isCollaborative: 'Collaborative review',
     },
     reviewVerdict: {
       accept: 'accept',
@@ -246,6 +250,7 @@ const en = {
       inviteUser: {
         Email: 'Email',
         Name: 'Name',
+        Collaborate: 'Collaborate',
       },
       declinedInvitation: 'Declined {{dateString}}',
       'Invited via email': 'Invited via email',
@@ -261,11 +266,13 @@ const en = {
         notCurrentVersion:
           'This is not the current, but an archived read-only version of the manuscript.',
         'Completed Reviews': 'Completed Reviews',
+        'Collaborative Reviews': 'Collaborative Reviews',
         noReviews: 'No reviews completed yet.',
         reviewNum: 'Review {{num}}',
         'Anonmyous Reviewer': 'Anonmyous Reviewer',
         'Hide review': 'Hide review',
         'Hide reviewer name': 'Hide reviewer name',
+        lockReview: 'Lock review',
         reviewModalShow: 'Show',
         reviewModalHide: 'Hide',
         Submit: 'Submit',
@@ -522,6 +529,8 @@ const en = {
       eventNotification: 'Event Notifications',
       reviewRejectedEmailTemplate: 'Reviewer rejects an invitation to review',
       reviewerInvitationPrimaryEmailTemplate: 'Reviewer invitation',
+      reviewerCollaborativeInvitationPrimaryEmailTemplate:
+        'Reviewer collaborative invitation',
       evaluationCompleteEmailTemplate: 'Submitted review',
       submissionConfirmationEmailTemplate: 'Submitted manuscript',
       alertUnreadMessageDigestTemplate: 'Unread discussion message',
@@ -863,6 +872,7 @@ const en = {
         'Registered Users': 'Registered Users',
         userRoles: {
           Reviewer: 'Reviewer',
+          'Collaborative reviewer': 'Collaborative reviewer',
           Editor: 'Editor',
           Author: 'Author',
         },
@@ -915,6 +925,7 @@ const en = {
       },
       reviewReport: {
         reviewReport: '{{name}}’s review report',
+        collaborativeReview: '{{name}}’s Collaborative review',
         anonymousReviewReport: 'Review report',
         'Last Updated': 'Last Updated: {{dateString}}',
         Reviewer: 'Reviewer:',
@@ -930,6 +941,7 @@ const en = {
         'Invite Reviewer': 'Invite Reviewer',
         Shared: 'Shared',
         'Email Notification': 'Email Notification',
+        Collaborate: 'Collaborate',
         Cancel: 'Cancel',
         Invite: 'Invite',
       },
@@ -1105,6 +1117,7 @@ const en = {
         links: 'List of links (URLs)',
         verdict: 'Verdict',
         discussion: 'Discussion',
+        fullWax: 'Full wax editor',
       },
       typeOptions: {
         Select: 'Select',

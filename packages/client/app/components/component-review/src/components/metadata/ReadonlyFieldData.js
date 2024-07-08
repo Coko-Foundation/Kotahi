@@ -1,15 +1,40 @@
 import React from 'react'
 import { get } from 'lodash'
+import FormCollaborateWax from '../../../../component-formbuilder/src/components/FormCollaborativeWax'
+import CollaborativeTextFieldBuilder from '../../../../component-formbuilder/src/components/builderComponents/CollaborativeTextField'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Affiliation, Email, BadgeContainer } from '../style'
 import { Attachment, ColorBadge } from '../../../../shared'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
+
+const parseIdentifierAndName = id => {
+  const lastIndex = id.lastIndexOf('-')
+
+  // Split the input string at the last occurrence of '-' character
+  const identifier = id.slice(0, lastIndex)
+  const name = id.slice(lastIndex + 1)
+  return { identifier, name }
+}
+
+const CollaborativeReadOnlyField = (Component, data) => {
+  const RenderedComponent = FormCollaborateWax(Component)
+  const { identifier, name } = parseIdentifierAndName(data)
+  return (
+    <RenderedComponent
+      collaborativeObject={{ identifier }}
+      name={name}
+      onChange={() => {}}
+      readonly
+    />
+  )
+}
 
 const ReadonlyFieldData = ({
   fieldName,
   form,
   formData,
   threadedDiscussionProps,
+  isCollaborativeForm,
 }) => {
   const data = get(formData, fieldName)
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
@@ -118,8 +143,32 @@ const ReadonlyFieldData = ({
       ))
   }
 
-  if (data && fieldDefinition?.component === 'AbstractEditor')
-    return <SimpleWaxEditor readonly value={data} />
+  if (
+    data &&
+    ['AbstractEditor', 'FullWaxField'].includes(fieldDefinition?.component)
+  )
+    return isCollaborativeForm ? (
+      CollaborativeReadOnlyField(SimpleWaxEditor, data)
+    ) : (
+      <SimpleWaxEditor readonly value={data} />
+    )
+
+  if (
+    data &&
+    fieldDefinition?.component === 'TextField' &&
+    isCollaborativeForm
+  ) {
+    const { identifier, name } = parseIdentifierAndName(data)
+    return (
+      <CollaborativeTextFieldBuilder
+        collaborativeObject={{ identifier }}
+        disabled
+        identifier={data}
+        name={name}
+        onChange={() => {}}
+      />
+    )
+  }
 
   if (fieldDefinition?.options) {
     const items = Array.isArray(data) ? data : [data]

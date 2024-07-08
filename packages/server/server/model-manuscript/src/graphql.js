@@ -25,6 +25,7 @@ const User = require('../../../models/user/user.model')
 const Invitation = require('../../../models/invitation/invitation.model')
 const Config = require('../../../models/config/config.model')
 const ReviewModel = require('../../../models/review/review.model')
+const CollaborativeDoc = require('../../../models/collaborative-doc')
 
 const {
   sendAnnouncementNotification,
@@ -789,7 +790,7 @@ const resolvers = {
 
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
-        userId: ctx.user,
+        userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
         isDecision: false,
       })
 
@@ -799,8 +800,9 @@ const resolvers = {
           isDecision: false,
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
-          userId: ctx.user,
+          userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
           manuscriptId: team.objectId,
+          isCollaborative: team.role === 'collaborativeReviewer',
           jsonData: '{}',
         }
 
@@ -1217,8 +1219,20 @@ const resolvers = {
 
       return Manuscript.query().updateAndFetchById(id, manuscript)
     },
-    async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
+    async addReviewer(
+      _,
+      { manuscriptId, userId, invitationId, isCollaborative },
+      ctx,
+    ) {
+      const manuscript = await Manuscript.query().findById(manuscriptId)
       const status = invitationId ? 'accepted' : 'invited'
+
+      const team = isCollaborative
+        ? {
+            role: 'collaborativeReviewer',
+            name: 'Collaborative Reviewers',
+          }
+        : { role: 'reviewer', name: 'Reviewers' }
 
       let invitationData
 
@@ -1226,9 +1240,9 @@ const resolvers = {
         invitationData = await Invitation.query().findById(invitationId)
       }
 
-      const existingTeam = await Manuscript.relatedQuery('teams')
-        .for(manuscriptId)
-        .where('role', 'reviewer')
+      const existingTeam = await manuscript
+        .$relatedQuery('teams')
+        .where('role', team.role)
         .first()
 
       // Add the reviewer to the existing team of reviewers
@@ -1257,24 +1271,29 @@ const resolvers = {
         objectId: manuscriptId,
         objectType: 'manuscript',
         members: [{ status, userId }],
-        role: 'reviewer',
-        name: 'Reviewers',
+        role: team.role,
+        name: team.name,
       }).saveGraph()
 
       return newTeam
     },
-    async removeReviewer(_, { manuscriptId, userId }, ctx) {
-      const reviewerTeam = await Manuscript.relatedQuery('teams')
-        .for(manuscriptId)
-        .where('role', 'reviewer')
-        .first()
+    async removeReviewer(_, { manuscriptId, userId }) {
+      const manuscript = await Manuscript.query().findById(manuscriptId)
 
-      await TeamMember.query()
-        .where({
+      const reviewerTeams = await manuscript
+        .$relatedQuery('teams')
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
+
+      const [deletedTeamMember] = await TeamMember.query()
+        .builder.whereIn(
+          'teamId',
+          reviewerTeams.map(reviewerTeam => reviewerTeam.id),
+        )
+        .andWhere({
           userId,
-          teamId: reviewerTeam.id,
         })
         .delete()
+        .returning('*')
 
       await removeUserFromManuscriptChatChannel({
         manuscriptId,
@@ -1282,8 +1301,13 @@ const resolvers = {
         type: 'editorial',
       })
 
+      const reviewerTeam = await Team.query().findOne({
+        id: deletedTeamMember.teamId,
+      })
+
       return reviewerTeam.$query().withGraphFetched('members.user')
     },
+
     /** To identify which data we're making publishable/unpublishable, we need:
      * manuscriptId; the ID of the owning review/decision or manuscript object; and the fieldName.
      * For threaded discussion comments, the fieldName should have the commentId concatenated onto it, like this:
@@ -1920,7 +1944,7 @@ const resolvers = {
       const assignments = await User.relatedQuery('teams')
         .for(ctx.user)
         .select('objectId')
-        .where({ role: 'reviewer' })
+        .whereIn('role', ['reviewer', 'collaborativeReviewer'])
         .whereIn('objectId', versionIds)
 
       return [...new Set(assignments.map(a => a.objectId))]
@@ -2040,6 +2064,22 @@ const resolvers = {
         parent.threadedDiscussions ||
         (await getThreadedDiscussionsForManuscript(parent, getUsersById))
 
+      // eslint-disable-next-line no-restricted-syntax
+      for (const review of reviews) {
+        const jsonData = JSON.parse(review.jsonData)
+
+        if (review.isCollaborative) {
+          const collaborativeFormData =
+            // eslint-disable-next-line no-await-in-loop
+            await CollaborativeDoc.getFormData(review.id, reviewForm)
+
+          review.jsonData = JSON.stringify({
+            ...jsonData,
+            ...collaborativeFormData,
+          })
+        }
+      }
+
       return getPublishableReviewFields(
         reviews,
         reviewForm,
@@ -2132,13 +2172,29 @@ const resolvers = {
     },
   },
   PublishedReview: {
-    async user(parent) {
+    async users(parent) {
       if (parent.isHiddenReviewerName) {
-        return { id: '', username: 'Anonymous User' }
+        return [{ id: '', username: 'Anonymous User' }]
       }
 
-      const user = await User.query().findById(parent.userId)
-      return user
+      let users = []
+
+      if (parent.isCollaborative) {
+        const manuscript = await Manuscript.query().findById(
+          parent.manuscriptId,
+        )
+
+        const existingTeam = await manuscript
+          .$relatedQuery('teams')
+          .where('role', 'collaborativeReviewer')
+          .first()
+
+        users = await existingTeam.$relatedQuery('users')
+      } else {
+        users = await User.query().where({ id: parent.userId })
+      }
+
+      return users
     },
   },
 }
@@ -2197,7 +2253,7 @@ const typeDefs = `
     deleteManuscripts(ids: [ID]!): [ID]!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
-    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
+    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID, isCollaborative: Boolean!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
@@ -2248,6 +2304,8 @@ const typeDefs = `
     isDecision: Boolean
     isHiddenReviewerName: Boolean
     isHiddenFromAuthor: Boolean
+    isCollaborative: Boolean!
+    isLock: Boolean!
     jsonData: String
   }
 
@@ -2432,8 +2490,10 @@ const typeDefs = `
     updated: DateTime
     isDecision: Boolean
     open: Boolean
-    user: ReviewUser
+    users: [ReviewUser!]!
     isHiddenFromAuthor: Boolean
+    isCollaborative: Boolean
+    isLock: Boolean
     isHiddenReviewerName: Boolean
     isSharedWithCurrentUser: Boolean!
     canBePublishedPublicly: Boolean!

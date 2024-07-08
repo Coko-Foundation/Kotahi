@@ -32,6 +32,7 @@
     "@babel/core": "7.11.6",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
+    "@coko/client": "0.0.41",
     "@fontsource/roboto": "^4.5.8",
     "@pubsweet/ui": "12.6.0",
     "@pubsweet/ui-toolkit": "^2.3.5",
@@ -116,7 +117,13 @@
     "wax-table-service": "0.9.4",
     "webpack": "4.44.2",
     "xpub-journal": "0.1.0",
-    "xpub-validators": "0.0.28"
+    "xpub-validators": "0.0.28",
+    "y-prosemirror": "1.2.0",
+    "y-protocols": "1.0.5",
+    "y-textarea": "^1.0.0",
+    "y-webrtc": "10.2.0",
+    "y-websocket": "1.4.5",
+    "yjs": "13.5.38"
   },
   "devDependencies": {
     "@babel/core": "7.11.6",
@@ -154,6 +161,11 @@
     "webpack-cli": "3.3.12",
     "webpack-dev-middleware": "3.7.2",
     "webpack-dev-server": "3.11.0",
-    "webpack-hot-middleware": "2.25.0"
+    "webpack-hot-middleware": "2.25.0",
+    "y-prosemirror": "^1.2.0",
+    "y-protocols": "^1.0.1",
+    "y-webrtc": "^10.2.0",
+    "y-websocket": "^1.4.5",
+    "yjs": "^13.5.38"
   }
 }

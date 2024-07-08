@@ -23,6 +23,11 @@ const DashboardReviewsPage = ({ currentUser, history }) => {
     'accepted:reviewer',
     'inProgress:reviewer',
     'completed:reviewer',
+    'collaborativeReviewer',
+    'invited:collaborativeReviewer',
+    'accepted:collaborativeReviewer',
+    'inProgress:collaborativeReviewer',
+    'completed:collaborativeReviewer',
   ]
 
   const applyQueryParams = useQueryParams()

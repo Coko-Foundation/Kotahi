@@ -61,6 +61,7 @@ ReviewerInput.propTypes = {
 const ReviewerForm = ({
   isValid,
   handleSubmit,
+  values,
   reviewerUsers,
   isNewUser,
   setIsNewUser,
@@ -95,6 +96,13 @@ const ReviewerForm = ({
               id="name"
               name="name"
               placeholder={t('decisionPage.inviteUser.Name')}
+            />
+            <Field
+              as={Checkbox}
+              checked={values.collaborate}
+              id="collaborate"
+              label={t('decisionPage.inviteUser.Collaborate')}
+              name="collaborate"
             />
             <ActionButton
               disabled={!isValid}

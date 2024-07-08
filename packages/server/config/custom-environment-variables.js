@@ -29,6 +29,7 @@ module.exports = {
     },
     tempFolderPath: 'TEMP_FOLDER_PATH',
     useFileStorage: 'USE_FILE_STORAGE',
+    wsYjsServerPort: 'WS_YJS_SERVER_PORT',
   },
   'client-features': {
     displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
@@ -120,6 +121,7 @@ module.exports = {
     clientSecret: 'FLAX_CLIENT_SECRET',
     clientAPIURL: 'FLAX_CLIENT_API_URL',
     clientFlaxSiteUrl: 'FLAX_SITE_URL',
+    clientYjsWebsocketUrl: 'CLIENT_YJS_WEBSOCKET_URL',
     port: 'FLAX_EXPRESS_PORT',
     host: 'FLAX_EXPRESS_HOST',
     protocol: 'FLAX_EXPRESS_PROTOCOL',

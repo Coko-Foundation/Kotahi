@@ -55,6 +55,7 @@ const DecisionVersion = ({
   updateManuscript, // To handle manuscript editing
   onChange, // To handle form editing
   makeDecision,
+  lockUnlockReview,
   sendNotifyEmail,
   sendChannelMessage,
   publishManuscript,
@@ -88,6 +89,7 @@ const DecisionVersion = ({
   teams,
   removeReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
@@ -321,13 +323,18 @@ const DecisionVersion = ({
             </SectionContent>
           )}
           <KanbanBoard
+            createFile={createFile}
+            currentUser={currentUser}
+            deleteFile={deleteFile}
             invitations={invitations}
             isCurrentVersion={isCurrentVersion}
             manuscript={version}
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
+            updateReviewJsonData={updateReviewJsonData}
             updateSharedStatusForInvitedReviewer={
               updateSharedStatusForInvitedReviewer
             }
@@ -419,7 +426,15 @@ const DecisionVersion = ({
                   manuscriptId={version.id}
                   manuscriptShortId={version.shortId}
                   manuscriptStatus={version.status}
-                  onChange={updateReviewJsonData}
+                  onChange={(value, path) => {
+                    updateReviewJsonData(
+                      currentDecisionData?.id,
+                      value,
+                      path,
+                      true,
+                      version.id,
+                    )
+                  }}
                   onSubmit={async (values, actions) => {
                     await makeDecision({
                       variables: {
@@ -503,12 +518,14 @@ const DecisionVersion = ({
               canHideReviews={canHideReviews}
               currentUser={currentUser}
               invitations={invitations}
+              lockUnlockReview={lockUnlockReview}
               manuscript={version}
-              refetch={refetch}
               reviewers={reviewers}
               reviewForm={reviewForm}
               threadedDiscussionProps={threadedDiscussionExtendedProps}
+              updateCollaborativeTeamMember={updateCollaborativeTeamMember}
               updateReview={updateReview}
+              updateReviewJsonData={updateReviewJsonData}
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer
               }
@@ -618,7 +635,7 @@ DecisionVersion.propTypes = {
           defaultIdentity: PropTypes.shape({
             identifier: PropTypes.string.isRequired,
           }),
-        }).isRequired,
+        }),
       }).isRequired,
     ).isRequired,
   }).isRequired,

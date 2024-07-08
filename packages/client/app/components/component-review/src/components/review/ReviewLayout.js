@@ -1,10 +1,11 @@
+/* eslint-disable react/default-props-match-prop-types */
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import { useTranslation } from 'react-i18next'
-import { v4 as uuid } from 'uuid'
-import { set } from 'lodash'
+import { set, flatten } from 'lodash'
 import { gql } from '@apollo/client'
+import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
@@ -25,19 +26,15 @@ import { ConfigContext } from '../../../../config/src'
 
 const ReviewLayout = ({
   currentUser,
+  currentUserReview,
   versions,
   reviewForm,
-  onSubmit,
   // isValid,
   channels,
-  uploadFile,
   channelId,
   submissionForm,
   createFile,
   deleteFile,
-  manuscript,
-  validateDoi,
-  validateSuffix,
   decisionForm,
   threadedDiscussionProps,
   chatProps,
@@ -92,32 +89,17 @@ const ReviewLayout = ({
         !r.isDecision,
     )
 
-    const reviewForCurrentUserData = latestManuscript.reviews?.find(
-      r => r.user?.id === currentUser.id && !r.isDecision,
-    )
-
-    const reviewData = reviewForCurrentUserData
-      ? JSON.parse(reviewForCurrentUserData?.jsonData)
+    const reviewData = currentUserReview
+      ? ensureJsonIsParsed(currentUserReview?.jsonData)
       : {}
 
-    const reviewersTeam = latestManuscript.teams.find(
-      team => team.role === 'reviewer',
+    const reviewersTeams = latestManuscript.teams.filter(
+      team => team.role === 'reviewer' || team.role === 'collaborativeReviewer',
     ) || { members: [] }
 
-    const reviewerStatus = reviewersTeam.members.find(
-      member => member.user.id === currentUser?.id,
-    )?.status
-
-    const existingReview = latestManuscript.reviews?.find(
-      review => review.user?.id === currentUser.id && !review.isDecision,
-    ) || {
-      id: uuid(),
-      isDecision: false,
-      isHiddenReviewerName: true,
-      jsonData: {},
-      manuscriptId: latestManuscript?.id,
-      userId: currentUser.id,
-    }
+    const reviewerStatus = flatten(
+      reviewersTeams.map(team => team.members),
+    ).find(member => member.user.id === currentUser?.id)?.status
 
     const updateReviewJsonData = (manuscriptId, review, value, path) => {
       const delta = {} // Only the changed fields
@@ -189,11 +171,15 @@ const ReviewLayout = ({
 
     return (
       <div key={latestManuscript.id}>
-        {reviewerStatus === 'completed' || !isLatestVersion ? (
+        {reviewerStatus === 'completed' ||
+        reviewerStatus === 'closed' ||
+        !isLatestVersion ? (
           <Review
-            isOldUnsubmitted={reviewerStatus !== 'completed'}
+            isOldUnsubmitted={
+              reviewerStatus !== 'completed' && reviewerStatus !== 'closed'
+            }
             isReview
-            review={existingReview}
+            review={currentUserReview}
             reviewForm={reviewForm}
             sharedReviews={sharedReviewsData}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -201,17 +187,25 @@ const ReviewLayout = ({
         ) : (
           <SectionContent>
             <FormTemplate
+              collaborativeObject={{
+                identifier: currentUserReview.id,
+                currentUser,
+              }}
               createFile={createFile}
               deleteFile={deleteFile}
               form={reviewForm}
+              formikOptions={{
+                enableReinitialize: currentUserReview.isCollaborative,
+              }}
               initialValues={reviewData}
+              isCollaborative={currentUserReview.isCollaborative}
               manuscriptId={latestManuscript.id}
               manuscriptShortId={latestManuscript.shortId}
               manuscriptStatus={latestManuscript.status}
               onChange={(value, path) =>
                 updateReviewJsonData(
                   latestManuscript.id,
-                  existingReview,
+                  currentUserReview,
                   value,
                   path,
                 )
@@ -222,8 +216,6 @@ const ReviewLayout = ({
               submissionButtonText={t('reviewPage.Submit')}
               tagForFiles="review"
               threadedDiscussionProps={threadedDiscussionProps}
-              validateDoi={validateDoi}
-              validateSuffix={validateSuffix}
             />
           </SectionContent>
         )}
@@ -415,9 +407,7 @@ ReviewLayout.propTypes = {
       ).isRequired,
     }).isRequired,
   ).isRequired,
-  review: PropTypes.shape({}),
-  onSubmit: PropTypes.func,
-  uploadFile: PropTypes.func,
+  currentUserReview: PropTypes.shape({}),
   channelId: PropTypes.string.isRequired,
   submissionForm: PropTypes.shape({
     children: PropTypes.arrayOf(
@@ -435,9 +425,9 @@ ReviewLayout.propTypes = {
 }
 
 ReviewLayout.defaultProps = {
-  onSubmit: () => {},
   review: undefined,
-  uploadFile: undefined,
+  currentUserReview: undefined,
+  status: undefined,
 }
 
 export default ReviewLayout

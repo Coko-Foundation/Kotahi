@@ -16,6 +16,7 @@ import { getMembersOfTeam } from '../../../../shared/manuscriptUtils'
 import statuses from '../../../../../config/journal/review-status'
 import localizeReviewFilterOptions from '../../../../shared/localizeReviewFilterOptions'
 import KanbanCard from './reviewers/KanbanCard'
+import { findReviewFromReviewer } from './reviewers/util'
 
 const Kanban = styled.div`
   margin: 15px 7.5px;
@@ -26,7 +27,7 @@ const Column = styled.div`
   height: 300px;
   margin-inline: 7.5px;
   /* stylelint-disable-next-line scss/operator-no-unspaced */
-  width: calc(${100 / (statuses.length - 1)}% - 15px);
+  width: calc(${100 / (statuses.length - 2)}% - 15px);
 `
 
 const StatusLabel = styled.div`
@@ -67,6 +68,9 @@ const normalizeStatus = statusString =>
     .replace('unanswered', 'invited')
 
 const KanbanBoard = ({
+  createFile,
+  currentUser,
+  deleteFile,
   invitations,
   version,
   versionNumber,
@@ -77,17 +81,26 @@ const KanbanBoard = ({
   manuscript,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateReview,
+  updateReviewJsonData,
 }) => {
   const reviewers = getMembersOfTeam(version, 'reviewer')
+
+  const collaborativeReviewers = getMembersOfTeam(
+    version,
+    'collaborativeReviewer',
+  ).map(reviewer => ({ ...reviewer, isCollaborative: true }))
+
   const { t } = useTranslation()
 
   const emailAndWebReviewers = []
 
-  reviewers.forEach(reviewer => {
+  reviewers.concat(collaborativeReviewers).forEach(reviewer => {
     emailAndWebReviewers.push({
       ...reviewer,
       status: normalizeStatus(reviewer.status),
+      isCollaborative: !!reviewer.isCollaborative,
       isEmail: false, // This will be revised to true if we find a matching invitation below
       suggestedReviewers: invitations.find(
         invitation =>
@@ -98,7 +111,11 @@ const KanbanBoard = ({
   })
 
   invitations
-    .filter(i => i.invitedPersonType === 'REVIEWER')
+    .filter(
+      i =>
+        i.invitedPersonType === 'REVIEWER' ||
+        i.invitedPersonType === 'COLLABORATIVE_REVIEWER',
+    )
     .map(i => ({ ...i, status: normalizeStatus(i.status) }))
     .forEach(invitation => {
       const existingReviewer = emailAndWebReviewers.find(
@@ -143,13 +160,6 @@ const KanbanBoard = ({
         manuscript.reviews.filter(review => !review.isDecision)) ||
       []
 
-  const findReview = reviewer => {
-    return allReviews.find(
-      review =>
-        review.user?.id === reviewer.user?.id && review.isDecision === false,
-    )
-  }
-
   const getReviewersWithoutDuplicates = (status, someReviewers) =>
     someReviewers
       .sort(
@@ -157,7 +167,8 @@ const KanbanBoard = ({
       )
       .filter((reviewer, index) => {
         const hasTheRightStatus =
-          reviewer.status === normalizeStatus(status.value)
+          reviewer.status === normalizeStatus(status.value) ||
+          (reviewer.status === 'closed' && status.value === 'completed')
 
         const isDuplicate =
           !!reviewer.user &&
@@ -166,6 +177,12 @@ const KanbanBoard = ({
 
         return hasTheRightStatus && !isDuplicate
       })
+
+  const statusLabel = status => {
+    return status?.value === 'completed'
+      ? t('reviewerStatus.completedClosed')
+      : status?.label
+  }
 
   return (
     <AdminSection>
@@ -183,14 +200,15 @@ const KanbanBoard = ({
         <SectionRow style={{ padding: 0 }}>
           <Kanban>
             {LocalizedReviewFilterOptions.filter(
-              status => status.value !== 'rejected',
+              status =>
+                !['rejected', 'closed'].includes(status.value.toLowerCase()),
             ).map(status => (
               <Column key={status.value}>
                 <StatusLabel
                   lightText={status.lightText}
                   statusColor={status.color}
                 >
-                  {status.label}
+                  {statusLabel(status)}
                 </StatusLabel>
                 <CardsWrapper>
                   {getReviewersWithoutDuplicates(
@@ -198,14 +216,19 @@ const KanbanBoard = ({
                     emailAndWebReviewers,
                   ).map(reviewer => (
                     <KanbanCard
+                      createFile={createFile}
+                      currentUser={currentUser}
+                      deleteFile={deleteFile}
                       isCurrentVersion={isCurrentVersion}
                       isInvitation={reviewer.isEmail}
                       key={reviewer.id}
                       manuscript={version}
                       removeReviewer={removeReviewer}
                       review={
-                        status.value === 'completed'
-                          ? findReview(reviewer)
+                        status.value === 'completed' ||
+                        (status.value === 'inProgress' &&
+                          reviewer.isCollaborative === true)
+                          ? findReviewFromReviewer(allReviews, reviewer)
                           : null
                       }
                       reviewer={reviewer}
@@ -214,7 +237,11 @@ const KanbanBoard = ({
                         reviewer.isEmail && status.value === 'invited'
                       }
                       status={status.value}
+                      updateCollaborativeTeamMember={
+                        updateCollaborativeTeamMember
+                      }
                       updateReview={updateReview}
+                      updateReviewJsonData={updateReviewJsonData}
                       updateSharedStatusForInvitedReviewer={
                         updateSharedStatusForInvitedReviewer
                       }

@@ -115,7 +115,6 @@ const DecisionAndReviews = ({
           <SectionHeader>
             <Title>{t('manuscriptSubmit.Reviews')}</Title>
           </SectionHeader>
-
           {reviewsToShow.length ? (
             reviewsToShow.map((review, index) => (
               <SectionRow key={review.id}>
@@ -123,13 +122,9 @@ const DecisionAndReviews = ({
                   currentUser={currentUser}
                   isControlPage={isControlPage}
                   open
+                  ordinal={index + 1}
                   readOnly
                   review={review}
-                  reviewer={{
-                    name: review.user?.username,
-                    ordinal: index + 1,
-                    user: review.user,
-                  }}
                   reviewForm={reviewForm}
                   showEditorOnlyFields={showEditorOnlyFields}
                   teams={manuscript.teams}

@@ -6,10 +6,10 @@ import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'isomorphic-dompurify'
-import { RadioGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import {
+  ColorBadge,
   Section as Container,
   Select,
   FilesUpload,
@@ -18,7 +18,13 @@ import {
   TextInput,
   CheckboxGroup,
   RichTextEditor,
+  RadioGroup,
 } from '../../../shared'
+import {
+  FullWaxField,
+  CollaborativeTextField,
+} from '../../../component-formbuilder/src/components/builderComponents'
+import FormCollaborateWax from '../../../component-formbuilder/src/components/FormCollaborativeWax'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
@@ -114,6 +120,11 @@ const FieldHead = styled.div`
   }
 `
 
+const CollaborativeBadge = styled.div`
+  flex-basis: 100%;
+  padding-top: 10px;
+`
+
 const filterFileManuscript = files =>
   files.filter(file => file.tags.includes('manuscript'))
 
@@ -124,6 +135,7 @@ const elements = {
   Abstract: RichTextEditor,
   Keywords: TextInput,
   TextField: TextInput,
+  FullWaxField,
   AbstractEditor: RichTextEditor,
   RadioGroup: SafeRadioGroup,
   CheckboxGroup,
@@ -131,6 +143,14 @@ const elements = {
   Select,
   LinksInput,
   ThreadedDiscussion,
+}
+
+const collaborativeElements = {
+  ...elements,
+  Abstract: FormCollaborateWax(RichTextEditor),
+  AbstractEditor: FormCollaborateWax(RichTextEditor),
+  FullWaxField: FormCollaborateWax(FullWaxField),
+  TextField: CollaborativeTextField,
 }
 
 /** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */
@@ -166,6 +186,7 @@ let lastChangedField = null
 
 const FormTemplate = ({
   form,
+  formikOptions,
   initialValues,
   manuscriptId,
   manuscriptShortId,
@@ -182,6 +203,7 @@ const FormTemplate = ({
   createFile,
   deleteFile,
   isSubmission,
+  isCollaborative,
   reviewId,
   shouldStoreFilesInForm,
   initializeReview,
@@ -192,6 +214,7 @@ const FormTemplate = ({
   fieldsToPublish,
   setShouldPublishField,
   shouldShowOptionToPublish = false,
+  collaborativeObject,
 }) => {
   const config = useContext(ConfigContext)
   const [confirming, setConfirming] = React.useState(false)
@@ -250,6 +273,7 @@ const FormTemplate = ({
       }}
       validateOnBlur
       validateOnChange={false}
+      {...formikOptions}
     >
       {({
         handleSubmit,
@@ -350,7 +374,10 @@ const FormTemplate = ({
 
         // this is whether or not to show a submit button
 
-        const showSubmitButton =
+        let showSubmitButton = !isCollaborative
+
+        showSubmitButton =
+          showSubmitButton &&
           submissionButtonText &&
           (isSubmission
             ? !['submitted', 'revise'].includes(values.status) ||
@@ -381,6 +408,13 @@ const FormTemplate = ({
                   ),
                 )}
               />
+              {isCollaborative && (
+                <CollaborativeBadge>
+                  <ColorBadge color={config.groupIdentity.primaryColor}>
+                    {t('reviewPage.isCollaborative')}
+                  </ColorBadge>
+                </CollaborativeBadge>
+              )}
             </header>
             <form>
               {(form.children || [])
@@ -508,7 +542,12 @@ const FormTemplate = ({
                             'labelColor',
                           ])}
                           aria-label={element.placeholder || element.title}
-                          component={elements[element.component]}
+                          collaborativeObject={collaborativeObject}
+                          component={
+                            isCollaborative
+                              ? collaborativeElements[element.component]
+                              : elements[element.component]
+                          }
                           data-testid={element.name} // TODO: Improve this
                           isClearable={
                             element.component === 'Select' &&
@@ -595,7 +634,7 @@ const FormTemplate = ({
 
 FormTemplate.propTypes = {
   form: PropTypes.shape({
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     description: PropTypes.string,
     children: PropTypes.arrayOf(
       PropTypes.shape({
@@ -618,8 +657,11 @@ FormTemplate.propTypes = {
     popupdescription: PropTypes.string,
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
+  formikOptions: PropTypes.shape({
+    enableReinitialize: PropTypes.bool,
+  }),
   manuscriptId: PropTypes.string.isRequired,
-  manuscriptShortId: PropTypes.number.isRequired,
+  manuscriptShortId: PropTypes.number,
   manuscriptStatus: PropTypes.string,
   initialValues: PropTypes.shape({
     files: PropTypes.arrayOf(
@@ -632,6 +674,7 @@ FormTemplate.propTypes = {
     ),
     status: PropTypes.string,
   }),
+  isCollaborative: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
   republish: PropTypes.func,
@@ -643,14 +686,19 @@ FormTemplate.propTypes = {
   initializeReview: PropTypes.func,
 }
 FormTemplate.defaultProps = {
+  isCollaborative: false,
   onSubmit: undefined,
   initialValues: null,
   republish: null,
   submissionButtonText: '',
   manuscriptStatus: null,
+  manuscriptShortId: 1,
   shouldStoreFilesInForm: false,
   tagForFiles: null,
   initializeReview: null,
+  formikOptions: {
+    enableReinitialize: false,
+  },
 }
 
 export default FormTemplate

@@ -51,6 +51,7 @@ module.exports = (opts = {}) => {
       'PUBLIC_CLIENT_PORT',
       'USE_COLAB_EMAIL',
       'FLAX_SITE_URL',
+      'CLIENT_YJS_WEBSOCKET_URL',
     ]),
   )
 

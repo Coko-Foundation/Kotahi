@@ -1,13 +1,16 @@
 import { grid, th } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Mail } from 'react-feather'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { ConfigContext } from '../../../../config/src'
+import { isCurrentUserCollaborative } from '../review/util'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { UserAvatar } from '../../../../component-avatar/src'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
 import { color } from '../../../../../theme'
+import { ColorBadge } from '../../../../shared'
 
 const Card = styled.div`
   background-color: ${color.gray97};
@@ -49,6 +52,7 @@ const DateDisplay = styled.div`
 const LeftSide = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
 `
 
 const EmailDisplay = styled(DateDisplay)`
@@ -67,7 +71,15 @@ const MailIcon = styled(Mail)`
   width: auto;
 `
 
+const CollaborativeBadge = styled.div`
+  flex-basis: 100%;
+  padding-top: 10px;
+`
+
 const KanbanCard = ({
+  createFile,
+  currentUser,
+  deleteFile,
   reviewer,
   isInvitation,
   manuscript,
@@ -78,17 +90,29 @@ const KanbanCard = ({
   isCurrentVersion,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
+  updateCollaborativeTeamMember,
   updateReview,
+  updateReviewJsonData,
   showEmailInvitation,
 }) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+  const config = useContext(ConfigContext)
+
+  const isCollaborative =
+    reviewer.invitedPersonType === 'COLLABORATIVE_REVIEWER' ||
+    isCurrentUserCollaborative(manuscript, reviewer.user)
+
   return (
     <>
       <ReviewDetailsModal
+        createFile={createFile}
+        currentUser={currentUser}
+        deleteFile={deleteFile}
         isInvitation={isInvitation}
         isOpen={open}
         manuscriptId={manuscript.id}
+        manuscriptShortId={manuscript.shortId}
         onClose={() => setOpen(false)}
         readOnly={!isCurrentVersion}
         removeReviewer={removeReviewer}
@@ -96,7 +120,9 @@ const KanbanCard = ({
         reviewerTeamMember={reviewer}
         reviewForm={reviewForm}
         status={status}
+        updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
+        updateReviewJsonData={updateReviewJsonData}
         updateSharedStatusForInvitedReviewer={
           updateSharedStatusForInvitedReviewer
         }
@@ -131,6 +157,13 @@ const KanbanCard = ({
               </EmailDisplay>
             )}
           </InfoGrid>
+          {isCollaborative && (
+            <CollaborativeBadge>
+              <ColorBadge color={config.groupIdentity.primaryColor}>
+                {t('common.kanban.isCollaborative')}
+              </ColorBadge>
+            </CollaborativeBadge>
+          )}
         </LeftSide>
       </Card>
     </>
