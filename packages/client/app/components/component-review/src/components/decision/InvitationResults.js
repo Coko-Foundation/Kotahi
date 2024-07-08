@@ -56,26 +56,67 @@ const Root = styled.div`
 `
 
 const ResponseComment = styled.div`
-  margin-left: 1em;
-  margin-top: 20px;
+  padding: 5px;
+`
+
+const ToggleableArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+`
+
+const SectionHeader = styled.h4`
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 10px;
+`
+
+const SuggestedReviewerContainer = styled.div`
+  display: flex;
+  margin-bottom: 8px;
+`
+
+const SuggestedReviewerFieldLabel = styled.span`
+  font-weight: bold;
+  margin-right: 5px;
+`
+
+const SuggestedReviewerFieldValue = styled.span`
+  margin-right: 8px;
+`
+
+const SuggestedReviewerInnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 4px;
+  width: 100%;
+`
+
+const SuggestedReviewerInnerRow = styled.div`
+  display: flex;
+  width: 100%;
 `
 
 const InvitationResult = ({ invitation }) => {
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
   const { t } = useTranslation()
-  const invitationStatus = invitation.status
+
+  const {
+    status: invitationStatus,
+    invitedPersonName,
+    responseComment,
+    responseDate,
+    suggestedReviewers,
+    user,
+    declinedReason: declinedResponse,
+  } = invitation
 
   if (invitationStatus === 'UNANSWERED') {
     return null
   }
 
-  const declinedResponse = invitation.declinedReason
-  const { invitedPersonName } = invitation
-  const { responseComment } = invitation
-  const { responseDate } = invitation
   const dateToDisplay = convertTimestampToDateString(responseDate)
-  const { user } = invitation
 
   let ordinalString = ''
   let invitationType = ''
@@ -127,7 +168,47 @@ const InvitationResult = ({ invitation }) => {
             </Controls>
           )}
         </ReviewHeadingRoot>
-        {open && <ResponseComment>{responseComment}</ResponseComment>}
+
+        {open && (
+          <ToggleableArea>
+            <SectionHeader>Response Comments</SectionHeader>
+            <ResponseComment>{responseComment}</ResponseComment>
+            {suggestedReviewers.length ? (
+              <>
+                <SectionHeader>Suggested Reviewers</SectionHeader>
+                {suggestedReviewers.map((suggestedReviewer, i) => (
+                  /* eslint-disable react/no-array-index-key */
+                  <SuggestedReviewerContainer key={`suggestedReviewer-${i}`}>
+                    <SuggestedReviewerInnerContainer>
+                      <SuggestedReviewerInnerRow>
+                        <SuggestedReviewerFieldLabel>
+                          Full Name:
+                        </SuggestedReviewerFieldLabel>
+                        <SuggestedReviewerFieldValue>
+                          {`${suggestedReviewer.firstName} ${suggestedReviewer.lastName}`}
+                        </SuggestedReviewerFieldValue>
+                        <SuggestedReviewerFieldLabel>
+                          Email:
+                        </SuggestedReviewerFieldLabel>
+                        <SuggestedReviewerFieldValue>
+                          {suggestedReviewer.email}
+                        </SuggestedReviewerFieldValue>
+                      </SuggestedReviewerInnerRow>
+                      <SuggestedReviewerInnerRow>
+                        <SuggestedReviewerFieldLabel>
+                          Affiliation:
+                        </SuggestedReviewerFieldLabel>
+                        <SuggestedReviewerFieldValue>
+                          {suggestedReviewer.affiliation}
+                        </SuggestedReviewerFieldValue>
+                      </SuggestedReviewerInnerRow>
+                    </SuggestedReviewerInnerContainer>
+                  </SuggestedReviewerContainer>
+                ))}
+              </>
+            ) : null}
+          </ToggleableArea>
+        )}
       </Root>
     </SectionRow>
   )

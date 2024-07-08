@@ -94,12 +94,13 @@ const resolvers = {
     },
     async updateInvitationResponse(
       _,
-      { id, responseComment, declinedReason },
+      { id, responseComment, declinedReason, suggestedReviewers },
       ctx,
     ) {
       const result = await Invitation.query().updateAndFetchById(id, {
         responseComment,
         declinedReason,
+        suggestedReviewers: suggestedReviewers || [],
       })
 
       return result
@@ -170,6 +171,20 @@ const resolvers = {
 }
 
 const typeDefs = `
+type SuggestedReviewer {
+  firstName: String
+  lastName: String
+  email: String
+  affiliation: String
+}
+
+input SuggestedReviewerInput {
+  firstName: String
+  lastName: String
+  email: String
+  affiliation: String
+}
+
 type Invitation {
   id: ID
   created: DateTime!
@@ -183,6 +198,7 @@ type Invitation {
   invitedPersonName: String!
   responseDate: DateTime
   responseComment: String
+  suggestedReviewers: [SuggestedReviewer]!
   declinedReason: String
   userId: ID
   user: User
@@ -207,7 +223,7 @@ extend type Query {
 
 extend type Mutation {
   updateInvitationStatus(id: ID, status: String, userId: ID,  responseDate: DateTime ): Invitation
-  updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String ): Invitation
+  updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String, suggestedReviewers:[SuggestedReviewerInput]): Invitation
   addEmailToBlacklist(email: String!, groupId: ID!): BlacklistEmail
   assignUserAsAuthor(manuscriptId: ID!, userId: ID!): Team
   updateSharedStatusForInvitedReviewer(invitationId: ID!, isShared: Boolean!): Invitation!

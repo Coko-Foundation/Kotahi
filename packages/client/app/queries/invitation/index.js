@@ -1,11 +1,17 @@
 import gql from 'graphql-tag'
 
 export const UPDATE_INVITATION_RESPONSE = gql`
-  mutation ($id: ID!, $responseComment: String, $declinedReason: String) {
+  mutation (
+    $id: ID!
+    $responseComment: String
+    $declinedReason: String
+    $suggestedReviewers: [SuggestedReviewerInput]
+  ) {
     updateInvitationResponse(
       id: $id
       responseComment: $responseComment
       declinedReason: $declinedReason
+      suggestedReviewers: $suggestedReviewers
     ) {
       id
       responseComment
@@ -27,6 +33,12 @@ export const GET_INVITATION_STATUS = gql`
   query invitationStatus($id: ID) {
     invitationStatus(id: $id) {
       status
+      suggestedReviewers {
+        firstName
+        lastName
+        email
+        affiliation
+      }
     }
   }
 `

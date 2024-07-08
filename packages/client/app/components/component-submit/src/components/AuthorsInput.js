@@ -59,7 +59,7 @@ const localizeFields = (origFields, t) => {
 }
 
 // TODO This is not following Formik idioms. Improve?
-const AuthorsInput = ({ onChange, value }) => {
+const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
   const { t } = useTranslation()
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
   const localizedFields = localizeFields(fields, t)
@@ -118,7 +118,9 @@ const AuthorsInput = ({ onChange, value }) => {
         plain
         type="button"
       >
-        {t('decisionPage.Add another person')}
+        {!overrideButtonLabel
+          ? t('decisionPage.Add another person')
+          : overrideButtonLabel}
       </Button>
     </div>
   )
