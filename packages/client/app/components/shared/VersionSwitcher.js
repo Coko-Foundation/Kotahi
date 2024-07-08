@@ -4,29 +4,10 @@ import { grid } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import { Select } from './Select'
 import PlainOrRichText from './PlainOrRichText'
+import { VersionIndicator, VersionLabelWrapper, VersionTitle } from './General'
 
 const Container = styled.div`
   margin-top: ${grid(2)};
-`
-
-const VerisonLabelWrapper = styled.div`
-  display: flex;
-  flex-wrap: no-wrap;
-  width: 100%;
-`
-
-const Title = styled.p`
-  flex-shrink: 1;
-  margin: 0 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-
-const VersionIndicator = styled.p`
-  flex-basis: fit-content;
-  flex-shrink: 0;
-  margin: 0 5px;
 `
 
 const StyledSelect = styled(Select)`
@@ -41,10 +22,10 @@ const StyledSelect = styled(Select)`
 
 const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
   return (
-    <VerisonLabelWrapper>
-      <Title>
+    <VersionLabelWrapper>
+      <VersionTitle>
         <PlainOrRichText value={manuscriptName} />
-      </Title>
+      </VersionTitle>
       <VersionIndicator>
         {versionNumber >= count
           ? `— ${t('decisionPage.Current version')} (${versionNumber})`
@@ -52,7 +33,7 @@ const generateLabel = (created, versionNumber, count, manuscriptName, t) => {
               .toISOString()
               .slice(0, 10)} (${versionNumber})`}
       </VersionIndicator>
-    </VerisonLabelWrapper>
+    </VersionLabelWrapper>
   )
 }
 

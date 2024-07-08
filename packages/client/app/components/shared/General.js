@@ -164,3 +164,23 @@ export const Chat = styled.div`
   grid-area: chat;
   height: 100vh;
 `
+
+export const VersionLabelWrapper = styled.div`
+  display: flex;
+  flex-wrap: no-wrap;
+  width: 100%;
+`
+
+export const VersionTitle = styled.p`
+  flex-shrink: 1;
+  margin: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+export const VersionIndicator = styled.p`
+  flex-basis: fit-content;
+  flex-shrink: 0;
+  margin: 0 5px;
+`
