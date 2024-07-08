@@ -116,20 +116,29 @@ const getFormattedReferencesFromCrossRef = async (
   crossrefRetrievalEmail,
   groupId,
 ) => {
+  const params = {
+    'query.bibliographic': reference,
+    rows: count,
+    select: 'DOI,author,issue,page,title,volume,container-title,issued',
+    order: 'desc',
+    sort: 'score',
+  }
+
+  if (crossrefRetrievalEmail) {
+    params.mailto = crossrefRetrievalEmail
+  } else {
+    console.error(
+      'No Crossref retrieval email. If this isn’t set in the config, we may run into problems with rate limiting.',
+    )
+  }
+
   try {
     const response = await http.get('https://api.crossref.org/v1/works', {
-      params: {
-        'query.bibliographic': reference,
-        rows: count,
-        select: 'DOI,author,issue,page,title,volume,container-title,issued',
-        mailto: crossrefRetrievalEmail || defaultMailTo,
-        order: 'desc',
-        sort: 'score',
-      },
+      params,
       timeout: 15000,
       headers: {
-        'User-Agent': `Kotahi (Axios 0.21; mailto:${
-          crossrefRetrievalEmail || defaultMailTo
+        'User-Agent': `Kotahi (Axios 0.21${
+          crossrefRetrievalEmail ? `; mailto:${crossrefRetrievalEmail}` : ''
         })`,
       },
     })

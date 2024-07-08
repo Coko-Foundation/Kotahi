@@ -572,8 +572,9 @@ const en = {
         cmos: 'Chicago Manual of Style (CMOS)',
         cse: 'Council of Science Editors (CSE)',
         'Select locale for citations': 'Select citation locale',
-        getDataFromDatacite: 'Get citation data from Datacite',
-        manuscriptVersionHistory: 'Manuscript Version History',
+        getDataFromDatacite:
+          'Search and retrieve citation results from Datacite',
+        manuscriptVersionHistory: 'Manuscript version history',
         historyIntervalInMinutes:
           'Interval to automatically save a manuscript version in minutes',
       },
