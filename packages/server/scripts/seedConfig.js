@@ -135,6 +135,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             allowAuthorsSubmitNewVersion: false,
           },
           publishing,
+          production,
           taskManager: {
             teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
           },
@@ -181,6 +182,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             allowAuthorsSubmitNewVersion: false,
           },
           publishing,
+          production,
           taskManager: {
             teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
           },
@@ -342,6 +344,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             allowAuthorsSubmitNewVersion: false,
           },
           publishing,
+          production,
           taskManager: {
             teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
           },
