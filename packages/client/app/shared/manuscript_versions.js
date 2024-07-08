@@ -3,7 +3,7 @@ import i18next from 'i18next'
 import moment from 'moment'
 import {
   PlainOrRichText,
-  VerisonLabelWrapper,
+  VersionLabelWrapper,
   VersionTitle,
   VersionIndicator,
 } from '../components/shared'
@@ -29,7 +29,7 @@ const manuscriptVersions = manuscript => {
 
     return {
       label: (
-        <VerisonLabelWrapper>
+        <VersionLabelWrapper>
           <VersionTitle>
             <PlainOrRichText value={submission.$title} />
           </VersionTitle>
@@ -43,7 +43,7 @@ const manuscriptVersions = manuscript => {
                   versions.length - index
                 })`}
           </VersionIndicator>
-        </VerisonLabelWrapper>
+        </VersionLabelWrapper>
       ),
       manuscript: {
         ...manuscript,
