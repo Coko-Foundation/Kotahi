@@ -1148,7 +1148,7 @@ const esLa = {
         issueNumber: 'Número de emisión',
         volumeNumber: 'Número de volumen',
         issueYear: 'Año de emisión',
-        fullWax: 'Editor de texto completo',
+        fullWax: 'Documento',
       },
       typeOptions: {
         Select: 'Selección',
