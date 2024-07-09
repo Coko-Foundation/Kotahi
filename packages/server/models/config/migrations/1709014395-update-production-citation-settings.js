@@ -16,22 +16,22 @@ exports.up = async knex => {
         configs.map(async config => {
           const newConfig = config
 
-          if (!newConfig.production) {
-            newConfig.production = {}
+          if (!newConfig.formData.production) {
+            newConfig.formData.production = {}
           }
 
-          if (!newConfig.production.citationStyles) {
-            newConfig.production.citationStyles = {}
+          if (!newConfig.formData.production.citationStyles) {
+            newConfig.formData.production.citationStyles = {}
           }
 
-          if (!newConfig.production.citationStyles.styleName) {
-            newConfig.production.citationStyles.styleName =
-              newConfig.production.styleName || 'apa'
+          if (!newConfig.formData.production.citationStyles.styleName) {
+            newConfig.formData.production.citationStyles.styleName =
+              newConfig.formData.production.styleName || 'apa'
           }
 
-          if (!newConfig.production.citationStyles.localeName) {
-            newConfig.production.citationStyles.localeName =
-              newConfig.production.localeName || 'en-US'
+          if (!newConfig.formData.production.citationStyles.localeName) {
+            newConfig.formData.production.citationStyles.localeName =
+              newConfig.formData.production.localeName || 'en-US'
           }
 
           await Config.query().updateAndFetchById(config.id, newConfig)
