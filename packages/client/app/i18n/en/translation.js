@@ -1118,6 +1118,9 @@ const en = {
         links: 'List of links (URLs)',
         verdict: 'Verdict',
         discussion: 'Discussion',
+        issueNumber: 'Issue Number',
+        volumeNumber: 'Volume Number',
+        issueYear: 'Issue Year',
         fullWax: 'Full wax editor',
       },
       typeOptions: {
