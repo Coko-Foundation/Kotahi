@@ -1158,7 +1158,7 @@ const fr = {
         issueNumber: 'Numéro de délivrer',
         volumeNumber: 'Numéro de volume',
         issueYear: 'Année de parution',
-        fullWax: 'Éditeur de texte complet',
+        fullWax: 'Document',
       },
       typeOptions: {
         Select: 'Sélection',

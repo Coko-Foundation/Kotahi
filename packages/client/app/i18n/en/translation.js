@@ -1121,7 +1121,7 @@ const en = {
         issueNumber: 'Issue Number',
         volumeNumber: 'Volume Number',
         issueYear: 'Issue Year',
-        fullWax: 'Full wax editor',
+        fullWax: 'Document',
       },
       typeOptions: {
         Select: 'Select',

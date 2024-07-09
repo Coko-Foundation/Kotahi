@@ -1142,7 +1142,7 @@ const ru = {
         issueNumber: 'Номер выпуска',
         volumeNumber: 'номер тома',
         issueYear: 'год выпуска',
-        fullWax: 'Расширенный текстовый редактор',
+        fullWax: 'Документ',
       },
       typeOptions: {
         Select: 'Выбор',
