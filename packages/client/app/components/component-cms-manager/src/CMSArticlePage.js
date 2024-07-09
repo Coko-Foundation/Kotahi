@@ -71,14 +71,6 @@ const query = gql`
       ${formFields}
     }
 
-    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision", groupId: $groupId) {
-      ${formFields}
-    }
-
-    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review", groupId: $groupId) {
-      ${formFields}
-    }
-
     articleTemplate(groupId: $groupId, isCms: $isCms) {
       id
       name
