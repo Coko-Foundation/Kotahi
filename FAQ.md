@@ -160,7 +160,7 @@ If a submission to Crossref fails basic schema validation (e.g. if required fiel
 
 #### Form fields for publishing an article to Crossref
 
-Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
+Registering an `article` DOI to Crossref on the publish action requires that you have certain fields configured via the form-builder. These are:
 
 <!-- prettier-ignore -->
 | Field type | Internal field name       | Purpose                                                                                                                            |
@@ -169,15 +169,23 @@ Publishing to Crossref requires that you have certain fields configured via the 
 | Authors    | `submission.$authors`     | Ordered list of authors                                                                                                            |
 | Abstract   | `submission.$abstract`    | Article abstract                                                                                                                   |
 | Rich text  | `submission.references`   | Citations in separate paragraphs                                                                                                   |
-| Text       | `submission.volumeNumber` | (Optional) Journal volume number                                                                                                   |
-| Text       | `submission.issueNumber`  | (Optional) Journal issue number                                                                                                    |
-| Text       | `submission.issueYear`    | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| Text | `submission.$volumeNumber` | (Optional) Journal volume number |
+| Text | `submission.$issueNumber` | (Optional) Journal issue number |
+| Text | `submission.$issueYear` | The year of publication. If `submission.$volumeNumber` is formatted as a year (e.g. 2021), then `submission.$issueYear` is optional. |
 | DOI suffix | `submission.$doiSuffix`   | (Optional) The custom DOI suffix for the article                                                                                   |
 
 <!-- prettier-ignore -->
-#### Registering article evaluations via Crossref
+#### Registering peer review DOIs via Crossref
 
-Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The following environment variables are required for this:
+Register peer review DOIs for `journal` and `prc` archetypes. A `referee-report` will be deposited for individual review submissions (data captured in a Review form submission) and an `aggregate` report for editorial team submissions (data captured in a Decision form submission). On publish action a peer review component will be depoisted if;
+
+1. It contains data (not blank); and
+2. The review is not hidden; and
+3. The field's publishing is set to "Always", or it is set to "Ad hoc" and the field has been manually ticked for publishing by an editor or group manager
+
+#### Registering peer review DOIs via Crossref using a single form
+
+Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The registering of peer views using a single form when using the `preprint1` or `preprint2` archhetype. The following environment variables are required for this:
 
 ```
 CROSSREF_LOGIN=crossrefLogin
