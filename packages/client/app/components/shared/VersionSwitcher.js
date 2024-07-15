@@ -95,7 +95,7 @@ export const VersionSwitcher = ({
         standalone
         value={selectedVersionKey}
       />
-      <Container>
+      <Container tabIndex="-1">
         {mode === 'props' ? selectedVersion.content : selectedVersion}
       </Container>
     </>
