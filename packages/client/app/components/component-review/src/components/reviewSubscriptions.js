@@ -4,7 +4,6 @@ const reviewFields = `
   id
   created
   updated
-  jsonData
   isDecision
   isHiddenFromAuthor
   isCollaborative

@@ -117,7 +117,7 @@ const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {
         </ResponseCommentRow>
         <SuggestedReviewerRow>
           <StyledH4>Suggested Reviewers</StyledH4>
-          {invitation.suggestedReviewers.map((reviewer, i) => (
+          {(invitation.suggestedReviewers || []).map((reviewer, i) => (
             /* eslint-disable react/no-array-index-key */
             <SuggestedReviewerContainer key={`suggestedReviewer-${i}`}>
               <SuggestedReviewerInnerContainer>

@@ -111,7 +111,7 @@ const ReviewHeading = ({
         {t('decisionPage.decisionTab.reviewNum', { num: ordinal })}
       </Ordinal>
       &nbsp;
-      {users.length === 0 && (
+      {users.length === 1 && (
         <Reviewer
           canBePublishedPublicly={canBePublishedPublicly}
           currentUser={currentUser}
@@ -158,7 +158,7 @@ const ReviewHeading = ({
             : t('decisionPage.decisionTab.reviewModalShow')}
         </Button>
       </Controls>
-      {users.length > 0 && (
+      {users.length > 1 && (
         <UsersList>
           {users.map(user => (
             <Reviewer

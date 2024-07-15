@@ -1285,7 +1285,7 @@ const resolvers = {
         .whereIn('role', ['reviewer', 'collaborativeReviewer'])
 
       const [deletedTeamMember] = await TeamMember.query()
-        .builder.whereIn(
+        .whereIn(
           'teamId',
           reviewerTeams.map(reviewerTeam => reviewerTeam.id),
         )

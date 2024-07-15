@@ -65,12 +65,21 @@ const DecisionReviews = ({
     : []
 
   const { t } = useTranslation()
+
+  const reviewerInvitations = invitations.filter(
+    invitation => invitation.invitedPersonType === 'REVIEWER',
+  )
+
+  const collaborativeReviewerInvitations = invitations.filter(
+    invitation => invitation.invitedPersonType === 'COLLABORATIVE_REVIEWER',
+  )
+
   return (
     <SectionContent>
       <SectionHeader>
         <Title>{t('decisionPage.decisionTab.Completed Reviews')}</Title>
       </SectionHeader>
-      <InvitationResults invitations={invitations} />
+      <InvitationResults invitations={reviewerInvitations} />
       {reviewsToShow.length > 0 ? (
         reviewsToShow
           .sort((reviewOne, reviewTwo) => {
@@ -122,7 +131,7 @@ const DecisionReviews = ({
       <SectionHeader>
         <Title>{t('decisionPage.decisionTab.Collaborative Reviews')}</Title>
       </SectionHeader>
-      <InvitationResults invitations={invitations} />
+      <InvitationResults invitations={collaborativeReviewerInvitations} />
       {collaborativeReviewToShow ? (
         <SectionRow key={collaborativeReviewToShow.id}>
           <DecisionReview
