@@ -399,9 +399,7 @@ const DecisionPage = ({ currentUser, match }) => {
         id,
       })
 
-      const reviewFormUpdated = reviews.find(
-        rv => rv.id === reviewFormUpdated.id,
-      )
+      const reviewFormUpdated = reviews.find(rv => rv.id === id)
 
       client.cache.modify({
         id: objectId,
