@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
+const pick = require('lodash/pick')
 const syncProtocol = require('y-protocols/dist/sync.cjs')
 const awarenessProtocol = require('y-protocols/dist/awareness.cjs')
 const encoding = require('lib0/encoding')
 const decoding = require('lib0/decoding')
 
 const Y = require('yjs')
-const { CollaborativeDoc } = require('@pubsweet/models')
+const { CollaborativeDoc, Form, ...otherModels } = require('@pubsweet/models')
 
 const { db } = require('@coko/server')
 
@@ -110,8 +111,47 @@ persistence = {
       try {
         await CollaborativeDoc.query().insert({
           yDocState: state,
-          ...ydoc.extraData,
+          ...pick(ydoc.extraData, ['objectId', 'objectType', 'groupId']),
         })
+
+        if (ydoc.extraData.objectType) {
+          const Model = otherModels[ydoc.extraData.objectType]
+
+          if (Model) {
+            const object = await Model.query().findOne({
+              id: objectId,
+              isCollaborative: true,
+            })
+
+            if (object) {
+              const [form] = await Form.query().where({
+                category: ydoc.extraData.category,
+                purpose: ydoc.extraData.purpose,
+                groupId: ydoc.extraData.groupId,
+              })
+
+              const collaborativeFields = await CollaborativeDoc.getFormData(
+                objectId,
+                form,
+              )
+
+              // eslint-disable-next-line no-restricted-syntax, guard-for-in
+              for (const key in collaborativeFields) {
+                collaborativeFields[key] = `${objectId}-${key}`
+              }
+
+              const { jsonData } = object
+              await Model.query()
+                .patch({
+                  jsonData: JSON.stringify({
+                    ...jsonData,
+                    ...collaborativeFields,
+                  }),
+                })
+                .findOne({ id: objectId })
+            }
+          }
+        }
       } catch (e) {
         console.log(`Insert Query`)
         console.log(e)

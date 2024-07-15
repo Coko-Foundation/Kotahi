@@ -312,7 +312,7 @@ const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
     )
     .joinRelated('teams')
     .join('team_members', 'team_members.teamId', 'teams.id') // joinRelated doesn't automate the 'teams.members' relation well, so we do it manually
-    .where('teams.role', 'reviewer')
+    .whereIn('teams.role', ['reviewer', 'collaborativeReviewer'])
     .where('team_members.userId', ctx.user)
     .select('team_members.status')
 

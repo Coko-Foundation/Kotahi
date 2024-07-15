@@ -1,8 +1,6 @@
 const isEmpty = require('lodash/isEmpty')
-
-const { File } = require('@coko/server')
-
-const { pubsubManager } = require('@coko/server')
+const omit = require('lodash/omit')
+const { File, pubsubManager } = require('@coko/server')
 const Review = require('../../../models/review/review.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const User = require('../../../models/user/user.model')
@@ -113,7 +111,7 @@ const resolvers = {
       }
 
       pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
-        reviewFormUpdated: returnedReview,
+        reviewFormUpdated: omit(returnedReview, ['jsonData']),
       })
 
       return returnedReview
@@ -163,7 +161,7 @@ const resolvers = {
       )
 
       pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
-        reviewFormUpdated: updatedReview,
+        reviewFormUpdated: omit(updatedReview, ['jsonData']),
       })
 
       return {

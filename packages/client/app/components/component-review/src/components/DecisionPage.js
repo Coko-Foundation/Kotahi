@@ -372,30 +372,42 @@ const DecisionPage = ({ currentUser, match }) => {
     variables: {
       formId: currentUserReview.id,
     },
-    onSubscriptionData: ({
+    skip: loading || !currentUserReview.isCollaborative,
+    onSubscriptionData: async ({
       subscriptionData: {
-        data: { reviewFormUpdated },
+        data: {
+          reviewFormUpdated: { id },
+        },
       },
     }) => {
-      const id = client.cache.identify({
-        __typename: 'Review',
-        id: reviewFormUpdated.id,
+      const {
+        data: {
+          manuscript: { reviews },
+        },
+      } = await client.query({
+        query,
+        variables: {
+          id: match.params.version,
+          groupId: config.groupId,
+        },
+        partialRefetch: true,
+        fetchPolicy: 'network-only',
       })
 
-      client.cache.modify({
+      const objectId = client.cache.identify({
+        __typename: 'Review',
         id,
-        fields: {
-          json_data() {
-            const newReviewRef = client.cache.writeFragment({
-              data: reviewFormUpdated,
-              fragment: gql`
-                fragment NewReview on Review {
-                  id
-                }
-              `,
-            })
+      })
 
-            return newReviewRef.jsonData
+      const reviewFormUpdated = reviews.find(
+        rv => rv.id === reviewFormUpdated.id,
+      )
+
+      client.cache.modify({
+        id: objectId,
+        fields: {
+          jsonData() {
+            return reviewFormUpdated.jsonData
           },
         },
       })

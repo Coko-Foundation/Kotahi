@@ -274,31 +274,40 @@ const ReviewPage = ({ currentUser, history, match }) => {
     variables: {
       formId: currentUserReview.id,
     },
-    onSubscriptionData: ({
+    skip: loading || !currentUserReview.isCollaborative,
+    onSubscriptionData: async ({
       subscriptionData: {
-        data: { reviewFormUpdated },
+        data: {
+          reviewFormUpdated: { id },
+        },
       },
       client,
     }) => {
-      const id = client.cache.identify({
-        __typename: 'Review',
-        id: reviewFormUpdated.id,
+      const {
+        data: {
+          manuscript: { reviews },
+        },
+      } = await client.query({
+        query,
+        variables: {
+          id: match.params.version,
+          groupId: config.groupId,
+        },
+        fetchPolicy: 'network-only',
       })
 
-      client.cache.modify({
+      const objectId = client.cache.identify({
+        __typename: 'Review',
         id,
-        fields: {
-          json_data() {
-            const newReviewRef = client.cache.writeFragment({
-              data: reviewFormUpdated,
-              fragment: gql`
-                fragment NewReview on Review {
-                  id
-                }
-              `,
-            })
+      })
 
-            return newReviewRef.jsonData
+      const reviewFormUpdated = reviews.find(rv => rv.id === id)
+
+      client.cache.modify({
+        id: objectId,
+        fields: {
+          jsonData() {
+            return reviewFormUpdated.jsonData
           },
         },
       })
@@ -334,7 +343,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
     createYjsProvider({
       currentUser,
       identifier: currentUserReview.id,
-      object: {},
+      object: { objectType: 'Review', category: 'review', purpose: 'review' },
     })
   }
 

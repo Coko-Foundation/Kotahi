@@ -93,7 +93,7 @@ const ReviewDetailsModal = (
       createYjsProvider({
         currentUser,
         identifier: review.id,
-        object: {},
+        object: { objectType: 'Review', category: 'review', purpose: 'review' },
       })
     }
   }, [])
