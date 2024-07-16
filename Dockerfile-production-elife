@@ -12,7 +12,7 @@ ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
 ARG flax_site_url
-ARG client_yjs_websocket_urL
+ARG client_yjs_websocket_url
 
 ENV USE_COLAB_EMAIL $use_colab_email
 ENV NODE_ENV "production"

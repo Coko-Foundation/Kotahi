@@ -20,7 +20,7 @@ services:
         - use_colab_email=${USE_COLAB_EMAIL:-false}
         - flax_site_url=${FLAX_SITE_URL:-https://site.kotahidev.cloud68.co/}
         - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
-        - client_yjs_websocket_urL=${CLIENT_YJS_WEBSOCKET_URL:-https://localhost:5010}
+        - client_yjs_websocket_url=${CLIENT_YJS_WEBSOCKET_URL:-https://localhost:5010}
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
       - ${WS_YJS_SERVER_PORT:-5010}:${WS_YJS_SERVER_PORT:-5010}
