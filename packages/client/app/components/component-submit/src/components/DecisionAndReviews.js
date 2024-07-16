@@ -51,6 +51,8 @@ const Decision = ({
 }
 
 const DecisionAndReviews = ({
+  createFile,
+  deleteFile,
   manuscript,
   isControlPage = false,
   reviewForm,
@@ -119,7 +121,9 @@ const DecisionAndReviews = ({
             reviewsToShow.map((review, index) => (
               <SectionRow key={review.id}>
                 <DecisionReview
+                  createFile={createFile}
                   currentUser={currentUser}
+                  deleteFile={deleteFile}
                   isControlPage={isControlPage}
                   open
                   ordinal={index + 1}

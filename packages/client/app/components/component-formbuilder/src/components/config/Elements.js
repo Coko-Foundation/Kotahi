@@ -302,7 +302,7 @@ const prototypeComponent = category => ({
   description: editorfield,
   validate: validateOther,
   hideFromAuthors: hideFromAuthorsField,
-  hideFromReviewers: hideFromReviewersField,
+  hideFromReviewers: category === 'review' ? null : hideFromReviewersField,
   permitPublishing: permitPublishingField,
   publishingTag: publishingTagField,
 })

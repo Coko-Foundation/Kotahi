@@ -29,6 +29,8 @@ const getReviewerTeamMember = (
 
 const DecisionReviews = ({
   canEditReviews,
+  createFile,
+  deleteFile,
   reviewForm,
   manuscript,
   lockUnlockReview,
@@ -102,7 +104,9 @@ const DecisionReviews = ({
               <DecisionReview
                 canEditReviews={canEditReviews}
                 canHideReviews={canHideReviews}
+                createFile={createFile}
                 currentUser={currentUser}
+                deleteFile={deleteFile}
                 isControlPage
                 lockUnlockReview={lockUnlockReview}
                 manuscriptId={manuscript.id}
@@ -137,7 +141,9 @@ const DecisionReviews = ({
           <DecisionReview
             canEditReviews={canEditReviews}
             canHideReviews={canHideReviews}
+            createFile={createFile}
             currentUser={currentUser}
+            deleteFile={deleteFile}
             isControlPage
             lockUnlockReview={lockUnlockReview}
             manuscriptId={manuscript.id}

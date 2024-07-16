@@ -393,8 +393,10 @@ const DecisionVersion = ({
           )}
           {!isCurrentVersion && (
             <DecisionAndReviews
+              createFile={createFile}
               currentUser={currentUser}
               decisionForm={decisionForm}
+              deleteFile={deleteFile}
               isControlPage
               manuscript={version}
               readOnly
@@ -500,8 +502,10 @@ const DecisionVersion = ({
           )}
           {!isCurrentVersion && (
             <DecisionAndReviews
+              createFile={createFile}
               currentUser={currentUser}
               decisionForm={decisionForm}
+              deleteFile={deleteFile}
               isControlPage
               manuscript={version}
               readOnly
@@ -516,7 +520,9 @@ const DecisionVersion = ({
             <DecisionReviews
               canEditReviews={config?.controlPanel?.editorsEditReviewsEnabled}
               canHideReviews={canHideReviews}
+              createFile={createFile}
               currentUser={currentUser}
+              deleteFile={deleteFile}
               invitations={invitations}
               lockUnlockReview={lockUnlockReview}
               manuscript={version}
