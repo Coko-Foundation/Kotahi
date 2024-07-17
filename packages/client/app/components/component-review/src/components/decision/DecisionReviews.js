@@ -20,7 +20,8 @@ const getReviewerTeamMember = (
   }
 
   if (isCollaborative) {
-    return team.members
+    // get any of the two members. We update all users of that team
+    return team.members[0]
   }
 
   const currentMember = team.members.find(m => m.user?.id === currentUser?.id)
