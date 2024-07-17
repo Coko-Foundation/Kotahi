@@ -25,7 +25,7 @@ const User = require('../../../models/user/user.model')
 const Invitation = require('../../../models/invitation/invitation.model')
 const Config = require('../../../models/config/config.model')
 const ReviewModel = require('../../../models/review/review.model')
-const CollaborativeDoc = require('../../../models/collaborative-doc')
+const CollaborativeDoc = require('../../../models/collaborative-doc/collaborativeDoc.model')
 
 const {
   sendAnnouncementNotification,
