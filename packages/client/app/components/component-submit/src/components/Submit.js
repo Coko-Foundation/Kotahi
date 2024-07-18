@@ -152,8 +152,10 @@ const Submit = ({
           <>
             <DecisionAndReviews
               allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+              createFile={createFile}
               currentUser={currentUser}
               decisionForm={decisionForm}
+              deleteFile={deleteFile}
               manuscript={version}
               reviewForm={reviewForm}
               threadedDiscussionProps={threadedDiscussionExtendedProps}

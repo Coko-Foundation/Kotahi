@@ -424,6 +424,18 @@ const FormTemplate = ({
                     (showEditorOnlyFields ||
                       element.hideFromAuthors !== 'true'),
                 )
+                .map(element => {
+                  if (isCollaborative && Array.isArray(element.validate)) {
+                    // Filter Out when there is a collaborative form the required validation
+                    const validate = element.validate.filter(
+                      rule => rule.value !== 'required',
+                    )
+
+                    return { ...element, validate }
+                  }
+
+                  return element
+                })
                 .map(prepareFieldProps)
                 .map((element, i) => {
                   let threadedDiscussionProps

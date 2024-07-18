@@ -13,6 +13,8 @@ const Root = styled.div`
 `
 
 const DecisionReview = ({
+  createFile,
+  deleteFile,
   canEditReviews,
   review,
   reviewForm,
@@ -81,7 +83,9 @@ const DecisionReview = ({
       />
       <ReviewDetailsModal
         canEditReviews={canEditReviews}
+        createFile={createFile}
         currentUser={currentUser}
+        deleteFile={deleteFile}
         isControlPage={isControlPage}
         isOpen={open}
         manuscriptId={manuscriptId}
