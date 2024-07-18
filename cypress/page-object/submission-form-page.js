@@ -50,6 +50,10 @@ const REVIEW_1_CREATOR_FIELD = 'submission.review1creator'
 const REVIEW_2_CREATOR_FIELD = 'submission.review2creator'
 const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
 const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
+const SUBMISSION_REVIEW1 = '[data-testid="submission.review1"] .ProseMirror'
+const SUBMISSION_REVIEW2 = '[data-testid="submission.review2"] .ProseMirror'
+const SUBMISSION_REVIEW3 = '[data-testid="submission.review3"] .ProseMirror'
+const SUBMISSION_SUMMARY = '[data-testid="submission.summary"] .ProseMirror'
 
 // specific to preprint2
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
@@ -266,13 +270,14 @@ export const SubmissionFormPage = {
     this.getReview1Date().fillInput(review1Date)
   },
   getReview1() {
-    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(0)
+    return cy.get(SUBMISSION_REVIEW1)
   },
   fillInReview1(review1) {
     this.getReview1()
+      .scrollIntoView()
       .clear()
       .focus()
-      .type(`{selectall}${review1}`, { delay: 300 })
+      .type(`{selectall}${review1}`, { force: true, delay: 200 })
   },
   getReview1Creator() {
     return cy.getByDataTestId(REVIEW_1_CREATOR_FIELD)
@@ -281,10 +286,14 @@ export const SubmissionFormPage = {
     this.getReview1Creator().fillInput(review1Creator)
   },
   getReview2() {
-    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(1)
+    return cy.get(SUBMISSION_REVIEW2)
   },
   fillInReview2(review2) {
-    this.getReview2().clear().type(`{selectall}${review2}`, { force: true })
+    this.getReview2()
+      .scrollIntoView()
+      .clear()
+      .focus()
+      .type(`{selectall}${review2}`, { force: true, delay: 200 })
   },
   getReview2Creator() {
     return cy.getByDataTestId(REVIEW_2_CREATOR_FIELD)
@@ -299,10 +308,14 @@ export const SubmissionFormPage = {
     this.getReview2Date().fillInput(review2Date)
   },
   getReview3() {
-    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(2)
+    return cy.get(SUBMISSION_REVIEW3)
   },
   fillInReview3(review3) {
-    this.getReview3().clear().type(`{selectall}${review3}`, { delay: 200 })
+    this.getReview3()
+      .scrollIntoView()
+      .clear()
+      .focus()
+      .type(`{selectall}${review3}`, { force: true, delay: 200 })
   },
   getReview3Creator() {
     return cy.getByDataTestId(REVIEW_3_CREATOR_FIELD)
@@ -317,10 +330,14 @@ export const SubmissionFormPage = {
     this.getReview3Date().fillInput(review3Date)
   },
   getSummary() {
-    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(3)
+    return cy.get(SUBMISSION_SUMMARY)
   },
   fillInSummary(summary) {
-    this.getSummary().type(`{selectall}${summary}`, { force: true })
+    this.getSummary()
+      .scrollIntoView()
+      .clear()
+      .focus()
+      .type(`{selectall}${summary}`, { force: true, delay: 200 })
   },
   getSummaryCreator() {
     return cy.getByDataTestId(SUMMARY_CREATOR_FIELD)
