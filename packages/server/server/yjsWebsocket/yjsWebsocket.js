@@ -54,8 +54,11 @@ module.exports = () => {
     // eslint-disable-next-line consistent-return
     WSServer.on('connection', async (injectedWS, request) => {
       injectedWS.binaryType = 'arraybuffer'
-      const [id, params] = request.url.slice('1').split('?')
 
+      const parts = request.url.split('/')
+      const lastPart = parts.pop()
+
+      const [id, params] = lastPart.split('?')
       const variables = {}
       params.split('&').forEach(pair => {
         const [key, value] = pair.split('=')

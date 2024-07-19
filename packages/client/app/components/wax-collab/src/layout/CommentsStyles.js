@@ -11,7 +11,7 @@ export const FullCommentsContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-width: 300px;
+  min-width: 250px;
   ${props => props.readOnlyComments && 'pointer-events: none;'}
   ${props => props.readOnlyComments && 'user-select: none;'}
   /* z-index: 999; */
