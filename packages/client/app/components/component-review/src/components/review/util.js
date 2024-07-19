@@ -7,11 +7,19 @@ export const stripHtml = htmlString => {
   return temp.textContent
 }
 
+export const canUserAccessCollaborativeReview = (manuscript, currentUser) =>
+  !!(
+    manuscript?.teams?.find(team => team.role === 'collaborativeReviewer')
+      ?.members || []
+  ).find(
+    member => member.user.id === currentUser?.id && member.status !== 'invited',
+  )
+
 export const isCurrentUserCollaborative = (manuscript, currentUser) =>
   !!(
     manuscript?.teams?.find(team => team.role === 'collaborativeReviewer')
       ?.members || []
-  ).find(member => member.user.id === currentUser?.id)
+  ).find(member => member?.user?.id === currentUser?.id)
 
 export const getCurrentUserReview = (manuscript, currentUser) => {
   const isUserCollaborative = isCurrentUserCollaborative(

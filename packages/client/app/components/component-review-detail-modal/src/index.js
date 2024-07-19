@@ -160,7 +160,7 @@ const ReviewDetailsModal = (
 
   return (
     <Modal
-      contentStyles={{ width: '65%', maxWidth: '65%' }}
+      contentStyles={{ width: '80%', maxWidth: '80%' }}
       isOpen={isOpen}
       leftActions={
         !readOnly && (

@@ -89,14 +89,15 @@ const Review = ({
     />
   )
 
-  const renderReviewerInfo = () => (
-    <div>
-      <Heading>
-        <strong>{review.user.username}</strong>
-      </Heading>
-      {review.user.defaultIdentity.identifier}
-    </div>
-  )
+  const renderReviewerInfo = () =>
+    review?.user && (
+      <div>
+        <Heading>
+          <strong>{review.user.username}</strong>
+        </Heading>
+        {review.user.defaultIdentity.identifier}
+      </div>
+    )
 
   const renderAnonymousReviewer = () => (
     <div>
