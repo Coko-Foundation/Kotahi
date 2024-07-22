@@ -1,5 +1,17 @@
 ## Changes
 
+### Version 3.5.0
+
+There is a new feature that leverages yjs to enable collaborative editing on some text editors. This feature opens a new websocket connection, which needs a couple of new environment variables to function:
+
+* `WS_YJS_SERVER_PORT`: This tells the server which port to open for the yjs websocket server.
+* `CLIENT_YJS_WEBSOCKET_URL`: This tells the client where the publicly accessible url for the yjs websocket server is.
+
+For example:
+- Open the yjs server at port 5010 with the environment variable `WS_YJS_SERVER_PORT=5010`.
+- Tell the client where it can find the yjs server with the variable `CLIENT_YJS_WEBSOCKET_URL=wss://mykotahideployment.com/yjs`.
+- Map the url `wss://mykotahideployment.com/yjs` to `localhost:5010` in your nginx config or equivalent.
+
 ### Version 3.2.0
 
 If you have a `translationOverrides.js` file, it must be moved from `config/` folder to `packages/client/config/translation/` folder.
