@@ -539,8 +539,10 @@ const publishReviewsToCrossref = async manuscript => {
     )
   }
 
+  const ffilteredReviews = [...filteredReviews, ...filteredReviews]
+
   const reviewsToPublish = await Promise.all(
-    filteredReviews.map(async review => {
+    ffilteredReviews.map(async review => {
       const reviewDOI = getDoi(review.id, activeConfig)
       if (!(await doiIsAvailable(reviewDOI)))
         throw Error('Custom DOI is not available.')
@@ -564,17 +566,18 @@ const publishReviewsToCrossref = async manuscript => {
           type: review.isDecision ? 'aggregate' : 'referee-report',
         },
         ...(users && {
-          contributors: users.map(user => {
-            return {
-              person_name: {
+          contributors: {
+            person_name: users.map((user, i) => {
+              return {
                 $: {
+                  sequence: i === 0 ? 'first' : 'additional',
                   contributor_role: review.isDecision ? 'editor' : 'reviewer',
                 },
                 given_name: user.firstName,
                 surname: user.lastName,
-              },
-            }
-          }),
+              }
+            }),
+          },
         }),
         titles: { title: `Review: ${$title}` },
         review_date: {
