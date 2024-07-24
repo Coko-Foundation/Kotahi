@@ -650,6 +650,8 @@ const permissions = {
       userIsEditorOfTheManuscriptOfTheReview,
     ),
     lockUnlockCollaborativeReview: or(
+      userIsGm,
+      userIsAdmin,
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),

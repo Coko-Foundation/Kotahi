@@ -236,7 +236,11 @@ const KanbanBoard = ({
                       showEmailInvitation={
                         reviewer.isEmail && status.value === 'invited'
                       }
-                      status={status.value}
+                      status={
+                        status.value === 'completed' && reviewer.isCollaborative
+                          ? 'closed'
+                          : status.value
+                      }
                       updateCollaborativeTeamMember={
                         updateCollaborativeTeamMember
                       }

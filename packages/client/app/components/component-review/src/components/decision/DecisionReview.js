@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { isObject, find } from 'lodash'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
@@ -49,7 +50,9 @@ const DecisionReview = ({
 
   const users = review.user
     ? [user]
-    : collaborativeUsers.members.map(member => member.user)
+    : collaborativeUsers.members
+        .filter(m => !['invited', 'rejected'].includes(m.status))
+        .map(member => member.user)
 
   const recommendation = ensureJsonIsParsed(review.jsonData)?.$verdict
 
@@ -57,6 +60,15 @@ const DecisionReview = ({
 
   const [open, setOpen] = useState(false)
   const toggleOpen = () => setOpen(!open)
+
+  // just select the first user to find the status  of the review
+  const [u] = users
+
+  const userMember = teams.map(
+    team => team.members.find(member => member.user.id === u?.id) || false,
+  )
+
+  const { status } = find(userMember || [], item => isObject(item)) || {}
 
   return (
     <Root>
@@ -96,6 +108,7 @@ const DecisionReview = ({
         reviewForm={reviewForm}
         showEditorOnlyFields={showEditorOnlyFields}
         showUserInfo
+        status={status}
         threadedDiscussionProps={threadedDiscussionProps}
         updateCollaborativeTeamMember={updateCollaborativeTeamMember}
         updateReview={updateReview}
