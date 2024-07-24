@@ -150,14 +150,7 @@ const ReviewDetailsModal = (
 
   const reviewData = review ? ensureJsonIsParsed(review?.jsonData) : {}
 
-  let showForm = false
-
-  if (review?.isCollaborative === true) {
-    showForm = !readOnly && canEditReviews && !review.isLock
-  } else {
-    showForm = !readOnly && canEditReviews
-  }
-
+  const showForm = !readOnly && canEditReviews
   return (
     <Modal
       contentStyles={{ width: '80%', maxWidth: '80%' }}
