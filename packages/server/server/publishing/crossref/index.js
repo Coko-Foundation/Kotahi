@@ -539,10 +539,8 @@ const publishReviewsToCrossref = async manuscript => {
     )
   }
 
-  const ffilteredReviews = [...filteredReviews, ...filteredReviews]
-
   const reviewsToPublish = await Promise.all(
-    ffilteredReviews.map(async review => {
+    filteredReviews.map(async review => {
       const reviewDOI = getDoi(review.id, activeConfig)
       if (!(await doiIsAvailable(reviewDOI)))
         throw Error('Custom DOI is not available.')
