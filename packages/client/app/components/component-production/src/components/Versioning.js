@@ -137,6 +137,7 @@ const atomicTags = [
   'math-display',
   'math-inline',
   'em',
+  'figure',
 ]
 
 const makeDiffedSource = (html1, html2) => {
@@ -160,6 +161,12 @@ const Versioning = ({
   // const { production } = useContext(ConfigContext)
   // const historyIntervalInMinutes = production.manuscriptVersionHistory.historyIntervalInMinutes || 10
   const { username } = currentUser
+  const [isSaving, setIsSaving] = useState(false)
+
+  const cleanedPreviousVersions =
+    manuscript.meta.source === manuscript.meta.previousVersions[0].source
+      ? manuscript.meta.previousVersions.slice(1)
+      : manuscript.meta.previousVersions || []
 
   const versionList = [
     {
@@ -167,7 +174,7 @@ const Versioning = ({
       user: { id: currentUser.id, userName: currentUser.username },
       created: Date.now(),
     },
-    ...(manuscript.meta.previousVersions || []),
+    ...cleanedPreviousVersions,
   ]
 
   const [shownVersion, setShownVersion] = useState(0)
@@ -199,6 +206,7 @@ const Versioning = ({
     // Second, get the old version out of the list
 
     // console.log('Making this the current version: ', resurrectedVersion)
+    // TODO: make this await the return!
     saveCurrentVersion(resurrectedVersion.source)
 
     // Then, set the selected version as the working version of the manuscript
@@ -222,14 +230,16 @@ const Versioning = ({
                 alignItems: 'center',
                 fontSize: '16px',
                 paddingTop: '3px',
+                userSelect: 'none',
               }}
               value="Show changes"
             />
           ) : null}
           <ActionButton
-            onClick={e => {
+            onClick={async e => {
               e.preventDefault()
               // console.log('Saving a new version')
+              setIsSaving(true)
 
               const newVersion = {
                 created: Date.now(),
@@ -239,10 +249,19 @@ const Versioning = ({
 
               addNewVersion(newVersion)
 
-              saveCurrentVersion(newVersion.source)
-              // TODO: this needs to trigger a redraw of the components
+              // NB this returns true or false based on whether it's actually a new version. Could do this differently.
+              await saveCurrentVersion(newVersion.source)
+
+              setIsSaving(false)
+
+              // if (returnedVersion) {
+              //   console.log('New version should be added to the list')
+              //   // TODO: this needs to trigger a redraw of the components
+              // }
             }}
             primary
+            status={isSaving ? 'pending' : ''}
+
             // type="submit"
           >
             Save current version
@@ -255,36 +274,44 @@ const Versioning = ({
             <h3 style={{ display: 'flex' }}>
               <strong style={{ marginRight: 'auto' }}>Version history</strong>
             </h3>
-            <VersionList>
-              {versionList.length ? (
-                versionList.map((version, index) => (
-                  <li key={`version-${version.created}`}>
-                    <a
-                      className={shownVersion === index ? 'active' : ''}
-                      href="/#"
-                      onClick={e => {
-                        e.preventDefault()
-                        setShownVersion(index)
-                        setCurrentSource(
-                          index === 0
-                            ? manuscript.meta.source
-                            : versionList[index].source,
-                        )
-                      }}
-                    >
-                      {versionList.length - index}.{' '}
-                      <strong>{version.user.userName}</strong>
-                      {', '}
-                      <span>{formatPublishedDate(version.created)}</span>
-                    </a>
-                  </li>
-                ))
-              ) : (
+            {isSaving ? (
+              <VersionList>
                 <dl>
-                  <dt>No previous saved versions</dt>
+                  <dt>Saving new version...</dt>
                 </dl>
-              )}
-            </VersionList>
+              </VersionList>
+            ) : (
+              <VersionList>
+                {versionList.length ? (
+                  versionList.map((version, index) => (
+                    <li key={`version-${version.created}`}>
+                      <a
+                        className={shownVersion === index ? 'active' : ''}
+                        href="/#"
+                        onClick={e => {
+                          e.preventDefault()
+                          setShownVersion(index)
+                          setCurrentSource(
+                            index === 0
+                              ? manuscript.meta.source
+                              : versionList[index].source,
+                          )
+                        }}
+                      >
+                        {versionList.length - index}.{' '}
+                        <strong>{version.user.userName}</strong>
+                        {', '}
+                        <span>{formatPublishedDate(version.created)}</span>
+                      </a>
+                    </li>
+                  ))
+                ) : (
+                  <dl>
+                    <dt>No previous saved versions</dt>
+                  </dl>
+                )}
+              </VersionList>
+            )}
           </Section>
         </LeftBlock>
         <RightBlock>

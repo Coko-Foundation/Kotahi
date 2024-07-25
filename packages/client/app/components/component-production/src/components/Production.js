@@ -114,9 +114,18 @@ const Production = ({
   )
 
   const saveCurrentVersion = async source => {
-    // This just saves the current version of the manuscript on demand
-    // Right now, this is just saving the source of the manuscript
-    updateManuscript(manuscript.id, { meta: { source } })
+    // This just saves the current version of the manuscript on demand if it has changed.
+    // This returns true if there's a new version.
+    if (manuscript.meta?.previousVersions.length > 0) {
+      if (source === manuscript.meta.previousVersions[0].source) {
+        // if it's the same as before, don't save.
+        console.error('Nothing has changed, not saving!')
+        return false
+      }
+    }
+
+    await updateManuscript(manuscript.id, { meta: { source } })
+    return true
   }
 
   const debouncedSave = useCallback(
@@ -311,6 +320,7 @@ const Production = ({
         addNewVersion={addNewVersion} // this is basically the same
         authorList={authorList}
         currentUser={currentUser}
+        key={manuscript.meta.previousVersions?.length}
         manuscript={manuscript}
         saveCurrentVersion={saveCurrentVersion}
       />

@@ -94,6 +94,7 @@ const CitationComponent = ({ node, getPos }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [doiHasBeenChecked, setDoiHasBeenChecked] = useState(false)
 
   // Note: state is maintained on the attributes of the node.
   // But that doesn't trigger a re-render (or useEffects), so we need to maintain
@@ -261,20 +262,25 @@ const CitationComponent = ({ node, getPos }) => {
 
         setStructures(newStructures)
         // console.log("Versions found. Setting status to 'needs review'")
-        setInternalNeedsValidation(!!dataciteHasBeenRun)
-        setInternalNeedsReview(dataciteHasBeenRun)
-        setContent(
-          {
-            // TODO: turn this off if we have successfully completed the datacite call
-            needsValidation: !!dataciteHasBeenRun,
-            needsReview: !!dataciteHasBeenRun,
-            valid: dataciteHasBeenRun,
-            originalText: formattedOriginalText,
-            possibleStructures: newStructures,
-          },
-          null,
-          true,
-        )
+
+        if (dataciteHasBeenRun) {
+          setInternalNeedsValidation(false)
+          setInternalNeedsReview(false)
+          setContent(
+            {
+              needsValidation: false,
+              needsReview: false,
+              valid: true,
+              originalText: formattedOriginalText,
+              possibleStructures: newStructures,
+            },
+            null,
+            true,
+          )
+        } else {
+          setInternalNeedsReview(true)
+        }
+
         setLoading(false)
       })
     }
@@ -303,14 +309,25 @@ const CitationComponent = ({ node, getPos }) => {
     }
 
     if (needsValidation) {
-      if (getDataFromDatacite) {
+      if (getDataFromDatacite && !doiHasBeenChecked) {
         // If we're doing this, try to get the DOI from the text.
+        setDoiHasBeenChecked(true)
+
         if (formattedOriginalText.match(matchDoi)) {
           const thisDoi = formattedOriginalText.match(matchDoi)[0]
           // console.log('DOI found in originalText', thisDoi)
           getDataciteData(thisDoi)
         } else {
           console.error('No DOI in this citation:', formattedOriginalText)
+
+          if (
+            !loading &&
+            !structures.crossRef.length &&
+            !(JSON.stringify(structures.anyStyle).length > 2)
+          ) {
+            // This is firing if we don't have a DOI in the text
+            getVersions(structures, false)
+          }
         }
       } else if (
         !loading &&
