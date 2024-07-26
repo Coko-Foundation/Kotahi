@@ -123,12 +123,12 @@ const applyTemplate = async (
   thisArticle.config = {
     groupIdentity: activeConfig.formData.groupIdentity,
     publishing: {
-      journalName: activeConfig.formData.publishing.crossref.journalName,
+      journalName: activeConfig.formData.groupIdentity.title,
       journalAbbreviatedName:
-        activeConfig.formData.publishing.crossref.journalAbbreviatedName,
+        activeConfig.formData.groupIdentity.journalAbbreviatedName,
       journalHomepage:
         activeConfig.formData.publishing.crossref.journalHomepage,
-      licenseUrl: activeConfig.formData.publishing.crossref.licenseUrl,
+      licenseUrl: activeConfig.formData.groupIdentity.licenseUrl,
     },
   }
 

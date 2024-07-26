@@ -56,25 +56,23 @@ const revertHiddenSensitiveInformation = async (
 
 const stripSensitiveInformation = async configData => {
   const config = configData
-
+  delete config.formData.groupIdentity?.licenseUrl
   // kotahiApis - tokens
-  delete config.formData.kotahiApis
-
+  delete config.formData.integrations?.kotahiApis
   // publishing - credentials
-  delete config.formData.publishing.crossref.login
-  delete config.formData.publishing.crossref.password
-  delete config.formData.publishing.crossref.depositorName
-  delete config.formData.publishing.crossref.depositorEmail
-  delete config.formData.publishing.crossref.doiPrefix
-  delete config.formData.publishing.crossref.licenseUrl
-  delete config.formData.publishing.crossref.registrant
-  delete config.formData.publishing.crossref.publicationType
-  delete config.formData.publishing.crossref.publishedArticleLocationPrefix
-  delete config.formData.publishing.hypothesis.group
-  delete config.formData.publishing.hypothesis.apiKey
-  delete config.formData.publishing.webhook
-  config?.formData?.aiDesignStudio?.apiKey &&
-    delete config.formData.aiDesignStudio.apiKey
+  delete config.formData.publishing?.crossref.login
+  delete config.formData.publishing?.crossref.password
+  delete config.formData.publishing?.crossref.depositorName
+  delete config.formData.publishing?.crossref.depositorEmail
+  delete config.formData.publishing?.crossref.doiPrefix
+  delete config.formData.publishing?.crossref.registrant
+  delete config.formData.publishing?.crossref.publicationType
+  delete config.formData.publishing?.crossref.publishedArticleLocationPrefix
+  delete config.formData.publishing?.hypothesis.group
+  delete config.formData.publishing?.hypothesis.apiKey
+  delete config.formData.publishing?.webhook
+  config?.formData?.integrations?.aiDesignStudio?.apiKey &&
+    delete config.formData.integrations.aiDesignStudio.apiKey
   // notification - credentials
   delete config.formData.notification
 

@@ -85,7 +85,9 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
 
     const promises = []
 
-    if (activeConfig.formData.semanticScholar.enableSemanticScholar) {
+    if (
+      activeConfig.formData.integrations.semanticScholar.enableSemanticScholar
+    ) {
       promises.push(importArticlesFromSemanticScholar(groupId, ctx))
     }
 

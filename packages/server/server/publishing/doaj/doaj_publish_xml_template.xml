@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<doi_batch 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://www.crossref.org/schema/4.4.2 http://www.crossref.org/schema/crossref4.4.2.xsd" 
+		xmlns="http://www.crossref.org/schema/4.4.2" 
+		version="4.4.2"
+		xmlns:ai="http://www.crossref.org/AccessIndicators.xsd"
+	>
+  	<head>
+     	<doi_batch_id>20170807</doi_batch_id>
+     	<timestamp>2017080715731</timestamp>
+     	<depositor>
+       	<depositor_name>Crossref</depositor_name>
+       	<email_address>support@crossref.org</email_address>
+     	</depositor>
+     	<registrant>Crossref</registrant>
+  	</head>
+  	<body>
+     	<peer_review stage="pre-publication" revision-round="0" type="">
+         	<contributors>
+           	<person_name contributor_role="reviewer" sequence="first">
+              	<given_name>Wilson</given_name>
+              	<surname>Liao</surname>
+           	</person_name>
+         	</contributors>
+         	<titles>
+            	<title>Review: Treatment of plaque psoriasis with an ointment formulation of the Januskinase inhibitor, tofacitinib: a Phase 2b randomized clinical trial. V1</title>
+         	</titles>
+			<review_date>
+        		<month>05</month>
+        		<day>26</day>
+        		<year>2021</year>
+      		</review_date>
+			<ai:program name="AccessIndicators">
+            	<ai:license_ref>http://creativecommons.org/licenses/by/4.0/</ai:license_ref>
+          	</ai:program>
+         	<program xmlns="http://www.crossref.org/relations.xsd">
+            	<related_item>
+              	<inter_work_relation relationship-type="isReviewOf" identifier-type="doi"
+>10.1186/s12895-016-0051-4 </inter_work_relation>
+            	</related_item>
+         	</program>
+         	<doi_data>
+            	<doi>10.5555/abc123</doi>
+            	<resource>https://www.example.org/openpeerreview/art%3A10.1186%2Fs12895-016-0051-4/12895_2016_51_ReviewerReport_V2_R1.pdf</resource>
+         	</doi_data>
+     	</peer_review>
+   	</body>
+   </doi_batch>

@@ -49,7 +49,7 @@
                 </div>
                 <div class="journal">
                     {# The name of the journal. Would be great to get it from kotahi config #}
-                    <p class="journal-name">{{ article.config.publishing.journalName }}</p>
+                    <p class="journal-name">{{ article.config.groupIdentity.title }}</p>
                 </div>
             </aside>
             <header>
@@ -92,10 +92,10 @@
                         </div>
                     </div>
                     {# the licence is cc-by. You can update here here:  #}
-                    {% if article.config.publishing.licenseUrl %}
+                    {% if article.config.groupIdentity.licenseUrl %}
                     <p class="licence">
                         This article is published under 
-                        <a href="{{article.config.publishing.licenseUrl}}">{{article.config.publishing.licenseUrl}}</a>.
+                        <a href="{{article.config.groupIdentity.licenseUrl}}">{{article.config.groupIdentity.licenseUrl}}</a>.
                     </p>
                     {% endif %}
                     <div class="logos">

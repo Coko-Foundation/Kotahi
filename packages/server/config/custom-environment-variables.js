@@ -51,7 +51,6 @@ module.exports = {
     publishedArticleLocationPrefix: 'PUBLISHED_ARTICLE_LOCATION_PREFIX',
     licenseUrl: 'PUBLICATION_LICENSE_URL',
     useSandbox: 'CROSSREF_USE_SANDBOX',
-    journalName: 'JOURNAL_NAME',
     journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
     journalHomepage: 'JOURNAL_HOMEPAGE',
   },

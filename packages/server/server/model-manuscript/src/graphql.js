@@ -44,6 +44,8 @@ const {
   doiExists,
 } = require('../../publishing/crossref')
 
+const { publishToDOAJ } = require('../../publishing/doaj')
+
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const {
@@ -1410,6 +1412,32 @@ const resolvers = {
         })
       }
 
+      if (activeConfig.formData.publishing.doaj.login) {
+        const stepLabel = 'DOAJ'
+        let succeeded = false
+        let errorMessage
+
+        if (
+          containsElifeStyleEvaluations ||
+          manuscript.status !== 'evaluated'
+        ) {
+          try {
+            await publishToDOAJ(manuscript)
+            succeeded = true
+          } catch (e) {
+            console.error('error publishing to DOAJ')
+            console.error(e)
+            errorMessage = e.message
+          }
+        }
+
+        steps.push({
+          stepLabel,
+          succeeded,
+          errorMessage,
+        })
+      }
+
       if (process.env.GOOGLE_SPREADSHEET_ID) {
         const stepLabel = 'Google Spreadsheet'
         let succeeded = false
@@ -1776,8 +1804,11 @@ const resolvers = {
 
       const activeConfig = await Config.getCached(group.id)
 
-      if (activeConfig.formData.kotahiApis.tokens) {
-        validateApiToken(token, activeConfig.formData.kotahiApis.tokens)
+      if (activeConfig.formData.integrations.kotahiApis.tokens) {
+        validateApiToken(
+          token,
+          activeConfig.formData.integrations.kotahiApis.tokens,
+        )
       } else {
         throw new Error('Kotahi api tokens are not configured!')
       }

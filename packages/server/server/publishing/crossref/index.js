@@ -266,18 +266,18 @@ const publishArticleToCrossref = async manuscript => {
     formData: {
       publishing: { crossref },
       instanceName,
+      groupIdentity,
     },
   } = activeConfig
 
+  const { depositorEmail, journalHomepage, depositorName, registrant } =
+    crossref
+
   const {
-    depositorEmail,
-    journalName,
     journalAbbreviatedName,
-    journalHomepage,
     licenseUrl,
-    depositorName,
-    registrant,
-  } = crossref
+    title: journalName,
+  } = groupIdentity
 
   const { submission, shortId, id } = manuscript
 
