@@ -1386,7 +1386,7 @@ const resolvers = {
       const update = { published: newPublishedDate, status: 'published' } // This will also collect any properties we may want to update in the DB
       const steps = []
 
-      if (activeConfig.formData.publishing.crossref.login) {
+      if (activeConfig.formData.publishing.crossref?.login) {
         const stepLabel = 'Crossref'
         let succeeded = false
         let errorMessage
@@ -1412,7 +1412,7 @@ const resolvers = {
         })
       }
 
-      if (activeConfig.formData.publishing.doaj.login) {
+      if (activeConfig.formData.publishing.doaj?.login) {
         const stepLabel = 'DOAJ'
         let succeeded = false
         let errorMessage
