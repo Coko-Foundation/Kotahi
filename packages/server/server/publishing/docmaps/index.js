@@ -155,7 +155,7 @@ const tryPublishDocMaps = async manuscript => {
     type: 'docmap',
     publisher: {
       id: activeConfig.formData.publishing.crossref.journalHomepage,
-      name: activeConfig.formData.publishing.crossref.journalName,
+      name: activeConfig.formData.groupIdentity.title,
       homepage: activeConfig.formData.publishing.crossref.journalHomepage,
     },
     'first-step': '_:b0',

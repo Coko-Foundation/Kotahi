@@ -27,9 +27,7 @@ const seedConfig = async (group, instanceName, index, options) => {
             login: process.env.CROSSREF_LOGIN || null,
             password: process.env.CROSSREF_PASSWORD || null,
             doiPrefix: process.env.DOI_PREFIX || null,
-            licenseUrl: process.env.PUBLICATION_LICENSE_URL || null,
             registrant: process.env.CROSSREF_REGISTRANT || null,
-            journalName: process.env.JOURNAL_NAME || null,
             depositorName: process.env.CROSSREF_DEPOSITOR_NAME || null,
             depositorEmail: process.env.CROSSREF_DEPOSITOR_EMAIL || null,
             journalHomepage: process.env.JOURNAL_HOMEPAGE || null,
@@ -37,8 +35,6 @@ const seedConfig = async (group, instanceName, index, options) => {
               process.env.CROSSREF_PUBLICATION_TYPE === 'article'
                 ? 'article'
                 : 'peer review',
-            journalAbbreviatedName:
-              process.env.JOURNAL_ABBREVIATED_NAME || null,
             publishedArticleLocationPrefix:
               process.env.PUBLISHED_ARTICLE_LOCATION_PREFIX || null,
             useSandbox: process.env.CROSSREF_USE_SANDBOX === 'true',
@@ -60,14 +56,23 @@ const seedConfig = async (group, instanceName, index, options) => {
             login: null,
             password: null,
             doiPrefix: null,
-            licenseUrl: null,
             registrant: null,
-            journalName: null,
             depositorName: null,
             depositorEmail: null,
             journalHomepage: null,
             publicationType: 'article',
-            journalAbbreviatedName: null,
+            publishedArticleLocationPrefix: null,
+            useSandbox: false,
+          },
+          doaj: {
+            login: null,
+            password: null,
+            doiPrefix: null,
+            registrant: null,
+            depositorName: null,
+            depositorEmail: null,
+            journalHomepage: null,
+            publicationType: 'article',
             publishedArticleLocationPrefix: null,
             useSandbox: false,
           },
@@ -95,6 +100,9 @@ const seedConfig = async (group, instanceName, index, options) => {
     description: '',
     contact: '',
     issn: '',
+    electronicIssn: '',
+    journalAbbreviatedName: process.env.JOURNAL_ABBREVIATED_NAME || '',
+    licenseUrl: process.env.PUBLICATION_LICENSE_URL || null,
   }
 
   const production = {
@@ -147,11 +155,13 @@ const seedConfig = async (group, instanceName, index, options) => {
           notification,
           eventNotification: {},
           groupIdentity,
-          kotahiApis: {},
-          coarNotify: {},
-          aiDesignStudio: {},
-          semanticScholar: {
-            enableSemanticScholar: false,
+          integrations: {
+            kotahiApis: {},
+            coarNotify: {},
+            aiDesignStudio: {},
+            semanticScholar: {
+              enableSemanticScholar: false,
+            },
           },
         },
         type: 'Config',
@@ -194,11 +204,13 @@ const seedConfig = async (group, instanceName, index, options) => {
           notification,
           eventNotification: {},
           groupIdentity,
-          kotahiApis: {},
-          coarNotify: {},
-          aiDesignStudio: {},
-          semanticScholar: {
-            enableSemanticScholar: false,
+          integrations: {
+            kotahiApis: {},
+            coarNotify: {},
+            aiDesignStudio: {},
+            semanticScholar: {
+              enableSemanticScholar: false,
+            },
           },
         },
         type: 'Config',
@@ -256,11 +268,13 @@ const seedConfig = async (group, instanceName, index, options) => {
           notification,
           eventNotification: {},
           groupIdentity,
-          kotahiApis: {},
-          coarNotify: {},
-          aiDesignStudio: {},
-          semanticScholar: {
-            enableSemanticScholar: false,
+          integrations: {
+            kotahiApis: {},
+            coarNotify: {},
+            aiDesignStudio: {},
+            semanticScholar: {
+              enableSemanticScholar: false,
+            },
           },
         },
         type: 'Config',
@@ -310,13 +324,15 @@ const seedConfig = async (group, instanceName, index, options) => {
           notification,
           eventNotification: {},
           groupIdentity,
-          kotahiApis: {
-            tokens: kotahiApiTokens,
-          },
-          coarNotify: {},
-          aiDesignStudio: {},
-          semanticScholar: {
-            enableSemanticScholar: false,
+          integrations: {
+            kotahiApis: {
+              tokens: kotahiApiTokens,
+            },
+            coarNotify: {},
+            aiDesignStudio: {},
+            semanticScholar: {
+              enableSemanticScholar: false,
+            },
           },
         },
         type: 'Config',

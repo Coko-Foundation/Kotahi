@@ -48,14 +48,23 @@ module.exports = {
       login: 'test',
       password: 'test',
       doiPrefix: '10.12345',
-      licenseUrl: 'test',
       registrant: 'test',
-      journalName: 'test',
       depositorName: 'test',
       depositorEmail: 'test@coko.foundation',
       journalHomepage: 'test',
       publicationType: 'article',
-      journalAbbreviatedName: 'test',
+      publishedArticleLocationPrefix: 'test',
+      useSandbox: false,
+    },
+    doaj: {
+      login: 'test',
+      password: 'test',
+      doiPrefix: '10.12345',
+      registrant: 'test',
+      depositorName: 'test',
+      depositorEmail: 'test@coko.foundation',
+      journalHomepage: 'test',
+      publicationType: 'article',
       publishedArticleLocationPrefix: 'test',
       useSandbox: false,
     },
@@ -91,25 +100,31 @@ module.exports = {
   groupIdentity: {
     brandName: 'Kotahi',
     title: '',
+    journalName: 'test',
+    journalAbbreviatedName: 'test',
     description: '',
     issn: '',
+    electronicIssn: '',
     contact: '',
+    licenseUrl: 'test',
     primaryColor: '#3aae2a',
     secondaryColor: '#9e9e9e',
     logoPath: '/assets/logo-kotahi.png',
   },
-  semanticScholar: {
-    enableSemanticScholar: true,
-    semanticScholarPublishingServers: [],
-    semanticScholarImportsRecencyPeriodDays: 42,
-  },
-  coarNotify: {
-    repoIpAddress: '127.0.0.1',
-  },
-  kotahiApis: {
-    tokens: 'test:123456',
-  },
-  aiDesignStudio: {
-    apiKey: 'text',
+  integrations: {
+    semanticScholar: {
+      enableSemanticScholar: true,
+      semanticScholarPublishingServers: [],
+      semanticScholarImportsRecencyPeriodDays: 42,
+    },
+    coarNotify: {
+      repoIpAddress: '127.0.0.1',
+    },
+    kotahiApis: {
+      tokens: 'test:123456',
+    },
+    aiDesignStudio: {
+      apiKey: 'text',
+    },
   },
 }

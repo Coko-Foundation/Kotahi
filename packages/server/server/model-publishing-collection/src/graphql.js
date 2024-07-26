@@ -180,6 +180,7 @@ const typeDefs = `
     contact: String!
     logoPath: String!
     issn: String!
+    electronicIssn: String!
   }
 
   type PublishingCollectionFormData {

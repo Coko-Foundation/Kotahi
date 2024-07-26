@@ -66,7 +66,7 @@ const validateIPs = async (requestIP, group) => {
     active: true,
   })
 
-  const coarNotifyFormData = activeConfig.formData.coarNotify
+  const coarNotifyFormData = activeConfig.formData.integrations.coarNotify
   let repoIpAddress = '*'
 
   if (coarNotifyFormData) {

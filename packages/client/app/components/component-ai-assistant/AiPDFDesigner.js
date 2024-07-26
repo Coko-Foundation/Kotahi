@@ -492,7 +492,7 @@ const AiPDFDesigner = ({
         <CssAssistantUi>
           <ChatBubble
             forceHide={showChat}
-            hasApiKey={config?.aiDesignStudio?.apiKey}
+            hasApiKey={config?.integrations?.aiDesignStudio?.apiKey}
             icons={settings.ui.icons}
             onRight
           />

@@ -502,6 +502,7 @@ const resolvers = {
         description: formData.groupIdentity.description,
         contact: formData.groupIdentity.contact,
         issn: formData.groupIdentity.issn,
+        electronicIssn: formData.groupIdentity.electronicIssn,
         logoPath: formData.groupIdentity.logoPath,
       })
     },

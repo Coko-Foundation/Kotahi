@@ -99,7 +99,7 @@ const getData = async (groupId, ctx) => {
     // await fetchPublicationDatesFromEuropePmc(importsOnlyWithDOI)
 
     const recencyPeriodDays = Number(
-      activeConfig.formData.semanticScholar
+      activeConfig.formData.integrations.semanticScholar
         .semanticScholarImportsRecencyPeriodDays ?? 0,
     )
 
@@ -152,7 +152,8 @@ const getData = async (groupId, ctx) => {
     )
 
     const allowedPreprintServers =
-      activeConfig.formData.semanticScholar.semanticScholarPublishingServers
+      activeConfig.formData.integrations.semanticScholar
+        .semanticScholarPublishingServers
 
     const allowedDomains = allowedPreprintServers
       .map(server => semanticScholarServers[server] ?? [])

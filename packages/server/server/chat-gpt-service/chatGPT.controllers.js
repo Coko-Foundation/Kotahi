@@ -9,7 +9,7 @@ const chatGPT = async (input, history = [], groupId) => {
     // const CHAT_GPT_URL = config.has('chatGPT.url') && config.get('chatGPT.url')
     const activeConfig = await Config.getCached(groupId)
 
-    const { apiKey } = activeConfig.formData.aiDesignStudio ?? {}
+    const { apiKey } = activeConfig.formData?.integrations?.aiDesignStudio ?? {}
 
     const CHAT_GPT_KEY = apiKey
 
@@ -19,7 +19,9 @@ const chatGPT = async (input, history = [], groupId) => {
 
     if (!CHAT_GPT_KEY) {
       throw new Error(
-        `Missing access key - ${JSON.stringify(activeConfig.aiDesignStudio)}`,
+        `Missing access key - ${JSON.stringify(
+          activeConfig.integrations.aiDesignStudio,
+        )}`,
       )
     }
 

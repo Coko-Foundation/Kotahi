@@ -26,6 +26,11 @@ const generateSchema = t => {
         description: t('configPage.issn'),
         default: '',
       },
+      electronicIssn: {
+        type: 'string',
+        description: t('configPage.electronicIssn'),
+        default: '',
+      },
     },
   }
 
