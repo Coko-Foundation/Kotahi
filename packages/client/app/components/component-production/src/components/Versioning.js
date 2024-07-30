@@ -164,7 +164,8 @@ const Versioning = ({
   const [isSaving, setIsSaving] = useState(false)
 
   const cleanedPreviousVersions =
-    manuscript.meta.source === manuscript.meta.previousVersions[0].source
+    manuscript.meta.source === manuscript.meta.previousVersions?.length &&
+    manuscript.meta.previousVersions[0].source
       ? manuscript.meta.previousVersions.slice(1)
       : manuscript.meta.previousVersions || []
 
