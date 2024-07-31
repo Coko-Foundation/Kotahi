@@ -82,12 +82,18 @@ const RightBlock = styled.div`
     // color: black;
     // text-decoration: none;
     // background-color: rgba(0, 255, 0, 0.25);
+    ${props => props.hideChanges && `display: none;`}
   }
 
   & span.insertion {
     // color: black;
     // text-decoration: none;
     // background-color: rgba(255, 0, 0, 0.25);
+    ${props => props.hideChanges && `color: initial !important;`}
+  }
+
+  & *[data-track]::before {
+    ${props => props.hideChanges && `display: none;`}
   }
 
   & .info {
@@ -216,7 +222,7 @@ const Versioning = ({
   }
 
   return (
-    <SectionContent style={{ height: '100%' }}>
+    <SectionContent style={{ height: 'fit-content' }}>
       <TopSection>
         <h3>
           {shownVersion + 1 < versionList.length ? (
@@ -315,7 +321,7 @@ const Versioning = ({
             )}
           </Section>
         </LeftBlock>
-        <RightBlock>
+        <RightBlock hideChanges={!useDiffing}>
           <Section>
             <h5>
               Edited by{' '}
@@ -339,6 +345,7 @@ const Versioning = ({
               readonly
               user={currentUser}
               value={
+                // TODO: if !useDiffing, turn off show changes as well
                 // We are showing a diffed version for all except the oldest version
                 shownVersion < versionList.length - 1 && useDiffing
                   ? makeDiffedSource(
