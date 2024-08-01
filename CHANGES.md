@@ -1,5 +1,16 @@
 ## Changes
 
+### Version 3.6.0
+
+There is a new integration with datacite which can optionally be configured via environment variables (but also through the config manager in the ui).  
+The new environment variables are:
+
+- `ROR_URL`
+- `DATACITE_LOGIN`
+- `DATACITE_PASSWORD`
+- `DOI_PREFIX`
+- `DATACITE_USE_SANDBOX`
+
 ### Version 3.5.0
 
 There is a new feature that leverages yjs to enable collaborative editing on some text editors. This feature opens a new websocket connection, which needs a couple of new environment variables to function:
