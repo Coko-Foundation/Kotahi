@@ -310,6 +310,7 @@ const esLa = {
       'Add another person': 'Agregar otra persona',
       'Add another doi': 'Agregar otra DOI',
       'Delete this author': 'Eliminar este autor',
+      invalidDoi: 'El DOI es inválido',
     },
     editorSection: {
       noFileLoaded: 'No se ha cargado ningún archivo de manuscrito',

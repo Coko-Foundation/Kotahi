@@ -306,6 +306,7 @@ const en = {
       'Add another person': 'Add another person',
       'Add another doi': 'Add another DOI',
       'Delete this author': 'Delete this author',
+      invalidDoi: 'DOI is invalid',
     },
     editorSection: {
       noFileLoaded: 'No manuscript file loaded',

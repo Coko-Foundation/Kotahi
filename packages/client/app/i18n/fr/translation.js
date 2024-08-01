@@ -313,6 +313,7 @@ const fr = {
       'Add another person': 'Ajouter une autre personne',
       'Add another doi': 'Ajouter une autre DOI',
       'Delete this author': 'Supprimer cet auteur',
+      invalidDoi: 'Le DOI est invalide',
     },
     editorSection: {
       noFileLoaded: 'Aucun fichier de manuscrit chargé',
