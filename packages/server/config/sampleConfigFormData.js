@@ -57,6 +57,13 @@ module.exports = {
       publishedArticleLocationPrefix: 'test',
       useSandbox: false,
     },
+    datacite: {
+      login: 'test',
+      password: 'test',
+      doiPrefix: '10.12345',
+      useSandbox: false,
+      publishedArticleLocationPrefix: 'test',
+    },
     doaj: {
       login: 'test',
       password: 'test',
@@ -105,5 +112,6 @@ module.exports = {
     logoPath: '/assets/logo-kotahi.png',
     licenseUrl: 'test',
     journalName: 'test',
+    rorUrl: 'https://ror.org/',
   },
 }

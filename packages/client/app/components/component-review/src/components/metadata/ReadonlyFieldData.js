@@ -56,6 +56,17 @@ const ReadonlyFieldData = ({
     })
   }
 
+  if (fieldDefinition?.component === 'DoisInput' && Array.isArray(data)) {
+    return (data || []).map((d, i) => {
+      const doi = d.name || '?'
+
+      return (
+        // eslint-disable-next-line react/no-array-index-key
+        <p key={i}>{doi}</p>
+      )
+    })
+  }
+
   if (fieldDefinition?.component === 'LinksInput' && Array.isArray(data)) {
     return data.map(link => (
       <p key={link.url}>

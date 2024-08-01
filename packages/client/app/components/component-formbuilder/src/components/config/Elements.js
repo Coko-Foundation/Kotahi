@@ -477,6 +477,14 @@ const submissionFieldOptions = [
     permitPublishing: { ...permitPublishingField, defaultValue: 'always' },
   },
   {
+    fieldType: 'dois',
+    label: 'Dois',
+    component: 'DoisInput',
+    title: requiredTextFieldWithDefault('Dois'),
+    name: presetTextField('submission.$dois'),
+    permitPublishing: { ...permitPublishingField, defaultValue: 'always' },
+  },
+  {
     fieldType: 'issueNumber',
     label: 'Issue Number',
     component: 'TextField',

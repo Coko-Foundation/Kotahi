@@ -39,6 +39,14 @@ const seedConfig = async (group, instanceName, index, options) => {
               process.env.PUBLISHED_ARTICLE_LOCATION_PREFIX || null,
             useSandbox: process.env.CROSSREF_USE_SANDBOX === 'true',
           },
+          datacite: {
+            login: process.env.DATACITE_LOGIN || null,
+            password: process.env.DATACITE_PASSWORD || null,
+            doiPrefix: process.env.DOI_PREFIX || null,
+            useSandbox: process.env.DATACITE_USE_SANDBOX === 'true',
+            publishedArticleLocationPrefix:
+              process.env.PUBLISHED_ARTICLE_LOCATION_PREFIX || null,
+          },
         }
       : {
           hypothesis: {
@@ -103,6 +111,7 @@ const seedConfig = async (group, instanceName, index, options) => {
     electronicIssn: '',
     journalAbbreviatedName: process.env.JOURNAL_ABBREVIATED_NAME || '',
     licenseUrl: process.env.PUBLICATION_LICENSE_URL || null,
+    rorUrl: process.env.ROR_URL || null,
   }
 
   const production = {
