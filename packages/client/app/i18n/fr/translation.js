@@ -311,6 +311,7 @@ const fr = {
         },
       },
       'Add another person': 'Ajouter une autre personne',
+      'Add another doi': 'Ajouter une autre DOI',
       'Delete this author': 'Supprimer cet auteur',
     },
     editorSection: {
@@ -526,6 +527,7 @@ const fr = {
         "Inverser l'ordre des champs du formulaire de soumission/décision publiés à Hypothèse",
       Crossref: 'Crossref',
       journalAbbreviatedName: 'Nom abrégé',
+      rorUrl: 'URL du Registre des organisations de recherche (ROR)',
       journalHomepage: "Page d'accueil",
       crossrefLogin: "Nom d'utilisateur Crossref",
       crossrefPassword: 'Mot de passe Crossref',
@@ -537,6 +539,14 @@ const fr = {
       crossrefPublishedArticleLocationPrefix:
         "Emplacement de l'article publié Crossref",
       crossrefUseSandbox: 'Publier dans le bac à sable Crossref',
+      Datacite: 'Datacite',
+      dataciteLogin: "Nom d'utilisateur Datacite",
+      datacitePassword: 'Mot de passe Datacite',
+      dataciteUseSandbox: 'Publier dans le bac à sable Datacite',
+      dataciteDoiPrefix: 'Préfixe DOI Datacite',
+      publishedArticleLocationPrefixDatacite:
+        "Emplacement de l'article publié Datacite",
+      publisher: 'Éditeur',
       doajDoiPrefix: 'Préfixe DOI DOAJ',
       doajPublishedArticleLocationPrefix:
         "Emplacement de l'article publié DOAJ",
@@ -1153,6 +1163,7 @@ const fr = {
         visualAbstract: 'Pièce jointe : Image unique',
         attachments: 'Pièces jointes',
         doi: 'DOI',
+        dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',
         sourceUri: 'URI de la source du manuscrit',
         customStatus: 'Statut personnalisé',
@@ -1178,6 +1189,7 @@ const fr = {
         SupplementaryFiles: 'Pièces jointes',
         VisualAbstract: 'Pièce jointe image unique',
         AuthorsInput: 'Liste des contributeurs',
+        DoisInput: 'Liste des DOI',
         LinksInput: 'Liste de liens (URIs)',
         AbstractEditor: 'Texte enrichi',
         TextField: 'Texte',

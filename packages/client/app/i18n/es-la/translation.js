@@ -308,6 +308,7 @@ const esLa = {
         },
       },
       'Add another person': 'Agregar otra persona',
+      'Add another doi': 'Agregar otra DOI',
       'Delete this author': 'Eliminar este autor',
     },
     editorSection: {
@@ -517,6 +518,7 @@ const esLa = {
         'Invertir el orden de campos del formulario de Envío/Decisión publicados en Hipótesis',
       Crossref: 'Crossref',
       journalAbbreviatedName: 'Nombre Abreviado de la Revista',
+      rorUrl: 'URL del Registro de Organizaciones de Investigación (ROR)',
       journalHomepage: 'Página de Inicio de la Revista',
       crossrefLogin: 'Nombre de Usuario de Crossref',
       crossrefPassword: 'Contraseña de Crossref',
@@ -529,6 +531,14 @@ const esLa = {
       crossrefPublishedArticleLocationPrefix:
         'Prefijo de Ubicación de Artículos Publicados de Crossref',
       crossrefUseSandbox: 'Publicar en el entorno de prueba de Crossref',
+      Datacite: 'Datacite',
+      dataciteLogin: 'Nombre de Usuario de Datacite',
+      datacitePassword: 'Contraseña de  Datacite',
+      dataciteUseSandbox: 'Publicar en el entorno de prueba de Datacite',
+      dataciteDoiPrefix: 'Prefijo DOI de Datacite',
+      publishedArticleLocationPrefixDatacite:
+        'Prefijo de Ubicación de Artículos Publicados de Datacite',
+      publisher: 'Editor',
       doajDoiPrefix: 'Prefijo DOI de DOAJ',
       doajPublishedArticleLocationPrefix:
         'Prefijo de Ubicación de Artículos Publicados de DOAJ',
@@ -1144,6 +1154,7 @@ const esLa = {
         visualAbstract: 'Adjunto de imagen única',
         attachments: 'Adjuntos',
         doi: 'DOI',
+        dois: 'Múltiples dois',
         doiSuffix: 'Sufijo DOI"',
         sourceUri: 'URI de la fuente del manuscrito',
         customStatus: 'Estado personalizado',
@@ -1169,6 +1180,7 @@ const esLa = {
         SupplementaryFiles: 'Archivos Adjuntos',
         VisualAbstract: 'Archivo de Imagen Única',
         AuthorsInput: 'Lista de colaboradores',
+        DoisInput: 'Lista de DOI',
         LinksInput: 'Lista de enlaces (URIs)',
         AbstractEditor: 'Texto enriquecido',
         TextField: 'Texto',

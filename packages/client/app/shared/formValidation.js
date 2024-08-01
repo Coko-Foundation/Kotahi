@@ -2,6 +2,7 @@
 
 import * as validators from 'xpub-validators'
 import { validateAuthors } from './authorsFieldDefinitions'
+import { validateDoiField } from './doiFieldDefinition'
 
 // eslint-disable-next-line import/prefer-default-export
 export const validateFormField =
@@ -26,6 +27,15 @@ export const validateFormField =
       )
         return 'Required'
       return validateAuthors(value)
+    }
+
+    if (componentType === 'DoisInput') {
+      if (
+        validator.some(v => v.value === 'required') &&
+        (value || []).length <= 0
+      )
+        return 'Required'
+      return validateDoiField(value)
     }
 
     if (

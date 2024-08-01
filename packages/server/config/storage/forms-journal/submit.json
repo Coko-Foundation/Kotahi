@@ -53,6 +53,14 @@
       "hideFromReviewers": "false"
     },
     {
+      "title": "Dois",
+      "id": "338b710d-d441-4c2e-a0ad-243cbd70eb02",
+      "component": "DoisInput",
+      "name": "submission.$dois",
+      "permitPublishing": "always",
+      "hideFromReviewers": "false"
+    },
+    {
       "title": "Topics",
       "id": "62ca72ad-04b0-41fc-85d1-415469d7e895",
       "component": "CheckboxGroup",

@@ -67,6 +67,10 @@ export const generateSchemas = (
               type: ['string', 'null'],
               description: t('configPage.journalAbbreviatedName'),
             },
+            rorUrl: {
+              type: ['string', 'null'],
+              description: t('configPage.rorUrl'),
+            },
             primaryColor: {
               type: 'string',
               description: t('configPage.Brand primary colour'),
@@ -765,6 +769,35 @@ export const generateSchemas = (
                 },
               },
             },
+            datacite: {
+              type: 'object',
+              title: t('configPage.Datacite'),
+              properties: {
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.datacitePassword'),
+                },
+                doiPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteDoiPrefix'),
+                },
+                useSandbox: {
+                  type: 'boolean',
+                  title: t('configPage.dataciteUseSandbox'),
+                  default: false,
+                },
+                publishedArticleLocationPrefix: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.publishedArticleLocationPrefixDatacite',
+                  ),
+                },
+              },
+            },
             // doaj: {
             //   type: 'object',
             //   title: t('configPage.DOAJ'),
@@ -976,6 +1009,10 @@ export const generateSchemas = (
             journalAbbreviatedName: {
               type: ['string', 'null'],
               description: t('configPage.journalAbbreviatedName'),
+            },
+            rorUrl: {
+              type: ['string', 'null'],
+              description: t('configPage.rorUrl'),
             },
             description: {
               type: 'string',
@@ -1699,6 +1736,35 @@ export const generateSchemas = (
                 },
               },
             },
+            datacite: {
+              type: 'object',
+              title: t('configPage.Datacite'),
+              properties: {
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.datacitePassword'),
+                },
+                doiPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteDoiPrefix'),
+                },
+                useSandbox: {
+                  type: 'boolean',
+                  title: t('configPage.dataciteUseSandbox'),
+                  default: false,
+                },
+                publishedArticleLocationPrefix: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.publishedArticleLocationPrefixDatacite',
+                  ),
+                },
+              },
+            },
             // doaj: {
             //   type: 'object',
             //   title: t('configPage.DOAJ'),
@@ -1910,6 +1976,10 @@ export const generateSchemas = (
             journalAbbreviatedName: {
               type: ['string', 'null'],
               description: t('configPage.journalAbbreviatedName'),
+            },
+            rorUrl: {
+              type: ['string', 'null'],
+              description: t('configPage.rorUrl'),
             },
             description: {
               type: 'string',
@@ -2640,6 +2710,35 @@ export const generateSchemas = (
                 },
               },
             },
+            datacite: {
+              type: 'object',
+              title: t('configPage.Datacite'),
+              properties: {
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.datacitePassword'),
+                },
+                doiPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteDoiPrefix'),
+                },
+                useSandbox: {
+                  type: 'boolean',
+                  title: t('configPage.dataciteUseSandbox'),
+                  default: false,
+                },
+                publishedArticleLocationPrefix: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.publishedArticleLocationPrefixDatacite',
+                  ),
+                },
+              },
+            },
             // doaj: {
             //   type: 'object',
             //   title: t('configPage.DOAJ'),
@@ -2851,6 +2950,10 @@ export const generateSchemas = (
             journalAbbreviatedName: {
               type: ['string', 'null'],
               description: t('configPage.journalAbbreviatedName'),
+            },
+            rorUrl: {
+              type: ['string', 'null'],
+              description: t('configPage.rorUrl'),
             },
             description: {
               type: 'string',
@@ -3582,6 +3685,35 @@ export const generateSchemas = (
                 },
               },
             },
+            datacite: {
+              type: 'object',
+              title: t('configPage.Datacite'),
+              properties: {
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.datacitePassword'),
+                },
+                doiPrefix: {
+                  type: ['string', 'null'],
+                  description: t('configPage.dataciteDoiPrefix'),
+                },
+                useSandbox: {
+                  type: 'boolean',
+                  title: t('configPage.dataciteUseSandbox'),
+                  default: false,
+                },
+                publishedArticleLocationPrefix: {
+                  type: ['string', 'null'],
+                  description: t(
+                    'configPage.publishedArticleLocationPrefixDatacite',
+                  ),
+                },
+              },
+            },
             // doaj: {
             //   type: 'object',
             //   title: t('configPage.DOAJ'),
@@ -3925,6 +4057,12 @@ export const generateSchemas = (
           classNames: 'col-md-12 col-md-offset-0',
         },
         crossref: {
+          classNames: 'col-md-12 col-md-offset-0',
+          password: {
+            'ui:widget': 'password',
+          },
+        },
+        datacite: {
           classNames: 'col-md-12 col-md-offset-0',
           password: {
             'ui:widget': 'password',

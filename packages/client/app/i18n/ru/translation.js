@@ -311,6 +311,7 @@ const ru = {
         },
       },
       'Add another person': 'Добавить',
+      'Add another doi': 'Добавить',
       'Delete this author': 'Удалить',
     },
     editorSection: {
@@ -518,6 +519,7 @@ const ru = {
         'Изменить порядок полей форм "Подача/Решение", публикуемых в гипотезе',
       Crossref: 'Crossref',
       journalAbbreviatedName: 'Сокращенное название',
+      rorUrl: 'URL Реестра исследовательских организаций (ROR)',
       journalHomepage: 'Домашняя страница',
       crossrefLogin: 'Имя пользователя Crossref',
       crossrefPassword: 'Пароль Crossref',
@@ -529,6 +531,14 @@ const ru = {
       crossrefPublishedArticleLocationPrefix:
         'Размещение опубликованной статьи в Crossref',
       crossrefUseSandbox: 'Опубликовать в Crossref sandbox',
+      Datacite: 'Datacite',
+      dataciteLogin: 'Имя пользователя Datacite',
+      datacitePassword: 'Пароль Datacite',
+      dataciteUseSandbox: 'Опубликовать в Datacite sandbox',
+      dataciteDoiPrefix: 'Префикс DOI в Datacite',
+      publishedArticleLocationPrefixDatacite:
+        'Размещение опубликованной статьи в Datacite',
+      publisher: 'Издатель',
       doajDoiPrefix: 'Префикс DOI в DOAJ',
       doajPublishedArticleLocationPrefix:
         'Размещение опубликованной статьи в DOAJ',
@@ -1136,6 +1146,7 @@ const ru = {
         visualAbstract: 'Одиночное изображение вложения',
         attachments: 'Вложения',
         doi: 'DOI',
+        dois: 'Несколько DOI',
         doiSuffix: 'Суффикс DOI',
         sourceUri: 'URI источника рукописи',
         customStatus: 'Пользовательский статус',
@@ -1161,6 +1172,7 @@ const ru = {
         SupplementaryFiles: 'Вложения',
         VisualAbstract: 'Одиночное изображение',
         AuthorsInput: 'Список участников',
+        DoisInput: 'Список DOI',
         LinksInput: 'Список ссылок (URI)',
         AbstractEditor: 'Форматированный текст',
         TextField: 'Текст',

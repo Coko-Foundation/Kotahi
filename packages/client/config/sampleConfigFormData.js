@@ -56,6 +56,14 @@ module.exports = {
       publishedArticleLocationPrefix: 'test',
       useSandbox: false,
     },
+    datacite: {
+      login: 'test',
+      password: 'test',
+      doiPrefix: '10.12345',
+      useSandbox: false,
+      publicationType: 'article',
+      publishedArticleLocationPrefix: 'test',
+    },
     doaj: {
       login: 'test',
       password: 'test',
@@ -102,6 +110,7 @@ module.exports = {
     title: '',
     journalName: 'test',
     journalAbbreviatedName: 'test',
+    rorUrl: 'https://ror.org/',
     description: '',
     issn: '',
     electronicIssn: '',

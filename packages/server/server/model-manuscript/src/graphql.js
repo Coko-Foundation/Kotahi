@@ -44,6 +44,8 @@ const {
   doiExists,
 } = require('../../publishing/crossref')
 
+const { publishToDatacite } = require('../../publishing/datacite')
+
 const { publishToDOAJ } = require('../../publishing/doaj')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
@@ -1400,6 +1402,32 @@ const resolvers = {
             succeeded = true
           } catch (e) {
             console.error('error publishing to crossref')
+            console.error(e)
+            errorMessage = e.message
+          }
+        }
+
+        steps.push({
+          stepLabel,
+          succeeded,
+          errorMessage,
+        })
+      }
+
+      if (activeConfig.formData.publishing.datacite?.login) {
+        const stepLabel = 'Datacite'
+        let succeeded = false
+        let errorMessage
+
+        if (
+          containsElifeStyleEvaluations ||
+          manuscript.status !== 'evaluated'
+        ) {
+          try {
+            await publishToDatacite(manuscript)
+            succeeded = true
+          } catch (e) {
+            console.error('error publishing to datacite')
             console.error(e)
             errorMessage = e.message
           }

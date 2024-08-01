@@ -14,6 +14,12 @@ const hideSensitiveInformation = async configData => {
       config.formData.publishing.crossref.password,
     )
 
+  // Publishing - Datacite password
+  if (config.formData.publishing.datacite?.password)
+    config.formData.publishing.datacite.password = redact(
+      config.formData.publishing.datacite.password,
+    )
+
   // Notifications - Gmail password
   if (config.formData.notification.gmailAuthPassword)
     config.formData.notification.gmailAuthPassword = redact(
@@ -38,6 +44,17 @@ const revertHiddenSensitiveInformation = async (
     if (passwordIsHidden)
       formData.publishing.crossref.password =
         existingConfig.formData.publishing.crossref.password
+  }
+
+  // Publishing - Datacite password
+  if (formData.publishing.datacite.password) {
+    const passwordIsHidden =
+      redact(existingConfig.formData.publishing.datacite?.password) ===
+      formData.publishing.datacite.password
+
+    if (passwordIsHidden)
+      formData.publishing.datacite.password =
+        existingConfig.formData.publishing.datacite?.password
   }
 
   // Notifications - Gmail password
@@ -68,6 +85,8 @@ const stripSensitiveInformation = async configData => {
   delete config.formData.publishing?.crossref.registrant
   delete config.formData.publishing?.crossref.publicationType
   delete config.formData.publishing?.crossref.publishedArticleLocationPrefix
+  delete config.formData.publishing.datacite?.login
+  delete config.formData.publishing.datacite?.password
   delete config.formData.publishing?.hypothesis.group
   delete config.formData.publishing?.hypothesis.apiKey
   delete config.formData.publishing?.webhook

@@ -304,6 +304,7 @@ const en = {
         },
       },
       'Add another person': 'Add another person',
+      'Add another doi': 'Add another DOI',
       'Delete this author': 'Delete this author',
     },
     editorSection: {
@@ -399,6 +400,12 @@ const en = {
       affiliation: {
         label: 'Affiliation',
         placeholder: 'Enter affiliation...',
+      },
+    },
+    doisInput: {
+      doi: {
+        label: 'Doi',
+        placeholder: 'Enter doi...',
       },
     },
     dragndrop: {
@@ -505,6 +512,7 @@ const en = {
       reverseFieldOrder:
         'Reverse the order of Submission/Decision form fields published to Hypothesis',
       Crossref: 'Crossref',
+      rorUrl: 'Research Organization Registry (ROR) URL',
       journalAbbreviatedName: 'Abbreviated name',
       journalHomepage: 'Home page',
       crossrefLogin: 'Crossref username',
@@ -521,6 +529,14 @@ const en = {
       doajPublishedArticleLocationPrefix: 'DOAJ published article location',
       doajUseSandbox: 'Publish to DOAJ sandbox',
       licenseUrl: 'Publication license URL',
+      Datacite: 'Datacite',
+      dataciteLogin: 'Datacite username',
+      datacitePassword: 'Datacite password',
+      dataciteUseSandbox: 'Publish to Datacite sandbox',
+      dataciteDoiPrefix: 'Datacite DOI prefix',
+      publishedArticleLocationPrefixDatacite:
+        'Datacite published article location',
+      publisher: 'Publisher',
       DOAJ: 'DOAJ',
       doajLogin: 'DOAJ username',
       doajPassword: 'DOAJ password',
@@ -1115,6 +1131,7 @@ const en = {
         visualAbstract: 'Single image attachment',
         attachments: 'Attachments',
         doi: 'DOI',
+        dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',
         sourceUri: 'Manuscript source URI',
         customStatus: 'Custom status',
@@ -1140,6 +1157,7 @@ const en = {
         SupplementaryFiles: 'Attachments',
         VisualAbstract: 'Single image attachment',
         AuthorsInput: 'List of contributors',
+        DoisInput: 'List of dois',
         LinksInput: 'List of links (URIs)',
         AbstractEditor: 'Rich text',
         TextField: 'Text',
