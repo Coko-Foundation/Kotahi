@@ -68,8 +68,9 @@ const DoisInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
       {cleanedVal.map((doi, index) => (
         <DoiContainer key={doi.id}>
           <Doi>
-            {localizedFields.map(f => {
-              const invalidity = f.validate && f.validate(doi[f.name])
+            {localizedFields.map((f, i) => {
+              const invalidity =
+                fields[i].validate && fields[i].validate(doi[f.name])
 
               return (
                 <div key={f.name}>
@@ -83,7 +84,9 @@ const DoisInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
                     placeholder={f.placeholder}
                     value={doi[f.name]}
                   />
-                  {invalidity && <InvalidLabel>{invalidity}</InvalidLabel>}
+                  {invalidity && (
+                    <InvalidLabel>{t('decisionPage.invalidDoi')}</InvalidLabel>
+                  )}
                 </div>
               )
             })}

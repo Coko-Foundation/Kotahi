@@ -144,12 +144,15 @@ const calculateDataciteCitations = text => {
 }
 
 const getRelatedDois = dois => {
+  const doiUrl = 'https://doi.org/'
   return dois
     .filter(({ doi }) => doi !== '')
     .map(({ doi }) => ({
       relatedIdentifierType: 'DOI',
       relationType: 'HasPart',
-      relatedIdentifier: doi,
+      relatedIdentifier: doi.startsWith(doiUrl)
+        ? doi.substring(doiUrl.length)
+        : doi,
     }))
 }
 
@@ -234,7 +237,7 @@ const publishArticleToDatacite = async manuscript => {
     : []
 
   const types = {
-    resourceTypeGeneral: 'other', // manuscript.submission.resourcetype,
+    resourceTypeGeneral: manuscript.submission.resourcetype,
     resourceType: manuscript.submission.ifother,
   }
 

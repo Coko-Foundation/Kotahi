@@ -313,6 +313,7 @@ const ru = {
       'Add another person': 'Добавить',
       'Add another doi': 'Добавить',
       'Delete this author': 'Удалить',
+      invalidDoi: 'DOI недействителен',
     },
     editorSection: {
       noFileLoaded: 'Файл рукописи не загружен',
