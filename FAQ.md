@@ -217,7 +217,6 @@ Datacite offers a paid service for indexing articles and registering DOIs. Kotah
 
 | Field type | Internal field name | Purpose |
 | ---------- | ------------------| --------------------------------------------------------------------------------------------|
-
 | *Title | submission.$title | Article title |
 | *Creators | submission.$authors | Ordered list of authors |
 | Abstract | submission.$abstract | Article abstract |
@@ -234,10 +233,16 @@ Datacite offers a paid service for indexing articles and registering DOIs. Kotah
 | *DOI     | submission.$dois | Multiple related DOIs (see 'retrieve citation styles from Datacite') |
 
 Variables mapped to the Configuration>General page:
+
+| Field type | Internal field name | Purpose |
+| ---------- | ------------------| --------------------------------------------------------------------------------------------|
 | *Journal Name | config.groupIdentity.title | Journal Name |
 | ROR | config.groupIdentity.rorUrl | Research Organization Registry (ROR) url |
 
 Variables mapped to the Configuration>Integration and Publishing Endpoints page:
+
+| Field type | Internal field name | Purpose |
+| ---------- | ------------------| --------------------------------------------------------------------------------------------|
 | *Username | config.formData.publishing.datacite.login | Datacite account username |
 | *Password | config.formData.publishing.datacite.password | Datacite account password |
 | Publish to sandbox | config.formData.publishing.datacite.useSandbox | Enable publishing to sandbox for testing purposes |
