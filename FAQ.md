@@ -211,6 +211,43 @@ And the following form fields are required:
 | (As above) | `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                                                          | (Optional) Fields for a summary of the reviews.          |
 | Title      | `submission.$title`                                                                                                                                                                                              | Title of the article under review, possibly abbreviated. |
 
+### Registering article DOIs with Datacite
+
+Datacite offers a paid service for indexing articles and registering DOIs. Kotahi can be configured to register articles with new DOIs upon publication. The following environment variables are needed:
+
+| Field type | Internal field name | Purpose |
+| ---------- | ------------------| --------------------------------------------------------------------------------------------|
+
+|*Title | submission.$title | Article title
+|*Creators | submission.$authors | Ordered list of authors
+|Abstract | submission.$abstract | Article abstract
+|*Resource Type | submission.resourcetype | Datacite Resource type
+|TypeValue | submission.ifother | Datacite Type Value
+|rightsUri | submission.localcontext | Rights URI
+|rightsIdentifier | submission.lcbadges | Rights Badges
+|geoLocations | submission.geolocation | Geolocation 
+|funderName | submission.Funding | Funder Name
+|funderIdentifierType | submission.funderIdentifierType | Funder Identifier Type
+|awardNumber | submission.awardnumber | Award Number
+|awardTitle | submission.awardtitle   Award Title
+|awardUri | submission.awarduri | Award URI
+|*DOI     | submission.$dois | Multiple related DOIs (see 'retrieve citation styles from Datacite')
+
+Variables mapped to the Configuration>General page:
+|*Journal Name | config.groupIdentity.title | Journal Name
+| ROR | config.groupIdentity.rorUrl | Research Organization Registry (ROR) url
+
+Variables mapped to the Configuration>Integration and Publishing Endpoints page:
+|*Username | config.formData.publishing.datacite.login | Datacite account username
+|*Password | config.formData.publishing.datacite.password | Datacite account password
+|Publish to sandbox | config.formData.publishing.datacite.useSandbox | Enable publishing to sandbox for testing purposes
+|*DOI Prefix | config.formData.publishing.datacite.doiPrefix | Datacite account prefix
+
+*Indicates a minimum required metadata fields to register an article DOI with Datacite. 
+
+### Retrieve citations styles from Datacite; 
+If Configuration>Production>'Search and retrieve citation results from Datacite' setting is enabled then highlighting (annotating) text and applying the 'Reference' parser will display a Datacite result. These result can be mapped to `submission.$dois` and markup the `HasPart` relationship to `relatedIdentifiers`. 
+
 ### Hypothesis
 
 [Hypothesis](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles or other data to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing most form data as Hypothesis annotations.
