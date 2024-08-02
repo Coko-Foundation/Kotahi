@@ -228,7 +228,7 @@ Datacite offers a paid service for indexing articles and registering DOIs. Kotah
 | funderName | submission.Funding | Funder Name |
 | funderIdentifierType | submission.funderIdentifierType | Funder Identifier Type |
 | awardNumber | submission.awardnumber | Award Number |
-| awardTitle | submission.awardtitle   Award Title |
+| awardTitle | submission.awardtitle | Award Title |
 | awardUri | submission.awarduri | Award URI | 
 | *DOI     | submission.$dois | Multiple related DOIs (see 'retrieve citation styles from Datacite') |
 
