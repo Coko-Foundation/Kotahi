@@ -218,30 +218,30 @@ Datacite offers a paid service for indexing articles and registering DOIs. Kotah
 | Field type | Internal field name | Purpose |
 | ---------- | ------------------| --------------------------------------------------------------------------------------------|
 
-|*Title | submission.$title | Article title |
-|*Creators | submission.$authors | Ordered list of authors |
-|Abstract | submission.$abstract | Article abstract |
-|*Resource Type | submission.resourcetype | Datacite Resource type |
-|TypeValue | submission.ifother | Datacite Type Value |
-|rightsUri | submission.localcontext | Rights URI |
-|rightsIdentifier | submission.lcbadges | Rights Badges |
-|geoLocations | submission.geolocation | Geolocation |
-|funderName | submission.Funding | Funder Name |
-|funderIdentifierType | submission.funderIdentifierType | Funder Identifier Type |
-|awardNumber | submission.awardnumber | Award Number |
-|awardTitle | submission.awardtitle   Award Title |
-|awardUri | submission.awarduri | Award URI | 
-|*DOI     | submission.$dois | Multiple related DOIs (see 'retrieve citation styles from Datacite') |
+| *Title | submission.$title | Article title |
+| *Creators | submission.$authors | Ordered list of authors |
+| Abstract | submission.$abstract | Article abstract |
+| *Resource Type | submission.resourcetype | Datacite Resource type |
+| TypeValue | submission.ifother | Datacite Type Value |
+| rightsUri | submission.localcontext | Rights URI |
+| rightsIdentifier | submission.lcbadges | Rights Badges |
+| geoLocations | submission.geolocation | Geolocation |
+| funderName | submission.Funding | Funder Name |
+| funderIdentifierType | submission.funderIdentifierType | Funder Identifier Type |
+| awardNumber | submission.awardnumber | Award Number |
+| awardTitle | submission.awardtitle   Award Title |
+| awardUri | submission.awarduri | Award URI | 
+| *DOI     | submission.$dois | Multiple related DOIs (see 'retrieve citation styles from Datacite') |
 
 Variables mapped to the Configuration>General page:
-|*Journal Name | config.groupIdentity.title | Journal Name |
+| *Journal Name | config.groupIdentity.title | Journal Name |
 | ROR | config.groupIdentity.rorUrl | Research Organization Registry (ROR) url |
 
 Variables mapped to the Configuration>Integration and Publishing Endpoints page:
-|*Username | config.formData.publishing.datacite.login | Datacite account username |
-|*Password | config.formData.publishing.datacite.password | Datacite account password |
-|Publish to sandbox | config.formData.publishing.datacite.useSandbox | Enable publishing to sandbox for testing purposes |
-|*DOI Prefix | config.formData.publishing.datacite.doiPrefix | Datacite account prefix |
+| *Username | config.formData.publishing.datacite.login | Datacite account username |
+| *Password | config.formData.publishing.datacite.password | Datacite account password |
+| Publish to sandbox | config.formData.publishing.datacite.useSandbox | Enable publishing to sandbox for testing purposes |
+| *DOI Prefix | config.formData.publishing.datacite.doiPrefix | Datacite account prefix |
 
 *Indicates a minimum required metadata fields to register an article DOI with Datacite. 
 
