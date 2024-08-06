@@ -278,7 +278,19 @@ const CitationComponent = ({ node, getPos }) => {
             true,
           )
         } else {
+          setInternalNeedsValidation(false)
           setInternalNeedsReview(true)
+          setContent(
+            {
+              needsValidation: false,
+              needsReview: true,
+              valid: false,
+              originalText: formattedOriginalText,
+              possibleStructures: newStructures,
+            },
+            null,
+            true,
+          )
         }
 
         setLoading(false)
