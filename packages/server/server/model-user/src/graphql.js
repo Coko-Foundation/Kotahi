@@ -1,5 +1,5 @@
 const { logger, fileStorage } = require('@coko/server')
-const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
+const { AuthorizationError, ConflictError } = require('@coko/server/src/errors')
 const { parseISO, addSeconds } = require('date-fns')
 const { chunk } = require('lodash')
 
@@ -58,7 +58,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
 
             // Skips removing reviewer team members with completed reviews
             if (member && (!member.status || member.status !== 'completed')) {
-              member.delete()
+              await TeamMember.query().deleteById(member.id)
             }
           }),
         )
@@ -78,7 +78,7 @@ const setUserMembershipInTeam = async (ctx, userId, team, shouldBeMember) => {
               invitation.userId === userId &&
               invitation.status === 'UNANSWERED'
             ) {
-              invitation.delete()
+              await Invitation.query().deleteById(invitation.id)
             } else if (invitation.senderId === userId) {
               // TODO: Fix database validation error sender_id is set not null 1647493905-invitations.sql
               // await Invitation.query(
@@ -326,7 +326,7 @@ const resolvers = {
     async setGlobalRole(_, { userId, role, shouldEnable }, ctx) {
       const team = await Team.query().findOne({ role, global: true })
       await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
-      const user = await User.find(userId)
+      const user = await User.findById(userId)
       await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
@@ -340,7 +340,7 @@ const resolvers = {
       })
 
       await setUserMembershipInTeam(ctx, userId, team, shouldEnable)
-      const user = await User.find(userId)
+      const user = await User.findById(userId)
       await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
       return user
@@ -354,7 +354,7 @@ const resolvers = {
       let user
 
       try {
-        user = await User.findByUsername(input.username)
+        user = await User.query.findOne({ username: input.username })
         isValid = await user.validPassword(input.password)
       } catch (err) {
         logger.debug(err)
@@ -370,19 +370,13 @@ const resolvers = {
       }
     },
     async updateUsername(_, { id, username }, ctx) {
-      const user = await User.find(id)
-      user.username = username
-      await user.save()
-      return user
+      return User.query().patchAndFetchById(id, { username })
     },
     async updateLanguage(_, { id, preferredLanguage }, ctx) {
-      const user = await User.find(id)
-      user.preferredLanguage = preferredLanguage
-      await user.save()
-      return user
+      return User.query().patchAndFetchById(id, { preferredLanguage })
     },
     async updateEmail(_, { id, email }, ctx) {
-      const user = await User.find(id)
+      const user = await User.findById(id)
 
       if (user.email === email) {
         return { success: true }

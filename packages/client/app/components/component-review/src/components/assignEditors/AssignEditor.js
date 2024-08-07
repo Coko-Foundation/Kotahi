@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
+
 import { Select } from '../../../../shared'
+import { transformTeamsToLegacy } from '../../../../utils'
 
 const editorOption = user => ({
   label: user.username || user.email,
@@ -40,7 +42,8 @@ const AssignEditor = ({
     setSelectedEditor(members.length > 0 ? members[0].user.id : undefined)
   }, [members])
 
-  const teamName = teamLabels[teamRole].name
+  const teamLabelsTransformed = transformTeamsToLegacy(teamLabels)
+  const teamName = teamLabelsTransformed[teamRole].name
 
   const teamNameLoc = t(`common.teams.${teamName}`)
 

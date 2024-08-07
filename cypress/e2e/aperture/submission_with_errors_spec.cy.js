@@ -9,8 +9,8 @@ import { FormsPage } from '../../page-object/forms-page'
 describe('Submission with errors test', () => {
   describe('Form builder', () => {
     it('views a form field', () => {
-      // task to restore the database as per the  dumps/commons/bootstrap.sql
-      cy.task('restore', 'commons/bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.bootstrap`)
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -30,7 +30,7 @@ describe('Submission with errors test', () => {
       )
       FormsPage.clickFormOption(1)
       FormsPage.getFieldValidate().scrollIntoView().click()
-      cy.get('[class*="MenuList"] > div').eq(0).click()
+      cy.get('[class*="react-select__option"]').eq(0).click()
       cy.contains('Save').click()
     })
 

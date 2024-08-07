@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { X } from 'react-feather'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { RoundIconButton } from '../../shared'
 import { color } from '../../../theme'

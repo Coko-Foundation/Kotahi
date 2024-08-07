@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import MinimalButton from './MinimalButton'
 import { MediumRow, MediumRowSpaced } from './Containers'
 

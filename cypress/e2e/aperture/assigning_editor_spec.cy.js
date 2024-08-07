@@ -8,8 +8,11 @@ import { dashboard } from '../../support/routes'
 
 describe('Assigning senior editor', () => {
   it('admin can give decision', () => {
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'submission_complete') // task to restore the database as per the  dumps/submission_complete.sql
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/submission_complete`)
 
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {

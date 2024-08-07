@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { SolidColumn, TightRow } from './Containers'
 import { color } from '../../theme'
 

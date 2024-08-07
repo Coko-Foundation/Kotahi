@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { ValidatedFieldFormik } from '@pubsweet/ui'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+
+import { ValidatedFieldFormik } from '../../../pubsweet'
 import PageOrder from './PageOrder'
 import {
   CompactSection,

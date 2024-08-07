@@ -6,8 +6,8 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
 
     // login as admin
     cy.fixture('role_names').then(name => {
@@ -29,7 +29,8 @@ describe('manuscripts page tests', () => {
         .should('be.visible')
     }
 
-    SubmissionFormPage.fillInCover('word count test')
+    cy.getByClass('ProseMirror').eq(0).type('word count test{selectAll}')
+
     SubmissionFormPage.getWordCountInfo()
       .eq(0)
       .should('contain', '3')

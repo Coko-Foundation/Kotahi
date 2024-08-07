@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { Action } from '@pubsweet/ui'
+import { Action } from '../../../../pubsweet'
 import { LooseColumn } from '../../../../shared'
 import { ConfirmationModal } from '../../../../component-modal/src/ConfirmationModal'
 import UploadComponent from '../../../../component-production/src/components/uploadManager/UploadComponent'

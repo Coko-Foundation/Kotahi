@@ -11,8 +11,8 @@ const bioRxivArticleUrl =
 // eslint-disable-next-line jest/no-disabled-tests
 describe.skip('Update the submission form field', () => {
   it('update submission form field for publishing to hypothesis group', () => {
-    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-    cy.task('restore', 'commons/elife_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

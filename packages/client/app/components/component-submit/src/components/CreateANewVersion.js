@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 // // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 // import Review from '../../../component-review/src/components/decision/DecisionReview'
 // import { UserAvatar } from '../../../../components/component-avatar/src'
-import { Button } from '@pubsweet/ui'
 import { gql } from '@apollo/client'
 
 import { Trans, useTranslation } from 'react-i18next'
+import { Button } from '../../../pubsweet'
 import {
   SectionHeader,
   SectionRow,

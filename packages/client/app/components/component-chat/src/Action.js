@@ -14,7 +14,7 @@
 
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { color } from '../../../theme'
 
 const common = css`

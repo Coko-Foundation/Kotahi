@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import PartnerListItem from './PartnerListItem'
 
 const Files = styled.div`

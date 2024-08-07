@@ -2,7 +2,7 @@
 import React, { useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { debounce } from 'lodash'
-import { rotate360 } from '@pubsweet/ui-toolkit'
+import { rotate360 } from '@coko/client'
 import PropTypes from 'prop-types'
 // import { gql, useLazyQuery } from '@apollo/client'
 import { autoResize, callOn } from './utils'

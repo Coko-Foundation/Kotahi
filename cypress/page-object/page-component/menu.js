@@ -56,7 +56,7 @@ export const Menu = {
     return cy.getByDataTestId('menu-Settings')
   },
   clickSettings() {
-    this.getSettingsButton().click()
+    this.getSettingsButton().click({ force: true })
   },
   getManuscriptsButton() {
     return cy.getByDataTestId('menu-Manuscripts')

@@ -31,7 +31,8 @@ const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]:nth(10)'
 
 // Decision + Publishing
 const PUBLISH_BUTTON =
-  '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
+  '.General__SectionAction-sc-1chiust-11 > .Button__StyledButton-sc-qdm33h-0'
+// '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
 const DECISION_FIELD = '[contenteditable="true"]'
 
@@ -51,7 +52,7 @@ const EXPAND_CHAT_BUTTON = '[class*=style__ChatButton]'
 // Multiple Elements
 const SUBMIT_BUTTON = 'decision-action-btn' // Also Matches Notify Button
 
-const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
+const DROPDOWN_OPTION = '[class*=react-select__option]'
 const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
 const METADATA_CELL = 'VersionSwitcher__Title'
 const ERROR_TEXT = 'style__ErrorText-'
@@ -59,8 +60,8 @@ const FORM_STATUS = 'style__FormStatus-'
 const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 
 // Decision Form
-const DECISION_TEXT_INPUT =
-  ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
+const DECISION_TEXT_INPUT = 'comment'
+//  ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
 
 const DECISION_RADIO_BUTTON = '[class*=FormTemplate__SafeRadioGroup]'
 const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
@@ -135,11 +136,8 @@ export const ControlPage = {
   clickAssignEditorDropdown() {
     this.getAssignEditorDropdown().click({ force: true })
   },
-  getDropdownOptionList() {
-    return cy.get(DROPDOWN_OPTION_LIST)
-  },
   selectDropdownOptionByName(name) {
-    this.getDropdownOptionList().contains(name).click()
+    cy.get(DROPDOWN_OPTION).contains(name).click({ force: true })
   },
 
   getMetadataCell() {
@@ -319,7 +317,7 @@ export const ControlPage = {
   },
   // Decision Form
   getDecisionTextInput() {
-    return cy.get(DECISION_TEXT_INPUT)
+    return cy.getByDataTestId(DECISION_TEXT_INPUT)
   },
   clickDecisionTextInput() {
     return this.getDecisionTextInput().click()

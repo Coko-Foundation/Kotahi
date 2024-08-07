@@ -35,6 +35,7 @@ const upload = multer({
 module.exports = app => {
   // eslint-disable-next-line global-require
   const User = require('../../models/user/user.model')
+
   app.post(
     '/api/uploadProfile',
     authBearer,
@@ -65,8 +66,12 @@ module.exports = app => {
 
       evictFromCache(`profilePicFileOfUser:${req.user}`)
 
-      user.profilePicture = await fileStorage.getURL(objectKey)
-      await user.save()
+      const profilePicture = await fileStorage.getURL(objectKey)
+
+      await User.query().patchAndFetchById(user.id, {
+        profilePicture,
+      })
+
       return res.send(user.profilePicture)
     },
   )

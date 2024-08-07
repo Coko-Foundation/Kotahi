@@ -8,9 +8,12 @@ import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
 import theme, { color } from '../../../theme'
-import { emailNotifications } from '../../../../config/journal/tasks.json'
 import { ConfigContext } from '../../config/src'
 import { ifReviewInviteThenAssignRecipientsAsReviewers } from './notificationUtils'
+
+import tasksJson from '../../../../config/journal/tasks.json'
+
+const { emailNotifications } = tasksJson
 
 const TaskTitle = styled.div`
   color: ${color.gray20};

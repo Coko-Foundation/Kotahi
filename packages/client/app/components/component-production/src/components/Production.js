@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@coko/client'
 import { withRouter } from 'react-router-dom'
 import { debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'

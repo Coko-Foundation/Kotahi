@@ -1,17 +1,17 @@
-FROM node:16.19.0-bullseye
+FROM node:18-bookworm-slim
 
-RUN apt-get update && apt-get install -y ranger vim curl nano
+RUN apt-get update
+RUN apt-get install -y make g++ ranger vim curl nano
 
 WORKDIR /home/node/app
-RUN mkdir ./uploads
-
-COPY package.json .
-COPY yarn.lock .
 
 RUN chown -R node:node .
 USER node
 
+COPY package.json .
+COPY yarn.lock .
+
 RUN yarn install --frozen-lockfile
 RUN yarn cache clean
 
-COPY --chown=node:node . .
+COPY . .

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { Button } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { v4 as uuid } from 'uuid'
 import { useTranslation } from 'react-i18next'
+import { Button } from '../../../pubsweet'
 import { DeleteControl, TextInput } from '../../../shared'
 import {
   fields,

@@ -1,11 +1,13 @@
 /* eslint-disable no-shadow */
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { Checkbox, Dropdown } from '@pubsweet/ui'
-import { grid } from '@pubsweet/ui-toolkit'
+import { Trans, useTranslation } from 'react-i18next'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Trans, useTranslation } from 'react-i18next'
+
+import { grid } from '@coko/client'
+
+import { Checkbox, Dropdown } from '../../pubsweet'
 import { color } from '../../../theme'
 
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'

@@ -1,7 +1,7 @@
 /* stylelint-disable string-quotes */
 
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 const Meta = styled.div`
   display: flex;

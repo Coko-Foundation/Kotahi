@@ -4,7 +4,7 @@
 import React, { useState } from 'react'
 /* eslint-disable import/no-unresolved */
 import styled from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@coko/client'
 import { v4 as uuid } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import { cloneDeep, pick, isArray } from 'lodash'

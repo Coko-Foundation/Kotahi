@@ -32,8 +32,8 @@ describe('Login page tests', () => {
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
-      // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-      cy.task('restore', 'commons/elife_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -51,8 +51,8 @@ describe('Login page tests', () => {
   })
 
   it('dashboard page should not be visible to the logged in user', () => {
-    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-    cy.task('restore', 'commons/elife_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -64,8 +64,9 @@ describe('Login page tests', () => {
   })
 
   it('reports option should be visible to the admin user', () => {
-    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-    cy.task('restore', 'commons/elife_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
+
     // cy.task('seedForms')
 
     // login as admin

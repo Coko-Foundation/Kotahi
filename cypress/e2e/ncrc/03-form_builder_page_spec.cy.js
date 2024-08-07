@@ -9,9 +9,12 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 describe.skip('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the dumps/initial_state_other.sql
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
+
       // login as admin
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, formBuilder)
@@ -120,9 +123,12 @@ describe.skip('form builder tests', () => {
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
-      // task to restore the database as per the dumps/initial_state_other.sql
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
+
       // login as admin
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)

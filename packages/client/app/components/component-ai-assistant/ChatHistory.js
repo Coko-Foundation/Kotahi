@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { fadeIn } from '@pubsweet/ui-toolkit'
+import { fadeIn } from '@coko/client'
 import { Delete } from 'react-feather'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import { htmlTagNames } from './utils'

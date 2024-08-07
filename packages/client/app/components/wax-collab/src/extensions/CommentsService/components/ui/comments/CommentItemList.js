@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { clone, uniqueId } from 'lodash'
-import { override } from '@pubsweet/ui-toolkit'
+import { override } from '@coko/client'
 
 import CommentItem from './CommentItem'
 

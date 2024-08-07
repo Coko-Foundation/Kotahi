@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Button } from '@pubsweet/ui'
 import { Trans, useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { Button } from '../../../pubsweet'
 import {
   Title,
   SectionHeader,

@@ -49,7 +49,8 @@ const CONFIRMATION_MESSAGE =
 
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 // const CONTROL = '[href*=decision]'
-const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
+const DROPDOWN_OPTION = '[class*=react-select__option]'
+
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
     return cy.get(MANUSCRIPTS_OPTIONS_LIST)
@@ -177,7 +178,7 @@ export const ManuscriptsPage = {
     )
       .scrollIntoView()
       .click()
-    cy.get('[class*="MenuList"]').contains(statusLabel).click()
+    cy.get('[class*="react-select__option"]').contains(statusLabel).click()
   },
   getArticleLabel() {
     return cy.get(ARTICLE_LABEL)
@@ -296,10 +297,10 @@ export const ManuscriptsPage = {
     return cy.get(IMPORT_CONFIRMATION_POPUP, { timeout: 600000 })
   },
   selectDropdownOption(nth) {
-    return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
+    return cy.get(DROPDOWN_OPTION).eq(nth).click()
   },
   selectDropdownOptionWithText(text) {
-    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click({ force: true })
+    return cy.get(DROPDOWN_OPTION).contains(text).click({ force: true })
   },
 }
 export default ManuscriptsPage

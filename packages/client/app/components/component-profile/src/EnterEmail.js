@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { TextField, Button } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import styled from 'styled-components'
+import { TextField, Button } from '../../pubsweet'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};

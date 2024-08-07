@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Dropdown } from '@pubsweet/ui'
 import { useTranslation } from 'react-i18next'
+import { Dropdown } from '../../../pubsweet'
 
 /* eslint-disable import/prefer-default-export */
 export const DownloadDropdown = ({

@@ -32,7 +32,10 @@ Cypress.Commands.add('setToken', token => {
 })
 
 Cypress.Commands.add('login', (name, page) => {
-  cy.task('createToken', name).then(token => {
+  const createTokenUrl = Cypress.config('createTokenUrl')
+
+  cy.request('POST', `${createTokenUrl}/${name}`).then(response => {
+    const { token } = response.body
     cy.setToken(token)
     cy.visit(page)
   })

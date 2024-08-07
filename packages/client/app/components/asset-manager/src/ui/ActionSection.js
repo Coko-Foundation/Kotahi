@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { th, darken, grid } from '@pubsweet/ui-toolkit'
+import { th, darken, grid } from '@coko/client'
 
 import UploadFilesButton from './UploadFilesButton'
 import { Button } from './Modal'

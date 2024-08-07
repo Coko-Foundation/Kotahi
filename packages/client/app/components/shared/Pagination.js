@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactPagination from 'react-paginate'
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { Trans, useTranslation } from 'react-i18next'
 
 const PaginationInfo = styled.div`

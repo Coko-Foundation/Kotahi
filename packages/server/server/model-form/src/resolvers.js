@@ -1,4 +1,4 @@
-const { NotFoundError } = require('@pubsweet/errors')
+const { NotFoundError } = require('@coko/server/src/errors')
 const Form = require('../../../models/form/form.model')
 
 const notFoundError = (property, value, className) =>
@@ -11,7 +11,7 @@ const resolvers = {
       return { query: {} }
     },
     deleteFormElement: async (_, { formId, elementId }) => {
-      const form = await Form.find(formId)
+      const form = await Form.findById(formId)
 
       if (!form) return null
       form.structure.children = form.structure.children.filter(
@@ -48,7 +48,7 @@ const resolvers = {
       return result
     },
     updateFormElement: async (_, { element, formId }) => {
-      const form = await Form.find(formId)
+      const form = await Form.findById(formId)
       if (!form) return null
 
       const indexToReplace = form.structure.children.findIndex(
@@ -64,8 +64,8 @@ const resolvers = {
     },
   },
   Query: {
-    form: async (_, { formId }) => Form.find(formId),
-    forms: async () => Form.all(),
+    form: async (_, { formId }) => Form.findById(formId),
+    forms: async () => Form.query(),
     formsByCategory: async (_, { category, groupId }) =>
       Form.query().where({
         category,

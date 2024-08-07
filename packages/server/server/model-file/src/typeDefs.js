@@ -39,59 +39,29 @@ const typeDefs = `
     reviewId: ID
   }
 
-  input UpdateFileInput {
-    id: ID!
-    name: String
-    alt: String
-  }
-
   input UpdateTagsFileInput {
     id: ID!
     removeTags: [String!]
     addTags: [String!]
   }
 
-  type File {
-    id: ID!
-    name: String!
-    alt: String
-    caption: String
+  extend type File {
     tags: [String]
     objectId: ID
-    storedObjects: [StoredObject!]!
-    uploadStatus: String
     inUse: Boolean
-    updated: DateTime!
-    created: DateTime!
   }
 
   type FileNotInDb {
     name:String!
-    storedObjects:[StoredObject!]!
+    storedObjects:[StoredObjects!]!
   }
 
-  type ImageMetadata {
-    width: Int!
-    height: Int!
-    space: String
-    density: Int
-  }
-
-  type StoredObject {
-    type: ImageSize!
-    key: String!
-    size: Int
-    mimetype: String!
-    extension: String!
-    imageMetadata: ImageMetadata
+  extend type StoredObjects {
     url: String
   }
 
-  enum ImageSize {
-    original
+  extend enum ImageSize {
     full
-    medium
-    small
   }
 
   extend type Subscription {

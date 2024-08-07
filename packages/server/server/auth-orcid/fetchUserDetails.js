@@ -28,8 +28,10 @@ const toDate = date => {
   return new Date(year, month, day)
 }
 
-module.exports = async user => {
-  const identity = await Identity.query().findOne({
+module.exports = async (user, options = {}) => {
+  const { trx } = options
+
+  const identity = await Identity.query(trx).findOne({
     userId: user.id,
     type: 'orcid',
   })

@@ -6,8 +6,9 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page label selection tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, dashboard)

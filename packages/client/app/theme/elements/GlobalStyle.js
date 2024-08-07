@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import color from '../color'
 
 export default createGlobalStyle`

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 export const hexa = (hex, alpha) => {
   const r = parseInt(hex.slice(1, 3), 16)

@@ -1,6 +1,6 @@
 /* stylelint-disable string-quotes */
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { ChevronRight } from 'react-feather'
 import { TextInput, Heading, ActionButton } from '../../shared'
 

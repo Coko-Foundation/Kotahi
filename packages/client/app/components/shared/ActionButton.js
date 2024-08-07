@@ -3,7 +3,7 @@ import styled, { ThemeContext } from 'styled-components'
 import PropTypes from 'prop-types'
 import Color from 'color'
 import { Check, AlertCircle } from 'react-feather'
-import { th, grid, rotate360 } from '@pubsweet/ui-toolkit'
+import { th, grid, rotate360 } from '@coko/client'
 import { color } from '../../theme'
 
 const BaseButton = styled.button`
@@ -125,6 +125,7 @@ const ActionButton = ({
 
   let statusIndicator = null
   if (status === 'pending') statusIndicator = <Spinner fgColor={fgColor} />
+
   if (status === 'success')
     statusIndicator = (
       <IconContainer>
@@ -136,6 +137,7 @@ const ActionButton = ({
         />
       </IconContainer>
     )
+
   if (status === 'failure')
     statusIndicator = (
       <IconContainer>

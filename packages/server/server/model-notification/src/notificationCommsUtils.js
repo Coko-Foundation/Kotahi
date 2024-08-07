@@ -1,4 +1,4 @@
-const config = require('config')
+const { clientUrl } = require('@coko/server')
 
 const sendEmailNotification = require('../../email-notifications')
 
@@ -78,7 +78,7 @@ const sendChatNotification = async ({
   const group = await Group.query().findById(groupId)
 
   // send email notification
-  const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+  const appUrl = `${clientUrl}/${group.name}`
 
   let discussionUrl = appUrl
 
@@ -200,7 +200,7 @@ const notify = async (
       const maxNotificationTime = new Date(time)
       maxNotificationTime.setMinutes(maxNotificationTime.getMinutes() + 30)
 
-      return new NotificationDigest({
+      return NotificationDigest.query().insert({
         time,
         maxNotificationTime,
         pathString: path.join('/'),
@@ -208,7 +208,7 @@ const notify = async (
         context,
         userId,
         groupId,
-      }).save()
+      })
     }
   })
 

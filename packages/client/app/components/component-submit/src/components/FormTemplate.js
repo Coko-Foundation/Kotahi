@@ -6,8 +6,9 @@ import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'isomorphic-dompurify'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
+
 import {
   ColorBadge,
   Section as Container,

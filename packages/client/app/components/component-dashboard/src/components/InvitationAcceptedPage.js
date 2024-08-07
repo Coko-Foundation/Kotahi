@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useTranslation } from 'react-i18next'
 
-import { Spinner } from '@pubsweet/ui/dist/atoms'
+import { Spinner } from '../../../pubsweet'
 import {
   ASSIGN_USER_AS_AUTHOR,
   ASSIGN_USER_AS_REVIEWER,

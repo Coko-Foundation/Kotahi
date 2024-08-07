@@ -1,7 +1,7 @@
 /* stylelint-disable string-quotes, declaration-block-no-redundant-longhand-properties */
 
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import waxDefaultStyles from './layout/waxDefaultStyles'
 import EditorElements from './layout/EditorElements'
 import { color } from '../../../../theme'

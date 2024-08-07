@@ -12,8 +12,9 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('profile page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
     // login and attempt to access the dashboard page
     cy.fixture('role_names').then(name => {
       cy.login(name.role.tester, profile)

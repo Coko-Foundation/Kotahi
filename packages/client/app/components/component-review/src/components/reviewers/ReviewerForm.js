@@ -1,12 +1,12 @@
-import { Button, Checkbox } from '@pubsweet/ui'
-import { grid } from '@pubsweet/ui-toolkit'
-import { TextField } from '@pubsweet/ui/dist/atoms'
+import { grid } from '@coko/client'
 import { Field } from 'formik'
 import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
 import { required } from 'xpub-validators'
 import { useTranslation } from 'react-i18next'
+
+import { Button, Checkbox, TextField } from '../../../../pubsweet'
 import { ActionButton, Select } from '../../../../shared'
 import { EmailErrorMessageWrapper } from '../emailNotifications'
 

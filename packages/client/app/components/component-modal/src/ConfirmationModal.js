@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactModal from 'react-modal'
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { LooseRowCentered } from '../../shared/Containers'
 import ActionButton from '../../shared/ActionButton'

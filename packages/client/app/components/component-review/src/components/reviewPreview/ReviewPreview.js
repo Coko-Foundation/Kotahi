@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import {

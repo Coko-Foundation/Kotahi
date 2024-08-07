@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
-import { Checkbox } from '@pubsweet/ui/dist/atoms'
 import { useTranslation } from 'react-i18next'
+
+import { Checkbox } from '../../pubsweet'
 import YjsContext from '../../provider-yjs/YjsProvider'
 import { convertTimestampToDateString } from '../../../shared/dateUtils'
 import { ensureJsonIsParsed } from '../../../shared/objectUtils'

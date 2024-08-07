@@ -3,10 +3,11 @@
 
 // @flow
 import * as React from 'react'
-import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { Send } from 'react-feather'
+
+import { Button } from '../../../pubsweet'
 import { Icon } from '../../../shared'
 import {
   Form,

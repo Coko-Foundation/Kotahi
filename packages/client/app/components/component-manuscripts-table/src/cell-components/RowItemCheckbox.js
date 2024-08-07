@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Checkbox } from '@pubsweet/ui'
+import { Checkbox } from '../../../pubsweet'
 
 const StyledCheckboxTable = styled(Checkbox)`
   height: 16px;

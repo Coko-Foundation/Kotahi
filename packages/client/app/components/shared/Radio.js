@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th, override } from '@pubsweet/ui-toolkit'
+import { th, override } from '@coko/client'
 
 const Label = styled.span`
   ${props =>

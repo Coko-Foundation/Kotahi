@@ -5,9 +5,11 @@ import { manuscripts } from '../../support/routes'
 
 describe.skip('Dashboard page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

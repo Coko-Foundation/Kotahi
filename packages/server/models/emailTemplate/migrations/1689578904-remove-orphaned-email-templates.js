@@ -14,10 +14,10 @@ exports.up = async knex => {
 
       if (groups.length === 0) {
         const orphanedEmailTemplateRecords = await EmailTemplate.query(trx)
+          .delete()
           .where({
             groupId: null,
           })
-          .delete()
 
         if (orphanedEmailTemplateRecords) {
           logger.info(`Removed orphaned email template records.`)

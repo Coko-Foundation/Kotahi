@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { color } from '../../../../theme'
 import ReadOnlyAuthorFeedback from '../../../component-author-feedback/src/components/ReadOnlyAuthorFeedback'

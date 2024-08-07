@@ -30,8 +30,12 @@ const reviewDataList = [
 
 describe('Completing a review', () => {
   it('accept and do a review', () => {
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'reviewers_invited')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/reviewers_invited`)
+
     cy.fixture('role_names').then(name => {
       // Reviewers
       doReview(name.role.reviewers[0], reviewDataList[0])
@@ -60,7 +64,7 @@ describe('Completing a review', () => {
 })
 
 // login as reviewer, accept and do review, leave comments and submit
-function doReview(name, reviewData) {
+const doReview = (name, reviewData) => {
   cy.login(name, dashboard)
   cy.get('nav').contains('Dashboard').click()
   cy.visit(dashboard)
@@ -89,17 +93,24 @@ function doReview(name, reviewData) {
       if (reviewData.radioButton === 'revise')
         ReviewPage.clickReviseRadioButton()
 
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000)
+
       // Submit the review
       ReviewPage.clickSubmitButton()
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500)
       ReviewPage.clickConfirmSubmitButton()
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500)
 
       // Verify the review got completed
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(2000)
       cy.get('nav').contains('Dashboard').click()
       DashboardPage.getDoReviewButton().should('contain', 'View')
+      cy.get('[type="user"]:nth(1)').click()
+      cy.contains('Logout').click()
     }
   }
 
@@ -107,5 +118,7 @@ function doReview(name, reviewData) {
   if (reviewData.verdict === 'reject') {
     DashboardPage.clickRejectReviewButton()
     DashboardPage.getDoReviewButton().should('not.exist')
+    cy.get('[type="user"]:nth(1)').click()
+    cy.contains('Logout').click()
   }
 }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import _ from 'lodash'
 import * as icons from 'react-feather'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 const IconWrapper = styled.div`
   align-items: center;

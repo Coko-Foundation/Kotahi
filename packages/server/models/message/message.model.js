@@ -6,11 +6,11 @@ class Message extends BaseModel {
   }
 
   static async createMessage({ content, channelId, userId }) {
-    const savedMessage = await new Message({
+    const savedMessage = await Message.query().insert({
       content,
       userId,
       channelId,
-    }).save()
+    })
 
     const message = await Message.query()
       .findById(savedMessage.id)

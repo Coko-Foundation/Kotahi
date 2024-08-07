@@ -1,4 +1,4 @@
-const { v4: uuid } = require('uuid')
+const { uuid } = require('@coko/server')
 
 const PublishedArtifact = require('../../models/publishedArtifact/publishedArtifact.model')
 

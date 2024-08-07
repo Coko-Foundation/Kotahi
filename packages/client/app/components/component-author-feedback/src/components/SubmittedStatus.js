@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { convertTimestampToDateTimeString } from '../../../../shared/dateUtils'
 
 export const VerticalBar = styled.div`

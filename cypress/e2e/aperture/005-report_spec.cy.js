@@ -5,10 +5,11 @@ import { ReportPage } from '../../page-object/reports-page'
 
 describe('Report Spec', () => {
   it('Can log in as admin (and logout)', () => {
-    // task to restore the database as per the  dumps/commons/bootstrap.sql
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'three_reviews_completed')
-    // cy.task('seed', 'decision_completed')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/three_reviews_completed`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

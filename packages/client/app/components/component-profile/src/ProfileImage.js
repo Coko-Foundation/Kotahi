@@ -1,4 +1,4 @@
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import styled from 'styled-components'
 
 export const BigProfileImage = styled.img`

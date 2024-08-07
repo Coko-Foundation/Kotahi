@@ -1,6 +1,7 @@
+const { isEnvVariableTrue } = require('@coko/server/src/utils/env')
 const modelComponents = require('../models/modelComponents')
 
-module.exports = [
+const components = [
   ...modelComponents,
   './server/model-notification/src/',
   './server/model-team/src',
@@ -40,3 +41,16 @@ module.exports = [
   './server/cms-upload',
   './server/model-publishing-collection/src',
 ]
+
+if (
+  process.env !== 'production' &&
+  isEnvVariableTrue(process.env.E2E_TESTING_API)
+) {
+  console.warn(
+    '\n>>>>> IMPORTANT! Using E2E_TESTING_API should never be done on production deployments!\n',
+  )
+
+  components.push('./api/rest/e2e')
+}
+
+module.exports = components

@@ -2,15 +2,10 @@ FROM cypress/browsers:node14.16.0-chrome89-ff86
 
 ARG packagechanged
 ARG node_env
-ARG server_protocol
-ARG server_host
-ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
 ARG use_colab_email
-ARG flax_site_url
-ARG client_yjs_websocket_url
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
@@ -21,8 +16,6 @@ ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
 ENV HOME "/home/simplej"
 ENV USE_COLAB_EMAIL $use_colab_email
-ENV FLAX_SITE_URL $flax_site_url
-ENV CLIENT_YJS_WEBSOCKET_URL $client_yjs_websocket_url
 
 RUN mkdir -p ${HOME}
 WORKDIR ${HOME}

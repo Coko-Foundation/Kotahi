@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@coko/client'
 import i18next from 'i18next'
 import { color } from '../../theme'
 

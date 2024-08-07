@@ -3,6 +3,8 @@
 import * as React from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
 
+import { serverUrl } from '@coko/client'
+
 import { Img, FallbackImg, LoadingImg } from './style'
 
 // type Props = {
@@ -18,8 +20,8 @@ const Image = props => {
 
   const fallbackSrc =
     type === 'user'
-      ? '/profiles/default_avatar.svg'
-      : '/profiles/default_community.svg'
+      ? `${serverUrl}/profiles/default_avatar.svg`
+      : `${serverUrl}/profiles/default_community.svg`
 
   return (
     <VisibilitySensor>

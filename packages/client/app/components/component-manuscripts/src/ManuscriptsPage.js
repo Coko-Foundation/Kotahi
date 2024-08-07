@@ -44,7 +44,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   const [doUpdateManuscript] = useMutation(updateManuscriptMutation)
   const config = useContext(ConfigContext)
   const { urlFrag } = config
-  const chatRoomId = fnv.hash(config.baseUrl).hex()
+  const chatRoomId = fnv.hash(config.clientUrl).hex()
 
   /** Returns an array of column names, e.g.
    *  ['shortId', 'created', 'titleAndAbstract', 'submission.topic', 'status'] */

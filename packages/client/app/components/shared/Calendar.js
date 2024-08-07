@@ -3,7 +3,7 @@
 
 import styled, { css } from 'styled-components'
 import UnstyledCalendar from 'react-calendar'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { color } from '../../theme'
 
 const Calendar = styled(UnstyledCalendar)`

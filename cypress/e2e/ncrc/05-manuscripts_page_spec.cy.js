@@ -8,9 +8,11 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe.skip('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     cy.fixture('role_names').then(name => {
@@ -608,8 +610,12 @@ describe.skip('manuscripts page tests', () => {
   })
   context('select button from Label column', () => {
     beforeEach(() => {
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
+
       // login as admin
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)

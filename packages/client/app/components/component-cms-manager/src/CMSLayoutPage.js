@@ -25,7 +25,7 @@ const CMSLayoutPage = ({ history }) => {
   const config = useContext(ConfigContext)
   const { groupName } = config
 
-  const flaxSiteUrlForGroup = `${process.env.FLAX_SITE_URL}/${groupName}/`
+  const flaxSiteUrlForGroup = `${config.flaxSiteUrl}/${groupName}/`
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {

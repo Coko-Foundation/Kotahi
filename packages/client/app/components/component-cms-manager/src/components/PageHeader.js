@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button } from '@pubsweet/ui'
+
+import { Button } from '../../../pubsweet'
 import SearchControl from '../../../component-manuscripts/src/SearchControl'
 
 import { Heading, HeadingWithAction } from '../../../shared'

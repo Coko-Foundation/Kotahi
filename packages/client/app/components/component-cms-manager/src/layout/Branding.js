@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { required } from 'xpub-validators'
-import { ValidatedFieldFormik } from '@pubsweet/ui'
 import { useTranslation } from 'react-i18next'
+
+import { ValidatedFieldFormik } from '../../../pubsweet'
 import { CompactSection, LayoutMainHeading } from '../style'
 
 import { inputComponents } from '../FormSettings'

@@ -1,10 +1,11 @@
 const axios = require('axios')
 const config = require('config')
 
+const { serverUrl } = require('@coko/server')
+
 const Group = require('../../models/group/group.model')
 const Review = require('../../models/review/review.model')
 
-const { protocol, publicHost, port } = config['pubsweet-client']
 const flaxConfig = config['flax-site']
 
 const isReviewDoi = () => {
@@ -36,7 +37,6 @@ const getRequestData = async (notification, manuscript) => {
   const { payload, groupId } = notification
   const group = await Group.query().findById(groupId).first()
   const reviewer = await getReviewer(manuscript)
-  const currentApiUrl = `${protocol}//${publicHost}${port ? `:${port}` : ''}`
   const flaxReviewUrl = await getFlaxUrl(group.name, manuscript.shortId)
 
   const defaultPayload = {
@@ -48,8 +48,8 @@ const getRequestData = async (notification, manuscript) => {
     updated: new Date(),
     type: ['Announce', 'coar-notify:ReviewAction'],
     origin: {
-      id: currentApiUrl,
-      inbox: `${currentApiUrl}/api/coar/inbox/${group.name}`,
+      id: serverUrl,
+      inbox: `${serverUrl}/api/coar/inbox/${group.name}`,
       type: 'Service',
     },
     target: {

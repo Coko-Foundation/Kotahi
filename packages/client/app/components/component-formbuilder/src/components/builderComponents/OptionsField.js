@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FieldArray } from 'formik'
-import { TextField, ValidatedFieldFormik, Button } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { TextField, ValidatedFieldFormik, Button } from '../../../../pubsweet'
 import { DeleteControl } from '../../../../shared'
 
 const Inline = styled.div`

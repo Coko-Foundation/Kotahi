@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import { Calendar as CalendarIcon } from 'react-feather'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import Calendar from './Calendar'
 import MinimalButton from './MinimalButton'
 

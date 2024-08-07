@@ -3,7 +3,7 @@
 /* stylelint-disable string-quotes, custom-property-pattern */
 
 import { css } from 'styled-components'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@coko/client'
 import lightenBy from '../../../../shared/lightenBy'
 import { color } from '../../../../theme'
 

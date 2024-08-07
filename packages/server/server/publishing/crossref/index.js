@@ -3,11 +3,13 @@ const fsPromised = require('fs').promises
 const fs = require('fs')
 const xml2js = require('xml2js')
 const axios = require('axios')
-// const path = require('path')
 const config = require('config')
-const { v4: uuid } = require('uuid')
-const models = require('@pubsweet/models')
+
+const { uuid } = require('@coko/server')
+
 const fetchUserDetails = require('../../auth-orcid/fetchUserDetails')
+
+const User = require('../../../models/user/user.model')
 
 const {
   getEditorIdsForManuscript,
@@ -448,7 +450,7 @@ const publishArticleToCrossref = async manuscript => {
 }
 
 const populateUserInfo = async userIds => {
-  const systemUsers = await models.User.query().findByIds(userIds)
+  const systemUsers = await User.query().findByIds(userIds)
   return Promise.all(systemUsers?.map(async user => fetchUserDetails(user)))
 }
 

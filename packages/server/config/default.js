@@ -1,33 +1,66 @@
 const path = require('path')
-const logger = require('winston')
-const { deferConfig } = require('config/defer')
 
 const permissions = require('./permissions')
 const components = require('./components')
 const journal = require('./journal')
 
+// console.log('helloooooooo')
+
+// Object.keys(process.env)
+//   .filter(k =>
+//     [
+//       'POSTGRES_PORT',
+//       'POSTGRES_HOST',
+//       'POSTGRES_DB',
+//       'POSTGRES_USER',
+//       'POSTGRES_PASSWORD',
+//     ].includes(k),
+//   )
+//   .map(i => {
+//     console.log(`${k}: ${process.env[k]}`)
+//   })
+
 module.exports = {
   teams: {
-    seniorEditor: {
-      name: 'Senior Editor',
+    global: {
+      admin: {
+        displayName: 'Admin',
+        role: 'admin',
+      },
+      groupManager: {
+        displayName: 'Group Manager',
+        role: 'groupManager',
+      },
     },
-    handlingEditor: {
-      name: 'Handling Editor',
-    },
-    editor: {
-      name: 'Editor',
-    },
-    managingEditor: {
-      name: 'Managing Editor',
-    },
-    reviewer: {
-      name: 'Reviewer',
-    },
-    collaborativeReviewer: {
-      name: 'Collaborative Reviewer',
-    },
-    author: {
-      name: 'Author',
+    nonGlobal: {
+      seniorEditor: {
+        displayName: 'Senior Editor',
+        role: 'seniorEditor',
+      },
+      handlingEditor: {
+        displayName: 'Handling Editor',
+        role: 'handlingEditor',
+      },
+      editor: {
+        displayName: 'Editor',
+        role: 'editor',
+      },
+      managingEditor: {
+        displayName: 'Managing Editor',
+        role: 'managingEditor',
+      },
+      reviewer: {
+        displayName: 'Reviewer',
+        role: 'reviewer',
+      },
+      author: {
+        displayName: 'Author',
+        role: 'author',
+      },
+      collaborativeReviewer: {
+        displayName: 'Collaborative Reviewer',
+        role: 'collaborativeReviewer',
+      },
     },
   },
   authsome: {
@@ -81,45 +114,9 @@ module.exports = {
       createRetryIntervalMillis: 100,
       propagateCreateError: false,
     },
-    logger,
     uploads: 'uploads',
-    baseUrl: deferConfig(cfg => {
-      const { protocol, host, port } = cfg['pubsweet-server']
-      return `${protocol}://${host}${port ? `:${port}` : ''}`
-    }),
     wsYjsServerPort: '5010',
   },
-  'pubsweet-client': {
-    API_ENDPOINT: '/api',
-    theme: process.env.PUBSWEET_THEME,
-    baseUrl: deferConfig(cfg => {
-      const { publicProtocol, protocol, publicHost, host, publicPort, port } =
-        cfg['pubsweet-client']
-
-      const protocolToUse = publicProtocol || protocol
-      let hostToUse = publicHost || host || '127.0.0.1'
-      if (hostToUse === '0.0.0.0') hostToUse = '127.0.0.1'
-      const portToUse = publicPort || port
-      return `${protocolToUse}://${hostToUse}${
-        portToUse ? `:${portToUse}` : ''
-      }`
-    }),
-  },
-  // 'pubsweet-component-xpub-dashboard': {
-  //   acceptUploadFiles: [
-  //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  //     'application/x-latex',
-  //     'text/vnd.latex-z',
-  //     'text/plain',
-  //     'text/x-tex',
-  //     'application/x-tex',
-  //     'application/x-dvi',
-  //     'application/pdf',
-  //     'application/epub+zip',
-  //     'application/zip',
-  //     '.tex',
-  //   ],
-  // },
   pagedjs: {
     clientId: '',
     clientSecret: '',
@@ -139,23 +136,6 @@ module.exports = {
     host: '',
     port: '',
   },
-  /** These named configuration sections will be available to webpack */
-  publicKeys: [
-    'pubsweet-client',
-    'pubsweet-component-xpub-dashboard',
-    'pubsweet-component-xpub-formbuilder',
-    'pubsweet',
-    'detectionMethodCorrelations',
-    'journal',
-    'teams',
-    'client-features',
-    'crossref',
-    'hypothesis',
-    'review',
-    'notification-email',
-    'pagedjs',
-    'manuscripts',
-  ],
   crossref: {
     login: '',
     password: '',

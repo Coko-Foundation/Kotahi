@@ -3,6 +3,8 @@ const config = require('config')
 // eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
 
+const { clientUrl } = require('@coko/server')
+
 const Config = require('../../models/config/config.model')
 const Group = require('../../models/group/group.model')
 
@@ -41,7 +43,7 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     data,
   )
 
-  const appUrl = `${config['pubsweet-client'].baseUrl}/${group.name}`
+  const appUrl = `${clientUrl}/${group.name}`
 
   // Modify the email template using Handlebars
   mailOptions.html = await renderTemplate(template.emailContent.body, {
@@ -58,19 +60,16 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
 
   // Override recipient(s) if not running in production.
   // To avoid inadvertently emailing customers during testing/debugging.
-  if (
-    process.env.NODE_ENV !== 'production' ||
-    ['localhost', '0.0.0.0', '127.0.0.1'].includes(
-      config['pubsweet-client'].publicHost,
-    )
-  ) {
+
+  const { hostname } = new URL(clientUrl)
+  const isLocalHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname)
+
+  if (process.env.NODE_ENV !== 'production' || isLocalHost) {
     const description = `email with subject '${mailOptions.subject}' to ${
       mailOptions.to
     }${
       mailOptions.cc && ` (CCing ${mailOptions.cc})`
-    }, because Kotahi is running in ${process.env.NODE_ENV} mode on ${
-      config['pubsweet-client'].publicHost
-    }`
+    }, because Kotahi is running in ${process.env.NODE_ENV} mode on ${hostname}`
 
     const overrideRecipient =
       config['notification-email'].testEmailRecipient || ''

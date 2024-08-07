@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable jest/valid-expect-in-promise */
+/* eslint-disable jest/no-commented-out-tests */
 /* eslint-disable jest/expect-expect */
+
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'

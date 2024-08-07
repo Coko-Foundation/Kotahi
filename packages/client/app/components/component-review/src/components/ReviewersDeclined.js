@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Icon } from '@pubsweet/ui'
 import { useTranslation } from 'react-i18next'
+import { Icon } from '../../../pubsweet'
 import { SectionHeader, SectionRow } from '../../../shared'
 import { UserAction } from '../../../component-manuscripts-table/src/style'
 import DeclinedReviewer from './DeclinedReviewer'

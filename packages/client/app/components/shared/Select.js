@@ -79,15 +79,17 @@ const getValueContainer =
   }
 
 // eslint-disable-next-line import/prefer-default-export
-export const Select = ({
-  value,
-  isMulti,
-  options,
-  customStyles,
-  hasGroupedOptions = false,
-  'data-testid': dataTestid,
-  ...otherProps
-}) => {
+export const Select = props => {
+  const {
+    value,
+    isMulti,
+    options,
+    customStyles,
+    hasGroupedOptions = false,
+    'data-testid': dataTestid,
+    ...otherProps
+  } = props
+
   const th = useContext(ThemeContext)
   let selectedOption = value
   const { t } = useTranslation()
@@ -114,6 +116,7 @@ export const Select = ({
 
   return (
     <ReactSelect
+      classNamePrefix="react-select"
       components={{ ValueContainer: getValueContainer(dataTestid) }}
       isMulti={isMulti}
       options={options}

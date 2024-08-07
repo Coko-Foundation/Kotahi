@@ -5,9 +5,12 @@ import { dashboard } from '../../support/routes'
 
 describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {
-    // task to restore the database as per the  dumps/commons/bootstrap.sql
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'new_user')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/new_user`)
+
     // login as admin and validate admin is logged in
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
@@ -17,11 +20,7 @@ describe('Login test', () => {
       cy.get('#enter-email').type('admin@gmail.com')
       // submit the email
       cy.contains('Next').click()
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.task('createToken', name.role.admin).then(token => {
-        cy.setToken(token)
-        cy.visit(dashboard)
-      })
+      cy.login(name.role.admin, dashboard)
       Menu.getLoggedUserButton().should('contain', name.role.admin)
       Menu.getDashboardButton().should('be.visible')
       Menu.getLoggedUserButton().should('contain', 'Group Manager')

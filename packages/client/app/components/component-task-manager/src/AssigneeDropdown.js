@@ -4,7 +4,10 @@ import { debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { Select, TextInput } from '../../shared'
 import theme from '../../../theme'
-import { assigneeTypes } from '../../../../config/journal/tasks.json'
+
+import tasksJson from '../../../../config/journal/tasks.json'
+
+const { assigneeTypes } = tasksJson
 
 const AssigneeCellContainer = styled.div`
   align-items: start;

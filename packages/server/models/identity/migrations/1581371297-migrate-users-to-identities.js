@@ -14,11 +14,11 @@ exports.up = async knex => {
     // To make the migration idempotent
     if (!user.defaultIdentity) {
       try {
-        await new Identity({
+        await Identity.query().insert({
           type: 'local',
           userId: user.id,
           isDefault: true,
-        }).save()
+        })
       } catch (e) {
         logger.error(e)
       }

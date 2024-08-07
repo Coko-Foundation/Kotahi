@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import Calendar from './Calendar'
 import MinimalButton from './MinimalButton'

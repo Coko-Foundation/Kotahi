@@ -1,0 +1,17 @@
+FROM cokoapps/base:18
+
+WORKDIR /home/node/app
+
+RUN chown -R node:node .
+USER node
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --frozen-lockfile --production=true
+RUN yarn cache clean
+
+COPY . .
+
+ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
+CMD ["node", "./startServer.js"]

@@ -1,84 +1,134 @@
+# include:
+#   - project: 'cokoapps/ci'
+#     ref: main
+#     file: 'ci-templates.yml'
+
+variables:
+  DOCKER_BUILDKIT: 1
+  IMAGE_NAME_DEVELOPMENT: kotahi/kotahi/root-development
+  IMAGE_NAME_PREPRODUCTION_CLIENT: kotahi/kotahi/client-preproduction
+  IMAGE_NAME_PREPRODUCTION_SERVER: kotahi/kotahi/server-preproduction
+  DEPLOY_COMPOSE_FILE: docker-compose.ci.yml
+
 stages:
-  - run-pipeline
+  - Build development
+  - Lint & Unit test
+  - Build production
+  - Deploy test
+  - End to end testing
+  - Tear down test
+  # - Publish
 
-test-pipeline:
-  except:
-    - schedules
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.config.yml
-    strategy: depend
-# preprint1-pipeline:
-#   except:
-#     - schedules
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.preprint1.yml
-#     strategy: depend
+build development:
+  stage: Build development
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:26-dind
+  services:
+    - docker:26-dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - docker build
+      --tag $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+      -f Dockerfile .
+    - docker push $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
 
-# preprint1-test-firefox:
-#   only:
-#     refs:
-#       - schedules
-#     variables:
-#       - $SCHEDULE_TYPE == "test-firefox"
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.preprint1-test-firefox.yml
-#     strategy: depend
+lint:
+  stage: Lint & Unit test
+  image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+  script:
+    - cd /home/node/app
+    - yarn coko-lint run
+# build production client:
+#   stage: Build production
+#   image: docker:26
+#   services:
+#     - docker:26-dind
+#   before_script:
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+#   script:
+#     - cd packages/client
+#     - docker pull $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest || true
+#     - docker build
+#       --cache-from $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
+#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
+#       -f Dockerfile-production .
+#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
 
-# preprint2-test-firefox:
-#   only:
-#     refs:
-#       - schedules
-#     variables:
-#       - $SCHEDULE_TYPE == "test-firefox"
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.preprint2-test-firefox.yml
-#     strategy: depend
+# build production server:
+#   stage: Build production
+#   image: docker:26
+#   services:
+#     - docker:26-dind
+#   before_script:
+#     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+#   script:
+#     - cd packages/server
+#     - docker pull $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest || true
+#     - docker build
+#       --cache-from $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
+#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
+#       -f Dockerfile-production .
+#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
 
-# preprint2-pipeline:
-#   except:
-#     - schedules
-#   only:
-#     refs:
-#       - main
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.preprint2.yml
-#     strategy: depend
+# deploy test:
+#   stage: Deploy test
+#   image: $CI_REGISTRY/cokoinfra/ansible-deployer
+#   services:
+#     - docker:26-dind
+#   environment:
+#     name: review/$CI_COMMIT_REF_NAME
+#     url: https://$CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
+#     on_stop: teardown test
+#   variables:
+#     ANSCOMPOSE_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES: true
+#     ANSCOMPOSE_ORCID_CLIENT_ID: $ORCID_CLIENT_ID_2
+#     ANSCOMPOSE_ORCID_CLIENT_SECRET: $ORCID_CLIENT_SECRET_2
+#     ANSCOMPOSE_USE_SANDBOXED_ORCID: true
+#     ANSCOMPOSE_INSTANCE_GROUPS: journal:journal
+#     ANSCOMPOSE_MANUSCRIPTS_TABLE_COLUMNS: 'shortId, submission.$title, created, updated, status, author'
+#     ANSCOMPOSE_E2E_TESTING_API: 1
+#     COMPOSE_SERVICES: client,server
+#     COMPOSE_SERVICES_CLIENT_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
+#     COMPOSE_SERVICES_CLIENT_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     COMPOSE_SERVICES_SERVER_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.server.coko.app
+#     COMPOSE_SERVICES_SERVER_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     do_spaces_access_key: $DIGITAL_OCEAN_SPACES_ACCESS_KEY
+#     do_spaces_secret_key: $DIGITAL_OCEAN_SPACES_SECRET_KEY
+#   script:
+#     - kubectl config get-contexts
+#     - kubectl config use-context kotahi/agent:agent-1
+#     - cp $DEPLOY_COMPOSE_FILE /ansible
+#     - cd /ansible
+#     - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
 
-# prc-test-firefox:
-#   only:
-#     refs:
-#       - schedules
-#     variables:
-#       - $SCHEDULE_TYPE == "test-firefox"
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.prc-test-firefox.yml
-#     strategy: depend
-# prc-pipeline:
-#   except:
-#     - schedules
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.prc.yml
-#     strategy: depend
+# run end to end tests:
+#   stage: End to end testing
+#   image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#   script:
+#     - yarn dlx cypress run --browser chrome --spec 'cypress/e2e/**/**.js --config $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
 
-# journal-pipeline:
-#   except:
-#     - schedules
-#   stage: run-pipeline
-#   trigger:
-#     include:
-#       - local: .gitlab-ci.journal.yml
-#     strategy: depend
+# teardown test:
+#   stage: Tear down test
+#   image: $CI_REGISTRY/cokoinfra/ansible-deployer
+#   services:
+#     - docker:26-dind
+#   environment:
+#     name: review/$CI_COMMIT_REF_NAME
+#     action: stop
+#   variables:
+#     COMPOSE_SERVICES: client,server
+#     COMPOSE_SERVICES_CLIENT_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
+#     COMPOSE_SERVICES_CLIENT_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     COMPOSE_SERVICES_SERVER_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.server.coko.app
+#     COMPOSE_SERVICES_SERVER_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+#     do_spaces_access_key: $DIGITAL_OCEAN_SPACES_ACCESS_KEY
+#     do_spaces_secret_key: $DIGITAL_OCEAN_SPACES_SECRET_KEY
+#   script:
+#     - kubectl config get-contexts
+#     - kubectl config use-context kotahi/agent:agent-1
+#     - cd /ansible
+#     - ANSIBLE_FORCE_COLOR=true ansible-playbook teardown.yml

@@ -1,9 +1,15 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/client'
+
+import { serverUrl } from '@coko/client'
+
 import Profile from './Profile'
 import { Spinner, CommsErrorBanner } from '../../shared'
-import { version as kotahiVersion } from '../../../../package.json'
+
+import packageJson from '../../../../package.json'
+
+const { version: kotahiVersion } = packageJson
 
 const GET_USER = gql`
   query user($id: ID, $username: String) {
@@ -87,7 +93,7 @@ const ProfilePage = ({ currentUser, match }) => {
     const body = new FormData()
     body.append('file', acceptedFiles[0])
 
-    await fetch('/api/uploadProfile', {
+    await fetch(`${serverUrl}/api/uploadProfile`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

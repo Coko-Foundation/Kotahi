@@ -1,7 +1,7 @@
 /* stylelint-disable string-quotes */
 
 import { css, keyframes } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import color from '../color'
 
 const checking = keyframes`

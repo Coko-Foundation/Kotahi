@@ -1,10 +1,9 @@
 /* eslint-disable prefer-destructuring */
-const { ref } = require('objection')
+const { ref, raw } = require('objection')
 const axios = require('axios')
 const { map, chunk, orderBy } = require('lodash')
 const { pubsubManager, File } = require('@coko/server')
 const cheerio = require('cheerio')
-const { raw } = require('objection')
 
 const {
   importManuscripts,
@@ -589,7 +588,7 @@ const resolvers = {
 
     async archiveManuscript(_, { id }, ctx) {
       await deleteAlertsForManuscript(id)
-      const manuscript = await Manuscript.find(id)
+      const manuscript = await Manuscript.findById(id)
 
       // getting the ID of the firstVersion for all manuscripts.
       const firstVersionId = manuscript.parentId || manuscript.id
@@ -716,17 +715,16 @@ const resolvers = {
     },
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
-      const manuscript = await Manuscript.find(id)
+      const manuscript = await Manuscript.findById(id)
 
       const activeConfig = await Config.getCached(manuscript.groupId)
 
       toDeleteList.push(manuscript.id)
 
       if (manuscript.parentId) {
-        const parentManuscripts = await Manuscript.findByField(
-          'parent_id',
-          manuscript.parentId,
-        )
+        const parentManuscripts = await Manuscript.query().where({
+          parent_id: manuscript.parentId,
+        })
 
         parentManuscripts.forEach(ms => {
           toDeleteList.push(ms.id)
@@ -774,15 +772,15 @@ const resolvers = {
 
       if (!team) throw new Error('No team was found')
 
-      for (let i = 0; i < team.members.length; i += 1) {
-        if (
-          team.members[i].userId === ctx.user &&
-          team.members[i].status !== 'completed'
-        )
-          team.members[i].status = action
-      }
-
-      await new Team(team).saveGraph()
+      await Promise.all(
+        team.members.map(async member => {
+          if (member.userId === ctx.user && member.status !== 'completed') {
+            await TeamMember.query().patchAndFetchById(member.id, {
+              status: action,
+            })
+          }
+        }),
+      )
 
       if (action === 'accepted') {
         await addUserToManuscriptChatChannel({
@@ -810,7 +808,7 @@ const resolvers = {
           jsonData: '{}',
         }
 
-        await new ReviewModel(review).save()
+        await ReviewModel.query().insert(review)
       }
 
       if (action === 'rejected') {
@@ -1258,12 +1256,12 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!reviewerExists) {
-          await new TeamMember({
+          await TeamMember.query().insert({
             teamId: existingTeam.id,
             status,
             userId,
             isShared: invitationData ? invitationData.isShared : null,
-          }).save()
+          })
         }
 
         return existingTeam.$query()
@@ -1271,13 +1269,18 @@ const resolvers = {
 
       // Create a new team of reviewers if it doesn't exist
 
-      const newTeam = await new Team({
+      const newTeam = await Team.query().insert({
         objectId: manuscriptId,
         objectType: 'manuscript',
-        members: [{ status, userId }],
         role: team.role,
         name: team.name,
-      }).saveGraph()
+      })
+
+      await TeamMember.query().insert({
+        userId,
+        teamId: newTeam.id,
+        status,
+      })
 
       return newTeam
     },

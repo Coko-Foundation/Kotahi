@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { ArrowUp, ArrowDown } from 'react-feather'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 
 export const SortUp = styled(ArrowUp)`
   height: ${grid(2)};

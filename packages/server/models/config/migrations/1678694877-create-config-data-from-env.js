@@ -65,7 +65,7 @@ exports.up = async knex => {
           : '#9e9e9e',
         logoPath: brandConfig.logoPath
           ? brandConfig.logoPath
-          : '/assets/logo-kotahi.png',
+          : '/logo-kotahi.png',
       }
 
       // Only applicable to existing client instances which use INSTANCE_NAME with single instance type one of "preprint1, preprint2, prc, journal"

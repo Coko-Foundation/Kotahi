@@ -43,6 +43,7 @@
     }
   },
   "resolutions": {
+    "glob": "7",
     "postcss": "8",
     "prettier": "2.8.8"
   },

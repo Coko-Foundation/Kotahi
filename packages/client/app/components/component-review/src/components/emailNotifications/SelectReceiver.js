@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Checkbox, TextField } from '@pubsweet/ui'
-
 import { useTranslation } from 'react-i18next'
+
+import { Checkbox, TextField } from '../../../../pubsweet'
 import { Select } from '../../../../shared'
 
 const InputField = styled(TextField)`

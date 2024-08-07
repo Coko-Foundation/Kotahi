@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { Heading2, SidebarPageRow, RightArrow } from '../style'
 import { RoundIconButton } from '../../../shared'

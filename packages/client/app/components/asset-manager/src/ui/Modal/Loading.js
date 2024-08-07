@@ -2,7 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { rotate360 } from '@pubsweet/ui-toolkit'
+import { rotate360 } from '@coko/client'
 import { color } from '../../../../../theme'
 
 const Wrapper = styled.div`

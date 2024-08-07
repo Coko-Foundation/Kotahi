@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 /**
  * SVG source
  * https://material.io/resources/icons/?search=chat&icon=chat&style=baseline

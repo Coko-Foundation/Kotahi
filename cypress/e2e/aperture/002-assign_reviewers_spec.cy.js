@@ -1,17 +1,20 @@
 /* eslint-disable jest/expect-expect */
+
 import { seniorEditor } from '../../fixtures/role_names'
 import { ControlPage } from '../../page-object/control-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
-// eslint-disable-next-line jest/no-disabled-tests
 describe('Editor assigning reviewers', () => {
   before(() => {
-    // Restore Database (dumps/senior_editor_assigned.sql)
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'senior_editor_assigned')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/senior_editor_assigned`)
   })
+
   it('can assign 3 reviewers', () => {
     // login as seniorEditor
     cy.login(seniorEditor, dashboard)

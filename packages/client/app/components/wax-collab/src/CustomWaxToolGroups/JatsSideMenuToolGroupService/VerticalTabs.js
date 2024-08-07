@@ -2,7 +2,7 @@
 /* stylelint-disable custom-property-pattern, string-quotes */
 
 import React, { useState, useContext } from 'react'
-import { th, override } from '@pubsweet/ui-toolkit'
+import { th, override } from '@coko/client'
 import { WaxContext } from 'wax-prosemirror-core'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'

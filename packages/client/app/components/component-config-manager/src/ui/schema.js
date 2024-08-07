@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 // NOTE: If you're modifying the schema here, ensure updating those changes to the files 'packages/client/config/sampleConfigFormData.js' and 'packages/server/scripts/seedConfig.js' as well.
 import React from 'react'
-import { Select } from '@pubsweet/ui/dist/molecules'
 import BrandIcon from './BrandIcon'
+
+import { Select } from '../../../pubsweet'
 import { ColorPicker } from '../../../shared'
 
 // QUESTION: should this two be on this file??
@@ -84,7 +85,7 @@ export const generateSchemas = (
             // Default logo
             logoPath: {
               type: 'string',
-              default: '/assets/logo-kotahi.png',
+              default: '/logo-kotahi.png',
             },
             logoId: {
               description: t('configPage.Logo'),
@@ -1051,7 +1052,7 @@ export const generateSchemas = (
             // Default logo
             logoPath: {
               type: 'string',
-              default: '/assets/logo-kotahi.png',
+              default: '/logo-kotahi.png',
             },
             logoId: {
               description: t('configPage.Logo'),
@@ -2018,7 +2019,7 @@ export const generateSchemas = (
             // Default logo
             logoPath: {
               type: 'string',
-              default: '/assets/logo-kotahi.png',
+              default: '/logo-kotahi.png',
             },
             logoId: {
               description: t('configPage.Logo'),
@@ -2992,7 +2993,7 @@ export const generateSchemas = (
             // Default logo
             logoPath: {
               type: 'string',
-              default: '/assets/logo-kotahi.png',
+              default: '/logo-kotahi.png',
             },
             logoId: {
               description: t('configPage.Logo'),
