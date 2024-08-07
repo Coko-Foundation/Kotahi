@@ -6,7 +6,7 @@ import {
   AppBar,
   Button,
   Checkbox,
-  GlobalStyle,
+  // GlobalStyle,
   Radio,
   TextField,
   Menu,
@@ -119,9 +119,9 @@ const cokoTheme = {
   },
 
   /* Transition */
-  transitionDuration: '0.2s', // TODO -- julien: not 0.05s
-  transitionTimingFunction: 'ease',
-  transitionDelay: '0',
+  // transitionDuration: '0.2s', // TODO -- julien: not 0.05s
+  // transitionTimingFunction: 'ease',
+  // transitionDelay: '0',
   /* Breakpoints */
   breakpoints: [480, 768, 1000, 1272],
 
@@ -135,7 +135,7 @@ const cokoTheme = {
       AppBar,
       Button,
       Checkbox,
-      GlobalStyle,
+      // GlobalStyle,
       Radio,
       TextField,
       Menu,

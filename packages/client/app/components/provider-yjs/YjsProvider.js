@@ -1,9 +1,11 @@
 /* eslint-disable react/prop-types */
 
 import React, { useState, useContext } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
+
+import { yjsWebSocketServerUrl, uuid } from '@coko/client'
+
 import { ConfigContext } from '../config/src'
 
 const YjsContext = React.createContext({
@@ -65,12 +67,12 @@ const YjsProvider = ({ children }) => {
     } else {
       if (!identifier) {
         // eslint-disable-next-line no-param-reassign
-        identifier = uuidv4()
+        identifier = uuid()
       }
 
       // eslint-disable-next-line no-restricted-globals
       provider = new WebsocketProvider(
-        process.env.CLIENT_YJS_WEBSOCKET_URL,
+        yjsWebSocketServerUrl,
         identifier,
         ydocInstance,
         {
@@ -86,7 +88,7 @@ const YjsProvider = ({ children }) => {
 
       if (currentUser) {
         provider.awareness.setLocalStateField('user', {
-          id: currentUser.id || uuidv4(),
+          id: currentUser.id || uuid(),
           color,
           displayName: currentUser
             ? currentUser.username || currentUser.email

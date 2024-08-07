@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
 import { color } from '../../../../../theme'

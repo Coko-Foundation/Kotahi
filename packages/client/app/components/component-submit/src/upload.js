@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 // import { map } from 'lodash'
 import * as cheerio from 'cheerio'
@@ -198,37 +196,37 @@ const stripTrackChanges = file => {
   return $.html()
 }
 
-const regexCustomReplace = (
-  regex,
-  text,
-  customReplaceFunction, // Function to do whatever you want with the groups returned by exec() and return a string
-) => {
-  const resultSubstrings = []
-  let lastMatchEnd = 0
-  let groups = regex.exec(text)
+// const regexCustomReplace = (
+//   regex,
+//   text,
+//   customReplaceFunction, // Function to do whatever you want with the groups returned by exec() and return a string
+// ) => {
+//   const resultSubstrings = []
+//   let lastMatchEnd = 0
+//   let groups = regex.exec(text)
 
-  while (groups) {
-    const matchStart = regex.lastIndex - groups[0].length
-    resultSubstrings.push(text.substring(lastMatchEnd, matchStart))
-    resultSubstrings.push(customReplaceFunction(groups))
-    lastMatchEnd = regex.lastIndex
-    groups = regex.exec(text)
-  }
+//   while (groups) {
+//     const matchStart = regex.lastIndex - groups[0].length
+//     resultSubstrings.push(text.substring(lastMatchEnd, matchStart))
+//     resultSubstrings.push(customReplaceFunction(groups))
+//     lastMatchEnd = regex.lastIndex
+//     groups = regex.exec(text)
+//   }
 
-  resultSubstrings.push(text.substring(lastMatchEnd))
-  return resultSubstrings.join('')
-}
+//   resultSubstrings.push(text.substring(lastMatchEnd))
+//   return resultSubstrings.join('')
+// }
 
-const doubleBackSlashReplace = groups => {
-  const openingTag = groups[1]
-  const text = groups[2]
-  const closingTag = groups[3]
+// const doubleBackSlashReplace = groups => {
+//   const openingTag = groups[1]
+//   const text = groups[2]
+//   const closingTag = groups[3]
 
-  if (/(?<!\\)\\(?!\\)/.test(text)) return groups[0] // If there's any single isolated backslash, return the full match unaltered
+//   if (/(?<!\\)\\(?!\\)/.test(text)) return groups[0] // If there's any single isolated backslash, return the full match unaltered
 
-  const cleanedText = text.replaceAll('\\\\', '\\') // Replace double-backslash with single backslash
-  return `${openingTag}${cleanedText}${closingTag}`
-}
+//   const cleanedText = text.replaceAll('\\\\', '\\') // Replace double-backslash with single backslash
+//   return `${openingTag}${cleanedText}${closingTag}`
+// }
 
 const cleanMath = file => {
   // We are getting back math-display in the form <[block-tag]><math-display>[equation]</math-display></>
@@ -325,23 +323,23 @@ const createManuscriptMutation = gql`
   }
 `
 
-const createFileMutation = gql`
-  mutation ($file: Upload!, $meta: FileMetaInput!) {
-    createFile(file: $file, meta: $meta) {
-      id
-      name
-      objectId
-      storedObjects {
-        type
-        key
-        size
-        mimetype
-        extension
-        url
-      }
-    }
-  }
-`
+// const createFileMutation = gql`
+//   mutation ($file: Upload!, $meta: FileMetaInput!) {
+//     createFile(file: $file, meta: $meta) {
+//       id
+//       name
+//       objectId
+//       storedObjects {
+//         type
+//         key
+//         size
+//         mimetype
+//         extension
+//         url
+//       }
+//     }
+//   }
+// `
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -352,74 +350,74 @@ export const updateMutation = gql`
   }
 `
 
-const base64toBlob = (base64Data, contentType) => {
-  const sliceSize = 1024
-  const arr = base64Data.split(',')
-  const byteCharacters = atob(arr[1])
-  const bytesLength = byteCharacters.length
-  const slicesCount = Math.ceil(bytesLength / sliceSize)
-  const byteArrays = new Array(slicesCount)
+// const base64toBlob = (base64Data, contentType) => {
+//   const sliceSize = 1024
+//   const arr = base64Data.split(',')
+//   const byteCharacters = atob(arr[1])
+//   const bytesLength = byteCharacters.length
+//   const slicesCount = Math.ceil(bytesLength / sliceSize)
+//   const byteArrays = new Array(slicesCount)
 
-  for (let sliceIndex = 0; sliceIndex < slicesCount; sliceIndex += 1) {
-    const begin = sliceIndex * sliceSize
-    const end = Math.min(begin + sliceSize, bytesLength)
+//   for (let sliceIndex = 0; sliceIndex < slicesCount; sliceIndex += 1) {
+//     const begin = sliceIndex * sliceSize
+//     const end = Math.min(begin + sliceSize, bytesLength)
 
-    const bytes = new Array(end - begin)
+//     const bytes = new Array(end - begin)
 
-    for (let offset = begin, i = 0; offset < end; i += 1, offset += 1) {
-      bytes[i] = byteCharacters[offset].charCodeAt(0)
-    }
+//     for (let offset = begin, i = 0; offset < end; i += 1, offset += 1) {
+//       bytes[i] = byteCharacters[offset].charCodeAt(0)
+//     }
 
-    byteArrays[sliceIndex] = new Uint8Array(bytes)
-  }
+//     byteArrays[sliceIndex] = new Uint8Array(bytes)
+//   }
 
-  return new Blob(byteArrays, { type: contentType || '' })
-}
+//   return new Blob(byteArrays, { type: contentType || '' })
+// }
 
-const base64Images = source => {
-  const doc = new DOMParser().parseFromString(source, 'text/html')
+// const base64Images = source => {
+//   const doc = new DOMParser().parseFromString(source, 'text/html')
 
-  const images = [...doc.images].map((e, index) => {
-    const isDataUrl = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
+//   const images = [...doc.images].map((e, index) => {
+//     const isDataUrl = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
 
-    if (isDataUrl) {
-      const mimeType = isDataUrl[0]
-      const blob = base64toBlob(e.src, mimeType)
-      const mimeTypeSplit = mimeType.split('/')
-      const extFileName = mimeTypeSplit[1]
+//     if (isDataUrl) {
+//       const mimeType = isDataUrl[0]
+//       const blob = base64toBlob(e.src, mimeType)
+//       const mimeTypeSplit = mimeType.split('/')
+//       const extFileName = mimeTypeSplit[1]
 
-      const file = new File([blob], `Image${index + 1}.${extFileName}`, {
-        type: mimeType,
-      })
+//       const file = new File([blob], `Image${index + 1}.${extFileName}`, {
+//         type: mimeType,
+//       })
 
-      return { dataSrc: e.src, mimeType, file }
-    }
+//       return { dataSrc: e.src, mimeType, file }
+//     }
 
-    return null
-  })
+//     return null
+//   })
 
-  return images || null
-}
+//   return images || null
+// }
 
-const uploadImage = (image, client, manuscriptId) => {
-  const { file } = image
+// const uploadImage = (image, client, manuscriptId) => {
+//   const { file } = image
 
-  const meta = {
-    fileType: 'manuscriptImage',
-    manuscriptId,
-    reviewId: null,
-  }
+//   const meta = {
+//     fileType: 'manuscriptImage',
+//     manuscriptId,
+//     reviewId: null,
+//   }
 
-  const data = client.mutate({
-    mutation: createFileMutation,
-    variables: {
-      file,
-      meta,
-    },
-  })
+//   const data = client.mutate({
+//     mutation: createFileMutation,
+//     variables: {
+//       file,
+//       meta,
+//     },
+//   })
 
-  return data
-}
+//   return data
+// }
 
 const uploadPromise = (files, client) => {
   const [file] = files
@@ -576,7 +574,7 @@ export default ({
     setConversion({ converting: true })
     let manuscriptData
     let uploadResponse
-    let images
+    // let images
 
     try {
       if (files) {
@@ -603,7 +601,7 @@ export default ({
               ),
             ),
           )
-          images = base64Images(uploadResponse.response)
+          // images = base64Images(uploadResponse.response)
           // console.log('uploadResponse after cleaning: ', uploadResponse.response)
         }
 

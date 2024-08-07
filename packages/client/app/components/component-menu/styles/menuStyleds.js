@@ -1,8 +1,8 @@
 /* stylelint-disable declaration-no-important, string-quotes */
 import styled from 'styled-components'
-import { Icon } from '@pubsweet/ui/dist/atoms'
 import { Link } from 'react-router-dom'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
+import { Icon } from '../../pubsweet'
 import { color } from '../../../theme'
 import { menuStyles } from './styleGlobals'
 import PinButton from './PinButton'
@@ -23,9 +23,9 @@ export const MainNavWrapper = styled.div`
   overflow: hidden;
   padding: 3.2px 4.8px;
   transition: all var(--transition-time);
-
   width: 100%;
 `
+
 export const ScrollWrapper = styled.div`
   align-items: center;
   display: flex;
@@ -52,6 +52,7 @@ export const ScrollWrapper = styled.div`
     background: #0000;
   }
 `
+
 export const NavLinks = styled.div`
   align-items: flex-start;
   display: flex;
@@ -81,6 +82,7 @@ export const SectionNavLayoutSettings = styled.div`
     }
   }
 `
+
 export const StyledPinButton = styled(PinButton)`
   background: ${p => (p.$pinned ? '#fff4' : 'transparent')};
   border-radius: 4px;
@@ -151,12 +153,14 @@ export const StyledLink = styled(Link)`
     }
   }
 `
+
 export const NonLink = styled.div`
   & > span {
     justify-content: center;
     overflow: hidden;
   }
 `
+
 export const LinkLabel = styled.span`
   margin-left: 0;
   opacity: 0;
@@ -166,6 +170,7 @@ export const LinkLabel = styled.span`
   white-space: nowrap;
   width: 100%;
 `
+
 export const StyledIcon = styled(Icon)``
 
 export const AlertIndicator = styled.div`
@@ -211,6 +216,7 @@ export const RolesLabel = styled.div`
   line-height: 1;
   white-space: nowrap;
 `
+
 export const UserItem = styled(Link)`
   align-items: end;
   border-bottom: 1px solid #fff2;
@@ -227,6 +233,7 @@ export const UserItem = styled(Link)`
     color: ${color.textReverse} !important;
   }
 `
+
 export const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -237,12 +244,14 @@ export const UserInfo = styled.div`
   transition: all var(--transition-time);
   width: ${p => (p.expanded ? '100%' : '0')};
 `
+
 export const UserName = styled.div`
   max-width: 30ch;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 `
+
 export const UserMenuContainer = styled.div`
   display: flex;
   gap: 24px;

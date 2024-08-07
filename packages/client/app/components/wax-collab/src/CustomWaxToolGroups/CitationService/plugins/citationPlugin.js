@@ -44,7 +44,7 @@ export default (key, config) =>
     props: {
       config,
       decorations: function decorations(state) {
-        return this.getState(state)
+        // return this.getState(state)
       },
     },
   })

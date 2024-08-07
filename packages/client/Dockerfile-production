@@ -1,0 +1,38 @@
+##############################################################
+# IMAGE FOR BUILDING
+
+FROM node:18-bookworm-slim
+
+ENV NODE_ENV='production'
+ENV CLIENT_STATIC_FOLDER_PATH=../public
+ENV CLIENT_PAGE_TITLE='Kotahi - Open Journals'
+
+WORKDIR /home/node/app
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+RUN touch ./config/translation/translationOverrides.js
+
+RUN yarn coko-client-build
+
+##############################################################
+# IMAGE FOR RUNNING
+
+FROM node:18-bookworm-slim
+
+WORKDIR /home/node/app
+
+RUN yarn global add serve
+
+COPY --from=0 /home/node/app/_build ./_build
+COPY --from=0 /home/node/app/node_modules/@coko/client/scripts/env.sh ./env.sh
+
+RUN chown -R node:node .
+USER node
+
+ENTRYPOINT ["sh", "./env.sh"]
+CMD ["npx", "serve", "-p", "4000", "--single", "./_build"]

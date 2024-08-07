@@ -22,7 +22,7 @@ exports.up = async knex => {
         })
 
         if (orphanedGroupManagerRecord) {
-          orphanedGroupManagerRecord.delete()
+          await Team.query().deleteById(orphanedGroupManagerRecord.id)
           logger.info(`Removed orphaned group manager team record.`)
         }
       }

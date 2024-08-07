@@ -110,7 +110,7 @@ const resolvers = {
       return result
     },
     async addEmailToBlacklist(_, { email, groupId }, ctx) {
-      const result = await new BlacklistEmail({ email, groupId }).save()
+      const result = await BlacklistEmail.query().insert({ email, groupId })
 
       return result
     },
@@ -134,23 +134,27 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!authorExists) {
-          await new TeamMember({
+          await TeamMember.query().insert({
             teamId: existingTeam.id,
             userId,
-          }).save()
+          })
         }
 
         return existingTeam.$query().withGraphFetched('members.[user]')
       }
 
       // Create a new team of authors if it doesn't exist
-      const newTeam = await new Team({
+      const newTeam = await Team.query().insert({
         objectId: manuscriptId,
         objectType: 'manuscript',
-        members: [{ userId }],
         role: 'author',
         name: 'Authors',
-      }).saveGraph()
+      })
+
+      await TeamMember.query().insert({
+        userId,
+        teamId: newTeam.id,
+      })
 
       return newTeam
     },

@@ -1,24 +1,19 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { debounce, isEmpty, pick } from 'lodash'
 import styled from 'styled-components'
-
 import { useQuery, useLazyQuery, useMutation } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
-
 import CodeMirror from '@uiw/react-codemirror'
 import { html } from '@codemirror/lang-html'
 import { css } from '@codemirror/lang-css'
-
 import SplitPane, { Pane } from 'split-pane-react'
-
 import 'split-pane-react/esm/themes/default.css'
 
+import { serverUrl } from '@coko/client'
+
 import Browser from './browser/FileBrowser'
-
 import { CommsErrorBanner, Spinner } from '../../shared'
-
 import UploadComponent from '../../component-production/src/components/uploadManager/UploadComponent'
-
 import { EditPageContainer } from './style'
 
 import {
@@ -204,7 +199,7 @@ const CMSFileBrowserPage = () => {
 
     body.append('id', activeContent.id)
 
-    await fetch('/api/cmsUploadFiles', {
+    await fetch(`${serverUrl}/api/cmsUploadFiles`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,

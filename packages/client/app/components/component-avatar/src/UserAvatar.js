@@ -3,6 +3,9 @@
 import React, { useContext } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
+
+import { serverUrl } from '@coko/client'
+
 import AvatarImage from './image'
 import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
@@ -57,7 +60,7 @@ const Avatar = props => {
 
   const src = user?.profilePicture
 
-  const userFallback = '/profiles/default_avatar.svg'
+  const userFallback = `${serverUrl}/profiles/default_avatar.svg`
 
   const source = [src, userFallback]
 

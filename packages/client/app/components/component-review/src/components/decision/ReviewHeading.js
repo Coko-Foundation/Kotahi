@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
-import { Checkbox, Button } from '@pubsweet/ui'
+import { Checkbox, Button } from '../../../../pubsweet'
 
 import Reviewer from './Reviewer'
 

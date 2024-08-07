@@ -7,7 +7,8 @@ import { dashboard } from '../../support/routes'
 
 describe('Upload manuscript test', () => {
   it('can upload a manuscript and some metadata', () => {
-    cy.task('restore', 'commons/bootstrap') // Populate the Database
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
 
     cy.fixture('role_names').then(name => {
       cy.login(name.role.author, dashboard) // login as author

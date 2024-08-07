@@ -22,7 +22,7 @@ exports.up = async knex => {
         })
 
         if (orphanedSystemwideChannelRecord) {
-          orphanedSystemwideChannelRecord.delete()
+          await Channel.query().deleteById(orphanedSystemwideChannelRecord.id)
           logger.info(`Removed orphaned system-wide discussion channel record.`)
         }
       }

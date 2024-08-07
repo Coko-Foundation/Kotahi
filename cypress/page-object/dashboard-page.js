@@ -110,13 +110,15 @@ export const DashboardPage = {
     return cy.getByDataTestId(ACCEPT_REVIEW_BUTTON)
   },
   clickAcceptReviewButton() {
-    this.getAcceptReviewButton().click()
+    this.getAcceptReviewButton().click({ force: true })
+    cy.reload()
   },
   getRejectReviewButton() {
     return cy.getByDataTestId(REJECT_REVIEW_BUTTON)
   },
   clickRejectReviewButton() {
-    this.getRejectReviewButton().click()
+    this.getRejectReviewButton().click({ force: true })
+    cy.reload()
   },
   getDoReviewButton() {
     return cy.get(DO_REVIEW_BUTTON)

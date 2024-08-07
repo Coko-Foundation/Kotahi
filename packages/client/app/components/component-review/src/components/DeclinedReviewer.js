@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { Mail } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Primary, Secondary } from '../../../shared'

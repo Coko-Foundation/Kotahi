@@ -1,3 +1,5 @@
+const appConfig = require('config')
+
 const Group = require('../../../models/group/group.model')
 
 const { getConfigJsonString } = require('../../config/src/configObject')
@@ -33,6 +35,11 @@ const resolvers = {
       return configs.map(async config => {
         const strippedConfig = await stripSensitiveInformation(config)
         strippedConfig.formData = JSON.stringify(strippedConfig.formData)
+
+        strippedConfig.flaxSiteUrl =
+          appConfig.has('flax-site.clientFlaxSiteUrl') &&
+          appConfig.get('flax-site.clientFlaxSiteUrl')
+
         return strippedConfig
       })
     },

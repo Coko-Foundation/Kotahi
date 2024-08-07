@@ -1,6 +1,6 @@
 import React from 'react'
-import { Attachment as PubsweetAttachment } from '@pubsweet/ui'
 import PropTypes from 'prop-types'
+import { Attachment as PubsweetAttachment } from '../pubsweet'
 
 /** A wrapper for pubsweet's Attachment, to convert to its outdated file structure. */
 const Attachment = ({ file, uploaded }) => (

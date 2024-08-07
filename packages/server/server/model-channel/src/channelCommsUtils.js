@@ -53,11 +53,11 @@ const addUserToManuscriptChatChannel = async ({
     .first()
 
   if (!channelMember) {
-    await new ChannelMember({
+    await ChannelMember.query().insert({
       channelId: channel.id,
       userId,
       lastViewed: new Date(),
-    }).save()
+    })
   }
 }
 

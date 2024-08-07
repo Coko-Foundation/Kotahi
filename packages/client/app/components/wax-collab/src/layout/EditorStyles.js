@@ -2,7 +2,7 @@
 /* stylelint-disable color-function-notation, alpha-value-notation */
 
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import waxDefaultStyles from './waxDefaultStyles'
 import EditorElements from './EditorElements'
 import { color } from '../../../../theme'

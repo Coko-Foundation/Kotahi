@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
 import InfoItem from './InfoItem'

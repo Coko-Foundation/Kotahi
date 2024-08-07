@@ -40,9 +40,11 @@ describe.skip('Login page tests', () => {
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
-      // task to restore the database as per the dumps/initial_state_other.sql
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -68,9 +70,11 @@ describe.skip('Login page tests', () => {
   })
 
   it('dashboard page should be visible to the logged in user', () => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -81,9 +85,11 @@ describe.skip('Login page tests', () => {
     Menu.getDashboardButton().should('be.visible')
   })
   it('login as Reviewer/Editor', () => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -99,9 +105,11 @@ describe.skip('Login page tests', () => {
     Menu.getMyProfileButton().should('be.visible')
   })
   it('as Reviewer/Editor try to access the admin-specific pages', () => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -120,9 +128,11 @@ describe.skip('Login page tests', () => {
     ManuscriptsPage.getLiveChatButton().should('not.exist')
   })
   it('reports option should be visible to the admin user', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

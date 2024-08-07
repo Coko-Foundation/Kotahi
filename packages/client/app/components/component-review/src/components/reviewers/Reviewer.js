@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 // import { map } from 'lodash'
 // import Moment from 'react-moment'
-import { Avatar } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
+import { Avatar } from '../../../../pubsweet'
 
 const Root = styled.div`
   font-family: ${th('fontReviewer')};

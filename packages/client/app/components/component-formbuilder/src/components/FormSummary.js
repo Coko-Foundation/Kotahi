@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import { Icon, Action, LooseRow, LabelBadge } from '../../../shared'

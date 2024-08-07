@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 // eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
 import { RoundIconButton } from '../../shared'

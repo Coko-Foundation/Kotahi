@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useCallback, useState } from 'react'
 import { omit } from 'lodash'
 import styled from 'styled-components'
-import { TextField } from '@pubsweet/ui'
 import Color from 'color'
 import { TextAreaBinding } from 'y-textarea'
 
+import { TextField } from '../../../../pubsweet'
 import { Spinner } from '../../../../shared'
 import YjsContext from '../../../../provider-yjs/YjsProvider'
 

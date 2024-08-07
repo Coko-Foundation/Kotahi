@@ -1,9 +1,9 @@
 /* stylelint-disable string-quotes */
 
 import styled, { css } from 'styled-components'
-import { Button, Action } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { AlertCircle } from 'react-feather'
+import { Button, Action } from '../../pubsweet'
 import { color } from '../../../theme'
 
 export const StyledButton = styled(Button)`

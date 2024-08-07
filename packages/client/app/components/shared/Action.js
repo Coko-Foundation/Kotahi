@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
-import { grid, rotate360 } from '@pubsweet/ui-toolkit'
+import { grid, rotate360 } from '@coko/client'
 import { Check, AlertCircle } from 'react-feather'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router-dom'

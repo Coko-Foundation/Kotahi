@@ -11,8 +11,11 @@ const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
 describe('Completing a review', () => {
   it('accept and do a review', () => {
-    cy.task('restore', 'commons/bootstrap')
-    cy.task('seed', 'three_reviews_completed') // restore the database as per dumps/three_reviews_completed.sql
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${seedUrl}/three_reviews_completed`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

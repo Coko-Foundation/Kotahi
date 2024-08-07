@@ -109,7 +109,7 @@ module.exports = {
     brandName: 'Kotahi',
     primaryColor: '#3aae2a',
     secondaryColor: '#9e9e9e',
-    logoPath: '/assets/logo-kotahi.png',
+    logoPath: '/logo-kotahi.png',
     licenseUrl: 'test',
     journalName: 'test',
     rorUrl: 'https://ror.org/',

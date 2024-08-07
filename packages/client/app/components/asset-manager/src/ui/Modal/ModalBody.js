@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 const Body = styled.div`
   flex-grow: 1;

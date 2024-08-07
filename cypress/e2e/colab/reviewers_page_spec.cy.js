@@ -6,9 +6,11 @@ import { dashboard } from '../../support/routes1'
 
 describe('Editor assigning reviewers', () => {
   it('can assign reviewers', () => {
-    // Restore Database (dumps/senior_editor_assigned.sql)
-    cy.task('restore', 'commons/colab_bootstrap')
-    cy.task('seed', 'senior_editor_assigned')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedUrl = Cypress.config('seedUrl')
+
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    cy.request('POST', `${seedUrl}/senior_editor_assigned`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

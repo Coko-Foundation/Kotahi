@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import {
   Button as OriginalButton,
   Checkbox as OriginalCheckbox,
-} from '@pubsweet/ui'
+} from '../../../../../pubsweet'
 import { color } from '../../../../../../theme'
 
 export const Wrapper = styled.div`

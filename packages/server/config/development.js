@@ -12,11 +12,6 @@ module.exports = {
     pool: { min: 0, max: 300, idleTimeoutMillis: 30000 },
     secret: 'secret-string',
   },
-  'pubsweet-client': {
-    protocol: 'http',
-    host: '127.0.0.1',
-    port: 4000,
-  },
   mailer: {
     from: 'simplej@example.com',
     path: `${__dirname}/test-mailer`, // eslint-disable-line node/no-path-concat

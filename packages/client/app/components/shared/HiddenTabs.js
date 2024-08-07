@@ -2,7 +2,7 @@
 
 import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { th, override } from '@pubsweet/ui-toolkit'
+import { th, override } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'

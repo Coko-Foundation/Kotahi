@@ -183,7 +183,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
      * Chat channels are always associated with the parent manuscript
      * but we allow different teams to work on different versions.
      * Therefore, authorization is based on the latest version of the manuscript.
-     *  */
+     */
 
     const manuscript = await getLatestVersionOfManuscript(
       ctx,
@@ -673,7 +673,13 @@ const permissions = {
     filesUploaded: isAuthenticated,
     reviewFormUpdated: isAuthenticated,
     manuscriptsImportStatus: isAuthenticated,
-    messageCreated: userIsAllowedToChat,
+    /**
+     * This was not being triggered at all before the v3 upgrade.
+     * It doesn't work because userIsAllowedToChat dependends on req, and req
+     * is not in the context for subscriptions.
+     */
+    // messageCreated: userIsAllowedToChat,
+    messageCreated: isAuthenticated,
     uploadProgress: isAuthenticated,
   },
   CurrentRole: isAuthenticated,

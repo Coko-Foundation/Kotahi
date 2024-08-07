@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-no-redundant-longhand-properties */
 
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 
 export const Table = styled.table`
   border-collapse: collapse;

@@ -5,7 +5,7 @@
 
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { useLocation } from 'react-router-dom'
 import { HiddenTabs } from '../../shared'
 import Chat from './Chat'

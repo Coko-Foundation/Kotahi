@@ -3,7 +3,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 
 const Wrapper = styled.div`
   align-items: center;

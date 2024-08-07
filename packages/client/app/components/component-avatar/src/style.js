@@ -5,7 +5,7 @@
 import styled, { css } from 'styled-components'
 import { Img as ReactImage } from 'react-image'
 import { Link } from 'react-router-dom'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { color } from '../../../theme'
 
 // import { ProfileHeaderAction } from '../profile/style'

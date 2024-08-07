@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RadioGroup as UnstableRadioGroup } from '@pubsweet/ui'
+import { RadioGroup as UnstableRadioGroup } from '../../../../pubsweet'
 
 const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;

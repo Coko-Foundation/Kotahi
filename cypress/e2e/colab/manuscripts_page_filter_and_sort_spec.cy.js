@@ -9,8 +9,9 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_other.sql
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
     // cy.task('seedForms')
 
     // login as admin
@@ -95,7 +96,9 @@ describe('manuscripts page tests', () => {
   })
   context('select button from Label column', () => {
     beforeEach(() => {
-      cy.task('restore', 'commons/colab_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {

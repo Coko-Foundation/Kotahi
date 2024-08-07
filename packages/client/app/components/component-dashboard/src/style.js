@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import { color } from '../../../theme'
 
 export { Container, Section, Content } from '../../shared'

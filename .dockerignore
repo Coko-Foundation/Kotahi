@@ -39,13 +39,12 @@ uploads/*
 CONTRIBUTING.md
 
 # development config files
-.eslintrc.js
 .commitlintrc.js
 .cz-config.js
+.gitlab/
 .gitlab-ci.yml
-.linstagedrc.js
-.prettierrc.js
-.stylelintrc.js
-cypress.json
-
+.gitlab-ci*
+.husky
+.lintstagedrc.js
 .nvmrc
+.renovaterc

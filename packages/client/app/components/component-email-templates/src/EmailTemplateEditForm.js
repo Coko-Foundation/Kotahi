@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { ValidatedFieldFormik } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
 import { debounce, camelCase } from 'lodash'
 // eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
+import { ValidatedFieldFormik } from '../../pubsweet'
 import { emailTemplateInputFields } from '../../component-cms-manager/src/FormSettings'
 import { ConfirmationModal } from '../../component-modal/src/ConfirmationModal'
 import {

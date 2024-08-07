@@ -1,5 +1,5 @@
-/* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
+
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
@@ -9,11 +9,10 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('Manuscripts page tests', () => {
   context('Elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-      cy.task('restore', 'commons/elife_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
       // login as admin
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
@@ -26,12 +25,11 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
       ManuscriptsPage.getLiveChatButton().should('be.visible')
     })
-    // eslint-disable-next-line jest/no-focused-tests
+
     it('evaluation button is visible and publish button is not visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       // fill the submit form and submit it
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
       })
@@ -45,11 +43,10 @@ describe('Manuscripts page tests', () => {
 
   context('unsubmitted article tests', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-      cy.task('restore', 'commons/elife_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
       // login as admin
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
@@ -58,7 +55,6 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       // fill the submit form and submit it
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
       })
@@ -77,7 +73,7 @@ describe('Manuscripts page tests', () => {
           .should('be.visible')
       }
 
-      SubmissionFormPage.fillInReview1('word count test')
+      SubmissionFormPage.fillInReview1('word count test{selectAll}')
       SubmissionFormPage.getWordCountInfo()
         .eq(0)
         .should('contain', '3')
@@ -103,7 +99,6 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.getSummaryCreator().should('have.value', '')
       SubmissionFormPage.getSummaryDate().should('have.value', '')
 
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
         SubmissionFormPage.fillInDoi(data.doi)
@@ -124,6 +119,7 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
       })
+
       ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
     })
 
@@ -154,11 +150,10 @@ describe('Manuscripts page tests', () => {
 
   context('Submitted and evaluated article tests', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-      cy.task('restore', 'commons/elife_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
 
       // login as admin
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
@@ -169,7 +164,6 @@ describe('Manuscripts page tests', () => {
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
 
         // fill the submit form and submit it
-        // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('submission_form_data').then(data => {
           SubmissionFormPage.fillInArticleld(data.articleId)
           SubmissionFormPage.fillInDoi(data.doi)
@@ -187,7 +181,6 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.fillInSummary(data.summary)
           SubmissionFormPage.fillInSummaryCreator(data.creator)
           SubmissionFormPage.fillInSummaryDate(data.summaryDate)
-          // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
           SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
         })
@@ -205,14 +198,12 @@ describe('Manuscripts page tests', () => {
     it('submission details should be visible', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
       ManuscriptsPage.clickEvaluation()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.getArticleld().should('have.value', data.articleId)
         SubmissionFormPage.getDoi().should(
           'have.value',
           data.doi.split('https://doi.org/')[1],
         )
-        // eslint-disable-next-line
         SubmissionFormPage.getTitleField().should(
           'have.value',
           data.description,
@@ -263,10 +254,9 @@ describe('Manuscripts page tests', () => {
         )
       })
     })
+
     it('evaluation changes should be visible', () => {
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('role_names').then(name => {
           ManuscriptsPage.getAuthor(0).should('eq', name.role.admin)
           ManuscriptsPage.getStatus(0).should('eq', 'Evaluated')
@@ -290,11 +280,9 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.fillInSummaryCreator('test.test')
         SubmissionFormPage.fillInSummaryDate('10/03/2050')
 
-        // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
         ManuscriptsPage.clickEvaluation()
-        // eslint-disable-next-line
         SubmissionFormPage.getArticleld().should(
           'not.have.value',
           data.articleId,
@@ -303,7 +291,6 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.doi.split('https://doi.org/')[1],
         )
-        // eslint-disable-next-line
         SubmissionFormPage.getTitleField().should(
           'not.have.value',
           data.description,
@@ -354,9 +341,9 @@ describe('Manuscripts page tests', () => {
         )
       })
     })
+
     it('assert article id is the first table head and contains submitted atricle id title', () => {
       ManuscriptsPage.getArticleIdByRow(0).should('contain', 'Article ID')
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ManuscriptsPage.getArticleIdByRow(1).should('contain', data.articleId)
       })

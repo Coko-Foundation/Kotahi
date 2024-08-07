@@ -63,10 +63,11 @@ class Manuscript extends BaseModel {
   async getReviews() {
     // TODO: Use relationships
     /* eslint-disable-next-line global-require */
-    // eslint-disable-next-line
     const Review = require('../review/review.model')
 
-    const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
+    const manuscriptReviews = await Review.query().where({
+      manuscript_id: this.id,
+    })
 
     // await Promise.all(
     //   manuscriptReviews.map(async review => {

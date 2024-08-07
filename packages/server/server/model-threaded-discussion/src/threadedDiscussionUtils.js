@@ -1,4 +1,4 @@
-const { v4: uuid } = require('uuid')
+const { uuid } = require('@coko/server')
 
 const filterDistinct = (id, index, arr) => arr.indexOf(id) === index
 

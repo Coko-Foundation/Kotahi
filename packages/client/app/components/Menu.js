@@ -56,9 +56,19 @@ const Menu = ({
       updateMenuState({ variables: { expanded: !menuPinned } })
       setMenuPinned(!menuPinned)
     },
-    mouseoverNav: e => menuIsMinimal && setMenuIsMinimal(false),
-    mouseleaveNav: () => !menuPinned && setMenuIsMinimal(true),
-    expandCollapse: () => setMenuIsMinimal(!menuIsMinimal),
+    mouseoverNav: () => {
+      if (menuIsMinimal) {
+        setMenuIsMinimal(false)
+      }
+    },
+    mouseleaveNav: () => {
+      if (!menuPinned) {
+        setMenuIsMinimal(true)
+      }
+    },
+    expandCollapse: () => {
+      setMenuIsMinimal(!menuIsMinimal)
+    },
   }
 
   return (
@@ -86,7 +96,7 @@ const Menu = ({
       <MainNavWrapper>
         <UserComponent
           expanded={!menuIsMinimal}
-          loginLink={loginLink}
+          loginLinsk={loginLink}
           profileLink={profileLink}
           t={t}
           user={user}

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 import styled from 'styled-components'
 import { Spinner, CommsErrorBanner, Select } from '../../shared'
 import { GET_GROUPS } from '../../../queries'

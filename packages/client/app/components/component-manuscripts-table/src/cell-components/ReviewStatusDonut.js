@@ -3,7 +3,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { Chart } from 'react-google-charts'
 import { countBy } from 'lodash'
 import i18next from 'i18next'

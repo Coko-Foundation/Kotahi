@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { X } from 'react-feather'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { TightRow } from './Containers'
 import MinimalButton from './MinimalButton'
 import ElasticTextInput from './ElasticTextInput'

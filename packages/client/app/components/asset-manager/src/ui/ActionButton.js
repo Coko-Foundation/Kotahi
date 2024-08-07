@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th, darken } from '@pubsweet/ui-toolkit'
+import { th, darken } from '@coko/client'
 import { color } from '../../../../theme'
 
 const Button = styled.button`

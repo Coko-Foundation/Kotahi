@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Formik } from 'formik'
 import { useMutation } from '@apollo/client'
-import { ValidatedFieldFormik } from '@pubsweet/ui'
 import styled from 'styled-components'
 import _ from 'lodash'
+
 import {
   ActionButton,
   PaddedContent,
   FilesUpload,
   Attachment,
 } from '../../../shared'
+import { ValidatedFieldFormik } from '../../../pubsweet'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import { CREATE_FILE_MUTATION, DELETE_FILE_MUTATION } from '../../../../queries'
 import SubmittedStatus from './SubmittedStatus'

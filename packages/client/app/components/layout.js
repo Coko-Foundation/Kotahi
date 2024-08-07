@@ -1,7 +1,7 @@
 /* stylelint-disable declaration-block-no-redundant-longhand-properties, string-quotes */
 
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 export const NAVBAR_WIDTH = 72
 export const NAVBAR_EXPANDED_WIDTH = 256

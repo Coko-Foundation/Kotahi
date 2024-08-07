@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
-import { Button } from '@pubsweet/ui'
+import { th, grid } from '@coko/client'
+import { Button } from '../../../pubsweet'
 import { color } from '../../../../theme'
 
 export const Section = styled.div`

@@ -11,7 +11,9 @@ import { ReviewPage } from '../../page-object/review-page'
 
 describe('review page tests', () => {
   beforeEach(() => {
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

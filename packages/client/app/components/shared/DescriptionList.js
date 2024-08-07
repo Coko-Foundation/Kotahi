@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 
 // eslint-disable-next-line import/prefer-default-export
 export const DescriptionList = styled.div`

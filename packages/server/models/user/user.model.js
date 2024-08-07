@@ -138,14 +138,15 @@ class User extends BaseModel {
     return Object.keys(roles).map(id => ({ id, roles: roles[id] }))
   }
 
-  async save() {
-    if (this.password) {
-      this.passwordHash = await User.hashPassword(this.password)
-      delete this.password
-    }
+  // NOT USED
+  // async save() {
+  //   if (this.password) {
+  //     this.passwordHash = await User.hashPassword(this.password)
+  //     delete this.password
+  //   }
 
-    return super.save()
-  }
+  //   return super.save()
+  // }
 
   async validPassword(password) {
     return password && this.passwordHash
@@ -157,13 +158,15 @@ class User extends BaseModel {
     return bcrypt.hash(password, BCRYPT_COST)
   }
 
-  static findByEmail(email) {
-    return this.findByField('email', email).then(users => users[0])
-  }
+  // NOT USED
+  // static findByEmail(email) {
+  //   return this.findByField('email', email).then(users => users[0])
+  // }
 
-  static findByUsername(username) {
-    return this.findByField('username', username).then(users => users[0])
-  }
+  // NOT USED
+  // static findByUsername(username) {
+  //   return this.findByField('username', username).then(users => users[0])
+  // }
 
   static async findOneWithIdentity(userId, identityType) {
     // eslint-disable-next-line global-require
@@ -195,7 +198,7 @@ class User extends BaseModel {
   static ownersWithUsername(object) {
     return Promise.all(
       object.owners.map(async ownerId => {
-        const owner = await this.find(ownerId)
+        const owner = await this.findById(ownerId)
         return pick(owner, ['id', 'username'])
       }),
     )

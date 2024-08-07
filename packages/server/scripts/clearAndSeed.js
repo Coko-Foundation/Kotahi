@@ -1,5 +1,4 @@
-const { logger, db } = require('@coko/server')
-const { createTables } = require('@pubsweet/db-manager')
+const { logger, db, createTables } = require('@coko/server')
 
 const clearDb = async () => {
   const { rows } = await db.raw(`

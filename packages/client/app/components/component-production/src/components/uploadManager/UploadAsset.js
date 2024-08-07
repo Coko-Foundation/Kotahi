@@ -2,9 +2,11 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, gql } from '@apollo/client'
-import { grid, th } from '@pubsweet/ui-toolkit'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
+
+import { grid, th, serverUrl } from '@coko/client'
+
 import { color } from '../../../../../theme'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { Placeholder } from '../../../../component-dashboard/src/style'
@@ -109,7 +111,8 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       body.append('isCms', tag === 'isCms')
       body.append('isPdf', tag === 'isPdf')
       body.append('fileType', fileType)
-      let result = await fetch('/api/uploadAsset', {
+
+      let result = await fetch(`${serverUrl}/api/uploadAsset`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -149,7 +152,7 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
 
   const onDelete = id => {
     return async () => {
-      let result = await fetch(`/api/deleteAsset`, {
+      let result = await fetch(`${serverUrl}/api/deleteAsset`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

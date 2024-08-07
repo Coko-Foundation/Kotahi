@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import ContentEditable from 'react-contenteditable'
 import { escape } from 'lodash'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { color } from '../../theme'
 
 const stripTags = html => {

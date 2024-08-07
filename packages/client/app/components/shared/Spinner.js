@@ -2,7 +2,7 @@
 
 import React from 'react'
 import styled from 'styled-components'
-import { rotate360, th } from '@pubsweet/ui-toolkit'
+import { rotate360, th } from '@coko/client'
 import { color } from '../../theme'
 
 // Courtesy of loading.io/css

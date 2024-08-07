@@ -2,7 +2,7 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { Icon } from '@pubsweet/ui'
+import { Icon } from '../../pubsweet'
 import { AlertIndicator, LinkLabel, StyledIcon, StyledLink } from '../styles'
 
 const MenuItem = ({ alert, icon, menu, name, open }) => (

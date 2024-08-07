@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react'
 import { Route, Switch, useLocation, Redirect } from 'react-router-dom'
-import { grid } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
+
+import { grid } from '@coko/client'
+
 import { ConfigProvider } from './components/config/src'
 import { DynamicThemeProvider } from './components/theme/src'
 import { YjsProvider } from './components/provider-yjs/YjsProvider'
@@ -18,10 +20,13 @@ import ArticleArtifactPage from './components/component-published-artifact/compo
 import DeclineArticleOwnershipPage from './components/component-dashboard/src/components/DeclineArticleOwnershipPage'
 import AcceptArticleOwnershipPage from './components/component-dashboard/src/components/AcceptArticleOwnershipPage'
 import InvitationAcceptedPage from './components/component-dashboard/src/components/InvitationAcceptedPage'
-
+import AssetManager from './components/asset-manager/src/AssetManagerPage'
 import AdminPage from './components/AdminPage'
-
 import GroupPage from './components/component-frontpage/src/GroupPage'
+import { JournalProvider } from './components/xpub-journal/src'
+import * as journal from '../config/journal'
+import ModalProvider from './components/asset-manager/src/ui/Modal/ModalProvider'
+import { XpubProvider } from './components/xpub-with-context/src'
 import { reloadTranslationsForGroup } from './i18n'
 
 const Container = styled.div`
@@ -44,6 +49,10 @@ const Content = styled.div`
 const Centered = styled.div`
   text-align: center;
 `
+
+const modals = {
+  assetManagerEditor: AssetManager,
+}
 
 const Pages = () => {
   const location = useLocation()
@@ -98,6 +107,7 @@ const Pages = () => {
     urlFrag: `/${currentGroup?.name}`,
     logo: activeConfig?.logo,
     icon: activeConfig?.icon,
+    flaxSiteUrl: activeConfig?.flaxSiteUrl,
     ...oldConfig,
     ...JSON.parse(activeConfig?.formData || '{}'),
   }
@@ -111,80 +121,86 @@ const Pages = () => {
   const { urlFrag } = config
 
   return (
-    <DynamicThemeProvider theme={theme}>
-      <DynamicFavicon config={config} />
-      <GlobalStyle />
-      <ConfigProvider config={config}>
-        <YjsProvider>
-          <Switch>
-            {hasMultipleGroups ? (
-              <Route component={GroupPage} exact path="/" />
-            ) : (
-              <Route
-                exact
-                path="/"
-                render={() => <Redirect to={`/${onlyGroupName}/login`} />}
-              />
-            )}
+    <XpubProvider>
+      <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
+        <ModalProvider modals={modals}>
+          <DynamicThemeProvider theme={theme}>
+            <DynamicFavicon config={config} />
+            <GlobalStyle />
+            <ConfigProvider config={config}>
+              <YjsProvider>
+                <Switch>
+                  {hasMultipleGroups ? (
+                    <Route component={GroupPage} exact path="/" />
+                  ) : (
+                    <Route
+                      exact
+                      path="/"
+                      render={() => <Redirect to={`/${onlyGroupName}/login`} />}
+                    />
+                  )}
 
-            <Route
-              exact
-              path="/login"
-              render={() => (
-                <Redirect
-                  to={hasMultipleGroups ? '/' : `/${onlyGroupName}/login`}
-                />
-              )}
-            />
+                  <Route
+                    exact
+                    path="/login"
+                    render={() => (
+                      <Redirect
+                        to={hasMultipleGroups ? '/' : `/${onlyGroupName}/login`}
+                      />
+                    )}
+                  />
 
-            <Route
-              exact
-              path={urlFrag}
-              render={() => (
-                <Redirect
-                  to={
-                    window.localStorage.getItem('token')
-                      ? `${urlFrag}/dashboard`
-                      : `${urlFrag}/login`
-                  }
-                />
-              )}
-            />
+                  <Route
+                    exact
+                    path={urlFrag}
+                    render={() => (
+                      <Redirect
+                        to={
+                          window.localStorage.getItem('token')
+                            ? `${urlFrag}/dashboard`
+                            : `${urlFrag}/login`
+                        }
+                      />
+                    )}
+                  />
 
-            {/* <Route component={Frontpage} exact path={`${urlFrag}`} /> */}
-            {/* <Route component={GroupPage} exact path="/" /> */}
+                  {/* <Route component={Frontpage} exact path={`${urlFrag}`} /> */}
+                  {/* <Route component={GroupPage} exact path="/" /> */}
 
-            <Route component={Login} exact path={`${urlFrag}/login`} />
+                  <Route component={Login} exact path={`${urlFrag}/login`} />
 
-            <Route
-              component={ArticleArtifactPage}
-              exact
-              path={`${urlFrag}/versions/:version/artifacts/:artifactId`}
-            />
-            <Route
-              component={DeclineArticleOwnershipPage}
-              exact
-              path={`${urlFrag}/decline/:invitationId`}
-            />
-            <Route
-              component={AcceptArticleOwnershipPage}
-              exact
-              path={`${urlFrag}/acceptarticle/:invitationId`}
-            />
-            <Route
-              component={InvitationAcceptedPage}
-              exact
-              path={`${urlFrag}/invitation/accepted`}
-            />
-            {/* AdminPage has nested routes within */}
-            <Route path={`${urlFrag}`}>
-              <AdminPage />
-            </Route>
-          </Switch>
-        </YjsProvider>
-      </ConfigProvider>
-    </DynamicThemeProvider>
+                  <Route
+                    component={ArticleArtifactPage}
+                    exact
+                    path={`${urlFrag}/versions/:version/artifacts/:artifactId`}
+                  />
+                  <Route
+                    component={DeclineArticleOwnershipPage}
+                    exact
+                    path={`${urlFrag}/decline/:invitationId`}
+                  />
+                  <Route
+                    component={AcceptArticleOwnershipPage}
+                    exact
+                    path={`${urlFrag}/acceptarticle/:invitationId`}
+                  />
+                  <Route
+                    component={InvitationAcceptedPage}
+                    exact
+                    path={`${urlFrag}/invitation/accepted`}
+                  />
+                  {/* AdminPage has nested routes within */}
+                  <Route path={`${urlFrag}`}>
+                    <AdminPage />
+                  </Route>
+                </Switch>
+              </YjsProvider>
+            </ConfigProvider>
+          </DynamicThemeProvider>
+        </ModalProvider>
+      </JournalProvider>
+    </XpubProvider>
   )
 }
 
-export default Pages
+export default <Pages />

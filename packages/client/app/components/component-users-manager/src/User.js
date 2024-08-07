@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Action } from '@pubsweet/ui'
 import { Trans, useTranslation } from 'react-i18next'
+import { Action } from '../../pubsweet'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   UserCombo,

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Icon } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
+import { Icon } from '../../pubsweet'
 import { color } from '../../../theme'
 
 const FloatRightButton = styled.a`

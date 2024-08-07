@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Form from '@rjsf/core'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../config/src'
 import journalSchema from './collection/ui/journalSchema' // Import the function that generates the schema and uiSchema

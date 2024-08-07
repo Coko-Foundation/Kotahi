@@ -8,8 +8,12 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe.skip('tooltip tests', () => {
   beforeEach(() => {
-    cy.task('restore', 'initial_state_other')
-    cy.task('seedForms')
+    const restoreUrl = Cypress.config('restoreUrl')
+    const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+    cy.request('POST', `${restoreUrl}/initial_state_other`)
+    cy.request('POST', seedFormsUrl)
+
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

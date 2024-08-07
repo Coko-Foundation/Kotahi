@@ -2,7 +2,7 @@
 /* stylelint-disable declaration-no-important, string-quotes */
 
 import styled, { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { MEDIA_BREAK } from '../../../layout'
 import { zIndex } from '../../../../globals'
 

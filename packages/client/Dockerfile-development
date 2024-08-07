@@ -1,4 +1,4 @@
-FROM node:16.19.0-bullseye
+FROM node:18-bookworm-slim
 
 RUN apt-get update && apt-get install -y ranger vim curl nano
 

@@ -1,7 +1,9 @@
-const { v4: uuid } = require('uuid')
 const fs = require('fs')
 const citeproc = require('citeproc-js-node')
 const path = require('path')
+
+const { uuid } = require('@coko/server')
+
 const Config = require('../../../models/config/config.model')
 const { pluckAuthors, pluckTitle, pluckJournalTitle } = require('./helpers')
 

@@ -1,4 +1,4 @@
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import React from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'

@@ -5,8 +5,8 @@ import { dashboard } from '../../support/routes1'
 
 describe('Form builder', () => {
   it('views a form field', () => {
-    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
-    cy.task('restore', 'commons/colab_bootstrap')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -26,7 +26,7 @@ describe('Form builder', () => {
     )
     FormsPage.clickFormOption(1)
     FormsPage.getFieldValidate().scrollIntoView().click()
-    cy.get('[class*="MenuList"] > div').eq(0).click()
+    cy.get('[class*="react-select__option"]').eq(0).click()
     cy.contains('Save').click()
 
     // adding a field in submission form
@@ -36,7 +36,6 @@ describe('Form builder', () => {
     cy.contains('Save').click()
 
     // for review field
-    Menu.clickSettings()
     cy.contains('Review').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Review')
     FormsPage.clickFormOption(1)
@@ -47,7 +46,7 @@ describe('Form builder', () => {
     // adding a field in review form
     cy.get('[title="Add a field..."]').click()
     cy.getByDataTestId('fieldType').click()
-    cy.get('[class*="MenuList"]')
+    cy.get('[class*="react-select__option"]')
       .contains('Attachments')
       .scrollIntoView()
       .click()
@@ -56,7 +55,6 @@ describe('Form builder', () => {
     cy.contains('Save').click()
 
     // for decision field
-    Menu.clickSettings()
     cy.contains('Decision').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)

@@ -5,7 +5,7 @@ import { last, maxBy } from 'lodash'
 import styled from 'styled-components'
 import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
 import { v4 as uuidv4 } from 'uuid'
-import { override } from '@pubsweet/ui-toolkit'
+import { override } from '@coko/client'
 import CommentBox from './ui/comments/CommentBox'
 
 const ConnectedCommentStyled = styled.div`

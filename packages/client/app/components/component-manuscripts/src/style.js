@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
-import { Button } from '@pubsweet/ui'
+import { grid } from '@coko/client'
+import { Button } from '../../pubsweet'
 import { Action } from '../../shared'
 import theme, { color } from '../../../theme'
 

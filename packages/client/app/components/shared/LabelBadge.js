@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import Color from 'color'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 
 const BadgeDiv = ({ color, children, ...rest }) => (
   <div {...rest}>{children}</div>

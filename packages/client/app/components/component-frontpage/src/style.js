@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@coko/client'
 
 export const Container = styled.div`
   background: ${th('colorBackgroundHue')};

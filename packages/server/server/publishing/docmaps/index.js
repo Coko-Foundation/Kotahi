@@ -1,7 +1,8 @@
 const Handlebars = require('handlebars')
 const { transform, isObject, isArray } = require('lodash')
-const config = require('config')
 const fnv = require('fnv-plus')
+
+const { clientUrl, serverUrl } = require('@coko/server')
 
 const Group = require('../../../models/group/group.model')
 const Config = require('../../../models/config/config.model')
@@ -94,7 +95,7 @@ const tryPublishDocMaps = async manuscript => {
   )
 
   const { doi, uri, title: manuscriptTitle } = fields
-  const id = fnv.hash(`${config['pubsweet-server'].baseUrl}::${uri}`).hex()
+  const id = fnv.hash(`${serverUrl}::${uri}`).hex()
 
   const fragment = expandTemplatesAndRemoveDirectivesRecursive(
     docmapsScheme,
@@ -138,7 +139,7 @@ const tryPublishDocMaps = async manuscript => {
 
             fragmentOutput.content.push({
               type: 'web-page',
-              url: `${config['pubsweet-client'].baseUrl}/${group.name}/versions/${manuscript.id}/artifacts/${artifactId}`,
+              url: `${clientUrl}/${group.name}/versions/${manuscript.id}/artifacts/${artifactId}`,
             })
           }
 

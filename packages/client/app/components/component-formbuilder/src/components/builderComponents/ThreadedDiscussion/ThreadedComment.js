@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Moment from 'react-moment'
-import { Button } from '@pubsweet/ui'
+import { Button } from '../../../../../pubsweet'
 import Tooltip from '../../../../../component-reporting/src/Tooltip'
 import {
   CommentMetaWrapper,

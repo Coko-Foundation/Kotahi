@@ -40,7 +40,7 @@ const CMSPagesPage = ({ match, history }) => {
   const [rebuildFlaxSiteQuery] = useMutation(rebuildFlaxSiteMutation)
   const [deleteCMSPage] = useMutation(deleteCMSPageMutation)
 
-  const flaxSiteUrlForGroup = `${process.env.FLAX_SITE_URL}/${groupName}/`
+  const flaxSiteUrlForGroup = `${config.flaxSiteUrl}/${groupName}/`
 
   let currentCMSPageId = null
 

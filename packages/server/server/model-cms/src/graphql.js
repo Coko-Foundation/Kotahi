@@ -24,11 +24,11 @@ const setInitialLayout = async groupId => {
   const { formData } = await Config.getCached(groupId)
   const { primaryColor, secondaryColor } = formData.groupIdentity
 
-  const layout = await new CMSLayout({
+  const layout = await CMSLayout.query().insert({
     primaryColor,
     secondaryColor,
     groupId,
-  }).save()
+  })
 
   return layout
 }
@@ -225,9 +225,9 @@ const resolvers = {
       try {
         const groupId = ctx.req.headers['group-id']
 
-        const savedCmsPage = await new CMSPage(
+        const savedCmsPage = await CMSPage.query().insert(
           cleanCMSPageInput({ ...input, groupId }),
-        ).save()
+        )
 
         const cmsPage = await CMSPage.query().findById(savedCmsPage.id)
         return { success: true, error: null, cmsPage }
@@ -258,7 +258,7 @@ const resolvers = {
 
     async deleteCMSPage(_, { id }, ctx) {
       try {
-        const response = await CMSPage.query().where({ id }).delete()
+        const response = await CMSPage.query().delete().where({ id })
 
         if (response) {
           return {
@@ -284,7 +284,7 @@ const resolvers = {
       const layout = await CMSLayout.query().where('groupId', groupId).first()
 
       if (!layout) {
-        const savedCmsLayout = await new CMSLayout(input).save()
+        const savedCmsLayout = await CMSLayout.query().insert(input)
 
         const cmsLayout = await CMSLayout.query().findById(savedCmsLayout.id)
 
@@ -474,7 +474,7 @@ const resolvers = {
           active: true,
         })
 
-        const file = await File.find(
+        const file = await File.findById(
           activeConfig.formData.groupIdentity.favicon,
         )
 
@@ -543,7 +543,7 @@ const resolvers = {
   StoredPartner: {
     async file(parent) {
       try {
-        const file = await File.find(parent.id)
+        const file = await File.findById(parent.id)
         const updatedStoredObjects = await setFileUrls(file.storedObjects)
         file.storedObjects = updatedStoredObjects
         return file

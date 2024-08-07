@@ -7,7 +7,8 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 // eslint-disable-next-line jest/no-disabled-tests
 describe('Email Notification Tests', () => {
   it('can send existing user email notifications', () => {
-    cy.task('restore', 'email_notification')
+    const restoreUrl = Cypress.config('restoreUrl')
+    cy.request('POST', `${restoreUrl}/email_notification`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

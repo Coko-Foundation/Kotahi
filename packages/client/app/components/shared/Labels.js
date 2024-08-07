@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 
 export const ControlLabel = styled.div`
   font-size: ${th('fontSizeBaseSmall')};

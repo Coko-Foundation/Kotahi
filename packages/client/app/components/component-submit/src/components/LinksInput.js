@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { FieldArray } from 'formik'
 import { cloneDeep, set, get } from 'lodash'
-import { TextField, Button, ValidatedFieldFormik } from '@pubsweet/ui'
+import { TextField, Button, ValidatedFieldFormik } from '../../../pubsweet'
 // import { minSize } from 'xpub-validators'
 
 // const minSize1 = minSize(1)

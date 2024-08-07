@@ -1,5 +1,5 @@
 /*
-  Lighten the shade of a color. Unlike @pubsweet/ui-toolkit's lighten, which applies a simple factor to a color's brightness,
+  Lighten the shade of a color. Unlike @coko/client's lighten, which applies a simple factor to a color's brightness,
   this lightens the colour relative to its distance from pure white, so that e.g. lightening by 50% will take it half
   way towards white (retaining hue and saturation as much as possible).
 

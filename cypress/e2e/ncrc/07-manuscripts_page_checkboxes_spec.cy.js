@@ -9,8 +9,12 @@ import { Menu } from '../../page-object/page-component/menu'
 describe.skip('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
+
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
@@ -75,8 +79,12 @@ describe.skip('manuscripts page checkboxes tests', () => {
   })
   context('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
-      cy.task('restore', 'initial_state_other')
-      cy.task('seedForms')
+      const restoreUrl = Cypress.config('restoreUrl')
+      const seedFormsUrl = Cypress.config('seedFormsUrl')
+
+      cy.request('POST', `${restoreUrl}/initial_state_other`)
+      cy.request('POST', seedFormsUrl)
+
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {

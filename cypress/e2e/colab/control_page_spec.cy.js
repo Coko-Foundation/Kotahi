@@ -237,7 +237,9 @@ describe('control page tests', () => {
 
   context('admin user can see the icons', () => {
     beforeEach(() => {
-      cy.task('restore', 'commons/colab_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[0], dashboard)
         cy.awaitDisappearSpinner()

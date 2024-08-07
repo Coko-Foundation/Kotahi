@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { Select } from './Select'
 import PlainOrRichText from './PlainOrRichText'

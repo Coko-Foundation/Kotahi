@@ -5,7 +5,7 @@
 // @flow
 import React from 'react'
 import { MentionsInput, Mention } from 'react-mentions'
-import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@coko/client'
 import { MentionsInputStyle } from './style'
 import MentionSuggestion from './mentionSuggestion'
 import { theme, hexa } from '../SuperChatInput/style'

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import UnstyledDatePicker from 'react-date-picker'
-import { grid, th } from '@pubsweet/ui-toolkit'
+import { grid, th } from '@coko/client'
 
 const DatePicker = styled(UnstyledDatePicker)`
   & > div.react-date-picker__wrapper {

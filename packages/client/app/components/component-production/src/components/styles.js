@@ -1,7 +1,7 @@
 /* stylelint-disable string-quotes */
 
 import styled, { css } from 'styled-components'
-import { grid } from '@pubsweet/ui-toolkit'
+import { grid } from '@coko/client'
 import { color } from '../../../../theme'
 
 export const Info = styled.span`

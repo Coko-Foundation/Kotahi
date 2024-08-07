@@ -9,7 +9,9 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 describe('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
-      cy.task('restore', 'commons/colab_bootstrap')
+      const restoreUrl = Cypress.config('restoreUrl')
+      cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+
       // cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

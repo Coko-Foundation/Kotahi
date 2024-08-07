@@ -58,12 +58,10 @@ const resolvers = {
           ccEditors: input.emailContent.ccEditors,
         }
 
-        const newEmailTemplate = new EmailTemplate({
+        const createdEmailTemplate = await EmailTemplate.query().insert({
           emailContent: emailContents,
           groupId,
         })
-
-        const createdEmailTemplate = await newEmailTemplate.save()
 
         return {
           success: true,
@@ -78,8 +76,8 @@ const resolvers = {
     async deleteEmailTemplate(_, { id }, ctx) {
       try {
         await TaskEmailNotification.query()
-          .where('email_template_id', id)
           .delete()
+          .where('email_template_id', id)
 
         const response = await EmailTemplate.query().where({ id }).delete()
 

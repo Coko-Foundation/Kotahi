@@ -1,6 +1,7 @@
 import React from 'react'
-import { Link } from '@pubsweet/ui'
 import PropTypes from 'prop-types'
+
+import { Link } from '../../../pubsweet'
 
 const ControlPageLink = ({ className, children, version, page, id }) => (
   <Link className={className} to={`versions/${id}/decision`}>

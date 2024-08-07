@@ -12,7 +12,7 @@ class Review extends BaseModel {
 
   // async user() {
   //   const User = require('../user/user.model')
-  //   return User.find(this.userId)
+  //   return User.findById(this.userId)
   // }
 
   // async getComments() {
