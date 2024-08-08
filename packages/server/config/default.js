@@ -100,7 +100,6 @@ module.exports = {
   'pubsweet-server': {
     useGraphQLServer: true,
     useJobQueue: false,
-    serveClient: true,
     useFileStorage: true,
     db: {},
     port: 3000,

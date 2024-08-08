@@ -156,7 +156,6 @@ services:
     ports:
       - ${FLAX_EXPRESS_PORT:-8082}:${FLAX_EXPRESS_PORT:-3000}
       - ${FLAX_SITE_PORT:-8081}:80
-
     environment:
       - FLAX_EXPRESS_PORT=${FLAX_EXPRESS_PORT:-3000}
       - FLAX_CLIENT_ID=${FLAX_CLIENT_ID}
