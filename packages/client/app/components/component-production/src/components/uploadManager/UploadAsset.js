@@ -79,11 +79,6 @@ export const FilesHeading = styled.div`
   }
 `
 
-const EmptyButton = styled.div`
-  min-width: 128px;
-  text-align: center;
-`
-
 const WrapperUpload = styled.div`
   display: flex;
   flex: 1;
@@ -192,6 +187,16 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
       )
   }
 
+  const onCopyAsLink = file => {
+    return () => {
+      const aTag = `<a data-name="${file.name}" data-fileid="${file.id}" rel="preload" href="${file.storedObjects[0].url}" title="${file.name}" target="_blank">${file.name}</a>`
+
+      const copiedStr = `{{ '${aTag}' | linkHandler(article.shortId, 'articles', cmsConfig.group, cmsLayout.hexCode) | safe }}`
+
+      return navigator.clipboard.writeText(copiedStr)
+    }
+  }
+
   let counter = 1
 
   const columnsProps = [
@@ -265,7 +270,11 @@ const UploadAsset = ({ files, groupTemplateId, tag, onCopyAsImage }) => {
           )
         }
 
-        return <EmptyButton />
+        return (
+          <ActionButton onClick={onCopyAsLink(file)} primary>
+            Link
+          </ActionButton>
+        )
       },
     },
     {

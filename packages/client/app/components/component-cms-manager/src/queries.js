@@ -1,5 +1,45 @@
 import { gql } from '@apollo/client'
 
+const formFields = `
+  structure {
+    name
+    description
+    haspopup
+    popuptitle
+    popupdescription
+    children {
+      title
+      shortDescription
+      id
+      component
+      name
+      description
+      doiValidation
+      doiUniqueSuffixValidation
+      placeholder
+      permitPublishing
+      parse
+      format
+      options {
+        id
+        label
+        labelColor
+        value
+      }
+      validate {
+        id
+        label
+        value
+      }
+      validateValue {
+        minChars
+        maxChars
+        minSize
+      }
+    }
+  }
+`
+
 const fileFields = `
     id
     name
@@ -338,6 +378,16 @@ export const getManuscriptData = gql`
         id
         submission
       }
+    }
+  }
+`
+
+export const getSubmissionForm = gql`
+    query(
+      $groupId: ID!
+    ) {
+      submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission", groupId: $groupId) {
+      ${formFields}
     }
   }
 `
