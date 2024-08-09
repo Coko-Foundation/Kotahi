@@ -17,18 +17,15 @@ import {
 } from '../../../shared'
 
 import { FormActionButton } from '../style'
+
 import UploadAsset from '../../../component-production/src/components/uploadManager/UploadAsset'
-import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
+import ManuscriptMetadata from './ManuscriptMetadata'
 import { color } from '../../../../theme'
 
 const FlexRow = styled.div`
   display: flex;
   gap: ${grid(1)};
   justify-content: space-between;
-`
-
-const FormTemplateStyled = styled.div`
-  max-height: calc(100vh - 150px);
 `
 
 const StyledManuscript = styled(Manuscript)`
@@ -55,7 +52,6 @@ const Article = ({
   displayShortIdAsIdentifier,
   form,
   onPublish,
-  manuscript,
   submitButtonText,
   updateTemplate,
 }) => {
@@ -95,7 +91,7 @@ const Article = ({
     return () => {
       const imageTag = `<img data-name="${file.name}" data-id="${file.id}" src="${file.storedObjects[0].url}" alt="${file.name}" />`
 
-      const copiedStr = `{{ '${imageTag}' | imagesHandler(article.shortId, 'articles', config.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}`
+      const copiedStr = `{{ '${imageTag}' | imagesHandler(article.shortId, 'articles', cmsConfig.group, cmsLayout.hexCode) | makeSvgsFromLatex(true) | safe }}`
 
       return navigator.clipboard.writeText(copiedStr)
     }
@@ -157,15 +153,10 @@ const Article = ({
   const manuscriptMetadata = {
     content: (
       <ScrollableTabContent>
-        <FormTemplateStyled>
-          <ReadonlyFormTemplate
-            copyHandleBarsCode
-            displayShortIdAsIdentifier={displayShortIdAsIdentifier}
-            form={formWithSubmissionFieldsOnly}
-            formData={{}}
-            showEditorOnlyFields
-          />
-        </FormTemplateStyled>
+        <ManuscriptMetadata
+          displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+          formWithSubmissionFieldsOnly={formWithSubmissionFieldsOnly}
+        />
       </ScrollableTabContent>
     ),
     key: 'manuscript-metadata',

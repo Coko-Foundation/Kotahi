@@ -10,6 +10,8 @@ import 'react-folder-tree/dist/style.css'
 
 import { Link } from '../../../pubsweet'
 
+import ModalMetadataReadOnly from './ModalMetadataReadOnly'
+
 import DeleteIcon from './DeleteIcon'
 import { Select } from '../../../shared'
 import { ConfigContext } from '../../../config/src'
@@ -167,12 +169,15 @@ const Browser = ({
   getTreeData,
   treeData,
   addObject,
+  displayShortIdAsIdentifier,
   folderLists,
+  form,
   deleteObject,
   rebuildFlaxSite,
   renameObject,
   updateFlaxFolderFn,
 }) => {
+  const [metadataState, setMetadataState] = useState(false)
   const config = useContext(ConfigContext)
   const { groupName } = config
 
@@ -268,6 +273,13 @@ const Browser = ({
     onSelect(nodeData)
   }
 
+  const formWithSubmissionFieldsOnly = {
+    ...form,
+    children: form.children.filter(field =>
+      field.name.startsWith('submission.'),
+    ),
+  }
+
   return (
     <ContainerBrowser>
       <RootFolder>
@@ -297,6 +309,21 @@ const Browser = ({
             {flaxSiteUrlForGroup}
           </FlaxLink>
         </SpanUrl>
+        <FormActionButtonStyled
+          onClick={() => setMetadataState(true)}
+          primary
+          type="button"
+        >
+          Metadata List
+        </FormActionButtonStyled>
+        <ModalMetadataReadOnly
+          displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+          formWithSubmissionFieldsOnly={formWithSubmissionFieldsOnly}
+          onClose={() => {
+            setMetadataState(false)
+          }}
+          open={metadataState}
+        />
       </RootFolder>
       <hr />
       <FolderTreeContainer>

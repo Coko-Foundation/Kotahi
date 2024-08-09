@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useContext } from 'react'
 import { debounce, isEmpty, pick } from 'lodash'
 import styled from 'styled-components'
 import { useQuery, useLazyQuery, useMutation } from '@apollo/client'
@@ -15,6 +15,7 @@ import Browser from './browser/FileBrowser'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import UploadComponent from '../../component-production/src/components/uploadManager/UploadComponent'
 import { EditPageContainer } from './style'
+import { ConfigContext } from '../../config/src'
 
 import {
   getCmsFileContent,
@@ -26,6 +27,7 @@ import {
   getFoldersList,
   updateFlaxRootFolder,
   rebuildFlaxSiteMutation,
+  getSubmissionForm,
 } from './queries'
 
 const StyledCodeMirror = styled(CodeMirror)`
@@ -87,6 +89,8 @@ const searchAddChildren = (treeData, { id, children }) => {
 }
 
 const CMSFileBrowserPage = () => {
+  const { groupId, controlPanel } = useContext(ConfigContext)
+
   const [sizes, setSizes] = useState(['20%', '80%'])
 
   const { t } = useTranslation()
@@ -104,6 +108,12 @@ const CMSFileBrowserPage = () => {
     data: dataFolders,
     refetch,
   } = useQuery(getFoldersList)
+
+  const { data: metadata, loadingMetadata } = useQuery(getSubmissionForm, {
+    variables: {
+      groupId,
+    },
+  })
 
   const [activeContent, setActiveContent] = useState({
     id: null,
@@ -232,9 +242,18 @@ const CMSFileBrowserPage = () => {
     }
   }
 
-  if (loadingFolders || loading) return <Spinner />
+  if (loadingFolders || loading || loadingMetadata) return <Spinner />
 
   if (error) return <CommsErrorBanner error={error} />
+
+  const { submissionForm } = metadata
+
+  const form = submissionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
 
   return (
     <EditPageContainer>
@@ -244,7 +263,9 @@ const CMSFileBrowserPage = () => {
             addObject={addObject}
             dataFolders={dataFolders}
             deleteObject={deleteObject}
+            displayShortIdAsIdentifier={controlPanel?.displayManuscriptShortId}
             folderLists={dataFolders.getFoldersList || []}
+            form={form}
             getTreeData={getTreeData}
             onSelect={onSelect}
             rebuildFlaxSite={rebuildFlaxSite}
