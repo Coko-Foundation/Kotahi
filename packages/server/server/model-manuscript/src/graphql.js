@@ -1699,7 +1699,9 @@ const resolvers = {
       const resultRows =
         Object.keys(userManuscriptsWithInfo).length > 0 ? rawQResult.rows : []
 
-      totalCount = parseInt(resultRows.length, 10)
+      if (resultRows.length) {
+        totalCount = parseInt(resultRows[0].full_count, 10)
+      }
 
       // Add in searchRank and searchSnippet
       const result = resultRows.map(row => ({
