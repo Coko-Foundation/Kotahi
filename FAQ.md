@@ -77,6 +77,8 @@ The following variables must be set in the `.env` file (`.env.example` provides 
 
 When configuring DNS for a production installation, Flax and Kotahi will need two separate DNS configurations. They can differ by subdomain, or you may choose to provide entirely separate domains for the two. Just ensure that `FLAX_SITE_URL` and `FLAX_CLIENT_API_URL` are set correspondingly.
 
+Metadata (for SEO) can be set inside of Kotahi by going to **Settings > CMS > File browser**, then editing `kotahi/layouts/base.njk`.
+
 ### What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
 
 These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
@@ -163,16 +165,16 @@ If a submission to Crossref fails basic schema validation (e.g. if required fiel
 Registering an `article` DOI to Crossref on the publish action requires that you have certain fields configured via the form-builder. These are:
 
 <!-- prettier-ignore -->
-| Field type | Internal field name       | Purpose                                                                                                                            |
-| ---------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Title      | `submission.$title`       | Article title                                                                                                                      |
-| Authors    | `submission.$authors`     | Ordered list of authors                                                                                                            |
-| Abstract   | `submission.$abstract`    | Article abstract                                                                                                                   |
-| Rich text  | `submission.references`   | Citations in separate paragraphs                                                                                                   |
-| Text | `submission.$volumeNumber` | (Optional) Journal volume number |
-| Text | `submission.$issueNumber` | (Optional) Journal issue number |
-| Text | `submission.$issueYear` | The year of publication. If `submission.$volumeNumber` is formatted as a year (e.g. 2021), then `submission.$issueYear` is optional. |
-| DOI suffix | `submission.$doiSuffix`   | (Optional) The custom DOI suffix for the article                                                                                   |
+| Field type | Internal field name        | Purpose                                                                                                                              |
+| ---------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Title      | `submission.$title`        | Article title                                                                                                                        |
+| Authors    | `submission.$authors`      | Ordered list of authors                                                                                                              |
+| Abstract   | `submission.$abstract`     | Article abstract                                                                                                                     |
+| Rich text  | `submission.references`    | Citations in separate paragraphs                                                                                                     |
+| Text       | `submission.$volumeNumber` | (Optional) Journal volume number                                                                                                     |
+| Text       | `submission.$issueNumber`  | (Optional) Journal issue number                                                                                                      |
+| Text       | `submission.$issueYear`    | The year of publication. If `submission.$volumeNumber` is formatted as a year (e.g. 2021), then `submission.$issueYear` is optional. |
+| DOI suffix | `submission.$doiSuffix`    | (Optional) The custom DOI suffix for the article                                                                                     |
 
 <!-- prettier-ignore -->
 #### Registering peer review DOIs via Crossref

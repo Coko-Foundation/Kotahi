@@ -26,17 +26,26 @@
         </script>
 
         <meta name="description" content="{{site.description}}">
-        <meta property="og:title" content="{{title}}">
+        <meta property="og:title" content="{{cmsLayout.publishConfig.title | title | safe}}: {{article.articleMetadata.submission.$title | safe}}">
         <meta property="og:description" content="{% if description %}{{description}}{% else %}{{site.description}}{% endif %}">
         <meta property="og:image" content="{{site.image}}">
         <meta property="og:image:alt" content="{{site.imageAlt}}">
         <meta property="og:locale" content="{{site.locale}}">
         <meta property="og:type" content="website">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta property="og:url" content="site.url">
+        <meta name="twitter:card" content="{{site.image}}">
+        <meta property="og:url" content="{{site.url}}">
 
         {% if cmsLayout.favicon %}<link rel="icon" href="{{cmsConfig.defaultImagesDirectory}}/favicon.png?{{cmsLayout.favicon.id}}">{% endif %}
         <meta name="twitter:dnt" content="on">
+				<meta name="citation_title" content="{{article.articleMetadata.submission.$title | safe}}">
+					{% for author in article.articleMetadata.submission.$authors %}
+							<meta name="citation_author" content="{{author.lastName}}, {{author.firstName}}">	
+					{% endfor %}
+				{# <meta name="googlebot" content="noindex, nofollow, noarchive" /> #}
+				<meta name="citation_publication_date" content="{{ article.headerInfo.publishedOn | replace('Z','') | postDate }}">	
+				<meta name="citation_journal_title" content="{{cmsLayout.publishConfig.title | title | safe}}">
+        <meta name="citation_volume" content="{{article.articleMetadata.submission.$volumeNumber | safe }}">
+        <meta name="citation_issue" content="{{article.articleMetadata.submission.$issueNumber | safe }}">				
 
         {% block styles %}
             <link rel="stylesheet" href="/{% if cmsLayout.hexCode %}{{cmsLayout.hexCode}}/{% endif %}assets/css/main.css?{{ [1,2,3,4,5,6,7,8,9] | random }}{{ [1,2,3,4,5,6,7,8,9] | random }}{{ [1,2,3,4,5,6,7,8,9] | random }}">
