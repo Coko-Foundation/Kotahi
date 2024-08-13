@@ -195,12 +195,16 @@ const esLa = {
         'View production feedback': 'Ver comentarios de producción',
       },
     },
+    submitPage: {
+      unauthorized: 'Este envío no es accesible.',
+    },
     reviewPage: {
       Versions: 'Versiones',
       'Anonymous Reviewer': 'Revisor Anónimo',
       Submit: 'Enviar',
       neverSubmitted: 'Esta revisión no fue enviada',
       isCollaborative: 'Revisión colaborativa',
+      unauthorized: 'Esta revisión no es accesible.',
     },
     reviewVerdict: {
       accept: 'aceptar',

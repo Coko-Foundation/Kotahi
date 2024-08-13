@@ -8,7 +8,7 @@ import { ConfigContext } from '../../../config/src'
 import YjsContext from '../../../provider-yjs/YjsProvider'
 
 import ReviewLayout from './review/ReviewLayout'
-import { Heading, Page, Spinner } from '../../../shared'
+import { AccessErrorPage, Heading, Page, Spinner } from '../../../shared'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
 import {
   UPDATE_PENDING_COMMENT,
@@ -362,11 +362,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
     return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
 
   if (!data.versionsOfManuscriptCurrentUserIsReviewerOf.length)
-    return (
-      <Page>
-        <Heading>This review is not accessible.</Heading>
-      </Page>
-    )
+    return <AccessErrorPage message={t('reviewPage.unauthorized')} />
 
   const versions = manuscriptVersions(manuscript)
 
