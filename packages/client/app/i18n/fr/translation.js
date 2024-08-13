@@ -197,12 +197,16 @@ const fr = {
           'Afficher les commentaires sur la production',
       },
     },
+    submitPage: {
+      unauthorized: "Cette soumission n'est pas accessible.",
+    },
     reviewPage: {
       Versions: 'Versions',
       'Anonymous Reviewer': 'Réviseur anonyme',
       Submit: 'Soumettre',
       neverSubmitted: "Cette évaluation n'a pas été soumise",
       isCollaborative: 'Révision collaborative',
+      unauthorized: "Cet avis n'est pas accessible.",
     },
     reviewVerdict: {
       accept: 'accepter',

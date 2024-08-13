@@ -197,12 +197,16 @@ const ru = {
         'View production feedback': 'Посмотреть отзывы о производстве',
       },
     },
+    submitPage: {
+      unauthorized: 'Эта подача недоступна.',
+    },
     reviewPage: {
       Versions: 'Версии',
       'Anonymous Reviewer': 'Анонимный рецензент',
       Submit: 'Отправить',
       neverSubmitted: 'Этот отзыв не был отправлен',
       isCollaborative: 'Коллективное обсуждение',
+      unauthorized: 'Этот обзор недоступен.',
     },
     reviewVerdict: {
       accept: 'Принять',

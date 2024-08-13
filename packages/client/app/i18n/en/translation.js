@@ -193,12 +193,16 @@ const en = {
         'View production feedback': 'View production feedback',
       },
     },
+    submitPage: {
+      unauthorized: 'This submission is not accessible.',
+    },
     reviewPage: {
       Versions: 'Versions',
       'Anonymous Reviewer': 'Anonymous Reviewer',
       Submit: 'Submit',
       neverSubmitted: 'This review was not submitted',
       isCollaborative: 'Collaborative review',
+      unauthorized: 'This review is not accessible.',
     },
     reviewVerdict: {
       accept: 'accept',

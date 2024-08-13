@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
 import query, { fragmentFields } from '../userManuscriptFormQuery'
-import { Spinner } from '../../../shared'
+import { AccessErrorPage, Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import {
   publishManuscriptMutation,
@@ -81,7 +81,7 @@ let debouncers = {}
 const SubmitPage = ({ currentUser, match, history }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
-  const { urlFrag } = config
+  const { urlFrag, instanceName } = config
   const [chatExpand] = useMutation(mutations.updateChatUI)
 
   useEffect(() => {
@@ -167,6 +167,16 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const submissionForm = data?.submissionForm?.structure
   const decisionForm = data?.decisionForm?.structure
   const reviewForm = data?.reviewForm?.structure
+
+  const authorTeam = manuscript.teams.find(e => e.role === 'author')
+
+  const authorMember = authorTeam?.members.find(
+    m => m.user.id === currentUser.id,
+  )
+
+  if (['journal', 'prc'].includes(instanceName) && !authorMember) {
+    return <AccessErrorPage message={t('submitPage.unauthorized')} />
+  }
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     return update({
