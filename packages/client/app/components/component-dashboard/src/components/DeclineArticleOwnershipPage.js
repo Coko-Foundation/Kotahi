@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { Field, Formik } from 'formik'
 
 import { Button, Checkbox, TextArea } from '../../../pubsweet'
 import { ADD_EMAIL_TO_BLACKLIST } from '../../../../queries/index'
@@ -26,6 +27,8 @@ import {
 
 import InvitationLinkExpired from './InvitationLinkExpired'
 import AuthorsInput from '../../../component-submit/src/components/AuthorsInput'
+import { validateAuthors } from '../../../../shared/authorsFieldDefinitions'
+import { InvalidLabel } from '../../../shared'
 
 const SuggestedReviewersContainer = styled.div`
   align-items: flex-start;
@@ -42,7 +45,7 @@ const SuggestedReviewersContainer = styled.div`
 `
 
 const SuggestedReviewersScrollable = styled.div`
-  max-height: 200px;
+  max-height: 232px;
   overflow-y: scroll;
   width: 100%;
 `
@@ -63,10 +66,6 @@ const StyledFormInput = styled(FormInput)`
 const DeclineArticleOwnershipPage = ({ match }) => {
   const config = useContext(ConfigContext)
   const { invitationId } = match.params
-
-  const [checked, setChecked] = useState(false)
-  const [feedbackComment, setFeedbackComment] = useState('')
-  const [suggestedReviewers, setSuggestedReviewers] = useState([])
 
   const { data } = useQuery(GET_INVITATION_STATUS, {
     variables: { id: invitationId },
@@ -107,11 +106,11 @@ const DeclineArticleOwnershipPage = ({ match }) => {
     },
   })
 
-  const handleChange = () => {
-    setChecked(!checked)
-  }
-
-  const handleDeclineAction = () => {
+  const handleDeclineAction = ({
+    feedbackComment,
+    doNotContact,
+    suggestedReviewers,
+  }) => {
     if (data && data.invitationStatus.status === 'UNANSWERED') {
       updateInvitationStatus({
         variables: {
@@ -126,7 +125,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
       variables: {
         id: invitationId,
         responseComment: feedbackComment,
-        declinedReason: checked ? 'DO_NOT_CONTACT' : null,
+        declinedReason: doNotContact ? 'DO_NOT_CONTACT' : null,
         suggestedReviewers: suggestedReviewers.map(reviewer => ({
           firstName: reviewer.firstName,
           lastName: reviewer.lastName,
@@ -168,44 +167,94 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                 config?.groupIdentity?.logoPath
               }
             />
-            <FeedbackForm>
-              <DeclinedInfoString>
-                {t('declineReviewPage.youHaveDeclined')}
-              </DeclinedInfoString>
-              <SubmitFeedbackNote>
-                {t('declineReviewPage.reason')}
-              </SubmitFeedbackNote>
-              <StyledFormInput>
-                <TextArea
-                  onChange={event => setFeedbackComment(event.target.value)}
-                  placeholder={t('declineReviewPage.messageHere')}
-                  rows="4"
-                  value={feedbackComment}
-                />
-                <SuggestedReviewersContainer>
-                  <SuggestedReviewersSectionLabel>
-                    Suggested Reviewers
-                  </SuggestedReviewersSectionLabel>
-                  <SuggestedReviewersScrollable>
-                    <AuthorsInput
-                      onChange={setSuggestedReviewers}
-                      overrideButtonLabel="Add Suggested Reviewer"
-                      value={suggestedReviewers}
-                    />
-                  </SuggestedReviewersScrollable>
-                </SuggestedReviewersContainer>
-                <Checkbox
-                  checked={checked}
-                  label={t('declineReviewPage.dontWantContact')}
-                  onChange={handleChange}
-                />
-              </StyledFormInput>
-            </FeedbackForm>
-            <ButtonWrapper>
-              <Button onClick={handleDeclineAction} primary type="submit">
-                {t('declineReviewPage.Decline Invitation')}
-              </Button>
-            </ButtonWrapper>
+            <Formik
+              initialValues={{
+                feedbackComment: '',
+                suggestedReviewers: [],
+                doNotContact: false,
+              }}
+              onSubmit={handleDeclineAction}
+              validate={values => {
+                const errors = {}
+                const authorError = validateAuthors(values.suggestedReviewers)
+
+                if (authorError) {
+                  errors.suggestedReviewers = authorError
+                }
+
+                return errors
+              }}
+            >
+              {formikProps => {
+                const {
+                  values: { feedbackComment, suggestedReviewers, doNotContact },
+                  handleChange,
+                  handleSubmit,
+                  setFieldValue,
+                  errors,
+                } = formikProps
+
+                return (
+                  <form onSubmit={handleSubmit}>
+                    <FeedbackForm>
+                      <DeclinedInfoString>
+                        {t('declineReviewPage.youHaveDeclined')}
+                      </DeclinedInfoString>
+                      <SubmitFeedbackNote>
+                        {t('declineReviewPage.reason')}
+                      </SubmitFeedbackNote>
+                      <StyledFormInput>
+                        <Field
+                          as={TextArea}
+                          id="feedbackComment"
+                          name="feedbackComment"
+                          onChange={handleChange}
+                          placeholder={t('declineReviewPage.messageHere')}
+                          rows={4}
+                          value={feedbackComment}
+                        />
+                        <SuggestedReviewersContainer>
+                          <SuggestedReviewersSectionLabel>
+                            {t('declineReviewPage.suggestedReviewers')}
+                          </SuggestedReviewersSectionLabel>
+                          <SuggestedReviewersScrollable>
+                            <AuthorsInput
+                              {...formikProps}
+                              onChange={newReviewers => {
+                                setFieldValue(
+                                  'suggestedReviewers',
+                                  newReviewers,
+                                )
+                              }}
+                              overrideButtonLabel="Add Suggested Reviewer"
+                              value={suggestedReviewers}
+                            />
+                          </SuggestedReviewersScrollable>
+                          {errors.suggestedReviewers && (
+                            <InvalidLabel>
+                              {t('declineReviewPage.invalidReviewers')}
+                            </InvalidLabel>
+                          )}
+                        </SuggestedReviewersContainer>
+                        <Field
+                          as={Checkbox}
+                          checked={doNotContact}
+                          id="doNotContact"
+                          label={t('declineReviewPage.dontWantContact')}
+                          name="doNotContact"
+                          onChange={handleChange}
+                        />
+                      </StyledFormInput>
+                      <ButtonWrapper>
+                        <Button primary type="submit">
+                          {t('declineReviewPage.Decline Invitation')}
+                        </Button>
+                      </ButtonWrapper>
+                    </FeedbackForm>
+                  </form>
+                )
+              }}
+            </Formik>
           </InvitationContent>
         </Centered>
       </InvitationContainer>

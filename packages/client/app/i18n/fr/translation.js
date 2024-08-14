@@ -819,6 +819,8 @@ const fr = {
       'Submit Feedback': 'Envoyer les commentaires',
       'Decline Invitation': "Refuser l'invitation",
       thanks: "Merci d'avoir soumis vos commentaires.",
+      suggestedReviewers: 'Réviseurs suggérés',
+      invalidReviewers: 'Certains évaluateurs ne sont pas valides',
     },
     invitationAcceptedPage: {
       error:

@@ -27,6 +27,7 @@ const SuggestedReviewerRow = styled.div`
 
 const SuggestedReviewerContainer = styled.div`
   display: flex;
+  padding: 5px;
 `
 
 const SuggestedReviewerFieldLabel = styled.span`
@@ -66,6 +67,7 @@ const DeclinedBadge = styled(ConfigurableStatus)`
 
 const TextChange = styled.div`
   color: ${props => (props.gray ? color.brand2.base : color.text)};
+  padding: 5px;
 `
 
 const InviteDeclineModal = ({ invitation, isOpen, onClose }) => {

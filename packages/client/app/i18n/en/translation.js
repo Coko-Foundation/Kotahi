@@ -794,6 +794,8 @@ const en = {
       'Submit Feedback': 'Submit Feedback',
       'Decline Invitation': 'Decline Invitation',
       thanks: 'Thank you for submitting the feedback.',
+      suggestedReviewers: 'Suggested Reviewers',
+      invalidReviewers: 'Some reviewers are invalid',
     },
     invitationAcceptedPage: {
       error:

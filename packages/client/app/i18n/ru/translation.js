@@ -810,6 +810,8 @@ const ru = {
       'Submit Feedback': 'Отправить',
       'Decline Invitation': 'Отклонить приглашение',
       thanks: 'Благодарим Вас за ответ.',
+      suggestedReviewers: 'Рекомендуемые рецензенты',
+      invalidReviewers: 'Некоторые рецензенты недействительны',
     },
     invitationAcceptedPage: {
       error:
