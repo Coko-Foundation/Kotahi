@@ -318,6 +318,7 @@ const fr = {
       'Add another doi': 'Ajouter une autre DOI',
       'Delete this author': 'Supprimer cet auteur',
       invalidDoi: 'Le DOI est invalide',
+      unauthorized: "Cette ressource n'est pas accessible.",
     },
     editorSection: {
       noFileLoaded: 'Aucun fichier de manuscrit chargé',

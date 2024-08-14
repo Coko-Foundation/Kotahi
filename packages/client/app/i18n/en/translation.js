@@ -311,6 +311,7 @@ const en = {
       'Add another doi': 'Add another DOI',
       'Delete this author': 'Delete this author',
       invalidDoi: 'DOI is invalid',
+      unauthorized: 'This resource is not accessible.',
     },
     editorSection: {
       noFileLoaded: 'No manuscript file loaded',

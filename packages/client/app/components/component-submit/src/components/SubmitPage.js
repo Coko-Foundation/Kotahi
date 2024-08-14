@@ -161,7 +161,14 @@ const SubmitPage = ({ currentUser, match, history }) => {
   const client = useApolloClient()
 
   if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
+
+  if (error) {
+    if (error.graphQLErrors.find(e => e.message === 'Not Authorised!')) {
+      return <AccessErrorPage message={t('submitPage.unauthorized')} />
+    }
+
+    return <CommsErrorBanner error={error} />
+  }
 
   const manuscript = data?.manuscript
   const submissionForm = data?.submissionForm?.structure
