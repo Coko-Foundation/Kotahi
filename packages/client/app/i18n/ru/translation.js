@@ -571,7 +571,7 @@ const ru = {
       reviewerInvitationPrimaryEmailTemplate: 'Приглашение рецензента',
       reviewerCollaborativeInvitationPrimaryEmailTemplate:
         'Приглашение Сотрудничать рецензента',
-      evaluationCompleteEmailTemplate: 'Рецензия отправлена',
+      evaluationCompleteEmailTemplate: 'Представленное решение',
       submissionConfirmationEmailTemplate: 'Рукопись подана',
       alertUnreadMessageDigestTemplate: 'Непрочитанные сообщения в обсуждении',
       authorProofingInvitationEmailTemplate:
