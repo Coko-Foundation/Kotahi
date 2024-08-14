@@ -580,7 +580,7 @@ const fr = {
       reviewerInvitationPrimaryEmailTemplate: "Invitation à l'évaluation",
       reviewerCollaborativeInvitationPrimaryEmailTemplate:
         'Invitación al revisor collaborer',
-      evaluationCompleteEmailTemplate: 'Évaluation soumise',
+      evaluationCompleteEmailTemplate: 'Décision soumise',
       submissionConfirmationEmailTemplate: 'Manuscrit soumis',
       alertUnreadMessageDigestTemplate: 'Message de discussion non lu',
       authorProofingInvitationEmailTemplate:

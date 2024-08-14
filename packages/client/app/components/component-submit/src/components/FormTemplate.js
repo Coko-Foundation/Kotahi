@@ -220,7 +220,8 @@ const FormTemplate = ({
   collaborativeObject,
 }) => {
   const config = useContext(ConfigContext)
-  const [confirming, setConfirming] = React.useState(false)
+  const [confirming, setConfirming] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
@@ -266,14 +267,21 @@ const FormTemplate = ({
 
   useEffect(() => debounceChange.flush, [])
 
+  const handleSubmitForm = async (values, actions) => {
+    setSubmitting(true)
+    await sumbitPendingThreadedDiscussionComments(values)
+
+    if (onSubmit) {
+      await onSubmit(values, actions)
+      setSubmitting(false)
+    }
+  }
+
   return (
     <Formik
       displayName={form.name}
       initialValues={initialValuesWithDummyValues}
-      onSubmit={async (values, actions) => {
-        await sumbitPendingThreadedDiscussionComments(values)
-        if (onSubmit) await onSubmit(values, actions)
-      }}
+      onSubmit={handleSubmitForm}
       validateOnBlur
       validateOnChange={false}
       {...formikOptions}
@@ -624,6 +632,7 @@ const FormTemplate = ({
                   <Confirm
                     errors={errors}
                     form={form}
+                    isSubmitting={submitting}
                     submit={handleSubmit}
                     toggleConfirming={toggleConfirming}
                   />

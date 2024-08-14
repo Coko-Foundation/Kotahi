@@ -10,6 +10,7 @@ const Channel = require('../../../models/channel/channel.model')
 const Config = require('../../../models/config/config.model')
 const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
 const Group = require('../../../models/group/group.model')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
   getUserRolesInManuscript,
@@ -79,8 +80,13 @@ const sendChatNotification = async ({
 
   // send email notification
   const appUrl = `${clientUrl}/${group.name}`
+  let manuscriptPageUrl = ''
+  let manuscriptProductionPageUrl = ''
+  let authorName = ''
 
   let discussionUrl = appUrl
+
+  let manuscript = null
 
   if (!channel.manuscriptId) {
     discussionUrl += `/admin/manuscripts` // admin discussion
@@ -105,6 +111,14 @@ const sendChatNotification = async ({
     } else {
       discussionUrl = `${appUrl}/dashboard`
     }
+
+    manuscript = await Manuscript.query().findById(channel.manuscriptId)
+
+    const author = await manuscript.getManuscriptAuthor()
+
+    authorName = author ? author.username : ''
+    manuscriptPageUrl = `${appUrl}/versions/${manuscript.id}`
+    manuscriptProductionPageUrl = `${appUrl}/versions/${manuscript.id}/production`
   }
 
   let currentUser
@@ -117,6 +131,16 @@ const sendChatNotification = async ({
     recipientName: recipient.username,
     discussionUrl,
     senderName: currentUser?.username || '',
+    ...(manuscript
+      ? {
+          authorName,
+          manuscriptNumber: manuscript.shortId,
+          manuscriptLink: manuscriptPageUrl,
+          manuscriptTitle: manuscript.submission.$title,
+          manuscriptTitleLink: manuscript.submission.$sourceUri,
+          manuscriptProductionLink: manuscriptProductionPageUrl,
+        }
+      : {}),
   }
 
   const activeConfig = await Config.getCached(groupId)

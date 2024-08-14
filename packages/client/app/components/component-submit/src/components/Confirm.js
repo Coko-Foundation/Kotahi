@@ -5,8 +5,9 @@ import { sanitize } from 'isomorphic-dompurify'
 import { unescape } from 'lodash'
 import { th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
-import { Button, PlainButton } from '../../../pubsweet'
+import { PlainButton } from '../../../pubsweet'
 import { Heading1 } from '../style'
+import { ActionButton } from '../../../shared'
 
 const Wrapper = styled.div`
   background: ${th('colorBackground')};
@@ -32,7 +33,7 @@ const createMarkup = encodedHtml => ({
   __html: sanitize(unescape(encodedHtml)),
 })
 
-const Confirm = ({ toggleConfirming, form, submit, errors }) => {
+const Confirm = ({ toggleConfirming, form, isSubmitting, submit, errors }) => {
   const { t } = useTranslation()
   return (
     <Wrapper>
@@ -52,14 +53,15 @@ const Confirm = ({ toggleConfirming, form, submit, errors }) => {
             <Paragraph
               dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
             />
-            <Button
+            <ActionButton
               data-testid="confirm-submit"
               onClick={submit}
               primary
+              status={isSubmitting ? 'pending' : null}
               type="submit"
             >
               {t('manuscriptSubmit.Submit')}
-            </Button>
+            </ActionButton>
             <Divider> {t('manuscriptSubmit.or')} </Divider>
           </>
         )}

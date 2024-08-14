@@ -574,7 +574,7 @@ const esLa = {
       reviewerInvitationPrimaryEmailTemplate: 'Invitación al revisor',
       reviewerCollaborativeInvitationPrimaryEmailTemplate:
         'Invitación al revisor colaborar',
-      evaluationCompleteEmailTemplate: 'Revisión enviada',
+      evaluationCompleteEmailTemplate: 'Decisión enviada',
       submissionConfirmationEmailTemplate: 'Manuscrito enviado',
       alertUnreadMessageDigestTemplate: 'Mensaje de discusión no leído',
       authorProofingInvitationEmailTemplate:

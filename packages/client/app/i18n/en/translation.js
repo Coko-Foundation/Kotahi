@@ -563,7 +563,7 @@ const en = {
       reviewerInvitationPrimaryEmailTemplate: 'Reviewer invitation',
       reviewerCollaborativeInvitationPrimaryEmailTemplate:
         'Reviewer collaborative invitation',
-      evaluationCompleteEmailTemplate: 'Submitted review',
+      evaluationCompleteEmailTemplate: 'Submitted decision',
       submissionConfirmationEmailTemplate: 'Submitted manuscript',
       alertUnreadMessageDigestTemplate: 'Unread discussion message',
       authorProofingInvitationEmailTemplate: 'Author proof assigned invitation',
