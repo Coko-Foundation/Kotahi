@@ -11,3 +11,8 @@ export const CompactDetailLabel = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('fontSizeBaseSmall')};
 `
+
+export const InvalidLabel = styled.div`
+  color: ${th('colorError')};
+  font-size: ${th('fontSizeBaseSmaller')};
+`

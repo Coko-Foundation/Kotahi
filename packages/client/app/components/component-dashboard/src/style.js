@@ -93,7 +93,9 @@ export const InvitationContent = styled.div`
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
   margin-bottom: 1rem;
+  max-height: calc(100vh - 32px);
   max-width: 50em;
+  overflow-y: auto;
   padding: ${grid(4)};
   text-align: center;
   width: 800px;
@@ -110,7 +112,7 @@ export const InvitationContent = styled.div`
   }
 `
 
-export const FeedbackForm = styled.p`
+export const FeedbackForm = styled.div`
   padding: 20px 40px;
 `
 

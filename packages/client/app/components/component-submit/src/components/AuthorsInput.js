@@ -1,21 +1,20 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { th } from '@coko/client'
 import { v4 as uuid } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../pubsweet'
-import { DeleteControl, TextInput } from '../../../shared'
+import { DeleteControl, InvalidLabel, TextInput } from '../../../shared'
 import {
   fields,
   validateAuthors,
 } from '../../../../shared/authorsFieldDefinitions'
-import theme from '../../../../theme'
+import theme, { color } from '../../../../theme'
 
 const Author = styled.div`
   align-items: top;
   display: grid;
-  grid-gap: 36px;
+  grid-gap: 24px;
   grid-template-columns: 1fr 1fr;
   margin-bottom: ${theme.spacing.f};
   margin-top: ${theme.spacing.e};
@@ -32,12 +31,20 @@ const Author = styled.div`
 `
 
 const AuthorContainer = styled.div`
+  align-items: flex-start;
+  border: 1px solid ${color.brand1.base};
+  border-radius: 8px;
   display: flex;
+  justify-content: space-between;
+  padding: 4px;
+  width: 100%;
 `
 
-const InvalidLabel = styled.div`
-  color: ${th('colorError')};
-  font-size: 80%;
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
 `
 
 const StyledDeleteControl = styled(DeleteControl)`
@@ -46,19 +53,18 @@ const StyledDeleteControl = styled(DeleteControl)`
 `
 
 const localizeFields = (origFields, t) => {
-  let clonedFieds = JSON.parse(JSON.stringify(origFields))
+  let clonedFields = [...origFields]
 
-  clonedFieds = clonedFieds.map((field, index) => {
+  clonedFields = clonedFields.map((field, index) => {
     const newField = { ...field }
     newField.label = t(`authorsInput.${field.name}.label`)
     newField.placeholder = t(`authorsInput.${field.name}.placeholder`)
     return newField
   })
 
-  return clonedFieds
+  return clonedFields
 }
 
-// TODO This is not following Formik idioms. Improve?
 const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
   const { t } = useTranslation()
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
@@ -67,7 +73,7 @@ const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
   if (value && !Array.isArray(value))
     console.error('Illegal AuthorsInput value:', value)
   return (
-    <div>
+    <Wrapper>
       {cleanedVal.map((author, index) => (
         <AuthorContainer key={author.id}>
           <Author>
@@ -122,7 +128,7 @@ const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
           ? t('decisionPage.Add another person')
           : overrideButtonLabel}
       </Button>
-    </div>
+    </Wrapper>
   )
 }
 

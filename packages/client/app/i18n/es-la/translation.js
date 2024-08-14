@@ -811,6 +811,8 @@ const esLa = {
       'Submit Feedback': 'Enviar Comentarios',
       'Decline Invitation': 'Declinar Invitación',
       thanks: 'Gracias por enviar los comentarios.',
+      suggestedReviewers: 'Revisores sugeridos',
+      invalidReviewers: 'Algunos revisores no son válidos',
     },
     invitationAcceptedPage: {
       error:

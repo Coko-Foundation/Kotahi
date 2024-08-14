@@ -1138,20 +1138,13 @@ const resolvers = {
           break
 
         default:
-          if (['prc', 'journal'].includes(activeConfig.formData.instanceName)) {
-            manuscript.decision = 'accepted'
-            manuscript.status = 'accepted'
-          } else if (
+          if (
             ['preprint1', 'preprint2'].includes(
               activeConfig.formData.instanceName,
             )
           ) {
             manuscript.decision = 'evaluated'
             manuscript.status = 'evaluated'
-          } else {
-            throw new Error(
-              `Unknown decision type "${decisionString}" received.`,
-            )
           }
       }
 
