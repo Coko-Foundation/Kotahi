@@ -315,6 +315,7 @@ const esLa = {
       'Add another doi': 'Agregar otra DOI',
       'Delete this author': 'Eliminar este autor',
       invalidDoi: 'El DOI es inválido',
+      unauthorized: 'Este recurso no es accesible.',
     },
     editorSection: {
       noFileLoaded: 'No se ha cargado ningún archivo de manuscrito',

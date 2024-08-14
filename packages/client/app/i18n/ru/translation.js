@@ -318,6 +318,7 @@ const ru = {
       'Add another doi': 'Добавить',
       'Delete this author': 'Удалить',
       invalidDoi: 'DOI недействителен',
+      unauthorized: 'Этот ресурс недоступен.',
     },
     editorSection: {
       noFileLoaded: 'Файл рукописи не загружен',

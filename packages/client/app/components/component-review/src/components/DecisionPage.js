@@ -11,7 +11,7 @@ import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
-import { CommsErrorBanner, Spinner } from '../../../shared'
+import { AccessErrorPage, CommsErrorBanner, Spinner } from '../../../shared'
 import DecisionVersions from './DecisionVersions'
 import { roles } from '../../../../globals'
 
@@ -413,7 +413,14 @@ const DecisionPage = ({ currentUser, match }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
+
+  if (error) {
+    if (error.graphQLErrors.find(e => e.message === 'Not Authorised!')) {
+      return <AccessErrorPage message={t('decisionPage.unauthorized')} />
+    }
+
+    return <CommsErrorBanner error={error} />
+  }
 
   const updateManuscript = (versionId, manuscriptDelta) =>
     doUpdateManuscript({
