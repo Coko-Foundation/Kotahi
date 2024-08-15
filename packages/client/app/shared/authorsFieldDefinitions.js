@@ -1,11 +1,11 @@
 import { required } from 'xpub-validators'
 
 const isMalformedEmail = val =>
-  (val === '' ||
-    (val &&
-      !/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
-        val,
-      ))) &&
+  val !== '' &&
+  val &&
+  !/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
+    val,
+  ) &&
   'Not a valid email address'
 
 export const fields = [

@@ -15,4 +15,5 @@ export const CompactDetailLabel = styled.div`
 export const InvalidLabel = styled.div`
   color: ${th('colorError')};
   font-size: ${th('fontSizeBaseSmaller')};
+  text-align: left;
 `
