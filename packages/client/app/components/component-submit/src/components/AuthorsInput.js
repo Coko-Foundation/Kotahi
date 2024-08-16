@@ -16,8 +16,7 @@ const Author = styled.div`
   display: grid;
   grid-gap: 24px;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: ${theme.spacing.f};
-  margin-top: ${theme.spacing.e};
+  margin: ${theme.spacing.d};
   position: relative;
   width: 600px;
 
@@ -32,8 +31,8 @@ const Author = styled.div`
 
 const AuthorContainer = styled.div`
   align-items: flex-start;
-  border: 1px solid ${color.brand1.base};
-  border-radius: 8px;
+  border: 1px solid ${color.gray80};
+  border-radius: ${theme.borderRadius};
   display: flex;
   justify-content: space-between;
   padding: 4px;
@@ -41,6 +40,7 @@ const AuthorContainer = styled.div`
 `
 
 const Wrapper = styled.div`
+  align-items: flex-start;
   display: flex;
   flex-direction: column;
   gap: 8px;
