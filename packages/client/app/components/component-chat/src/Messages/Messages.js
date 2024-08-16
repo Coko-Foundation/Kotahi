@@ -190,6 +190,7 @@ const Messages = ({
       id="messages"
       ref={mainRef}
       style={{ paddingBottom: unreadMessagesCount !== 0 ? '20px' : '8px' }}
+      tabIndex={-1}
     >
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
