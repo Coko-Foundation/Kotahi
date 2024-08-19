@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '../../../pubsweet'
 import { DeleteControl, InvalidLabel, TextInput } from '../../../shared'
 import {
-  fields,
+  getAuthorFields,
   validateAuthors,
 } from '../../../../shared/authorsFieldDefinitions'
 import theme, { color } from '../../../../theme'
@@ -65,10 +65,19 @@ const localizeFields = (origFields, t) => {
   return clonedFields
 }
 
-const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
+const AuthorsInput = ({
+  onChange,
+  requireEmail,
+  value,
+  overrideButtonLabel = undefined,
+}) => {
   const { t } = useTranslation()
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
-  const localizedFields = localizeFields(fields, t)
+
+  const authorFieldOptions = { requireEmail } // add more definitions here as needed
+
+  const authorFields = getAuthorFields(authorFieldOptions)
+  const localizedFields = localizeFields(authorFields, t)
 
   if (value && !Array.isArray(value))
     console.error('Illegal AuthorsInput value:', value)
@@ -106,7 +115,7 @@ const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
         </AuthorContainer>
       ))}
       <Button
-        disabled={validateAuthors(cleanedVal)}
+        disabled={validateAuthors(cleanedVal, authorFieldOptions)}
         onClick={() => {
           const newVal = [
             ...cleanedVal,
@@ -134,6 +143,7 @@ const AuthorsInput = ({ onChange, value, overrideButtonLabel = undefined }) => {
 
 AuthorsInput.propTypes = {
   onChange: PropTypes.func.isRequired,
+  requireEmail: PropTypes.bool,
   /** value should be an array of objects or null, but we also currently permit empty string */
   value: PropTypes.oneOfType([
     PropTypes.arrayOf(
@@ -149,6 +159,7 @@ AuthorsInput.propTypes = {
 }
 
 AuthorsInput.defaultProps = {
+  requireEmail: false,
   value: null,
 }
 
