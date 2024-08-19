@@ -176,7 +176,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
               onSubmit={handleDeclineAction}
               validate={values => {
                 const errors = {}
-                const authorError = validateAuthors(values.suggestedReviewers)
+
+                const authorError = validateAuthors(values.suggestedReviewers, {
+                  requireEmail: true,
+                })
 
                 if (authorError) {
                   errors.suggestedReviewers = authorError
@@ -227,6 +230,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                                 )
                               }}
                               overrideButtonLabel="Add Suggested Reviewer"
+                              requireEmail
                               value={suggestedReviewers}
                             />
                           </SuggestedReviewersScrollable>
