@@ -51,6 +51,14 @@ const resolvers = {
       const form = await Form.findById(formId)
       if (!form) return null
 
+      if (element.name === '$verdict' && Array.isArray(element.options)) {
+        // eslint-disable-next-line no-param-reassign
+        element.options = element.options.map(option => ({
+          ...option,
+          value: option.value.trim(),
+        }))
+      }
+
       const indexToReplace = form.structure.children.findIndex(
         field => field.id === element.id,
       )
