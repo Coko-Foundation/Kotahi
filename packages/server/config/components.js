@@ -3,6 +3,7 @@ const modelComponents = require('../models/modelComponents')
 
 const components = [
   ...modelComponents,
+  './api/graphql',
   './server/model-notification/src/',
   './server/model-team/src',
   './server/model-user/src',
@@ -29,7 +30,6 @@ const components = [
   './server/model-published-artifact/src',
   './server/model-docmap/src',
   './server/config/src',
-  './server/anystyle',
   './server/xsweet',
   './server/model-email-templates/src',
   './server/flax-site',

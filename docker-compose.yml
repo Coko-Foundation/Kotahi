@@ -56,6 +56,10 @@ services:
         'scripts',
         '--',
         'models',
+        '--',
+        'api',
+        '--',
+        'controllers',
         '--ext',
         'js,graphql',
       ]
@@ -155,6 +159,7 @@ services:
     volumes:
       - ./packages/server/api:/home/node/app/api
       - ./packages/server/config:/home/node/app/config
+      - ./packages/server/controllers:/home/node/app/controllers
       - ./packages/server/models:/home/node/app/models
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server

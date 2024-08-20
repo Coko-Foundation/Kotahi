@@ -1,13 +1,14 @@
 const fs = require('fs-extra')
 const fsPromised = require('fs').promises
-const axios = require('axios')
-const FormData = require('form-data')
 const crypto = require('crypto')
 const { promisify } = require('util')
+const FormData = require('form-data')
+const axios = require('axios')
 const striptags = require('striptags')
 const config = require('config')
-const anystyleXmlToHtml = require('./anystyleToHtml')
-const { formatCitation } = require('../reference/src/formatting')
+
+const anystyleXmlToHtml = require('./anyStyleToHtml')
+const { formatCitation } = require('../../server/reference/src/formatting')
 
 const randomBytes = promisify(crypto.randomBytes)
 
@@ -273,57 +274,7 @@ const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
   })
 }
 
-const resolvers = {
-  Query: {
-    buildCitations: async (_, { textReferences }, ctx) => {
-      let outReferences = textReferences
-      let error = ''
-
-      try {
-        outReferences = await parseCitations(textReferences)
-      } catch (e) {
-        error = e
-      }
-
-      return {
-        htmlReferences: outReferences || '',
-        error: error ? JSON.stringify(error) : '',
-      }
-    },
-    buildCitationsCSL: async (_, { textReferences }, ctx) => {
-      const groupId = ctx.req.headers['group-id']
-      let outReferences = textReferences
-      let error = ''
-
-      try {
-        outReferences = await parseCitationsCSL(textReferences, 0, groupId)
-      } catch (e) {
-        error = e.message
-      }
-
-      return {
-        cslReferences: outReferences || '',
-        error: error || '',
-      }
-    },
-  },
+module.exports = {
+  parseCitations,
+  parseCitationsCSL,
 }
-
-const typeDefs = `
-	extend type Query {
-		buildCitations(textReferences: String!): BuildCitationsType
-		buildCitationsCSL(textReferences: String!): BuildCitationsCSLType
-	}
-
-	type BuildCitationsType {
-		htmlReferences: String!
-		error: String
-	}
-
-	type BuildCitationsCSLType {
-		cslReferences: String!
-		error: String
-	}
-`
-
-module.exports = { resolvers, typeDefs }
