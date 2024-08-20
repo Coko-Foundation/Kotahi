@@ -133,6 +133,7 @@ const CollapseOverlay = styled.div`
       : css`
           background: transparent;
         `};
+  pointer-events: none;
   position: absolute;
   width: 100%;
 `
