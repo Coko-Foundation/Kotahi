@@ -395,7 +395,14 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
           }
         }
 
-        if (Array.isArray(value)) value = value.map(x => ({ id: uuid(), ...x }))
+        if (Array.isArray(value))
+          value = value.map(x => ({
+            id: uuid(),
+            ...x,
+            ...(x.value && typeof x.value === 'string'
+              ? { value: x.value.trim() }
+              : {}),
+          }))
 
         return [propName, value]
       })
