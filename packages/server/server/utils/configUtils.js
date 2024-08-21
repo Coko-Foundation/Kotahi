@@ -47,7 +47,7 @@ const revertHiddenSensitiveInformation = async (
   }
 
   // Publishing - Datacite password
-  if (formData.publishing.datacite.password) {
+  if (formData.publishing.datacite?.password) {
     const passwordIsHidden =
       redact(existingConfig.formData.publishing.datacite?.password) ===
       formData.publishing.datacite.password
