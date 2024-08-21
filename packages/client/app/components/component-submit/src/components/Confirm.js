@@ -54,7 +54,7 @@ const Confirm = ({ toggleConfirming, form, isSubmitting, submit, errors }) => {
               dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
             />
             <ActionButton
-              data-testid="confirm-submit"
+              dataTestid="confirm-submit"
               onClick={submit}
               primary
               status={isSubmitting ? 'pending' : null}
