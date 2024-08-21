@@ -15,7 +15,12 @@ import Alert from './publishing/Alert'
 import PublishingResponse from './publishing/PublishingResponse'
 import { getLanguages } from '../../../../i18n'
 
-const Publish = ({ manuscript, publishManuscript, dois }) => {
+const Publish = ({
+  manuscript,
+  publishManuscript,
+  dois,
+  areVerdictOptionsComplete,
+}) => {
   // Hooks from the old world
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishResponse, setPublishResponse] = useState(null)
@@ -61,24 +66,29 @@ const Publish = ({ manuscript, publishManuscript, dois }) => {
             </Trans>
           )}
 
-          {!manuscript.published && notAccepted && (
-            <div>
-              <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
-              {doiMessage}
-            </div>
-          )}
-          {!manuscript.published && !notAccepted && (
-            <div>
-              <p>{t('decisionPage.decisionTab.publishingNewEntry')}</p>
-              {doiMessage}
-            </div>
-          )}
+          {!manuscript.published &&
+            notAccepted &&
+            areVerdictOptionsComplete && (
+              <div>
+                <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
+                {doiMessage}
+              </div>
+            )}
+          {!manuscript.published &&
+            !(notAccepted && areVerdictOptionsComplete) && (
+              <div>
+                <p>{t('decisionPage.decisionTab.publishingNewEntry')}</p>
+                {doiMessage}
+              </div>
+            )}
           {publishResponse && <PublishingResponse response={publishResponse} />}
           {publishingError && <Alert type="error">{publishingError}</Alert>}
         </SectionActionInfo>
         <SectionAction>
           <Button
-            disabled={notAccepted || isPublishing}
+            disabled={
+              (notAccepted && areVerdictOptionsComplete) || isPublishing
+            }
             onClick={() => {
               setIsPublishing(true)
 
