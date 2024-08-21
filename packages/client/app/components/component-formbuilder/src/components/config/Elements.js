@@ -478,10 +478,15 @@ const submissionFieldOptions = [
   },
   {
     fieldType: 'dois',
-    label: 'Dois',
+    label: 'Multiple DOIs',
     component: 'DoisInput',
-    title: requiredTextFieldWithDefault('Dois'),
+    title: requiredTextFieldWithDefault('Multiple DOIs'),
     name: presetTextField('submission.$dois'),
+    doiValidation: { ...doiValidationField, defaultValue: 'true' },
+    doiUniqueSuffixValidation: null,
+    parse: null,
+    format: null,
+    validate: validateOther,
     permitPublishing: { ...permitPublishingField, defaultValue: 'always' },
   },
   {
