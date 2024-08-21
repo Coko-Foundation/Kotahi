@@ -378,6 +378,15 @@ const DecisionVersion = ({
   }
 
   const decisionSection = () => {
+    const formVerdictOptions =
+      decisionForm?.children
+        .find(formElement => formElement.name === '$verdict')
+        ?.options.map(verdictOption => verdictOption.value) || []
+
+    const areVerdictOptionsComplete = ['accept'].every(requiredOption =>
+      formVerdictOptions.includes(requiredOption),
+    )
+
     return {
       content: (
         <>
@@ -473,6 +482,7 @@ const DecisionVersion = ({
           {isCurrentVersion && (
             <AdminSection>
               <Publish
+                areVerdictOptionsComplete={areVerdictOptionsComplete}
                 dois={dois}
                 manuscript={version}
                 publishManuscript={publishManuscript}
