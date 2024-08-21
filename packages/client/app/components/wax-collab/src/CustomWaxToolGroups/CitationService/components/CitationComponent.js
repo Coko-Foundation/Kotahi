@@ -263,11 +263,15 @@ const CitationComponent = ({ node, getPos }) => {
         setStructures(newStructures)
         // console.log("Versions found. Setting status to 'needs review'")
 
-        if (dataciteHasBeenRun) {
+        if (
+          dataciteHasBeenRun &&
+          currentStructures.datacite.constructor === Object
+        ) {
           setInternalNeedsValidation(false)
           setInternalNeedsReview(false)
           setContent(
             {
+              structure: currentStructures.datacite,
               needsValidation: false,
               needsReview: false,
               valid: true,
