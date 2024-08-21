@@ -4,6 +4,8 @@ const modelComponents = require('../models/modelComponents')
 const components = [
   ...modelComponents,
   './api/graphql',
+  './api/rest/assetUpload',
+
   './server/model-notification/src/',
   './server/model-team/src',
   './server/model-user/src',
@@ -36,7 +38,6 @@ const components = [
   './server/model-group/src',
   './server/reference/src',
   './server/model-article-templates/src',
-  './server/asset-upload',
   './server/chat-gpt-service',
   './server/cms-upload',
   './server/model-publishing-collection/src',
