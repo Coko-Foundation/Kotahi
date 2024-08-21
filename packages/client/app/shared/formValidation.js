@@ -35,7 +35,7 @@ export const validateFormField =
         (value || []).length <= 0
       )
         return 'Required'
-      return validateDoiField(value)
+      if (value && doiValidation) return validateDoiField(value)
     }
 
     if (
