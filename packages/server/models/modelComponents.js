@@ -3,7 +3,6 @@
  */
 
 const modelPaths = [
-  'alias',
   'articleImportHistory',
   'articleImportSources',
   'articleTemplate',

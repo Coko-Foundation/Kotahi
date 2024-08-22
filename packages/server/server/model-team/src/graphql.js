@@ -35,8 +35,8 @@ const resolvers = {
       const options = {
         relate: ['members.user'],
         unrelate: ['members.user'],
-        allowUpsert: '[members, members.alias]',
-        eager: '[members.[user.teams, alias]]',
+        allowUpsert: '[members]',
+        eager: '[members.[user.teams]]',
       }
 
       await Promise.all(
@@ -175,10 +175,6 @@ const resolvers = {
     async user(teamMember, vars, ctx) {
       return teamMember.user ?? cachedGet(`userForTeamMember:${teamMember.id}`)
     },
-    async alias(teamMember, vars, ctx) {
-      const member = await TeamMember.query().findById(teamMember.id)
-      return member ? member.$relatedQuery('alias') : null
-    },
   },
 }
 
@@ -220,7 +216,6 @@ const typeDefs = `
   input TeamMemberInput {
     id: ID
     user: TeamMemberUserInput
-    alias: AliasInput
     status: String
     isShared: Boolean
   }
@@ -233,22 +228,9 @@ const typeDefs = `
     id: ID
     user: User
     status: String
-    alias: Alias
     isShared: Boolean
     created: DateTime
     updated: DateTime
-  }
-
-  type Alias {
-    name: String
-    email: String
-    aff: String
-  }
-
-  input AliasInput {
-    name: String
-    email: String
-    aff: String
   }
 
   type TeamObject {
@@ -273,9 +255,7 @@ const typeDefs = `
     members: [TeamMemberInput]
     global: Boolean
     users: [ID!]
-    alias: AliasInput
   }
-
 `
 
 module.exports = { resolvers, typeDefs }

@@ -24,10 +24,8 @@ class Team extends BaseModel {
   }
 
   static get relationMappings() {
-    /* eslint-disable global-require */
+    /* eslint-disable-next-line global-require */
     const User = require('../user/user.model')
-    const Alias = require('../alias/alias.model')
-    /* eslint-enable global-require */
 
     return {
       members: {
@@ -49,19 +47,6 @@ class Team extends BaseModel {
             to: 'team_members.userId',
           },
           to: 'users.id',
-        },
-      },
-      aliases: {
-        relation: BaseModel.ManyToManyRelation,
-        modelClass: Alias,
-        join: {
-          from: 'teams.id',
-          through: {
-            modelClass: require.resolve('../teamMember/teamMember.model'),
-            from: 'team_members.teamId',
-            to: 'team_members.aliasId',
-          },
-          to: 'aliases.id',
         },
       },
       manuscript: {

@@ -15,10 +15,8 @@ class TeamMember extends BaseModel {
   }
 
   static get relationMappings() {
-    /* eslint-disable global-require */
+    /* eslint-disable-next-line global-require */
     const User = require('../user/user.model')
-    const Alias = require('../alias/alias.model')
-    /* eslint-enable global-require */
 
     return {
       user: {
@@ -37,14 +35,6 @@ class TeamMember extends BaseModel {
           to: 'teams.id',
         },
       },
-      alias: {
-        relation: BaseModel.BelongsToOneRelation,
-        modelClass: Alias,
-        join: {
-          from: 'team_members.aliasId',
-          to: 'aliases.id',
-        },
-      },
     }
   }
 
@@ -60,7 +50,6 @@ class TeamMember extends BaseModel {
       properties: {
         userId: { type: 'string', format: 'uuid' },
         teamId: { type: 'string', format: 'uuid' },
-        aliasId: { type: ['string', 'null'], format: 'uuid' },
         status: { type: ['string', 'null'] },
         isShared: { type: ['boolean', 'null'] },
       },
