@@ -1,52 +1,33 @@
-import React from 'react'
-import { State } from 'react-powerplug'
+import React, { useState } from 'react'
 
 import ModalContext from './ModalContext'
 
-const ModalProvider = ({ children, modals: modalsVal }) => {
+const ModalProvider = ({ children, modals }) => {
+  const [modalState, setModalState] = useState({
+    data: undefined,
+    modalKey: undefined,
+  })
+
+  const hideModal = () => {
+    setModalState({ data: undefined, modalKey: undefined })
+  }
+
+  const showModal = (modalKey, data) => {
+    setModalState({ data, modalKey })
+  }
+
   return (
-    <State
-      initial={{
-        modalState: { data: undefined, modalKey: undefined },
-        modals: modalsVal,
+    <ModalContext.Provider
+      /* eslint-disable-next-line react/jsx-no-constructed-context-values */
+      value={{
+        ...modalState,
+        modals,
+        showModal,
+        hideModal,
       }}
     >
-      {({ state, setState }) => {
-        const { modalState, modals } = state
-
-        const hideModal = () => {
-          setState({
-            modalState: {
-              data: undefined,
-              modalKey: undefined,
-            },
-          })
-        }
-
-        const showModal = (modalKey, data) => {
-          setState({
-            modalState: {
-              data,
-              modalKey,
-            },
-          })
-        }
-
-        return (
-          <ModalContext.Provider
-            /* eslint-disable-next-line react/jsx-no-constructed-context-values */
-            value={{
-              ...modalState,
-              modals,
-              showModal,
-              hideModal,
-            }}
-          >
-            {children}
-          </ModalContext.Provider>
-        )
-      }}
-    </State>
+      {children}
+    </ModalContext.Provider>
   )
 }
 
