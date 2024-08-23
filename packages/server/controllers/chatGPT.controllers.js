@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const Config = require('../../models/config/config.model')
+const Config = require('../models/config/config.model')
 
 /* eslint-disable-next-line default-param-last */
 const chatGPT = async (input, history = [], groupId) => {

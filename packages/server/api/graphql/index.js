@@ -3,8 +3,12 @@ const path = require('path')
 const merge = require('lodash/merge')
 
 const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
+const chatGPTResolvers = require('./chatGPT/chatGPT.resolvers')
 
-const typeDefFilePaths = ['anyStyle/anyStyle.graphql']
+const typeDefFilePaths = [
+  'anyStyle/anyStyle.graphql',
+  'chatGPT/chatGPT.graphql',
+]
 
 const createTotalTypeDefs = paths => {
   return paths
@@ -14,7 +18,7 @@ const createTotalTypeDefs = paths => {
 
 const typeDefs = createTotalTypeDefs(typeDefFilePaths)
 
-const resolvers = merge({}, anyStyleResolvers)
+const resolvers = merge({}, anyStyleResolvers, chatGPTResolvers)
 
 module.exports = {
   typeDefs,
