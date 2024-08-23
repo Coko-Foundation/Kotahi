@@ -38,7 +38,6 @@ const components = [
   './server/model-group/src',
   './server/reference/src',
   './server/model-article-templates/src',
-  './server/chat-gpt-service',
   './server/cms-upload',
   './server/model-publishing-collection/src',
 ]
