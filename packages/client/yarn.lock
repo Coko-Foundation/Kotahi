@@ -13438,13 +13438,6 @@ react-panelgroup@^1.0.12:
   dependencies:
     prop-types "^15.6.1"
 
-react-powerplug@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/react-powerplug/-/react-powerplug-1.0.0.tgz#f9c10a761ece115661b8fd10920c4e573ea95909"
-  integrity sha512-H7U+1sNiOqlaPgZpfciVZ3BMHtXHsd0tkXrOmrwV7ZTpK+YGRddK7+Um1RT2OTe+4G+1muXfyFMAwcnasABMtA==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-
 react-redux@^7.2.0:
   version "7.2.9"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.9.tgz#09488fbb9416a4efe3735b7235055442b042481d"
