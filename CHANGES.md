@@ -2,7 +2,7 @@
 
 ### Version 3.7.0
 
-Client and server are now two separate containers in production. This means that your main url (eg. myapp.com) should now point to the client deployment, not the server. You can see the [production compose file](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/docker-compose.production.yml?ref_type=heads) for reference. Both client and server need to have separate, publicly accessible urls.
+Client and server are now two separate containers in production. This means that your main url (eg. myapp.com) should now point to the client deployment, not the server. You can see the [production compose file](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/3.7.0/docker-compose.production.yml?ref_type=tags) for reference. Both client and server need to have separate, publicly accessible urls.
 
 eg. If on your deployment, you are running the client on `localhost:4000` and the server on `localhost:3000`, in your nginx or equivalent configuration you will need to point eg. myapp.com to `localhost:4000` and server.myapp.com (or whatever new url you want) to `localhost:3000`.
 
