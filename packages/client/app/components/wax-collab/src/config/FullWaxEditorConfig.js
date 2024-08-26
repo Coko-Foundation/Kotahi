@@ -18,10 +18,7 @@ import {
   BottomInfoService,
   EditingSuggestingService,
 } from 'wax-prosemirror-services'
-import {
-  TablesService,
-  /* tableEditing, */ columnResizing,
-} from 'wax-table-service'
+import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 import CommentsService from '../extensions/CommentsService/CommentsService'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
@@ -106,7 +103,7 @@ const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
     },
   ],
 
-  PmPlugins: [columnResizing() /* tableEditing() */],
+  PmPlugins: [columnResizing(), tableEditing()],
 
   RulesService: [emDash, ellipsis],
 

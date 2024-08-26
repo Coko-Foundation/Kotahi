@@ -17,10 +17,7 @@ import {
   BottomInfoService,
   EditingSuggestingService,
 } from 'wax-prosemirror-services'
-import {
-  TablesService,
-  /* tableEditing, */ columnResizing,
-} from 'wax-table-service'
+import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
 import CommentsService from '../extensions/CommentsService/CommentsService'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
@@ -131,7 +128,7 @@ const authorProofingWaxEditorConfig = (
     },
   ],
 
-  PmPlugins: [columnResizing() /* tableEditing() */ /* WaxSelectionPlugin */],
+  PmPlugins: [columnResizing(), tableEditing()],
 
   RulesService: [emDash, ellipsis],
 
