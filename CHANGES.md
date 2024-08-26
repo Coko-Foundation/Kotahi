@@ -1,5 +1,34 @@
 ## Changes
 
+### Version 3.7.0
+
+Client and server are now two separate containers in production. This means that your main url (eg. myapp.com) should now point to the client deployment, not the server. You can see the [production compose file](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/docker-compose.production.yml?ref_type=heads) for reference. Both client and server need to have separate, publicly accessible urls.
+
+eg. If on your deployment, you are running the client on `localhost:4000` and the server on `localhost:3000`, in your nginx or equivalent configuration you will need to point eg. myapp.com to `localhost:4000` and server.myapp.com (or whatever new url you want) to `localhost:3000`.
+
+Running the client and server independently lets you scale the client and server independently according to your needs. It also allows you to run them on completely different machines, if you so wish.
+
+It's important to note the changed environment variables in this release.
+The following variables were dropped:
+- `SERVER_PROTOCOL`
+- `SERVER_HOST`
+- `CLIENT_PROTOCOL`
+- `CLIENT_HOST`
+- `PUBLIC_CLIENT_PROTOCOL`
+- `PUBLIC_CLIENT_HOST`
+- `PUBLIC_CLIENT_PORT`
+
+The following variables were added:
+- `SERVER_URL`: The public url of the server
+- `CLIENT_URL`: The public url of the client
+
+The following variables have been renamed:
+- `CLIENT_YJS_WEBSOCKET_URL` -> `YJS_WEBSOCKET_SERVER_URL`
+
+If you're a developer, we've also added the variable `E2E_TESTING_API`. This enables api access to cypress tests in order to seed and clear the database while running. This variable is blocked if `NODE_ENV` is `production` and MUST NOT be true in any deployment.
+
+Make sure you reach out at our [support forum](https://forum.kotahi.community/c/kotahi/8) if you need further assistance or are having deployment issues.
+
 ### Version 3.6.0
 
 There is a new integration with datacite which can optionally be configured via environment variables (but also through the config manager in the ui).  
