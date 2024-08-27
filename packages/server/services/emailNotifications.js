@@ -5,8 +5,8 @@ const Handlebars = require('handlebars')
 
 const { clientUrl } = require('@coko/server')
 
-const Config = require('../../models/config/config.model')
-const Group = require('../../models/group/group.model')
+const Config = require('../models/config/config.model')
+const Group = require('../models/group/group.model')
 
 const renderTemplate = async (templateContent, data) => {
   // Compile the template

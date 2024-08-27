@@ -1,6 +1,6 @@
 const { clientUrl } = require('@coko/server')
 
-const sendEmailNotification = require('../../email-notifications')
+const sendEmailNotification = require('../../../services/emailNotifications')
 
 const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
 const NotificationUserOption = require('../../../models/notificationUserOption/notificationUserOption.model')

@@ -13,7 +13,7 @@ const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
-const sendEmailNotification = require('../../email-notifications')
+const sendEmailNotification = require('../../../services/emailNotifications')
 const { cachedGet } = require('../../querycache')
 
 const getUsersById = async userIds => User.query().findByIds(userIds)
