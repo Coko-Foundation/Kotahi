@@ -138,6 +138,15 @@ export const fragmentFields = `
   }
 `
 
+export const searchRoRQuery = gql`
+  query ($input: String!) {
+    searchRor(input: $input) {
+      id
+      name
+    }
+  }
+`
+
 const query = gql`
   query($id: ID!, $groupId: ID, $submitPurpose: String!, $decisionPurpose: String!, $reviewPurpose: String!) {
     manuscript(id: $id) {

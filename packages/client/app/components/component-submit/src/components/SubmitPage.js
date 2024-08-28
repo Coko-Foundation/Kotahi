@@ -5,7 +5,10 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
-import query, { fragmentFields } from '../userManuscriptFormQuery'
+import query, {
+  fragmentFields,
+  searchRoRQuery,
+} from '../userManuscriptFormQuery'
 import { AccessErrorPage, Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import {
@@ -14,7 +17,11 @@ import {
 } from '../../../component-review/src/components/queries'
 import { validateManuscriptSubmission } from '../../../../shared/manuscriptUtils'
 import CommsErrorBanner from '../../../shared/CommsErrorBanner'
-import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
+import {
+  validateDoi,
+  validateSuffix,
+  VALIDATE_ORCID,
+} from '../../../../shared/commsUtils'
 import {
   UPDATE_PENDING_COMMENT,
   COMPLETE_COMMENTS,
@@ -78,11 +85,50 @@ const deleteFileMutation = gql`
 
 let debouncers = {}
 
+const useRoRQuery = () => {
+  const { refetch } = useQuery(searchRoRQuery, {
+    skip: true, // you should skip the initial query
+  })
+
+  const loadROROptions = filterOptions => (inputValue, callback) => {
+    const variables = {
+      input: inputValue,
+    }
+
+    return refetch(variables)
+      .then(response => {
+        callback(filterOptions(response))
+      })
+      .catch(error => console.error(error))
+  }
+
+  return { loadROROptions }
+}
+
+const useValidateORCID = () => {
+  const { refetch } = useQuery(VALIDATE_ORCID, {
+    skip: true, // you should skip the initial query
+  })
+
+  const validationOrcid = inputValue => {
+    const variables = {
+      input: inputValue,
+    }
+
+    // eslint-disable-next-line no-return-await
+    return refetch(variables)
+  }
+
+  return { validationOrcid }
+}
+
 const SubmitPage = ({ currentUser, match, history }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
   const { urlFrag, instanceName } = config
   const [chatExpand] = useMutation(mutations.updateChatUI)
+  const { loadROROptions } = useRoRQuery()
+  const { validationOrcid } = useValidateORCID()
 
   useEffect(() => {
     return () => {
@@ -303,6 +349,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      loadROROptions={loadROROptions}
       manuscript={manuscript}
       manuscriptLatestVersionId={manuscriptLatestVersionId}
       match={match}
@@ -321,6 +368,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       updateManuscript={updateManuscript}
       validateDoi={validateDoi(client)}
       validateSuffix={validateSuffix(client, config.groupId)}
+      validationOrcid={validationOrcid}
       versions={versions}
     />
   )

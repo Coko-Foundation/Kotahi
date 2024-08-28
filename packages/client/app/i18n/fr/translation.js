@@ -408,13 +408,21 @@ const fr = {
         label: 'Nom',
         placeholder: 'Saisissez le nom...',
       },
+      middleName: {
+        label: 'Prénom',
+        placeholder: 'Entrez le prénom...',
+      },
+      orcid: {
+        label: 'ID ORCID',
+        placeholder: "Entrez l'ID ORCID...",
+      },
+      ror: {
+        label: 'Affiliation ROR',
+        placeholder: "Entrez l'affiliation ROR...",
+      },
       email: {
         label: 'Email',
         placeholder: 'Saisissez le courrier électronique...',
-      },
-      affiliation: {
-        label: 'Affiliation',
-        placeholder: 'Saisissez l’affiliation...',
       },
     },
     dragndrop: {

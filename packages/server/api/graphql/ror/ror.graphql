@@ -1,0 +1,8 @@
+type Ror {
+  id: String!
+  name: String!
+}
+
+extend type Query {
+  searchRor(input: String!): [Ror!]!
+}

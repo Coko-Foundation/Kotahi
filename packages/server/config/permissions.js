@@ -533,6 +533,7 @@ const permissions = {
     manuscriptsUserHasCurrentRoleIn: isAuthenticated,
     message: deny, // Never used
     messages: isAuthenticated,
+    orcidValidate: isAuthenticated,
     paginatedManuscripts: or(userIsGm, userIsAdmin),
     paginatedUsers: or(userIsGm, userIsAdmin),
     publishedArtifacts: allow,
@@ -540,6 +541,7 @@ const permissions = {
     publishedManuscripts: allow,
     publishingCollection: allow,
     reviewersActivity: or(userIsGm, userIsAdmin),
+    searchRor: isAuthenticated,
     searchUsers: isAuthenticated,
     summaryActivity: or(userIsGm, userIsAdmin),
     systemWideDiscussionChannel: or(userIsGm, userIsAdmin),
