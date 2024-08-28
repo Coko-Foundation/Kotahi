@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/client'
 
@@ -8,6 +9,7 @@ import Profile from './Profile'
 import { Spinner, CommsErrorBanner } from '../../shared'
 
 import packageJson from '../../../../package.json'
+import { ConfigContext } from '../../config/src'
 
 const { version: kotahiVersion } = packageJson
 
@@ -104,6 +106,9 @@ const ProfilePage = ({ currentUser, match }) => {
 
   const { id } = match.params
 
+  const { urlFrag } = useContext(ConfigContext)
+  const [didLogout, setDidLogout] = useState(false)
+
   const { loading, error, data, client, refetch } = useQuery(GET_USER, {
     variables: { id: id || currentUser?.id },
     fetchPolicy: 'network-only',
@@ -125,11 +130,16 @@ const ProfilePage = ({ currentUser, match }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
+  if (didLogout) {
+    return <Redirect to={`${urlFrag}/login`} />
+  }
+
   const localStorage = window.localStorage || undefined
 
   const logoutUser = () => {
     localStorage.removeItem('token')
-    client.resetStore()
+    client.clearStore()
+    setDidLogout(true)
   }
 
   // This is a bridge between the fetch results and the Apollo cache/state
