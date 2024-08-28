@@ -6,7 +6,7 @@ Queries and mutations related to modifying properties relating to teams
 
 const teamFields = `
   id
-  name
+  displayName
   role
   objectId
   objectType

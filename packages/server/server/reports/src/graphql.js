@@ -98,7 +98,7 @@ const getTrueReviews = m =>
 const getReviewingDuration = manuscript => {
   const reviewingStart = seekFromEarliestVersion(manuscript, m => {
     if (!m.teams) return null
-    const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
+    const reviewersTeam = m.teams.find(t => t.displayName === 'Reviewers')
     if (!reviewersTeam) return null
     return reviewersTeam.created.getTime()
   })
@@ -149,12 +149,14 @@ const wasSubmitted = manuscript =>
 
 const wasAssignedToEditor = manuscript =>
   seekFromEarliestVersion(manuscript, m =>
-    m.teams.some(t => ['Senior Editor', 'Handling Editor'].includes(t.name)),
+    m.teams.some(t =>
+      ['Senior Editor', 'Handling Editor'].includes(t.displayName),
+    ),
   )
 
 const reviewerWasInvited = manuscript =>
   seekFromEarliestVersion(manuscript, m =>
-    m.teams.some(t => t.name === 'Reviewers'),
+    m.teams.some(t => t.displayName === 'Reviewers'),
   )
 
 const reviewInviteWasAccepted = manuscript =>
@@ -378,7 +380,7 @@ const getTeamUsers = (manuscript, teamNameOrNames) => {
   const manuscripts = getVersionsAsArray(manuscript)
   manuscripts.forEach(m => {
     m.teams
-      .filter(t => teamNames.includes(t.name))
+      .filter(t => teamNames.includes(t.displayName))
       .forEach(team => {
         team.users.forEach(user => {
           if (!users.some(u => u.id === user.id)) users.push(user)
@@ -395,7 +397,10 @@ const getReviewersAndLatestStatuses = ms => {
     name: u.username || u.email || u.defaultIdentity.identifier,
   }))
 
-  const currentTeam = getLastVersion(ms).teams.find(t => t.name === 'Reviewers')
+  const currentTeam = getLastVersion(ms).teams.find(
+    t => t.displayName === 'Reviewers',
+  )
+
   if (!currentTeam) return allReviewers
 
   currentTeam.members.forEach(m => {
@@ -421,7 +426,7 @@ const getVersionReviewDurations = ms => {
   const reviewDurations = []
   const versions = getVersionsAsArray(ms)
   versions.forEach((v, i) => {
-    const reviewTeam = v.teams.find(t => t.name === 'Reviewers')
+    const reviewTeam = v.teams.find(t => t.displayName === 'Reviewers')
     if (!reviewTeam && i === versions.length - 1) return // continue
     if (i === versions.length - 1 && !allReviewersAreComplete(reviewTeam))
       reviewDurations.push(null)
@@ -481,7 +486,7 @@ const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
 
   manuscripts.forEach(m => {
     const wasGivenToReviewers = !!seekFromEarliestVersion(m, manuscript =>
-      manuscript.teams.find(t => t.name === 'Reviewers'),
+      manuscript.teams.find(t => t.displayName === 'Reviewers'),
     )
 
     const wasRevised = m.manuscriptVersions.length > 0
@@ -532,7 +537,7 @@ const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
 
   manuscripts.forEach(manuscript =>
     getVersionsAsArray(manuscript).forEach(m => {
-      const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
+      const reviewersTeam = m.teams.find(t => t.displayName === 'Reviewers')
       if (!reviewersTeam) return // continue
 
       reviewersTeam.members.forEach(member => {

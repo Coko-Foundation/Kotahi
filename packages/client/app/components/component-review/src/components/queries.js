@@ -73,7 +73,7 @@ const manuscriptFields = `
   }
   teams {
     id
-    name
+    displayName
     role
     objectId
     objectType
@@ -93,8 +93,6 @@ const manuscriptFields = `
       }
       status
       isShared
-      created
-      updated
     }
   }
   status
@@ -226,11 +224,10 @@ const formFields = `
 const teamFields = `
   id
   role
-  name
+  displayName
   objectId
   objectType
   members {
-    updated
     id
     user {
       id

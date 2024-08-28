@@ -1,0 +1,44 @@
+extend type Mutation {
+  createTeam(input: TeamInput): Team
+  # deleteTeam(id: ID): Team
+  updateTeam(id: ID, input: TeamInput): Team
+  updateTeamMember(id: ID!, input: String): TeamMember
+  # addTeamMembers(teamId: ID!, members: [ID!]!, status: String): Team!
+  updateCollaborativeTeamMembers(
+    manuscriptId: ID!
+    input: String
+  ): [TeamMember!]!
+}
+
+extend type User {
+  teams: [Team]
+}
+
+extend type TeamMember {
+  isShared: Boolean
+}
+
+# extend type Team {
+# created: DateTime
+# updated: DateTime
+# }
+
+input TeamMemberInput {
+  id: ID
+  user: TeamMemberUserInput
+  status: String
+  isShared: Boolean
+}
+
+input TeamMemberUserInput {
+  id: ID!
+}
+
+input TeamInput {
+  role: String
+  displayName: String
+  objectId: ID
+  objectType: String
+  members: [TeamMemberInput]
+  global: Boolean
+}

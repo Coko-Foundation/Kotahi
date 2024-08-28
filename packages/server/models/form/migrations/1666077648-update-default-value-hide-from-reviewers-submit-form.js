@@ -1,5 +1,9 @@
 /* eslint-disable no-param-reassign */
-const { useTransaction, logger } = require('@coko/server')
+const {
+  useTransaction,
+  // logger
+} = require('@coko/server')
+
 const { map } = require('lodash')
 
 // Paths are relative to the generated migrations folder
@@ -14,9 +18,9 @@ exports.up = async knex => {
         category: 'submission',
       })
 
-      logger.info(`Total submission forms: ${forms.length}`)
+      // logger.info(`Total submission forms: ${forms.length}`)
 
-      let updatedForms = 0
+      // let updatedForms = 0
 
       return Promise.all(
         forms.map(async form => {
@@ -28,11 +32,12 @@ exports.up = async knex => {
             }
           })
           await Form.query().patchAndFetchById(form.id, form)
-          updatedForms += 1
+          // updatedForms += 1
         }),
-      ).then(res => {
-        logger.info(`Total updated submission forms: ${updatedForms}`)
-      })
+      )
+      // .then(res => {
+      //   logger.info(`Total updated submission forms: ${updatedForms}`)
+      // })
     })
   } catch (error) {
     throw new Error(error)

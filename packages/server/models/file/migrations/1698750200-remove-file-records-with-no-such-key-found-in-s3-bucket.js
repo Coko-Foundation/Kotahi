@@ -12,7 +12,7 @@ exports.up = async knex => {
     await connectToFileStorage()
     const files = await File.query(trx)
 
-    logger.info(`Total file records in table: ${files.length}`)
+    // logger.info(`Total file records in table: ${files.length}`)
 
     const tempDir = path.join(__dirname, '..', 'temp')
     await fs.ensureDir(tempDir)
@@ -40,18 +40,19 @@ exports.up = async knex => {
 
         fs.unlinkSync(tempPath)
       }),
-    ).then(async res => {
-      logger.info(
-        `Number of file records to be removed: ${filesWithNoSuchKeyFound.length}`,
-      )
+    )
+    // .then(async res => {
+    // logger.info(
+    //   `Number of file records to be removed: ${filesWithNoSuchKeyFound.length}`,
+    // )
 
-      const affectedRows = await Promise.all(
-        filesWithNoSuchKeyFound.map(async f =>
-          File.query(trx).deleteById(f.id),
-        ),
-      )
+    // const affectedRows = await Promise.all(
+    //   filesWithNoSuchKeyFound.map(async f =>
+    //     File.query(trx).deleteById(f.id),
+    //   ),
+    // )
 
-      logger.info(`Number of removed file records: ${affectedRows.length}`)
-    })
+    // logger.info(`Number of removed file records: ${affectedRows.length}`)
+    // })
   })
 }

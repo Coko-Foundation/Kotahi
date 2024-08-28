@@ -19,11 +19,11 @@ INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "t
 ('f1bdad7f-de4c-4833-87d5-27aa2838197f', '908587ed-c5f8-4532-aa56-bc94f805d336', '2022-09-13 14:07:25.575+00', '2022-09-13 14:07:25.575+00', 'Editorial discussion', 'editorial', g_id);
 INSERT INTO "public"."messages" ("id", "user_id", "channel_id", "created", "updated", "content") VALUES
 ('43a31e42-3da6-4078-bc69-52565db09caf', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'f1bdad7f-de4c-4833-87d5-27aa2838197f', '2022-09-13 14:07:32.462+00', '2022-09-13 14:07:32.462+00', 'Submission Confirmation Email sent by Kotahi to Emily Clay');
-INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
-('62469169-e185-43e3-965c-3e4ecf3dcbcb', '2022-09-15 06:52:52.933+00', '2022-09-15 06:52:52.933+00', 'Author', 'author', NULL, NULL, NULL, 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript'),
-('84b65fa6-0ca9-42ee-92dc-e8c98307456b', '2022-09-15 06:53:16.324+00', '2022-09-15 06:53:16.324+00', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript');
-INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "is_shared") VALUES
-('e150f9c6-903a-4753-9934-26c4a74be188', '2022-09-13 14:07:25.582+00', '2022-09-13 14:07:25.582+00', NULL, '62469169-e185-43e3-965c-3e4ecf3dcbcb', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL);
+INSERT INTO "public"."teams" ("id", "created", "updated", "display_name", "role", "global", "type", "object_id", "object_type") VALUES
+('62469169-e185-43e3-965c-3e4ecf3dcbcb', '2022-09-15 06:52:52.933+00', '2022-09-15 06:52:52.933+00', 'Author', 'author', 'f', 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript'),
+('84b65fa6-0ca9-42ee-92dc-e8c98307456b', '2022-09-15 06:53:16.324+00', '2022-09-15 06:53:16.324+00', 'Senior Editor', 'seniorEditor', 'f', 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript');
+INSERT INTO "public"."team_members" ("id", "created", "updated", "team_id", "user_id", "is_shared") VALUES
+('e150f9c6-903a-4753-9934-26c4a74be188', '2022-09-13 14:07:25.582+00', '2022-09-13 14:07:25.582+00', '62469169-e185-43e3-965c-3e4ecf3dcbcb', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL);
 
 
 INSERT INTO "public"."channel_members" ("id", "created", "updated", "user_id", "channel_id", "last_viewed", "last_alert_triggered_time") VALUES 
@@ -46,13 +46,15 @@ INSERT INTO "public"."reviews" ("id", "created", "updated", "is_decision", "user
 ('8724608a-bcfe-429b-b542-0a0059d55e6e', '2022-09-14 15:14:22.012+00', '2022-09-14 15:14:22.012+00', 'f', '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '908587ed-c5f8-4532-aa56-bc94f805d336', 'Review', 't', 't', 'f', '{"comment": "<p class=\"paragraph\">Please use a linear scale instead of a logarithmic one.</p>"}');
 
 -- Team of Reviewers Added
-INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
-('4f26aac1-3f96-43d4-a41e-595b363fa524', '2022-09-13 14:46:58.148+00', '2022-09-13 14:46:58.148+00', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript');
+INSERT INTO "public"."teams" ("id", "created", "updated", "display_name", "role", "global", "type", "object_id", "object_type") VALUES
+('4f26aac1-3f96-43d4-a41e-595b363fa524', '2022-09-13 14:46:58.148+00', '2022-09-13 14:46:58.148+00', 'Reviewers', 'reviewer', 'f', 'team', '908587ed-c5f8-4532-aa56-bc94f805d336', 'manuscript');
 
 -- Team Members' ID changed
+INSERT INTO "public"."team_members" ("id", "created", "updated", "team_id", "user_id", "is_shared") VALUES
+('910db2fa-0975-4f9e-93e5-49a88879a42c', '2022-09-13 14:46:57.459+00', '2022-09-13 14:46:57.459+00', '84b65fa6-0ca9-42ee-92dc-e8c98307456b', '85e1300e-003c-4e96-987b-23812f902477', NULL);
+
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "is_shared") VALUES
 ('63335151-176b-4142-80c9-1ea594d9edab', '2022-09-14 05:02:35.031+00', '2022-09-14 05:02:35.031+00', 'accepted', '4f26aac1-3f96-43d4-a41e-595b363fa524', '41d52254-a2b8-4ea4-9ded-bfbfe9671578', NULL),
-('910db2fa-0975-4f9e-93e5-49a88879a42c', '2022-09-13 14:46:57.459+00', '2022-09-13 14:46:57.459+00', NULL, '84b65fa6-0ca9-42ee-92dc-e8c98307456b', '85e1300e-003c-4e96-987b-23812f902477', NULL),
 ('9b658252-fb7d-4f06-bca1-803783d5095b', '2022-09-14 05:02:38.57+00', '2022-09-14 05:02:38.57+00', 'invited', '4f26aac1-3f96-43d4-a41e-595b363fa524', 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', NULL),
 ('a11d610c-4f0b-4747-9682-41dfee5b1316', '2022-09-14 05:02:36.849+00', '2022-09-14 15:14:26.379+00', 'completed', '4f26aac1-3f96-43d4-a41e-595b363fa524', '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', NULL),
 ('d178722c-17c6-45b8-985b-a34ab39c61f5', '2022-09-13 14:47:01.485+00', '2022-09-13 14:47:01.485+00', 'rejected', '4f26aac1-3f96-43d4-a41e-595b363fa524', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),

@@ -3,7 +3,7 @@ INSERT INTO teams (id, object_id, object_type, name, role, global, type)
 
 -- Add all users with admin IS TRUE to the admin team.
 -- Not all of these may be appropriate as admins,
--- but the users must manually remove priveleges
+-- but the users must manually remove privileges
 -- as appropriate.
 INSERT INTO team_members (id, team_id, user_id)
   SELECT get_uuid_v4(), teams.id, users.id

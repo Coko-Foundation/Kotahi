@@ -4,7 +4,10 @@
 // never filling out the required info. New functionality prevents
 // a user creating a partially-defined field like this.
 
-const { useTransaction, logger } = require('@coko/server')
+const {
+  useTransaction,
+  // logger
+} = require('@coko/server')
 
 // Paths are relative to the generated migrations folder
 /* eslint-disable-next-line import/no-unresolved, import/extensions */
@@ -12,9 +15,9 @@ const Form = require('../models/form/form.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {
-    let updatedFormsCount = 0
+    // let updatedFormsCount = 0
     const forms = await Form.query(trx)
-    logger.info(`Total forms: ${forms.length}`)
+    // logger.info(`Total forms: ${forms.length}`)
 
     return Promise.all(
       forms.map(async form => {
@@ -25,11 +28,12 @@ exports.up = async knex => {
           await Form.query(trx).patchAndFetchById(form.id, {
             structure: { ...form.structure, children: newFields },
           })
-          updatedFormsCount += 1
+          // updatedFormsCount += 1
         }
       }),
-    ).then(res => {
-      logger.info(`Total updated forms: ${updatedFormsCount}`)
-    })
+    )
+    // .then(res => {
+    //   logger.info(`Total updated forms: ${updatedFormsCount}`)
+    // })
   })
 }

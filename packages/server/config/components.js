@@ -2,12 +2,14 @@ const { isEnvVariableTrue } = require('@coko/server/src/utils/env')
 const modelComponents = require('../models/modelComponents')
 
 const components = [
+  '@coko/server/src/models/team',
+  '@coko/server/src/models/teamMember',
+
   ...modelComponents,
   './api/graphql',
   './api/rest/assetUpload',
 
   './server/model-notification/src/',
-  './server/model-team/src',
   './server/model-user/src',
   './server/model-cms/src',
   './server/model-article-import-sources/src/',

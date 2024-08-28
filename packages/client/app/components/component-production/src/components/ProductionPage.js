@@ -128,7 +128,6 @@ const fragmentFields = `
         id
         created
       }
-      created
     }
   }
   ${fileFragment}

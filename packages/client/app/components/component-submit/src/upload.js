@@ -290,7 +290,7 @@ const createManuscriptMutation = gql`
       teams {
         id
         role
-        name
+        displayName
         objectId
         objectType
         members {

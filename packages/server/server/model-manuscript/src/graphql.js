@@ -503,7 +503,7 @@ const resolvers = {
         teams: [
           {
             role: 'author',
-            name: 'Author',
+            displayName: 'Author',
             members: [{ user: { id: ctx.user } }],
             objectType: 'manuscript',
           },
@@ -1225,9 +1225,9 @@ const resolvers = {
       const team = isCollaborative
         ? {
             role: 'collaborativeReviewer',
-            name: 'Collaborative Reviewers',
+            displayName: 'Collaborative Reviewers',
           }
-        : { role: 'reviewer', name: 'Reviewers' }
+        : { role: 'reviewer', displayName: 'Reviewers' }
 
       let invitationData
 
@@ -1266,7 +1266,7 @@ const resolvers = {
         objectId: manuscriptId,
         objectType: 'manuscript',
         role: team.role,
-        name: team.name,
+        displayName: team.displayName,
       })
 
       await TeamMember.query().insert({

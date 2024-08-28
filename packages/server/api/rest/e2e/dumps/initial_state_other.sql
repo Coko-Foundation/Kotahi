@@ -35,8 +35,8 @@ INSERT INTO identities (id, user_id, created, updated, type, identifier, name, a
 (gen_random_uuid(), '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', true),
 (gen_random_uuid(), '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joane Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
-INSERT INTO team_members (id, created, updated, status, team_id, user_id, is_shared) VALUES
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, gm_team_id, '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
+INSERT INTO team_members (id, created, updated, team_id, user_id, is_shared) VALUES
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
 
 END $$

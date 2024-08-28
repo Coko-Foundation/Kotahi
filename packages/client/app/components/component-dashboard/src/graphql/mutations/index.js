@@ -15,7 +15,7 @@ export default {
       ) {
         id
         role
-        name
+        displayName
         objectId
         objectType
         members {
@@ -40,7 +40,7 @@ export default {
         teams {
           id
           role
-          name
+          displayName
           objectId
           objectType
           members {

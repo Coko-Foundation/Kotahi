@@ -1,4 +1,4 @@
-CREATE TABLE teams (
+CREATE TABLE IF NOT EXISTS teams (
   id UUID PRIMARY KEY,
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
   updated TIMESTAMP WITH TIME ZONE,
@@ -8,9 +8,23 @@ CREATE TABLE teams (
   members JSONB,
   owners JSONB,
   global BOOLEAN,
-  type TEXT NOT NULL,
-  manuscript_id UUID REFERENCES manuscripts(id) ON DELETE CASCADE
+  type TEXT NOT NULL
 );
+
+ALTER TABLE teams
+ADD manuscript_id UUID REFERENCES manuscripts(id) ON DELETE CASCADE;
+
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_name = 'teams' 
+          AND column_name = 'display_name'
+    ) THEN
+        EXECUTE 'ALTER TABLE teams RENAME COLUMN display_name TO name';
+    END IF;
+END $$;
 
 CREATE INDEX ON teams (manuscript_id);
 

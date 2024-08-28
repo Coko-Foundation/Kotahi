@@ -5,9 +5,12 @@ const Team = require('../models/team/team.model')
 
 exports.up = async knex => {
   try {
-    await knex.schema.table('teams', table => {
-      table.uuid('object_id')
-      table.string('object_type')
+    await knex.schema.table('teams', async table => {
+      const hasObjectId = await knex.schema.hasColumn('teams', 'object_id')
+      const hasObjectType = await knex.schema.hasColumn('teams', 'object_type')
+
+      if (!hasObjectId) table.uuid('object_id')
+      if (!hasObjectType) table.string('object_type')
       table.index(['object_id', 'object_type'])
     })
 

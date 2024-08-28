@@ -1,17 +1,7 @@
-const { BaseModel } = require('@coko/server')
+const TeamBase = require('@coko/server/src/models/team/team.model')
 const { evictFromCache } = require('../../server/querycache')
 
-class Team extends BaseModel {
-  constructor(properties) {
-    super(properties)
-
-    this.type = 'team'
-  }
-
-  static get tableName() {
-    return 'teams'
-  }
-
+class Team extends TeamBase {
   static get modifiers() {
     return {
       onlyAuthors(builder) {
@@ -29,7 +19,7 @@ class Team extends BaseModel {
 
     return {
       members: {
-        relation: BaseModel.HasManyRelation,
+        relation: TeamBase.HasManyRelation,
         modelClass: require.resolve('../teamMember/teamMember.model'),
         join: {
           from: 'teams.id',
@@ -37,7 +27,7 @@ class Team extends BaseModel {
         },
       },
       users: {
-        relation: BaseModel.ManyToManyRelation,
+        relation: TeamBase.ManyToManyRelation,
         modelClass: User,
         join: {
           from: 'teams.id',
@@ -50,7 +40,7 @@ class Team extends BaseModel {
         },
       },
       manuscript: {
-        relation: BaseModel.BelongsToOneRelation,
+        relation: TeamBase.BelongsToOneRelation,
         modelClass: require.resolve('../manuscript/manuscript.model'),
         join: {
           from: 'teams.objectId',
@@ -64,22 +54,6 @@ class Team extends BaseModel {
   async $beforeInsert(queryContext) {
     await super.$beforeInsert(queryContext)
     evictFromCache(`teamsForObject:${this.objectId}`)
-  }
-
-  static get schema() {
-    return {
-      properties: {
-        objectId: { type: ['string', 'null'], format: 'uuid' },
-        objectType: { type: ['string', 'null'] },
-        name: { type: 'string' },
-        role: { type: ['string'] },
-        owners: {
-          type: ['array', 'null'],
-          items: { type: 'string', format: 'uuid' },
-        },
-        global: { type: ['boolean', 'null'] },
-      },
-    }
   }
 }
 
