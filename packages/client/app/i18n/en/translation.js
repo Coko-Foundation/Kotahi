@@ -395,6 +395,18 @@ const en = {
         label: 'First name',
         placeholder: 'Enter first name...',
       },
+      middleName: {
+        label: 'Middle name',
+        placeholder: 'Enter middle name...',
+      },
+      orcid: {
+        label: 'ORCID ID',
+        placeholder: 'Enter ORCID id...',
+      },
+      ror: {
+        label: 'Affiliation',
+        placeholder: 'Enter ROR affiliation...',
+      },
       lastName: {
         label: 'Last name',
         placeholder: 'Enter last name...',
@@ -402,10 +414,6 @@ const en = {
       email: {
         label: 'Email',
         placeholder: 'Enter email...',
-      },
-      affiliation: {
-        label: 'Affiliation',
-        placeholder: 'Enter affiliation...',
       },
     },
     doisInput: {

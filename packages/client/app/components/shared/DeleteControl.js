@@ -22,9 +22,11 @@ const DeleteButton = styled.button`
   }
 `
 
-const DeleteControl = ({ onClick, tooltip }) => (
-  <DeleteButton onClick={onClick} title={tooltip} type="button">
-    <Icon color={color.textReverse}>x</Icon>
+const DeleteControl = ({ onClick, tooltip, iconProps, ...rest }) => (
+  <DeleteButton onClick={onClick} title={tooltip} type="button" {...rest}>
+    <Icon color={color.textReverse} {...iconProps}>
+      x
+    </Icon>
   </DeleteButton>
 )
 

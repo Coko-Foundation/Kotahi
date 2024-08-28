@@ -1,10 +1,11 @@
 /* eslint-disable no-nested-ternary */
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import ReactSelect, { components } from 'react-select'
 import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
+import { resourceTypeOptions } from '../../shared/authorsFieldDefinitions'
 
 const styles = th => ({
   menu: (provided, state) => ({
@@ -81,6 +82,7 @@ const getValueContainer =
 // eslint-disable-next-line import/prefer-default-export
 export const Select = props => {
   const {
+    name,
     value,
     isMulti,
     options,
@@ -91,26 +93,35 @@ export const Select = props => {
   } = props
 
   const th = useContext(ThemeContext)
-  let selectedOption = value
   const { t } = useTranslation()
+  const isObjectTypeField = name === 'submission.objectType'
 
-  if (!isMulti && value) {
-    if (hasGroupedOptions) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const option of options) {
-        const optionMatched = option.options.find(
-          subOption => subOption.value === value,
-        )
+  const [selectedOption, setSelectedOption] = useState(
+    !isObjectTypeField
+      ? value
+      : {
+          label: 'Other',
+          value: 'Other',
+        },
+  )
 
-        if (optionMatched) {
-          selectedOption = optionMatched
-          break
-        }
+  useEffect(() => {
+    if (!isMulti && value) {
+      if (hasGroupedOptions) {
+        options.some(option => {
+          const optionMatched = option.options.find(
+            subOption => subOption.value === value,
+          )
+
+          optionMatched && setSelectedOption(optionMatched)
+
+          return !!optionMatched
+        })
+      } else {
+        setSelectedOption(options.find(option => option.value === value))
       }
-    } else {
-      selectedOption = options.find(option => option.value === value)
     }
-  }
+  }, [value, isMulti, hasGroupedOptions, options])
 
   const myStyles = { ...styles(th), ...(customStyles || {}) }
 
@@ -119,7 +130,7 @@ export const Select = props => {
       classNamePrefix="react-select"
       components={{ ValueContainer: getValueContainer(dataTestid) }}
       isMulti={isMulti}
-      options={options}
+      options={isObjectTypeField ? resourceTypeOptions : options}
       {...otherProps}
       menuPlacement="auto"
       menuPortalTarget={document.querySelector('body')}

@@ -404,13 +404,21 @@ const esLa = {
         label: 'Apellido',
         placeholder: 'Ingresa el apellido...',
       },
+      middleName: {
+        label: 'Segundo nombre',
+        placeholder: 'Introduce el segundo nombre...',
+      },
+      orcid: {
+        label: 'ID ORCID',
+        placeholder: 'Introduce el ID ORCID...',
+      },
+      ror: {
+        label: 'Afiliación ROR',
+        placeholder: 'Introduce la afiliación ROR...',
+      },
       email: {
         label: 'Correo Electrónico',
         placeholder: 'Ingresa el correo electrónico...',
-      },
-      affiliation: {
-        label: 'Afiliación',
-        placeholder: 'Ingresa la afiliación...',
       },
     },
     dragndrop: {

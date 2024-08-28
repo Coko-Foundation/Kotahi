@@ -53,3 +53,9 @@ export const validateSuffix = (client, groupId) => async value => {
 
   return 'Suffix is invalid or not available'
 }
+
+export const VALIDATE_ORCID = gql`
+  query ($input: String!) {
+    orcidValidate(input: $input)
+  }
+`

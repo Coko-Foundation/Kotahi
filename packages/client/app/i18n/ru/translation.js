@@ -410,9 +410,17 @@ const ru = {
         label: 'Email',
         placeholder: 'Email',
       },
-      affiliation: {
-        label: 'Принадлежность',
-        placeholder: 'Место работы',
+      middleName: {
+        label: 'Отчество',
+        placeholder: 'Введите отчество...',
+      },
+      orcid: {
+        label: 'ID ORCID',
+        placeholder: 'Введите ID ORCID...',
+      },
+      ror: {
+        label: 'Аффилиация ROR',
+        placeholder: 'Введите аффилиацию ROR...',
       },
     },
     dragndrop: {

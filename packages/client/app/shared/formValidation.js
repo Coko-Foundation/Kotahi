@@ -14,6 +14,7 @@ export const validateFormField =
     doiUniqueSuffixValidation = false,
     validateDoi,
     validateSuffix,
+    validationOrcid,
     componentType,
     threadedDiscussionProps,
   ) =>
@@ -26,7 +27,9 @@ export const validateFormField =
         (value || []).length <= 0
       )
         return 'Required'
-      return validateAuthors(value)
+
+      // eslint-disable-next-line no-return-await
+      return await validateAuthors(value, validationOrcid)
     }
 
     if (componentType === 'DoisInput') {

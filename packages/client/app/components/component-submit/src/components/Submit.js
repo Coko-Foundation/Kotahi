@@ -46,6 +46,7 @@ const Submit = ({
   onSubmit,
   channelId,
   chatProps,
+  loadROROptions,
   parent,
   match,
   channels,
@@ -57,6 +58,7 @@ const Submit = ({
   manuscriptLatestVersionId,
   validateDoi,
   validateSuffix,
+  validationOrcid,
   chatExpand,
 }) => {
   const config = useContext(ConfigContext)
@@ -131,6 +133,7 @@ const Submit = ({
         onSubmit,
         onChange,
         republish,
+        loadROROptions,
         match,
         manuscript: version,
         createFile,
@@ -139,6 +142,7 @@ const Submit = ({
         threadedDiscussionExtendedProps,
         validateDoi,
         validateSuffix,
+        validationOrcid,
       }
 
       decisionSection = {

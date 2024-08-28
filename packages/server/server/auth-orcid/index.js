@@ -1,5 +1,5 @@
-/* eslint-disable global-require */
+const app = require('./orcid')
 
 module.exports = {
-  server: () => require('./orcid'),
+  server: () => app,
 }

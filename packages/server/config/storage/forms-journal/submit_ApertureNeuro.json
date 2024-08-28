@@ -64,29 +64,159 @@
           "value": "software"
         },
         {
+          "id": "0fafbfc3-6797-46e3-aff4-3fd4f16261b1",
+          "label": "Figure",
+          "value": "figure"
+        },
+        {
           "id": "5117a7c6-2fcf-414b-ac60-47f8d93ccfef",
           "label": "Notebook",
           "value": "notebook"
         },
         {
-          "id": "7441dc19-b8cf-401c-a5c3-10acd8f753da",
-          "label": "Tutorial/Educational",
-          "value": "Tutorial/Educational"
+          "id": "32121b38-b855-465e-b039-b5100177698b",
+          "label": "Research article",
+          "value": "Research article"
         },
         {
-          "id": "14c94ad6-bbcf-4956-a98d-997386aeb55c",
-          "label": "Original Research Manuscript",
-          "value": "Original Research Manuscript"
+          "id": "91ba65da-cd23-45db-9bd8-f3457456ae3d",
+          "label": "Audiovisual",
+          "value": "Audiovisual"
         },
         {
-          "id": "603bf302-2edc-499d-a008-15dbacb63f99",
-          "label": "Review",
-          "value": "Review"
+          "id": "22d097c2-a674-48ae-9308-643cc5ca1c9b",
+          "label": "Book",
+          "value": "Book"
         },
         {
-          "id": "8f5943ca-e559-4221-884e-7d4cd5fbafdf",
-          "label": "Other ",
-          "value": "Other "
+          "id": "65a73d9f-7ce4-405b-a3cc-02ede6c42b01",
+          "label": "Book Chapter",
+          "value": "BookChapter"
+        },
+        {
+          "id": "995c2884-421b-45ab-952c-06ccc262c1d7",
+          "label": "Collection",
+          "value": "Collection"
+        },
+        {
+          "id": "980d5911-bca8-49a2-9834-bdf43db57e06",
+          "label": "Computational Notebook",
+          "value": "ComputationalNotebook"
+        },
+        {
+          "id": "b88dda6a-3bb9-42c6-b1e2-6614d4c1598e",
+          "label": "Conference Paper",
+          "value": "ConferencePaper"
+        },
+        {
+          "id": "fec5fdbb-3ddf-408d-b67c-1b8fa3f46386",
+          "label": "Conference Proceeding",
+          "value": "ConferenceProceeding"
+        },
+        {
+          "id": "b95f5564-3cae-472c-a58f-ab86386d95e5",
+          "label": "Data Paper",
+          "value": "DataPaper"
+        },
+        {
+          "id": "2803d4e4-9064-42e2-a236-951a45f0e657",
+          "label": "Dissertation",
+          "value": "Dissertation"
+        },
+        {
+          "id": "159077af-0b15-4cdc-95db-c6493e71915e",
+          "label": "Event",
+          "value": "Event"
+        },
+        {
+          "id": "b417d51f-c047-492c-9c0d-4accf652c328",
+          "label": "Image",
+          "value": "Image"
+        },
+        {
+          "id": "2c28de49-a3e5-4543-a580-e2fac67fd541",
+          "label": "Interactive Resource",
+          "value": "InteractiveResource"
+        },
+        {
+          "id": "06f44798-05ee-4d08-8b8a-946fb7985b8b",
+          "label": "Instrument",
+          "value": "Instrument"
+        },
+        {
+          "id": "67724cec-51bc-45a7-9538-f231bb47d3c9",
+          "label": "Journal",
+          "value": "Journal"
+        },
+        {
+          "id": "efb9ea1a-8ab0-49fb-8973-bff719fbee4d",
+          "label": "Journal Article",
+          "value": "JournalArticle"
+        },
+        {
+          "id": "bacbf174-94e3-46de-bd41-86fd82670258",
+          "label": "Model",
+          "value": "Model"
+        },
+        {
+          "id": "ba4cd24c-c5aa-400b-b9ce-2aef836d89d8",
+          "label": "Output Management Plan",
+          "value": "OutputManagementPlan"
+        },
+        {
+          "id": "3c58de5e-522c-4bbc-9132-468829460584",
+          "label": "Peer Review",
+          "value": "PeerReview"
+        },
+        {
+          "id": "f13bc593-07d8-4458-a279-800aae5bb1ed",
+          "label": "Physical Object",
+          "value": "PhysicalObject"
+        },
+        {
+          "id": "04440ff8-57d4-4dd1-b71c-82f6dd7fd64d",
+          "label": "Preprint",
+          "value": "Preprint"
+        },
+        {
+          "id": "b8812fb6-3e9c-4bcc-8112-979e425648af",
+          "label": "Report",
+          "value": "Report"
+        },
+        {
+          "id": "6f98ab37-08cb-47b1-aa2f-92222c9a0e91",
+          "label": "Service",
+          "value": "Service"
+        },
+        {
+          "id": "729fed06-3a10-47e8-a8e1-b8dd00996918",
+          "label": "Sound",
+          "value": "Sound"
+        },
+        {
+          "id": "0e07ac3f-5293-48c4-8134-9f68e3ad9ea2",
+          "label": "Standard",
+          "value": "Standard"
+        },
+        {
+          "id": "650390d5-b5ac-4df2-b9c7-d5eddcadac6b",
+          "label": "Study Registration",
+          "value": "StudyRegistration"
+        },
+        {
+          "id": "1cf2a1a9-713d-4a7d-9899-9a50a8edd98f",
+          "label": "Text",
+          "value": "Text"
+        },
+        {
+          "id": "a3dd3def-033e-4a5c-9fb0-4d74f0e0fc61",
+          "label": "Workflow",
+          "value": "Workflow"
+        },
+        {
+          "id": "402c64a2-322c-4f16-89e9-6407fa98351f",
+          "label": "Other",
+          "value": "Other"
         }
       ]
     },
