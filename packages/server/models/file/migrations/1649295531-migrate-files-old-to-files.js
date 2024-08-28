@@ -1,7 +1,11 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-const { useTransaction, logger, createFile } = require('@coko/server')
+const {
+  useTransaction,
+  // logger,
+  createFile,
+} = require('@coko/server')
 
 // Paths are relative to the generated migrations folder
 /* eslint-disable-next-line import/no-unresolved, import/extensions */
@@ -12,9 +16,9 @@ exports.up = async knex => {
     return useTransaction(async trx => {
       const filesOld = await File.query(trx)
 
-      logger.info(`Total Old files: ${filesOld.length}`)
+      // logger.info(`Total Old files: ${filesOld.length}`)
 
-      let migratedFiles = 0
+      // let migratedFiles = 0
 
       return Promise.all(
         filesOld.map(async file => {
@@ -28,11 +32,12 @@ exports.up = async knex => {
             [file.fileType],
             file.reviewCommentId || file.manuscriptId,
           )
-          migratedFiles += 1
+          // migratedFiles += 1
         }),
-      ).then(res => {
-        logger.info(`Total Migrated Files: ${migratedFiles}`)
-      })
+      )
+      // .then(res => {
+      //   logger.info(`Total Migrated Files: ${migratedFiles}`)
+      // })
     })
   } catch (error) {
     throw new Error(error)

@@ -587,7 +587,6 @@ const permissions = {
     deleteManuscript: deny, // Never used
     deleteManuscripts: deny, // Never used
     deletePendingComment: isAuthenticated,
-    deleteTeam: deny, // Never used
     deleteUser: or(userIsGm, userIsAdmin),
     deleteMessage: or(userOwnsMessage, and(userIsGm, userIsAdmin)),
     importManuscripts: or(userIsGm, userIsAdmin),

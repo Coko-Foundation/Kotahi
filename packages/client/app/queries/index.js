@@ -314,7 +314,7 @@ const exportFields = `
     created
     updated
     role
-    name
+    displayName
     members {
       user {
         username

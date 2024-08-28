@@ -71,7 +71,7 @@ const AssignEditor = ({ teamRole, manuscript }) => {
           // Editors are always linked to the parent manuscript
           objectId: manuscript.id,
           objectType: 'manuscript',
-          name: teamRole === 'seniorEditor' ? 'Senior Editor' : editor,
+          displayName: teamRole === 'seniorEditor' ? 'Senior Editor' : editor,
           role: teamRole,
           members: [{ user: { id: selectedEditor } }],
         }

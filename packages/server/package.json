@@ -21,7 +21,7 @@
     "pg": "8.4.0"
   },
   "dependencies": {
-    "@coko/server": "3.13.0",
+    "@coko/server": "3.13.2",
     "@pubsweet/job-xsweet": "^2.2.1",
     "@pubsweet/model-user": "6.0.3",
     "@pubsweet/models": "^0.3.15",

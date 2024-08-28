@@ -6,7 +6,7 @@ shortId
 teams {
   id
   role
-  name
+  displayName
   members {
     id
     user {
@@ -14,8 +14,6 @@ teams {
       username
     }
     status
-    created
-    updated
   }
 }
 status

@@ -73,7 +73,6 @@ const createFileMutation = gql`
       created
       name
       updated
-      name
       tags
       objectId
       storedObjects {

@@ -16,7 +16,7 @@ module.exports = {
     mode: path.resolve(__dirname, '..', 'test', 'helpers', 'authsome_mode'),
     teams: {
       teamTest: {
-        name: 'Contributors',
+        displayName: 'Contributors',
       },
     },
   },

@@ -100,7 +100,7 @@ const createGroupAndRelatedData = async (
 
   if (!userTeamExists) {
     const userTeam = await Team.query(trx).insertAndFetch({
-      name: 'User',
+      displayName: 'User',
       role: 'user',
       global: false,
       objectId: group.id,
@@ -124,7 +124,7 @@ const createGroupAndRelatedData = async (
 
   if (!groupManagerTeamExists) {
     const groupManagerTeam = await Team.query(trx).insertAndFetch({
-      name: 'Group Manager',
+      displayName: 'Group Manager',
       role: 'groupManager',
       global: false,
       objectId: group.id,

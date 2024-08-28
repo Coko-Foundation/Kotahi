@@ -70,7 +70,7 @@ const AssignEditor = ({
       // Editors are always linked to the parent manuscript
       objectId: manuscript.id,
       objectType: 'manuscript',
-      name: teamName,
+      displayName: teamName,
       role: teamRole,
       members: updatedMembers,
     }

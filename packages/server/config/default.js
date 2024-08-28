@@ -50,7 +50,7 @@ module.exports = {
         role: 'managingEditor',
       },
       reviewer: {
-        displayName: 'Reviewer',
+        displayName: 'Reviewers',
         role: 'reviewer',
       },
       author: {
@@ -60,6 +60,14 @@ module.exports = {
       collaborativeReviewer: {
         displayName: 'Collaborative Reviewer',
         role: 'collaborativeReviewer',
+      },
+      user: {
+        displayName: 'User',
+        role: 'user',
+      },
+      groupManager: {
+        displayName: 'Group Manager',
+        role: 'groupManager',
       },
     },
   },

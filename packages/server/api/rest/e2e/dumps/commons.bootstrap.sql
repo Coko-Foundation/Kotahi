@@ -17,7 +17,7 @@ BEGIN
     RAISE EXCEPTION 'No group named ''single_form'' with instanceName ''preprint1'' found. For cypress tests ensure your .env has INSTANCE_GROUPS=journal:journal,prc:prc,single_form:preprint1';
   END IF;
 
-INSERT INTO teams (id, object_id, object_type, name, role, global, type)
+INSERT INTO teams (id, object_id, object_type, display_name, role, global, type)
   values (gen_random_uuid(), null, null, 'Admin', 'admin', true, 'team');
 
 
@@ -55,16 +55,16 @@ INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type"
 (gen_random_uuid(), '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2022-09-14 02:50:09.747+00', '2022-09-14 02:50:09.747+00', 'orcid', '0000-0001-5956-7341', 'Gale Davis'     , '', '{"accessToken": "1300952c-a4cc-4c44-ba23-df4295571689", "refreshToken": "f4ed08d1-930e-43f0-9463-0a45428d08f5"}', 't'),
 (gen_random_uuid(), 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.743+00', '2022-09-14 02:51:21.743+00', 'orcid', '0000-0002-9601-2254', 'David Miller'   , '', '{"accessToken": "a0829b38-4732-4f7c-961d-eac592dbfb07", "refreshToken": "581792f0-a925-4cdb-a491-a519af67273c"}', 't');
 
-INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "is_shared") VALUES
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, '5b861dfb-02df-4be1-bc67-41a21611f5e7', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, '85e1300e-003c-4e96-987b-23812f902477', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, '41d52254-a2b8-4ea4-9ded-bfbfe9671578', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, user_team_id, 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, admin_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
-(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
+INSERT INTO "public"."team_members" ("id", "created", "updated", "team_id", "user_id", "is_shared") VALUES
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, '5b861dfb-02df-4be1-bc67-41a21611f5e7', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, '85e1300e-003c-4e96-987b-23812f902477', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, '41d52254-a2b8-4ea4-9ded-bfbfe9671578', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', admin_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
 
 INSERT INTO "public"."channel_members" ("id", "created", "updated", "user_id", "channel_id", "last_viewed", "last_alert_triggered_time") VALUES 
 (gen_random_uuid(), '2023-07-27 06:58:30.249+00', '2023-07-27 06:58:53.829+00', '5b861dfb-02df-4be1-bc67-41a21611f5e7', channel_id, '2023-07-27 06:58:53.829+00', NULL),

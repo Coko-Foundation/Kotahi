@@ -91,7 +91,7 @@ const fragmentFields = `
   decision
   teams {
     id
-    name
+    displayName
     role
     objectId
     objectType

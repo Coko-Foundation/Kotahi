@@ -148,7 +148,7 @@ const resolvers = {
         objectId: manuscriptId,
         objectType: 'manuscript',
         role: 'author',
-        name: 'Authors',
+        displayName: 'Authors',
       })
 
       await TeamMember.query().insert({

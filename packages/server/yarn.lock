@@ -314,10 +314,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@coko/server@3.13.0":
-  version "3.13.0"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.13.0.tgz#28e746fdad76b02a58305b4a48b326b8f7db3c7d"
-  integrity sha512-S5lvUNnoCrY2x2RNSLjoplgoAqEowTj6tPPcOSwDetnBknJWy0jU32fNYaFxccaZqzBSNWWzG3/V9nXCiKMTMA==
+"@coko/server@3.13.2":
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-3.13.2.tgz#95c97f542a85c77479327a6e918cbdb76dff7b81"
+  integrity sha512-dnCv8Emc/zu23eIX9Um3BhvWChzkLW3v9nXgyEy3H5mRyVcWExTZheFq/rFP/TcbCQKBEOCAtpSgK2YBhpj4sw==
   dependencies:
     "@hapi/joi" "^14.3.0"
     "@pubsweet/models" "^0.3.21"
