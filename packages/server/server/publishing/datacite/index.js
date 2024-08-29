@@ -77,7 +77,7 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
     $dois,
     $issueYear: issueYear,
     objectType: resourceTypeGeneral = 'Other',
-    ifother: resourceType,
+    ifother: resourceType = 'project',
     $title: title,
   } = submission
 
