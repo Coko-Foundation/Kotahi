@@ -35,3 +35,6 @@ cypress/screenshots
 
 # macOS
 .dccache
+
+packages/server/config/translation
+!packages/server/config/translationOverrides.example.js

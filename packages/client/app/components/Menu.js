@@ -96,7 +96,7 @@ const Menu = ({
       <MainNavWrapper>
         <UserComponent
           expanded={!menuIsMinimal}
-          loginLinsk={loginLink}
+          loginLink={loginLink}
           profileLink={profileLink}
           t={t}
           user={user}

@@ -75,9 +75,14 @@ const Pages = () => {
     currentGroup = groups.find(group => group.name === name)
   }
 
+  const activeConfig = currentGroup?.configs?.find(config => config?.active)
+
   useEffect(() => {
-    reloadTranslationsForGroup(currentGroup?.name)
-  }, [currentGroup?.id])
+    reloadTranslationsForGroup(
+      currentGroup?.name,
+      JSON.parse(activeConfig?.translationOverrides || '{}'),
+    )
+  }, [currentGroup?.id, activeConfig?.id])
 
   if (loading && !data) return <Spinner />
 
@@ -96,8 +101,6 @@ const Pages = () => {
 
   // TODO: Remove old config once refactor of config is completed
   const oldConfig = JSON.parse(currentGroup?.oldConfig || '{}')
-
-  const activeConfig = currentGroup?.configs?.find(config => config?.active)
 
   const config = {
     id: activeConfig?.id,

@@ -1,6 +1,7 @@
 const File = require('@coko/server/src/models/file/file.model')
 
 const Config = require('../../../models/config/config.model')
+const Group = require('../../../models/group/group.model')
 
 const { getConfigJsonString } = require('./configObject')
 
@@ -68,6 +69,28 @@ const resolvers = {
       const icon = getFile(parent, 'favicon')
       return icon
     },
+    translationOverrides: async ({ groupId }) => {
+      const { name: groupName } = await Group.query().findById(groupId)
+
+      let groupOverrides
+      let globalOverrides
+
+      try {
+        // eslint-disable-next-line import/no-dynamic-require, global-require
+        groupOverrides = require(`../../../config/translation/${groupName}/translationOverrides`)
+      } catch {
+        groupOverrides = {}
+      }
+
+      try {
+        // eslint-disable-next-line global-require, import/no-unresolved, import/extensions
+        globalOverrides = require('../../../config/translation/translationOverrides')
+      } catch {
+        globalOverrides = {}
+      }
+
+      return JSON.stringify({ groupOverrides, globalOverrides })
+    },
   },
 }
 
@@ -91,6 +114,7 @@ const typeDefs = `
     icon: File
     groupId: ID!
     flaxSiteUrl: String
+	translationOverrides: String
   }
 
   input ConfigInput {
