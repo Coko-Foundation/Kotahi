@@ -114,7 +114,7 @@ const typeDefs = `
     icon: File
     groupId: ID!
     flaxSiteUrl: String
-	translationOverrides: String
+  	translationOverrides: String
   }
 
   input ConfigInput {

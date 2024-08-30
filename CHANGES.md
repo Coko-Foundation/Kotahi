@@ -1,5 +1,9 @@
 ## Changes
 
+### Version 3.8.0
+
+We've changed how translation overrides work a little. Instead of mounting files on the client container, you now need to mount your override files on the server container, under `config/translation`. This will enable us to provide pre-built client images in the near future.
+
 ### Version 3.7.0
 
 Client and server are now two separate containers in production. This means that your main url (eg. myapp.com) should now point to the client deployment, not the server. You can see the [production compose file](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/3.7.0/docker-compose.production.yml?ref_type=tags) for reference. Both client and server need to have separate, publicly accessible urls.
