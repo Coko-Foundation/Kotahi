@@ -115,7 +115,7 @@ const FormSettingsModal = ({
                 : t('formBuilder.Create Form')
             }
           >
-            {!isActive && (
+            {!isActive && form.id && (
               <MakeActiveButton
                 isCompact
                 onClick={() => setIsConfirmingMakeActive(true)}
