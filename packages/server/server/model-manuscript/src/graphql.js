@@ -2,7 +2,7 @@
 const { ref, raw } = require('objection')
 const axios = require('axios')
 const { map, chunk, orderBy } = require('lodash')
-const { pubsubManager, File } = require('@coko/server')
+const { subscriptionManager, File } = require('@coko/server')
 const cheerio = require('cheerio')
 
 const {
@@ -110,8 +110,6 @@ const {
 
 const { cachedGet } = require('../../querycache')
 
-const { getPubsub } = pubsubManager
-
 const getCss = async () => {
   const css = await generateCss()
   return css
@@ -174,11 +172,11 @@ const getRelatedReviews = async (
 
   const userRoles = shouldGetPublicReviewsOnly
     ? {}
-    : await getUserRolesInManuscript(ctx.user, manuscript.id)
+    : await getUserRolesInManuscript(ctx.userId, manuscript.id)
 
   const sharedReviewersIds = await getSharedReviewersIds(
     manuscript.id,
-    ctx.user,
+    ctx.userId,
   )
 
   // Insert isShared flag before userIds are stripped
@@ -201,7 +199,7 @@ const getRelatedReviews = async (
     reviewForm,
     decisionForm,
     sharedReviewersIds,
-    ctx.user,
+    ctx.userId,
     userRoles,
     manuscriptHasDecision,
   )
@@ -480,7 +478,7 @@ const resolvers = {
         meta,
         status: 'new',
         submission,
-        submitterId: ctx.user,
+        submitterId: ctx.userId,
         // Create two channels: 1. free for all involved, 2. editorial
         channels: [
           {
@@ -504,7 +502,7 @@ const resolvers = {
           {
             role: 'author',
             displayName: 'Author',
-            members: [{ user: { id: ctx.user } }],
+            members: [{ user: { id: ctx.userId } }],
             objectType: 'manuscript',
           },
         ],
@@ -534,7 +532,7 @@ const resolvers = {
       // add user to author discussion channel
       await addUserToManuscriptChatChannel({
         manuscriptId: updatedManuscript.id,
-        userId: ctx.user,
+        userId: ctx.userId,
       })
       return updatedManuscript
     },
@@ -607,7 +605,7 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[channels]')
 
-      const sender = await User.query().findById(ctx.user)
+      const sender = await User.query().findById(ctx.userId)
       const author = await manuscript.getManuscriptAuthor()
       const authorName = author?.username || ''
 
@@ -688,7 +686,7 @@ const resolvers = {
           Message.createMessage({
             content: `Author proof assigned Email sent by Kotahi to ${author.username}`,
             channelId,
-            userId: ctx.user,
+            userId: ctx.userId,
           })
         } catch (e) {
           /* eslint-disable-next-line */
@@ -774,7 +772,7 @@ const resolvers = {
 
       await Promise.all(
         team.members.map(async member => {
-          if (member.userId === ctx.user && member.status !== 'completed') {
+          if (member.userId === ctx.userId && member.status !== 'completed') {
             await TeamMember.query().patchAndFetchById(member.id, {
               status: action,
             })
@@ -785,14 +783,14 @@ const resolvers = {
       if (action === 'accepted') {
         await addUserToManuscriptChatChannel({
           manuscriptId: team.objectId,
-          userId: ctx.user,
+          userId: ctx.userId,
           type: 'editorial',
         })
       }
 
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
-        userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
+        userId: team.role === 'collaborativeReviewer' ? null : ctx.userId,
         isDecision: false,
       })
 
@@ -802,7 +800,7 @@ const resolvers = {
           isDecision: false,
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
-          userId: team.role === 'collaborativeReviewer' ? null : ctx.user,
+          userId: team.role === 'collaborativeReviewer' ? null : ctx.userId,
           manuscriptId: team.objectId,
           isCollaborative: team.role === 'collaborativeReviewer',
           jsonData: '{}',
@@ -814,7 +812,7 @@ const resolvers = {
       if (action === 'rejected') {
         // Automated email reviewReject on rejection
         const reviewer = await User.query()
-          .findById(ctx.user)
+          .findById(ctx.userId)
           .withGraphJoined('[defaultIdentity]')
 
         const reviewerName =
@@ -955,7 +953,7 @@ const resolvers = {
           },
         })
 
-        const author = await User.query().findById(ctx.user)
+        const author = await User.query().findById(ctx.userId)
 
         const activeConfig = await Config.getCached(manuscript.groupId)
 
@@ -1054,7 +1052,7 @@ const resolvers = {
           ?.submissionConfirmationEmailTemplate
 
       if (selectedTemplate && manuscript.submitter) {
-        const sender = await User.query().findById(ctx.user)
+        const sender = await User.query().findById(ctx.userId)
         const receiverEmail = manuscript.submitter.email
 
         const receiverName =
@@ -1157,7 +1155,7 @@ const resolvers = {
           manuscript.submitter.defaultIdentity.name ||
           ''
 
-        const sender = await User.query().findById(ctx.user)
+        const sender = await User.query().findById(ctx.userId)
 
         const selectedTemplate =
           activeConfig.formData.eventNotification
@@ -1580,9 +1578,7 @@ const resolvers = {
   Subscription: {
     manuscriptsImportStatus: {
       subscribe: async (_, vars, context) => {
-        const pubsub = await getPubsub()
-
-        return pubsub.asyncIterator(['IMPORT_MANUSCRIPTS_STATUS'])
+        return subscriptionManager.asyncIterator(['IMPORT_MANUSCRIPTS_STATUS'])
       },
     },
   },
@@ -1611,7 +1607,7 @@ const resolvers = {
 
       const firstVersionIds =
         await Manuscript.getFirstVersionIdsOfManuscriptsUserHasARoleIn(
-          ctx.user,
+          ctx.userId,
           groupId,
         )
 
@@ -1653,7 +1649,7 @@ const resolvers = {
               if (
                 t.members.some(
                   member =>
-                    member.userId === ctx.user &&
+                    member.userId === ctx.userId &&
                     (!reviewerStatus || member.status === reviewerStatus),
                 )
               )
@@ -1664,7 +1660,7 @@ const resolvers = {
         if (rolesFound.size) {
           // eslint-disable-next-line no-param-reassign
           latestVersion.hasOverdueTasksForUser =
-            manuscriptHasOverdueTasksForUser(latestVersion, ctx.user)
+            manuscriptHasOverdueTasksForUser(latestVersion, ctx.userId)
           latestVersion.rolesFound = [...rolesFound]
 
           userManuscriptsWithInfo[latestVersion.id] = latestVersion
@@ -1999,7 +1995,7 @@ const resolvers = {
       const versionIds = [manuscriptId, ...otherVersions.map(v => v.id)]
 
       const assignments = await User.relatedQuery('teams')
-        .for(ctx.user)
+        .for(ctx.userId)
         .select('objectId')
         .whereIn('role', ['reviewer', 'collaborativeReviewer'])
         .whereIn('objectId', versionIds)

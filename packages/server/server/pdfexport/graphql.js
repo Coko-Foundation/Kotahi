@@ -7,7 +7,12 @@ const axios = require('axios')
 const config = require('config')
 const { promisify } = require('util')
 
-const { createFile, File, fileStorage } = require('@coko/server')
+const {
+  createFile,
+  File,
+  fileStorage,
+  tempFolderPath,
+} = require('@coko/server')
 
 const Manuscript = require('../../models/manuscript/manuscript.model')
 const ArticleTemplate = require('../../models/articleTemplate/articleTemplate.model')
@@ -33,8 +38,6 @@ const copyFile = promisify(fs.copyFile)
 // editoria version of this code is here: https://gitlab.coko.foundation/editoria/editoria/-/blob/master/server/api/useCases/services.js
 
 const randomBytes = promisify(crypto.randomBytes)
-
-const uploadsPath = config.get('pubsweet-server').uploads
 
 const { clientId, clientSecret, port, protocol, host } = config.pagedjs
 
@@ -274,9 +277,9 @@ const htmlHandler = async manuscriptId => {
       `<body><div class="disclaimer">Please note: this HTML is formatted for the page, not for the screen! Print this to a PDF, where the styling will display correctly (and this message will not be visible).</div>`,
     )
 
-  const tempPath = path.join(uploadsPath, filename)
+  const tempPath = path.join(tempFolderPath, filename)
 
-  await fsPromised.appendFile(`${uploadsPath}/${filename}`, outHtml)
+  await fsPromised.appendFile(`${tempFolderPath}/${filename}`, outHtml)
 
   return `${tempPath}`
 }

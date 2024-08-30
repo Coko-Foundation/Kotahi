@@ -8,9 +8,42 @@ class ArticleImportHistory extends BaseModel {
   static get schema() {
     return {
       properties: {
-        date: { type: ['string', 'object', 'null'], format: 'date-time' },
-        sourceId: { type: ['string', 'null'], format: 'uuid' },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        date: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        sourceId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

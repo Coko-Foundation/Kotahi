@@ -1,7 +1,6 @@
 const { useTransaction } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../models/config/config.model')
+const Config = require('../config.model')
 
 exports.up = async () => {
   return useTransaction(async trx => {

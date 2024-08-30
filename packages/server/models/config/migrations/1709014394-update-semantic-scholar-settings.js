@@ -1,8 +1,8 @@
 const { useTransaction, logger } = require('@coko/server')
 
 const variableConfig = require('config')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../models/config/config.model')
+
+const Config = require('../config.model')
 
 const shouldRunDefaultImportsForColab = [true, 'true'].includes(
   variableConfig['import-for-prc'].default_import,

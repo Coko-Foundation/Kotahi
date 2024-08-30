@@ -1,7 +1,6 @@
 const { logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Invitation = require('../models/invitation/invitation.model')
+const Invitation = require('../invitation.model')
 
 exports.up = async knex => {
   try {

@@ -1,13 +1,9 @@
 const { useTransaction, logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const User = require('../models/user/user.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Team = require('../models/team/team.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const TeamMember = require('../models/teamMember/teamMember.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Group = require('../models/group/group.model')
+const Team = require('../team.model')
+const User = require('../../user/user.model')
+const TeamMember = require('../../teamMember/teamMember.model')
+const Group = require('../../group/group.model')
 
 exports.up = async knex => {
   try {

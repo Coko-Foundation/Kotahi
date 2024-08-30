@@ -1,12 +1,8 @@
 const { useTransaction } = require('@coko/server')
 
-// eslint-disable-next-line import/no-unresolved, import/extensions
-const NotificationUserOptions = require('../models/notificationUserOption/notificationUserOption.model')
-// eslint-disable-next-line import/no-unresolved, import/extensions
-const User = require('../models/user/user.model')
-
-// eslint-disable-next-line import/no-unresolved, import/extensions
-const Group = require('../models/group/group.model')
+const NotificationUserOptions = require('../notificationUserOption.model')
+const User = require('../../user/user.model')
+const Group = require('../../group/group.model')
 
 exports.up = async knex => {
   await useTransaction(async trx => {

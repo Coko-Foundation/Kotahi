@@ -147,7 +147,7 @@ const sendAutomatedNotifications = async groupId => {
 
     if (!upcomingNotificationTime) {
       // eslint-disable-next-line no-console
-      console.info('No upcoming notifications found.')
+      // console.info('No upcoming notifications found.')
       return
     }
 

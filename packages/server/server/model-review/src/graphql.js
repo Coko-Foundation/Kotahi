@@ -1,6 +1,6 @@
 const isEmpty = require('lodash/isEmpty')
 const omit = require('lodash/omit')
-const { File, pubsubManager } = require('@coko/server')
+const { File, subscriptionManager } = require('@coko/server')
 const Review = require('../../../models/review/review.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const User = require('../../../models/user/user.model')
@@ -25,7 +25,6 @@ const { REVIEW_FORM_UPDATED } = require('./consts')
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
-      const pubsub = await pubsubManager.getPubsub()
       const reviewDelta = { jsonData: {}, ...input }
       const existingReview = (await Review.query().findById(id)) || {}
 
@@ -38,13 +37,13 @@ const resolvers = {
         : await getReviewForm(manuscript.groupId)
 
       const roles = await getUserRolesInManuscript(
-        existingReview.userId || ctx.user,
+        existingReview.userId || ctx.userId,
         existingReview.manuscriptId || input.manuscriptId,
       )
 
       const reviewUserId = !isEmpty(existingReview)
         ? existingReview.userId
-        : ctx.user
+        : ctx.userId
 
       const userId = roles.collaborativeReviewer ? null : reviewUserId
 
@@ -110,7 +109,7 @@ const resolvers = {
         manuscriptId: review.manuscriptId,
       }
 
-      pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
+      subscriptionManager.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
         reviewFormUpdated: omit(returnedReview, ['jsonData']),
       })
 
@@ -118,8 +117,6 @@ const resolvers = {
     },
 
     async lockUnlockCollaborativeReview(_, { id }) {
-      const pubsub = await pubsubManager.getPubsub()
-
       const review = await Review.query()
         .findOne({
           id,
@@ -160,7 +157,7 @@ const resolvers = {
         getFilesWithUrl,
       )
 
-      pubsub.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
+      subscriptionManager.publish(`${REVIEW_FORM_UPDATED}_${review.id}`, {
         reviewFormUpdated: omit(updatedReview, ['jsonData']),
       })
 
@@ -184,7 +181,7 @@ const resolvers = {
           'teamId',
           teams.map(t => t.id),
         )
-        .andWhere({ userId: ctx.user })
+        .andWhere({ userId: ctx.userId })
         .first()
 
       return member.$query().patchAndFetch({
@@ -197,7 +194,7 @@ const resolvers = {
     async user(parent, { id }, ctx) {
       if (parent.user) return parent.user
 
-      // TODO redact user if it's an anonymous review and ctx.user is not editor or admin
+      // TODO redact user if it's an anonymous review and ctx.userId is not editor or admin
       return parent.userId ? User.query().findById(parent.userId) : null
     },
     async isSharedWithCurrentUser(parent, _, ctx) {
@@ -216,18 +213,21 @@ const resolvers = {
         )
         .where({ isShared: true })
         .where(builder =>
-          builder.where({ status: 'completed' }).orWhere({ userId: ctx.user }),
+          builder
+            .where({ status: 'completed' })
+            .orWhere({ userId: ctx.userId }),
         )
 
-      if (sharedMembers.some(m => m.userId === ctx.user)) return true
+      if (sharedMembers.some(m => m.userId === ctx.userId)) return true
       return false
     },
   },
   Subscription: {
     reviewFormUpdated: {
       subscribe: async (_, { formId }) => {
-        const pubsub = await pubsubManager.getPubsub()
-        return pubsub.asyncIterator(`${REVIEW_FORM_UPDATED}_${formId}`)
+        return subscriptionManager.asyncIterator(
+          `${REVIEW_FORM_UPDATED}_${formId}`,
+        )
       },
     },
   },

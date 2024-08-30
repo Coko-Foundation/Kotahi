@@ -63,7 +63,7 @@ const resolvers = {
 
       return Promise.all(
         result.map(async discussion => {
-          return stripHiddenAndAddUserInfo(discussion, ctx.user, getUsersById)
+          return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)
         }),
       )
     },
@@ -118,12 +118,12 @@ const resolvers = {
       }
 
       let pendingVersion = commnt.pendingVersions.find(
-        pv => pv.userId === ctx.user,
+        pv => pv.userId === ctx.userId,
       )
 
       if (!pendingVersion) {
         pendingVersion = {
-          userId: ctx.user,
+          userId: ctx.userId,
           created: now,
         }
         commnt.pendingVersions.push(pendingVersion)
@@ -137,7 +137,7 @@ const resolvers = {
         { insertMissing: true },
       )
 
-      return stripHiddenAndAddUserInfo(discussion, ctx.user, getUsersById)
+      return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)
     },
     /* eslint-disable no-restricted-syntax */
     async completeComments(_, { threadedDiscussionId }, ctx) {
@@ -156,7 +156,11 @@ const resolvers = {
       for (const thread of discussion.threads) {
         for (const comment of thread.comments) {
           if (
-            convertUsersPendingVersionsToCommentVersions(ctx.user, comment, now)
+            convertUsersPendingVersionsToCommentVersions(
+              ctx.userId,
+              comment,
+              now,
+            )
           ) {
             hasUpdated = true
             thread.updated = now
@@ -173,7 +177,7 @@ const resolvers = {
           })
           .where({ id: threadedDiscussionId })
 
-      return stripHiddenAndAddUserInfo(discussion, ctx.user, getUsersById)
+      return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)
     },
     /* eslint-enable no-restricted-syntax */
     async completeComment(
@@ -198,7 +202,7 @@ const resolvers = {
       if (!comment) throw new Error(`comment with ID ${commentId} not found`)
 
       if (
-        convertUsersPendingVersionsToCommentVersions(ctx.user, comment, now)
+        convertUsersPendingVersionsToCommentVersions(ctx.userId, comment, now)
       ) {
         thread.updated = now
         discussion.updated = now
@@ -211,7 +215,7 @@ const resolvers = {
           .where({ id: threadedDiscussionId })
       }
 
-      return stripHiddenAndAddUserInfo(discussion, ctx.user, getUsersById)
+      return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)
     },
     async deletePendingComment(
       _,
@@ -233,7 +237,7 @@ const resolvers = {
       if (!comment) throw new Error(`comment with ID ${commentId} not found`)
 
       comment.pendingVersions = comment.pendingVersions.filter(
-        pv => pv.userId !== ctx.user,
+        pv => pv.userId !== ctx.userId,
       )
 
       await ThreadedDiscussion.query()
@@ -243,7 +247,7 @@ const resolvers = {
         })
         .where({ id: threadedDiscussionId })
 
-      return stripHiddenAndAddUserInfo(discussion, ctx.user, getUsersById)
+      return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)
     },
   },
 }

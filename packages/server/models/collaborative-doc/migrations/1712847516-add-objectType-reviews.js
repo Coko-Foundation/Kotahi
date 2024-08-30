@@ -1,10 +1,7 @@
-/* eslint-disable import/no-unresolved */
 const { useTransaction } = require('@coko/server')
 
-/* eslint-disable no-await-in-loop */
-const CollaborativeDoc = require('../models/collaborative-doc/collaborativeDoc.model')
-
-const Review = require('../models/review/review.model')
+const CollaborativeDoc = require('../collaborativeDoc.model')
+const Review = require('../../review/review.model')
 
 exports.up = async knex => {
   // At the current time the object Type is always Review,

@@ -7,7 +7,7 @@
 const map = require('lodash/map')
 
 const {
-  pubsubManager,
+  subscriptionManager,
   fileStorage,
   createFile,
   deleteFiles,
@@ -178,8 +178,6 @@ const resolvers = {
       return data
     },
     async uploadFiles(_, { files, fileType, entityId }, ctx) {
-      const pubsub = await pubsubManager.getPubsub()
-
       const uploadedFiles = await Promise.all(
         map(files, async file => {
           const { createReadStream, filename } = await file
@@ -200,7 +198,7 @@ const resolvers = {
         }),
       )
 
-      pubsub.publish(FILES_UPLOADED, {
+      subscriptionManager.publish(FILES_UPLOADED, {
         filesUploaded: true,
       })
 
@@ -211,23 +209,21 @@ const resolvers = {
       return id
     },
     async deleteFiles(_, { ids }, ctx) {
-      const pubsub = await pubsubManager.getPubsub()
       await deleteFiles(ids, true)
-      pubsub.publish(FILES_DELETED, {
+      subscriptionManager.publish(FILES_DELETED, {
         filesDeleted: true,
       })
       return ids
     },
     async updateFile(_, { input }, ctx) {
       const { id, name, alt } = input
-      const pubsub = await pubsubManager.getPubsub()
 
       const updatedFile = await File.query().patchAndFetchById(id, {
         name,
         alt,
       })
 
-      pubsub.publish(FILE_UPDATED, {
+      subscriptionManager.publish(FILE_UPDATED, {
         fileUpdated: updatedFile,
       })
       return updatedFile
@@ -256,20 +252,17 @@ const resolvers = {
   Subscription: {
     filesUploaded: {
       subscribe: async () => {
-        const pubsub = await pubsubManager.getPubsub()
-        return pubsub.asyncIterator(FILES_UPLOADED)
+        return subscriptionManager.asyncIterator(FILES_UPLOADED)
       },
     },
     filesDeleted: {
       subscribe: async () => {
-        const pubsub = await pubsubManager.getPubsub()
-        return pubsub.asyncIterator(FILES_DELETED)
+        return subscriptionManager.asyncIterator(FILES_DELETED)
       },
     },
     fileUpdated: {
       subscribe: async () => {
-        const pubsub = await pubsubManager.getPubsub()
-        return pubsub.asyncIterator(FILE_UPDATED)
+        return subscriptionManager.asyncIterator(FILE_UPDATED)
       },
     },
   },

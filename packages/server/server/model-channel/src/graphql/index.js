@@ -12,7 +12,7 @@ const resolvers = {
   },
   Mutation: {
     channelViewed: async (_, { channelId }, context) => {
-      return updateChannelLastViewed({ channelId, userId: context.user })
+      return updateChannelLastViewed({ channelId, userId: context.userId })
     },
   },
 }

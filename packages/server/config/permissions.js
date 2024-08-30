@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 // Shield's `race` rule is misnamed, as it doesn't race the different rules but applies them sequentially until one succeeds. `or`, on the other hand, applies all rules in parallel.
 const { race: lazyOr } = require('graphql-shield')
 const { rule, and, or, allow, deny } = require('@coko/server/authorization')
@@ -7,18 +9,18 @@ const { cachedGet } = require('../server/querycache')
 const userIsEditor = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
+  if (!ctx.userId) return false
   const manuscriptId = parent?.manuscriptId ?? args?.id
   if (!manuscriptId) throw new Error('No manuscriptId for userIsEditor!')
-  return cachedGet(`userIsEditor:${ctx.user}:${manuscriptId}`)
+  return cachedGet(`userIsEditor:${ctx.userId}:${manuscriptId}`)
 })
 
 // TODO Is this actually needed anywhere? Can it be replaced with userIsEditor?
 const userIsEditorOfAnyManuscript = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
-  return cachedGet(`userIsEditorOfAnyManuscript:${ctx.user}`)
+  if (!ctx.userId) return false
+  return cachedGet(`userIsEditorOfAnyManuscript:${ctx.userId}`)
 })
 
 const userIsGm = rule({
@@ -28,26 +30,26 @@ const userIsGm = rule({
   // An 'undefined' groupId header can occasionally be obtained, especially
   // in development. If we don't deal with it gracefully, it will cause
   // a crash and prevent its replacement with a correct value.
-  if (!ctx.user || !groupId || groupId === 'undefined') return false
-  return cachedGet(`userIsGM:${ctx.user}:${groupId}`)
+  if (!ctx.userId || !groupId || groupId === 'undefined') return false
+  return cachedGet(`userIsGM:${ctx.userId}:${groupId}`)
 })
 
 const userIsAdmin = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
-  return cachedGet(`userIsAdmin:${ctx.user}`)
+  if (!ctx.userId) return false
+  return cachedGet(`userIsAdmin:${ctx.userId}`)
 })
 
 const userOwnsMessage = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
+    if (!ctx.userId) return false
 
-    const message = await ctx.connectors.Message.model
-      .query()
-      .findById(args.messageId)
+    const Message = require('../models/message/message.model')
 
-    return message?.userId === ctx.user
+    const message = await Message.query().findById(args.messageId)
+
+    return message?.userId === ctx.userId
   },
 )
 
@@ -57,15 +59,15 @@ const getLatestVersionOfManuscriptOfFile = async (file, ctx) => {
   if (!manuscript) return null
 
   const firstVersionId = manuscript.parentId || manuscript.id
-
   const latestVersion = await getLatestVersionOfManuscript(ctx, firstVersionId)
 
   return latestVersion
 }
 
 const getLatestVersionOfManuscript = async (ctx, manuscriptVersionId) => {
-  const latestVersion = await ctx.connectors.Manuscript.model
-    .query()
+  const Manuscript = require('../models/manuscript/manuscript.model')
+
+  const latestVersion = await Manuscript.query()
     .where({ parentId: manuscriptVersionId })
     .orWhere({ id: manuscriptVersionId })
     .orderBy('created', 'desc')
@@ -128,9 +130,9 @@ const isPublicReviewFromPublishedManuscript = rule({ cache: 'strict' })(
 
     // TODO Check that all confidential fields have been stripped out. Otherwise return false.
 
-    const manuscript = await ctx.connectors.Manuscript.model
-      .query()
-      .findById(parent.manuscriptId)
+    const Manuscript = require('../models/manuscript/manuscript.model')
+
+    const manuscript = await Manuscript.query().findById(parent.manuscriptId)
 
     return !!(manuscript && manuscript.published)
   },
@@ -139,8 +141,11 @@ const isPublicReviewFromPublishedManuscript = rule({ cache: 'strict' })(
 // TODO This appears only to check if the user is a reviewer of ANY manuscript!??
 const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
-    const user = await ctx.connectors.User.model.query().findById(ctx.user)
+    if (!ctx.userId) return false
+
+    const User = require('../models/user/user.model')
+
+    const user = await User.query().findById(ctx.userId)
 
     const rows =
       user &&
@@ -152,7 +157,7 @@ const reviewIsByUser = rule({ cache: 'contextual' })(
 
 const isAuthenticated = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    return !!ctx.user
+    return !!ctx.userId
   },
 )
 
@@ -162,22 +167,23 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 // if the channel is for 'editorial', only editors and admins can chat there
 const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
+    if (!ctx.userId) return false
+
+    const User = require('../models/user/user.model')
+    const Channel = require('../models/channel/channel.model')
 
     const isUserGM = await cachedGet(
-      `userIsGM:${ctx.user}:${ctx.req.headers['group-id']}`,
+      `userIsGM:${ctx.userId}:${ctx.req.headers['group-id']}`,
     )
 
     if (isUserGM) return true
 
-    const isUserAdmin = await cachedGet(`userIsAdmin:${ctx.user}`)
+    const isUserAdmin = await cachedGet(`userIsAdmin:${ctx.userId}`)
     if (isUserAdmin) return true
 
-    const user = await ctx.connectors.User.model.query().findById(ctx.user)
+    const user = await User.query().findById(ctx.userId)
 
-    const channel = await ctx.connectors.Channel.model
-      .query()
-      .findById(args.channelId)
+    const channel = await Channel.query().findById(args.channelId)
 
     /**
      * Chat channels are always associated with the parent manuscript
@@ -203,7 +209,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
     )
 
     const isEditor = await cachedGet(
-      `userIsEditor:${ctx.user}:${manuscript.id}`,
+      `userIsEditor:${ctx.userId}:${manuscript.id}`,
     )
 
     if (channel.type === 'all') {
@@ -221,15 +227,19 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
 const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
+  if (!ctx.userId) return false
   let manuscriptId
+
+  const Review = require('../models/review/review.model')
+  const Team = require('../models/team/team.model')
+  const TeamMember = require('../models/teamMember/teamMember.model')
 
   // updateReviewerTeamMemberStatus
   if (args.manuscriptId) manuscriptId = args.manuscriptId
 
   // updateReview
   if (!manuscriptId && args.id) {
-    const review = await ctx.connectors.Review.model.query().findById(args.id)
+    const review = await Review.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
@@ -238,12 +248,11 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     manuscriptId = args.input.manuscriptId
   }
 
-  const manuscript = await ctx.connectors.Manuscript.model
-    .query()
-    .findById(manuscriptId)
+  const Manuscript = require('../models/manuscript/manuscript.model')
 
-  const teams = await ctx.connectors.Team.model
-    .query()
+  const manuscript = await Manuscript.query().findById(manuscriptId)
+
+  const teams = await Team.query()
     .where({
       objectId: manuscript.id,
       objectType: 'manuscript',
@@ -254,14 +263,13 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 
   if (!teams) return false
 
-  const member = await ctx.connectors.TeamMember.model
-    .query()
+  const member = await TeamMember.query()
     .whereIn(
       'teamId',
       teams.map(t => t.id),
     )
     .andWhere(builder => {
-      builder.where({ userId: ctx.user })
+      builder.where({ userId: ctx.userId })
     })
     .first()
 
@@ -272,15 +280,16 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 const userIsEditorOfTheManuscriptOfTheReview = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
+  if (!ctx.userId) return false
   let manuscriptId
+  const Review = require('../models/review/review.model')
 
   // updateReviewerTeamMemberStatus
   if (args.manuscriptId) manuscriptId = args.manuscriptId
 
   // updateReview
   if (!manuscriptId && args.id) {
-    const review = await ctx.connectors.Review.model.query().findById(args.id)
+    const review = await Review.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
@@ -290,30 +299,28 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   }
 
   // eslint-disable-next-line no-return-await
-  return cachedGet(`userIsEditor:${ctx.user}:${manuscriptId}`)
+  return cachedGet(`userIsEditor:${ctx.userId}:${manuscriptId}`)
 })
 
 const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user || !args.id) return false
+  if (!ctx.userId || !args.id) return false
+
+  const Manuscript = require('../models/manuscript/manuscript.model')
 
   const parentId = (
-    await ctx.connectors.Manuscript.model
-      .query()
-      .findById(args.id)
-      .select('parentId')
+    await Manuscript.query().findById(args.id).select('parentId')
   )?.parentId
 
-  const reviewerStatuses = await ctx.connectors.Manuscript.model
-    .query()
+  const reviewerStatuses = await Manuscript.query()
     .where(builder =>
       builder.where('manuscripts.id', parentId).orWhere({ parentId }),
     )
     .joinRelated('teams')
     .join('team_members', 'team_members.teamId', 'teams.id') // joinRelated doesn't automate the 'teams.members' relation well, so we do it manually
     .whereIn('teams.role', ['reviewer', 'collaborativeReviewer'])
-    .where('team_members.userId', ctx.user)
+    .where('team_members.userId', ctx.userId)
     .select('team_members.status')
 
   return !!reviewerStatuses.length
@@ -321,12 +328,14 @@ const userIsReviewerOrInvitedReviewerOfTheManuscript = rule({
 
 const userIsInvitedReviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
-    const team = await ctx.connectors.Team.model.query().findById(args.teamId)
+    if (!ctx.userId) return false
+    const Team = require('../models/team/team.model')
+
+    const team = await Team.query().findById(args.teamId)
 
     const member = await team
       .$relatedQuery('members')
-      .where({ userId: ctx.user, status: 'invited' })
+      .where({ userId: ctx.userId, status: 'invited' })
       .first()
 
     return !!member
@@ -335,11 +344,11 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
 
 const userHasAcceptedInvitation = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
+    if (!ctx.userId) return false
+    const TeamMember = require('../models/teamMember/teamMember.model')
 
-    const teamMember = await ctx.connectors.TeamMember.model
-      .query()
-      .where({ userId: ctx.user, teamId: args.teamId })
+    const teamMember = await TeamMember.query()
+      .where({ userId: ctx.userId, teamId: args.teamId })
       .whereIn('status', ['accepted', 'inProgress', 'completed'])
       .first()
 
@@ -349,16 +358,13 @@ const userHasAcceptedInvitation = rule({ cache: 'strict' })(
 
 const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user || !args.id) return false
+    if (!ctx.userId || !args.id) return false
 
-    const authorRecord = await ctx.connectors.Team.model
-      .relatedQuery('members')
-      .for(
-        ctx.connectors.Team.model
-          .query()
-          .where({ objectId: args.id, role: 'author' }),
-      )
-      .findOne({ userId: ctx.user })
+    const Team = require('../models/team/team.model')
+
+    const authorRecord = await Team.relatedQuery('members')
+      .for(Team.query().where({ objectId: args.id, role: 'author' }))
+      .findOne({ userId: ctx.userId })
 
     return !!authorRecord
   },
@@ -367,7 +373,7 @@ const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
 // const userIsAuthorOfFilesAssociatedManuscript = rule({
 //   cache: 'no_cache',
 // })(async (parent, args, ctx, info) => {
-//   if (!ctx.user) return false
+//   if (!ctx.userId) return false
 //   let manuscriptId
 
 //   if (args.meta && args.meta.manuscriptId) {
@@ -376,14 +382,14 @@ const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
 //     manuscriptId = args.meta.manuscriptId
 //   } else if (args.id) {
 //     // id is supplied for deletion
-//     const file = await ctx.connectors.File.model.query().findById(args.id)
+//     const file = await File.query().findById(args.id)
 //     const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
 //     manuscriptId = manuscript && manuscript.id
 //   }
 
 //   if (!manuscriptId) return false
 
-//   const team = await ctx.connectors.Team.model
+//   const team = await Team
 //     .query()
 //     .where({
 //       objectId: manuscriptId,
@@ -393,23 +399,23 @@ const userIsAuthorOfManuscript = rule({ cache: 'strict' })(
 //     .first()
 
 //   if (!team) return false
-//   const members = await team.$relatedQuery('members').where('userId', ctx.user)
+//   const members = await team.$relatedQuery('members').where('userId', ctx.userId)
 //   if (members && members[0]) return true
 //   return false
 // })
 
 const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
-  async (parent, args, ctx, info) => {
-    if (!ctx.user) return false
+  async (file, args, ctx, info) => {
+    if (!ctx.userId) return false
 
-    if (parent.storedObjects && !parent.id) return true // only on uploading manuscript docx this will be validated
+    if (file.storedObjects && !file.id) return true // only on uploading manuscript docx this will be validated
 
-    const file = await ctx.connectors.File.model.query().findById(parent.id)
+    const Team = require('../models/team/team.model')
+
     const manuscript = await cachedGet(`msOfFile:${file.id}`, ctx)
     if (!manuscript) return false
 
-    const team = await ctx.connectors.Team.model
-      .query()
+    const team = await Team.query()
       .where({
         objectId: manuscript.id,
         objectType: 'manuscript',
@@ -421,7 +427,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 
     const members = await team
       .$relatedQuery('members')
-      .where('userId', ctx.user)
+      .where('userId', ctx.userId)
 
     if (members && members[0]) return true
     return false
@@ -432,16 +438,17 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) return false
-
+  if (!ctx.userId) return false
   if (!parent.id) return false
 
-  const file = await ctx.connectors.File.model.query().findById(parent.id)
+  const { File } = require('@coko/server')
+  const Team = require('../models/team/team.model')
+
+  const file = await File.query().findById(parent.id)
   const manuscript = await getLatestVersionOfManuscriptOfFile(file, ctx)
   if (!manuscript) return false
 
-  const team = await ctx.connectors.Team.model
-    .query()
+  const team = await Team.query()
     .where({
       objectId: manuscript.id,
       objectType: 'manuscript',
@@ -450,7 +457,11 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     .first()
 
   if (!team) return false
-  const members = await team.$relatedQuery('members').where('userId', ctx.user)
+
+  const members = await team
+    .$relatedQuery('members')
+    .where('userId', ctx.userId)
+
   if (members && members[0] && members[0].status !== 'completed') return true
   return false
 })
@@ -458,8 +469,9 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 const manuscriptIsPublished = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  const manuscript = await ctx.connectors.Manuscript.model
-    .query()
+  const Manuscript = require('../models/manuscript/manuscript.model')
+
+  const manuscript = await Manuscript.query()
     .select('published')
     .findById(args.id)
 
@@ -468,8 +480,8 @@ const manuscriptIsPublished = rule({
 
 const userIsCurrentUser = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user || !args.id) return false
-    return ctx.user === args.id
+    if (!ctx.userId || !args.id) return false
+    return ctx.userId === args.id
   },
 )
 
@@ -657,7 +669,6 @@ const permissions = {
       userIsEditorOfTheManuscriptOfTheReview,
     ),
     updateUser: or(userIsGm, userIsAdmin),
-    upload: isAuthenticated,
     uploadFile: isAuthenticated,
     uploadFiles: isAuthenticated,
     updateTaskStatus: isAuthenticated,
@@ -681,7 +692,6 @@ const permissions = {
      */
     // messageCreated: userIsAllowedToChat,
     messageCreated: isAuthenticated,
-    uploadProgress: isAuthenticated,
   },
   CurrentRole: isAuthenticated,
   Team: isAuthenticated,
@@ -712,7 +722,6 @@ const permissions = {
   FormElement: allow,
   FormElementOption: allow,
   FormElementValidation: allow,
-  UploadResult: isAuthenticated,
   Review: or(
     isPublicReviewFromPublishedManuscript,
     reviewIsByUser,

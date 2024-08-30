@@ -28,9 +28,6 @@ RUN if [ -z "$packagechanged" ] ; then echo packagechanged not provided ; else [
 
 ENV NODE_ENV ${NODE_ENV}
 
-# Disabling the build for now, as it runs in the test server again
-# RUN [ "npx", "pubsweet", "build"]
-
 # The copy everything else that changes frequently
 COPY . .
 EXPOSE ${PORT}

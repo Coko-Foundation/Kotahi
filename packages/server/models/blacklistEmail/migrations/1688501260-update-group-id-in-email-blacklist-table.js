@@ -1,9 +1,7 @@
 const { useTransaction, logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const BlacklistEmail = require('../models/blacklistEmail/blacklistEmail.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Group = require('../models/group/group.model')
+const BlacklistEmail = require('../blacklistEmail.model')
+const Group = require('../../group/group.model')
 
 exports.up = async knex => {
   try {

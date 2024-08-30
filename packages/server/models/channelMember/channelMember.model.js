@@ -37,12 +37,33 @@ class ChannelMember extends BaseModel {
         userId: { type: 'string', format: 'uuid' },
         channelId: { type: 'string', format: 'uuid' },
         lastViewed: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
         },
+
         lastAlertTriggeredTime: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
         },
       },
     }

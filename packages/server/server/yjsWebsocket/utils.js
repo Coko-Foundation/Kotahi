@@ -4,11 +4,11 @@ const syncProtocol = require('y-protocols/dist/sync.cjs')
 const awarenessProtocol = require('y-protocols/dist/awareness.cjs')
 const encoding = require('lib0/encoding')
 const decoding = require('lib0/decoding')
-
 const Y = require('yjs')
-const { CollaborativeDoc, Form, ...otherModels } = require('@pubsweet/models')
 
 const { db } = require('@coko/server')
+
+const { CollaborativeDoc, Form, ...otherModels } = require('../../models')
 
 let persistence = null
 
@@ -24,12 +24,10 @@ const docs = new Map()
  * @param {WSSharedDoc} doc
  */
 const updateHandler = (update, origin, doc) => {
-  // console.log(update, origin, doc)
   const encoder = encoding.createEncoder()
   encoding.writeVarUint(encoder, messageSync)
   syncProtocol.writeUpdate(encoder, update)
   const message = encoding.toUint8Array(encoder)
-  // console.log({ message })
   doc.conns.forEach((_, conn) => send(doc, conn, message))
 }
 

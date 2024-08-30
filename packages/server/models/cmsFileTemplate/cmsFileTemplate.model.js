@@ -7,7 +7,8 @@ class CMSFileTemplate extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const File = require('@coko/server/src/models/file/file.model')
+    const { File } = require('@coko/server')
+
     return {
       file: {
         relation: BaseModel.BelongsToOneRelation,
@@ -24,9 +25,29 @@ class CMSFileTemplate extends BaseModel {
     return {
       properties: {
         name: { type: ['string', 'null'] },
-        fileId: { type: ['string', 'null'], format: 'uuid' },
-        parentId: { type: ['string', 'null'], format: 'uuid' },
-        groupId: { type: ['string'], format: 'uuid' },
+        fileId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        parentId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        groupId: { type: 'string', format: 'uuid' },
         rootFolder: { type: 'boolean' },
       },
     }

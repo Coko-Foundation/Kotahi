@@ -3,12 +3,10 @@
 // supplying either 'false', or, for a few specific fields, 'always'.
 // If there is a pre-existing value, it is left unmodified.
 
-/* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop, import/no-unresolved */
+/* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop */
 const { useTransaction } = require('@coko/server')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/extensions */
-const Form = require('../models/form/form.model')
+const Form = require('../form.model')
 
 const fieldsToAlwaysPublishByDefault = [
   'submission.$title',

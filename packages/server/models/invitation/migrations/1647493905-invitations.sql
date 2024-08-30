@@ -1,5 +1,3 @@
-
-
 create type invitation_status as enum ('UNANSWERED','ACCEPTED','REJECTED');
 
 CREATE TABLE invitations (

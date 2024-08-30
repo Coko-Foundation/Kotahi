@@ -29,7 +29,17 @@ class PublishingCollection extends BaseModel {
             title: { type: 'string' },
             description: { type: 'string' },
             publicationDate: { type: 'string' },
-            image: { type: ['string', 'null'], format: 'uuid' },
+            image: {
+              anyOf: [
+                {
+                  type: 'string',
+                  format: 'uuid',
+                },
+                {
+                  type: 'null',
+                },
+              ],
+            },
             issueNumber: { type: 'string' },
           },
         },

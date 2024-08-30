@@ -54,7 +54,7 @@ const deleteAsset = async id => {
 
   try {
     if (keys.length > 0) {
-      await fileStorage.deleteFiles(keys)
+      await fileStorage.delete(keys)
       await File.query().deleteById(id)
     }
 

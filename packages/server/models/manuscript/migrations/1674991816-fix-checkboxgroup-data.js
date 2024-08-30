@@ -1,13 +1,9 @@
 const { useTransaction, logger } = require('@coko/server')
 const { isArray } = require('lodash')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Form = require('../models/form/form.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Manuscript = require('../models/manuscript/manuscript.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Review = require('../models/review/review.model')
+const Form = require('../../form/form.model')
+const Manuscript = require('../manuscript.model')
+const Review = require('../../review/review.model')
 
 const getCheckboxGroupFieldNames = async category => {
   const form = await Form.query().findOne({

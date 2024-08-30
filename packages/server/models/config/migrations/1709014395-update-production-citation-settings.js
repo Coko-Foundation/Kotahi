@@ -1,7 +1,6 @@
 const { useTransaction, logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../models/config/config.model')
+const Config = require('../config.model')
 
 // as requested here: https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/1258#note_142075
 

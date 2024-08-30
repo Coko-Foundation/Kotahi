@@ -8,9 +8,35 @@ class BlacklistEmail extends BaseModel {
   static get schema() {
     return {
       properties: {
-        date: { type: ['string', 'object', 'null'], format: 'date-time' },
-        email: { type: ['string'], format: 'email' },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        date: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        email: {
+          type: 'string',
+          format: 'email',
+        },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

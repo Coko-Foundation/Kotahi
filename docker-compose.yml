@@ -34,37 +34,7 @@ services:
       - db
       - xsweet
       - fileHosting
-    entrypoint:
-      [
-        'node_modules/.bin/wait-for-it',
-        'db:5432',
-        '--',
-        'sh',
-        'scripts/setupDevServer.sh',
-      ]
-    command:
-      [
-        'node_modules/.bin/nodemon',
-        '--ignore',
-        'tmp/',
-        'startServer.js',
-        '--watch',
-        'server',
-        '--watch',
-        'config',
-        '--watch',
-        'scripts',
-        '--watch',
-        'models',
-        '--watch',
-        'api',
-        '--watch',
-        'controllers',
-        '--watch',
-        'services',
-        '--ext',
-        'js,graphql,json',
-      ]
+    command: ['yarn', 'coko-server', 'start-dev']
     ports:
       - ${SERVER_PORT:-3000}:3000
       - ${WS_YJS_SERVER_PORT:-5010}:${WS_YJS_SERVER_PORT:-5010}
@@ -113,9 +83,7 @@ services:
       - PUBLISHING_WEBHOOK_REF=${PUBLISHING_WEBHOOK_REF:-}
       - NOTIFICATION_EMAIL_AUTOMATED=${NOTIFICATION_EMAIL_AUTOMATED:-false}
       - NOTIFICATION_EMAIL_CC_ENABLED=${NOTIFICATION_EMAIL_CC_ENABLED:-false}
-      - S3_PROTOCOL=http
-      - S3_HOST=fileHosting
-      - S3_PORT=${S3_PORT:-9000}
+      - S3_URL=${S3_URL:-http://fileHosting:9000}
       - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID:-nonRootUser}
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:-nonRootPassword}
       - S3_BUCKET=${S3_BUCKET:-uploads}
@@ -165,6 +133,7 @@ services:
       - ./packages/server/models:/home/node/app/models
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
+    tty: true
 
   pagedjs:
     depends_on:
@@ -249,8 +218,6 @@ services:
       - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
       - POSTGRES_USER=${POSTGRES_USER:-dev}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
-    volumes:
-      - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
     command:
       - 'postgres'
       - '-c'

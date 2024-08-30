@@ -1,6 +1,4 @@
-const { pubsubManager } = require('@coko/server')
-
-const { getPubsub } = pubsubManager
+const { subscriptionManager } = require('@coko/server')
 
 // Fires immediately when the message is created
 const MESSAGE_CREATED = 'MESSAGE_CREATED'
@@ -45,7 +43,7 @@ const resolvers = {
 
       const channelMember = await getChannelMemberByChannel({
         channelId,
-        userId: context.user,
+        userId: context.userId,
       })
 
       let unreadMessagesCount = [{ count: 0 }]
@@ -80,7 +78,7 @@ const resolvers = {
       const promises = channelIds.map(async channelId => {
         const channelMember = await getChannelMemberByChannel({
           channelId,
-          userId: context.user,
+          userId: context.userId,
         })
 
         if (channelMember) {
@@ -107,8 +105,7 @@ const resolvers = {
   },
   Mutation: {
     createMessage: async (_, { content, channelId }, context) => {
-      const pubsub = await getPubsub()
-      const currentUserId = context.user
+      const currentUserId = context.userId
 
       const savedMessage = await Message.query().insert({
         content,
@@ -120,7 +117,7 @@ const resolvers = {
         .findById(savedMessage.id)
         .withGraphJoined('[user, channel]')
 
-      pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
+      subscriptionManager.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
 
       // using Set() to avoid having duplicate user ids
       const taggedUserIds = new Set()
@@ -142,7 +139,7 @@ const resolvers = {
         })
         .whereNot({ userId: message.userId })
 
-      await addUsersToChatChannel(channelId, [...taggedUserIds, context.user])
+      await addUsersToChatChannel(channelId, [...taggedUserIds, context.userId])
 
       // Notify non-mentioned users
       notify(['chat', message.channelId], {
@@ -171,8 +168,7 @@ const resolvers = {
         { content },
       )
 
-      const pubsub = await getPubsub()
-      pubsub.publish(
+      subscriptionManager.publish(
         `${MESSAGE_UPDATED}.${updatedMessage.channelId}`,
         updatedMessage.id,
       )
@@ -186,11 +182,9 @@ const resolvers = {
         throw new Error('Message not found')
       }
 
-      const pubsub = await getPubsub()
-
       await Message.query().deleteById(messageId)
 
-      pubsub.publish(
+      subscriptionManager.publish(
         `${MESSAGE_DELETED}.${deleteMessage.channelId}`,
         deleteMessage,
       )
@@ -208,8 +202,9 @@ const resolvers = {
         return message
       },
       subscribe: async (_, vars, context) => {
-        const pubsub = await getPubsub()
-        return pubsub.asyncIterator(`${MESSAGE_CREATED}.${vars.channelId}`)
+        return subscriptionManager.asyncIterator(
+          `${MESSAGE_CREATED}.${vars.channelId}`,
+        )
       },
     },
     messageUpdated: {
@@ -221,8 +216,9 @@ const resolvers = {
         return message
       },
       subscribe: async (_, vars, context) => {
-        const pubsub = await getPubsub()
-        return pubsub.asyncIterator(`${MESSAGE_UPDATED}.${vars.channelId}`)
+        return subscriptionManager.asyncIterator(
+          `${MESSAGE_UPDATED}.${vars.channelId}`,
+        )
       },
     },
     messageDeleted: {
@@ -230,8 +226,9 @@ const resolvers = {
         return deletedMessage
       },
       subscribe: async (_, vars) => {
-        const pubsub = await getPubsub()
-        return pubsub.asyncIterator(`${MESSAGE_DELETED}.${vars.channelId}`)
+        return subscriptionManager.asyncIterator(
+          `${MESSAGE_DELETED}.${vars.channelId}`,
+        )
       },
     },
   },

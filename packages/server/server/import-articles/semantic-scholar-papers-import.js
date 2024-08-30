@@ -215,7 +215,7 @@ const getData = async (groupId, ctx) => {
           $doi: externalIds?.DOI || '',
         },
         meta: {},
-        submitterId: ctx.user,
+        submitterId: ctx.userId,
         channels: [
           {
             topic: 'Manuscript discussion',

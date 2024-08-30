@@ -24,7 +24,7 @@ class User extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable global-require */
-    const File = require('@coko/server/src/models/file/file.model')
+    const { File } = require('@coko/server')
 
     const Identity = require('../identity/identity.model')
     const Review = require('../review/review.model')
@@ -87,23 +87,43 @@ class User extends BaseModel {
     return {
       properties: {
         admin: { type: ['boolean', 'null'] },
-        email: { type: ['string', 'null'], format: 'email' },
+        email: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'email',
+            },
+            { type: 'null' },
+          ],
+        },
         username: { type: 'string' },
         passwordHash: { type: ['string', 'null'] },
         online: { type: ['boolean', 'null'] },
         passwordResetToken: { type: ['string', 'null'] },
         passwordResetTimestamp: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            { type: 'object' },
+            { type: 'null' },
+          ],
         },
         profilePicture: { type: ['string', 'null'] },
         lastOnline: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            { type: 'object' },
+            { type: 'null' },
+          ],
         },
         recentTab: { type: ['string', 'null'] },
         preferredLanguage: { type: ['string', 'null'] },
-        eventNotificationsOptIn: { type: ['boolean', true] },
+        eventNotificationsOptIn: { type: 'boolean', default: true },
         chatExpanded: { type: 'boolean' },
         menuPinned: { type: 'boolean' },
       },

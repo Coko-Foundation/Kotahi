@@ -25,10 +25,20 @@ class NotificationUserOption extends BaseModel {
     return {
       properties: {
         userId: { type: 'string', format: 'uuid' },
-        objectId: { type: ['string', 'null'], format: 'uuid' },
+        objectId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         path: { type: 'array', items: { type: 'string' } },
         option: { type: 'string' },
-        groupId: { type: ['string'], format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
       },
     }
   }

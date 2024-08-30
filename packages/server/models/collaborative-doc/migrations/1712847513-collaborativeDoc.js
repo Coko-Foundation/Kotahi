@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 const { logger } = require('@coko/server')
 
 exports.up = async knex => {

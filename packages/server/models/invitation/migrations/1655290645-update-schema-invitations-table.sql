@@ -1,4 +1,3 @@
-
 DROP table IF EXISTS invitations;
 DROP type IF EXISTS invitation_status;
 DROP type IF EXISTS invitation_declined_reason_type;

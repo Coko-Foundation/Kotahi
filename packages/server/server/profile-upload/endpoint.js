@@ -1,4 +1,3 @@
-const express = require('express')
 const fs = require('fs-extra')
 const crypto = require('crypto')
 const multer = require('multer')
@@ -14,7 +13,7 @@ const randomBytes = promisify(crypto.randomBytes)
 const authBearer = passport.authenticate('bearer', { session: false })
 
 const storage = multer.diskStorage({
-  destination: config.get('pubsweet-server').profiles,
+  destination: config.has('profiles') && config.get('profiles'),
   filename: (req, file, cb) => {
     crypto.randomBytes(16, (err, raw) => {
       if (err) {
@@ -74,10 +73,5 @@ module.exports = app => {
 
       return res.send(user.profilePicture)
     },
-  )
-
-  app.use(
-    '/profiles',
-    express.static(path.join(__dirname, '..', '..', 'profiles')),
   )
 }

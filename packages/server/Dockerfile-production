@@ -13,5 +13,4 @@ RUN yarn cache clean
 
 COPY . .
 
-ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
-CMD ["node", "./startServer.js"]
+CMD ["yarn", "coko-server", "start"]

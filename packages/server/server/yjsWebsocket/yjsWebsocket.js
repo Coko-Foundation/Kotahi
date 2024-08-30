@@ -4,7 +4,6 @@ const { omit } = require('lodash')
 const map = require('lib0/map')
 // const Y = require('yjs')
 const { WebSocketServer } = require('ws')
-// const { CollaborativeDoc } = require('@pubsweet/models')
 const config = require('config')
 
 const WSSharedDoc = require('./wsSharedDoc')
@@ -47,7 +46,7 @@ const messageListener = (conn, doc, message) => {
 module.exports = () => {
   try {
     const WSServer = new WebSocketServer({
-      port: config.get('pubsweet-server.wsYjsServerPort'),
+      port: config.get('wsYjsServerPort'),
       clientTracking: true,
     })
 

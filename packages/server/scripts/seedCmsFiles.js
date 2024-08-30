@@ -4,10 +4,6 @@ const path = require('path')
 
 const { createFile } = require('@coko/server')
 
-const {
-  connectToFileStorage,
-} = require('@coko/server/src/services/fileStorage')
-
 const CMSFileTemplate = require('../models/cmsFileTemplate/cmsFileTemplate.model')
 
 const readDirectoryRecursively = async (directoryPath, parentId, callBack) => {
@@ -36,8 +32,6 @@ const readDirectoryRecursively = async (directoryPath, parentId, callBack) => {
 }
 
 const seed = async (group, { trx }) => {
-  await connectToFileStorage()
-
   const insertResource = async (name, parentId, rootFolder, isDirectory) => {
     const insertedResource = await CMSFileTemplate.query(trx)
       .insertGraph({

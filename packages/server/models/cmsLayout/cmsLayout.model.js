@@ -7,7 +7,7 @@ class CMSLayout extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const File = require('@coko/server/src/models/file/file.model')
+    const { File } = require('@coko/server')
 
     return {
       logo: {
@@ -43,12 +43,48 @@ class CMSLayout extends BaseModel {
         hexCode: { type: ['string', 'null'] },
         primaryColor: { type: 'string' },
         secondaryColor: { type: 'string' },
-        logoId: { type: ['string', 'null'], format: 'uuid' },
+        logoId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         partners: arrayOfStoredPartners,
         footerText: { type: ['string', 'null'] },
-        published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        edited: { type: ['string', 'object', 'null'], format: 'date-time' },
-        groupId: { type: ['string'], format: 'uuid' },
+        published: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        edited: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        groupId: { type: 'string', format: 'uuid' },
       },
     }
   }

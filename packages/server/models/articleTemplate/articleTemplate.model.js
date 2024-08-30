@@ -12,7 +12,7 @@ class ArticleTemplate extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const File = require('@coko/server/src/models/file/file.model')
+    const { File } = require('@coko/server')
     /* eslint-disable-next-line global-require */
     const Group = require('../group/group.model')
 
@@ -42,7 +42,17 @@ class ArticleTemplate extends BaseModel {
         name: { type: ['string', 'null'] },
         article: { type: ['string', 'null'] },
         css: { type: ['string', 'null'] },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         isCms: { type: 'boolean' },
       },
     }

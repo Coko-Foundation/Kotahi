@@ -264,7 +264,7 @@ class Manuscript extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable global-require */
-    const File = require('@coko/server/src/models/file/file.model')
+    const { File } = require('@coko/server')
 
     const Channel = require('../channel/channel.model')
     const User = require('../user/user.model')
@@ -387,7 +387,17 @@ class Manuscript extends BaseModel {
     return {
       properties: {
         shortId: { type: 'integer' },
-        parentId: { type: ['string', 'null'], format: 'uuid' },
+        parentId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         manuscriptVersions: { type: ['object', 'null'] },
         files: {
           items: { type: 'object' },
@@ -429,33 +439,116 @@ class Manuscript extends BaseModel {
         },
         submission: {},
         submittedDate: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
         },
-        submitterId: { type: ['string', 'null'], format: 'uuid' },
-        published: { type: ['string', 'object', 'null'], format: 'date-time' },
+        submitterId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        published: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         evaluationsHypothesisMap: {},
         isImported: { type: ['boolean', 'null'] },
-        importSource: { type: ['string', 'null'], format: 'uuid' },
+        importSource: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         importSourceServer: { type: ['string', 'null'] },
         isHidden: { type: ['boolean', 'null'] },
         formFieldsToPublish: { type: 'array' },
         doi: { type: ['string', 'null'] },
         searchableText: { type: 'string' },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         authorFeedback: {
           type: 'object',
           properties: {
             text: { type: 'string' },
             fileIds: { type: 'array' },
-            submitterId: { type: ['string', 'null'], format: 'uuid' },
+            submitterId: {
+              anyOf: [
+                {
+                  type: 'string',
+                  format: 'uuid',
+                },
+                {
+                  type: 'null',
+                },
+              ],
+            },
             edited: {
-              type: ['string', 'object', 'null'],
-              format: 'date-time',
+              anyOf: [
+                {
+                  type: 'string',
+                  format: 'date-time',
+                },
+                {
+                  type: 'object',
+                },
+                {
+                  type: 'null',
+                },
+              ],
             },
             submitted: {
-              type: ['string', 'object', 'null'],
-              format: 'date-time',
+              anyOf: [
+                {
+                  type: 'string',
+                  format: 'date-time',
+                },
+                {
+                  type: 'object',
+                },
+                {
+                  type: 'null',
+                },
+              ],
             },
             assignedAuthors: {
               items: { type: 'object' },

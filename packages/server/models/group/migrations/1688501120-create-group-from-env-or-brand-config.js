@@ -1,9 +1,7 @@
 const { useTransaction, logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../models/config/config.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Group = require('../models/group/group.model')
+const Config = require('../../config/config.model')
+const Group = require('../group.model')
 
 exports.up = async knex => {
   try {

@@ -8,7 +8,7 @@ try {
   // eslint-disable-next-line global-require, import/no-unresolved
   userPublicationMetadata = require('../../../config/journal/export/journalMetadata.json')
 } catch {
-  console.error("userPublicationMetadata doesn't exist.")
+  // console.error("userPublicationMetadata doesn't exist.")
 }
 
 const publicationMetadata = {
