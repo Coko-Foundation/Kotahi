@@ -30,8 +30,11 @@ const initI18n = groupName => {
 initI18n(null)
 let languages = getLanguagesLabels(null)
 
-export const reloadTranslationsForGroup = async groupName => {
-  const resources = getResources(groupName)
+export const reloadTranslationsForGroup = async (
+  groupName,
+  groupTranslationOverrides = {},
+) => {
+  const resources = getResources(groupName, groupTranslationOverrides)
 
   // Clear existing resources and add the new resources
   Object.keys(resources).forEach(lng => {

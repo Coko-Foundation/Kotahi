@@ -7,8 +7,8 @@
  *
  *  Create a separate version of this file for each group or universal override,
  *  insert your desired translation changes, and save to:
- *  - packages/client/config/translation/<groupName>/translationOverrides.js (AFFECTS ONE GROUP) or
- *  - packages/client/config/translation/translationOverrides.js (AFFECTS ALL GROUPS)
+ *  - packages/server/config/translation/<groupName>/translationOverrides.js (AFFECTS ONE GROUP) or
+ *  - packages/server/config/translation/translationOverrides.js (AFFECTS ALL GROUPS)
  */
 const translationOverrides = {
   resources: {
@@ -64,4 +64,4 @@ const translationOverrides = {
   ],
 }
 
-export default translationOverrides
+module.exports = { translationOverrides }

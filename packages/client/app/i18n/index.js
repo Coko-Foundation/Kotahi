@@ -4,27 +4,8 @@ import esLa from './es-la/translation'
 import fr from './fr/translation'
 import ru from './ru/translation'
 
-const loadGroupTranslationOverrides = groupName => {
-  if (!groupName) return {}
-
-  try {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    return require(`../../config/translation/${groupName}/translationOverrides`)
-      .default
-  } catch (error) {
-    return {}
-  }
-}
-
-let globalOverrides = {}
-
-try {
-  globalOverrides =
-    // eslint-disable-next-line global-require, import/no-unresolved, import/extensions
-    require('../../config/translation/translationOverrides').default
-} catch (error) {
-  // ignore
-}
+const groupOverrides = {}
+let globalOverride = {}
 
 const baseTranslations = {
   en,
@@ -37,13 +18,24 @@ const baseTranslations = {
  * Group-specific overrides take precedence, where there are conflicts.
  */
 const getTranslationOverrides = groupName => {
-  const groupOverrides = loadGroupTranslationOverrides(groupName)
-  const combinedOverrides = merge(cloneDeep(globalOverrides), groupOverrides)
+  const groupOverride = groupOverrides[groupName] ?? {}
+  const combinedOverrides = merge(cloneDeep(globalOverride), groupOverride)
   if (Object.keys(combinedOverrides).length) return combinedOverrides
   return null
 }
 
-const getResources = groupName => {
+const getResources = (groupName, groupTranslationOverrides = {}) => {
+  const { groupOverrides: groupVal, globalOverrides: globalVal } =
+    groupTranslationOverrides
+
+  if (groupVal?.translationOverrides) {
+    groupOverrides[groupName] = groupVal.translationOverrides
+  }
+
+  if (globalVal?.translationOverrides) {
+    globalOverride = globalVal.translationOverrides
+  }
+
   const translationOverrides = getTranslationOverrides(groupName)
   if (!translationOverrides) return baseTranslations
   return merge(cloneDeep(baseTranslations), translationOverrides.resources)
