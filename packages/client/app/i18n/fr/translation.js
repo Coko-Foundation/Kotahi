@@ -1156,6 +1156,8 @@ const fr = {
       'Internal name': 'Nom interne',
       'Enter name': 'Entrer un nom...',
       'Add another option': 'Ajouter une autre option',
+      'Add options from a JSON file':
+        "Ajouter des options à partir d'un fichier JSON",
       'Delete this option': 'Supprimer cette option',
       validateInputPlaceholder: 'Sélectionner...',
       'Field parse': 'Analyse spéciale',
@@ -1194,6 +1196,7 @@ const fr = {
         doi: 'DOI',
         dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',
+        divider: 'Séparateur',
         sourceUri: 'URI de la source du manuscrit',
         customStatus: 'Statut personnalisé',
         editDate: 'Date de dernière modification (lecture seule)',
