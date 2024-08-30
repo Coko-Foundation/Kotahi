@@ -1,13 +1,10 @@
 const { logger } = require('@coko/server')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Manuscript = require('../models/manuscript/manuscript.model')
+const Manuscript = require('../../manuscript/manuscript.model')
 
 const {
   populateTemplatedTasksForManuscript,
-  /* eslint-disable-next-line import/no-unresolved, import/extensions */
-} = require('../server/model-task/src/taskCommsUtils')
+} = require('../../../server/model-task/src/taskCommsUtils')
 
 exports.up = async knex => {
   logger.info(

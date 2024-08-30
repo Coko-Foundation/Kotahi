@@ -31,9 +31,9 @@ class CollaborativeDoc extends BaseModel {
     return {
       type: 'object',
       properties: {
-        objectId: { type: ['string'], format: 'uuid' },
+        objectId: { type: 'string', format: 'uuid' },
         objectType: { type: ['string'] },
-        groupId: { type: ['string'], format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
         yDocState: {
           type: 'binary',
         },

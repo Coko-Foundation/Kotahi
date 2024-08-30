@@ -1,8 +1,7 @@
 const axios = require('axios')
 const { Readable } = require('stream')
 
-const File = require('@coko/server/src/models/file/file.model')
-const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
+const { File, fileStorage } = require('@coko/server')
 
 const ArticleTemplate = require('../../../models/articleTemplate/articleTemplate.model')
 const CMSFileTemplate = require('../../../models/cmsFileTemplate/cmsFileTemplate.model')
@@ -52,11 +51,13 @@ const resolvers = {
         if (articleFile) {
           const file = await File.query().findById(articleFile.fileId)
 
-          const { key, mimetype } = file.storedObjects.find(
+          const { key } = file.storedObjects.find(
             obj => obj.type === 'original',
           )
 
-          await uploadFileHandler(Readable.from(input.article), key, mimetype)
+          await fileStorage.upload(Readable.from(input.article), file.name, {
+            forceObjectKeyValue: key,
+          })
         }
 
         // eslint-disable-next-line no-param-reassign

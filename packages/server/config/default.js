@@ -1,83 +1,61 @@
-const path = require('path')
-
 const permissions = require('./permissions')
 const components = require('./components')
 const journal = require('./journal')
-
-// console.log('helloooooooo')
-
-// Object.keys(process.env)
-//   .filter(k =>
-//     [
-//       'POSTGRES_PORT',
-//       'POSTGRES_HOST',
-//       'POSTGRES_DB',
-//       'POSTGRES_USER',
-//       'POSTGRES_PASSWORD',
-//     ].includes(k),
-//   )
-//   .map(i => {
-//     console.log(`${k}: ${process.env[k]}`)
-//   })
+const startupScripts = require('./startup')
 
 module.exports = {
   teams: {
-    global: {
-      admin: {
+    global: [
+      {
         displayName: 'Admin',
         role: 'admin',
       },
-      groupManager: {
+      {
         displayName: 'Group Manager',
         role: 'groupManager',
       },
-    },
-    nonGlobal: {
-      seniorEditor: {
+    ],
+    nonGlobal: [
+      {
         displayName: 'Senior Editor',
         role: 'seniorEditor',
       },
-      handlingEditor: {
+      {
         displayName: 'Handling Editor',
         role: 'handlingEditor',
       },
-      editor: {
+      {
         displayName: 'Editor',
         role: 'editor',
       },
-      managingEditor: {
+      {
         displayName: 'Managing Editor',
         role: 'managingEditor',
       },
-      reviewer: {
+      {
         displayName: 'Reviewers',
         role: 'reviewer',
       },
-      author: {
+      {
         displayName: 'Author',
         role: 'author',
       },
-      collaborativeReviewer: {
+      {
         displayName: 'Collaborative Reviewer',
         role: 'collaborativeReviewer',
       },
-      user: {
+      {
         displayName: 'User',
         role: 'user',
       },
-      groupManager: {
+      {
         displayName: 'Group Manager',
         role: 'groupManager',
       },
-    },
-  },
-  authsome: {
-    mode: path.resolve(__dirname, 'authsome.js'),
+    ],
   },
   permissions,
-  pubsweet: {
-    components,
-  },
+  components,
   mailer: {
     from: 'dev@example.com',
     path: `${__dirname}/mailer`, // eslint-disable-line node/no-path-concat
@@ -105,25 +83,21 @@ module.exports = {
     //   return path.resolve(__dirname, pathToFormTemplateFolder)
     // }),
   },
-  'pubsweet-server': {
-    useGraphQLServer: true,
-    useJobQueue: false,
-    useFileStorage: true,
-    db: {},
-    port: 3000,
-    pool: {
-      min: 0,
-      max: 300,
-      createTimeoutMillis: 3000,
-      acquireTimeoutMillis: 30000,
-      idleTimeoutMillis: 30000,
-      reapIntervalMillis: 1000,
-      createRetryIntervalMillis: 100,
-      propagateCreateError: false,
-    },
-    uploads: 'uploads',
-    wsYjsServerPort: '5010',
+  useGraphQLServer: true,
+  useFileStorage: true,
+  db: {},
+  port: 3000,
+  pool: {
+    min: 0,
+    max: 300,
+    createTimeoutMillis: 3000,
+    acquireTimeoutMillis: 30000,
+    idleTimeoutMillis: 30000,
+    reapIntervalMillis: 1000,
+    createRetryIntervalMillis: 100,
+    propagateCreateError: false,
   },
+  wsYjsServerPort: '5010',
   pagedjs: {
     clientId: '',
     clientSecret: '',
@@ -167,17 +141,10 @@ module.exports = {
     use_colab: 'false',
   },
   fileStorage: {
-    minioRootUser: '',
-    minioRootPassword: '',
     accessKeyId: '',
     secretAccessKey: '',
     bucket: '',
-    protocol: '',
-    host: '',
-    port: '',
-    minioConsolePort: '',
-    maximumWidthForSmallImages: '',
-    maximumWidthForMediumImages: '',
+    url: '',
   },
   manuscripts: {
     teamTimezone: 'Etc/UTC',
@@ -201,4 +168,11 @@ module.exports = {
   chatGPT: {
     key: 'CHAT_GPT_KEY',
   },
+  onStartup: startupScripts,
+  staticFolders: [
+    {
+      folderPath: './profiles',
+      mountPoint: '/profiles',
+    },
+  ],
 }

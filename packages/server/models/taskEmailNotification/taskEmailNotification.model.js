@@ -53,14 +53,47 @@ class TaskEmailNotification extends BaseModel {
     return {
       properties: {
         taskId: { type: 'string', format: 'uuid' },
-        recipientUserId: { type: ['string', 'null'], format: 'uuid' },
+        recipientUserId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         recipientType: { type: ['string', 'null'] },
         notificationElapsedDays: { type: ['integer', 'null'] },
         emailTemplateKey: { type: ['string', 'null'] },
-        emailTemplateId: { type: ['string', 'null'], format: 'uuid' },
+        emailTemplateId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         recipientName: { type: ['string', 'null'] },
         recipientEmail: { type: ['string', 'null'] },
-        sentAt: { type: ['string', 'object', 'null'], format: 'date-time' },
+        sentAt: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

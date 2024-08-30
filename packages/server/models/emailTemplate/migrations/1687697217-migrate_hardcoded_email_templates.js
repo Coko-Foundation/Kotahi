@@ -1,35 +1,23 @@
 const { useTransaction } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const EmailTemplate = require('../models/emailTemplate/emailTemplate.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const TaskEmailNotification = require('../models/taskEmailNotification/taskEmailNotification.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const TaskEmailNotificationLog = require('../models/taskEmailNotificationLog/taskEmailNotificationLog.model')
-
-/* eslint-disable-next-line import/no-unresolved */
-const existingEmailTemplates =
-  /* eslint-disable-next-line import/no-unresolved, import/extensions */
-  require('../server/model-email-templates/src/existingEmailTemplates')
+const EmailTemplate = require('../emailTemplate.model')
+const TaskEmailNotification = require('../../taskEmailNotification/taskEmailNotification.model')
+const TaskEmailNotificationLog = require('../../taskEmailNotificationLog/taskEmailNotificationLog.model')
+const existingEmailTemplates = require('../../../server/model-email-templates/src/existingEmailTemplates')
 
 exports.up = async knex => {
   try {
     return useTransaction(async trx => {
-      // eslint-disable-next-line func-names
       await trx.schema.alterTable(EmailTemplate.tableName, table => {
         table.text('email_template_key')
       })
-      await trx.schema.alterTable(
-        TaskEmailNotification.tableName,
-        // eslint-disable-next-line func-names
-        table => {
-          table
-            .uuid('email_template_id')
-            .nullable()
-            .references('id')
-            .inTable(EmailTemplate.tableName)
-        },
-      )
+      await trx.schema.alterTable(TaskEmailNotification.tableName, table => {
+        table
+          .uuid('email_template_id')
+          .nullable()
+          .references('id')
+          .inTable(EmailTemplate.tableName)
+      })
       await trx.schema.alterTable(
         TaskEmailNotificationLog.tableName,
         // eslint-disable-next-line func-names

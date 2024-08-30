@@ -77,9 +77,39 @@ class Channel extends BaseModel {
       properties: {
         type: { type: ['string', 'null'] },
         topic: { type: 'string' },
-        teamId: { type: ['string', 'null'], format: 'uuid' },
-        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        teamId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        manuscriptId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

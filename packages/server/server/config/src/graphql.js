@@ -1,4 +1,4 @@
-const File = require('@coko/server/src/models/file/file.model')
+const { File } = require('@coko/server')
 
 const Config = require('../../../models/config/config.model')
 const Group = require('../../../models/group/group.model')

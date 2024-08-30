@@ -7,9 +7,7 @@ const {
   createFile,
 } = require('@coko/server')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const File = require('../models/file/file.model')
+const File = require('../file.model')
 
 exports.up = async knex => {
   try {

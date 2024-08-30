@@ -1,9 +1,7 @@
 const axios = require('axios')
 const { Readable } = require('stream')
 
-const { createFile, fileStorage } = require('@coko/server')
-const File = require('@coko/server/src/models/file/file.model')
-const { uploadFileHandler } = require('@coko/server/src/services/fileStorage')
+const { createFile, fileStorage, File } = require('@coko/server')
 
 const CMSFileTemplate = require('../../../models/cmsFileTemplate/cmsFileTemplate.model')
 const CMSPage = require('../../../models/cmsPage/cmsPage.model')
@@ -249,7 +247,7 @@ const resolvers = {
       const attrs = cleanCMSPageInput(input)
 
       if (!input.creatorId) {
-        attrs.creatorId = ctx.user
+        attrs.creatorId = ctx.userId
       }
 
       const cmsPage = await CMSPage.query().updateAndFetchById(id, attrs)
@@ -354,7 +352,7 @@ const resolvers = {
 
         try {
           if (keys.length > 0) {
-            await fileStorage.deleteFiles(keys)
+            await fileStorage.delete(keys)
             await File.query().deleteById(id)
           }
         } catch (e) {
@@ -396,11 +394,11 @@ const resolvers = {
     async updateResource(_, { id, content }, ctx) {
       const file = await File.query().findOne({ id })
 
-      const { key, mimetype } = file.storedObjects.find(
-        obj => obj.type === 'original',
-      )
+      const { key } = file.storedObjects.find(obj => obj.type === 'original')
 
-      await uploadFileHandler(Readable.from(content), key, mimetype)
+      await fileStorage.upload(Readable.from(content), file.name, {
+        forceObjectKeyValue: key,
+      })
 
       return { id, content }
     },

@@ -127,7 +127,7 @@ const resolvers = {
       createNewTaskAlerts(groupId), // For testing purposes. Normally initiated by a scheduler on the server.
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
-      TaskAlert.query().delete().where({ userId: ctx.user }),
+      TaskAlert.query().delete().where({ userId: ctx.userId }),
 
     updateTaskStatus: async (_, { task }) => {
       // eslint-disable-next-line prefer-destructuring
@@ -192,8 +192,8 @@ const resolvers = {
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
-        (await TaskAlert.query().where({ userId: ctx.user }).limit(1)).length >
-        0
+        (await TaskAlert.query().where({ userId: ctx.userId }).limit(1))
+          .length > 0
       )
     },
   },

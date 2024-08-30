@@ -1,7 +1,6 @@
 const { logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Channel = require('../models/channel/channel.model')
+const Channel = require('../channel.model')
 
 exports.up = async knex => {
   try {

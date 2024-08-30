@@ -46,8 +46,18 @@ class File extends BaseModel {
         fileType: { type: ['string'] },
         filename: { type: ['string'] },
         size: { type: ['integer'] },
-        reviewCommentId: { type: ['string', 'null'], format: 'uuid' },
-        manuscriptId: { type: ['string'], format: 'uuid' },
+        reviewCommentId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        manuscriptId: { type: 'string', format: 'uuid' },
       },
     }
   }

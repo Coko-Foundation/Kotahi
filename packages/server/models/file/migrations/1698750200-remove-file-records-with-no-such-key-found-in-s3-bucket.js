@@ -3,13 +3,8 @@ const path = require('path')
 
 const { fileStorage, File, logger, useTransaction } = require('@coko/server')
 
-const {
-  connectToFileStorage,
-} = require('@coko/server/src/services/fileStorage')
-
 exports.up = async knex => {
   return useTransaction(async trx => {
-    await connectToFileStorage()
     const files = await File.query(trx)
 
     // logger.info(`Total file records in table: ${files.length}`)

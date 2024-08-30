@@ -47,7 +47,17 @@ class TaskEmailNotificationLog extends BaseModel {
         senderEmail: { type: 'string' },
         recipientEmail: { type: 'string' },
         emailTemplateKey: { type: 'string' },
-        emailTemplateId: { type: ['string', 'null'], format: 'uuid' },
+        emailTemplateId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         content: { type: 'string' },
       },
     }

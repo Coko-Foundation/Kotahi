@@ -4,14 +4,10 @@ const {
   getSubmissionForm,
   getReviewForm,
   getDecisionForm,
-  // eslint-disable-next-line import/no-unresolved, import/extensions
-} = require('../server/model-review/src/reviewCommsUtils')
+} = require('../../../server/model-review/src/reviewCommsUtils')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Manuscript = require('../models/manuscript/manuscript.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const PublishedArtifact = require('../models/publishedArtifact/publishedArtifact.model')
+const Manuscript = require('../../manuscript/manuscript.model')
+const PublishedArtifact = require('../publishedArtifact.model')
 
 const fieldKeyRegex =
   /^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}).([a-zA-Z]\w*|submission\.[a-zA-Z]\w*|meta.title|meta.abstract)(?::([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}))?$/

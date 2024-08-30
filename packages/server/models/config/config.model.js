@@ -66,7 +66,17 @@ class Config extends BaseModel {
       properties: {
         active: { type: ['boolean', 'null'] },
         formData: {},
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

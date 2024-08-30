@@ -38,12 +38,48 @@ class CMSPage extends BaseModel {
         status: { type: 'string' },
         content: { type: 'string' },
         meta: {},
-        creatorId: { type: ['string', 'null'], format: 'uuid' },
-        published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        edited: { type: ['string', 'object', 'null'], format: 'date-time' },
+        creatorId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        published: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        edited: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         flaxHeaderConfig: flaxConfig,
         flaxFooterConfig: flaxConfig,
-        groupId: { type: ['string'], format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
       },
     }
   }

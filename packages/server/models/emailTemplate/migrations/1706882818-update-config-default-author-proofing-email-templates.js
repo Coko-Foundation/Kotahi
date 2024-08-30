@@ -1,10 +1,7 @@
 const { useTransaction, logger } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Config = require('../models/config/config.model')
-
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const EmailTemplate = require('../models/emailTemplate/emailTemplate.model')
+const Config = require('../../config/config.model')
+const EmailTemplate = require('../emailTemplate.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {

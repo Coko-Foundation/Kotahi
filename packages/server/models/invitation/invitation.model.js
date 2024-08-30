@@ -6,7 +6,17 @@ const suggestedReviewerItem = {
   properties: {
     firstName: { type: ['string', 'null'] },
     lastName: { type: ['string', 'null'] },
-    email: { type: ['string', 'null'], format: 'email' },
+    email: {
+      anyOf: [
+        {
+          type: 'string',
+          format: 'email',
+        },
+        {
+          type: 'null',
+        },
+      ],
+    },
     affiliation: { type: ['string', 'null'] },
   },
 }
@@ -26,22 +36,75 @@ class Invitation extends BaseModel {
   static get schema() {
     return {
       properties: {
-        date: { type: ['string', 'object', 'null'], format: 'date-time' },
-        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        date: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        manuscriptId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         purpose: { type: 'string' },
-        toEmail: { type: ['string'] },
-        status: { type: ['string'] },
-        senderId: { type: ['string', 'null'], format: 'uuid' },
+        toEmail: { type: 'string' },
+        status: { type: 'string' },
+        senderId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         invitedPersonType: { type: ['string'] },
-        invitedPersonName: { type: ['srting'] },
+        invitedPersonName: { type: ['string'] },
         responseDate: {
-          type: ['string', 'object', 'null'],
-          format: 'date-time',
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
         },
         responseComment: { type: ['string', 'null'] },
         declinedReason: { type: ['string', 'null'] },
         suggestedReviewers,
-        userId: { type: ['string', 'null'], format: 'uuid' },
+        userId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         isShared: { type: ['boolean'] },
       },
     }

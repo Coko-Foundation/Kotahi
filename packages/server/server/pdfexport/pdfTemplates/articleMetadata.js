@@ -16,7 +16,7 @@ try {
   userArticleMetadata = require('../../../config/journal/export/articleMetadata.json')
 } catch {
   // eslint-disable-next-line no-console
-  console.log("userArticleMetadata doesn't exist.")
+  // console.log("userArticleMetadata doesn't exist.")
 }
 
 const makeFormattedAuthors = (authors, correspondingAuthor) => {

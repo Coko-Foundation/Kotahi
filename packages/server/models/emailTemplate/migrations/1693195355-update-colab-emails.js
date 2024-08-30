@@ -1,7 +1,6 @@
 const { useTransaction } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const EmailTemplate = require('../models/emailTemplate/emailTemplate.model')
+const EmailTemplate = require('../emailTemplate.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {

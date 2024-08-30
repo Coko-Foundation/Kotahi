@@ -1,14 +1,13 @@
-/* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop, import/no-unresolved */
+/* eslint-disable no-param-reassign, no-restricted-syntax, no-await-in-loop */
 const { useTransaction, logger } = require('@coko/server')
 const { chunk } = require('lodash')
 
-/* eslint-disable import/extensions */
 // Paths are relative to the generated migrations folder
-const Group = require('../models/group/group.model')
-const Config = require('../models/config/config.model')
-const Form = require('../models/form/form.model')
-const Manuscript = require('../models/manuscript/manuscript.model')
-const Review = require('../models/review/review.model')
+const Form = require('../form.model')
+const Group = require('../../group/group.model')
+const Config = require('../../config/config.model')
+const Manuscript = require('../../manuscript/manuscript.model')
+const Review = require('../../review/review.model')
 
 const fieldNameMap = {
   'meta.title': 'submission.$title',

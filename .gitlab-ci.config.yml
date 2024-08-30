@@ -10,9 +10,7 @@ variables:
   POSTGRES_PASSWORD: kotahidev
   PGUSER: kotahidev
   PGPASSWORD: kotahidev
-  S3_PROTOCOL: http
-  S3_HOST: localhost
-  S3_PORT: 9000
+  S3_URL: http://localhost:9000
   S3_ACCESS_KEY_ID: nonRootUser
   S3_SECRET_ACCESS_KEY: nonRootPassword
   S3_BUCKET: uploads

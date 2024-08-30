@@ -12,7 +12,6 @@
     "storybook": "coko-storybook"
   },
   "resolutions": {
-    "@apollo/client": "3.2.2",
     "@storybook/react": "6.5.10",
     "formik": "2.2.6",
     "prosemirror-inputrules": "1.2.0",
@@ -27,11 +26,11 @@
     "wax-table-service": "0.9.39"
   },
   "dependencies": {
-    "@apollo/client": "3.2.2",
+    "@apollo/client": "3.10.1",
     "@apollo/react-testing": "3.1.4",
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
-    "@coko/client": "^0.0.63",
+    "@coko/client": "1.0.0-beta.0",
     "@fontsource/roboto": "^4.5.8",
     "@rjsf/core": "4.2.3",
     "@uiw/react-codemirror": "^4.21.20",

@@ -46,7 +46,17 @@ class EmailTemplate extends BaseModel {
         },
         emailTemplateType: { type: ['string', 'null'] },
         emailTemplateKey: { type: ['string'] },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

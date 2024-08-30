@@ -1,4 +1,4 @@
-const TeamBase = require('@coko/server/src/models/team/team.model')
+const { Team: TeamBase } = require('@coko/server')
 const { evictFromCache } = require('../../server/querycache')
 
 class Team extends TeamBase {

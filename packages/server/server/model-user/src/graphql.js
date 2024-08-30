@@ -145,7 +145,7 @@ const resolvers = {
       })
     },
     async paginatedUsers(_, { sort, offset, limit }, ctx) {
-      const currentUser = await User.query().findById(ctx.user)
+      const currentUser = await User.query().findById(ctx.userId)
       await addGlobalAndGroupRolesToUserObject(ctx, currentUser)
 
       let query
@@ -239,9 +239,9 @@ const resolvers = {
 
     // Authentication
     async currentUser(_, vars, ctx) {
-      if (!ctx.user) return null
+      if (!ctx.userId) return null
 
-      const user = await User.query().patchAndFetchById(ctx.user, {
+      const user = await User.query().patchAndFetchById(ctx.userId, {
         lastOnline: new Date(Date.now()),
       })
 
@@ -408,7 +408,7 @@ const resolvers = {
       }
     },
     async updateRecentTab(_, { tab }, ctx) {
-      const user = await User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.userId, {
         recentTab: tab,
       })
 
@@ -435,14 +435,14 @@ const resolvers = {
       }
     },
     async expandChat(_, { state }, ctx) {
-      const user = await User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.userId, {
         chatExpanded: state,
       })
 
       return user
     },
     async updateMenuUI(_, { expanded }, ctx) {
-      const user = await User.query().updateAndFetchById(ctx.user, {
+      const user = await User.query().updateAndFetchById(ctx.userId, {
         menuPinned: expanded,
       })
 

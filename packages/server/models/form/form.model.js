@@ -57,7 +57,7 @@ class Form extends BaseModel {
                       properties: {
                         label: { type: 'string' },
                         value: { type: 'string' },
-                        labelColor: { type: 'color' },
+                        labelColor: { type: 'string' },
                         id: { type: 'string', format: 'uuid' },
                       },
                     },
@@ -102,7 +102,17 @@ class Form extends BaseModel {
             },
           },
         },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
       },
     }
   }

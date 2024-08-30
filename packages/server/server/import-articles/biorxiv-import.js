@@ -162,7 +162,7 @@ const getData = async (groupId, ctx) => {
             initialTopicsOnImport: topics,
           },
           meta: {},
-          submitterId: ctx.user,
+          submitterId: ctx.userId,
           channels: [
             {
               topic: 'Manuscript discussion',

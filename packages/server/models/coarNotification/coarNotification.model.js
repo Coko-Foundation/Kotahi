@@ -9,8 +9,8 @@ class CoarNotification extends BaseModel {
     return {
       properties: {
         payload: { type: 'object' },
-        manuscriptId: { type: ['string'], format: 'uuid' },
-        groupId: { type: ['string'], format: 'uuid' },
+        manuscriptId: { type: 'string', format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
         status: { type: 'boolean' },
       },
     }

@@ -353,7 +353,7 @@ const getData = async (groupId, ctx) => {
                   journal: Journal.Title._text,
                 },
                 meta: {},
-                submitterId: ctx.user,
+                submitterId: ctx.userId,
                 channels: [
                   {
                     topic: 'Manuscript discussion',

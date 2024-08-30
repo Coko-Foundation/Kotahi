@@ -70,12 +70,55 @@ class Task extends BaseModel {
   static get schema() {
     return {
       properties: {
-        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
-        groupId: { type: ['string', 'null'], format: 'uuid' },
+        manuscriptId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
+        groupId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         title: { type: 'string' },
-        assigneeUserId: { type: ['string', 'null'], format: 'uuid' },
+        assigneeUserId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         defaultDurationDays: { type: ['integer', 'null'] },
-        dueDate: { type: ['string', 'object', 'null'], format: 'date-time' },
+        dueDate: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'date-time',
+            },
+            {
+              type: 'object',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         reminderPeriodDays: { type: ['integer', 'null'] },
         status: { type: 'string' },
         sequenceIndex: { type: 'integer' },

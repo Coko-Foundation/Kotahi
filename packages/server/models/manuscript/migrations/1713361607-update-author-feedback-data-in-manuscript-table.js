@@ -1,13 +1,9 @@
-/* eslint-disable no-unused-vars */
 const { useTransaction, logger } = require('@coko/server')
 
 const { orderBy } = require('lodash')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Manuscript = require('../models/manuscript/manuscript.model')
-
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const User = require('../models/user/user.model')
+const Manuscript = require('../manuscript.model')
+const User = require('../../user/user.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {

@@ -1,5 +1,5 @@
 const config = require('config')
-const { pubsubManager } = require('@coko/server')
+const { subscriptionManager } = require('@coko/server')
 
 const Config = require('../../../models/config/config.model')
 
@@ -8,8 +8,6 @@ const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articl
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const importArticlesFromSemanticScholar = require('../../import-articles/semantic-scholar-papers-import')
 const { runImports } = require('../../plugins/imports')
-
-const { getPubsub } = pubsubManager
 
 const importsInProgress = new Set()
 
@@ -42,7 +40,7 @@ const importManuscripts = async (groupId, ctx) => {
       ? 'evaluated'
       : 'accepted'
 
-    const promises = [runImports(groupId, evaluatedStatusString, ctx.user)]
+    const promises = [runImports(groupId, evaluatedStatusString, ctx.userId)]
 
     if (activeConfig.formData.instanceName === 'preprint2') {
       promises.push(importArticlesFromBiorxiv(groupId, ctx))
@@ -59,8 +57,7 @@ const importManuscripts = async (groupId, ctx) => {
     Promise.all(promises)
       .catch(error => console.error(error))
       .finally(async () => {
-        const pubsub = await getPubsub()
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
           manuscriptsImportStatus: true,
         })
       })
@@ -96,8 +93,7 @@ const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
     Promise.all(promises)
       .catch(error => console.error(error))
       .finally(async () => {
-        const pubsub = await getPubsub()
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
           manuscriptsImportStatus: true,
         })
       })

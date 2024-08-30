@@ -9,9 +9,7 @@ const {
   // logger
 } = require('@coko/server')
 
-// Paths are relative to the generated migrations folder
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Form = require('../models/form/form.model')
+const Form = require('../form.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {

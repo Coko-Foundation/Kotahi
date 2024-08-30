@@ -16,7 +16,7 @@ const tryGetObjectIdFromPath = path => {
 const resolvers = {
   Query: {
     notificationOption: async (_, { path }, ctx) => {
-      if (!ctx.user) {
+      if (!ctx.userId) {
         throw new Error(
           'Cannot retrieve notificationOption for an unregistered user',
         )
@@ -26,7 +26,7 @@ const resolvers = {
       const objectId = tryGetObjectIdFromPath(path)
 
       const notificationOption = await NotificationUserOption.query().findOne({
-        userId: ctx.user,
+        userId: ctx.userId,
         path: `{${path.join(',')}}`,
         groupId,
         objectId,
@@ -37,7 +37,7 @@ const resolvers = {
   },
   Mutation: {
     updateNotificationOption: async (_, { path, option }, ctx) => {
-      if (!ctx.user)
+      if (!ctx.userId)
         throw new Error(
           'Cannot updateNotificationOption for an unregistered user',
         )
@@ -49,7 +49,7 @@ const resolvers = {
       }
 
       const groupId = ctx.req.headers['group-id']
-      const userId = ctx.user
+      const { userId } = ctx
       const objectId = tryGetObjectIdFromPath(path)
 
       // Find the existing record based on userId, path, and groupId
@@ -80,7 +80,7 @@ const resolvers = {
         const pathString = path.join('/')
 
         await NotificationDigest.query().delete().where({
-          userId: context.user,
+          userId: context.userId,
           pathString,
           actioned: false,
         })

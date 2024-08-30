@@ -1,7 +1,6 @@
 const { useTransaction } = require('@coko/server')
 
-/* eslint-disable-next-line import/no-unresolved */
-const TeamMember = require('../models/teamMember/teamMember.model')
+const TeamMember = require('../teamMember.model')
 
 exports.up = async knex => {
   await knex.raw(

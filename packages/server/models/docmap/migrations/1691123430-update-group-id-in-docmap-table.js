@@ -1,10 +1,8 @@
 const { useTransaction, logger } = require('@coko/server')
 const { chunk } = require('lodash')
 
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Docmap = require('../models/docmap/docmap.model')
-/* eslint-disable-next-line import/no-unresolved, import/extensions */
-const Group = require('../models/group/group.model')
+const Docmap = require('../docmap.model')
+const Group = require('../../group/group.model')
 
 exports.up = async knex => {
   return useTransaction(async trx => {

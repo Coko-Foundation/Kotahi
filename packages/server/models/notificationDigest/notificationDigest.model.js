@@ -43,14 +43,14 @@ class NotificationDigest extends BaseModel {
         time: { type: 'datetime' },
         maxNotificationTime: { type: 'datetime' },
         pathString: { type: 'string' },
-        userId: { type: ['string'], format: 'uuid' },
+        userId: { type: 'string', format: 'uuid' },
         option: { type: 'string' },
         actioned: { type: 'boolean', default: false },
         context: {
           type: 'object',
           properties: { messageId: { type: ['string', 'null'] } },
         },
-        groupId: { type: ['string'], format: 'uuid' },
+        groupId: { type: 'string', format: 'uuid' },
       },
     }
   }

@@ -43,7 +43,17 @@ class Review extends BaseModel {
     return {
       properties: {
         manuscriptId: { type: 'string', format: 'uuid' },
-        userId: { type: ['string', null], format: 'uuid' },
+        userId: {
+          anyOf: [
+            {
+              type: 'string',
+              format: 'uuid',
+            },
+            {
+              type: 'null',
+            },
+          ],
+        },
         user: { type: ['object', 'null'] },
         isDecision: { type: 'boolean' },
         isHiddenFromAuthor: { type: 'boolean' },
