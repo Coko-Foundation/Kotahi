@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS teams (
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
   updated TIMESTAMP WITH TIME ZONE,
 
-  name TEXT,
   role TEXT NOT NULL,
   members JSONB,
   owners JSONB,
@@ -13,6 +12,8 @@ CREATE TABLE IF NOT EXISTS teams (
 
 ALTER TABLE teams
 ADD manuscript_id UUID REFERENCES manuscripts(id) ON DELETE CASCADE;
+
+ALTER TABLE teams ADD name TEXT;
 
 DO $$
 BEGIN
