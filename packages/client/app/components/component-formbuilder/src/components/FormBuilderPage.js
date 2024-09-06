@@ -28,6 +28,11 @@ structure {
     description
     doiValidation
     doiUniqueSuffixValidation
+    uploadAttachmentSource {
+      type
+      s3Url
+      s3Bucket
+    }
     placeholder
     inline
     sectioncss

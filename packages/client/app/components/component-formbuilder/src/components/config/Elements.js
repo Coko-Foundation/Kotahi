@@ -206,6 +206,31 @@ const permitPublishingField = {
   defaultValue: 'false',
 }
 
+const uploadAttachmentSource = {
+  component: 'RadioBoxS3Service',
+  props: {
+    inline: true,
+    radioOptions: [
+      {
+        value: 'internal',
+        label: 'Internal',
+      },
+      {
+        value: 'external',
+        label: 'External',
+      },
+    ],
+    label: 'Select S3 Service',
+  },
+  defaultValue: {
+    type: 'internal',
+    s3Url: '',
+    s3AccessId: '',
+    s3AccessToken: '',
+    s3Bucket: '',
+  },
+}
+
 const publishingTagField = {
   component: 'TextField',
   props: {
@@ -327,6 +352,7 @@ const propertiesOrder = [
   'validate',
   'parse',
   'format',
+  'uploadAttachmentSource',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'hideFromAuthors',
@@ -551,6 +577,7 @@ const submissionFieldOptions = [
     component: 'SupplementaryFiles',
     title: requiredTextFieldWithDefault('Attachments'),
     name: presetTextField('fileName'),
+    uploadAttachmentSource,
   },
   {
     fieldType: 'doi',

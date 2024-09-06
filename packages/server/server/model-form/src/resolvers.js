@@ -1,10 +1,38 @@
+const { GraphQLScalarType, Kind } = require('graphql')
+const { mergeWith } = require('lodash')
+
 const { NotFoundError } = require('@coko/server/src/errors')
 const Form = require('../../../models/form/form.model')
+const { encrypt } = require('../../utils/encryptDecryptUtils')
 
 const notFoundError = (property, value, className) =>
   new NotFoundError(`Object not found: ${className} with ${property} ${value}`)
 
+const PasswordScalar = new GraphQLScalarType({
+  name: 'Password',
+  description: 'Password scalar type for encryption',
+
+  // Encrypt the value when the input is received
+  parseValue(value) {
+    return encrypt(value)
+  },
+
+  serialize(value) {
+    return value
+  },
+
+  parseLiteral(ast) {
+    if (ast.kind === Kind.STRING) {
+      // eslint-disable-next-line no-return-await
+      return this.parseValue(ast.value)
+    }
+
+    return null
+  },
+})
+
 const resolvers = {
+  Password: PasswordScalar,
   Mutation: {
     deleteForm: async (_, { formId }) => {
       await Form.query().deleteById(formId)
@@ -63,8 +91,27 @@ const resolvers = {
         field => field.id === element.id,
       )
 
+      const { name } = form.structure.children[indexToReplace]
+
+      const customMerge = (objValue, srcValue) => {
+        // If both are arrays, return the updated array (srcValue)
+        if (Array.isArray(srcValue)) {
+          return srcValue
+        }
+
+        return undefined
+      }
+
       if (indexToReplace < 0) form.structure.children.push(element)
-      else form.structure.children[indexToReplace] = element
+      else
+        form.structure.children[indexToReplace] =
+          element.name === name
+            ? mergeWith(
+                form.structure.children[indexToReplace],
+                element,
+                customMerge,
+              )
+            : element
 
       return Form.query().patchAndFetchById(formId, {
         structure: form.structure,
