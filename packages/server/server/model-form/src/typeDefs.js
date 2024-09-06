@@ -59,6 +59,14 @@ const typeDefs = `
     readonly: Boolean
   }
 
+  input UploadAttachmentSourceInput {
+    type: String
+    s3Url: String
+    s3Bucket: String
+    s3AccessId: Password
+    s3AccessToken: Password
+  }
+
   input FormElementOptionInput {
     label: String!
     value: String!
@@ -117,6 +125,12 @@ const typeDefs = `
     permitPublishing: String
     publishingTag: String
     readonly: Boolean
+  }
+
+  type UploadAttachmentSource {
+    type: String
+    s3Url: String
+    s3Bucket: String
   }
 
   type FormElementOption {
