@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { th } from '@coko/client'
+import { useTranslation } from 'react-i18next'
+
 import Flexbox from '../../../../pubsweet/Flexbox'
 import Radio from '../../../../pubsweet/Radio'
 import { TextField } from '../../../../pubsweet'
 import { ActionButton } from '../../../../shared'
+import ValidatedField from '../../../../component-submit/src/components/ValidatedField'
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
@@ -16,7 +19,11 @@ const CredentialsFlexbox = styled(Flexbox)`
   margin-top: 10px;
 `
 
-const CredentialFields = ({ s3Values, onChange }) => {
+const TextFieldComponent = props => {
+  return <TextField {...props} />
+}
+
+const CredentialFields = ({ s3Values, onChange, t }) => {
   const [credentials, setCredentials] = useState({
     accessId: null,
     accessToken: null,
@@ -48,54 +55,53 @@ const CredentialFields = ({ s3Values, onChange }) => {
     <ActionButton
       onClick={() => setCredentials({ ...credentials, status: 'update' })}
     >
-      Set S3 credentials
+      {t('fields.uploadAttachmentSource.setCredentials')}
     </ActionButton>
   ) : (
     <>
-      <Legend>S3 access id</Legend>
+      <Legend>{t('fields.uploadAttachmentSource.s3AccessId')}</Legend>
       <TextField
         name="s3AccessId"
         onChange={onTextChange('accessId')}
         value={credentials.accessId}
       />
-      <Legend>S3 access token</Legend>
+      <Legend>{t('fields.uploadAttachmentSource.s3AccessToken')}</Legend>
       <TextField
         name="s3AccessToken"
         onChange={onTextChange('accessToken')}
         value={credentials.accessToken}
       />
-      <ActionButton onClick={updatePassword}>Update password</ActionButton>
+      <ActionButton onClick={updatePassword}>
+        {t('fields.uploadAttachmentSource.updateCredentials')}
+      </ActionButton>
     </>
   )
 }
 
 const RadioboxS3ServiceBuilder = ({
   inline,
-  value,
+  value: componentValue,
   className,
   disabled,
   name,
   radioOptions,
-  required,
   onChange,
 }) => {
-  const [s3Values, setS3Values] = useState(value)
+  const { t } = useTranslation()
 
   const handleChange = event => {
     // eslint-disable-next-line no-shadow
     const { value } = event.target
-    const data = { ...s3Values, type: value }
-    setS3Values(data)
+    const data = { ...componentValue, type: value }
     onChange(data)
   }
 
   const onTextChange = field => event => {
     // eslint-disable-next-line no-shadow
     const { value } = event.target
-    const v = s3Values
+    const v = componentValue
     v[field] = value
 
-    setS3Values({ ...v })
     onChange(v)
   }
 
@@ -104,7 +110,7 @@ const RadioboxS3ServiceBuilder = ({
       <Flexbox column={!inline}>
         {radioOptions.map(option => (
           <Radio
-            checked={option.value === s3Values.type}
+            checked={option.value === componentValue.type}
             className={className}
             color={option.color}
             disabled={disabled || option.disabled}
@@ -113,27 +119,34 @@ const RadioboxS3ServiceBuilder = ({
             label={option.label}
             name={name}
             onChange={handleChange}
-            required={required}
             value={option.value}
           />
         ))}
       </Flexbox>
       <CredentialsFlexbox column={inline}>
-        {s3Values.type === 'external' && (
+        {componentValue.type === 'external' && (
           <>
-            <Legend>S3 Service Url</Legend>
-            <TextField
-              name="s3Url"
+            <Legend>{t('fields.uploadAttachmentSource.s3Url')}</Legend>
+            <ValidatedField
+              component={TextFieldComponent}
+              name="uploadAttachmentSource.s3Url"
               onChange={onTextChange('s3Url')}
-              value={s3Values.s3Url}
+              shouldAllowFieldSpecChanges="true"
+              value={componentValue.s3Url}
             />
-            <Legend>S3 Service Bucket</Legend>
-            <TextField
-              name="s3Bucket"
+            <Legend>{t('fields.uploadAttachmentSource.s3Bucket')}</Legend>
+            <ValidatedField
+              component={TextFieldComponent}
+              name="uploadAttachmentSource.s3Bucket"
               onChange={onTextChange('s3Bucket')}
-              value={s3Values.s3Bucket}
+              shouldAllowFieldSpecChanges="true"
+              value={componentValue.s3Bucket}
             />
-            <CredentialFields onChange={onChange} s3Values={s3Values} />
+            <CredentialFields
+              onChange={onChange}
+              s3Values={componentValue}
+              t={t}
+            />
           </>
         )}
       </CredentialsFlexbox>
