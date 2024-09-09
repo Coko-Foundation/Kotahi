@@ -633,12 +633,6 @@ const genericFieldOptions = [
     component: 'GenericFiles',
     ...s3InputFields,
   },
-  {
-    label: 'Date picker',
-    isCustom: true,
-    fieldType: 'datePicker',
-    component: 'DatePicker',
-  },
 ]
 
 /** Field options for use in the submission form. Some are specialised, imposing
