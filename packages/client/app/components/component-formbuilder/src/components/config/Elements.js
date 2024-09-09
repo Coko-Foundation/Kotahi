@@ -473,6 +473,13 @@ const genericFieldOptions = [
     fieldType: 'links',
     component: 'LinksInput',
   },
+  {
+    label: 'S3 Uploader',
+    isCustom: true,
+    fieldType: 's3Uploader',
+    component: 'SupplementaryFiles',
+    uploadAttachmentSource,
+  },
 ]
 
 /** Field options for use in the submission form. Some are specialised, imposing
@@ -694,6 +701,7 @@ const decisionFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
+    uploadAttachmentSource,
   },
   {
     fieldType: 'doiSuffix',
@@ -734,6 +742,7 @@ const reviewFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
+    uploadAttachmentSource,
   },
   {
     fieldType: 'doiSuffix',

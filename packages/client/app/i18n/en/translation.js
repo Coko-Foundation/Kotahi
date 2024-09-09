@@ -1147,6 +1147,7 @@ const en = {
         abstract: 'Abstract',
         visualAbstract: 'Single image attachment',
         attachments: 'Attachments',
+        s3Uploader: 'S3 Uploader',
         doi: 'DOI',
         dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',

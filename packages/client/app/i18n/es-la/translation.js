@@ -1170,6 +1170,7 @@ const esLa = {
         abstract: 'Resumen',
         visualAbstract: 'Adjunto de imagen única',
         attachments: 'Adjuntos',
+        s3Uploader: 'Cargador S3',
         doi: 'DOI',
         dois: 'Múltiples dois',
         doiSuffix: 'Sufijo DOI"',

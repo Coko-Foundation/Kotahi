@@ -1180,6 +1180,7 @@ const fr = {
         abstract: 'Résumé',
         visualAbstract: 'Pièce jointe : Image unique',
         attachments: 'Pièces jointes',
+        s3Uploader: 'Téléchargeur S3',
         doi: 'DOI',
         dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',

@@ -1162,6 +1162,7 @@ const ru = {
         abstract: 'Аннотация',
         visualAbstract: 'Одиночное изображение вложения',
         attachments: 'Вложения',
+        s3Uploader: 'Загрузчик S3',
         doi: 'DOI',
         dois: 'Несколько DOI',
         doiSuffix: 'Суффикс DOI',
