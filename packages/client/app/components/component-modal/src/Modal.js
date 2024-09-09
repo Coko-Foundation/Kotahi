@@ -190,7 +190,7 @@ const Modal = ({
       flexDirection: 'column',
       inset: 'unset',
       margin: '0px',
-      maxHeight: '90%',
+      maxHeight: '80%',
       maxWidth: '60%',
       overflow: 'hidden',
       padding: '0px',
