@@ -91,7 +91,11 @@ const resolvers = {
         field => field.id === element.id,
       )
 
-      const { name } = form.structure.children[indexToReplace]
+      let name = null
+
+      if (indexToReplace > 0) {
+        name = form.structure.children[indexToReplace].name
+      }
 
       const customMerge = (objValue, srcValue) => {
         // If both are arrays, return the updated array (srcValue)

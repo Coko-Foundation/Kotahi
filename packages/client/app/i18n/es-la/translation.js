@@ -1218,6 +1218,14 @@ const esLa = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        s3Url: 'URL del servicio S3',
+        s3Bucket: 'Cubo del servicio S3',
+        s3AccessId: 'ID de acceso S3',
+        s3AccessToken: 'Token de acceso S3',
+        updateCredentials: 'Actualizar credenciales',
+        setCredentials: 'Establecer credenciales',
+      },
       hideFromReviewers: {
         true: 'Sí',
         false: 'No',

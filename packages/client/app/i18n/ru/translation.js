@@ -1210,6 +1210,14 @@ const ru = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        s3Url: 'URL службы S3',
+        s3Bucket: 'Корзина службы S3',
+        s3AccessId: 'Идентификатор доступа S3',
+        s3AccessToken: 'Токен доступа S3',
+        updateCredentials: 'Обновить учетные данные',
+        setCredentials: 'Установить учетные данные',
+      },
       hideFromReviewers: {
         true: 'Да',
         false: 'Нет',

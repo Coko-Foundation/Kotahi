@@ -221,6 +221,17 @@ const uploadAttachmentSource = {
       },
     ],
     label: 'Select S3 Service',
+    validate: value => {
+      let error
+
+      if (value.type === 'external' && value.s3Url === '') {
+        error = 'S3 Service Url Field is required'
+      } else if (value.type === 'external' && value.s3Bucket === '') {
+        error = 'S3 Service Bucket Field is required'
+      }
+
+      return error
+    },
   },
   defaultValue: {
     type: 'internal',

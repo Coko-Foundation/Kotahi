@@ -1195,6 +1195,14 @@ const en = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        s3Url: 'S3 Service Url',
+        s3Bucket: 'S3 Service Bucket',
+        s3AccessId: 'S3 access id',
+        s3AccessToken: 'S3 access token',
+        updateCredentials: 'Update Credentials',
+        setCredentials: 'Set Credentials',
+      },
       hideFromReviewers: {
         true: 'Yes',
         false: 'No',

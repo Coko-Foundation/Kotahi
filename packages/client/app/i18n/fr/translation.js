@@ -1228,6 +1228,14 @@ const fr = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        s3Url: 'URL du service S3',
+        s3Bucket: 'Seau de service S3',
+        s3AccessId: "ID d'accès S3",
+        s3AccessToken: "Jeton d'accès S3",
+        updateCredentials: "Mettre à jour les informations d'identification",
+        setCredentials: "Définir les informations d'identification",
+      },
       hideFromReviewers: {
         true: 'Oui',
         false: 'Non',
