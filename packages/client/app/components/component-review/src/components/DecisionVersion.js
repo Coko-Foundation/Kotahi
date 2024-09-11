@@ -27,6 +27,7 @@ import KanbanBoard from './KanbanBoard'
 import InviteReviewer from './reviewers/InviteReviewer'
 import { ConfigContext } from '../../../config/src'
 import { getActiveTab } from '../../../../shared/manuscriptUtils'
+import { transformTeamsToLegacy } from '../../../utils'
 
 const TaskSectionRow = styled(SectionRow)`
   padding: 12px 0 18px;
@@ -96,6 +97,8 @@ const DecisionVersion = ({
   manuscriptLatestVersionId,
   emailTemplates,
 }) => {
+  const teamLabelsTransformed = transformTeamsToLegacy(teamLabels)
+
   const config = useContext(ConfigContext)
 
   const threadedDiscussionExtendedProps = {
@@ -311,7 +314,7 @@ const DecisionVersion = ({
                   ) {
                     return (
                       <p key={team.id}>
-                        {teamLabels[team.role].name}:{' '}
+                        {teamLabelsTransformed[team.role].name}:{' '}
                         {team.members?.[0]?.user?.username}
                       </p>
                     )
