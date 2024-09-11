@@ -71,6 +71,7 @@ module.exports = {
     secretAccessKey: 'S3_SECRET_ACCESS_KEY',
     bucket: 'S3_BUCKET',
     url: 'S3_URL',
+    region: 'S3_REGION',
   },
   pagedjs: {
     clientId: 'SERVICE_PAGEDJS_CLIENT_ID',
