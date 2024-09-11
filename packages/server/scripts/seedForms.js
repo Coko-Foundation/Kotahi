@@ -4,8 +4,6 @@
 
 const Form = require('../models/form/form.model')
 
-console.log(process.cwd())
-
 // TODO: come up with predefined generic forms based on workflows
 const SUBMISSION_FORM_PATHS = {
   journal: '../config/storage/forms-journal/submit.json',
