@@ -23,8 +23,14 @@ const ERROR_MESSAGES = {
   noResourceType: 'Manuscript has no submission.resourcetype',
 }
 
+// relatedIdentifiers (citations)
+const CITATION_SELECTOR = 'p.ref'
+const CITATION_DATA_STRUCTURE = 'data-structure'
+
 module.exports = {
   DOI_PATH_PREFIX,
   RIGHTS,
   ERROR_MESSAGES,
+  CITATION_SELECTOR,
+  CITATION_DATA_STRUCTURE,
 }

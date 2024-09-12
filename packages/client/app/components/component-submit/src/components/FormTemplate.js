@@ -219,7 +219,6 @@ const FormTemplate = ({
   setShouldPublishField,
   shouldShowOptionToPublish = false,
   collaborativeObject,
-  loadROROptions = () => {},
 }) => {
   const config = useContext(ConfigContext)
   const [confirming, setConfirming] = useState(false)
@@ -579,7 +578,6 @@ const FormTemplate = ({
                             element.name === 'submission.$customStatus'
                           }
                           key={`validate-${element.id}`}
-                          loadROROptions={loadROROptions}
                           name={element.name}
                           onChange={value => {
                             // TODO: Perhaps split components remove conditions here
