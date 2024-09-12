@@ -1,101 +1,96 @@
 const cheerio = require('cheerio')
 const htmlToJats = require('../../jatsexport/htmlToJats')
-const { RIGHTS } = require('./constants')
+const { objIf, safeParse } = require('../../utils/objectUtils')
+
+const {
+  RIGHTS,
+  CITATION_SELECTOR,
+  CITATION_DATA_STRUCTURE,
+} = require('./constants')
 
 const calculateDataciteCitations = text => {
   const $ = cheerio.load(text)
-  // Select all <p> elements with the data-possible-structures attribute
-  const paragraphs = $('p[data-possible-structures]')
-  // Iterate through the selected elements and print them
+  const citations = $(CITATION_SELECTOR)
   const citationDois = []
-  paragraphs.each((_, element) => {
-    if ($(element).attr('data-possible-structures')) {
-      const citation = JSON.parse($(element).attr('data-possible-structures'))
+  citations.each((_, citation) => {
+    const { doi } = safeParse($(citation).attr(CITATION_DATA_STRUCTURE))
 
-      if (citation.datacite !== '' && citation.datacite.doi) {
-        citationDois.push({
-          relatedIdentifierType: 'DOI',
-          relationType: 'IsCitedBy',
-          relatedIdentifier: citation.datacite.doi,
-        })
-      }
-    }
+    doi &&
+      citationDois.push({
+        relatedIdentifierType: 'DOI',
+        relationType: 'IsCitedBy',
+        relatedIdentifier: doi,
+      })
   })
 
   return citationDois
 }
 
 const getPublisher = formData => {
-  let publisher = {
-    name: formData.groupIdentity.title,
-  }
+  const { rorUrl, title } = formData.groupIdentity
 
-  if (formData.groupIdentity.rorUrl) {
-    publisher = {
-      ...publisher,
-      publisherIdentifier: formData.groupIdentity.rorUrl,
+  const publisher = {
+    name: title,
+    ...objIf(rorUrl, {
+      publisherIdentifier: rorUrl,
       schemeUri: 'https://ror.org',
       publisherIdentifierScheme: 'ROR',
-    }
+    }),
   }
 
   return publisher
 }
 
 const getContributor = author => {
-  if (!author.firstName || !author.lastName)
+  const { ror, orcid, firstName, lastName } = author
+  if (!firstName || !lastName)
     throw new Error(`Incomplete author record ${JSON.stringify(author)}`)
 
   const contributor = {
     nameType: 'Personal',
-    givenName: author.firstName,
-    familyName: author.lastName,
-  }
-
-  if (author.orcid) {
-    contributor.nameIdentifier = [
-      {
-        nameIdentifierScheme: 'ORCID',
-        schemeUri: 'https://orcid.org',
-        value: author.orcid,
-      },
-    ]
-  }
-
-  if (author.ror) {
-    contributor.affiliation = [
-      {
-        affiliationIdentifier: author.ror,
-        affiliationIdentifierScheme: 'ROR',
-        schemeUri: 'https://ror.org',
-      },
-    ]
+    givenName: firstName,
+    familyName: lastName,
+    ...objIf(orcid, {
+      nameIdentifiers: [
+        {
+          nameIdentifierScheme: 'ORCID',
+          schemeUri: 'https://orcid.org',
+          nameIdentifier: orcid,
+        },
+      ],
+    }),
+    ...objIf(ror, {
+      affiliation: [
+        {
+          affiliationIdentifier: ror?.value,
+          affiliationIdentifierScheme: 'ROR',
+          schemeUri: 'https://ror.org',
+          name: ror?.label,
+        },
+      ],
+    }),
   }
 
   return contributor
 }
 
 const getContributors = formData => {
+  const { title: name, rorUrl } = formData.groupIdentity
+
   const contributor = {
     contributorType: 'Sponsor',
-    name: formData.groupIdentity.title,
+    name,
+    nameType: 'Organizational',
     affiliation: [
       {
-        name: formData.groupIdentity.title,
+        name,
+        ...objIf(rorUrl, {
+          affiliationIdentifierScheme: 'ROR',
+          schemeUri: 'https://ror.org',
+          affiliationIdentifier: rorUrl,
+        }),
       },
     ],
-    nameType: 'Organizational',
-  }
-
-  if (formData.groupIdentity.rorUrl) {
-    contributor.affiliation = [
-      {
-        name: contributor.affiliation[0].name,
-        affiliationIdentifierScheme: 'ROR',
-        schemeUri: 'https://ror.org',
-        affiliationIdentifier: formData.groupIdentity.rorUrl,
-      },
-    ]
   }
 
   return [contributor]
@@ -143,10 +138,12 @@ const getDescriptions = $abstract => {
 }
 
 const getRelatedIdentifiers = (meta, $dois) => {
-  return [
-    ...(meta.source ? [calculateDataciteCitations(meta.source)] : []),
-    ...getRelatedDois($dois),
-  ]
+  const citationDois = meta.source
+    ? calculateDataciteCitations(meta.source)
+    : []
+
+  const relatedDois = getRelatedDois($dois)
+  return [...citationDois, ...relatedDois]
 }
 
 const getRelatedDois = dois => {

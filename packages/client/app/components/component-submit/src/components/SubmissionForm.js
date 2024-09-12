@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { isFunction } from 'formik'
 import { SectionContent } from '../../../shared'
 import FormTemplate from './FormTemplate'
 import { articleStatuses } from '../../../../globals'
@@ -11,7 +10,6 @@ const SubmissionForm = ({
   onSubmit,
   onChange,
   republish,
-  loadROROptions,
   match,
   manuscript,
   createFile,
@@ -34,7 +32,7 @@ const SubmissionForm = ({
     } else submissionButtonText = 'Submit Evaluation'
   }
 
-  return !isFunction(loadROROptions) || !isFunction(validationOrcid) ? null : (
+  return (
     <SectionContent>
       <FormTemplate
         createFile={createFile}
@@ -47,7 +45,6 @@ const SubmissionForm = ({
         form={form}
         initialValues={versionValues}
         isSubmission
-        loadROROptions={loadROROptions}
         manuscriptId={manuscript.id}
         manuscriptShortId={manuscript.shortId}
         manuscriptStatus={manuscript.status}
