@@ -205,7 +205,7 @@ export const validateAuthor = async (
       if (f.name === 'orcid') {
         if (author[f.name]) {
           try {
-            const { data } = (await validationOrcid(author[f.name])) || {}
+            const { data } = await validationOrcid(author[f.name])
             return {
               [f.name]: data?.orcidValidate ? undefined : 'ORCID is invalid',
             }
