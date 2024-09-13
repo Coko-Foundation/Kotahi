@@ -282,17 +282,22 @@ const FieldSettingsModal = ({
                 return (
                   <>
                     <Section key={key}>
-                      <MediumRow>
-                        <Legend space>
-                          {t(
-                            `formBuilder.Field ${key}`,
-                            t('formBuilder.fallbackFieldLabel', { name: key }),
-                          )}
-                        </Legend>
-                        <ErrorMessageWrapper>
-                          <ErrorMessage name={key} />
-                        </ErrorMessageWrapper>
-                      </MediumRow>
+                      {value.showFieldTitle === false ||
+                        (value.showFieldTitle === undefined && (
+                          <MediumRow>
+                            <Legend space>
+                              {t(
+                                `formBuilder.Field ${key}`,
+                                t('formBuilder.fallbackFieldLabel', {
+                                  name: key,
+                                }),
+                              )}
+                            </Legend>
+                            <ErrorMessageWrapper>
+                              <ErrorMessage name={key} />
+                            </ErrorMessageWrapper>
+                          </MediumRow>
+                        ))}
                       <ValidatedField
                         component={elements[value.component]}
                         data-testid={key}

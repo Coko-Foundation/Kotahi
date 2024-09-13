@@ -37,6 +37,7 @@ const typeDefs = `
     fileType: String!
     manuscriptId: ID!
     reviewId: ID
+    formElementId: ID
   }
 
   input UpdateTagsFileInput {

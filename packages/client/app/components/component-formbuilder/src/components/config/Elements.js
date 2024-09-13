@@ -9,6 +9,18 @@ const textfield = {
   component: 'TextField',
 }
 
+const showHideTextfield = (toggleShow, options) => {
+  return {
+    showFieldTitle: false,
+    component: 'TextFieldShowHide',
+    props: {
+      validate: required,
+      toggleShow,
+      ...options,
+    },
+  }
+}
+
 const optionfield = {
   component: 'OptionsField',
   defaultValue: [],
@@ -206,40 +218,38 @@ const permitPublishingField = {
   defaultValue: 'false',
 }
 
-const uploadAttachmentSource = {
-  component: 'RadioBoxS3Service',
-  props: {
-    inline: true,
-    radioOptions: [
-      {
-        value: 'internal',
-        label: 'Internal',
-      },
-      {
-        value: 'external',
-        label: 'External',
-      },
-    ],
-    label: 'Select S3 Service',
-    validate: value => {
-      let error
+const showHideCredentials = formValues => {
+  return formValues.uploadAttachmentSource === 'external'
+}
 
-      if (value.type === 'external' && value.s3Url === '') {
-        error = 'S3 Service Url Field is required'
-      } else if (value.type === 'external' && value.s3Bucket === '') {
-        error = 'S3 Service Bucket Field is required'
-      }
-
-      return error
+const s3InputFields = {
+  uploadAttachmentSource: {
+    component: 'RadioBox',
+    props: {
+      inline: true,
+      options: [
+        {
+          value: 'internal',
+          label: 'Internal',
+        },
+        {
+          value: 'external',
+          label: 'External',
+        },
+      ],
+      label: 'Select S3 Service',
     },
+    defaultValue: 'internal',
   },
-  defaultValue: {
-    type: 'internal',
-    s3Url: '',
-    s3AccessId: '',
-    s3AccessToken: '',
-    s3Bucket: '',
-  },
+  s3Url: showHideTextfield(showHideCredentials),
+  s3Bucket: showHideTextfield(showHideCredentials),
+  s3Region: showHideTextfield(showHideCredentials),
+  s3AccessToken: showHideTextfield(showHideCredentials, {
+    placeholder: '*********',
+  }),
+  s3AccessId: showHideTextfield(showHideCredentials, {
+    placeholder: '*********',
+  }),
 }
 
 const publishingTagField = {
@@ -364,6 +374,11 @@ const propertiesOrder = [
   'parse',
   'format',
   'uploadAttachmentSource',
+  's3Url',
+  's3Bucket',
+  's3Region',
+  's3AccessId',
+  's3AccessToken',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'hideFromAuthors',
@@ -488,8 +503,8 @@ const genericFieldOptions = [
     label: 'S3 Uploader',
     isCustom: true,
     fieldType: 's3Uploader',
-    component: 'SupplementaryFiles',
-    uploadAttachmentSource,
+    component: 'GenericFiles',
+    ...s3InputFields,
   },
 ]
 
@@ -595,7 +610,7 @@ const submissionFieldOptions = [
     component: 'SupplementaryFiles',
     title: requiredTextFieldWithDefault('Attachments'),
     name: presetTextField('fileName'),
-    uploadAttachmentSource,
+    ...s3InputFields,
   },
   {
     fieldType: 'doi',
@@ -712,7 +727,7 @@ const decisionFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
-    uploadAttachmentSource,
+    ...s3InputFields,
   },
   {
     fieldType: 'doiSuffix',
@@ -753,7 +768,7 @@ const reviewFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
-    uploadAttachmentSource,
+    ...s3InputFields,
   },
   {
     fieldType: 'doiSuffix',

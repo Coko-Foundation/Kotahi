@@ -1229,7 +1229,10 @@ const fr = {
     },
     fields: {
       uploadAttachmentSource: {
+        internal: 'Interne',
+        external: 'Externe',
         s3Url: 'URL du service S3',
+        s3Region: 'Région S3',
         s3Bucket: 'Seau de service S3',
         s3AccessId: "ID d'accès S3",
         s3AccessToken: "Jeton d'accès S3",

@@ -33,7 +33,12 @@ const typeDefs = `
     title: String
     shortDescription: String
     id: ID!
-    uploadAttachmentSource: UploadAttachmentSourceInput
+    uploadAttachmentSource: String
+    s3Url: String
+    s3Region: String
+    s3Bucket: String
+    s3AccessId: Password
+    s3AccessToken: Password
     component: String
     name: String
     label: String
@@ -52,14 +57,6 @@ const typeDefs = `
     permitPublishing: String
     publishingTag: String
     readonly: Boolean
-  }
-
-  input UploadAttachmentSourceInput {
-    type: String
-    s3Url: String
-    s3Bucket: String
-    s3AccessId: Password
-    s3AccessToken: Password
   }
 
   input FormElementOptionInput {
@@ -102,7 +99,10 @@ const typeDefs = `
     component: String
     name: String
     description: String
-    uploadAttachmentSource: UploadAttachmentSource
+    uploadAttachmentSource: String
+    s3Url: String
+    s3Region: String
+    s3Bucket: String
     doiValidation: String
     doiUniqueSuffixValidation: String
     placeholder: String
@@ -117,12 +117,6 @@ const typeDefs = `
     permitPublishing: String
     publishingTag: String
     readonly: Boolean
-  }
-
-  type UploadAttachmentSource {
-    type: String
-    s3Url: String
-    s3Bucket: String
   }
 
   type FormElementOption {

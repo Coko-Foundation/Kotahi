@@ -503,6 +503,24 @@ const FormTemplate = ({
                           <ErrorMessage name={element.name} />
                         </MessageWrapper>
                       </FieldHead>
+                      {element.component === 'GenericFiles' && (
+                        <FilesUpload
+                          createFile={createFile}
+                          deleteFile={deleteFile}
+                          fieldName={
+                            shouldStoreFilesInForm ? element.name : 'files'
+                          } // TODO Store files in form for submissions too: should simplify code both frontend and back.
+                          fileType={element.name}
+                          formElementId={element.id}
+                          initializeReview={initializeReview}
+                          manuscriptId={manuscriptId}
+                          onChange={
+                            shouldStoreFilesInForm ? innerOnChange : null
+                          }
+                          reviewId={reviewId}
+                          values={values}
+                        />
+                      )}
                       {element.component === 'SupplementaryFiles' && (
                         <FilesUpload
                           createFile={createFile}
@@ -511,6 +529,7 @@ const FormTemplate = ({
                             shouldStoreFilesInForm ? element.name : 'files'
                           } // TODO Store files in form for submissions too: should simplify code both frontend and back.
                           fileType={tagForFiles || 'supplementary'}
+                          formElementId={element.id}
                           initializeReview={initializeReview}
                           manuscriptId={manuscriptId}
                           onChange={
@@ -529,6 +548,7 @@ const FormTemplate = ({
                             shouldStoreFilesInForm ? element.name : 'files'
                           }
                           fileType={tagForFiles || 'visualAbstract'}
+                          formElementId={element.id}
                           initializeReview={initializeReview}
                           manuscriptId={manuscriptId}
                           mimeTypesToAccept="image/*"
@@ -548,6 +568,7 @@ const FormTemplate = ({
                         />
                       ) : null}
                       {![
+                        'GenericFiles',
                         'SupplementaryFiles',
                         'VisualAbstract',
                         'ManuscriptFile',

@@ -1211,7 +1211,10 @@ const ru = {
     },
     fields: {
       uploadAttachmentSource: {
+        internal: 'Внутренний',
+        external: 'Внешний',
         s3Url: 'URL службы S3',
+        s3Region: 'Регион S3',
         s3Bucket: 'Корзина службы S3',
         s3AccessId: 'Идентификатор доступа S3',
         s3AccessToken: 'Токен доступа S3',

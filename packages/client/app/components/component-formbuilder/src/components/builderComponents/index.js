@@ -1,9 +1,9 @@
 import OptionsField from './OptionsField'
 import TextField from './TextField'
+import TextFieldShowHide from './TextFieldShowHide'
 import AbstractField from './AbstractField'
 import CheckBox from './CheckBox'
 import RadioBox from './RadioBox'
-import RadioBoxS3Service from './RadioBoxS3Service'
 import TextArea from './TextArea'
 import FullWaxField from './FullWaxField'
 import ThreadedDiscussion from './ThreadedDiscussion/ThreadedDiscussion'
@@ -15,10 +15,10 @@ export {
   FullWaxField,
   OptionsField,
   TextField,
+  TextFieldShowHide,
   AbstractField,
   CheckBox,
   RadioBox,
-  RadioBoxS3Service,
   TextArea,
   ThreadedDiscussion,
   Select,

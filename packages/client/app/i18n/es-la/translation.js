@@ -1219,7 +1219,10 @@ const esLa = {
     },
     fields: {
       uploadAttachmentSource: {
+        internal: 'Interno',
+        external: 'Externo',
         s3Url: 'URL del servicio S3',
+        s3Region: 'Región S3',
         s3Bucket: 'Cubo del servicio S3',
         s3AccessId: 'ID de acceso S3',
         s3AccessToken: 'Token de acceso S3',

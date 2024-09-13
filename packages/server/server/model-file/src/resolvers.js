@@ -4,8 +4,6 @@
 // const path = require('path')
 // const config = require('config')
 // const sharp = require('sharp')
-const map = require('lodash/map')
-
 const {
   subscriptionManager,
   fileStorage,
@@ -14,8 +12,9 @@ const {
   File,
 } = require('@coko/server')
 
-const { uniq } = require('lodash')
-
+const { map, uniq, flatten } = require('lodash')
+const { decrypt } = require('../../utils/encryptDecryptUtils')
+const Form = require('../../../models/form/form.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
@@ -164,6 +163,26 @@ const resolvers = {
       const { createReadStream, filename } = await file
       const fileStream = createReadStream()
 
+      const options = {}
+
+      if (meta.formElementId) {
+        const form = await Form.query()
+
+        const formsElements = flatten(form.map(f => f.structure.children))
+
+        const element = formsElements.find(el => el.id === meta.formElementId)
+
+        if (element.uploadAttachmentSource === 'external') {
+          options.s3 = {
+            accessKeyId: decrypt(element.s3AccessId),
+            secretAccessKey: decrypt(element.s3AccessToken),
+            bucket: element.s3Bucket,
+            region: element.s3Region,
+            url: element.s3Url,
+          }
+        }
+      }
+
       const createdFile = await createFile(
         fileStream,
         filename,
@@ -171,6 +190,7 @@ const resolvers = {
         null,
         [meta.fileType],
         meta.reviewId || meta.manuscriptId,
+        options,
       )
 
       const data = await getFileWithUrl(createdFile)
