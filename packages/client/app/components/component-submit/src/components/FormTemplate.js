@@ -20,6 +20,7 @@ import {
   CheckboxGroup,
   RichTextEditor,
   RadioGroup,
+  DatePicker,
 } from '../../../shared'
 import {
   FullWaxField,
@@ -146,6 +147,7 @@ const elements = {
   Select,
   LinksInput,
   ThreadedDiscussion,
+  DatePicker,
 }
 
 const collaborativeElements = {

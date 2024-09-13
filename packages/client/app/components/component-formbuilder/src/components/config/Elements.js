@@ -360,6 +360,44 @@ const doiValidationField = {
   defaultValue: 'false',
 }
 
+const allowFutureDatesOnlyField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Allow to select future dates only?',
+  },
+  defaultValue: 'false',
+}
+
+const embargoField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Embargo?',
+  },
+  defaultValue: 'false',
+}
+
 /** Most fields have at least these properties.
  * Components and fields can override these */
 const prototypeComponent = category => ({
@@ -405,6 +443,8 @@ const propertiesOrder = [
   'isReadOnly',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
+  'allowFutureDatesOnly',
+  'embargo',
   'hideFromAuthors',
   'hideFromReviewers',
   'permitPublishing',
@@ -477,6 +517,11 @@ const getBaseComponentProperties = category => ({
     inline: radiofield,
     sectioncss: textarea,
   },
+  DatePicker: {
+    label: 'Date Picker',
+    allowFutureDatesOnly: allowFutureDatesOnlyField,
+    embargo: embargoField,
+  },
 })
 
 /** Field types for free representation of arbitrary data, available in all forms.
@@ -529,6 +574,12 @@ const genericFieldOptions = [
     fieldType: 's3Uploader',
     component: 'GenericFiles',
     ...s3InputFields,
+  },
+  {
+    label: 'Date picker',
+    isCustom: true,
+    fieldType: 'datePicker',
+    component: 'DatePicker',
   },
 ]
 

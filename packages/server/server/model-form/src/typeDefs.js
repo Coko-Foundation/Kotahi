@@ -45,6 +45,8 @@ const typeDefs = `
     description: String
     doiValidation: String
     doiUniqueSuffixValidation: String
+    allowFutureDatesOnly: String
+    embargo: String
     placeholder: String
     parse: String
     format: String
@@ -114,6 +116,8 @@ const typeDefs = `
     s3Bucket: String
     doiValidation: String
     doiUniqueSuffixValidation: String
+    allowFutureDatesOnly: String
+    embargo: String
     placeholder: String
     parse: String
     format: String
