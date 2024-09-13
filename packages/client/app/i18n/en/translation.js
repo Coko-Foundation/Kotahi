@@ -1328,7 +1328,8 @@ const en = {
       'Field doiValidation': 'Validate as a DOI?',
       'Field doiUniqueSuffixValidation':
         'Validate as a DOI suffix and ensure it is unique?',
-      'Field allowFutureDatesOnly': 'Select future date only?',
+      'Field allowFutureDatesOnly': 'Allow to select future dates only?',
+      'Field embargo': 'Embargo?',
       'Update Field': 'Update Field',
       'Correct invalid values before updating':
         'Correct invalid values before updating',

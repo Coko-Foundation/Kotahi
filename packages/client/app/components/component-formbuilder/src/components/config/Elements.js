@@ -414,7 +414,7 @@ const allowFutureDatesOnlyField = {
         label: 'No',
       },
     ],
-    label: 'Select future date only?',
+    label: 'Allow to select future dates only?',
   },
   defaultValue: 'false',
 }
@@ -426,6 +426,25 @@ const aiPromptField = {
     description:
       'The prompt should be clear and specific so the AI understands what you want it to do.',
   },
+}
+
+const embargoField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Embargo?',
+  },
+  defaultValue: 'false',
 }
 
 /** Most fields have at least these properties.
@@ -475,6 +494,7 @@ const propertiesOrder = [
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',
+  'embargo',
   'hideFromAuthors',
   'hideFromReviewers',
   'permitPublishing',
@@ -567,6 +587,7 @@ const getBaseComponentProperties = category => ({
   DatePicker: {
     label: 'Date Picker',
     allowFutureDatesOnly: allowFutureDatesOnlyField,
+    embargo: embargoField,
   },
 })
 
@@ -632,6 +653,12 @@ const genericFieldOptions = [
     fieldType: 's3Uploader',
     component: 'GenericFiles',
     ...s3InputFields,
+  },
+  {
+    label: 'Date picker',
+    isCustom: true,
+    fieldType: 'datePicker',
+    component: 'DatePicker',
   },
 ]
 
