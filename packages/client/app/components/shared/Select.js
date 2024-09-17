@@ -120,6 +120,8 @@ export const Select = props => {
       } else {
         setSelectedOption(options.find(option => option.value === value))
       }
+    } else if (isMulti && value) {
+      setSelectedOption(options.find(option => option.value === value))
     }
   }, [value, isMulti, hasGroupedOptions, options])
 
