@@ -569,7 +569,7 @@ const fr = {
       DOAJ: 'DOAJ',
       doajLogin: 'Nom d’utilisateur DOAJ',
       doajPassword: 'Mot de passe DOAJ',
-      doajRegistrant: 'ID du déposant DOAJ',
+      doajRegistrant: 'DOAJ API key',
       doajDepositorName: 'Nom du déposant DOAJ',
       doajDepositorEmail: 'Adresse e-mail du déposant DOAJ',
       Webhook: 'Webhook',

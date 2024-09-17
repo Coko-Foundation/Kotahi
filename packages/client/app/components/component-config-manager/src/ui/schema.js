@@ -799,68 +799,28 @@ export const generateSchemas = (
                 },
               },
             },
-            // doaj: {
-            //   type: 'object',
-            //   title: t('configPage.DOAJ'),
-            //   properties: {
-            //     journalHomepage: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.journalHomepage'),
-            //     },
-            //     login: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajLogin'),
-            //     },
-            //     password: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajPassword'),
-            //     },
-            //     registrant: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajRegistrant'),
-            //     },
-            //     depositorName: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorName'),
-            //     },
-            //     depositorEmail: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorEmail'),
-            //       // format: 'email',
-            //     },
-            //     publicationType: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.publicationType'),
-            //       // enum: ['article', 'peer review'],
-            //       default: 'peer review',
-            //       oneOf: [
-            //         {
-            //           const: 'article',
-            //           title: t('configPage.article'),
-            //         },
-            //         {
-            //           const: 'peer review',
-            //           title: t('configPage.peer review'),
-            //         },
-            //       ],
-            //     },
-            //     doiPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDoiPrefix'),
-            //     },
-            //     publishedArticleLocationPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t(
-            //         'configPage.doajPublishedArticleLocationPrefix',
-            //       ),
-            //     },
-            //     useSandbox: {
-            //       type: 'boolean',
-            //       title: t('configPage.doajUseSandbox'),
-            //       default: false,
-            //     },
-            //   },
-            // },
+            doaj: {
+              type: 'object',
+              title: t('configPage.DOAJ'),
+              properties: {
+                journalHomepage: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalHomepage'),
+                },
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajPassword'),
+                },
+                registrant: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajRegistrant'),
+                },
+              },
+            },
             webhook: {
               type: 'object',
               title: t('configPage.Webhook'),
@@ -1766,68 +1726,28 @@ export const generateSchemas = (
                 },
               },
             },
-            // doaj: {
-            //   type: 'object',
-            //   title: t('configPage.DOAJ'),
-            //   properties: {
-            //     journalHomepage: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.journalHomepage'),
-            //     },
-            //     login: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajLogin'),
-            //     },
-            //     password: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajPassword'),
-            //     },
-            //     registrant: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajRegistrant'),
-            //     },
-            //     depositorName: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorName'),
-            //     },
-            //     depositorEmail: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorEmail'),
-            //       // format: 'email',
-            //     },
-            //     publicationType: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.publicationType'),
-            //       // enum: ['article', 'peer review'],
-            //       default: 'peer review',
-            //       oneOf: [
-            //         {
-            //           const: 'article',
-            //           title: t('configPage.article'),
-            //         },
-            //         {
-            //           const: 'peer review',
-            //           title: t('configPage.peer review'),
-            //         },
-            //       ],
-            //     },
-            //     doiPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDoiPrefix'),
-            //     },
-            //     publishedArticleLocationPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t(
-            //         'configPage.doajPublishedArticleLocationPrefix',
-            //       ),
-            //     },
-            //     useSandbox: {
-            //       type: 'boolean',
-            //       title: t('configPage.doajUseSandbox'),
-            //       default: false,
-            //     },
-            //   },
-            // },
+            doaj: {
+              type: 'object',
+              title: t('configPage.DOAJ'),
+              properties: {
+                journalHomepage: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalHomepage'),
+                },
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajPassword'),
+                },
+                registrant: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajRegistrant'),
+                },
+              },
+            },
             webhook: {
               type: 'object',
               title: t('configPage.Webhook'),
@@ -2740,68 +2660,28 @@ export const generateSchemas = (
                 },
               },
             },
-            // doaj: {
-            //   type: 'object',
-            //   title: t('configPage.DOAJ'),
-            //   properties: {
-            //     journalHomepage: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.journalHomepage'),
-            //     },
-            //     login: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajLogin'),
-            //     },
-            //     password: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajPassword'),
-            //     },
-            //     registrant: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajRegistrant'),
-            //     },
-            //     depositorName: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorName'),
-            //     },
-            //     depositorEmail: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorEmail'),
-            //       // format: 'email',
-            //     },
-            //     publicationType: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.publicationType'),
-            //       // enum: ['article', 'peer review'],
-            //       default: 'peer review',
-            //       oneOf: [
-            //         {
-            //           const: 'article',
-            //           title: t('configPage.article'),
-            //         },
-            //         {
-            //           const: 'peer review',
-            //           title: t('configPage.peer review'),
-            //         },
-            //       ],
-            //     },
-            //     doiPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDoiPrefix'),
-            //     },
-            //     publishedArticleLocationPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t(
-            //         'configPage.doajPublishedArticleLocationPrefix',
-            //       ),
-            //     },
-            //     useSandbox: {
-            //       type: 'boolean',
-            //       title: t('configPage.doajUseSandbox'),
-            //       default: false,
-            //     },
-            //   },
-            // },
+            doaj: {
+              type: 'object',
+              title: t('configPage.DOAJ'),
+              properties: {
+                journalHomepage: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalHomepage'),
+                },
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajPassword'),
+                },
+                registrant: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajRegistrant'),
+                },
+              },
+            },
             webhook: {
               type: 'object',
               title: t('configPage.Webhook'),
@@ -3715,68 +3595,28 @@ export const generateSchemas = (
                 },
               },
             },
-            // doaj: {
-            //   type: 'object',
-            //   title: t('configPage.DOAJ'),
-            //   properties: {
-            //     journalHomepage: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.journalHomepage'),
-            //     },
-            //     login: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajLogin'),
-            //     },
-            //     password: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajPassword'),
-            //     },
-            //     registrant: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajRegistrant'),
-            //     },
-            //     depositorName: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorName'),
-            //     },
-            //     depositorEmail: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDepositorEmail'),
-            //       // format: 'email',
-            //     },
-            //     publicationType: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.publicationType'),
-            //       // enum: ['article', 'peer review'],
-            //       default: 'peer review',
-            //       oneOf: [
-            //         {
-            //           const: 'article',
-            //           title: t('configPage.article'),
-            //         },
-            //         {
-            //           const: 'peer review',
-            //           title: t('configPage.peer review'),
-            //         },
-            //       ],
-            //     },
-            //     doiPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t('configPage.doajDoiPrefix'),
-            //     },
-            //     publishedArticleLocationPrefix: {
-            //       type: ['string', 'null'],
-            //       description: t(
-            //         'configPage.doajPublishedArticleLocationPrefix',
-            //       ),
-            //     },
-            //     useSandbox: {
-            //       type: 'boolean',
-            //       title: t('configPage.doajUseSandbox'),
-            //       default: false,
-            //     },
-            //   },
-            // },
+            doaj: {
+              type: 'object',
+              title: t('configPage.DOAJ'),
+              properties: {
+                journalHomepage: {
+                  type: ['string', 'null'],
+                  description: t('configPage.journalHomepage'),
+                },
+                login: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajLogin'),
+                },
+                password: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajPassword'),
+                },
+                registrant: {
+                  type: ['string', 'null'],
+                  description: t('configPage.doajRegistrant'),
+                },
+              },
+            },
             webhook: {
               type: 'object',
               title: t('configPage.Webhook'),
@@ -4069,12 +3909,12 @@ export const generateSchemas = (
             'ui:widget': 'password',
           },
         },
-        // doaj: {
-        //   classNames: 'col-md-12 col-md-offset-0',
-        //   password: {
-        //     'ui:widget': 'password',
-        //   },
-        // },
+        doaj: {
+          classNames: 'col-md-12 col-md-offset-0',
+          password: {
+            'ui:widget': 'password',
+          },
+        },
         webhook: {
           classNames: 'col-md-12 col-md-offset-0',
         },

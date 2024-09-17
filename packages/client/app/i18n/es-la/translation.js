@@ -561,7 +561,7 @@ const esLa = {
       DOAJ: 'DOAJ',
       doajLogin: 'Nombre de Usuario de DOAJ',
       doajPassword: 'Contraseña de DOAJ',
-      doajRegistrant: 'ID de Registrante de DOAJ',
+      doajRegistrant: 'DOAJ API key',
       doajDepositorName: 'Nombre del Depositante de DOAJ',
       doajDepositorEmail:
         'Dirección de Correo Electrónico del Depositante de DOAJ',

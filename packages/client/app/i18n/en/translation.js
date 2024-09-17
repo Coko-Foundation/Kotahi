@@ -554,7 +554,7 @@ const en = {
       DOAJ: 'DOAJ',
       doajLogin: 'DOAJ username',
       doajPassword: 'DOAJ password',
-      doajRegistrant: 'DOAJ registrant id',
+      doajRegistrant: 'DOAJ API key',
       doajDepositorName: 'DOAJ depositor name',
       doajDepositorEmail: 'DOAJ depositor email address',
       Webhook: 'Webhook',
