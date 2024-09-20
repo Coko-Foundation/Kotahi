@@ -428,25 +428,6 @@ const aiPromptField = {
   },
 }
 
-const embargoField = {
-  component: 'RadioBox',
-  props: {
-    inline: true,
-    options: [
-      {
-        value: 'true',
-        label: 'Yes',
-      },
-      {
-        value: 'false',
-        label: 'No',
-      },
-    ],
-    label: 'Embargo?',
-  },
-  defaultValue: 'false',
-}
-
 /** Most fields have at least these properties.
  * Components and fields can override these */
 const prototypeComponent = category => ({
@@ -494,7 +475,6 @@ const propertiesOrder = [
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',
-  'embargo',
   'hideFromAuthors',
   'hideFromReviewers',
   'permitPublishing',
@@ -587,7 +567,6 @@ const getBaseComponentProperties = category => ({
   DatePicker: {
     label: 'Date Picker',
     allowFutureDatesOnly: allowFutureDatesOnlyField,
-    embargo: embargoField,
   },
 })
 

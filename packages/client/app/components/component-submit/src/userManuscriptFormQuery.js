@@ -38,7 +38,6 @@ const formFields = `
       doiValidation
       doiUniqueSuffixValidation
       allowFutureDatesOnly
-      embargo
       placeholder
       parse
       format
