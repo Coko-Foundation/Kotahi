@@ -374,26 +374,7 @@ const allowFutureDatesOnlyField = {
         label: 'No',
       },
     ],
-    label: 'Allow to select future dates only?',
-  },
-  defaultValue: 'false',
-}
-
-const embargoField = {
-  component: 'RadioBox',
-  props: {
-    inline: true,
-    options: [
-      {
-        value: 'true',
-        label: 'Yes',
-      },
-      {
-        value: 'false',
-        label: 'No',
-      },
-    ],
-    label: 'Embargo?',
+    label: 'Select future date only?',
   },
   defaultValue: 'false',
 }
@@ -444,7 +425,6 @@ const propertiesOrder = [
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',
-  'embargo',
   'hideFromAuthors',
   'hideFromReviewers',
   'permitPublishing',
@@ -520,7 +500,6 @@ const getBaseComponentProperties = category => ({
   DatePicker: {
     label: 'Date Picker',
     allowFutureDatesOnly: allowFutureDatesOnlyField,
-    embargo: embargoField,
   },
 })
 
@@ -775,6 +754,19 @@ const submissionFieldOptions = [
     title: requiredTextFieldWithDefault('Attached manuscript'),
     name: presetTextField('manuscriptFile'),
     validate: null,
+  },
+  {
+    fieldType: 'embargoDate',
+    label: 'Embargo date',
+    component: 'DatePicker',
+    title: requiredTextFieldWithDefault('Embargo date'),
+    name: presetTextField('submission.$embargoDate'),
+    placeholder: null,
+    doiValidation: null,
+    doiUniqueSuffixValidation: null,
+    parse: null,
+    format: null,
+    validate: validateOther,
   },
   ...genericFieldOptions,
 ]
