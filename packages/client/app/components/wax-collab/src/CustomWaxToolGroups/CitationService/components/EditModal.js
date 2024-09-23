@@ -21,8 +21,7 @@ const EditModal = ({
 }) => {
   // console.log('Coming in: ', citationData, formattedCitation)
   const config = useContext(ConfigContext)
-  /* eslint-disable-next-line no-unsafe-optional-chaining */
-  const { styleName } = config?.production
+  const styleName = config?.production?.citationStyles?.styleName || 'apa'
   const { t } = useTranslation()
   const [currentText, setCurrentText] = useState(formattedCitation)
   const [reRender, setReRender] = useState(-1)
@@ -44,10 +43,15 @@ const EditModal = ({
     // If the citation has not changed, don't send it through Citeproc
     // Previously if you clicked "Edit" on a plaintext citation, this would turn into an empty citation
     // which is not correct. This should only happen if the content of the CSL has changed.
-    newCitation.formattedCitation =
-      JSON.stringify(newCitation) === JSON.stringify(initialCitation)
-        ? formattedCitation
-        : await sendToCiteProc(currentCitation)
+    if (JSON.stringify(newCitation) === JSON.stringify(initialCitation)) {
+      newCitation.formattedCitation = formattedCitation
+    } else {
+      const { formattedCitation: updatedCitation, citeHtml } =
+        await sendToCiteProc(currentCitation)
+
+      newCitation.formattedCitation = updatedCitation
+      newCitation.citeHtml = citeHtml
+    }
 
     setCurrentText(currentCitation.formattedCitation)
     setCurrentCitation(newCitation)
@@ -75,6 +79,7 @@ const EditModal = ({
       type: '', // do we need this?
       volume: '',
       'container-title': '',
+      citeHtml: '',
       ...(citationData === '{}' ? {} : citationData),
     }
 
@@ -110,6 +115,19 @@ const EditModal = ({
           <strong>Edited</strong>
         </p>
       </CitationVersionWrapper>
+      {citationData.citeHtml && (
+        <CitationVersionWrapper>
+          <div
+            // eslint-disable-next-line
+            dangerouslySetInnerHTML={{
+              __html: sanitize(`<p class="cite">${citationData.citeHtml}</p>`),
+            }}
+          />
+          <p>
+            <strong>Cite</strong>
+          </p>
+        </CitationVersionWrapper>
+      )}
       <form key={`form-${reRender}`}>
         {currentCitation.author && currentCitation.author.length
           ? currentCitation.author.map((author, index) => (

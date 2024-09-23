@@ -236,6 +236,8 @@ const parseCitationsCSL = async (references, startNumber = 0, groupId) => {
             const formattedCitation = await formatCitation(citation, groupId)
             // eslint-disable-next-line
             citation.formattedCitation = formattedCitation.result
+            // eslint-disable-next-line
+            citation.citeHtml = formattedCitation.citeHtml
             return citation
           }),
         )

@@ -6,6 +6,7 @@ const validateJats = require('./validation')
 const makeZippedJats = require('./makeZippedJats')
 
 const Manuscript = require('../../models/manuscript/manuscript.model')
+const Config = require('../../models/config/config.model')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 const skipValidation = false
@@ -34,12 +35,14 @@ const getManuscriptById = async id => {
 
 const jatsHandler = async manuscriptId => {
   const manuscript = await getManuscriptById(manuscriptId)
+  const activeConfig = await Config.getCached(manuscript.groupId)
   const html = manuscript.meta.source
 
   const { jats } = makeJats(
     html,
     articleMetadata(manuscript),
     publicationMetadata,
+    activeConfig,
   )
 
   // check if the output is valid XML – this is NOT checking whether this is valid JATS

@@ -7,6 +7,7 @@ const listItemNode = {
     track: { default: [] },
     group: { default: '' },
     viewid: { default: '' },
+    listnumber: { default: '' },
   },
   parseDOM: [
     {
@@ -17,6 +18,7 @@ const listItemNode = {
           id: hook.dom.dataset.id,
           group: hook.dom.dataset.group,
           viewid: hook.dom.dataset.viewid,
+          listnumber: hook.dom.dataset.listnumber,
         })
         next()
       },
@@ -31,6 +33,8 @@ const listItemNode = {
       attrs['data-group'] = hook.node.attrs.group
       attrs['data-viewid'] = hook.node.attrs.viewid
     }
+
+    attrs['data-listnumber'] = hook.node.attrs.listnumber
 
     // eslint-disable-next-line no-param-reassign
     hook.value = ['li', attrs, 0]

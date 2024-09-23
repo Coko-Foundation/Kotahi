@@ -74,6 +74,7 @@ const formatCitation = async (cslObject, groupId) => {
   let error = ''
   const referenceCSL = {}
   let result = ''
+  let citeText = ''
 
   try {
     // console.log('stringifiedCSL: ', stringifiedCSL)
@@ -83,6 +84,35 @@ const formatCitation = async (cslObject, groupId) => {
     sys.items = referenceCSL
 
     engine.updateItems(Object.keys(referenceCSL))
+
+    const processSingleCitation = citation => {
+      // Format the citation input correctly
+      const citationItem = {
+        citationID: `citation-${uuid()}`,
+        citationItems: [citation],
+        properties: {
+          noteIndex: 0,
+        },
+      }
+
+      // Process the citation cluster
+      // eslint-disable-next-line no-unused-vars
+      const [res, [[_, citeHtml, id]]] = engine.processCitationCluster(
+        citationItem,
+        [], // No previous citations need for single citation
+        [],
+        'html',
+      )
+
+      return { citeHtml, id }
+    }
+
+    const citeData = processSingleCitation(csl)
+
+    citeText = citeData.citeHtml
+
+    // console.log('Citation ID:', citeData.id)
+
     const bib = engine.makeBibliography()
     // bib is the bibliography array. The first item is a metadata object; the second is an array of HTML strings.
 
@@ -137,18 +167,9 @@ If we can't format it, we're not showing it as a choice on the front end. It wou
     error = e.message
   }
 
-  // console.log('Comming out of formatting.js:', result, error)
-  return { result, error }
+  // console.log('Comming out of formatting.js:', result, citeHtml, error)
+  return { result, citeHtml: citeText, error }
 }
-
-// TODO: We probably want to have a version of this that handles multiple citations – the usecase would be that you have a
-// Reference List with citations in it, and you want to alphabetize them according to the formatting rules in the CSL style
-// library. Maybe we could do this using the UUID attached to each citation; we could pass back an array of objects, and something
-// in the ReferenceList Wax code could use the UUID to match the formatted citation to what it should be inserted into.
-//
-// Note that this usecase requires us to have CSL versions of all the citations in the Reference List; we might not have that
-// because some of the citations might be just strings of text that haven't gone through Crossref or Anystyle. If we fed those in,
-// they'd come out in the wrong place because Citeproc won't know how to deal with them.
 
 const createFormattedReference = async (data, groupId, isDatacite = false) => {
   const {
@@ -189,10 +210,157 @@ const createFormattedReference = async (data, groupId, isDatacite = false) => {
   )
 
   outputData.formattedCitation = formattedCitation.result
+  outputData.citeHtml = formattedCitation.citeHtml
   return outputData
+}
+
+// Note: We probably want to have a version of this that handles multiple citations – the usecase would be that you have a
+// Reference List with citations in it, and you want to alphabetize them according to the formatting rules in the CSL style
+// library. Maybe we could do this using the UUID attached to each citation; we could pass back an array of objects, and something
+// in the ReferenceList Wax code could use the UUID to match the formatted citation to what it should be inserted into.
+//
+// Note that this usecase requires us to have CSL versions of all the citations in the Reference List; we might not have that
+// because some of the citations might be just strings of text that haven't gone through Crossref or Anystyle. If we fed those in,
+// they'd come out in the wrong place because Citeproc won't know how to deal with them.
+
+// The below code hanldes the multiple citations and above note usecase.
+// It takes valid Reference list and valid callouts data as inputs and it outputs calloutTexts, orderedCitations list
+const formatMultipleCitations = async (
+  groupId,
+  referenceData = {},
+  calloutData = [],
+) => {
+  const citations = {}
+  const itemIDs = []
+
+  referenceData.items.forEach(item => {
+    if (item.issued) {
+      citations[item.id] = item
+      itemIDs.push(item.id)
+    }
+  })
+
+  const activeConfig = await Config.query().findOne({ groupId, active: true })
+
+  const localeName =
+    activeConfig.formData.production?.citationStyles?.localeName || 'en-US'
+
+  const styleName =
+    activeConfig.formData.production?.citationStyles?.styleName || 'apa'
+
+  // const styleName = getStyleNameFromTitle(styleTitle)
+
+  // console.log('Citeproc settings: ', localeName, styleName)
+
+  // localeName can be either 'en-US' or 'en-GB'
+
+  const localeData = fs.readFileSync(
+    path.join(__dirname, `/csl-locales/locales-${localeName}.xml`),
+    'utf8',
+  )
+
+  sys.addLocale(localeName, localeData)
+
+  // styleName can be any of the files in the csl directory. We might change this in the future to work with an uploaded file
+
+  const styleString = fs.readFileSync(
+    path.join(__dirname, `/csl/${styleName}.csl`),
+    'utf8',
+  )
+
+  const engine = sys.newEngine(styleString, localeName, null)
+
+  let error = ''
+  let result = []
+  const calloutTexts = []
+  // eslint-disable-next-line no-unused-vars
+  let preCitations = []
+  // eslint-disable-next-line no-unused-vars
+  let orderedReferenceIds = []
+
+  try {
+    sys.items = citations
+
+    engine.updateItems(itemIDs)
+
+    engine.setOutputFormat('text') // Available citeproc output format 'html', 'text', 'rtf'
+
+    // eslint-disable-next-line no-unused-vars
+    const { citeData, preCitationIds } = calloutData.reduce(
+      (accumulator, citation) => {
+        // console.log('citation', citation)
+        // console.log('accumulator', accumulator)
+        // console.log('preCitationIds', accumulator.preCitationIds)
+        // eslint-disable-next-line no-unused-vars
+        const [res, [[_, citeHtml, id]]] = engine.processCitationCluster(
+          citation,
+          accumulator.preCitationIds,
+          [],
+        )
+
+        accumulator.citeData.push(citeHtml)
+        calloutTexts.push({ id: citation.citationID, text: citeHtml })
+        accumulator.preCitationIds.push([citation.citationID, 0])
+        return accumulator
+      },
+      { citeData: [], preCitationIds: [] },
+    )
+
+    // eslint-disable-next-line no-unused-vars
+    preCitations = preCitationIds
+
+    // console.log(preCitationIds)
+
+    const bib = engine.makeBibliography()
+    // eslint-disable-next-line no-unused-vars
+    orderedReferenceIds = bib[0].entry_ids.flat()
+    // console.log(bib)
+    // console.log(bib[0]['entry_ids']) // order of citations by ids
+    // bib is the bibliography array. The first item is a metadata object; the second is an array of HTML strings.
+
+    if (bib.length > 1) {
+      // We are dealing with the array of HTML strings, the second item in the array.
+      const results = bib[1]
+      // Even if there's a single result, it's in an array.
+      // This is CSL-flavored HTML, need to make it JATS-flavored HTML.
+      // Not 100% sure that all of the HTML coming out of this will work for us, keep an eye out.
+
+      // Worth noting that sometimes there are spaces between tags, sometimes not. We're going to remove them all.
+      // eslint-disable-next-line prefer-destructuring
+      // html output
+      // result = results.map(r =>
+      //   r
+      //     .replace(/<div class="csl-entry">\s*/g, '<p class="ref">')
+      //     .replace(/\s*<\/div>/g, '</p>')
+      //     .replace(/<i>/g, '<em>')
+      //     .replace(/<\/i>/g, '</em>')
+      //     .replace(/<b>/g, '<strong>')
+      //     .replace(/<\/b>/g, '</strong>')
+      //     .trim(),
+      // )
+
+      // text output
+      result = results.map(r => `<p class="ref">${r.trim()}</p>`)
+    }
+  } catch (e) {
+    console.error('\n\n\nCiteproc error', e)
+    error = e.message
+  }
+
+  // console.log(
+  //   'Comming out of formatting.js:',
+  //   result, // reoredered citation array of html - p.ref
+  //   calloutTexts, // callout text array of {id, text}
+  //   preCitations,
+  //   orderedReferenceIds, // citeproc order of biblographic citation ids
+  //   error,
+  // )
+
+  return { result, calloutTexts, orderedReferenceIds, error }
 }
 
 module.exports = {
   formatCitation,
   createFormattedReference,
+  formatMultipleCitations,
 }

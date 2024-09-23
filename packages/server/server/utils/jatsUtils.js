@@ -391,12 +391,14 @@ const fixMath = html => {
   return output
 }
 
-const makeJats = (html, articleMeta, journalMeta) => {
+const makeJats = (html, articleMeta, journalMeta, activeConfig) => {
   // html is what's coming out of Wax
   // articleMeta is what's needed for front matter (see makeArticleMeta for description)
   // journalMeta is the journal metadata object (see makeJournalMeta for description)
 
   // 0. strip xsweet attributes out of html
+
+  const styleName = activeConfig.formData.production?.citationStyles?.styleName
 
   const deAttributedHtml = html
     .replace(/ data-xsweet-[^=]+="[^"]+"/g, '')
@@ -423,7 +425,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deglossariedHtml, glossary } = processGlossary(deKeywordedHtml)
 
-  const { processedHtml, refList } = makeCitations(deglossariedHtml)
+  const { processedHtml, refList } = makeCitations(deglossariedHtml, styleName)
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
