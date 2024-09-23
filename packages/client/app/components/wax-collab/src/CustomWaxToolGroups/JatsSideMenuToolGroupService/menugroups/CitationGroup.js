@@ -11,6 +11,7 @@ class CitationGroup extends ToolGroup {
   constructor(
     @inject('RefList') refList,
     @inject('Reference') reference,
+    @inject('Callout') callout,
     // @inject('ArticleTitle') articleTitle,
     // @inject('MixedCitationSpan') mixedCitationSpan,
     // @inject('AuthorGroup') authorGroup, // this isn't being shown currently
@@ -29,6 +30,7 @@ class CitationGroup extends ToolGroup {
     this.tools = [
       refList,
       reference,
+      callout,
       // mixedCitationSpan,
       // citationLabel,
       // authorGroup,

@@ -12,7 +12,6 @@ const htmlToJats = require('./htmlToJats')
 - if there is a footnote with a citation in it: 
   - change <span class="mixed-citation"> to citation, add that to the reflist
 	- if there is anything else in the footnote, leave it, replace the deleted <span> with an <xref>
-
 */
 
 const replaceAll = (str, find, replace) => {
@@ -110,6 +109,7 @@ const cleanCitation = (html, id) => {
   })
 
   // console.log('returning!', $.html())
+
   return {
     xref: `<xref ref-type="bibr" rid='ref-${id}'>${id}</xref>`,
     ref: `<ref id='ref-${id}'>${
@@ -163,8 +163,11 @@ const findCslCitations = (html, refCount, refList) => {
     // console.log('index: ', index)
     const { attribs } = $(citation)[0]
     const structure = attribs['data-structure']
+    const referenceId = attribs.id || `${index + refCount}` // have a fallback in case there's no ID
     let parsedStructure = {}
-    let thisJatsReference = `<ref id='ref-${index + refCount}'>`
+
+    // this ID needs to be "ref-<id>" if the reference has a unique ID
+    let thisJatsReference = `<ref id="ref-${referenceId}">`
 
     try {
       parsedStructure = JSON.parse(structure)
@@ -253,7 +256,68 @@ const findCslCitations = (html, refCount, refList) => {
   }
 }
 
-const makeCitations = html => {
+const findCalloutSpans = (html, styleName) => {
+  //  - find all <span class="callout" id="id" data-citationitems="["id":"rid"]>content</span>
+  //  - replace with <xref ref-type="bibr" rid="rid">content</xref>
+
+  //  Questions:
+
+  //   - what if there are mutlitple data-citationitems?
+  // 	  - strip parentheses, split content on semicolons, replace with multiple <xref> tags (APA) [Handled]
+  // 	  - How does that change for different styles? [Not Handled]
+
+  const dom = htmlparser2.parseDocument(html)
+  const $ = cheerio.load(dom, { xmlMode: true })
+  const cslCitations = $('span.callout')
+  cslCitations.each((index, el) => {
+    const citationItemsString = $(el).attr('data-citationitems')
+    const citationItemIds = JSON.parse(citationItemsString)
+
+    if (citationItemIds.length > 1) {
+      const content = $(el).text()
+
+      // Split the content into individual citations only handled for APA styleName
+      const citations = content
+        .slice(1, -1) // Remove the surrounding parentheses
+        .split('; ') // Split by semicolon and space to separate citations
+        .map(citation => citation.trim()) // Remove any extra spaces
+
+      const xrefs = citationItemIds.map((citationItemId, itemIdIndex) => {
+        return `<xref ref-type="bibr" rid="ref-${citationItemId.id}">${
+          styleName === 'apa' ? citations[itemIdIndex] : content
+        }</xref>`
+      })
+
+      $(el).replaceWith(
+        styleName === 'apa' ? `(${xrefs.join('; ')})` : xrefs.join(''),
+      )
+    } else if (citationItemIds.length) {
+      const citationItemId = citationItemIds[0]
+      // Callout citation only handled for APA styleName
+      $(el).replaceWith(
+        styleName === 'apa'
+          ? `(<xref ref-type="bibr" rid="ref-${citationItemId.id}">${$(el)
+              .text()
+              .slice(1, -1)}</xref>)`
+          : `<xref
+            ref-type="bibr"
+            rid="ref-${citationItemId.id}"
+          >
+            ${$(el).text()}
+          </xref>`,
+      )
+    } else {
+      console.error('No citation items found for callout: ', $(el).html())
+      $(el).replaceWith($(el).html())
+    }
+  })
+
+  // console.log('html after callouts: ', $.html())
+
+  return $.html()
+}
+
+const makeCitations = (html, styleName) => {
   let refList = '' // this is the ref-list that we're building
   let refCount = 0 // this is to give refs IDs
   const potentialRefs = []
@@ -377,6 +441,8 @@ const makeCitations = html => {
     refList,
   )
 
+  const fixedCallouts = findCalloutSpans(reCleanedHtml, styleName)
+
   if (cleanedRefList || reCleanedRefList) {
     // After parsing is done and this is just a string,<@ource> can go back
     // to being <source>
@@ -391,7 +457,7 @@ const makeCitations = html => {
     )}</ref-list>`
   }
 
-  const processedHtml = reCleanedHtml || '' // If we have a state where there is only a RefList in the body, we need to make sure we're passing a string back
+  const processedHtml = fixedCallouts || '' // If we have a state where there is only a RefList in the body, we need to make sure we're passing a string back
 
   return { processedHtml, refList }
 }

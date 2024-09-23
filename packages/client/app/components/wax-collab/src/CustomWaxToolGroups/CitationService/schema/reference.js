@@ -38,6 +38,7 @@ const reference = {
     structure: { default: '{}' },
     originalText: { default: '' },
     possibleStructures: { default: '{}' },
+    citationNumber: { default: '' },
   },
   parseDOM: [
     {
@@ -58,6 +59,7 @@ const reference = {
             hook?.dom?.getAttribute('data-possible-structures') || '{}',
           ),
           originalText: hook?.dom?.getAttribute('data-original-text') || '',
+          citationNumber: hook?.dom?.getAttribute('data-citation-number') || '',
         })
         typeof next !== 'undefined' && next()
       },
@@ -75,6 +77,7 @@ const reference = {
       'data-needs-validation': hook?.node?.attrs?.needsValidation,
       'data-needs-review': hook?.node?.attrs?.needsReview,
       'data-original-text': hook?.node?.attrs?.originalText, // || originalText,
+      'data-citation-number': hook?.node?.attrs?.citationNumber,
       id: hook?.node?.attrs?.refId,
     }
 

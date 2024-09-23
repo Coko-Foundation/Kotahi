@@ -13,7 +13,7 @@ const {
   getFormattedReferencesFromDatacite,
 } = require('../../utils/dataciteCommusUtils')
 
-const { formatCitation } = require('./formatting')
+const { formatCitation, formatMultipleCitations } = require('./formatting')
 
 const Config = require('../../../models/config/config.model')
 
@@ -140,14 +140,38 @@ const resolvers = {
       // You know, it's probably bad to have two formatCitation functions!
 
       try {
-        const { result, error } = await formatCitation(
+        const { result, citeHtml, error } = await formatCitation(
           JSON.parse(citation),
           ctx.req.headers['group-id'],
         )
 
-        return { formattedCitation: result, error }
+        return { formattedCitation: result, citeHtml, error }
       } catch (error) {
-        return { formattedCitation: '', error: error.message }
+        return { formattedCitation: '', citeHtml: '', error: error.message }
+      }
+    },
+    async formatMultipleCitations(_, { input }, ctx) {
+      try {
+        const { result, calloutTexts, orderedReferenceIds, error } =
+          await formatMultipleCitations(
+            ctx.req.headers['group-id'],
+            JSON.parse(input.references),
+            JSON.parse(input.callouts),
+          )
+
+        return {
+          orderedCitations: result,
+          calloutTexts,
+          orderedReferenceIds,
+          error,
+        }
+      } catch (error) {
+        return {
+          orderedCitations: [],
+          calloutTexts: [],
+          orderedReferenceIds: [],
+          error: error.message,
+        }
       }
     },
   },
@@ -158,6 +182,11 @@ const typeDefs = `
     text: String!
     count: Int 
   }
+  
+  input CitationData {
+    references: String
+    callouts: String
+  }
 
   extend type Query {
     getMatchingReferences(input: CitationSearchInput): CitationSearchResult
@@ -165,6 +194,7 @@ const typeDefs = `
     getFormattedReferences(input: CitationSearchInput): FormattedCitationSearchResult
     getReferenceFromDoi(doi:String!): CitationSearchSingleResult
 		formatCitation(citation: String!): CitationFormatResult
+		formatMultipleCitations(input: CitationData): ReorderedCitationFormatResult
   }
 
   type CitationSearchSingleResult {
@@ -216,11 +246,24 @@ const typeDefs = `
     volume: String
     journalTitle: String
 		formattedCitation: String
+    citeHtml: String
   }
 
-
 	type CitationFormatResult {
-		formattedCitation: String
+    formattedCitation: String
+    citeHtml: String
+		error: String
+	}
+
+  type CalloutText {
+    id: String
+    text: String
+  }
+
+  type ReorderedCitationFormatResult {
+    orderedCitations: [String]
+    calloutTexts: [CalloutText]
+    orderedReferenceIds: [String]
 		error: String
 	}
 `

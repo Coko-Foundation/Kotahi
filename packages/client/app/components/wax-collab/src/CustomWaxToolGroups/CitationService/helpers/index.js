@@ -163,10 +163,10 @@ function liftOutOfList(state, dispatch, range, newType, newClass) {
   const atStart = range.startIndex == 0
   // eslint-disable-next-line eqeqeq
   const atEnd = range.endIndex == list.childCount
-  const parent = $start.node(-1)
+  const p = $start.node(-1) // p is parent
   const indexBefore = $start.index(-1)
   if (
-    !parent.canReplace(
+    !p.canReplace(
       indexBefore + (atStart ? 0 : 1),
       indexBefore + 1,
       item.content.append(atEnd ? Fragment.empty : Fragment.from(list)),
@@ -200,8 +200,12 @@ function liftOutOfList(state, dispatch, range, newType, newClass) {
   )
 
   const { from, to } = state.selection
-  state.doc.nodesBetween(from, to, (node, pos) => {
-    // console.log('node:', node.type)
+  let citationNumber = ''
+  state.doc.nodesBetween(from, to, (node, pos, parent) => {
+    if (node.type.name === 'list_item' && node.attrs.listnumber) {
+      citationNumber = node.attrs.listnumber
+    }
+
     if (!node.isTextblock || node.hasMarkup(newType, { class: newClass }))
       return
     let applicable = false
@@ -217,12 +221,24 @@ function liftOutOfList(state, dispatch, range, newType, newClass) {
     }
 
     if (applicable) {
-      // console.log('applicable: ', applicable, node.type.name)
+      // console.log(
+      //   'applicable: ',
+      //   applicable,
+      //   node.type.name,
+      //   'citationNumber:',
+      //   citationNumber,
+      // )
       // console.log('from: ', from, 'to: ', to, node, pos)
-      tr.setBlockType(from, to - node.content.size, newType, {
+
+      const newStart = pos
+      const newEnd = pos + 1
+
+      tr.setBlockType(newStart, newEnd, newType, {
         ...node.attrs,
+        citationNumber,
         class: newClass,
       })
+
       // should we then stop?
     }
   })

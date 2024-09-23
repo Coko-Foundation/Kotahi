@@ -32,6 +32,7 @@ import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
 // import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
 import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
+import CalloutService from '../CustomWaxToolGroups/CalloutService/CalloutService'
 import 'wax-table-service/dist/index.css'
 
 const updateTitle = title => {
@@ -143,6 +144,10 @@ const authorProofingWaxEditorConfig = (
     CiteProcTransformation: styleReference,
     readOnly: false,
   },
+  CalloutService: {
+    updateCallout: () => {},
+    readOnly: true,
+  },
   services: [
     new BaseService(),
     new ImageService(),
@@ -166,6 +171,7 @@ const authorProofingWaxEditorConfig = (
     new JatsSideMenuToolGroupService(),
     new JatsAnnotationListTooolGroupService(),
     new CitationService(),
+    new CalloutService(),
     new KotahiBlockDropDownToolGroupService(),
   ],
 })

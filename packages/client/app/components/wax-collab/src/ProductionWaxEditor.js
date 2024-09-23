@@ -45,6 +45,7 @@ const getCrossRefQuery = gql`
         volume
         journalTitle
         formattedCitation
+        citeHtml
       }
     }
   }
@@ -80,6 +81,21 @@ const getCiteProcQuery = gql`
   query ($citation: String!) {
     formatCitation(citation: $citation) {
       formattedCitation
+      citeHtml
+      error
+    }
+  }
+`
+
+const getCalloutTextQuery = gql`
+  query ($input: CitationData) {
+    formatMultipleCitations(input: $input) {
+      orderedCitations
+      calloutTexts {
+        id
+        text
+      }
+      orderedReferenceIds
       error
     }
   }
@@ -242,13 +258,67 @@ const ProductionWaxEditor = ({
         // eslint-disable-next-line no-console
         // console.log('Citeproc result:', result)
 
-        if (result?.data?.formatCitation?.formattedCitation) {
+        if (
+          result?.data?.formatCitation?.formattedCitation &&
+          result?.data?.formatCitation?.citeHtml
+        ) {
           // This returns an array of CSL
-          return result.data.formatCitation.formattedCitation
+          return {
+            formattedCitation: result.data.formatCitation.formattedCitation,
+            citeHtml: result.data.formatCitation.citeHtml,
+          }
         }
 
         console.error('Server-side error: ', result.data.formatCitation.error)
         return JSON.stringify(csl)
+      })
+  }
+
+  const updateCallout = async (references, callouts) => {
+    // eslint-disable-next-line no-console
+    // console.log(
+    //   'Coming in for citeproc input references: ',
+    //   JSON.stringify(references),
+    // )
+    // console.log(
+    //   'Coming in for citeproc input callouts: ',
+    //   JSON.stringify(callouts),
+    // )
+    return client
+      .query({
+        query: getCalloutTextQuery,
+        variables: {
+          input: {
+            references: JSON.stringify(references),
+            callouts: JSON.stringify(callouts),
+          },
+        },
+        fetchPolicy: 'network-only',
+      })
+      .then(result => {
+        // eslint-disable-next-line no-console
+        // console.log('Citeproc result:', result)
+
+        if (
+          result?.data?.formatMultipleCitations?.orderedCitations &&
+          result?.data?.formatMultipleCitations?.calloutTexts &&
+          result?.data?.formatMultipleCitations?.orderedReferenceIds
+        ) {
+          // This returns an array of orderedCitations and calloutTexts
+          return {
+            orderedCitations:
+              result.data.formatMultipleCitations.orderedCitations,
+            calloutTexts: result.data.formatMultipleCitations.calloutTexts,
+            orderedReferenceIds:
+              result.data.formatMultipleCitations.orderedReferenceIds,
+          }
+        }
+
+        console.error(
+          'Server-side error: ',
+          result.data.formatMultipleCitations.error,
+        )
+        return null
       })
   }
 
@@ -271,6 +341,7 @@ const ProductionWaxEditor = ({
         updateAnystyle,
         updateCrossRef,
         updateCiteProc,
+        updateCallout,
         readonly,
         getDataFromDatacite || false,
       )

@@ -26,6 +26,7 @@ import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
 import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
+import CalloutService from '../CustomWaxToolGroups/CalloutService/CalloutService'
 import 'wax-table-service/dist/index.css'
 
 const updateTrackStatus = change => {
@@ -121,6 +122,10 @@ const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
     CiteProcTransformation: () => {}, // We may need to pass this in if we're letting this editor change these.
     readOnly: true,
   },
+  CalloutService: {
+    updateCallout: () => {},
+    readOnly: true,
+  },
 
   services: [
     new BaseService(),
@@ -143,6 +148,7 @@ const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
     new CommentsService(),
     new JatsTagsService(),
     new CitationService(),
+    new CalloutService(),
     new KotahiBlockDropDownToolGroupService(),
   ],
 })

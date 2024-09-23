@@ -30,6 +30,7 @@ import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
 import CitationService from '../CustomWaxToolGroups/CitationService/CitationService'
+import CalloutService from '../CustomWaxToolGroups/CalloutService/CalloutService'
 import 'wax-table-service/dist/index.css'
 
 const updateTitle = title => {
@@ -42,6 +43,7 @@ const productionWaxEditorConfig = (
   updateAnystyle,
   updateCrossRef,
   styleReference,
+  updateCallout,
   isReadOnly,
   getDataFromDatacite = false,
 ) => ({
@@ -130,6 +132,10 @@ const productionWaxEditorConfig = (
     readOnly: false,
     getDataFromDatacite,
   },
+  CalloutService: {
+    updateCallout,
+    readOnly: false,
+  },
   services: [
     new BaseService(),
     new ImageService(),
@@ -153,6 +159,7 @@ const productionWaxEditorConfig = (
     new JatsSideMenuToolGroupService(),
     new JatsAnnotationListTooolGroupService(),
     new CitationService(),
+    new CalloutService(),
     new KotahiBlockDropDownToolGroupService(),
   ],
 })

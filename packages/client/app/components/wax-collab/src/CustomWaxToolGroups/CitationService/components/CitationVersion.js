@@ -33,13 +33,21 @@ const CitationVersion = ({ text, type, selected, editThis, select }) => {
         <p>No formatted version available.</p>
       )}
       <p>
-        <strong>
-          {type === 'original' && 'Original'}
-          {type === 'anystyle' && 'AnyStyle'}
-          {type === 'crossref' && 'CrossRef'}
-          {type === 'datacite' && 'Datacite'}
-          {type === 'custom' && 'Custom'}
-        </strong>
+        {type === 'original' && (
+          <span className="tag">
+            <i>unstructured</i>
+          </span>
+        )}
+        <br />
+        <span>
+          <strong>
+            {type === 'original' && 'Original'}
+            {type === 'anystyle' && 'AnyStyle'}
+            {type === 'crossref' && 'CrossRef'}
+            {type === 'datacite' && 'Datacite'}
+            {type === 'custom' && 'Custom'}
+          </strong>
+        </span>
       </p>
     </CitationVersionWrapper>
   )
