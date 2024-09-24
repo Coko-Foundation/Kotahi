@@ -33,6 +33,7 @@ structure {
     s3Url
     s3Bucket
     s3Region
+    allowFutureDatesOnly
     placeholder
     inline
     sectioncss
