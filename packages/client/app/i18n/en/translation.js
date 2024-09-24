@@ -12,6 +12,8 @@ const en = {
       assigned: 'Author proof assigned',
       inProgress: 'Author proofing in progress',
       completed: 'Author proof completed',
+      underEmbargo: 'Under embargo',
+      embargoReleased: 'Embargo released',
       unknown: 'Unknown',
     },
     reviewerStatus: {
@@ -1132,7 +1134,6 @@ const en = {
       'Field doiUniqueSuffixValidation':
         'Validate as a DOI suffix and ensure it is unique?',
       'Field allowFutureDatesOnly': 'Select future date only?',
-      'Field embargo': 'Embargo?',
       'Update Field': 'Update Field',
       'Correct invalid values before updating':
         'Correct invalid values before updating',

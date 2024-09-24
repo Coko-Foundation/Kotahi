@@ -40,6 +40,7 @@ const formFields = `
       description
       doiValidation
       doiUniqueSuffixValidation
+      allowFutureDatesOnly
       placeholder
       permitPublishing
       parse

@@ -361,6 +361,16 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   updatedMs.submission.$editDate = new Date().toISOString().split('T')[0]
 
+  // If the status is `submitted` and `submission.$embargoDate` is present we update the staus to `underEmbargo`
+  if (
+    updatedMs.submission?.$embargoDate &&
+    updatedMs.submission?.$embargoDate?.length &&
+    updatedMs.status === 'submitted' &&
+    updatedMs.status !== 'underEmbargo'
+  ) {
+    updatedMs.status = 'underEmbargo'
+  }
+
   if (isSettingFirstLabels && !updatedMs.tasks.length)
     await populateTemplatedTasksForManuscript(id)
 

@@ -134,6 +134,7 @@ const formStructure = `
       description
       doiValidation
       doiUniqueSuffixValidation
+      allowFutureDatesOnly
       placeholder
       parse
       format
