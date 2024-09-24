@@ -13,6 +13,8 @@ const esLa = {
       assigned: 'Prueba de autor asignada',
       inProgress: 'Revisión del autor en curso',
       completed: 'Prueba de autor completada',
+      underEmbargo: 'Bajo embargo',
+      embargoReleased: 'Embargo liberado',
       unknown: 'Desconocido',
     },
     reviewerStatus: {
@@ -1150,6 +1152,7 @@ const esLa = {
       'Field doiValidation': 'Validar como DOI',
       'Field doiUniqueSuffixValidation':
         'Validar como sufijo DOI y asegurar que sea único',
+      'Field allowFutureDatesOnly': '¿Seleccionar solo fecha futura?',
       'Update Field': 'Actualizar Campo',
       'Correct invalid values before updating':
         'Corregir valores inválidos antes de actualizar',
@@ -1198,6 +1201,8 @@ const esLa = {
         volumeNumber: 'Número de volumen',
         issueYear: 'Año de emisión',
         fullWax: 'Documento',
+        datePicker: 'Selector de fecha',
+        embargoDate: 'fecha de embargo',
       },
       typeOptions: {
         Select: 'Selección',
