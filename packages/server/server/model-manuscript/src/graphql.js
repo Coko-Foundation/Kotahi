@@ -361,11 +361,11 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   updatedMs.submission.$editDate = new Date().toISOString().split('T')[0]
 
-  // If the status is `submitted` and `submission.$embargoDate` is present we update the staus to `underEmbargo`
+  // If the status is `submitted` or 'embargoReleased' and `submission.$embargoDate` is present we update the staus to `underEmbargo`
   if (
     updatedMs.submission?.$embargoDate &&
     updatedMs.submission?.$embargoDate?.length &&
-    updatedMs.status === 'submitted' &&
+    ['submitted', 'embargoReleased'].includes(updatedMs.status) &&
     updatedMs.status !== 'underEmbargo'
   ) {
     updatedMs.status = 'underEmbargo'

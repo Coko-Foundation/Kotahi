@@ -12,21 +12,27 @@ const StyledDatePicker = styled(UnstyledDatePicker)`
 `
 
 const DatePicker = ({ value, allowFutureDatesOnly, onChange, ...rest }) => {
+  // If value exists, convert it into a Date, otherwise keep it undefined
+  const date = value ? new Date(value) : undefined
+
   // Calculate minDate
   const minDate = allowFutureDatesOnly
     ? new Date(Date.now() + 86400000)
     : undefined // Add 1 day in milliseconds
 
-  // If value exists, convert it into a Date object, otherwise keep it undefined
-  const dateObject = value ? new Date(value) : undefined
+  const dateTimestamp = date && date.getTime()
+
+  const minDateTimestamp = minDate && minDate.getTime()
+
+  const isDateMinDate = dateTimestamp < minDateTimestamp
 
   return (
     <StyledDatePicker
       {...rest}
       format="yyyy-MM-dd"
-      minDate={minDate}
+      minDate={isDateMinDate ? date : minDate}
       onChange={val => onChange(val ?? '')}
-      value={dateObject}
+      value={date}
     />
   )
 }

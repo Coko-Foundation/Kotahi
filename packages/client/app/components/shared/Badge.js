@@ -93,7 +93,8 @@ export const StatusBadge = ({
   if (
     status === 'accepted' ||
     status === 'published' ||
-    status === 'completed'
+    status === 'completed' ||
+    status === 'embargoReleased'
   ) {
     return (
       <SuccessStatus clickable={clickable} minimal={minimal} style={styles}>
