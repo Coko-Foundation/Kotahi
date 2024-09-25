@@ -1656,7 +1656,39 @@ const resolvers = {
   },
   Query: {
     async manuscript(_, { id }, ctx) {
-      return Manuscript.query().findById(id)
+      const manuscript = await Manuscript.query().findById(id)
+
+      const submission =
+        typeof manuscript.submission === 'string'
+          ? JSON.parse(manuscript.submission)
+          : manuscript.submission
+
+      // Intermittent solution - optimzed way would be to use as scheduler based on embargo date
+      if (
+        submission?.$embargoDate &&
+        submission?.$embargoDate?.length &&
+        manuscript.status === 'underEmbargo'
+      ) {
+        const embargoTimestamp = new Date(submission?.$embargoDate).getTime()
+
+        const currentTimestamp = Date.now()
+
+        if (
+          !Number.isNaN(embargoTimestamp) &&
+          embargoTimestamp <= currentTimestamp
+        ) {
+          const updatedManuscript = await Manuscript.query().patchAndFetchById(
+            id,
+            {
+              status: 'embargoReleased',
+            },
+          )
+
+          return updatedManuscript
+        }
+      }
+
+      return manuscript
     },
     // TODO This is overcomplicated, trying to do three things at once (find manuscripts
     // where user is author, reviewer or editor).
