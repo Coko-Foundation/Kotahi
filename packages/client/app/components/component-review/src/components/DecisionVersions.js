@@ -57,6 +57,7 @@ const DecisionVersions = ({
   lockUnlockReview,
   dois,
   refetch,
+  updateAda,
   updateTask,
   updateTasks,
   teams,
@@ -165,6 +166,7 @@ const DecisionVersions = ({
                 teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
                 unpublish={unpublish}
+                updateAda={updateAda}
                 updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}

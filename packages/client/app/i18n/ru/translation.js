@@ -153,6 +153,7 @@ const ru = {
       Updated: 'Обновлено',
       lastReviewerStatusUpdate: 'Последнее обновление статуса рецензента',
       Status: 'Статус',
+      adaState: 'ADA Статус',
       'Your Status': 'Статус',
       Title: 'Название',
       Version: 'Версия',
@@ -300,6 +301,8 @@ const ru = {
           'К публикации допускаются рукописи принятые по итогам рецензирования.',
         publishingNewEntry:
           'Публикация добавит новую запись на общедоступный веб-сайт и не может быть отменена.',
+        UpdateAda: 'Обновить ADA',
+        PublishingAda: 'Публиковать с ADA',
         Publish: 'Опубликовать',
         Republish: 'Опубликовать заново',
         Unpublish: 'Снять с публикации',
@@ -582,6 +585,10 @@ const ru = {
       crossrefDoiPrefix: 'Префикс DOI в Crossref',
       crossrefPublishedArticleLocationPrefix: 'Опубликованный домен Crossref',
       crossrefUseSandbox: 'Опубликовать в Crossref sandbox',
+      ada: 'Настройки ADA',
+      enableAdaPublish: 'Включить публикацию ADA',
+      adaLogin: 'Имя пользователя ADA',
+      adaPassword: 'Пароль ADA',
       Datacite: 'Datacite',
       dataciteLogin: 'Имя пользователя Datacite',
       datacitePassword: 'Пароль Datacite',
@@ -1442,6 +1449,10 @@ const ru = {
         false: 'Никогда',
         true: 'Для конкретного случая (Редактор принимает решение при совместном использовании/публикации)',
         always: 'Всегда',
+      },
+      isReadOnly: {
+        true: 'Да',
+        false: 'Нет',
       },
       validate: {
         required: 'Обязательно',

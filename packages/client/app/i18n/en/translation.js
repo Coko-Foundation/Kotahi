@@ -152,6 +152,7 @@ const en = {
       Updated: 'Updated',
       lastReviewerStatusUpdate: 'Last Reviewer Status Update',
       Status: 'Status',
+      adaState: 'ADA State',
       'Your Status': 'Your Status',
       Title: 'Title',
       Version: 'Version',
@@ -293,6 +294,11 @@ const en = {
         publishOnlyAccepted: 'You can only publish accepted submissions.',
         publishingNewEntry:
           'Publishing will add a new entry on the public website and can not be undone.',
+        UpdateAda: 'Update ADA',
+        PublishingAda: 'Publishing ADA',
+        PublishingAdaState: 'ADA State',
+        Draft: 'Draft',
+        Findable: 'Findable',
         Publish: 'Publish',
         Republish: 'Republish',
         Unpublish: 'Unpublish',
@@ -581,6 +587,10 @@ const en = {
       doajPublishedArticleLocationPrefix: 'DOAJ published article location',
       doajUseSandbox: 'Publish to DOAJ sandbox',
       licenseUrl: 'Publication license URL',
+      ada: 'ADA Settings',
+      enableAdaPublish: 'Enable ADA Publishing',
+      adaLogin: 'ADA username',
+      adaPassword: 'ADA password',
       Datacite: 'Datacite',
       dataciteLogin: 'Datacite username',
       datacitePassword: 'Datacite password',
@@ -1442,6 +1452,10 @@ const en = {
       format: {
         false: 'None',
         join: 'Join with commas',
+      },
+      isReadOnly: {
+        true: 'Yes',
+        false: 'No',
       },
       doiValidation: {
         true: 'Yes',

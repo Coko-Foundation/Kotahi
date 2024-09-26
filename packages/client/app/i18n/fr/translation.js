@@ -153,6 +153,7 @@ const fr = {
       lastReviewerStatusUpdate: 'Dernière mise à jour du statut du réviseur',
       Status: 'Statut',
       'Your Status': 'Votre statut',
+      adaState: 'ADA Statut',
       Title: 'Titre',
       Version: 'Version',
       Author: 'Auteur',
@@ -298,6 +299,8 @@ const fr = {
           'Vous pouvez uniquement publier les soumissions acceptées.',
         publishingNewEntry:
           'La publication ajoutera une nouvelle entrée sur le site public et ne pourra pas être annulée.',
+        UpdateAda: 'Mettre à jour ADA',
+        PublishingAda: 'Publier avec ADA',
         Publish: 'Publier',
         Republish: 'Republier',
         Unpublish: 'Dépublier',
@@ -592,6 +595,10 @@ const fr = {
       crossrefDoiPrefix: 'Préfixe DOI Crossref',
       crossrefPublishedArticleLocationPrefix: 'Domaine publié par Crossref',
       crossrefUseSandbox: 'Publier dans le bac à sable Crossref',
+      ada: 'Paramètres ADA',
+      enableAdaPublish: 'Activer la publication ADA',
+      adaLogin: "Nom d'utilisateur ADA",
+      adaPassword: 'Mot de passe ADA',
       Datacite: 'Datacite',
       dataciteLogin: "Nom d'utilisateur Datacite",
       datacitePassword: 'Mot de passe Datacite',
@@ -1466,6 +1473,10 @@ const fr = {
         false: 'Jamais',
         true: "Ad hoc (l'éditeur décide au moment du partage/de la publication)",
         always: 'Toujours',
+      },
+      isReadOnly: {
+        true: 'Oui',
+        false: 'Non',
       },
       validate: {
         required: 'Requis',

@@ -220,7 +220,7 @@ const formFields = `
         maxChars
         minSize
       }
-      readonly
+      isReadOnly
     }
   }
 `

@@ -42,6 +42,7 @@ const query = gql`
           id
           component
           name
+          isReadOnly
           hideFromReviewers
           format
         }
