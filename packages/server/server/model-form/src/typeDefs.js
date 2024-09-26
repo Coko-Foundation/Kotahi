@@ -128,18 +128,6 @@ const typeDefs = `
     publishingTag: String
   }
 
-  type UploadAttachmentSource {
-    type: String
-    s3Url: String
-    s3Bucket: String
-  }
-
-  type UploadAttachmentSource {
-    type: String
-    s3Url: String
-    s3Bucket: String
-  }
-
   type FormElementOption {
     label: String!
     value: String!
