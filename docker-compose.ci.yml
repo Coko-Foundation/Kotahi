@@ -1,8 +1,6 @@
 # This file is meant only for use in deploying through the project's ci pipeline
 # Image values will be replaced during the pipeline run
 
-version: '3'
-
 services:
   client:
     image: kotahi/kotahi/client-preproduction:latest

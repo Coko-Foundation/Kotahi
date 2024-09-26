@@ -1,7 +1,5 @@
 # This file is meant for running a production environment locally
 
-version: '3'
-
 services:
   client:
     build:
