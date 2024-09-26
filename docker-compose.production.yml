@@ -109,6 +109,7 @@ services:
       - INSTANCE_GROUPS=${INSTANCE_GROUPS:-kotahi:journal}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
       - E2E_TESTING_API=${E2E_TESTING_API}
+      - ADA_KEY=${ADA_KEY}
       - WS_YJS_SERVER_PORT=${WS_YJS_SERVER_PORT:-5010}
     volumes:
       - ./packages/client/config/translation:/home/node/app/config/translation

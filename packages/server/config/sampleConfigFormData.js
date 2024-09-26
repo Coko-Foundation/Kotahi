@@ -57,6 +57,9 @@ module.exports = {
       publishedArticleLocationPrefix: 'test',
       useSandbox: false,
     },
+    ada: {
+      enableAdaPublish: false,
+    },
     datacite: {
       login: 'test',
       password: 'test',

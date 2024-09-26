@@ -89,6 +89,7 @@ const DecisionVersion = ({
   updateTasks,
   teams,
   removeReviewer,
+  updateAda,
   updateTeamMember,
   updateCollaborativeTeamMember,
   updateTaskNotification,
@@ -502,6 +503,7 @@ const DecisionVersion = ({
                 dois={dois}
                 manuscript={version}
                 publishManuscript={publishManuscript}
+                updateAda={updateAda}
               />
             </AdminSection>
           )}

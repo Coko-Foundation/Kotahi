@@ -58,7 +58,7 @@ const formFields = `
       }
       hideFromAuthors
       permitPublishing
-      readonly
+      isReadOnly
     }
   }
 `

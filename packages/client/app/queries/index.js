@@ -233,6 +233,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           name
           title
           shortDescription
+          isReadOnly
           validate {
             id
             label
@@ -252,7 +253,6 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             labelColor
             value
           }
-          readonly
         }
       }
     }

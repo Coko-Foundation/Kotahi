@@ -278,76 +278,82 @@ const FieldSettingsModal = ({
                   />
                 </Section>
               )}
-              {editableProperties.map(([key, value]) => {
-                return (
-                  <>
-                    <Section key={key}>
-                      {value.showFieldTitle === false ||
-                        (value.showFieldTitle === undefined && (
-                          <MediumRow>
-                            <Legend space>
-                              {t(
-                                `formBuilder.Field ${key}`,
-                                t('formBuilder.fallbackFieldLabel', {
-                                  name: key,
-                                }),
-                              )}
-                            </Legend>
-                            <ErrorMessageWrapper>
-                              <ErrorMessage name={key} />
-                            </ErrorMessageWrapper>
-                          </MediumRow>
-                        ))}
-                      <ValidatedField
-                        component={elements[value.component]}
-                        data-testid={key}
-                        name={key}
-                        onChange={val => {
-                          if (isEmpty(val)) {
-                            setFieldValue(key, null)
-                            return
-                          }
+              {editableProperties
+                .filter(([compKey, compValue]) => {
+                  return compValue?.props?.toggleShow
+                    ? compValue.props.toggleShow(values)
+                    : true
+                })
+                .map(([key, value]) => {
+                  return (
+                    <>
+                      <Section key={key}>
+                        {value.showFieldTitle === false ||
+                          (value.showFieldTitle === undefined && (
+                            <MediumRow>
+                              <Legend space>
+                                {t(
+                                  `formBuilder.Field ${key}`,
+                                  t('formBuilder.fallbackFieldLabel', {
+                                    name: key,
+                                  }),
+                                )}
+                              </Legend>
+                              <ErrorMessageWrapper>
+                                <ErrorMessage name={key} />
+                              </ErrorMessageWrapper>
+                            </MediumRow>
+                          ))}
+                        <ValidatedField
+                          component={elements[value.component]}
+                          data-testid={key}
+                          name={key}
+                          onChange={val => {
+                            if (isEmpty(val)) {
+                              setFieldValue(key, null)
+                              return
+                            }
 
-                          setFieldValue(
-                            key,
-                            val.target ? val.target.value : val,
-                          )
-                        }}
-                        {...{
-                          ...value.props,
-                          label: undefined,
-                          description: undefined,
-                        }}
-                        options={value.props?.options?.map(o => ({
-                          ...o,
-                          label: t(`fields.${key}.${o.value}`),
-                        }))}
-                        shouldAllowFieldSpecChanges
-                        validate={
-                          key === 'name'
-                            ? val => {
-                                if (reservedFieldNames.includes(val))
-                                  return t('formBuilder.nameInUse')
-                                if (value.props?.validate)
-                                  return value.props.validate(val)
-                                return null
-                              }
-                            : value.props?.validate
-                        }
-                      />
-                      {value.props?.description && (
-                        <DetailText>{value.props.description}</DetailText>
+                            setFieldValue(
+                              key,
+                              val.target ? val.target.value : val,
+                            )
+                          }}
+                          {...{
+                            ...value.props,
+                            label: undefined,
+                            description: undefined,
+                          }}
+                          options={value.props?.options?.map(o => ({
+                            ...o,
+                            label: t(`fields.${key}.${o.value}`),
+                          }))}
+                          shouldAllowFieldSpecChanges
+                          validate={
+                            key === 'name'
+                              ? val => {
+                                  if (reservedFieldNames.includes(val))
+                                    return t('formBuilder.nameInUse')
+                                  if (value.props?.validate)
+                                    return value.props.validate(val)
+                                  return null
+                                }
+                              : value.props?.validate
+                          }
+                        />
+                        {value.props?.description && (
+                          <DetailText>{value.props.description}</DetailText>
+                        )}
+                      </Section>
+                      {key === 'validate' && (
+                        <ValidationSubFields
+                          setFieldValue={setFieldValue}
+                          values={values}
+                        />
                       )}
-                    </Section>
-                    {key === 'validate' && (
-                      <ValidationSubFields
-                        setFieldValue={setFieldValue}
-                        values={values}
-                      />
-                    )}
-                  </>
-                )
-              })}
+                    </>
+                  )
+                })}
               {!editableProperties.some(([key]) => key === 'name') &&
                 values.name && (
                   <Section key="name">

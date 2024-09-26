@@ -450,6 +450,8 @@ const FormTemplate = ({
                 })
                 .map(prepareFieldProps)
                 .map((element, i) => {
+                  const disabledElement = element.isReadOnly === 'true'
+
                   let threadedDiscussionProps
 
                   if (element.component === 'ThreadedDiscussion') {
@@ -594,6 +596,7 @@ const FormTemplate = ({
                               : elements[element.component]
                           }
                           data-testid={element.name} // TODO: Improve this
+                          disabled={disabledElement}
                           isClearable={
                             element.component === 'Select' &&
                             element.name === 'submission.$customStatus'

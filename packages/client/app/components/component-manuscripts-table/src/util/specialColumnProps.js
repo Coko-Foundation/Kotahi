@@ -4,6 +4,7 @@ import {
   RowItemCheckbox,
   TitleWithAbstractAsTooltip,
   FilterableStatusBadge,
+  StatusBadge,
   LabelsOrSelectButton,
   Submitter,
   Editors,
@@ -77,6 +78,17 @@ const buildSpecialColumnProps = (
       title: i18next.t('manuscriptsTable.Last Status Update'),
       component: LastReviewerUpdated,
       flex: '0.25 1 8em',
+    },
+    'submission.adaState': {
+      title: i18next.t('manuscriptsTable.adaState'),
+      flex: '0.25 1 21em',
+      component: StatusBadge,
+      centered: true,
+    },
+    'submission.$doi': {
+      title: i18next.t('formBuilder.fieldOpts.doi'),
+      flex: '0.25 1 21em',
+      centered: true,
     },
     status: {
       title: i18next.t('manuscriptsTable.Status'),

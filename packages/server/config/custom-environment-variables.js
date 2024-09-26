@@ -115,5 +115,6 @@ module.exports = {
     default_import: 'USE_COLAB_BIOPHYSICS_IMPORT',
   },
   e2eTestingApi: 'E2E_TESTING_API',
+  adaKey: 'ADA_KEY',
   clientUrl: 'CLIENT_URL',
 }

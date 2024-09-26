@@ -153,8 +153,8 @@ const formStructure = `
         maxChars
         minSize
       }
+      isReadOnly
       hideFromReviewers
-      readonly
     }
   }
 `

@@ -67,6 +67,23 @@ export const updateManuscriptMutation = gql`
   }
 `
 
+export const updateAdaMutation = gql`
+  mutation ($id: ID!, $adaState: String!) {
+    updateAda(id: $id, adaState: $adaState) {
+      manuscript {
+        id
+        published
+      }
+      steps {
+        stepLabel
+        succeeded
+        errorMessage
+        errorDetails
+      }
+    }
+  }
+`
+
 const createFileMutation = gql`
   mutation ($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
@@ -215,6 +232,7 @@ const DecisionPage = ({ currentUser, match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+  const [updateAda] = useMutation(updateAdaMutation)
 
   const [lockUnlockReview] = useMutation(
     lockUnlockCollaborativeReviewMutation,
@@ -644,6 +662,7 @@ const DecisionPage = ({ currentUser, match }) => {
       teamLabels={config.teams}
       teams={data?.manuscript?.teams}
       threadedDiscussionProps={threadedDiscussionProps}
+      updateAda={updateAda}
       updateCollaborativeTeamMember={updateCollaborativeTeamMember}
       updateManuscript={updateManuscript}
       updateReview={updateReview}

@@ -14,9 +14,16 @@ const PublishingResponse = ({ response }) => {
     }
 
     return (
-      <Alert detail={step.errorMessage} key={step.stepLabel} type="error">
-        Error posting to {step.stepLabel}
-      </Alert>
+      <>
+        <Alert detail={step.errorMessage} key={step.stepLabel} type="error">
+          Error posting to {step.stepLabel}
+        </Alert>
+        {step.errorDetails.map((key, detail) => (
+          <Alert detail={detail} key={`detail-${key}`} type="error">
+            Error posting to {step.stepLabel}
+          </Alert>
+        ))}
+      </>
     )
   })
 }

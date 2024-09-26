@@ -98,6 +98,7 @@ services:
       - INSTANCE_GROUPS=${INSTANCE_GROUPS}
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT}
       - E2E_TESTING_API=${E2E_TESTING_API}
+      - ADA_KEY=${ADA_KEY}
 
   # kotahi-flax-site:
   #   image: cokoapps/kotahi-flax:0.2.41

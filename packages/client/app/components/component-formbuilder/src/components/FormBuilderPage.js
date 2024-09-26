@@ -53,11 +53,11 @@ structure {
       maxChars
       minSize
     }
+    isReadOnly
     hideFromReviewers
     hideFromAuthors
     permitPublishing
     publishingTag
-    readonly
   }
 }
 `

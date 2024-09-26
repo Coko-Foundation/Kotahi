@@ -845,6 +845,17 @@ export const generateSchemas = (
                 },
               },
             },
+            ada: {
+              type: 'object',
+              title: t('configPage.ada'),
+              properties: {
+                enableAdaPublish: {
+                  type: 'boolean',
+                  title: t('configPage.enableAdaPublish'),
+                  default: false,
+                },
+              },
+            },
             datacite: {
               type: 'object',
               title: t('configPage.Datacite'),
@@ -1884,6 +1895,17 @@ export const generateSchemas = (
                 useSandbox: {
                   type: 'boolean',
                   title: t('configPage.crossrefUseSandbox'),
+                  default: false,
+                },
+              },
+            },
+            ada: {
+              type: 'object',
+              title: t('configPage.ada'),
+              properties: {
+                enableAdaPublish: {
+                  type: 'boolean',
+                  title: t('configPage.enableAdaPublish'),
                   default: false,
                 },
               },
@@ -2934,6 +2956,17 @@ export const generateSchemas = (
                 useSandbox: {
                   type: 'boolean',
                   title: t('configPage.crossrefUseSandbox'),
+                  default: false,
+                },
+              },
+            },
+            ada: {
+              type: 'object',
+              title: t('configPage.ada'),
+              properties: {
+                enableAdaPublish: {
+                  type: 'boolean',
+                  title: t('configPage.enableAdaPublish'),
                   default: false,
                 },
               },
@@ -3989,6 +4022,17 @@ export const generateSchemas = (
                 },
               },
             },
+            ada: {
+              type: 'object',
+              title: t('configPage.ada'),
+              properties: {
+                enableAdaPublish: {
+                  type: 'boolean',
+                  title: t('configPage.enableAdaPublish'),
+                  default: false,
+                },
+              },
+            },
             datacite: {
               type: 'object',
               title: t('configPage.Datacite'),
@@ -4365,6 +4409,9 @@ export const generateSchemas = (
           password: {
             'ui:widget': 'password',
           },
+        },
+        ada: {
+          classNames: 'col-md-12 col-md-offset-0',
         },
         datacite: {
           classNames: 'col-md-12 col-md-offset-0',

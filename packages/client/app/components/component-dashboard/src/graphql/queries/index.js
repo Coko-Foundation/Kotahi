@@ -50,6 +50,7 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
       name
       title
       shortDescription
+      isReadOnly
       validate {
         id
         label
@@ -68,7 +69,6 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
         labelColor
         value
       }
-      readonly
     }
   }
 }

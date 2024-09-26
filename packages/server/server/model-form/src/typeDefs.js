@@ -50,6 +50,7 @@ const typeDefs = `
     format: String
     inline: String
     sectioncss: String
+    isReadOnly: String
     validate: [FormElementOptionInput!]
     validateValue: FormElementValidationInput
     hideFromReviewers: String
@@ -120,11 +121,11 @@ const typeDefs = `
     sectioncss: String
     validate: [FormElementOption!]
     validateValue: FormElementValidation
+    isReadOnly: String
     hideFromReviewers: String
     hideFromAuthors: String
     permitPublishing: String
     publishingTag: String
-    readonly: Boolean
   }
 
   type UploadAttachmentSource {

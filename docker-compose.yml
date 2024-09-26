@@ -125,6 +125,7 @@ services:
       - USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
       - WS_YJS_SERVER_PORT=${WS_YJS_SERVER_PORT:-5010}
       - E2E_TESTING_API=${E2E_TESTING_API}
+      - ADA_KEY=${ADA_KEY}
     volumes:
       - ./packages/server/api:/home/node/app/api
       - ./packages/server/config:/home/node/app/config

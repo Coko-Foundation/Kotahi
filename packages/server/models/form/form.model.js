@@ -77,6 +77,7 @@ class Form extends BaseModel {
                   s3Region: { type: 'string' },
                   doiValidation: { type: ['string', 'null'] },
                   placeholder: { type: ['string', 'null'] },
+                  isReadOnly: { type: ['string', 'null'] },
                   hideFromReviewers: { type: ['string', 'null'] },
                   inline: { type: ['string', 'null'] },
                   sectioncss: { type: ['string', 'null'] },

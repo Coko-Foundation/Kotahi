@@ -45,6 +45,8 @@ const {
 
 const { publishToDatacite } = require('../../publishing/datacite')
 
+const { publishToAda } = require('../../publishing/astromat-ada')
+
 const { publishToDOAJ } = require('../../publishing/doaj')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
@@ -1589,6 +1591,51 @@ const resolvers = {
 
       return { manuscript: updatedManuscript, steps }
     },
+    async updateAda(_, { id, adaState }, ctx) {
+      const manuscript = await Manuscript.query().findById(id)
+      const activeConfig = await Config.getCached(manuscript.groupId)
+      let updatedManuscript = manuscript
+
+      if (activeConfig.formData.publishing.ada?.enableAdaPublish) {
+        const update = {}
+        const steps = []
+
+        try {
+          const { data } = await publishToAda(manuscript, adaState)
+
+          steps.push({
+            stepLabel: 'Publishing to ADA',
+            succeeded: true,
+          })
+
+          update.submission = JSON.stringify({
+            ...manuscript.submission,
+            adaState,
+            adaProcessStatus: data.processStatus,
+            $doi: data.doi,
+          })
+
+          updatedManuscript = await Manuscript.query().patchAndFetchById(
+            id,
+            update,
+          )
+        } catch (err) {
+          console.error(err)
+          steps.push({
+            stepLabel: 'Publishing to ADA',
+            succeeded: false,
+            errorMessage: err.message,
+            errorDetails: Object.entries(err.response.data).map(
+              ([key, value]) => `${key}: ${value}`,
+            ),
+          })
+        }
+
+        return { manuscript: updatedManuscript, steps }
+      }
+
+      return { manuscript: null, steps: [] }
+    },
   },
   Subscription: {
     manuscriptsImportStatus: {
@@ -2334,6 +2381,7 @@ const typeDefs = `
     archiveManuscripts(ids: [ID]!): [ID!]!
     unarchiveManuscripts(ids: [ID]!): [ID!]!
     assignAuthoForProofingManuscript(id: ID!): Manuscript!
+    updateAda(id: ID!, adaState: String!): PublishingResult!
   }
 
   type Manuscript {
@@ -2417,6 +2465,7 @@ const typeDefs = `
     stepLabel: String!
     succeeded: Boolean!
     errorMessage: String
+    errorDetails: [String]
   }
 
   input FileInput {
