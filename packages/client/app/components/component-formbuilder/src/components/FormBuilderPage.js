@@ -62,7 +62,6 @@ structure {
     permitPublishing
     publishingTag
     aiPrompt
-    readonly
   }
 }
 `
