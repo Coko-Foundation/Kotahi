@@ -153,6 +153,7 @@ const esLa = {
       Updated: 'Actualizado',
       lastReviewerStatusUpdate: 'Actualización del estado del último revisor',
       Status: 'Estado',
+      adaState: 'ADA Estado',
       'Your Status': 'Tu Estado',
       Title: 'Título',
       Version: 'Versión',
@@ -296,6 +297,8 @@ const esLa = {
           'Solo puedes publicar las presentaciones aceptadas.',
         publishingNewEntry:
           'La publicación agregará una nueva entrada en el sitio web público y no se puede deshacer.',
+        UpdateAda: 'Actualizar ADA',
+        PublishingAda: 'Publicar con ADA',
         Publish: 'Publicar',
         Republish: 'Volver a Publicar',
         Unpublish: 'Despublicar',
@@ -583,6 +586,10 @@ const esLa = {
       crossrefDoiPrefix: 'Prefijo DOI de Crossref',
       crossrefPublishedArticleLocationPrefix: 'Dominio publicado por Crossref',
       crossrefUseSandbox: 'Publicar en el entorno de prueba de Crossref',
+      ada: 'Configuración ADA',
+      enableAdaPublish: 'Habilitar publicación ADA',
+      adaLogin: 'Nombre de Usuario de ADA',
+      adaPassword: 'Contraseña de ADA',
       Datacite: 'Datacite',
       dataciteLogin: 'Nombre de Usuario de Datacite',
       datacitePassword: 'Contraseña de  Datacite',
@@ -1452,6 +1459,10 @@ const esLa = {
         false: 'Nunca',
         true: 'Ad hoc (El Editor decide al compartir/publicar)',
         always: 'Siempre',
+      },
+      isReadOnly: {
+        true: 'Sí',
+        false: 'No',
       },
       validate: {
         required: 'Requerido',

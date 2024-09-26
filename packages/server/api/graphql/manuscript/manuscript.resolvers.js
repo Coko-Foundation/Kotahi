@@ -51,6 +51,7 @@ const {
   styledHtml,
   submissionWithFields,
   supplementaryFiles,
+  updateAda,
   metaSource,
   publishedReviewUsers,
   removeAuthor,
@@ -168,6 +169,10 @@ const resolvers = {
 
     async publishManuscript(_, { id }, ctx) {
       return publishManuscript(id, ctx.req.headers['group-id'])
+    },
+
+    async updateAda(_, { id, adaState }, ctx) {
+      return updateAda(id, adaState)
     },
   },
   Subscription: {

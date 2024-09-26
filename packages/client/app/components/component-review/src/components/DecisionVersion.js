@@ -91,6 +91,7 @@ const DecisionVersion = ({
   removeAuthor,
   removeInvitation,
   removeReviewer,
+  updateAda,
   updateTeamMember,
   updateCollaborativeTeamMember,
   updateTaskNotification,
@@ -553,6 +554,7 @@ const DecisionVersion = ({
                 manuscript={version}
                 publishManuscript={publishManuscript}
                 unpublish={unpublish}
+                updateAda={updateAda}
               />
             </AdminSection>
           )}

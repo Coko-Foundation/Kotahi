@@ -104,6 +104,7 @@ extend type Mutation {
   archiveManuscripts(ids: [ID]!): [ID!]!
   unarchiveManuscripts(ids: [ID]!): [ID!]!
   assignAuthorForProofingManuscript(id: ID!): Manuscript!
+  updateAda(id: ID!, adaState: String!): PublishingResult!
 }
 
 type Manuscript {
@@ -187,6 +188,7 @@ type PublishingStepResult {
   stepLabel: String!
   succeeded: Boolean!
   errorMessage: String
+  errorDetails: [String]
 }
 
 input FileInput {

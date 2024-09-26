@@ -7,9 +7,10 @@ const PublishingResponse = ({ response }) => {
   if (!response?.steps) return null
 
   return response.steps.map(step => {
-    const { stepLabel } = step
+    const { errorDetails, errorMessage, stepLabel, succeeded, unpublished } =
+      step
 
-    if (step.unpublished) {
+    if (unpublished) {
       return (
         <Alert key={stepLabel} type="success">
           {t('decisionPage.decisionTab.unpublishResponse')}
@@ -17,7 +18,7 @@ const PublishingResponse = ({ response }) => {
       )
     }
 
-    if (step.succeeded) {
+    if (succeeded) {
       return (
         <Alert key={stepLabel} type="success">
           {t('decisionPage.decisionTab.postedTo', { stepLabel })}
@@ -26,9 +27,16 @@ const PublishingResponse = ({ response }) => {
     }
 
     return (
-      <Alert detail={step.errorMessage} key={stepLabel} type="error">
-        {t('decisionPage.decisionTab.errorPosting', { stepLabel })}
-      </Alert>
+      <>
+        <Alert detail={errorMessage} key={stepLabel} type="error">
+          {t('decisionPage.decisionTab.errorPosting', { stepLabel })}
+        </Alert>
+        {errorDetails.map((key, detail) => (
+          <Alert detail={detail} key={`detail-${key}`} type="error">
+            {t('decisionPage.decisionTab.errorPosting', { stepLabel })}
+          </Alert>
+        ))}
+      </>
     )
   })
 }

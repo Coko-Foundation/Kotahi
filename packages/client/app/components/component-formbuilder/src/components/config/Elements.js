@@ -161,6 +161,25 @@ const radiofield = {
   defaultValue: 'false',
 }
 
+const isReadOnlyField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Is read only?',
+  },
+  defaultValue: 'false',
+}
+
 const hideFromReviewersField = {
   component: 'RadioBox',
   props: {
@@ -419,6 +438,7 @@ const prototypeComponent = category => ({
   description: editorfield,
   validate: validateOther,
   hideFromAuthors: hideFromAuthorsField,
+  isReadOnly: isReadOnlyField,
   hideFromReviewers: category === 'review' ? null : hideFromReviewersField,
   permitPublishing: permitPublishingField,
   publishingTag: publishingTagField,
@@ -451,6 +471,7 @@ const propertiesOrder = [
   's3Region',
   's3AccessId',
   's3AccessToken',
+  'isReadOnly',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',

@@ -35,6 +35,7 @@ const { cachedGet } = require('../../services/queryCache.service')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
 const { publishToDatacite } = require('../../services/publishing/datacite')
+const { publishToAda } = require('../../services/publishing/astromat-ada')
 const { publishToDOAJ } = require('../../services/publishing/doaj')
 const publishToGoogleSpreadSheet = require('../../services/publishing/google-spreadsheet')
 const { tryPublishDocMaps } = require('../../services/publishing/docmaps')
@@ -1545,6 +1546,49 @@ const publishManuscript = async (id, groupId) => {
   return { manuscript: updatedManuscript, steps }
 }
 
+const updateAda = async (id, adaState) => {
+  const manuscript = await Manuscript.query().findById(id)
+  const activeConfig = await Config.getCached(manuscript.groupId)
+  let updatedManuscript = manuscript
+
+  if (activeConfig.formData.publishing.ada?.enableAdaPublish) {
+    const update = {}
+    const steps = []
+
+    try {
+      const { data } = await publishToAda(manuscript, adaState)
+
+      steps.push({
+        stepLabel: 'Publishing to ADA',
+        succeeded: true,
+      })
+
+      update.submission = JSON.stringify({
+        ...manuscript.submission,
+        adaState,
+        adaProcessStatus: data.processStatus,
+        $doi: data.doi,
+      })
+
+      updatedManuscript = await Manuscript.query().patchAndFetchById(id, update)
+    } catch (err) {
+      console.error(err)
+      steps.push({
+        stepLabel: 'Publishing to ADA',
+        succeeded: false,
+        errorMessage: err.message,
+        errorDetails: Object.entries(err.response.data).map(
+          ([key, value]) => `${key}: ${value}`,
+        ),
+      })
+    }
+
+    return { manuscript: updatedManuscript, steps }
+  }
+
+  return { manuscript: null, steps: [] }
+}
+
 const publishOnCMS = async (groupId, manuscriptId) => {
   await rebuildCMSSite(groupId, { manuscriptId })
   return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
@@ -2171,6 +2215,7 @@ module.exports = {
   supplementaryFiles,
   unarchiveManuscripts,
   unreviewedPreprints,
+  updateAda,
   updateManuscript,
   validateDOI,
   validateSuffix,
