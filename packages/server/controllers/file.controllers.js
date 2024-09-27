@@ -25,11 +25,15 @@ const createFileFn = async (file, meta) => {
 
     const element = formsElements.find(el => el.id === meta.formElementId)
 
+    const manuscript = await Manuscript.query()
+      .findById(meta.manuscriptId)
+      .select('shortId')
+
     if (element.uploadAttachmentSource === 'external') {
       options.s3 = {
         accessKeyId: decrypt(element.s3AccessId),
         secretAccessKey: decrypt(element.s3AccessToken),
-        bucket: element.s3Bucket,
+        bucket: element.s3Bucket || manuscript.shortId,
         region: element.s3Region,
         url: element.s3Url,
       }
