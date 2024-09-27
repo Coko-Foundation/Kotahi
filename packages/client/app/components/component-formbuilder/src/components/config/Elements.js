@@ -260,7 +260,11 @@ const s3InputFields = {
     defaultValue: 'internal',
   },
   s3Url: showHideTextfield(showHideCredentials),
-  s3Bucket: showHideTextfield(showHideCredentials),
+  s3Bucket: showHideTextfield(showHideCredentials, {
+    description:
+      'Leave empty to use the short id of the manuscript as the bucket name.',
+    validate: null,
+  }),
   s3Region: showHideTextfield(showHideCredentials),
   s3AccessToken: showHideTextfield(showHideCredentials, {
     placeholder: '*********',
