@@ -80,8 +80,19 @@ const Submit = ({
   const handleSave = (source, versionId) =>
     updateManuscript(versionId, { meta: { source } })
 
+  const handleSaveComments = (comments, versionId) =>
+    updateManuscript(versionId, {
+      meta: { comments: JSON.stringify(comments) },
+    })
+
   const { t } = useTranslation()
   const debouncedSave = useCallback(debounce(handleSave, 2000), [])
+
+  const debouncedSaveComments = useCallback(
+    debounce(handleSaveComments, 500),
+    [],
+  )
+
   useEffect(() => {
     debouncedSave.flush()
     return () => debouncedSave.flush()
@@ -100,6 +111,9 @@ const Submit = ({
           currentUser={currentUser}
           manuscript={version}
           readonly={!userCanEditManuscriptAndFormData}
+          saveComments={comments => {
+            debouncedSaveComments(comments, version.id)
+          }}
           saveSource={source => {
             debouncedSave(source, version.id)
           }}

@@ -7,6 +7,11 @@ class Config extends BaseModel {
     return 'configs'
   }
 
+  constructor(properties) {
+    super(properties)
+    this.type = 'config'
+  }
+
   static cachedConfigsByGroupId = {}
   // static timeToInvalidateCache = 0
 

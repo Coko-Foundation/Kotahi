@@ -11,4 +11,10 @@ module.exports = {
     from: 'simplej@example.com',
     path: `${__dirname}/test-mailer`, // eslint-disable-line node/no-path-concat
   },
+  logger: {
+    info: () => {},
+    warn: () => {},
+    error: () => {},
+    debug: () => {},
+  },
 }

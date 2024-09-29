@@ -2,10 +2,11 @@ import React, { useRef } from 'react'
 
 import { Wax } from 'wax-prosemirror-core'
 
-import { FullWidthAndHeightContainer } from '../style'
+import { CmsWidthAndHeightContainer } from '../style'
 
 import ContentEditorLayout from './layout/ContentEditorLayout'
 import ContentEditorConfig from './config/ContentEditorConfig'
+import SimpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -38,12 +39,15 @@ const ContentWaxEditor = ({
     username: user.username || 'demo',
   }
 
+  const { simple } = rest
   const editorRef = useRef(null)
 
+  const config = simple ? SimpleWaxEditorConfig : ContentEditorConfig
+
   return (
-    <FullWidthAndHeightContainer>
+    <CmsWidthAndHeightContainer>
       <Wax
-        config={ContentEditorConfig(onAssetManager)}
+        config={config(onAssetManager)}
         fileUpload={file => renderImage(file)}
         layout={ContentEditorLayout(readonly)}
         ref={editorRef}
@@ -51,7 +55,7 @@ const ContentWaxEditor = ({
         value={value}
         {...rest}
       />
-    </FullWidthAndHeightContainer>
+    </CmsWidthAndHeightContainer>
   )
 }
 

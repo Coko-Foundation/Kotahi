@@ -38,14 +38,19 @@ const ManuscriptContainer = styled.div`
   }
 `
 
-const Manuscript = ({ file, content, currentUser }) => {
+const Manuscript = ({ file, content, currentUser, manuscript }) => {
   return (
     <Columns>
       {file &&
       file.storedObjects[0].mimetype ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
         <ManuscriptContainer>
-          <FullWaxEditor readonly user={currentUser} value={content} />
+          <FullWaxEditor
+            readonly
+            setComments={() => JSON.parse(manuscript.meta.comments) || []}
+            user={currentUser}
+            value={content}
+          />
         </ManuscriptContainer>
       ) : (
         <Info>No supported view of the file</Info>

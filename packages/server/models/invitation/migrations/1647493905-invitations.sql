@@ -1,4 +1,9 @@
-create type invitation_status as enum ('UNANSWERED','ACCEPTED','REJECTED');
+DO $$ 
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'invitation_status') THEN
+        CREATE TYPE invitation_status AS enum ('UNANSWERED','ACCEPTED','REJECTED');
+    END IF;
+END $$;
 
 CREATE TABLE invitations (
     id UUID PRIMARY KEY,

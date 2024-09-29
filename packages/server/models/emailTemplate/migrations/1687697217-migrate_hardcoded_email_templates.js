@@ -73,9 +73,9 @@ exports.up = async knex => {
         }
 
         // eslint-disable-next-line no-console
-        console.info(
-          'Email template IDs successfully inserted into task_email_notifications.',
-        )
+        // console.info(
+        //   'Email template IDs successfully inserted into task_email_notifications.',
+        // )
       } catch (error) {
         console.error('Error updating email template IDs:', error)
         throw error
@@ -111,9 +111,9 @@ exports.up = async knex => {
         }
 
         // eslint-disable-next-line no-console
-        console.info(
-          'Email template IDs successfully inserted into task_email_notifications.',
-        )
+        // console.info(
+        //   'Email template IDs successfully inserted into task_email_notifications.',
+        // )
       } catch (error) {
         console.error('Error updating email template IDs:', error)
         throw error

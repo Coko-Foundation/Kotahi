@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
+import { WaxContext, ComponentPlugin, WaxView } from 'wax-prosemirror-core'
 import { Grid, EditorDiv, Menu, FullWaxEditorGrid } from '../EditorStyles'
 
 import 'wax-prosemirror-core/dist/index.css'
@@ -10,7 +10,7 @@ const TopBar = ComponentPlugin('topBar')
 const ContentEditorLayout =
   readOnly =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) => {
+  props => {
     const { options } = useContext(WaxContext)
 
     // added to bring in full screen
@@ -48,7 +48,7 @@ const ContentEditorLayout =
                 className="wax-surface-scroll panelWrapper"
                 hideComments
               >
-                {editor}
+                <WaxView {...props} />
               </EditorDiv>
             </FullWaxEditorGrid>
           </>

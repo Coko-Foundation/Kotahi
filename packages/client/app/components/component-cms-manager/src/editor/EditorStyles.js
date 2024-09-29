@@ -45,7 +45,6 @@ export const FullWaxEditorGrid = styled.div`
   grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
   height: 18rem;
   ${waxDefaultStyles}
-  overflow: scroll;
   position: relative;
   z-index: 0;
 `
@@ -58,7 +57,7 @@ export const EditorDiv = styled.div`
   grid-row-start: editorRow;
   height: 100%;
   ${props => !props.hideComments && 'min-width: 800px'};
-  overflow: scroll;
+  overflow: auto;
   padding: 5px;
   position: relative;
 

@@ -22,7 +22,6 @@ const ChatWaxEditor = ({
   return (
     <div className={validationStatus}>
       <Wax
-        autoCompleteReducer={autoCompleteReducer}
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         className={editorType}
@@ -33,7 +32,6 @@ const ChatWaxEditor = ({
         readonly={readonly}
         ref={editorRef}
         value={value}
-        {...rest}
       />
     </div>
   )

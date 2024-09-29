@@ -1,10 +1,29 @@
 import { Service } from 'wax-prosemirror-core'
+import autocomplete from 'prosemirror-autocomplete'
 
 class MentionService extends Service {
   name = 'MentionService'
 
-  // eslint-disable-next-line class-methods-use-this
-  boot() {}
+  boot() {
+    const mentionsConfig = this.app.config.get('config.MentionService')
+
+    const options = {
+      reducer: mentionsConfig.autoCompleteReducer,
+      triggers: [
+        {
+          name: 'mention',
+          trigger: /(@)$/,
+          decorationAttrs: { class: 'mention-tag' },
+        },
+      ],
+    }
+
+    const autoCompletePlugins = autocomplete(options)
+
+    autoCompletePlugins.forEach((plugin, i) => {
+      this.app.PmPlugins.add(`autocomplete-${i}`, plugin)
+    })
+  }
 
   register() {
     const createMark = this.container.get('CreateMark')

@@ -46,7 +46,6 @@ class KotahiBlockDropDown extends ToolGroup {
     @inject('Heading5') heading5,
     @inject('Heading6') heading6,
     @inject('Paragraph') paragraph,
-    @inject('BlockQuote') blockQuote,
   ) {
     /* stylelint-enable */
 
@@ -60,7 +59,6 @@ class KotahiBlockDropDown extends ToolGroup {
       heading5,
       heading6,
       paragraph,
-      blockQuote,
     ]
   }
 
@@ -80,7 +78,6 @@ class KotahiBlockDropDown extends ToolGroup {
       { label: 'Heading 5', value: 4, item: this._tools[4] },
       { label: 'Heading 6', value: 5, item: this._tools[5] },
       { label: 'Paragraph', value: 6, item: this._tools[6] },
-      { label: 'Block quote', value: 7, item: this._tools[7] },
     ]
     /* eslint-enable no-underscore-dangle */
 

@@ -298,6 +298,7 @@ const AiPDFDesigner = ({
   passedSettings,
   currentUser,
   manuscript,
+  setComments,
 }) => {
   const {
     css,
@@ -590,6 +591,7 @@ const AiPDFDesigner = ({
               {...settings?.editor}
               currentUser={currentUser}
               manuscript={manuscript}
+              setComments={setComments}
             />
             <SelectionBox
               // eslint-disable-next-line react/prop-types

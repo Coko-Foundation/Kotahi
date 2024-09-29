@@ -315,7 +315,6 @@ const uploadAndConvertBase64ImagesInManuscript = async manuscript => {
 }
 
 const commonUpdateManuscript = async (id, input, ctx) => {
-  // ms = manuscript
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
   if (msDelta.submission?.$doi?.startsWith('https://doi.org/'))
     msDelta.submission.$doi =
@@ -336,6 +335,10 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     : false
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
+
+  if (updatedMs.meta?.comments && !Array.isArray(updatedMs.meta.comments)) {
+    updatedMs.meta.comments = JSON.parse(updatedMs.meta.comments)
+  }
 
   // Create a date for new submissions
   if (
@@ -360,7 +363,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
-  return Manuscript.query().updateAndFetchById(id, updatedMs)
+
+  // convert to json, otherwise you're bypassing validation
+  return Manuscript.query().updateAndFetchById(id, updatedMs.$toJson())
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
@@ -600,6 +605,7 @@ const resolvers = {
 
       return archivedManuscript[0].id
     },
+
     async assignAuthoForProofingManuscript(_, { id }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
@@ -711,6 +717,7 @@ const resolvers = {
 
       return ids
     },
+
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
       const manuscript = await Manuscript.findById(id)
@@ -757,6 +764,7 @@ const resolvers = {
 
       return id
     },
+
     // TODO Rename to something like 'setReviewerResponse'
     async reviewerResponse(_, { action, teamId }, ctx) {
       if (action !== 'accepted' && action !== 'rejected')
@@ -898,9 +906,11 @@ const resolvers = {
 
       return team
     },
+
     async updateManuscript(_, { id, input }, ctx) {
       return commonUpdateManuscript(id, input, ctx)
     },
+
     async submitAuthorProofingFeedback(_, { id, input }, ctx) {
       let updated = await commonUpdateManuscript(id, input, ctx)
 
@@ -1035,10 +1045,12 @@ const resolvers = {
 
       return updated
     },
+
     async createNewVersion(_, { id }, ctx) {
       const manuscript = await Manuscript.query().findById(id)
       return manuscript.createNewVersion()
     },
+
     async submitManuscript(_, { id, input }, ctx) {
       // Automated email submissionConfirmation on submission
       const manuscript = await Manuscript.query()
@@ -1212,6 +1224,7 @@ const resolvers = {
 
       return Manuscript.query().updateAndFetchById(id, manuscript)
     },
+
     async addReviewer(
       _,
       { manuscriptId, userId, invitationId, isCollaborative },
@@ -1275,6 +1288,7 @@ const resolvers = {
 
       return newTeam
     },
+
     async removeReviewer(_, { manuscriptId, userId }) {
       const manuscript = await Manuscript.query().findById(manuscriptId)
 
@@ -1353,6 +1367,7 @@ const resolvers = {
 
       return updated
     },
+
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
@@ -2223,6 +2238,9 @@ const resolvers = {
       // TODO Any reason not to use replaceImageSrcResponsive here?
       return replaceImageSrc(parent.source, files, 'medium')
     },
+    async comments(parent) {
+      return JSON.stringify(parent.comments)
+    },
   },
   PublishedReview: {
     async users(parent) {
@@ -2387,6 +2405,7 @@ const typeDefs = `
 
   input ManuscriptMetaInput {
     source: String
+    comments: String
   }
 
   type PublishingResult {
@@ -2451,6 +2470,7 @@ const typeDefs = `
   type ManuscriptMeta {
     title: String
     source: String
+    comments: String
     abstract: String
     subjects: [String]
     history: [MetaDate]

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Formik } from 'formik'
 // eslint-disable-next-line import/no-unresolved
 import { useTranslation } from 'react-i18next'
-import { FullWidthAndHeightContainer } from '../../component-cms-manager/src/style'
+import { CmsWidthAndHeightContainer } from '../../component-cms-manager/src/style'
 import EmailTemplateEditForm from './EmailTemplateEditForm'
 
 const EmailTemplateContent = ({
@@ -108,7 +108,7 @@ const EmailTemplateContent = ({
   }
 
   return (
-    <FullWidthAndHeightContainer>
+    <CmsWidthAndHeightContainer>
       <Formik
         enableReinitialize
         initialValues={{
@@ -168,7 +168,7 @@ const EmailTemplateContent = ({
           )
         }}
       </Formik>
-    </FullWidthAndHeightContainer>
+    </CmsWidthAndHeightContainer>
   )
 }
 

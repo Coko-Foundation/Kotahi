@@ -134,6 +134,7 @@ const fragmentFields = `
   submission
   meta {
     source
+    comments
     manuscriptId
     previousVersions {
       source

@@ -30,6 +30,8 @@ const FullWaxEditor = ({
   readonly,
   autoFocus,
   saveSource,
+  getComments,
+  setComments,
   placeholder,
   useComments,
   authorComments,
@@ -67,11 +69,14 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  const config = yjsConfig(fullWaxEditorConfig(handleAssetManager, readonly), {
-    wsProvider,
-    ydoc,
-    yjsType: name,
-  })
+  const config = yjsConfig(
+    fullWaxEditorConfig(handleAssetManager, getComments, setComments, readonly),
+    {
+      wsProvider,
+      ydoc,
+      yjsType: name,
+    },
+  )
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>

@@ -116,6 +116,7 @@ const manuscriptFields = `
   meta {
     manuscriptId
     source
+		comments
     history {
       type
       date

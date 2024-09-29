@@ -3,6 +3,7 @@ import {
   WaxContext,
   ComponentPlugin,
   DocumentHelpers,
+  WaxView,
 } from 'wax-prosemirror-core'
 import {
   NotesAreaContainer,
@@ -33,7 +34,7 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 const ProductionWaxEditorNoCommentsLayout =
   readOnly =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) => {
+  props => {
     const getNotes = main => {
       const notes = DocumentHelpers.findChildrenByType(
         main.state.doc,
@@ -89,7 +90,7 @@ const ProductionWaxEditorNoCommentsLayout =
         <Grid production readonly={readOnly}>
           {readOnly ? (
             <ReadOnlyEditorDiv className="wax-surface-scroll">
-              {editor}
+              <WaxView {...props} />
             </ReadOnlyEditorDiv>
           ) : (
             <>
@@ -100,7 +101,9 @@ const ProductionWaxEditorNoCommentsLayout =
                 <SideMenu>
                   <LeftSideBar />
                 </SideMenu>
-                <EditorContainer>{editor}</EditorContainer>
+                <EditorContainer>
+                  <WaxView {...props} />
+                </EditorContainer>
               </ProductionEditorDiv>
             </>
           )}

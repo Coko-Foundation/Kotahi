@@ -41,6 +41,7 @@ const Editor = ({
   enablePaste,
   currentUser,
   manuscript,
+  setComments,
 }) => {
   const {
     setHtmlSrc,
@@ -149,12 +150,14 @@ const Editor = ({
         id="assistant-ctx"
         onPaste={enablePaste ? handlePaste : () => {}}
         ref={editorRef}
+        setComments={setComments}
       />
       {!passedContent && (
         <HiddenWaxEditor>
           <FullWaxEditor
             getActiveViewDom={setPassedContent}
             readonly={!contentEditable}
+            setComments={setComments}
             user={currentUser}
             value={manuscript.meta.source}
           />

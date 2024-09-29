@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS get_uuid_v4;
+
 CREATE FUNCTION get_uuid_v4() RETURNS uuid AS $$
 BEGIN
   -- See https://stackoverflow.com/a/21327318/6505513

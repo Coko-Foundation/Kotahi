@@ -3,7 +3,7 @@ import { Formik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import CMSPageEditForm from './CMSPageEditForm'
 
-import { FullWidthAndHeightContainer } from '../style'
+import { CmsWidthAndHeightContainer } from '../style'
 
 const CMSPageEdit = ({
   isNewPage,
@@ -126,43 +126,41 @@ const CMSPageEdit = ({
   const resetCustomErrors = () => setCustomFormErrors({})
 
   return (
-    <FullWidthAndHeightContainer>
-      <FullWidthAndHeightContainer>
-        <Formik
-          initialValues={{
-            title: cmsPage.title || '',
-            content: cmsPage.content || '',
-            url: cmsPage.url || '',
-          }}
-          innerRef={formikRef}
-          onSubmit={async values =>
-            isNewPage ? createNewPage(values) : publish(values)
-          }
-        >
-          {formikProps => {
-            return (
-              <CMSPageEditForm
-                autoSaveData={autoSaveData}
-                autoSubmit={autoSubmit}
-                cmsPage={cmsPage}
-                currentValues={formikProps.values}
-                customFormErrors={customFormErrors}
-                flaxSiteUrlForGroup={flaxSiteUrlForGroup}
-                isNewPage={isNewPage}
-                onDelete={onDelete}
-                onSubmit={formikProps.handleSubmit}
-                resetCustomErrors={resetCustomErrors}
-                setFieldValue={formikProps.setFieldValue}
-                setTouched={formikProps.setTouched}
-                submitButtonText={
-                  isNewPage ? t('common.Save') : submitButtonState.text
-                }
-              />
-            )
-          }}
-        </Formik>
-      </FullWidthAndHeightContainer>
-    </FullWidthAndHeightContainer>
+    <CmsWidthAndHeightContainer>
+      <Formik
+        initialValues={{
+          title: cmsPage.title || '',
+          content: cmsPage.content || '',
+          url: cmsPage.url || '',
+        }}
+        innerRef={formikRef}
+        onSubmit={async values =>
+          isNewPage ? createNewPage(values) : publish(values)
+        }
+      >
+        {formikProps => {
+          return (
+            <CMSPageEditForm
+              autoSaveData={autoSaveData}
+              autoSubmit={autoSubmit}
+              cmsPage={cmsPage}
+              currentValues={formikProps.values}
+              customFormErrors={customFormErrors}
+              flaxSiteUrlForGroup={flaxSiteUrlForGroup}
+              isNewPage={isNewPage}
+              onDelete={onDelete}
+              onSubmit={formikProps.handleSubmit}
+              resetCustomErrors={resetCustomErrors}
+              setFieldValue={formikProps.setFieldValue}
+              setTouched={formikProps.setTouched}
+              submitButtonText={
+                isNewPage ? t('common.Save') : submitButtonState.text
+              }
+            />
+          )
+        }}
+      </Formik>
+    </CmsWidthAndHeightContainer>
   )
 }
 

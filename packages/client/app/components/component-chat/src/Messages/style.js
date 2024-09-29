@@ -59,7 +59,7 @@ export const Message = styled.div`
   align-self: stretch;
   background: transparent;
   display: grid;
-  grid-template-columns: 45px auto;
+  grid-template-columns: 40px auto;
   padding-right: 4px;
   position: relative;
 
@@ -67,6 +67,7 @@ export const Message = styled.div`
     align-items: flex-start;
     display: flex;
     justify-content: flex-end;
+    max-width: 70px;
     padding-right: 20px;
     position: relative;
   }
@@ -98,7 +99,7 @@ export const Message = styled.div`
 
 export const GutterContainer = styled.div`
   display: flex;
-  padding-left: 8px;
+  padding-left: 5px;
   width: 45px;
 `
 

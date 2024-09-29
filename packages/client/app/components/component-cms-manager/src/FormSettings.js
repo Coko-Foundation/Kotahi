@@ -9,12 +9,11 @@ import { FormTextInput, SimpleWaxEditorContainer } from './style'
 
 import { Checkbox } from '../../shared/Checkbox'
 
-import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
-
 import { hasValue } from '../../../shared/htmlUtils'
 import { ColorPicker } from '../../shared'
 
-const createEditorComponent = (EditorComponent, shouldWrap = true) => {
+/* eslint-disable-next-line default-param-last */
+const createEditorComponent = (EditorComponent, shouldWrap = true, simple) => {
   /* eslint-disable-next-line react/function-component-definition */
   return ({ validationStatus, setTouched, onChange, ...rest }) => {
     const editorComponent = (
@@ -28,6 +27,7 @@ const createEditorComponent = (EditorComponent, shouldWrap = true) => {
           const cleanedVal = hasValue(val) ? val : ''
           onChange(cleanedVal)
         }}
+        simple={simple}
       />
     )
 
@@ -39,8 +39,8 @@ const createEditorComponent = (EditorComponent, shouldWrap = true) => {
   }
 }
 
-const richEditor = createEditorComponent(ContentWaxEditor, false)
-const simpleWaxEditor = createEditorComponent(SimpleWaxEditor)
+const richEditor = createEditorComponent(ContentWaxEditor, false, false)
+const simpleWaxEditor = createEditorComponent(ContentWaxEditor, false, true)
 
 const staticTextInput = props => {
   return <StaticTextInput {...props} />

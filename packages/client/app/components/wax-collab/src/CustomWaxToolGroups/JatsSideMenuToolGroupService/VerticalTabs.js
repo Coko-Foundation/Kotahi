@@ -78,8 +78,8 @@ const Tab = styled.div`
 `
 
 const Content = styled.div`
-  border-right: 1px solid ${color.gray60};
-  border-top: 1px solid ${color.gray60};
+  border-right: 1px solid ${color.gray90};
+  border-top: 1px solid ${color.gray90};
   border-top-right-radius: 4px;
   height: 100%;
   width: 100%;

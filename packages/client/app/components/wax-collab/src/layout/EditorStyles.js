@@ -1,5 +1,6 @@
-/* stylelint-disable string-quotes */
+/* stylelint-disable string-quotes, declaration-no-important, declaration-block-no-redundant-longhand-properties */
 /* stylelint-disable color-function-notation, alpha-value-notation */
+/* stylelint-disable shorthand-property-no-redundant-values, no-descending-specificity */
 
 import styled, { css } from 'styled-components'
 import { th, grid } from '@coko/client'
@@ -12,7 +13,6 @@ export const Grid = styled.div`
   display: grid;
   grid-template-areas: 'menu' 'editor';
   grid-template-columns: 100%;
-  /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
   ${props => props.production && 'min-height: calc(100vh - 142px);'}
   position: relative;
@@ -24,7 +24,6 @@ export const Grid = styled.div`
 export const Menu = styled.div`
   align-items: center;
   background: #fff;
-  border: 1px solid ${color.gray60};
   border-bottom: 1px solid ${color.gray90};
   display: flex;
   flex-wrap: wrap;
@@ -37,6 +36,22 @@ export const Menu = styled.div`
   top: -20px;
   user-select: none;
   z-index: 5;
+
+  > div:last-child {
+    border-left-color: ${th('colorFurniture')};
+    border-left-style: ${th('borderStyle')};
+    border-left-width: ${th('borderWidth')};
+    margin-left: 0 !important;
+    margin-right: ${grid(5)};
+  }
+
+  > div:nth-last-of-type(-n + 2) {
+    margin-left: auto;
+  }
+
+  > div[data-name='Tables'] {
+    border-right: none;
+  }
 `
 
 // export const ReadOnlyEditorWithCommentsWrapper = styled.div`
@@ -110,13 +125,12 @@ export const EditorDiv = styled.div`
 
 export const EditorContainer = styled.div`
   height: 100%;
-  width: 100%;
+  width: 65%;
 
   .ProseMirror {
-    box-shadow: 0 0 8px #ecedf1;
-    min-height: 98%;
-    padding: ${grid(10)};
-    padding: 10px;
+    border-right: 1px solid #ecedf1;
+    min-height: 100%;
+    padding: 45px 25px 25px 25px;
   }
 `
 
@@ -150,17 +164,11 @@ export const ReadOnlyEditorDiv = styled.div`
 `
 
 export const InfoContainer = styled.div`
+  bottom: 1px;
   display: flex;
-  flex-flow: row wrap;
-  grid-column-start: editorCol;
-  grid-row-start: infoRow;
-  justify-content: flex-end;
-  width: 100%;
-  z-index: 998;
-  /* TODO: when clicked on, this displays a tooltip which is placed incorrectly! */
-  /* tooltip expects this to be in bottom right of viewport, which isn't where we always have it. */
-  /* position: fixed;
-  bottom: 0; */
+  position: fixed;
+  right: 21px;
+  z-index: 999;
 `
 
 // these are for the simple editor
@@ -311,7 +319,6 @@ export const ProductionEditorDiv = styled.div`
 export const EditorArea = styled.div`
   flex-grow: 1;
   height: calc(100vh - 182px);
-  overflow-y: scroll;
 `
 
 export const SideMenu = styled.div`

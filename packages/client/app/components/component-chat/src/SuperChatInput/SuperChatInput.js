@@ -5,9 +5,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { Send } from 'react-feather'
 
-import { Button } from '../../../pubsweet'
 import { Icon } from '../../../shared'
 import {
   Form,
@@ -22,18 +20,6 @@ import { useAppScroller } from '../../../../hooks/useAppScroller'
 import EditorMention from './EditorMention'
 
 const QuotedMessage = styled.div``
-
-const SendButton = styled(Button)`
-  align-items: center;
-  display: flex;
-  font-size: 90%;
-  justify-content: center;
-  min-height: 42px;
-  min-width: unset;
-  /* stylelint-disable-next-line declaration-no-important */
-  padding: 0 !important;
-  width: 50px;
-`
 
 export const cleanSuggestionUserObject = user => {
   if (!user) return null
@@ -50,9 +36,7 @@ const SuperChatInput = props => {
 
   const cacheKey = `last-content-${props.channelId}`
   const [text, changeText] = React.useState('')
-  // key to clear ChatWaxEditor input on submit
-  const [messageSentCount, setMessageSentCount] = React.useState(0)
-  const [chatInputFocus, setChatInputFocus] = React.useState(false)
+
   const { scrollToBottom } = useAppScroller()
   const editorRef = React.useRef()
 
@@ -142,9 +126,7 @@ const SuperChatInput = props => {
     sendMessage({ body: msg.replace(/@\[([a-z0-9_-]+)\]/g, '@$1') })
 
     // Clear the chat input now that we're sending a message for sure
-    setMessageSentCount(messageSentCount + 1)
     removeQuotedMessage()
-    setChatInputFocus(true)
   }
 
   // $FlowFixMe
@@ -170,7 +152,6 @@ const SuperChatInput = props => {
       props.websocketConnection !== 'reconnected')
 
   const { t } = useTranslation()
-  const sendTooltip = t('chat.Send') // For accessibility
 
   return (
     <ChatInputContainer>
@@ -211,7 +192,7 @@ const SuperChatInput = props => {
               </PreviewWrapper>
             )}
             <EditorMention
-              autoFocus={chatInputFocus}
+              autoFocus
               editorRef={editorRef}
               field={{
                 name: 'comment',
@@ -219,7 +200,6 @@ const SuperChatInput = props => {
               hasAttachment={!!props.quotedMessage || !!mediaPreview}
               id={`comment-editor-${props.channelId}`}
               mentionsList={mentionsList}
-              messageSentCount={messageSentCount}
               networkDisabled={networkDisabled}
               onEnterPress={onEnterPress}
               placeholder={t('chat.Your message here...')}
@@ -227,15 +207,6 @@ const SuperChatInput = props => {
               staticSuggestions={props.participants}
             />
           </InputWrapper>
-          <SendButton
-            aria-label={sendTooltip}
-            data-cy="chat-input-send-button"
-            onClick={submit}
-            primary
-            title={sendTooltip}
-          >
-            <Send color="white" size={18} />
-          </SendButton>
         </Form>
       </ChatInputWrapper>
     </ChatInputContainer>
