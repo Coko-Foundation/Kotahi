@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react'
 import {
   WaxContext,
+  WaxView,
   ComponentPlugin,
   DocumentHelpers,
 } from 'wax-prosemirror-core'
@@ -47,7 +48,7 @@ const CitationArea = ComponentPlugin('citationArea')
 const AuthorProofingWaxEditorLayout =
   readOnly =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) => {
+  props => {
     const {
       pmViews: { main },
       options,
@@ -104,11 +105,12 @@ const AuthorProofingWaxEditorLayout =
           {readOnly ? (
             <ProductionEditorDiv>
               <SideMenu />
-
               <EditorArea className="editorArea production">
                 <div>
                   <WaxSurfaceScroll className="panelWrapper">
-                    <EditorContainer>{editor}</EditorContainer>
+                    <EditorContainer>
+                      <WaxView {...props} />
+                    </EditorContainer>
                     <CitationArea />
                     <CommentsContainer>
                       <CommentTrackToolsContainer>
@@ -149,7 +151,9 @@ const AuthorProofingWaxEditorLayout =
                 <EditorArea className="editorArea authorProofing">
                   <div>
                     <WaxSurfaceScroll className="panelWrapper">
-                      <EditorContainer>{editor}</EditorContainer>
+                      <EditorContainer>
+                        <WaxView {...props} />
+                      </EditorContainer>
                       <CitationArea />
                       <CommentsContainer>
                         <CommentTrackToolsContainer>

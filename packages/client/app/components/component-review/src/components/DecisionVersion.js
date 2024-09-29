@@ -116,6 +116,15 @@ const DecisionVersion = ({
     [],
   )
 
+  const debouncedSaveComments = useCallback(
+    debounce(comments => {
+      updateManuscript(version.id, {
+        meta: { comments: JSON.stringify(comments) },
+      })
+    }, 500),
+    [],
+  )
+
   const { t } = useTranslation()
   useEffect(() => debouncedSave.flush, [])
   const location = useLocation()
@@ -135,6 +144,7 @@ const DecisionVersion = ({
           currentUser={user}
           manuscript={manuscript}
           readonly={isReadOnly}
+          saveComments={debouncedSaveComments}
           saveSource={isReadOnly ? null : debouncedSave}
         />
       ),

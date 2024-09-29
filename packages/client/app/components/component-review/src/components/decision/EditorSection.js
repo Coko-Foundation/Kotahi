@@ -60,6 +60,7 @@ const Composed = adopt(mapper, mapProps)
 const EditorSection = ({
   manuscript,
   saveSource,
+  saveComments,
   onChange,
   onBlur,
   readonly,
@@ -107,7 +108,6 @@ const EditorSection = ({
       : false
 
   const isAuthorMode = !!(currentUserIsAuthor && readonly)
-
   return (
     <Composed
       currentUser={currentUser}
@@ -122,12 +122,14 @@ const EditorSection = ({
         <div>
           <FullWaxEditor
             authorComments={isAuthorMode}
+            getComments={saveComments}
             manuscriptId={manuscript.id}
+            onAssetManager={onAssetManager}
             // onChange={readonly && !isAuthorMode ? null : onBlur}
             // onChange={readonly && !isAuthorMode ? null : onChange}
-            onAssetManager={onAssetManager}
             readonly={readonly}
             saveSource={saveSource}
+            setComments={() => JSON.parse(manuscript.meta.comments) || []}
             useComments={
               !!(
                 currentUserIsEditor ||

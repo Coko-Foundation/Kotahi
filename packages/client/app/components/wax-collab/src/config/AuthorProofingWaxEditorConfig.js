@@ -16,10 +16,11 @@ import {
   SpecialCharactersService,
   BottomInfoService,
   EditingSuggestingService,
+  CommentsService,
 } from 'wax-prosemirror-services'
 import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
-import CommentsService from '../extensions/CommentsService/CommentsService'
+// import CommentsService from '../extensions/CommentsService/CommentsService'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
 import {
@@ -54,6 +55,8 @@ const authorProofingWaxEditorConfig = (
   updateAnystyle,
   updateCrossRef,
   styleReference,
+  getComments,
+  setComments,
 ) => ({
   EnableTrackChangeService: {
     enabled: true,
@@ -85,6 +88,8 @@ const authorProofingWaxEditorConfig = (
     showTitle: true,
     readOnly: true, // this should make it work though this is not yet in Wax
     replyToReadOnlyComments: true,
+    getComments,
+    setComments,
   },
   MenuService: [
     {

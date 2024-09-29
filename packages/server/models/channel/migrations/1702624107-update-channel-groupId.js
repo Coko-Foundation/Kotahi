@@ -26,9 +26,9 @@ exports.up = async knex => {
       }
 
       // eslint-disable-next-line no-console
-      console.log(
-        `Updated ${channelsWithMissingGroup.length} channel records to add the missing group_id`,
-      )
+      // console.log(
+      //   `Updated ${channelsWithMissingGroup.length} channel records to add the missing group_id`,
+      // )
     } else {
       logger.error('No channels found with missing group id.')
     }

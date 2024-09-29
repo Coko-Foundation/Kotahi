@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react'
 import {
   WaxContext,
+  WaxView,
   ComponentPlugin,
   DocumentHelpers,
 } from 'wax-prosemirror-core'
@@ -47,7 +48,7 @@ const CitationArea = ComponentPlugin('citationArea')
 const ProductionWaxEditorLayout =
   readOnly =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) => {
+  props => {
     const {
       pmViews: { main },
       options,
@@ -108,7 +109,9 @@ const ProductionWaxEditorLayout =
               <EditorArea className="editorArea production">
                 <div>
                   <WaxSurfaceScroll className="panelWrapper">
-                    <EditorContainer>{editor}</EditorContainer>
+                    <EditorContainer>
+                      <WaxView {...props} />
+                    </EditorContainer>
                     <CitationArea />
                     <CommentsContainer>
                       <CommentTrackToolsContainer>
@@ -146,43 +149,43 @@ const ProductionWaxEditorLayout =
                 </SideMenu>
 
                 <EditorArea className="editorArea production">
-                  <div>
-                    <WaxSurfaceScroll className="panelWrapper">
-                      <EditorContainer>{editor}</EditorContainer>
-                      <CitationArea />
-                      <CommentsContainer>
-                        <CommentTrackToolsContainer>
-                          <CommentTrackTools>
-                            {commentsTracksCount + trackBlockNodesCount}{' '}
-                            COMMENTS AND SUGGESTIONS
-                            <CommentTrackOptions>
-                              <CommentTrackToolBar />
-                            </CommentTrackOptions>
-                          </CommentTrackTools>
-                        </CommentTrackToolsContainer>
-                        <RightArea area="main" />
-                      </CommentsContainer>
-                    </WaxSurfaceScroll>
-                    {hasNotes && (
-                      <NotesAreaContainer className="productionnotes panelWrapper">
-                        <NotesContainer id="notes-container">
-                          <NotesHeading>Notes</NotesHeading>
-                          <NotesArea view={main} />
-                        </NotesContainer>
-                        <CommentsContainerNotes>
-                          <RightArea area="notes" />
-                        </CommentsContainerNotes>
-                      </NotesAreaContainer>
-                    )}
-                  </div>
+                  <WaxSurfaceScroll className="panelWrapper">
+                    <EditorContainer>
+                      <WaxView {...props} />
+                    </EditorContainer>
+                    <CitationArea />
+                    <CommentsContainer>
+                      <CommentTrackToolsContainer>
+                        <CommentTrackTools>
+                          {commentsTracksCount + trackBlockNodesCount} COMMENTS
+                          AND SUGGESTIONS
+                          <CommentTrackOptions>
+                            <CommentTrackToolBar />
+                          </CommentTrackOptions>
+                        </CommentTrackTools>
+                      </CommentTrackToolsContainer>
+                      <RightArea area="main" />
+                    </CommentsContainer>
+                  </WaxSurfaceScroll>
+                  {hasNotes && (
+                    <NotesAreaContainer className="productionnotes panelWrapper">
+                      <NotesContainer id="notes-container">
+                        <NotesHeading>Notes</NotesHeading>
+                        <NotesArea view={main} />
+                      </NotesContainer>
+                      <CommentsContainerNotes>
+                        <RightArea area="notes" />
+                      </CommentsContainerNotes>
+                    </NotesAreaContainer>
+                  )}
                 </EditorArea>
+                <InfoContainer>
+                  <CounterInfo />
+                </InfoContainer>
               </ProductionEditorDiv>
             </>
           )}
         </Grid>
-        <InfoContainer>
-          <CounterInfo />
-        </InfoContainer>
       </div>
     )
   }

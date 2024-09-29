@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import {
   WaxContext,
+  WaxView,
   ComponentPlugin,
   DocumentHelpers,
 } from 'wax-prosemirror-core'
@@ -76,7 +77,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 const FullWaxEditorCommentsLayout =
   (readOnly, authorComments) =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) => {
+  props => {
     const {
       pmViews: { main },
       options,
@@ -101,7 +102,7 @@ const FullWaxEditorCommentsLayout =
           <Grid readonly>
             <FullWaxEditorGrid noScroll useComments>
               <ReadOnlyEditorWithCommentsEditor className="panelWrapper">
-                {editor}
+                <WaxView {...props} />
               </ReadOnlyEditorWithCommentsEditor>
               <FullCommentsContainer authorComments={authorComments}>
                 <CommentTrackToolsContainer authorComments={authorComments}>
@@ -139,7 +140,7 @@ const FullWaxEditorCommentsLayout =
             </Menu>
             <FullWaxEditorGrid useComments>
               <EditorDiv className="wax-surface-scroll panelWrapper">
-                {editor}
+                <WaxView {...props} />
               </EditorDiv>
               <FullCommentsContainer>
                 <CommentTrackToolsContainer>

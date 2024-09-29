@@ -1,3 +1,4 @@
+import BlockQuoteService from './BlockQuoteService/BlockQuoteService'
 import BulletListService from './BulletListService/BulletListService'
 import OrderedListService from './OrderedListService/OrderedListService'
 import JoinUpService from './JoinUpService/JoinUpService'
@@ -6,6 +7,7 @@ import ListItemService from './ListItemService/ListItemService'
 import ListToolGroupService from './ListToolGroupService/ListToolGroupService'
 
 export default [
+  new BlockQuoteService(),
   new ListItemService(),
   new BulletListService(),
   new OrderedListService(),

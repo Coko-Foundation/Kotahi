@@ -263,6 +263,7 @@ const Messages = ({
                       </div>
                     </Byline>
                   )}
+
                   <Bubble>
                     <MessageRenderer message={message} />
                     {index !== 0 && (
@@ -270,11 +271,13 @@ const Messages = ({
                         <InlineTime className="message-timestamp">
                           {convertTimestampToTimeString(message.created)}
                         </InlineTime>
-                        {renderDropdownAndEllipsis(
-                          isAdmin,
-                          isGroupManager,
-                          message,
-                        )}
+                        <div>
+                          {renderDropdownAndEllipsis(
+                            isAdmin,
+                            isGroupManager,
+                            message,
+                          )}
+                        </div>
                       </div>
                     )}
                   </Bubble>

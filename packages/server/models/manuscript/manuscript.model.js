@@ -385,6 +385,7 @@ class Manuscript extends BaseModel {
 
   static get schema() {
     return {
+      type: 'object',
       properties: {
         shortId: { type: 'integer' },
         parentId: {
@@ -427,6 +428,19 @@ class Manuscript extends BaseModel {
             title: { type: 'string' }, // TODO DEPRECATED. Remove once we clean up old migrations.
             abstract: { type: ['string', 'null'] }, // TODO DEPRECATED. Remove once we clean up old migrations.
             source: { type: 'string' },
+            comments: {
+              anyOf: [
+                {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                  },
+                },
+                {
+                  type: 'null',
+                },
+              ],
+            },
             history: {
               items: { type: 'object' },
               type: ['array', 'null'],
@@ -507,58 +521,63 @@ class Manuscript extends BaseModel {
           ],
         },
         authorFeedback: {
-          type: 'object',
-          properties: {
-            text: { type: 'string' },
-            fileIds: { type: 'array' },
-            submitterId: {
-              anyOf: [
-                {
-                  type: 'string',
-                  format: 'uuid',
+          anyOf: [
+            {
+              type: 'object',
+              properties: {
+                text: { type: 'string' },
+                fileIds: { type: 'array' },
+                submitterId: {
+                  anyOf: [
+                    {
+                      type: 'string',
+                      format: 'uuid',
+                    },
+                    {
+                      type: 'null',
+                    },
+                  ],
                 },
-                {
-                  type: 'null',
+                edited: {
+                  anyOf: [
+                    {
+                      type: 'string',
+                      format: 'date-time',
+                    },
+                    {
+                      type: 'object',
+                    },
+                    {
+                      type: 'null',
+                    },
+                  ],
                 },
-              ],
+                submitted: {
+                  anyOf: [
+                    {
+                      type: 'string',
+                      format: 'date-time',
+                    },
+                    {
+                      type: 'object',
+                    },
+                    {
+                      type: 'null',
+                    },
+                  ],
+                },
+                assignedAuthors: {
+                  items: { type: 'object' },
+                  type: ['array'],
+                },
+                previousSubmissions: {
+                  items: { type: 'object' },
+                  type: ['array'],
+                },
+              },
             },
-            edited: {
-              anyOf: [
-                {
-                  type: 'string',
-                  format: 'date-time',
-                },
-                {
-                  type: 'object',
-                },
-                {
-                  type: 'null',
-                },
-              ],
-            },
-            submitted: {
-              anyOf: [
-                {
-                  type: 'string',
-                  format: 'date-time',
-                },
-                {
-                  type: 'object',
-                },
-                {
-                  type: 'null',
-                },
-              ],
-            },
-            assignedAuthors: {
-              items: { type: 'object' },
-              type: ['array'],
-            },
-            previousSubmissions: {
-              items: { type: 'object' },
-              type: ['array'],
-            },
-          },
+            { type: 'null' },
+          ],
         },
       },
     }

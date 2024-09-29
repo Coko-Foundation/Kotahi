@@ -16,9 +16,9 @@ import {
   SpecialCharactersService,
   BottomInfoService,
   EditingSuggestingService,
+  CommentsService,
 } from 'wax-prosemirror-services'
 import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
-import CommentsService from '../extensions/CommentsService/CommentsService'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 // import TrackChangeService from '../CustomWaxToolGroups/TrackChangeService/TrackChangeService'
 import {
@@ -43,6 +43,8 @@ const productionWaxEditorConfig = (
   updateAnystyle,
   updateCrossRef,
   styleReference,
+  getComments,
+  setComments,
   updateCallout,
   isReadOnly,
   getDataFromDatacite = false,
@@ -72,7 +74,12 @@ const productionWaxEditorConfig = (
   // If we are in read-only mode, readOnly is set to true. This makes it so that the user cannot add more comments.
   // A little vexingly, however, the interface for adding (or replying to) comments is shown. Maybe this should be
   // changed in CommentsService in the future.
-  CommentsService: { showTitle: true, readOnly: isReadOnly || false },
+  CommentsService: {
+    showTitle: true,
+    readOnly: isReadOnly || false,
+    getComments,
+    setComments,
+  },
   MenuService: [
     {
       templateArea: 'topBar',

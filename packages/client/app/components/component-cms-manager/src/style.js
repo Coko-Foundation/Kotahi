@@ -124,7 +124,24 @@ export const FullWidthAndHeightContainer = styled.div`
   }
 `
 
+export const CmsWidthAndHeightContainer = styled.div`
+  height: 96%;
+  position: relative;
+  width: 100%;
+
+  @media screen and (min-width: 1440px) {
+    .full-wax-editor-grid {
+      height: 100%;
+      min-height: 250px; /* Double the height when screen width is above 1440 pixels */
+      position: absolute;
+      width: 100%;
+    }
+  }
+`
+
 export const SimpleWaxEditorContainer = styled.div`
+  height: 100%;
+
   & * {
     margin: 0;
   }

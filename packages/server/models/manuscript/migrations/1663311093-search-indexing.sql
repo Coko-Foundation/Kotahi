@@ -1,6 +1,8 @@
 ALTER TABLE manuscripts ADD COLUMN IF NOT EXISTS searchable_text TEXT DEFAULT '' NOT NULL;
 ALTER TABLE manuscripts ADD COLUMN IF NOT EXISTS search_tsvector tsvector DEFAULT ''::tsvector NOT NULL;
 
+DROP FUNCTION IF EXISTS manuscripts_searchable_text_trigger;
+
 CREATE FUNCTION manuscripts_searchable_text_trigger() RETURNS trigger AS $$
 DECLARE
   a TEXT;
@@ -91,6 +93,8 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER searchable_text_update BEFORE INSERT OR UPDATE
   ON manuscripts FOR EACH ROW EXECUTE PROCEDURE manuscripts_searchable_text_trigger();
 
+DROP FUNCTION IF EXISTS team_members_trigger;
+
 CREATE FUNCTION team_members_trigger() RETURNS trigger AS $$
 BEGIN
   UPDATE manuscripts SET updated = manuscripts.updated -- Cause trigger function to regenerate searchable_text
@@ -102,6 +106,8 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER team_member_update AFTER INSERT OR UPDATE
   ON team_members FOR EACH ROW EXECUTE PROCEDURE team_members_trigger();
+
+DROP FUNCTION IF EXISTS invitations_trigger;
 
 CREATE FUNCTION invitations_trigger() RETURNS trigger AS $$
 BEGIN

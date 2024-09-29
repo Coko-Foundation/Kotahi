@@ -135,6 +135,15 @@ const Production = ({
     [],
   )
 
+  const debouncedSaveComments = useCallback(
+    debounce(comments => {
+      updateManuscript(manuscript.id, {
+        meta: { comments: JSON.stringify(comments) },
+      })
+    }, 500),
+    [],
+  )
+
   const [cssValue, setCssValue] = useState(articleTemplate.css)
 
   const [htmlValue, setHtmlValue] = useState(articleTemplate.article)
@@ -178,16 +187,15 @@ const Production = ({
           <SectionContent>
             {manuscript ? (
               <ProductionWaxEditor
-                // onBlur={source => {
-                //   updateManuscript(manuscript.id, { meta: { source } })
-                // }}
                 client={client}
+                getComments={debouncedSaveComments}
                 getDataFromDatacite={getDataFromDatacite}
                 isAuthorProofingVersion={isAuthorProofingVersion}
                 manuscriptId={manuscript.id}
                 onAssetManager={onAssetManager}
                 readonly={isReadOnlyVersion || false}
                 saveSource={debouncedSave}
+                setComments={() => JSON.parse(manuscript.meta.comments) || []}
                 user={currentUser}
                 value={manuscript.meta.source}
               />
@@ -302,7 +310,11 @@ const Production = ({
   const cssAiAssistant = {
     content: (
       <CssAssistantProvider>
-        <AiPDFDesigner currentUser={currentUser} manuscript={manuscript} />
+        <AiPDFDesigner
+          currentUser={currentUser}
+          manuscript={manuscript}
+          setComments={() => JSON.parse(manuscript.meta.comments) || []}
+        />
       </CssAssistantProvider>
     ),
     hideOnly: true,
@@ -323,6 +335,7 @@ const Production = ({
         key={manuscript.meta.previousVersions?.length}
         manuscript={manuscript}
         saveCurrentVersion={saveCurrentVersion}
+        setComments={() => JSON.parse(manuscript.meta.comments) || []}
       />
     ),
   }

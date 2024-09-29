@@ -48,7 +48,7 @@ export const CommentTrackToolsContainer = styled.div`
   display: flex;
   /* margin-right: 30px; */
   padding-top: 5px;
-  /* position: fixed; */
+  position: fixed;
   user-select: none;
   z-index: 0;
   /* z-index: 1; */

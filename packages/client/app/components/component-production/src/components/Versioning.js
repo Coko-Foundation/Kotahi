@@ -163,6 +163,7 @@ const Versioning = ({
   currentUser,
   saveCurrentVersion,
   addNewVersion,
+  setComments,
 }) => {
   // const { production } = useContext(ConfigContext)
   // const historyIntervalInMinutes = production.manuscriptVersionHistory.historyIntervalInMinutes || 10
@@ -343,6 +344,7 @@ const Versioning = ({
             <FullWaxEditor
               key={`${useDiffing}-${versionList[shownVersion].created}`}
               readonly
+              setComments={setComments}
               user={currentUser}
               value={
                 // TODO: if !useDiffing, turn off show changes as well

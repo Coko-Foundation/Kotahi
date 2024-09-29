@@ -109,6 +109,7 @@ const fragmentFields = `
   meta {
     manuscriptId
     source
+		comments
     history {
       type
       date

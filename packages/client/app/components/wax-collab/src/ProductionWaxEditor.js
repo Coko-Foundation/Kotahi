@@ -121,6 +121,8 @@ const ProductionWaxEditor = ({
   readonly,
   autoFocus,
   saveSource,
+  getComments,
+  setComments,
   placeholder,
   fileUpload,
   useComments,
@@ -335,12 +337,16 @@ const ProductionWaxEditor = ({
         updateAnystyle,
         updateCrossRef,
         updateCiteProc,
+        getComments,
+        setComments,
       )
     : productionWaxEditorConfig(
         handleAssetManager,
         updateAnystyle,
         updateCrossRef,
         updateCiteProc,
+        getComments,
+        setComments,
         updateCallout,
         readonly,
         getDataFromDatacite || false,
@@ -363,6 +369,8 @@ const ProductionWaxEditor = ({
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}
+          scrollMargin={200}
+          scrollThreshold={200}
           user={waxUser}
           value={value}
           {...rest}

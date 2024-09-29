@@ -17,9 +17,9 @@ import {
   SpecialCharactersService,
   BottomInfoService,
   EditingSuggestingService,
+  CommentsService,
 } from 'wax-prosemirror-services'
 import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
-import CommentsService from '../extensions/CommentsService/CommentsService'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
@@ -41,7 +41,13 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
+const fullWaxEditorConfig = (
+  handleAssetManager,
+  getComments,
+  setComments,
+
+  isReadOnly,
+) => ({
   EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
   AcceptTrackChangeService: {
     own: {
@@ -64,6 +70,8 @@ const fullWaxEditorConfig = (handleAssetManager, isReadOnly) => ({
   CommentsService: {
     showTitle: true,
     readOnly: false,
+    getComments,
+    setComments,
   },
   MenuService: [
     {

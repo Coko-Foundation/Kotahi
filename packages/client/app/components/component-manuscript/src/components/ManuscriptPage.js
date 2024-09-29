@@ -17,6 +17,7 @@ const fragmentFields = `
   }
   meta {
     source
+		comments
     manuscriptId
   }
   channels {
@@ -50,6 +51,7 @@ const ManuscriptPage = ({ currentUser, match, ...props }) => {
       content={manuscript.meta?.source}
       currentUser={currentUser}
       file={manuscript.files.find(file => file.tags.includes('manuscript'))}
+      manuscript={manuscript}
     />
   )
 }

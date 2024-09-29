@@ -1,5 +1,5 @@
 import React from 'react'
-import { ComponentPlugin } from 'wax-prosemirror-core'
+import { ComponentPlugin, WaxView } from 'wax-prosemirror-core'
 import {
   SimpleGrid,
   SimpleEditorDiv,
@@ -17,16 +17,16 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 const SimpleWaxEditorLayout =
   (readonly, dataTestid = null) =>
   /* eslint-disable-next-line react/function-component-definition */
-  ({ editor }) =>
+  props =>
     (
-      <div>
+      <>
         <SimpleGrid readonly={readonly}>
           {readonly ? (
             <ReadOnlySimpleEditorDiv
               className="wax-surface-scroll"
               data-testid={dataTestid}
             >
-              {editor}
+              <WaxView {...props} />
             </ReadOnlySimpleEditorDiv>
           ) : (
             <>
@@ -37,7 +37,7 @@ const SimpleWaxEditorLayout =
                 className="wax-surface-scroll"
                 data-testid={dataTestid}
               >
-                {editor}
+                <WaxView {...props} />
               </SimpleEditorDiv>
             </>
           )}
@@ -47,7 +47,7 @@ const SimpleWaxEditorLayout =
             <CounterInfo />
           </SimpleInfoContainer>
         )}
-      </div>
+      </>
     )
 
 export default SimpleWaxEditorLayout

@@ -21,7 +21,7 @@ stages:
 
 build development:
   stage: Build development
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:26-dind
+  image: docker:26-dind
   services:
     - docker:26-dind
   before_script:

@@ -6717,6 +6717,11 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
+
 css-box-model@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/css-box-model/-/css-box-model-1.2.1.tgz#59951d3b81fd6b2074a62d49444415b0d2b4d7c1"
@@ -12614,18 +12619,10 @@ prosemirror-inputrules@1.2.0, prosemirror-inputrules@^1.2.0:
     prosemirror-state "^1.0.0"
     prosemirror-transform "^1.0.0"
 
-prosemirror-keymap@1.2.1:
+prosemirror-keymap@1.2.1, prosemirror-keymap@^1.0.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/prosemirror-keymap/-/prosemirror-keymap-1.2.1.tgz#3839e7db66cecddae7451f4246e73bdd8489be1d"
   integrity sha512-kVK6WGC+83LZwuSJnuCb9PsADQnFZllt94qPP3Rx/vLcOUV65+IbBeH2nS5cFggPyEVJhGkGrgYFRrG250WhHQ==
-  dependencies:
-    prosemirror-state "^1.0.0"
-    w3c-keyname "^2.2.0"
-
-prosemirror-keymap@^1.0.0:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/prosemirror-keymap/-/prosemirror-keymap-1.2.2.tgz#14a54763a29c7b2704f561088ccf3384d14eb77e"
-  integrity sha512-EAlXoksqC6Vbocqc0GtzCruZEzYgrn+iiGnNjsJsH4mrnIGex4qbLdWWNza3AW5W36ZRrlBID0eM6bdKH4OStQ==
   dependencies:
     prosemirror-state "^1.0.0"
     w3c-keyname "^2.2.0"
@@ -12957,6 +12954,19 @@ rc-input@~1.6.0, rc-input@~1.6.2:
     classnames "^2.2.1"
     rc-util "^5.18.1"
 
+rc-mentions@^2.15.0:
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/rc-mentions/-/rc-mentions-2.16.0.tgz#54a0746b8f664085bdc68044782000768cbd5cd9"
+  integrity sha512-46VoLGZe08BjTDsBJh0MSDE/OCmrMhHd3vxPo4I50lya58VgZ1m7s/A32ybUxVfI9Pwsn+l1QIjJJnxsdC8kPg==
+  dependencies:
+    "@babel/runtime" "^7.22.5"
+    "@rc-component/trigger" "^2.0.0"
+    classnames "^2.2.6"
+    rc-input "~1.6.0"
+    rc-menu "~9.15.1"
+    rc-textarea "~1.8.0"
+    rc-util "^5.34.1"
+
 rc-mentions@~2.15.0:
   version "2.15.0"
   resolved "https://registry.yarnpkg.com/rc-mentions/-/rc-mentions-2.15.0.tgz#ada022b32e68fa067a859ee0024c3f2aa7a9c871"
@@ -12974,6 +12984,18 @@ rc-menu@~9.14.0, rc-menu@~9.14.1:
   version "9.14.1"
   resolved "https://registry.yarnpkg.com/rc-menu/-/rc-menu-9.14.1.tgz#5c2aea72bdce421e9d50bf721ad8b76c154ae66f"
   integrity sha512-5wlRb3M8S4yGlWhSoEYJ7ZVRElyScdcpUHxgiLxkeig1tEdyKrnED3B2fhpN0Rrpdp9jyhnmZR/Lwq2fH5VvDQ==
+  dependencies:
+    "@babel/runtime" "^7.10.1"
+    "@rc-component/trigger" "^2.0.0"
+    classnames "2.x"
+    rc-motion "^2.4.3"
+    rc-overflow "^1.3.1"
+    rc-util "^5.27.0"
+
+rc-menu@~9.15.1:
+  version "9.15.1"
+  resolved "https://registry.yarnpkg.com/rc-menu/-/rc-menu-9.15.1.tgz#d8b38ea534a7f596a8da063881519e7eaafca698"
+  integrity sha512-UKporqU6LPfHnpPmtP6hdEK4iO5Q+b7BRv/uRpxdIyDGplZy9jwUjsnpev5bs3PQKB0H0n34WAPDfjAfn3kAPA==
   dependencies:
     "@babel/runtime" "^7.10.1"
     "@rc-component/trigger" "^2.0.0"
@@ -14153,6 +14175,11 @@ safe-regex@^1.1.0:
   integrity sha512-aJXcif4xnaNUzvUuC5gcb46oTS7zvg4jpMTnuqtrEPlR3vFr4pxtdTwaF1Qs3Enjn9HK+ZlwQui+a7z0SywIzg==
   dependencies:
     ret "~0.1.10"
+
+safe-stable-stringify@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/safe-stable-stringify/-/safe-stable-stringify-2.4.3.tgz#138c84b6f6edb3db5f8ef3ef7115b8f55ccbf886"
+  integrity sha512-e2bDA2WJT0wxseVd4lsDP4+3ONX6HpMXQa1ZhFQ7SU+GjvORCmShbCMltrtIDfkYhVHrOcPtj+KhmDBdPdZD1g==
 
 "safer-buffer@>= 2.1.2 < 3", "safer-buffer@>= 2.1.2 < 3.0.0":
   version "2.1.2"
@@ -16063,12 +16090,13 @@ watchpack@^2.2.0, watchpack@^2.4.1:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
-wax-prosemirror-core@0.9.39, wax-prosemirror-core@^0.9.39:
-  version "0.9.39"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.9.39.tgz#e24770df5893c2a7808c8fe69a1325b8a0b1acf7"
-  integrity sha512-kFD1FOr6/qBKCaWPjJOPODUo9Efg0/1JhuuwIc5YeyKnxeNYG9xOnxpF0ENCbSvwmbD0O4ZGTMo3KOG3gtPmTQ==
+wax-prosemirror-core@0.9.58, wax-prosemirror-core@^0.9.58:
+  version "0.9.58"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.9.58.tgz#10119b78f26743094c0ad7ab74734022277c5282"
+  integrity sha512-PH/j2C1dJJopH6oNktp2//WY3jO1I1s8YO7FiYeClJ/5gf6gZpNhhStdKId5fhgsM+7T63bqPX7dZu1zcdsLLQ==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
+    crypto-js "^4.2.0"
     deepmerge "^4.2.2"
     inversify "^5.0.1"
     inversify-inject-decorators "^3.1.0"
@@ -16088,12 +16116,13 @@ wax-prosemirror-core@0.9.39, wax-prosemirror-core@^0.9.39:
     prosemirror-view "1.30.2"
     react-i18next "^13.3.1"
     reflect-metadata "^0.1.13"
+    safe-stable-stringify "^2.4.3"
     uuid "^7.0.3"
 
-wax-prosemirror-services@0.9.39:
-  version "0.9.39"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.9.39.tgz#49ca85459ba6d2a10d157d1533a08f727271c9cf"
-  integrity sha512-vWlLPjGkN1tFFK4jpVC6R9p0zb2M9Ua/Bz5uCSZyb4jX4AppzBKbIsDecFwMOTqPaiyjRh8pLSzHVxVMJtgnGQ==
+wax-prosemirror-services@0.9.58:
+  version "0.9.58"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.9.58.tgz#99b15fdef54c0896ddf706731eb57fe3352171d9"
+  integrity sha512-LGospI5g/a03ZkjNaK2bjJbBs27vBf33B7M+jMuvOy9qfp9oykKtnCvLRmx0vxRSbcwFvsvI1mKDwIfQYn3mQg==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     highlight.js "^10.1.1"
@@ -16112,22 +16141,23 @@ wax-prosemirror-services@0.9.39:
     prosemirror-state "1.4.3"
     prosemirror-transform "1.7.1"
     prosemirror-view "1.30.2"
+    rc-mentions "^2.15.0"
     rc-switch "^3.2.2"
     react-dropdown "^1.6.2"
     react-i18next "^13.3.1"
     use-deep-compare-effect "^1.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.9.39"
+    wax-prosemirror-core "^0.9.58"
     y-prosemirror "1.2.0"
     y-protocols "1.0.5"
     y-webrtc "10.2.0"
     y-websocket "1.4.5"
     yjs "13.5.38"
 
-wax-table-service@0.9.39:
-  version "0.9.39"
-  resolved "https://registry.yarnpkg.com/wax-table-service/-/wax-table-service-0.9.39.tgz#03227bad2b60227ba449fb02312a1895f15ca0a2"
-  integrity sha512-SZLLftyBHPR5OWpA0J+islP0WZ6NffuThzvfZBSk2YWlhuZmHdlDRv2btezPaC100PcEvhg8/ZZQqrzv4FEdoQ==
+wax-table-service@0.9.58:
+  version "0.9.58"
+  resolved "https://registry.yarnpkg.com/wax-table-service/-/wax-table-service-0.9.58.tgz#d59a5e12e53c2edf4e0831aed85b6f2b98e4c717"
+  integrity sha512-TxWRNjc2Zun/MdJLuFaC3gA3T1iUEiFLQADMmp7OmM5sQ2hA0rRc3oMMB2/1mpuUGIvjya6hj/W46oYN+XK9tg==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     inversify "^5.0.1"
@@ -16138,7 +16168,7 @@ wax-table-service@0.9.39:
     prosemirror-view "1.30.2"
     react-i18next "^13.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.9.39"
+    wax-prosemirror-core "^0.9.58"
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"

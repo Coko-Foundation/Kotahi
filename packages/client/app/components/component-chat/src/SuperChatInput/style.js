@@ -168,7 +168,6 @@ export const InputWrapper = styled.div`
   flex: auto;
   flex-direction: column;
   margin-right: 8px;
-  max-width: calc(100% - 32px);
   min-height: 40px;
   transition: padding 0.2s ease-in-out;
   transition: border 0.3s ease-out;

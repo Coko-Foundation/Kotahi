@@ -24,7 +24,6 @@ const suggestedReviewerItem = {
 const suggestedReviewers = {
   type: ['array'],
   default: [],
-  additionalProperties: false,
   items: suggestedReviewerItem,
 }
 

@@ -55,7 +55,6 @@ const EditorMention = ({
   mentionsList,
   readOnly,
   id,
-  messageSentCount,
   onEnterPress,
   editorRef,
   placeholder,
@@ -298,7 +297,6 @@ const EditorMention = ({
         field={{ name, value }}
         form={{ setFieldValue }}
         hasAttachment={hasAttachment}
-        key={messageSentCount}
         networkDisabled={networkDisabled}
         onEnterPress={onEnterPress}
         placeholder={placeholder}
