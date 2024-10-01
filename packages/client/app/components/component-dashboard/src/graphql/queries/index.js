@@ -12,6 +12,7 @@ teams {
     user {
       id
       username
+      email
     }
     status
 	updated
@@ -38,7 +39,9 @@ firstVersionCreated
 published
 hasOverdueTasksForUser
 invitations {
+  id
   status
+  toEmail
 }
 rolesFound
 `
