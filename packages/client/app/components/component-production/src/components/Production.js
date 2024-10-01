@@ -346,21 +346,21 @@ const Production = ({
   if (isAuthorProofingVersion) {
     tabSections.push(feedbackSection)
   } else {
-    // The manuscript editor can only view editor section and feedback section in readonly mode
+    // The manuscript Editor / Admin / groupManager can view feedbackSection in readonly view if minimum one previous feedback exist!
     /* eslint-disable no-lonely-if */
-    if (isReadOnlyVersion && showFeedbackTab) {
+    if (showFeedbackTab) {
       tabSections.push(feedbackSection)
-    } else {
-      if (useVersioning) tabSections.push(versioningSection)
-
-      tabSections.push(
-        htmlTemplate,
-        cssPagedJS,
-        uploadAssets,
-        manuscriptMetadata,
-        cssAiAssistant,
-      )
     }
+
+    if (useVersioning) tabSections.push(versioningSection)
+
+    tabSections.push(
+      htmlTemplate,
+      cssPagedJS,
+      uploadAssets,
+      manuscriptMetadata,
+      cssAiAssistant,
+    )
   }
 
   return (

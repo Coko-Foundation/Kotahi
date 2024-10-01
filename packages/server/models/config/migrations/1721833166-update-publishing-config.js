@@ -37,12 +37,12 @@ exports.up = async knex => {
           delete newConfig.formData.publishing.crossref.licenseUrl
         }
 
-        if (!newConfig.groupIdentity.electronicIssn) {
-          newConfig.groupIdentity.electronicIssn = ''
+        if (!newConfig.formData.groupIdentity.electronicIssn) {
+          newConfig.formData.groupIdentity.electronicIssn = ''
         }
 
-        if (!newConfig.groupIdentity.language) {
-          newConfig.groupIdentity.language = ''
+        if (!newConfig.formData.groupIdentity.language) {
+          newConfig.formData.groupIdentity.language = ''
         }
 
         if (!newConfig.formData.integrations) {
@@ -67,7 +67,7 @@ exports.up = async knex => {
           delete newConfig.formData.coarNotify
         }
 
-        if (newConfig.formDAta.aiDesignStudio) {
+        if (newConfig.formData.aiDesignStudio) {
           newConfig.formData.integrations.aiDesignStudio =
             newConfig.formData.aiDesignStudio
           delete newConfig.formData.aiDesignStudio

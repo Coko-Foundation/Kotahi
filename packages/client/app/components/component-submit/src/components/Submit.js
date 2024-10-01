@@ -46,7 +46,6 @@ const Submit = ({
   onSubmit,
   channelId,
   chatProps,
-  loadROROptions,
   parent,
   match,
   channels,
@@ -147,7 +146,7 @@ const Submit = ({
         onSubmit,
         onChange,
         republish,
-        loadROROptions,
+
         match,
         manuscript: version,
         createFile,

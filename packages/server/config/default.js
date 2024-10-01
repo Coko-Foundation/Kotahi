@@ -41,7 +41,7 @@ module.exports = {
         role: 'author',
       },
       {
-        displayName: 'Collaborative Reviewer',
+        displayName: 'Collaborative Reviewers',
         role: 'collaborativeReviewer',
       },
       {

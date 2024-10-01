@@ -73,10 +73,7 @@ const ProfileDropzone = ({
     <div {...getRootProps()}>
       <input {...getInputProps()} />
       <BigProfileImage
-        src={
-          `${serverUrl}${profilePicture}` ||
-          `${serverUrl}/profiles/default_avatar.svg`
-        }
+        src={`${profilePicture}` || `${serverUrl}/profiles/default_avatar.svg`}
       />
       <Button>
         {isDragActive

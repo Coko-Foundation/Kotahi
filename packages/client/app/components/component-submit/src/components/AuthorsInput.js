@@ -18,6 +18,7 @@ import {
 
 import theme, { color } from '../../../../theme'
 import { FlexRow } from '../../../../globals'
+import useAuthorsFieldQueries from './hooks/useAuthorsInputQueries'
 
 // #region styled
 const StyledButton = styled(Button)`
@@ -103,12 +104,11 @@ const AuthorsInput = ({
   onChange,
   requireEmail,
   value,
-  loadROROptions,
-  validationOrcid,
   overrideButtonLabel = undefined,
 }) => {
   const [validatePerField, setValidatePerField] = useState([])
   const { t } = useTranslation()
+  const { validationOrcid, searchRor } = useAuthorsFieldQueries()
 
   const filterOptions = response => {
     return response.data.searchRor.map(ror => ({
@@ -211,7 +211,7 @@ const AuthorsInput = ({
                       <StyledSelect
                         classNamePrefix="react-select"
                         isClearable
-                        loadOptions={loadROROptions(filterOptions)}
+                        loadOptions={searchRor(filterOptions)}
                         onChange={handleChange}
                         placeholder={f.placeholder}
                         value={author[f.name]}
@@ -249,8 +249,6 @@ const AuthorsInput = ({
 AuthorsInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   requireEmail: PropTypes.bool,
-  loadROROptions: PropTypes.func,
-  validationOrcid: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
@@ -268,8 +266,6 @@ AuthorsInput.propTypes = {
 AuthorsInput.defaultProps = {
   requireEmail: false,
   value: null,
-  loadROROptions: () => {},
-  validationOrcid: () => {},
 }
 
 export default AuthorsInput
