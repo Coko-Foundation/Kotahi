@@ -96,14 +96,14 @@ export const Select = props => {
   const { t } = useTranslation()
   const isObjectTypeField = name === 'submission.objectType'
 
-  const [selectedOption, setSelectedOption] = useState(
-    !isObjectTypeField
-      ? value
-      : {
-          label: 'Other',
-          value: 'Other',
-        },
-  )
+  const defaultOption = !isObjectTypeField
+    ? value
+    : {
+        label: 'Other',
+        value: 'Other',
+      }
+
+  const [selectedOption, setSelectedOption] = useState(defaultOption)
 
   useEffect(() => {
     if (!isMulti && value) {
@@ -118,8 +118,11 @@ export const Select = props => {
           return !!optionMatched
         })
       } else {
-        setSelectedOption(options.find(option => option.value === value))
+        const foundValue = options.find(option => option.value === value)
+        setSelectedOption(foundValue)
       }
+    } else if (!(isMulti || value)) {
+      setSelectedOption(defaultOption)
     }
   }, [value, isMulti, hasGroupedOptions, options])
 
