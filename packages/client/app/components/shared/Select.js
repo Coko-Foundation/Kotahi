@@ -109,8 +109,11 @@ export const Select = props => {
           return !!optionMatched
         })
       } else {
-        setSelectedOption(options.find(option => option.value === value))
+        const foundValue = options.find(option => option.value === value)
+        setSelectedOption(foundValue)
       }
+    } else if (!(isMulti || value)) {
+      setSelectedOption(null)
     }
   }, [value, isMulti, hasGroupedOptions, options])
 
