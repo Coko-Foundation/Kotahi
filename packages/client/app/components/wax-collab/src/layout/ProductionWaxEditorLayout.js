@@ -1,10 +1,18 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react'
+/* eslint-disable default-param-last */
+import React, {
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react'
 import {
   WaxContext,
   WaxView,
   ComponentPlugin,
   DocumentHelpers,
 } from 'wax-prosemirror-core'
+import { TextSelection } from 'prosemirror-state'
 
 import { NotesAreaContainer, NotesHeading, NotesContainer } from './NotesStyles'
 import {
@@ -46,13 +54,15 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout =
-  readOnly =>
+  (readOnly, authorComments = null, leftBar = true) =>
   /* eslint-disable-next-line react/function-component-definition */
   props => {
     const {
       pmViews: { main },
       options,
     } = useContext(WaxContext)
+
+    const [isWaxMounted, setWaxMounted] = useState(false)
 
     // added to bring in notes
 
@@ -72,6 +82,23 @@ const ProductionWaxEditorLayout =
     )
 
     useEffect(() => {}, [delayedShowedNotes])
+
+    useEffect(() => {
+      if (localStorage.getItem('activeTabKey').includes('editor')) {
+        setTimeout(() => {
+          if (main) {
+            main.dispatch(
+              main.state.tr.setSelection(
+                TextSelection.create(main.state.doc, 0),
+              ),
+            )
+            // main.focus()
+          }
+
+          setWaxMounted(true)
+        })
+      }
+    }, [localStorage.getItem('activeTabKey')])
 
     // added to bring in comments
 
@@ -99,55 +126,20 @@ const ProductionWaxEditorLayout =
       }
     }
 
-    return (
-      <div style={fullScreenStyles}>
-        <Grid production readonly={readOnly}>
-          {readOnly ? (
-            <ProductionEditorDiv>
-              <SideMenu />
-
-              <EditorArea className="editorArea production">
-                <div>
-                  <WaxSurfaceScroll className="panelWrapper">
-                    <EditorContainer>
-                      <WaxView {...props} />
-                    </EditorContainer>
-                    <CitationArea />
-                    <CommentsContainer>
-                      <CommentTrackToolsContainer>
-                        <CommentTrackTools>
-                          {commentsTracksCount + trackBlockNodesCount} COMMENTS
-                          AND SUGGESTIONS
-                          <CommentTrackOptions />
-                        </CommentTrackTools>
-                      </CommentTrackToolsContainer>
-                      <RightArea area="main" />
-                    </CommentsContainer>
-                  </WaxSurfaceScroll>
-                  {hasNotes && (
-                    <NotesAreaContainer className="productionnotes panelWrapper">
-                      <NotesContainer id="notes-container">
-                        <NotesHeading>Notes</NotesHeading>
-                        <NotesArea view={main} />
-                      </NotesContainer>
-                      <CommentsContainerNotes>
-                        <RightArea area="notes" />
-                      </CommentsContainerNotes>
-                    </NotesAreaContainer>
-                  )}
-                </div>
-              </EditorArea>
-            </ProductionEditorDiv>
-          ) : (
+    return useMemo(
+      () => (
+        <div id="main-wax-editor" style={fullScreenStyles}>
+          <Grid production readonly={readOnly}>
             <>
               <Menu className="waxmenu">
                 <TopBar />
               </Menu>
               <ProductionEditorDiv>
-                <SideMenu>
-                  <LeftSideBar />
-                </SideMenu>
-
+                {leftBar && (
+                  <SideMenu>
+                    <LeftSideBar />
+                  </SideMenu>
+                )}
                 <EditorArea className="editorArea production">
                   <WaxSurfaceScroll className="panelWrapper">
                     <EditorContainer>
@@ -184,9 +176,10 @@ const ProductionWaxEditorLayout =
                 </InfoContainer>
               </ProductionEditorDiv>
             </>
-          )}
-        </Grid>
-      </div>
+          </Grid>
+        </div>
+      ),
+      [isWaxMounted, options.fullScreen],
     )
   }
 

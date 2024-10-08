@@ -145,10 +145,6 @@ const cokoTheme = {
         color: #111;
         margin: 2px;
         padding: 1px;
-
-        > svg {
-          fill: #333;
-        }
       `,
       CharactersListComponent: css`
         padding: 0;
@@ -194,6 +190,11 @@ const cokoTheme = {
             color: inherit;
           }
         }
+      `,
+      CounterInfoComponent: css`
+        left: -221px;
+        position: absolute;
+        width: 300px;
       `,
     },
   },

@@ -61,8 +61,6 @@ const EditorSection = ({
   manuscript,
   saveSource,
   saveComments,
-  onChange,
-  onBlur,
   readonly,
   currentUser,
 }) => {
@@ -108,6 +106,7 @@ const EditorSection = ({
       : false
 
   const isAuthorMode = !!(currentUserIsAuthor && readonly)
+
   return (
     <Composed
       currentUser={currentUser}
@@ -125,8 +124,6 @@ const EditorSection = ({
             getComments={saveComments}
             manuscriptId={manuscript.id}
             onAssetManager={onAssetManager}
-            // onChange={readonly && !isAuthorMode ? null : onBlur}
-            // onChange={readonly && !isAuthorMode ? null : onChange}
             readonly={readonly}
             saveSource={saveSource}
             setComments={() => JSON.parse(manuscript.meta.comments) || []}
@@ -158,14 +155,10 @@ EditorSection.propTypes = {
       source: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  onBlur: PropTypes.func,
-  onChange: PropTypes.func,
   readonly: PropTypes.bool,
 }
 
 EditorSection.defaultProps = {
-  onChange: undefined,
-  onBlur: undefined,
   readonly: false,
 }
 
