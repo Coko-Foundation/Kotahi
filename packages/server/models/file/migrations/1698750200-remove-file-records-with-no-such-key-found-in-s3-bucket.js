@@ -1,16 +1,19 @@
 const fs = require('fs-extra')
 const path = require('path')
 
-const { fileStorage, File, logger, useTransaction } = require('@coko/server')
+const {
+  fileStorage,
+  File,
+  logger,
+  tempFolderPath,
+  useTransaction,
+} = require('@coko/server')
 
 exports.up = async knex => {
   return useTransaction(async trx => {
     const files = await File.query(trx)
 
     // logger.info(`Total file records in table: ${files.length}`)
-
-    const tempDir = path.join(__dirname, '..', 'temp')
-    await fs.ensureDir(tempDir)
 
     const filesWithNoSuchKeyFound = []
 
@@ -20,7 +23,7 @@ exports.up = async knex => {
           storedObject => storedObject.type === 'original',
         )
 
-        const tempPath = path.join(tempDir, `${file.id}_${key}`)
+        const tempPath = path.join(tempFolderPath, `${file.id}_${key}`)
 
         try {
           await fileStorage.download(key, tempPath)

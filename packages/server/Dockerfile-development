@@ -3,15 +3,15 @@ FROM node:18-bookworm-slim
 RUN apt-get update
 RUN apt-get install -y make g++ ranger vim curl nano
 
+USER node
 WORKDIR /home/node/app
 
-RUN chown -R node:node .
-USER node
+# RUN chown -R node:node .
 
-COPY package.json .
-COPY yarn.lock .
+COPY --chown=node:node package.json .
+COPY --chown=node:node yarn.lock .
 
 RUN yarn install --frozen-lockfile
 RUN yarn cache clean
 
-COPY . .
+COPY --chown=node:node . .
