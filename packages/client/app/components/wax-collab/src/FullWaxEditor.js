@@ -8,7 +8,7 @@ import waxTheme from './layout/waxTheme'
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
 import yjsConfig from './config/yjsConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
-import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
+import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -42,7 +42,6 @@ const FullWaxEditor = ({
   wsProvider,
   ydoc,
   name,
-  ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
@@ -85,10 +84,10 @@ const FullWaxEditor = ({
           autoFocus={autoFocus}
           config={config}
           fileUpload={file => renderImage(file)}
-          key={`readonly-${readonly}`} // Force remount to overcome Wax bugs on changing between editable and readonly
+          key={`readonly-${readonly}`}
           layout={
             useComments
-              ? FullWaxEditorCommentsLayout(readonly, authorComments)
+              ? ProductionWaxEditorLayout(readonly, authorComments, false)
               : FullWaxEditorLayout(readonly, getActiveViewDom)
           }
           onChange={source => debouncedSave(source)}
@@ -97,7 +96,6 @@ const FullWaxEditor = ({
           ref={editorRef}
           user={waxUser}
           value={value}
-          {...rest}
         />
       </div>
     </ThemeProvider>

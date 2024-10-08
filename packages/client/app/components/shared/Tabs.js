@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import styled, { css } from 'styled-components'
 import { th, override } from '@coko/client'
 import { ConfigContext } from '../config/src'
@@ -121,6 +122,8 @@ const Tabs = ({
   const currentContent = (
     sections.find(section => section.key === activeKey) || {}
   ).content
+
+  localStorage.setItem('activeTabKey', `editor-${uuid()}`)
 
   return (
     <>

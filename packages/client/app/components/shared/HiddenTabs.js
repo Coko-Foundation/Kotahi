@@ -111,6 +111,8 @@ const HiddenTabs = ({
   //   sections.find(section => section.key === activeKey) || {}
   // ).content
 
+  localStorage.setItem('activeTabKey', activeKey)
+
   return (
     <>
       <HiddenTabsContainer
@@ -125,7 +127,7 @@ const HiddenTabs = ({
               key={key}
               onClick={() => setActiveKeyAndCallOnChange(key)}
             >
-              <Tab active={activeKey === key}>
+              <Tab active={activeKey === key} key={key}>
                 <div>{label || key}</div>
               </Tab>
             </TabContainer>

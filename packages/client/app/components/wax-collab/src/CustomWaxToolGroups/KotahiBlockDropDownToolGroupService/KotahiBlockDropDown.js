@@ -65,7 +65,7 @@ class KotahiBlockDropDown extends ToolGroup {
   renderTools(view) {
     if (isEmpty(view) || window.innerWidth > 18800) return null
 
-    const { activeViewId } = useContext(WaxContext)
+    const { activeViewId, pmViews } = useContext(WaxContext)
 
     const { dispatch, state } = view
 
@@ -81,8 +81,9 @@ class KotahiBlockDropDown extends ToolGroup {
     ]
     /* eslint-enable no-underscore-dangle */
 
-    const isDisabled = true // this was doing the weird thing with the title, disconnected for now.
-    // if we want to re-enable it, go look in the Wax code
+    const isEditable = pmViews.main.props.editable(editable => {
+      return editable
+    })
 
     let found = ''
     dropDownOptions.forEach((item, i) => {
@@ -100,7 +101,7 @@ class KotahiBlockDropDown extends ToolGroup {
         }}
         options={dropDownOptions}
         placeholder="Block Level"
-        select={isDisabled}
+        select={isEditable}
         value={found}
       />
     )

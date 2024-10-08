@@ -154,7 +154,6 @@ export const Manuscript = styled.div`
   background: ${color.gray97};
   grid-area: manuscript;
   height: 100vh;
-  overflow-y: scroll;
   padding: ${grid(2)};
 `
 

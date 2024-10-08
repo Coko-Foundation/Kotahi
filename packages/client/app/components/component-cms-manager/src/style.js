@@ -114,7 +114,7 @@ export const FormActionDelete = styled(SecondaryButton)`
 `
 
 export const FullWidthAndHeightContainer = styled.div`
-  height: auto;
+  height: 100%;
   width: 100%;
 
   @media screen and (min-width: 1440px) {
@@ -122,6 +122,11 @@ export const FullWidthAndHeightContainer = styled.div`
       min-height: 250px; /* Double the height when screen width is above 1440 pixels */
     }
   }
+`
+
+export const LayoutPageFooterContainer = styled.div`
+  height: 527px;
+  width: 100%;
 `
 
 export const CmsWidthAndHeightContainer = styled.div`

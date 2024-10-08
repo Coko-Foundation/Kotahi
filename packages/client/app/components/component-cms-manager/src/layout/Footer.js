@@ -7,7 +7,7 @@ import PageOrder from './PageOrder'
 import {
   CompactSection,
   LayoutMainHeading,
-  FullWidthAndHeightContainer,
+  LayoutPageFooterContainer,
   LayoutSecondaryHeading,
 } from '../style'
 import { FilesUpload } from '../../../shared'
@@ -89,7 +89,7 @@ const Footer = ({
   }
 
   return (
-    <FullWidthAndHeightContainer>
+    <LayoutPageFooterContainer>
       <LayoutMainHeading>{t('cmsPage.layout.Footer')}</LayoutMainHeading>
       <CompactSectionWithFullWidth key={partnersInput.name}>
         <LayoutSecondaryHeading>
@@ -147,7 +147,7 @@ const Footer = ({
           onPageOrderUpdated={onPageOrderUpdated}
         />
       </CompactSectionWithFullWidth>
-    </FullWidthAndHeightContainer>
+    </LayoutPageFooterContainer>
   )
 }
 
