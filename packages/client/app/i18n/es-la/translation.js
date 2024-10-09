@@ -513,7 +513,7 @@ const esLa = {
       'Control pages visible to editors':
         'Páginas de control visibles para editores',
       Team: 'Equipo',
-      aiDesignStudio: 'AI Design Studio',
+      aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `Clave de acceso de OpenAI`,
       Submission: 'Envío',
       allowToSubmitNewVersion:
@@ -603,6 +603,7 @@ const esLa = {
       Update: 'Actualizar',
       article: 'artículo',
       'peer review': 'revisión de pares',
+      'enable Ai': 'Habilitar  AI',
       showTabs: {
         Team: 'Equipo',
         Decision: 'Decisión',

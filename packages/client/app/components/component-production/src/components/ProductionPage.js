@@ -10,6 +10,7 @@ import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
 import DownloadPdfComponent from './DownloadPdf'
 import DownloadJatsComponent from './DownloadJats'
+import { waxAiToolSystem } from '../../helpers'
 
 const mapper = {
   getSpecificFilesQuery,
@@ -198,6 +199,24 @@ const query = gql`
   }
 `
 
+const useChatGpt = gql`
+  query OpenAi(
+    $input: UserMessage!
+    $groupId: ID!
+    $history: [OpenAiMessage]
+    $system: SystemMessage
+    $format: String
+  ) {
+    openAi(
+      input: $input
+      groupId: $groupId
+      history: $history
+      format: $format
+      system: $system
+    )
+  }
+`
+
 export const updateMutation = gql`
 mutation($id: ID!, $input: String) {
   updateManuscript(id: $id, input: $input) {
@@ -263,6 +282,23 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
   //   xml: '',
   //   error: false,
   // })
+
+  const { refetch } = useQuery(useChatGpt, {
+    fetchPolicy: 'network-only',
+    skip: true,
+    // onError: err => {
+    //   console.log(err)
+    //   if (err.toString().includes('Missing access key')) {
+    //     // onInfoModal('Access key is missing or invalid')
+    //   } else if (
+    //     err.toString().includes('Request failed with status code 429')
+    //   ) {
+    //     // showOpenAiRateLimitModal()
+    //   } else {
+    //     // showGenericErrorModal()
+    //   }
+    // },
+  })
 
   const [update] = useMutation(updateMutation)
 
@@ -385,6 +421,28 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
     haspopup: 'false',
   }
 
+  const queryAI = input => {
+    const [userInput, highlightedText] = input.text
+
+    const formattedInput = {
+      text: [`${userInput}.\nHighlighted text: ${highlightedText}`],
+    }
+
+    return new Promise((resolve, reject) => {
+      refetch({
+        system: waxAiToolSystem,
+        input: formattedInput,
+        groupId,
+      }).then(({ data: { openAi } }) => {
+        const {
+          message: { content },
+        } = JSON.parse(openAi)
+
+        resolve(content)
+      })
+    })
+  }
+
   return (
     <Composed
       articleTemplate={articleTemplate}
@@ -437,6 +495,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
             makePdf={setMakingPdf}
             manuscript={manuscript}
             onAssetManager={onAssetManager}
+            queryAI={queryAI}
             submitAuthorProofingFeedback={submitAuthorProofingFeedback}
             unparsedManuscript={unparsedManuscript}
             updateManuscript={(a, b) => {

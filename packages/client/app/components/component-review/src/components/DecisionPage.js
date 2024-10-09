@@ -14,6 +14,7 @@ import { fragmentFields } from '../../../component-submit/src/userManuscriptForm
 import { AccessErrorPage, CommsErrorBanner, Spinner } from '../../../shared'
 import DecisionVersions from './DecisionVersions'
 import { roles } from '../../../../globals'
+import { waxAiToolSystem } from '../../../component-production/helpers'
 
 import {
   addReviewerMutation,
@@ -90,6 +91,24 @@ const deleteFileMutation = gql`
   }
 `
 
+const useChatGpt = gql`
+  query OpenAi(
+    $input: UserMessage!
+    $groupId: ID!
+    $history: [OpenAiMessage]
+    $system: SystemMessage
+    $format: String
+  ) {
+    openAi(
+      input: $input
+      groupId: $groupId
+      history: $history
+      format: $format
+      system: $system
+    )
+  }
+`
+
 let debouncers = {}
 
 const DecisionPage = ({ currentUser, match }) => {
@@ -98,6 +117,11 @@ const DecisionPage = ({ currentUser, match }) => {
   const client = useApolloClient()
   const config = useContext(ConfigContext)
   const { urlFrag } = config
+
+  const { refetch } = useQuery(useChatGpt, {
+    fetchPolicy: 'network-only',
+    skip: true,
+  })
 
   useEffect(() => {
     return () => {
@@ -411,6 +435,28 @@ const DecisionPage = ({ currentUser, match }) => {
     },
   })
 
+  const queryAI = input => {
+    const [userInput, highlightedText] = input.text
+
+    const formattedInput = {
+      text: [`${userInput}.\nHighlighted text: ${highlightedText}`],
+    }
+
+    return new Promise((resolve, reject) => {
+      refetch({
+        system: waxAiToolSystem,
+        input: formattedInput,
+        groupId: config.groupId,
+      }).then(({ data: { openAi } }) => {
+        const {
+          message: { content },
+        } = JSON.parse(openAi)
+
+        resolve(content)
+      })
+    })
+  }
+
   if (loading) return <Spinner />
 
   if (error) {
@@ -580,6 +626,7 @@ const DecisionPage = ({ currentUser, match }) => {
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}
+      queryAI={queryAI}
       refetch={() => {
         refetchManuscript()
       }}

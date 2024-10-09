@@ -18,6 +18,7 @@ import {
   BottomInfoService,
   EditingSuggestingService,
   CommentsService,
+  AskAiContentService,
 } from 'wax-prosemirror-services'
 import { TablesService, tableEditing, columnResizing } from 'wax-table-service'
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
@@ -45,8 +46,8 @@ const fullWaxEditorConfig = (
   handleAssetManager,
   getComments,
   setComments,
-
   isReadOnly,
+  aiConfig,
 ) => ({
   EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
   AcceptTrackChangeService: {
@@ -98,6 +99,7 @@ const fullWaxEditorConfig = (
         'Notes',
         'Tables',
         'Images',
+        'ToggleAi',
         'TrackingAndEditing',
         'FullScreen',
       ],
@@ -135,7 +137,16 @@ const fullWaxEditorConfig = (
     readOnly: true,
   },
 
+  AskAiContentService: {
+    AskAiContentTransformation: aiConfig?.AskAiContentTransformation,
+    AiOn: aiConfig?.AiOn,
+    CustomPromptsOn: aiConfig?.CustomPromptsOn,
+    FreeTextPromptsOn: aiConfig?.FreeTextPromptsOn,
+    CustomPrompts: aiConfig?.CustomPrompts,
+  },
+
   services: [
+    new AskAiContentService(),
     new BaseService(),
     new BottomInfoService(),
     new FindAndReplaceService(),

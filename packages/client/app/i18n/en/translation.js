@@ -511,7 +511,7 @@ const en = {
       'Control pages visible to editors': 'Control pages visible to editors',
       Team: 'Team',
       Submission: 'Submission',
-      aiDesignStudio: 'AI Design Studio',
+      aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `OpenAI access key`,
       allowToSubmitNewVersion:
         'Allow an author to submit a new version of their manuscript at any time',
@@ -588,6 +588,7 @@ const en = {
       Update: 'Update',
       article: 'article',
       'peer review': 'peer review',
+      'enable Ai': 'Enable AI',
       showTabs: {
         Team: 'Team',
         Decision: 'Decision',

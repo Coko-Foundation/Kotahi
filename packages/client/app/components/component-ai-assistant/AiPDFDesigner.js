@@ -39,11 +39,16 @@ import { color } from '../../theme'
 import { ConfigContext } from '../config/src'
 
 const CHAT_GPT_QUERY = gql`
-  query ChatGpt($input: String!, $groupId: ID!, $history: [ChatGptMessage!]) {
-    chatGPT(input: $input, groupId: $groupId, history: $history)
+  query ChatGpt(
+    $input: UserMessage!
+    $groupId: ID!
+    $history: [OpenAiMessage]
+  ) {
+    openAi(input: $input, groupId: $groupId, history: $history)
   }
 `
 
+// #region styled
 const Assistant = styled(PromptsInput)`
   margin: 10px 0;
   width: 480px;
@@ -268,6 +273,7 @@ const OverlayAnimated = styled(LoadingOverlay)`
 `
 
 const StyledCheckbox = styled(Checkbox)``
+// #endregion styled
 
 const defaultSettings = {
   advancedTools: true,
@@ -342,7 +348,7 @@ const AiPDFDesigner = ({
   })
 
   const [callOpenAi, { loading, error }] = useLazyQuery(CHAT_GPT_QUERY, {
-    onCompleted: ({ chatGPT }) => {
+    onCompleted: ({ openAi: chatGPT }) => {
       // eslint-disable-next-line camelcase
       const { message = '', finish_reason = '' } = JSON.parse(chatGPT)
 
@@ -442,7 +448,9 @@ const AiPDFDesigner = ({
       ? callOpenAi({
           variables: {
             groupId: config.groupId,
-            input: `${userPrompt}. NOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
+            input: {
+              text: `${userPrompt}. NOTE: Remember to always return the expected valid JSON, have a second thought on this before responding`,
+            },
             history: [
               {
                 role: 'system',

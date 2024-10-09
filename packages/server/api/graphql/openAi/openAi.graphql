@@ -1,0 +1,39 @@
+input OpenAiMessage {
+  role: String!
+  content: String!
+}
+
+input UserMessage {
+  text: [String]
+  image_url: [String]
+}
+
+input EmbeddingOptions {
+  limit: Int
+  metric: String
+  threshold: Float
+}
+
+input SystemResponse {
+  type: String
+  shape: String
+}
+
+input SystemMessage {
+  text: String
+  role: String
+  task: String
+  context: String
+  response: SystemResponse
+  notes: [String]
+}
+
+extend type Query {
+  openAi(
+    input: UserMessage!
+    groupId: ID!
+    history: [OpenAiMessage]
+    format: String
+    system: SystemMessage
+  ): String!
+}

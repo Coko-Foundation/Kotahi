@@ -91,10 +91,85 @@ export const generateSchemas = (
               description: t('configPage.Logo'),
               type: ['string', 'null'],
             },
-
             favicon: {
               description: t('configPage.Favicon'),
               type: ['string', 'null'],
+            },
+            toggleAi: {
+              type: 'boolean',
+              title: t('configPage.enable Ai'),
+              default: false,
+            },
+          },
+          dependencies: {
+            toggleAi: {
+              oneOf: [
+                {
+                  properties: {
+                    toggleAi: {
+                      const: true,
+                    },
+                    AiAuthorEditor: {
+                      type: 'boolean',
+                      title: 'Use on author editor',
+                      default: true,
+                    },
+                    AiControlPanelEditor: {
+                      type: 'boolean',
+                      title: 'Use on Control panel editor',
+                      default: true,
+                    },
+                    AiProductionEditor: {
+                      type: 'boolean',
+                      title: 'Use on Production editor',
+                      default: true,
+                    },
+                    AiFreeTextPrompts: {
+                      type: 'boolean',
+                      title: 'Enable free text prompts',
+                      default: false,
+                    },
+                    customAiPrompts: {
+                      type: 'boolean',
+                      title: 'Enable custom AI prompts',
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    toggleAi: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
+            },
+            customAiPrompts: {
+              oneOf: [
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: true,
+                    },
+                    customAiInputs: {
+                      type: 'array',
+                      title: 'AI Inputs',
+                      items: {
+                        type: 'string',
+                        title: 'AI Input',
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -1062,6 +1137,82 @@ export const generateSchemas = (
               description: t('configPage.Favicon'),
               type: ['string', 'null'],
             },
+            toggleAi: {
+              type: 'boolean',
+              title: t('configPage.enable Ai'),
+              default: false,
+            },
+          },
+          dependencies: {
+            toggleAi: {
+              oneOf: [
+                {
+                  properties: {
+                    toggleAi: {
+                      const: true,
+                    },
+                    AiAuthorEditor: {
+                      type: 'boolean',
+                      title: 'Use on author editor',
+                      default: true,
+                    },
+                    AiControlPanelEditor: {
+                      type: 'boolean',
+                      title: 'Use on Control panel editor',
+                      default: true,
+                    },
+                    AiProductionEditor: {
+                      type: 'boolean',
+                      title: 'Use on Production editor',
+                      default: true,
+                    },
+                    AiFreeTextPrompts: {
+                      type: 'boolean',
+                      title: 'Enable free text prompts',
+                      default: false,
+                    },
+                    customAiPrompts: {
+                      type: 'boolean',
+                      title: 'Enable custom AI prompts',
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    toggleAi: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
+            },
+            customAiPrompts: {
+              oneOf: [
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: true,
+                    },
+                    customAiInputs: {
+                      type: 'array',
+                      title: 'AI Inputs',
+                      items: {
+                        type: 'string',
+                        title: 'AI Input',
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
+            },
           },
         },
         dashboard: {
@@ -2028,6 +2179,82 @@ export const generateSchemas = (
             favicon: {
               description: t('configPage.Favicon'),
               type: ['string', 'null'],
+            },
+            toggleAi: {
+              type: 'boolean',
+              title: t('configPage.enable Ai'),
+              default: false,
+            },
+          },
+          dependencies: {
+            toggleAi: {
+              oneOf: [
+                {
+                  properties: {
+                    toggleAi: {
+                      const: true,
+                    },
+                    AiAuthorEditor: {
+                      type: 'boolean',
+                      title: 'Use on author editor',
+                      default: true,
+                    },
+                    AiControlPanelEditor: {
+                      type: 'boolean',
+                      title: 'Use on Control panel editor',
+                      default: true,
+                    },
+                    AiProductionEditor: {
+                      type: 'boolean',
+                      title: 'Use on Production editor',
+                      default: true,
+                    },
+                    AiFreeTextPrompts: {
+                      type: 'boolean',
+                      title: 'Enable free text prompts',
+                      default: false,
+                    },
+                    customAiPrompts: {
+                      type: 'boolean',
+                      title: 'Enable custom AI prompts',
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    toggleAi: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
+            },
+            customAiPrompts: {
+              oneOf: [
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: true,
+                    },
+                    customAiInputs: {
+                      type: 'array',
+                      title: 'AI Inputs',
+                      items: {
+                        type: 'string',
+                        title: 'AI Input',
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -3002,6 +3229,82 @@ export const generateSchemas = (
             favicon: {
               description: t('configPage.Favicon'),
               type: ['string', 'null'],
+            },
+            toggleAi: {
+              type: 'boolean',
+              title: t('configPage.enable Ai'),
+              default: false,
+            },
+          },
+          dependencies: {
+            toggleAi: {
+              oneOf: [
+                {
+                  properties: {
+                    toggleAi: {
+                      const: true,
+                    },
+                    AiAuthorEditor: {
+                      type: 'boolean',
+                      title: 'Use on author editor',
+                      default: true,
+                    },
+                    AiControlPanelEditor: {
+                      type: 'boolean',
+                      title: 'Use on Control panel editor',
+                      default: true,
+                    },
+                    AiProductionEditor: {
+                      type: 'boolean',
+                      title: 'Use on Production editor',
+                      default: true,
+                    },
+                    AiFreeTextPrompts: {
+                      type: 'boolean',
+                      title: 'Enable free text prompts',
+                      default: false,
+                    },
+                    customAiPrompts: {
+                      type: 'boolean',
+                      title: 'Enable custom AI prompts',
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    toggleAi: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
+            },
+            customAiPrompts: {
+              oneOf: [
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: true,
+                    },
+                    customAiInputs: {
+                      type: 'array',
+                      title: 'AI Inputs',
+                      items: {
+                        type: 'string',
+                        title: 'AI Input',
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    customAiPrompts: {
+                      const: false,
+                    },
+                  },
+                },
+              ],
             },
           },
         },

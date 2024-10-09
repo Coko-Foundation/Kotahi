@@ -115,6 +115,7 @@ const renderImage = file => {
 }
 
 const ProductionWaxEditor = ({
+  aiConfig,
   client,
   value,
   validationStatus,
@@ -135,7 +136,6 @@ const ProductionWaxEditor = ({
   wsProvider,
   ydoc,
   name,
-  ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
@@ -339,6 +339,7 @@ const ProductionWaxEditor = ({
         updateCiteProc,
         getComments,
         setComments,
+        aiConfig,
       )
     : productionWaxEditorConfig(
         handleAssetManager,
@@ -350,6 +351,7 @@ const ProductionWaxEditor = ({
         updateCallout,
         readonly,
         getDataFromDatacite || false,
+        aiConfig,
       )
 
   config = yjsConfig(config, { wsProvider, ydoc, yjsType: name })
@@ -373,7 +375,6 @@ const ProductionWaxEditor = ({
           scrollThreshold={200}
           user={waxUser}
           value={value}
-          {...rest}
         />
       </div>
     </ThemeProvider>

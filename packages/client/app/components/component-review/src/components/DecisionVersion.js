@@ -96,6 +96,7 @@ const DecisionVersion = ({
   createTaskEmailNotificationLog,
   manuscriptLatestVersionId,
   emailTemplates,
+  queryAI,
 }) => {
   const teamLabelsTransformed = transformTeamsToLegacy(teamLabels)
 
@@ -142,7 +143,9 @@ const DecisionVersion = ({
       content: (
         <EditorSection
           currentUser={user}
+          editorSection="CPEditor"
           manuscript={manuscript}
+          queryAI={queryAI}
           readonly={isReadOnly}
           saveComments={debouncedSaveComments}
           saveSource={isReadOnly ? null : debouncedSave}
