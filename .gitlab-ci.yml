@@ -4,10 +4,9 @@
 #     file: 'ci-templates.yml'
 
 variables:
-  DOCKER_BUILDKIT: 1
   IMAGE_NAME_DEVELOPMENT: kotahi/kotahi/root-development
-  IMAGE_NAME_PREPRODUCTION_CLIENT: kotahi/kotahi/client-preproduction
-  IMAGE_NAME_PREPRODUCTION_SERVER: kotahi/kotahi/server-preproduction
+  CLIENT_PREPRODUCTION: $CI_REGISTRY/kotahi/kotahi/client-preproduction:$CI_COMMIT_REF_NAME
+  SERVER_PREPRODUCTION: $CI_REGISTRY/kotahi/kotahi/server-preproduction:$CI_COMMIT_REF_NAME
   DEPLOY_COMPOSE_FILE: docker-compose.ci.yml
 
 stages:
@@ -17,6 +16,7 @@ stages:
   - Deploy test
   - End to end testing
   - Tear down test
+  - Deploy staging
   # - Publish
 
 build development:
@@ -38,41 +38,63 @@ lint:
   script:
     - cd /home/node/app
     - yarn coko-lint run
-# build production client:
-#   stage: Build production
-#   image: docker:26
-#   services:
-#     - docker:26-dind
-#   before_script:
-#     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
-#   script:
-#     - cd packages/client
-#     - docker pull $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest || true
-#     - docker build
-#       --cache-from $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
-#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
-#       -f Dockerfile-production .
-#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.latest
 
-# build production server:
-#   stage: Build production
-#   image: docker:26
-#   services:
-#     - docker:26-dind
-#   before_script:
-#     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
-#   script:
-#     - cd packages/server
-#     - docker pull $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest || true
-#     - docker build
-#       --cache-from $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
-#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#       --tag $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
-#       -f Dockerfile-production .
-#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     - docker push $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.latest
+build production client:
+  stage: Build production
+  image: docker:27
+  services:
+    - docker:27-dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - cd packages/client
+    - docker build 
+      --tag $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
+      --tag $CLIENT_PREPRODUCTION.latest
+      -f Dockerfile-production .
+    - docker push $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
+    - docker push $CLIENT_PREPRODUCTION.latest
+
+build production server:
+  stage: Build production
+  image: docker:27
+  services:
+    - docker:27-dind
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - cd packages/server
+    - docker build
+      --tag $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
+      --tag $SERVER_PREPRODUCTION.latest
+      -f Dockerfile-production .
+    - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
+    - docker push $SERVER_PREPRODUCTION.latest
+
+deploy staging:
+  image: docker:27
+  services:
+    - docker:27:dind
+  variables:
+    ANSCOMPOSE_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES: true
+    ANSCOMPOSE_USE_SANDBOXED_ORCID: true
+    ANSCOMPOSE_ORCID_CLIENT_ID: $ORCID_CLIENT_ID
+    ANSCOMPOSE_ORCID_CLIENT_SECRET: $ORCID_CLIENT_SECRET
+    ANSCOMPOSE_INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1
+    ANSCOMPOSE_MANUSCRIPTS_TABLE_COLUMNS: 'shortId, submission.$title, created, updated, status, author'
+    COMPOSE_SERVICES: client,server
+    COMPOSE_SERVICES_CLIENT_URL: kotahi.coko.app
+    COMPOSE_SERVICES_CLIENT_IMAGE: $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
+    COMPOSE_SERVICES_SERVER_URL: kotahi-server.coko.app
+    COMPOSE_SERVICES_SERVER_IMAGE: $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
+  script:
+    - kubectl config get-contexts
+    - kubectl config use-context kotahi/agent:agent-1
+    - cp $DEPLOY_COMPOSE_FILE /ansible
+    - cd /ansible
+    - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
+  only:
+    - main
 
 # deploy test:
 #   stage: Deploy test
