@@ -88,6 +88,7 @@ const LabeledTab = styled.div`
 
 const Production = ({
   client,
+  queryAI,
   file,
   articleTemplate,
   displayShortIdAsIdentifier,
@@ -177,6 +178,16 @@ const Production = ({
   const config = useContext(ConfigContext)
   const getDataFromDatacite = config?.production?.getDataFromDatacite
 
+  const aiConfig = {
+    AskAiContentTransformation: queryAI,
+    AiOn:
+      config?.groupIdentity?.toggleAi &&
+      config?.groupIdentity?.AiProductionEditor,
+    FreeTextPromptsOn: config?.groupIdentity?.AiFreeTextPrompts,
+    CustomPromptsOn: config?.groupIdentity?.customAiPrompts,
+    CustomPrompts: config?.groupIdentity?.customAiInputs,
+  }
+
   const editorSection = {
     content: (
       // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -187,6 +198,7 @@ const Production = ({
           <SectionContent>
             {manuscript ? (
               <ProductionWaxEditor
+                aiConfig={aiConfig}
                 client={client}
                 getComments={debouncedSaveComments}
                 getDataFromDatacite={getDataFromDatacite}

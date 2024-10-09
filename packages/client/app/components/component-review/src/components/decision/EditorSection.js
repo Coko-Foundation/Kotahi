@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { adopt } from 'react-adopt'
 import { useTranslation } from 'react-i18next'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
+import { ConfigContext } from '../../../../config/src'
 import { Info } from '../style'
 import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
 import withModal from '../../../../asset-manager/src/ui/Modal/withModal'
@@ -63,6 +64,8 @@ const EditorSection = ({
   saveComments,
   readonly,
   currentUser,
+  editorSection,
+  queryAI,
 }) => {
   const manuscriptFile = manuscript?.files?.find(file =>
     file.tags.includes('manuscript'),
@@ -107,6 +110,20 @@ const EditorSection = ({
 
   const isAuthorMode = !!(currentUserIsAuthor && readonly)
 
+  const config = useContext(ConfigContext)
+
+  const editorType =
+    editorSection === 'CPEditor' ? 'AiControlPanelEditor' : 'AiAuthorEditor'
+
+  const aiConfig = {
+    AskAiContentTransformation: queryAI,
+    AiOn:
+      config?.groupIdentity?.toggleAi && config?.groupIdentity?.[editorType],
+    FreeTextPromptsOn: config?.groupIdentity?.AiFreeTextPrompts,
+    CustomPromptsOn: config?.groupIdentity?.customAiPrompts,
+    CustomPrompts: config?.groupIdentity?.customAiInputs,
+  }
+
   return (
     <Composed
       currentUser={currentUser}
@@ -120,6 +137,7 @@ const EditorSection = ({
       {({ onAssetManager }) => (
         <div>
           <FullWaxEditor
+            aiConfig={aiConfig}
             authorComments={isAuthorMode}
             getComments={saveComments}
             manuscriptId={manuscript.id}

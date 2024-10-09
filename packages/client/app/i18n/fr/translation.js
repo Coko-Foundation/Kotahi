@@ -522,7 +522,7 @@ const fr = {
       Team: 'Équipe',
       Submission: 'Soumission',
       coarNotify: 'COAR-Notifier',
-      aiDesignStudio: 'AI Design Studio',
+      aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `Clé d'accès OpenAI`,
       acceptedIPs: 'IP acceptées',
       allowToSubmitNewVersion:
@@ -608,6 +608,8 @@ const fr = {
       Update: 'Mise à jour',
       article: 'article',
       'peer review': 'évaluation par les pairs',
+      'enable Ai': "Activer l'IA",
+
       showTabs: {
         Team: 'Équipe',
         Decision: 'Décision',

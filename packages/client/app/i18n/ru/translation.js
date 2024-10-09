@@ -515,7 +515,7 @@ const ru = {
         'Редакторам доступен просмотр разделов управления',
       Team: 'Исполнители',
       coarNotify: 'COAR-Уведомить',
-      aiDesignStudio: 'AI Design Studio',
+      aiDesignStudio: 'AI Design Studio & AI Assistant',
       openAiApiKey: `Ключ доступа OpenAI`,
       acceptedIPs: 'Принятые IP-адреса',
       Submission: 'Подача',
@@ -600,6 +600,7 @@ const ru = {
       Update: 'Обновлять',
       article: 'Статья',
       'peer review': 'Рецензия',
+      'enable Ai': 'включить ИИ',
       showTabs: {
         Team: 'Исполнители',
         Decision: 'Решение',

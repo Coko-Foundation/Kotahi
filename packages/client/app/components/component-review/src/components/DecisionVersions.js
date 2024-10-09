@@ -66,6 +66,7 @@ const DecisionVersions = ({
   deleteTaskNotification,
   createTaskEmailNotificationLog,
   emailTemplates,
+  queryAI,
 }) => {
   const { t } = useTranslation()
   const versions = gatherManuscriptVersions(manuscript)
@@ -141,6 +142,7 @@ const DecisionVersions = ({
                 onChange={handleChange}
                 parent={firstVersion.manuscript}
                 publishManuscript={publishManuscript}
+                queryAI={queryAI}
                 refetch={refetch}
                 removeReviewer={removeReviewer}
                 reviewers={reviewers}

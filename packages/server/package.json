@@ -29,6 +29,7 @@
     "@coko/server": "4.0.0-beta.6",
     "@pubsweet/job-xsweet": "^2.2.1",
     "@pubsweet/model-user": "6.0.3",
+    "@dqbd/tiktoken": "^1.0.14",
     "archiver": "^5.3.0",
     "atob": "^2.1.2",
     "axios": "^0.21.1",

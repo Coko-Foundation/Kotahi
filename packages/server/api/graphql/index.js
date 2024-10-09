@@ -3,14 +3,14 @@ const path = require('path')
 const merge = require('lodash/merge')
 
 const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
-const chatGPTResolvers = require('./chatGPT/chatGPT.resolvers')
+const openAiResolvers = require('./openAi/openAi.resolvers')
 const rorResolvers = require('./ror/ror.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
 const teamResolvers = require('./team/team.resolvers')
 
 const typeDefFilePaths = [
   'anyStyle/anyStyle.graphql',
-  'chatGPT/chatGPT.graphql',
+  'openAi/openAi.graphql',
   'team/team.graphql',
   'ror/ror.graphql',
   'orcid/orcid.graphql',
@@ -27,10 +27,10 @@ const typeDefs = createTotalTypeDefs(typeDefFilePaths)
 const resolvers = merge(
   {},
   anyStyleResolvers,
-  chatGPTResolvers,
   teamResolvers,
-  rorResolvers,
+  openAiResolvers,
   orcidResolvers,
+  rorResolvers,
 )
 
 module.exports = {

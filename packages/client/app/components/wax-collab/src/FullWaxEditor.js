@@ -24,6 +24,7 @@ const renderImage = file => {
 }
 
 const FullWaxEditor = ({
+  aiConfig,
   onAssetManager,
   value,
   validationStatus,
@@ -69,7 +70,13 @@ const FullWaxEditor = ({
   const editorRef = useRef(null)
 
   const config = yjsConfig(
-    fullWaxEditorConfig(handleAssetManager, getComments, setComments, readonly),
+    fullWaxEditorConfig(
+      handleAssetManager,
+      getComments,
+      setComments,
+      readonly,
+      aiConfig,
+    ),
     {
       wsProvider,
       ydoc,

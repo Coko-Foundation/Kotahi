@@ -12,7 +12,6 @@ import {
   ComponentPlugin,
   DocumentHelpers,
 } from 'wax-prosemirror-core'
-import { TextSelection } from 'prosemirror-state'
 
 import { NotesAreaContainer, NotesHeading, NotesContainer } from './NotesStyles'
 import {
@@ -86,15 +85,6 @@ const ProductionWaxEditorLayout =
     useEffect(() => {
       if (localStorage.getItem('activeTabKey').includes('editor')) {
         setTimeout(() => {
-          if (main) {
-            main.dispatch(
-              main.state.tr.setSelection(
-                TextSelection.create(main.state.doc, 0),
-              ),
-            )
-            // main.focus()
-          }
-
           setWaxMounted(true)
         })
       }
