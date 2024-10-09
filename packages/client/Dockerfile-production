@@ -15,7 +15,6 @@ COPY yarn.lock .
 RUN yarn install --frozen-lockfile
 
 COPY . .
-RUN touch ./config/translation/translationOverrides.js
 
 RUN yarn coko-client-build
 
