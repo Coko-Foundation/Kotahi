@@ -164,8 +164,7 @@ export const ReadOnlyEditorDiv = styled.div`
 `
 
 export const InfoContainer = styled.div`
-  bottom: -32px;
-  display: flex;
+  bottom: -27px;
   position: absolute;
   right: 1px;
   z-index: 999;
