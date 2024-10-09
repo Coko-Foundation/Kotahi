@@ -72,6 +72,7 @@ build production server:
     - docker push $SERVER_PREPRODUCTION.latest
 
 deploy staging:
+  stage: Deploy staging
   image: docker:27
   services:
     - docker:27:dind
