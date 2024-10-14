@@ -7,6 +7,8 @@ variables:
   IMAGE_NAME_DEVELOPMENT: kotahi/kotahi/root-development
   CLIENT_PREPRODUCTION: $CI_REGISTRY/kotahi/kotahi/client-preproduction:$CI_COMMIT_REF_NAME
   SERVER_PREPRODUCTION: $CI_REGISTRY/kotahi/kotahi/server-preproduction:$CI_COMMIT_REF_NAME
+  CLIENT_PRODUCTION: cokoapps/kotahi-client
+  SERVER_PRODUCTION: cokoapps/kotahi-server
   DEPLOY_COMPOSE_FILE: docker-compose.ci.yml
 
 stages:
@@ -17,7 +19,8 @@ stages:
   - End to end testing
   - Tear down test
   - Deploy staging
-  # - Publish
+  - Release
+  - Publish
 
 build development:
   stage: Build development
@@ -39,7 +42,7 @@ lint:
     - cd /home/node/app
     - yarn coko-lint run
 
-build production client:
+.build preproduction client:
   stage: Build production
   image: docker:27
   services:
@@ -48,14 +51,14 @@ build production client:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
     - cd packages/client
-    - docker build 
+    - docker build
       --tag $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
       --tag $CLIENT_PREPRODUCTION.latest
       -f Dockerfile-production .
     - docker push $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $CLIENT_PREPRODUCTION.latest
 
-build production server:
+.build preproduction server:
   stage: Build production
   image: docker:27
   services:
@@ -71,7 +74,7 @@ build production server:
     - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $SERVER_PREPRODUCTION.latest
 
-deploy staging:
+.deploy staging:
   stage: Deploy staging
   image: docker:27
   services:
@@ -97,6 +100,62 @@ deploy staging:
   only:
     - main
 
+release:
+  stage: Release
+  image: node:18
+  when: manual
+  only:
+    - main
+  before_script:
+    - git remote set-url --push origin "https://gitlab-ci-token:$CI_RELEASE_TOKEN@gitlab.coko.foundation/kotahi/kotahi.git"
+    - git config user.email "$CI_RELEASE_BOT_EMAIL"
+    - git config user.name "kotahi release bot"
+  script:
+    - node scripts/updatePackageJson.js
+    - git add -A
+    - git commit -m "release version $VERSION [skip ci]"
+    - git remote get-url origin
+    - git push origin HEAD:$CI_COMMIT_REF_NAME --verbose
+    - git tag $VERSION
+    - git push origin $VERSION
+    - echo RELEASE_VERSION=$VERSION >> version.env
+  artifacts:
+    reports:
+      dotenv: version.env
+
+build production client:
+  stage: Publish
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - release
+  only:
+    - main
+  before_script:
+    - '[ -z "$RELEASE_VERSION" ] && exit 1'
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+  script:
+    - cd packages/client
+    - docker build --tag $CLIENT_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
+    - docker push $CLIENT_PRODUCTION:$RELEASE_VERSION
+
+build production server:
+  stage: Publish
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - release
+  only:
+    - main
+  before_script:
+    - '[ -z "$RELEASE_VERSION" ] && exit 1'
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
+  script:
+    - cd packages/server
+    - docker build --tag $SERVER_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
+    - docker push $SERVER_PRODUCTION:$RELEASE_VERSION
 # deploy test:
 #   stage: Deploy test
 #   image: $CI_REGISTRY/cokoinfra/ansible-deployer
