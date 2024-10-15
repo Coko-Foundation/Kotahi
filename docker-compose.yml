@@ -137,40 +137,28 @@ services:
   pagedjs:
     depends_on:
       - db-pagedjs
-    image: cokoapps/pagedjs:1.6.9
+    image: cokoapps/pagedjs:2.0.0
     ports:
       - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
     environment:
-      - PUBSWEET_SECRET=pagedjs_dev_secret
+      - NODE_ENV=development
+      - SECRET=pagedjs_dev_secret
+      - SERVER_PORT=${SERVICE_PAGEDJS_PORT:-3003}
+      - SERVER_URL=http://localhost:${SERVICE_PAGEDJS_PORT:-3003}
+      - POSTGRES_HOST=db-pagedjs
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=pagedjs_dev
       - POSTGRES_USER=pagedjs_user_dev
       - POSTGRES_PASSWORD=pagedjs_user_password
-      - POSTGRES_HOST=db-pagedjs
-      - POSTGRES_DB=pagedjs_dev
-      - POSTGRES_PORT=5432
-      - SERVER_PORT=${SERVICE_PAGEDJS_PORT:-3003}
-      - SERVER_PROTOCOL=http
-      - SERVER_HOST=localhost
-      - NODE_ENV=development
     security_opt:
       - seccomp:unconfined
-    entrypoint:
-      [
-        'node_modules/.bin/wait-for-it',
-        'db-pagedjs:5432',
-        '--',
-        'sh',
-        'scripts/setupDevServer.sh',
-      ]
-    command: ['node', './server/startServer.js']
 
   db-pagedjs:
-    image: postgres:12-alpine
+    image: postgres:16-alpine
     environment:
       - POSTGRES_USER=pagedjs_user_dev
       - POSTGRES_DB=pagedjs_dev
       - POSTGRES_PASSWORD=pagedjs_user_password
-    volumes:
-      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   xsweet:
     depends_on:
