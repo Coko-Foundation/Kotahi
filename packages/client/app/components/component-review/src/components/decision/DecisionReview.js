@@ -49,9 +49,9 @@ const DecisionReview = ({
 
   const users = review.user
     ? [user]
-    : collaborativeUsers.members
+    : collaborativeUsers?.members
         .filter(m => !['invited', 'rejected'].includes(m.status))
-        .map(member => member.user)
+        .map(member => member.user) || []
 
   const recommendation = ensureJsonIsParsed(review.jsonData)?.$verdict
 
