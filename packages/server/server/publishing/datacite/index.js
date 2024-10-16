@@ -55,12 +55,12 @@ const verifySubmission = (formData, submission) => {
   if (!locationPrefix) errors.push(ERROR_MESSAGES.noArticleLocationPrefix)
   if (!submission) errors.push(ERROR_MESSAGES.noSubmissionObject)
 
-  const { $title, $authors /* objectType */ } = submission || {}
+  const { $title, $authors /* resourcetype */ } = submission || {}
   const noAuthors = !isArray($authors) || !$authors.length
 
   if (!$title) errors.push(ERROR_MESSAGES.noSubmissionTitle)
   if (noAuthors) errors.push(ERROR_MESSAGES.noSubmissionAuthors)
-  // if (!objectType) return ERROR_MESSAGES.noResourceType // disabled (we will set 'other' as default)
+  // if (!resourcetype) return ERROR_MESSAGES.noResourceType // disabled (we will set 'other' as default)
 
   return errors.length > 0 && errors
 }
@@ -76,7 +76,7 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
     $authors,
     $dois,
     $issueYear: issueYear,
-    objectType: resourceTypeGeneral = 'Other',
+    resourcetype: resourceTypeGeneral = 'Other',
     ifother: resourceType = 'project',
     $title: title,
   } = submission

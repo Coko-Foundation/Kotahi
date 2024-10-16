@@ -5,7 +5,6 @@ import ReactSelect, { components } from 'react-select'
 import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { color } from '../../theme'
-import { resourceTypeOptions } from '../../shared/authorsFieldDefinitions'
 
 const styles = th => ({
   menu: (provided, state) => ({
@@ -94,16 +93,8 @@ export const Select = props => {
 
   const th = useContext(ThemeContext)
   const { t } = useTranslation()
-  const isObjectTypeField = name === 'submission.objectType'
 
-  const [selectedOption, setSelectedOption] = useState(
-    !isObjectTypeField
-      ? value
-      : {
-          label: 'Other',
-          value: 'Other',
-        },
-  )
+  const [selectedOption, setSelectedOption] = useState(value)
 
   useEffect(() => {
     if (!isMulti && value) {
@@ -130,7 +121,7 @@ export const Select = props => {
       classNamePrefix="react-select"
       components={{ ValueContainer: getValueContainer(dataTestid) }}
       isMulti={isMulti}
-      options={isObjectTypeField ? resourceTypeOptions : options}
+      options={options}
       {...otherProps}
       menuPlacement="auto"
       menuPortalTarget={document.querySelector('body')}
