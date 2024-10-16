@@ -36,7 +36,7 @@ const revertHiddenSensitiveInformation = async (
   const formData = inputFormData
 
   // Publishing - Crossref password
-  if (formData.publishing.crossref.password) {
+  if (formData.publishing.crossref?.password) {
     const passwordIsHidden =
       redact(existingConfig.formData.publishing.crossref.password) ===
       formData.publishing.crossref.password
