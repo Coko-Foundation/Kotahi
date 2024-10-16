@@ -561,7 +561,7 @@ const ru = {
       DOAJ: 'DOAJ',
       doajLogin: 'Имя пользователя DOAJ',
       doajPassword: 'Пароль DOAJ',
-      doajRegistrant: 'ID в DOAJ',
+      doajRegistrant: 'DOAJ API key',
       doajDepositorName: 'Имя владельца DOAJ',
       doajDepositorEmail: 'Email владельца DOAJ',
       Webhook: 'Вебхук',

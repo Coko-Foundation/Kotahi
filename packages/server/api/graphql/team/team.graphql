@@ -16,6 +16,7 @@ extend type User {
 
 extend type TeamMember {
   isShared: Boolean
+  updated: DateTime
 }
 
 # extend type Team {
