@@ -42,11 +42,13 @@ lint:
     - cd /home/node/app
     - yarn coko-lint run
 
-.build preproduction client:
+build preproduction client:
   stage: Build production
   image: docker:27
   services:
     - docker:27-dind
+  only:
+    - main
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
@@ -58,11 +60,13 @@ lint:
     - docker push $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $CLIENT_PREPRODUCTION.latest
 
-.build preproduction server:
+build preproduction server:
   stage: Build production
   image: docker:27
   services:
     - docker:27-dind
+  only:
+    - main
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
@@ -74,11 +78,13 @@ lint:
     - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $SERVER_PREPRODUCTION.latest
 
-.deploy staging:
+deploy staging:
   stage: Deploy staging
-  image: docker:27
+  image: $CI_REGISTRY/cokoinfra/ansible-deployer
   services:
     - docker:27:dind
+  only:
+    - main
   variables:
     ANSCOMPOSE_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES: true
     ANSCOMPOSE_USE_SANDBOXED_ORCID: true
@@ -97,8 +103,6 @@ lint:
     - cp $DEPLOY_COMPOSE_FILE /ansible
     - cd /ansible
     - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
-  only:
-    - main
 
 release:
   stage: Release
