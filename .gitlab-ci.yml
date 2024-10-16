@@ -24,6 +24,7 @@ stages:
 
 build development:
   stage: Build development
+  interruptible: true
   image: docker:26-dind
   services:
     - docker:26-dind
@@ -37,6 +38,7 @@ build development:
 
 lint:
   stage: Lint & Unit test
+  interruptible: true
   image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
   script:
     - cd /home/node/app
@@ -44,6 +46,7 @@ lint:
 
 build preproduction client:
   stage: Build production
+  interruptible: true
   image: docker:27
   services:
     - docker:27-dind
@@ -62,6 +65,7 @@ build preproduction client:
 
 build preproduction server:
   stage: Build production
+  interruptible: true
   image: docker:27
   services:
     - docker:27-dind
@@ -80,6 +84,7 @@ build preproduction server:
 
 deploy staging:
   stage: Deploy staging
+  interruptible: false
   image: $CI_REGISTRY/cokoinfra/ansible-deployer
   services:
     - docker:27:dind
@@ -106,6 +111,7 @@ deploy staging:
 
 release:
   stage: Release
+  interruptible: false
   image: node:18
   when: manual
   only:
@@ -127,8 +133,9 @@ release:
     reports:
       dotenv: version.env
 
-build production client:
+production client:
   stage: Publish
+  interruptible: false
   image: docker:27
   services:
     - docker:27-dind
@@ -144,8 +151,9 @@ build production client:
     - docker build --tag $CLIENT_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
     - docker push $CLIENT_PRODUCTION:$RELEASE_VERSION
 
-build production server:
+production server:
   stage: Publish
+  interruptible: false
   image: docker:27
   services:
     - docker:27-dind
