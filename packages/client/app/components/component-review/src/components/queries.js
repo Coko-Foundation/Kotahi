@@ -91,6 +91,7 @@ const manuscriptFields = `
           identifier
         }
       }
+      updated
       status
       isShared
     }
@@ -240,6 +241,7 @@ const teamFields = `
         identifier
       }
     }
+    updated
     status
     isShared
   }

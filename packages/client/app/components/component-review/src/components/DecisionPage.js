@@ -57,6 +57,7 @@ import { reviewFormUpdatedSubscription } from './reviewSubscriptions'
 import useChat from '../../../../hooks/useChat'
 
 import { getCurrentUserReview } from './review/util'
+import { getRoles } from '../../../../shared/manuscriptUtils'
 
 export const updateManuscriptMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -525,6 +526,19 @@ const DecisionPage = ({ currentUser, match }) => {
     doisToRegister,
     emailTemplates,
   } = data
+
+  const currentUserRoles = getRoles(manuscript, currentUser.id)
+
+  if (
+    !(
+      currentUser.groupRoles.includes('groupManager') ||
+      ['seniorEditor', 'handlingEditor', 'editor'].some(editorRole =>
+        currentUserRoles.includes(editorRole),
+      )
+    )
+  ) {
+    return <AccessErrorPage message={t('decisionPage.unauthorized')} />
+  }
 
   const form = submissionForm?.structure ?? {
     name: '',
