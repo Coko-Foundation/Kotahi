@@ -42,9 +42,10 @@ const getPublisher = formData => {
 }
 
 const getContributor = author => {
-  const { ror, orcid, firstName, lastName } = author
+  const { ror: affiliation, orcid, firstName, lastName } = author
   if (!firstName || !lastName)
     throw new Error(`Incomplete author record ${JSON.stringify(author)}`)
+  const isRor = affiliation?.value.includes('ror.org')
 
   const contributor = {
     nameType: 'Personal',
@@ -59,13 +60,15 @@ const getContributor = author => {
         },
       ],
     }),
-    ...objIf(ror, {
+    ...objIf(affiliation, {
       affiliation: [
         {
-          affiliationIdentifier: ror?.value,
-          affiliationIdentifierScheme: 'ROR',
-          schemeUri: 'https://ror.org',
-          name: ror?.label,
+          ...objIf(isRor, {
+            affiliationIdentifier: affiliation?.value,
+            affiliationIdentifierScheme: 'ROR',
+            schemeUri: 'https://ror.org',
+          }),
+          name: affiliation?.label,
         },
       ],
     }),
