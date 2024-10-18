@@ -5,6 +5,7 @@ import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
 import {
   WaxContext,
+  /* ApplicationContext, */
   MenuButton /*, DocumentHelpers */,
 } from 'wax-prosemirror-core'
 import { TextSelection } from 'prosemirror-state'
@@ -44,11 +45,12 @@ const AnyStyleButton = ({ view = {}, item, anyStyle }) => {
   const { active, icon, label, /* run, */ select, title } = item
 
   const {
-    // app,
     pmViews: { main },
     activeViewId,
     activeView,
   } = useContext(WaxContext)
+
+  // const { app } = useContext(ApplicationContext)
 
   const { /* dispatch, */ state } = view
   // const serviceConfig = app.config.get('config.AnyStyleService')

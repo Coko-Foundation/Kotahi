@@ -4,16 +4,21 @@ import React, { useContext, useState, useMemo, useCallback } from 'react'
 // eslint-disable-next-line
 import useDeepCompareEffect from 'use-deep-compare-effect'
 import { each, uniqBy, sortBy } from 'lodash'
-import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
+import {
+  WaxContext,
+  ApplicationContext,
+  DocumentHelpers,
+} from 'wax-prosemirror-core'
 import BoxList from './BoxList'
 
 const RightArea = ({ area }) => {
   const {
     pmViews,
     pmViews: { main },
-    app,
     activeView,
   } = useContext(WaxContext)
+
+  const { app } = useContext(ApplicationContext)
 
   const commentPlugin = app.PmPlugins.get('commentPlugin')
   const trakChangePlugin = app.PmPlugins.get('trackChangePlugin')
