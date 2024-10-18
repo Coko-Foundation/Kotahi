@@ -1,4 +1,6 @@
+/* stylelint-disable string-quotes */
 /* stylelint-disable no-descending-specificity */
+import Creatable from 'react-select/async-creatable'
 
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -6,7 +8,6 @@ import { th, grid } from '@coko/client'
 import PropTypes from 'prop-types'
 import { v4 as uuid } from 'uuid'
 import { useTranslation } from 'react-i18next'
-import AsyncSelect from 'react-select/async'
 import { PlusCircle } from 'react-feather'
 import { Button } from '../../../pubsweet'
 import { DeleteControl, TextInput } from '../../../shared'
@@ -54,7 +55,7 @@ const Author = styled.div`
   width: 100%;
 `
 
-const StyledSelect = styled(AsyncSelect)`
+const StyledSelect = styled(Creatable)`
   border: 1px solid #dedede;
   border-radius: ${th('borderRadius')};
   font-size: ${th('fontSizeBaseSmall')};

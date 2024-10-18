@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client'
 import { SEARCH_ROR } from '../../userManuscriptFormQuery'
 import { VALIDATE_ORCID } from '../../../../../shared/commsUtils'
 
+// TODO: refactor and move to Pages
 const useAuthorsFieldQueries = () => {
   const { refetch: rorSearch } = useQuery(SEARCH_ROR, { skip: true })
 
