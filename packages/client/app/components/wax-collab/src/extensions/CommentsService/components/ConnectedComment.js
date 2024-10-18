@@ -3,7 +3,11 @@ import React, { useContext, useMemo, useState, useEffect } from 'react'
 import { TextSelection } from 'prosemirror-state'
 import { last, maxBy } from 'lodash'
 import styled from 'styled-components'
-import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
+import {
+  WaxContext,
+  ApplicationContext,
+  DocumentHelpers,
+} from 'wax-prosemirror-core'
 import { v4 as uuidv4 } from 'uuid'
 import { override } from '@coko/client'
 import CommentBox from './ui/comments/CommentBox'
@@ -29,6 +33,7 @@ const ConnectedCommentStyled = styled.div`
 /* eslint-disable-next-line react/function-component-definition */
 export default ({ comment, top, commentId, recalculateTops }) => {
   const context = useContext(WaxContext)
+  const { app } = useContext(ApplicationContext)
 
   const {
     pmViews,
@@ -37,7 +42,6 @@ export default ({ comment, top, commentId, recalculateTops }) => {
         props: { user },
       },
     },
-    app,
     activeView,
   } = context
 

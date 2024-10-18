@@ -1,7 +1,11 @@
 /* eslint react/prop-types: 0 */
 import React, { useEffect, useState, useContext } from 'react'
 import { DOMParser, DOMSerializer, Fragment } from 'prosemirror-model'
-import { WaxContext, DocumentHelpers } from 'wax-prosemirror-core'
+import {
+  WaxContext,
+  ApplicationContext,
+  DocumentHelpers,
+} from 'wax-prosemirror-core'
 import { sanitize } from 'isomorphic-dompurify'
 import striptags from 'striptags'
 import { Loader, List, CheckCircle } from 'react-feather'
@@ -59,7 +63,8 @@ const decideStatus = (needsReview, needsValidation) => {
 }
 
 const CitationComponent = ({ node, getPos }) => {
-  const { app, pmViews, activeView } = useContext(WaxContext)
+  const { pmViews, activeView } = useContext(WaxContext)
+  const { app } = useContext(ApplicationContext)
 
   // eslint-disable-next-line
   const citationConfig = app.config._config.config.CitationService

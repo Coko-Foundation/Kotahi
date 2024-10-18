@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useContext, useState, useEffect } from 'react'
-import { WaxContext } from 'wax-prosemirror-core'
+import { WaxContext, ApplicationContext } from 'wax-prosemirror-core'
 import { sanitize } from 'isomorphic-dompurify'
 import Modal from '../../../../../component-modal/src/Modal'
 import {
@@ -22,7 +22,8 @@ import {
 const CalloutComponent = ({ node, view, getPos }) => {
   const context = useContext(WaxContext)
 
-  const { app, activeView, pmViews, activeViewId } = context
+  const { activeView, pmViews, activeViewId } = context
+  const { app } = useContext(ApplicationContext)
 
   const { state } = activeView
   const posFrom = pmViews[activeViewId].state.selection.from
