@@ -213,6 +213,8 @@ const AuthorsInput = ({
                         classNamePrefix="react-select"
                         isClearable
                         loadOptions={searchRor(filterOptions)}
+                        menuPlacement="auto"
+                        menuPortalTarget={document.querySelector('body')}
                         onChange={handleChange}
                         placeholder={f.placeholder}
                         value={author[f.name]}
