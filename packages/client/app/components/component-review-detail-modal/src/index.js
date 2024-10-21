@@ -84,20 +84,34 @@ const ReviewDetailsModal = (
     updateReviewJsonData,
   } = props
 
-  const { createYjsProvider } = useContext(YjsContext)
+  const { createYjsProvider, wsProvider } = useContext(YjsContext)
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
 
   useEffect(() => {
     if (review?.isCollaborative) {
-      createYjsProvider({
-        currentUser,
-        identifier: review.id,
-        object: { objectType: 'Review', category: 'review', purpose: 'review' },
-      })
+      setTimeout(() => {
+        if (!wsProvider || wsProvider?.roomname !== review?.id) {
+          createYjsProvider({
+            currentUser,
+            identifier: review.id,
+            object: {
+              objectType: 'Review',
+              category: 'review',
+              purpose: 'review',
+            },
+          })
+        }
+      }, 500)
     }
-  }, [])
+
+    if (wsProvider && wsProvider?.roomname !== review?.id) {
+      return () => wsProvider?.disconnect()
+    }
+
+    return null
+  }, [review?.id])
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
     reviewStatuses,

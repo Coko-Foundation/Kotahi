@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import yjsConfig from '../../../wax-collab/src/config/yjsConfig'
@@ -20,11 +20,17 @@ const FormWaxEditor = ({
   name,
   ...rest
 }) => {
-  const config = yjsConfig(simpleWaxEditorConfig(), {
-    wsProvider,
-    ydoc,
-    yjsType: name,
-  })
+  const [config, setConfig] = useState(simpleWaxEditorConfig())
+
+  useEffect(() => {
+    setConfig(
+      yjsConfig(config, {
+        wsProvider,
+        ydoc,
+        yjsType: name,
+      }),
+    )
+  }, [name, ydoc?.guid])
 
   return (
     <div className={validationStatus}>
@@ -34,13 +40,13 @@ const FormWaxEditor = ({
         config={config}
         layout={SimpleWaxEditorLayout(readonly, dataTestid)}
         onBlur={val => {
-          onChange && onChange(val)
-          onBlur && onBlur(val)
+          !ydoc && onChange && onChange(val)
+          !ydoc && onBlur && onBlur(val)
         }}
-        onChange={onChange}
+        onChange={!ydoc && onChange}
         placeholder={placeholder}
         readonly={readonly}
-        value={value}
+        value={!ydoc && value}
         {...rest}
       />
     </div>
