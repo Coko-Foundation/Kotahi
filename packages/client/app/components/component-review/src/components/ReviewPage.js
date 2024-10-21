@@ -5,8 +5,6 @@ import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { useTranslation } from 'react-i18next'
 import { ConfigContext } from '../../../config/src'
-import YjsContext from '../../../provider-yjs/YjsProvider'
-
 import ReviewLayout from './review/ReviewLayout'
 import { AccessErrorPage, Heading, Page, Spinner } from '../../../shared'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
@@ -237,8 +235,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const { t } = useTranslation()
   const config = useContext(ConfigContext)
 
-  const { createYjsProvider } = useContext(YjsContext)
-
   const { urlFrag } = config
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS_MUTATION)
@@ -339,14 +335,6 @@ const ReviewPage = ({ currentUser, history, match }) => {
   const chatProps = useChat(channels)
 
   if (loading || currentUser === null) return <Spinner />
-
-  if (currentUserReview && currentUserReview.isCollaborative) {
-    createYjsProvider({
-      currentUser,
-      identifier: currentUserReview.id,
-      object: { objectType: 'Review', category: 'review', purpose: 'review' },
-    })
-  }
 
   if (error) {
     console.warn(error.message)

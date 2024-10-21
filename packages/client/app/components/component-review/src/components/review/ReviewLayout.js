@@ -1,5 +1,5 @@
 /* eslint-disable react/default-props-match-prop-types */
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
 import { useTranslation } from 'react-i18next'
@@ -23,6 +23,7 @@ import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../../../config/src'
+import YjsContext from '../../../../provider-yjs/YjsProvider'
 
 const ReviewLayout = ({
   currentUser,
@@ -45,6 +46,8 @@ const ReviewLayout = ({
   chatExpand,
 }) => {
   const config = useContext(ConfigContext) || {}
+  const { createYjsProvider, wsProvider } = useContext(YjsContext)
+
   const { urlFrag } = config
   const priorVersions = versions.slice(1)
   priorVersions.reverse() // Convert to chronological order (was reverse-chron)
@@ -54,6 +57,30 @@ const ReviewLayout = ({
   const channelData = chatProps?.channelsData?.find(
     channel => channel?.channelId === channelId,
   )
+
+  useEffect(() => {
+    if (currentUserReview && currentUserReview.isCollaborative) {
+      setTimeout(() => {
+        if (!wsProvider || wsProvider?.roomname !== currentUserReview.id) {
+          createYjsProvider({
+            currentUser,
+            identifier: currentUserReview.id,
+            object: {
+              objectType: 'Review',
+              category: 'review',
+              purpose: 'review',
+            },
+          })
+        }
+      }, 500)
+    }
+
+    if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
+      return () => wsProvider?.disconnect()
+    }
+
+    return null
+  }, [currentUserReview.id])
 
   const createMetaDataSection = latestManuscript => {
     return (

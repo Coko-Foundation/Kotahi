@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useContext, useCallback } from 'react'
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import { debounce } from 'lodash'
@@ -49,13 +55,13 @@ const FullWaxEditor = ({
 
   const debouncedSave = useCallback(
     debounce(source => {
-      if (saveSource) saveSource(source)
+      if (saveSource && !ydoc) saveSource(source)
     }, 6000),
     [],
   )
 
   useEffect(() => {
-    return () => debouncedSave.flush()
+    return () => !ydoc && debouncedSave.flush()
   }, [])
 
   const waxUser = {
@@ -69,7 +75,7 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  const config = yjsConfig(
+  const [config, setConfig] = useState(
     fullWaxEditorConfig(
       handleAssetManager,
       getComments,
@@ -77,12 +83,17 @@ const FullWaxEditor = ({
       readonly,
       aiConfig,
     ),
-    {
-      wsProvider,
-      ydoc,
-      yjsType: name,
-    },
   )
+
+  useEffect(() => {
+    setConfig(
+      yjsConfig(config, {
+        wsProvider,
+        ydoc,
+        yjsType: name,
+      }),
+    )
+  }, [name, ydoc?.guid])
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
@@ -94,15 +105,20 @@ const FullWaxEditor = ({
           key={`readonly-${readonly}`}
           layout={
             useComments
-              ? ProductionWaxEditorLayout(readonly, authorComments, false)
+              ? ProductionWaxEditorLayout(
+                  readonly,
+                  authorComments,
+                  false,
+                  getActiveViewDom,
+                )
               : FullWaxEditorLayout(readonly, getActiveViewDom)
           }
-          onChange={source => debouncedSave(source)}
+          onChange={source => !ydoc && debouncedSave(source)}
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}
           user={waxUser}
-          value={value}
+          value={!ydoc && value}
         />
       </div>
     </ThemeProvider>

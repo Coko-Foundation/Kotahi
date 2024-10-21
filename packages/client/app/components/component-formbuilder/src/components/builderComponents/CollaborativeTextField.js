@@ -68,9 +68,10 @@ const CollaborativeTextFieldBuilder = ({ collaborativeObject, ...input }) => {
 
   useEffect(() => {
     return () => {
-      areaBinding.destroy()
+      // eslint-disable-next-line no-unused-expressions
+      areaBinding?.destroy()
     }
-  }, [])
+  }, [ydoc?.guid])
 
   const startTextYjs = useCallback(
     node => {

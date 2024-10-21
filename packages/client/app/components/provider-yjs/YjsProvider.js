@@ -9,7 +9,7 @@ import { yjsWebSocketServerUrl, uuid } from '@coko/client'
 import { ConfigContext } from '../config/src'
 
 const YjsContext = React.createContext({
-  jsProvider: null,
+  wsProvider: null,
   ydoc: null,
   createYjsProvider: () => {},
 })
@@ -52,49 +52,40 @@ const YjsProvider = ({ children }) => {
     }
 
     let ydocInstance = null
-
-    if (ydoc) {
-      ydocInstance = ydoc
-    } else {
-      ydocInstance = new Y.Doc()
-      setYDoc(ydocInstance)
-    }
+    ydocInstance = new Y.Doc()
+    setYDoc(ydocInstance)
 
     let provider = null
 
-    if (wsProvider) {
-      provider = wsProvider
-    } else {
-      if (!identifier) {
-        // eslint-disable-next-line no-param-reassign
-        identifier = uuid()
-      }
+    if (!identifier) {
+      // eslint-disable-next-line no-param-reassign
+      identifier = uuid()
+    }
 
-      // eslint-disable-next-line no-restricted-globals
-      provider = new WebsocketProvider(
-        yjsWebSocketServerUrl,
-        identifier,
-        ydocInstance,
-        {
-          params: {
-            token: localStorage.getItem('token') || '',
-            groupId,
-            ...object,
-          },
+    // eslint-disable-next-line no-restricted-globals
+    provider = new WebsocketProvider(
+      yjsWebSocketServerUrl,
+      identifier,
+      ydocInstance,
+      {
+        params: {
+          token: localStorage.getItem('token') || '',
+          groupId,
+          ...object,
         },
-      )
+      },
+    )
 
-      const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
+    const color = arrayColor[Math.floor(Math.random() * arrayColor.length)]
 
-      if (currentUser) {
-        provider.awareness.setLocalStateField('user', {
-          id: currentUser.id || uuid(),
-          color,
-          displayName: currentUser
-            ? currentUser.username || currentUser.email
-            : 'Anonymous',
-        })
-      }
+    if (currentUser) {
+      provider.awareness.setLocalStateField('user', {
+        id: currentUser.id || uuid(),
+        color,
+        displayName: currentUser
+          ? currentUser.username || currentUser.email
+          : 'Anonymous',
+      })
     }
 
     setWsProvider(provider)

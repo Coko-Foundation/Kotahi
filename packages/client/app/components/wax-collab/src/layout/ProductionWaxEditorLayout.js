@@ -53,13 +53,20 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout =
-  (readOnly, authorComments = null, leftBar = true) =>
+  (readOnly, authorComments = null, leftBar = true, getActiveViewDom) =>
   /* eslint-disable-next-line react/function-component-definition */
   props => {
     const {
       pmViews: { main },
+      activeView,
       options,
     } = useContext(WaxContext)
+
+    // useEffect(() => {
+    //   activeView.dom?.outerHTML &&
+    //     getActiveViewDom &&
+    //     getActiveViewDom(activeView.dom?.outerHTML)
+    // }, [activeView.dom, activeView])
 
     const [isWaxMounted, setWaxMounted] = useState(false)
 
@@ -169,7 +176,7 @@ const ProductionWaxEditorLayout =
           </Grid>
         </div>
       ),
-      [isWaxMounted, options.fullScreen],
+      [isWaxMounted, options.fullScreen, activeView.dom, activeView],
     )
   }
 

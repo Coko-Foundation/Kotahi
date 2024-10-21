@@ -11,6 +11,7 @@ const CollaborativeWax = ({
   user,
   collaborativeObject,
   identifier,
+  setComments,
   ...rest
 }) => {
   const { currentUser } = collaborativeObject
@@ -24,6 +25,7 @@ const CollaborativeWax = ({
   return Component ? (
     <Component
       {...rest}
+      setComments={setComments}
       user={currentUser}
       wsProvider={wsProvider}
       ydoc={ydoc}
