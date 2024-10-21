@@ -211,6 +211,7 @@ const AuthorsInput = ({
                     {f.name === 'ror' ? (
                       <StyledSelect
                         classNamePrefix="react-select"
+                        createOptionPosition="first"
                         isClearable
                         loadOptions={searchRor(filterOptions)}
                         menuPlacement="auto"
