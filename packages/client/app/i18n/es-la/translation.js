@@ -143,7 +143,7 @@ const esLa = {
       'Manuscript number': 'Número de Manuscrito',
       Created: 'Creado',
       Updated: 'Actualizado',
-      'Last Status Update': 'Última Actualización de Estado',
+      lastReviewerStatusUpdate: 'Actualización del estado del último revisor',
       Status: 'Estado',
       'Your Status': 'Tu Estado',
       Title: 'Título',

@@ -143,7 +143,7 @@ const fr = {
       'Manuscript number': 'Numéro de manuscrit',
       Created: 'Créé',
       Updated: 'Mis à jour',
-      'Last Status Update': 'Dernière mise à jour du statut',
+      lastReviewerStatusUpdate: 'Dernière mise à jour du statut du réviseur',
       Status: 'Statut',
       'Your Status': 'Votre statut',
       Title: 'Titre',
