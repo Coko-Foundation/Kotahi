@@ -74,7 +74,7 @@ const buildSpecialColumnProps = (
       flex: '0.25 1 8em',
     },
     lastUpdated: {
-      title: i18next.t('manuscriptsTable.Last Status Update'),
+      title: i18next.t('manuscriptsTable.lastReviewerStatusUpdate'),
       component: LastReviewerUpdated,
       flex: '0.25 1 8em',
     },

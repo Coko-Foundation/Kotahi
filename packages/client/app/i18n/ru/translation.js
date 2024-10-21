@@ -143,7 +143,7 @@ const ru = {
       'Manuscript number': 'Номер статьи',
       Created: 'Создано',
       Updated: 'Обновлено',
-      'Last Status Update': 'Последнее обновление статуса',
+      lastReviewerStatusUpdate: 'Последнее обновление статуса рецензента',
       Status: 'Статус',
       'Your Status': 'Статус',
       Title: 'Название',

@@ -142,7 +142,7 @@ const en = {
       'Manuscript number': 'Manuscript number',
       Created: 'Created',
       Updated: 'Updated',
-      'Last Status Update': 'Last Status Update',
+      lastReviewerStatusUpdate: 'Last Reviewer Status Update',
       Status: 'Status',
       'Your Status': 'Your Status',
       Title: 'Title',
