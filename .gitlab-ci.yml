@@ -124,9 +124,9 @@ release:
     - node scripts/updatePackageJson.js
     - git add -A
     - git commit -m "release version $VERSION [skip ci]"
-    - git remote get-url origin
-    - git push origin HEAD:$CI_COMMIT_REF_NAME --verbose
+    - git tag -d $VERSION
     - git tag $VERSION
+    - git push origin HEAD:$CI_COMMIT_REF_NAME --verbose
     - git push origin $VERSION
     - echo RELEASE_VERSION=$VERSION >> version.env
   artifacts:
