@@ -405,7 +405,7 @@ const en = {
       },
       ror: {
         label: 'Affiliation',
-        placeholder: 'Enter ROR affiliation...',
+        placeholder: 'Insert text or select ROR affiliation...',
       },
       lastName: {
         label: 'Last name',
