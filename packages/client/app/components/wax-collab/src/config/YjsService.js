@@ -25,9 +25,6 @@ class YjsService extends Service {
       //   this.app.context.setOption({ currentYdoc: ydoc })
     }
 
-    // connectionUrl and docIdentifier is undefined here!
-    console.log('config', this.config, connectionUrl, docIdentifier)
-
     // Without this the review page is crashing locally!
     this.app.context.setOption({ currentYdoc: ydoc })
 

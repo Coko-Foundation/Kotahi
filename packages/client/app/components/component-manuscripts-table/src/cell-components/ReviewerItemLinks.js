@@ -58,12 +58,7 @@ const ReviewerItemLinks = ({
             })
           }
 
-          if (team.role === 'collaborativeReviewer') {
-            // Interim - Hacky solution to avoid the collaborative review page crash while switching between reviews
-            window.location.assign(mainActionLink)
-          } else {
-            history.push(mainActionLink)
-          }
+          history.push(mainActionLink)
         }}
       >
         {reviewLinkText[status]}
