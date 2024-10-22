@@ -1,5 +1,28 @@
 ## Changes
 
+### Version 3.9.0
+
+We now offer pre-built production images for both kotahi server and kotahi client. You can find them on dockerhub as `cokoapps/kotahi-server` and `cokoapps/kotahi-client`. Tags will be the version that is being published (eg. `cokoapps/kotahi-server:3.9.0`).
+
+The `S3_PROTOCOL`, `S3_HOST` and `S3_PORT` variables have been dropped. Use `S3_URL` instead of them.
+eg. 
+```sh
+# Before
+
+S3_PROTOCOL=https
+S3_HOST=mystoragedomain.com
+S3_PORT=5050
+
+# After
+S3_URL=https://mystoragedomain.com:5050
+```
+
+There's a new (optional) `S3_REGION` environment variable that let's you control the storage provider's region setting.
+
+If you were previously adding the `pgcrypto` extension to your databases manually, that is no longer necessary. The extension is still necessary, but its addition will happen automatically.
+
+Note that there's a new major version (`2.0.0`) of the pagedjs microservice. If you switch to that, there are a couple of environment variables that you need to change. Check that repo's [changelog](https://gitlab.coko.foundation/cokoapps/pagedjs/-/blob/main/CHANGELOG.md?ref_type=heads) for details. Both versions 1 and 2 will work with kotahi.
+
 ### Version 3.8.0
 
 We've changed how translation overrides work a little. Instead of mounting files on the client container, you now need to mount your override files on the server container, under `config/translation`. This will enable us to provide pre-built client images in the near future.
