@@ -1,9 +1,15 @@
 import React, { useContext } from 'react'
+import styled from 'styled-components'
 import { WaxContext, ComponentPlugin, WaxView } from 'wax-prosemirror-core'
 import { Grid, EditorDiv, Menu, FullWaxEditorGrid } from '../EditorStyles'
 
 import 'wax-prosemirror-core/dist/index.css'
 import 'wax-prosemirror-services/dist/index.css'
+
+const WaxContainer = styled.div`
+  height: 100%;
+  position: relative;
+`
 
 const TopBar = ComponentPlugin('topBar')
 
@@ -15,9 +21,7 @@ const ContentEditorLayout =
 
     // added to bring in full screen
 
-    let fullScreenStyles = {
-      height: '100%',
-    }
+    let fullScreenStyles = {}
 
     if (options.fullScreen) {
       fullScreenStyles = {
@@ -34,26 +38,21 @@ const ContentEditorLayout =
     }
 
     return (
-      <div id="wax-container" style={fullScreenStyles}>
+      <WaxContainer id="wax-container" style={fullScreenStyles}>
         <Grid readonly={readOnly} readOnlyComments>
-          <>
-            <Menu className="waxmenu">
-              <TopBar />
-            </Menu>
-            <FullWaxEditorGrid
-              className="full-wax-editor-grid"
-              useComments={false}
-            >
-              <EditorDiv
-                className="wax-surface-scroll panelWrapper"
-                hideComments
-              >
-                <WaxView {...props} />
-              </EditorDiv>
-            </FullWaxEditorGrid>
-          </>
+          <Menu className="waxmenu">
+            <TopBar />
+          </Menu>
+          <FullWaxEditorGrid
+            className="full-wax-editor-grid"
+            useComments={false}
+          >
+            <EditorDiv className="wax-surface-scroll panelWrapper" hideComments>
+              <WaxView {...props} />
+            </EditorDiv>
+          </FullWaxEditorGrid>
         </Grid>
-      </div>
+      </WaxContainer>
     )
   }
 

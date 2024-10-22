@@ -125,8 +125,12 @@ export const FullWidthAndHeightContainer = styled.div`
 `
 
 export const LayoutPageFooterContainer = styled.div`
-  height: 527px;
+  height: 100%;
   width: 100%;
+
+  & #wax-container {
+    height: 300px;
+  }
 `
 
 export const CmsWidthAndHeightContainer = styled.div`
