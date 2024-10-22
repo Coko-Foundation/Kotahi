@@ -30,7 +30,7 @@ const FormWaxEditor = ({
         yjsType: name,
       }),
     )
-  }, [name, ydoc?.guid])
+  }, [name, wsProvider?.roomname, ydoc?.guid])
 
   return (
     <div className={validationStatus}>

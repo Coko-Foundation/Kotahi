@@ -93,7 +93,7 @@ const FullWaxEditor = ({
         yjsType: name,
       }),
     )
-  }, [name, ydoc?.guid])
+  }, [name, wsProvider?.roomname, ydoc?.guid])
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
