@@ -109,6 +109,16 @@ deploy staging:
     - cd /ansible
     - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
 
+deploy fly:
+  stage: Deploy staging
+  interruptible: false
+  image: cokoapps/fly
+  only:
+    - main
+  script:
+    - FLY_API_TOKEN=$FLY_SERVER_TEST_TOKEN flyctl deploy --config .fly/kotahi-server-test.toml --image $SERVER_PREPRODUCTION.$CI_COMMIT_SHA --env APP_RELEASE=$CI_COMMIT_SHA
+    - FLY_API_TOKEN=$FLY_CLIENT_TEST_TOKEN flyctl deploy --config .fly/kotahi-client-test.toml --image $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA --env APP_RELEASE=$CI_COMMIT_SHA
+
 release:
   stage: Release
   interruptible: false

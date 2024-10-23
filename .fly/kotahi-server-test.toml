@@ -1,0 +1,122 @@
+app = "kotahi-server-test"
+primary_region = "lhr"
+
+# [build]
+# image = "cokoapps/kotahi-server:test"
+
+[http_service]
+auto_start_machines = true
+auto_stop_machines = true
+force_https = true
+internal_port = 8_080
+min_machines_running = 0
+processes = ["app"]
+
+# HTTP service configuration (port 8080)
+[[services]]
+internal_port = 8080
+protocol = "tcp"
+
+[[services.ports]]
+handlers = ["http"]
+port = 80           # Map internal HTTP service (8080) to external port 80
+
+[[services.ports]]
+handlers = ["tls", "http"]
+port = 443                 # Map internal HTTP service (8080) to external HTTPS (443)
+
+# WebSocket service configuration (port 8081)
+[[services]]
+internal_port = 8081
+protocol = "tcp"     # Use TCP for WebSocket connections
+
+[[services.ports]]
+handlers = ["http"] # WebSocket handler
+port = 8081         # External port for WebSocket (same as internal port)
+
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory = "1gb"
+
+[env]
+NODE_ENV = "production"
+CLIENT_URL = "https://kotahi-client-test.fly.dev"
+SERVER_URL = "https://kotahi-server-test.fly.dev"
+WS_YJS_SERVER_PORT = "8081"
+INSTANCE_GROUPS = "journal:journal,prc:prc,single_form:preprint1"
+MANUSCRIPTS_TABLE_COLUMNS = 'shortId, submission.$title, created, updated, status, author'
+USE_SANDBOXED_ORCID = "true"
+SERVICE_PAGEDJS_PROTOCOL = "https"
+SERVICE_PAGEDJS_HOST = "pagedjs-ms.fly.dev"
+SERVICE_PAGEDJS_PORT = ""
+SERVICE_XSWEET_PROTOCOL = "https"
+SERVICE_XSWEET_HOST = "xsweet-ms.fly.dev"
+SERVICE_XSWEET_PORT = ""
+SERVICE_ANYSTYLE_PROTOCOL = "https"
+SERVICE_ANYSTYLE_HOST = "anystyle-ms.fly.dev"
+SERVICE_ANYSTYLE_PORT = ""
+
+# REVIEW_SHARED = true
+# REVIEW_HIDE = true
+
+# PUBLISHING_WEBHOOK_URL=https://someserver/webhook-address # see https://gitlab.coko.foundation/kotahi/kotahi/-/blob/main/    FAQ.md#how-do-i-publish-from-kotahi
+# PUBLISHING_WEBHOOK_SECRET=some-secret-string
+# PUBLISHING_WEBHOOK_URL=${PUBLISHING_WEBHOOK_URL:-}
+# PUBLISHING_WEBHOOK_TOKEN=${PUBLISHING_WEBHOOK_TOKEN:-}
+# PUBLISHING_WEBHOOK_REF=${PUBLISHING_WEBHOOK_REF:-}
+
+# TEAM_TIMEZONE=Etc/UTC
+# AUTO_IMPORT_HOUR_UTC=21
+# ARCHIVE_PERIOD_DAYS=60
+# ALLOW_MANUAL_IMPORT=true
+# SEMANTIC_SCHOLAR_IMPORTS_RECENCY_PERIOD_DAYS=42
+
+# NOTIFICATION_EMAIL_AUTOMATED=false
+# NOTIFICATION_EMAIL_CC_ENABLED=false
+
+# USE_APERTURE_EMAIL=${USE_APERTURE_EMAIL:-false}
+# USE_COLAB_EMAIL=false
+# USE_COLAB_BIOPHYSICS_IMPORT=${USE_COLAB_BIOPHYSICS_IMPORT:-false}
+
+# FLAX_EXPRESS_PORT=8082
+# FLAX_EXPRESS_HOST=kotahi-flax-site
+# FLAX_EXPRESS_PROTOCOL=http
+# FLAX_SITE_PORT=8081
+# FLAX_CLIENT_ID=''
+# FLAX_CLIENT_SECRET=''
+# FLAX_CLIENT_API_URL=http://server:3000
+# FLAX_SITE_URL="http://localhost:8081"
+
+# KOTAHI_API_TOKENS=${KOTAHI_API_TOKENS:-}
+# JOURNAL_NAME=${JOURNAL_NAME:-}
+# JOURNAL_ABBREVIATED_NAME=${JOURNAL_ABBREVIATED_NAME:-}
+# JOURNAL_HOMEPAGE=${JOURNAL_HOMEPAGE:-}
+
+# GOOGLE_SPREADSHEET_CLIENT_EMAIL=${GOOGLE_SPREADSHEET_CLIENT_EMAIL:-}
+# GOOGLE_SPREADSHEET_PRIVATE_KEY=${GOOGLE_SPREADSHEET_PRIVATE_KEY:-}
+# GOOGLE_SPREADSHEET_ID=${GOOGLE_SPREADSHEET_ID:-}
+
+# HYPOTHESIS_API_KEY=${HYPOTHESIS_API_KEY:-}
+# HYPOTHESIS_GROUP=${HYPOTHESIS_GROUP:-}
+# HYPOTHESIS_REVERSE_FIELD_ORDER=${HYPOTHESIS_REVERSE_FIELD_ORDER:-}
+# HYPOTHESIS_ALLOW_TAGGING=${HYPOTHESIS_ALLOW_TAGGING:-}
+
+# CROSSREF_LOGIN=${CROSSREF_LOGIN:-}
+# CROSSREF_PASSWORD=${CROSSREF_PASSWORD:-}
+# CROSSREF_REGISTRANT=${CROSSREF_REGISTRANT:-}
+# CROSSREF_DEPOSITOR_NAME=${CROSSREF_DEPOSITOR_NAME:-}
+# CROSSREF_DEPOSITOR_EMAIL=${CROSSREF_DEPOSITOR_EMAIL:-}
+# CROSSREF_PUBLICATION_TYPE=${CROSSREF_PUBLICATION_TYPE:-article}
+# CROSSREF_USE_SANDBOX=${CROSSREF_USE_SANDBOX:-true}
+
+# DOI_PREFIX=${DOI_PREFIX:-}
+
+# PUBLISHED_ARTICLE_LOCATION_PREFIX=${PUBLISHED_ARTICLE_LOCATION_PREFIX:-}
+# PUBLICATION_LICENSE_URL=${PUBLICATION_LICENSE_URL:-}
+
+# GMAIL_NOTIFICATION_EMAIL_AUTH=${GMAIL_NOTIFICATION_EMAIL_AUTH}
+# GMAIL_NOTIFICATION_EMAIL_SENDER=${GMAIL_NOTIFICATION_EMAIL_SENDER}
+# GMAIL_NOTIFICATION_PASSWORD=${GMAIL_NOTIFICATION_PASSWORD}
+
+# DISABLE_EVENT_NOTIFICATIONS=${DISABLE_EVENT_NOTIFICATIONS:-}
