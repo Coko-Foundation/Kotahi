@@ -104,8 +104,9 @@ const processNotification = async (group, payload) => {
     groupId,
   })
 
+  // If not Offer type notification, just return 200 and process no further.
   if (!filterNotification(payload)) {
-    return { status: 403, message: 'Only Offer type notifications are allowed' }
+    return { status: 200, message: 'Notification received' }
   }
 
   if (existingNotification) {
