@@ -21,9 +21,9 @@
     "prosemirror-view": "1.30.2",
     "react": "17",
     "react-router-dom": "5.2.0",
-    "wax-prosemirror-core": "0.9.60",
-    "wax-prosemirror-services": "0.9.60",
-    "wax-table-service": "0.9.60"
+    "wax-prosemirror-core": "0.9.61",
+    "wax-prosemirror-services": "0.9.61",
+    "wax-table-service": "0.9.61"
   },
   "dependencies": {
     "@apollo/client": "3.10.1",
@@ -100,9 +100,9 @@
     "styled-components": "^5.2.3",
     "turndown": "^7.0.0",
     "uuid": "^8.3.2",
-    "wax-prosemirror-core": "0.9.60",
-    "wax-prosemirror-services": "0.9.60",
-    "wax-table-service": "0.9.60",
+    "wax-prosemirror-core": "0.9.61",
+    "wax-prosemirror-services": "0.9.61",
+    "wax-table-service": "0.9.61",
     "xpub-journal": "0.1.0",
     "xpub-validators": "0.0.28",
     "y-prosemirror": "1.2.0",
