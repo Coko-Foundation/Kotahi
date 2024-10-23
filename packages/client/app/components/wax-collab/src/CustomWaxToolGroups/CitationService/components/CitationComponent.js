@@ -66,8 +66,7 @@ const CitationComponent = ({ node, getPos }) => {
   const { pmViews, activeView } = useContext(WaxContext)
   const { app } = useContext(ApplicationContext)
 
-  // eslint-disable-next-line
-  const citationConfig = app.config._config.config.CitationService
+  const citationConfig = app.config.get('config.CitationService')
 
   const config = useContext(ConfigContext)
   const styleName = config?.production?.citationStyles?.styleName
