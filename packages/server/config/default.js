@@ -3,7 +3,7 @@ const components = require('./components')
 const journal = require('./journal')
 const startupScripts = require('./startup')
 
-module.exports = {
+const cfg = {
   teams: {
     global: [
       {
@@ -176,3 +176,11 @@ module.exports = {
     },
   ],
 }
+
+if (process.env.POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES) {
+  cfg.db.ssl = {
+    rejectUnauthorized: false,
+  }
+}
+
+module.exports = cfg
