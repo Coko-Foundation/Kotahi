@@ -937,14 +937,13 @@ export const generateSchemas = (
               description: t('configPage.gmailAuthEmail'),
               // format: 'email',
             },
-            gmailSenderEmail: {
-              type: ['string', 'null'],
-              description: t('configPage.gmailSenderEmail'),
-              // format: 'email',
-            },
             gmailAuthPassword: {
               type: ['string', 'null'],
               description: t('configPage.gmailAuthPassword'),
+            },
+            gmailSenderName: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailSenderName'),
             },
           },
         },
@@ -1940,14 +1939,13 @@ export const generateSchemas = (
               description: t('configPage.gmailAuthEmail'),
               // format: 'email',
             },
-            gmailSenderEmail: {
-              type: ['string', 'null'],
-              description: t('configPage.gmailSenderEmail'),
-              // format: 'email',
-            },
             gmailAuthPassword: {
               type: ['string', 'null'],
               description: t('configPage.gmailAuthPassword'),
+            },
+            gmailSenderName: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailSenderName'),
             },
           },
         },
@@ -2950,14 +2948,13 @@ export const generateSchemas = (
               description: t('configPage.gmailAuthEmail'),
               // format: 'email',
             },
-            gmailSenderEmail: {
-              type: ['string', 'null'],
-              description: t('configPage.gmailSenderEmail'),
-              // format: 'email',
-            },
             gmailAuthPassword: {
               type: ['string', 'null'],
               description: t('configPage.gmailAuthPassword'),
+            },
+            gmailSenderName: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailSenderName'),
             },
           },
         },
@@ -3961,14 +3958,13 @@ export const generateSchemas = (
               description: t('configPage.gmailAuthEmail'),
               // format: 'email',
             },
-            gmailSenderEmail: {
-              type: ['string', 'null'],
-              description: t('configPage.gmailSenderEmail'),
-              // format: 'email',
-            },
             gmailAuthPassword: {
               type: ['string', 'null'],
               description: t('configPage.gmailAuthPassword'),
+            },
+            gmailSenderName: {
+              type: ['string', 'null'],
+              description: t('configPage.gmailSenderName'),
             },
           },
         },

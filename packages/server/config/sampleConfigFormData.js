@@ -97,8 +97,8 @@ module.exports = {
   },
   notification: {
     gmailAuthEmail: 'test@coko.foundation',
-    gmailSenderEmail: 'test@coko.foundation',
     gmailAuthPassword: 'test',
+    gmailSenderName: 'Coko',
   },
   eventNotification: {
     reviewerInvitationPrimaryEmailTemplate: null,

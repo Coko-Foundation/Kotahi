@@ -574,8 +574,7 @@ const esLa = {
         'Establecer zona horaria para las fechas de vencimiento del Administrador de Tareas',
       Emails: 'Correos Electrónicos',
       gmailAuthEmail: 'Dirección de Correo Electrónico de Gmail',
-      gmailSenderEmail:
-        'Dirección de Correo Electrónico del Remitente de Gmail',
+      gmailSenderName: 'Nombre del remitente de Gmail',
       gmailAuthPassword: 'Contraseña de Gmail',
       eventNotification: 'Notificaciones de Eventos',
       reviewRejectedEmailTemplate:
