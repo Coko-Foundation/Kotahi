@@ -157,6 +157,8 @@ production client:
     - '[ -z "$RELEASE_VERSION" ] && exit 1'
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
   script:
+    - git fetch origin $CI_COMMIT_REF_NAME
+    - git reset --hard origin/$CI_COMMIT_REF_NAME
     - cd packages/client
     - docker build --tag $CLIENT_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
     - docker push $CLIENT_PRODUCTION:$RELEASE_VERSION
@@ -175,6 +177,8 @@ production server:
     - '[ -z "$RELEASE_VERSION" ] && exit 1'
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
   script:
+    - git fetch origin $CI_COMMIT_REF_NAME
+    - git reset --hard origin/$CI_COMMIT_REF_NAME
     - cd packages/server
     - docker build --tag $SERVER_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
     - docker push $SERVER_PRODUCTION:$RELEASE_VERSION
