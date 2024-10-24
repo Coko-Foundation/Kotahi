@@ -1,18 +1,23 @@
 # Kotahi
 
-Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, research labs and PRC (publish-review-curate) groups. Kotahi supports:
+[Site & Docs](https://kotahi.community/)
 
-- individual **manuscript submission**
-- **bulk imports** of preprints and other documents for review
+Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, data publications, data review, research labs and PRC (publish-review-curate) groups. Kotahi supports:
+
+- individual **research object submission**
+- **bulk imports** of preprints and other documents/data objects for review
 - **highly customisable** data and workflows
-- **centralised viewing and editing of manuscripts**, so that authors, editors, reviewers and production editors work on a single source without needing to send versions back and forth
-- **automated export** to various formats including **JATS**
+- **single source**, so that authors, editors, reviewers and production editors work on a single source without needing to send versions back and forth
+- **automated export** to various formats including **JATS**, HTML, PDF
+- integrations with DOAJ, Crossref, DataCite and more
 - a built in, highly customisable **publishing site and CMS** (content management system)
 - several **other publishing options** including **DOI registration**
-- efficiency tools such as **semantic tagging** within documents for easy JATS export, and **citation management and correction**
+- automated **citation management and structuring tools** via API lookups 
 - a **task management** system to guide team-members, plus **in-app chat** and alerts to simplify communication
 - **multitenancy**, allowing multiple groups to be hosted in a single instance, and allowing easy experimentation with new workflows
 - a **plugin architecture** for custom functionality and easy extensibility
+- modern interfaces, architecture, thinking
+
 
 Kotahi is currently under development by the [Coko Foundation](https://coko.foundation/). 
 ## Project roadmap
@@ -57,7 +62,7 @@ If something doesn't work, read though the details in the next section; or check
 
 ## Installation: details
 
-Developer beware! This project is currently under very heavy development, so documentation may be out of date at times.
+Developer beware! ThisEmpower researchers to create, share and disseminate knowledge in ways that transcend the boundaries of traditional publishing. project is currently under very heavy development, so documentation may be out of date at times.
 
 ### Running the app
 
@@ -132,6 +137,3 @@ Depending on your needs and setup, it might not be a good idea to use the `docke
 See [FAQ.md](FAQ.md).
 Conventions for code changes, branching and merge requests are covered in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-# Other credits
-
-The real-time chat functionality was heavily inspired by https://github.com/withspectrum/spectrum, from data model approach to copying and adapting certain bits of their React app. Thank you, Spectrum!
