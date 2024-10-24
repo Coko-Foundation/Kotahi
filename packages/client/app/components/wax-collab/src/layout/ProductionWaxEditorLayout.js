@@ -90,12 +90,28 @@ const ProductionWaxEditorLayout =
     useEffect(() => {}, [delayedShowedNotes])
 
     useEffect(() => {
+      document.addEventListener(
+        'click',
+        e => {
+          const text = e.target.textContent || e.target.innerText
+
+          if (
+            text === 'Editor' ||
+            text === 'Manuscript text' ||
+            text === 'Review'
+          ) {
+            setWaxMounted(true)
+          }
+        },
+        false,
+      )
+
       if (localStorage.getItem('activeTabKey').includes('editor')) {
         setTimeout(() => {
-          setWaxMounted(true)
+          setWaxMounted(!isWaxMounted)
         })
       }
-    }, [localStorage.getItem('activeTabKey')])
+    }, [localStorage.getItem('activeTabKey'), isWaxMounted])
 
     // added to bring in comments
 
@@ -176,7 +192,7 @@ const ProductionWaxEditorLayout =
           </Grid>
         </div>
       ),
-      [isWaxMounted, options.fullScreen, activeView.dom, activeView],
+      [isWaxMounted, options.fullScreen, activeView.dom],
     )
   }
 

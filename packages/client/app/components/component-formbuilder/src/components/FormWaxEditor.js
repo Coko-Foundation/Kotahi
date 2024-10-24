@@ -39,10 +39,6 @@ const FormWaxEditor = ({
         browserSpellCheck={spellCheck}
         config={config}
         layout={SimpleWaxEditorLayout(readonly, dataTestid)}
-        onBlur={val => {
-          !ydoc && onChange && onChange(val)
-          !ydoc && onBlur && onBlur(val)
-        }}
         onChange={!ydoc && onChange}
         placeholder={placeholder}
         readonly={readonly}
@@ -61,7 +57,6 @@ FormWaxEditor.propTypes = {
   readonly: PropTypes.bool,
   /** Should this element be given focus on initial rendering? */
   autoFocus: PropTypes.bool,
-  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   /** Should enable browser's native spellcheck? */
@@ -73,7 +68,6 @@ FormWaxEditor.defaultProps = {
   validationStatus: undefined,
   readonly: false,
   autoFocus: false,
-  onBlur: () => {},
   onChange: () => {},
   placeholder: '',
   spellCheck: false,
