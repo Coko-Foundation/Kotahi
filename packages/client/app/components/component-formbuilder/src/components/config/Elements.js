@@ -483,7 +483,6 @@ const getBaseComponentProperties = category => ({
   },
   Divider: {
     label: 'Text',
-    name: presetTextField('submission.divider'),
     description: hiddenfield,
     placeholder: hiddenfield,
     validate: hiddenfield,
