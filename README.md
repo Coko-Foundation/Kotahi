@@ -1,6 +1,6 @@
 # Kotahi
 
-Kotahi is a modern document submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups and PRC (publish-review-curate) groups. Kotahi supports:
+Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, research labs and PRC (publish-review-curate) groups. Kotahi supports:
 
 - individual **manuscript submission**
 - **bulk imports** of preprints and other documents for review
@@ -14,8 +14,7 @@ Kotahi is a modern document submission, review and publishing system especially 
 - **multitenancy**, allowing multiple groups to be hosted in a single instance, and allowing easy experimentation with new workflows
 - a **plugin architecture** for custom functionality and easy extensibility
 
-Kotahi was originally based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project. It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
-
+Kotahi is currently under development by the [Coko Foundation](https://coko.foundation/). 
 ## Project roadmap
 
 [The Kotahi project roadmap](https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280) can be viewed on Miro.
