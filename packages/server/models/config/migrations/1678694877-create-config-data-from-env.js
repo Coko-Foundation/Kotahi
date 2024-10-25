@@ -89,6 +89,7 @@ exports.up = async knex => {
                 },
                 submission: {
                   allowAuthorsSubmitNewVersion: false,
+                  allowAuthorUploadWithForm: true,
                 },
                 publishing,
                 taskManager: {
@@ -128,6 +129,7 @@ exports.up = async knex => {
                 },
                 submission: {
                   allowAuthorsSubmitNewVersion: false,
+                  allowAuthorUploadWithForm: true,
                 },
                 publishing,
                 taskManager: {
@@ -179,6 +181,7 @@ exports.up = async knex => {
                 },
                 submission: {
                   allowAuthorsSubmitNewVersion: true,
+                  allowAuthorUploadWithForm: true,
                 },
                 publishing,
                 taskManager: {
@@ -223,6 +226,7 @@ exports.up = async knex => {
                 },
                 submission: {
                   allowAuthorsSubmitNewVersion: false,
+                  allowAuthorUploadWithForm: true,
                 },
                 publishing,
                 taskManager: {

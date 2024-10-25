@@ -73,13 +73,10 @@ const EditorSection = ({
 
   const { t } = useTranslation()
 
-  if (!manuscriptFile) {
-    return <Info>{t('editorSection.noFileLoaded')}</Info>
-  }
-
   if (
+    manuscriptFile &&
     manuscriptFile.storedObjects[0].mimetype !==
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   )
     return <Info>{t('editorSection.noSupportedView')}</Info>
 
