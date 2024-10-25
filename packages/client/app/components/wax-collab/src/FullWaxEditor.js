@@ -93,7 +93,7 @@ const FullWaxEditor = ({
         yjsType: name,
       }),
     )
-  }, [name])
+  }, [name, wsProvider?.roomname, ydoc?.guid])
 
   const hasYjs = !!ydoc?.guid
 
