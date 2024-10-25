@@ -75,8 +75,10 @@ const ReviewLayout = ({
       }, 500)
     }
 
-    if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
-      wsProvider?.disconnect()
+    return () => {
+      if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
+        wsProvider?.disconnect()
+      }
     }
   }, [currentUserReview.id])
 
