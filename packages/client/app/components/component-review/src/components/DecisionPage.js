@@ -573,6 +573,13 @@ const DecisionPage = ({ currentUser, match }) => {
     return response
   }
 
+  const handleCreateTeam = async createTeamVariables => {
+    const createTeamResponse = await createTeam(createTeamVariables)
+    await refetchManuscript()
+
+    return createTeamResponse
+  }
+
   const sendChannelMessage = async messageData => {
     const response = await doSendChannelMessage({
       variables: messageData,
@@ -623,7 +630,7 @@ const DecisionPage = ({ currentUser, match }) => {
       chatProps={chatProps}
       createFile={createFile}
       createTaskEmailNotificationLog={createTaskEmailNotificationLog}
-      createTeam={createTeam}
+      createTeam={handleCreateTeam}
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
