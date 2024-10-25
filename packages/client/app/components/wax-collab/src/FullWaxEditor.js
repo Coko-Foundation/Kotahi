@@ -93,7 +93,9 @@ const FullWaxEditor = ({
         yjsType: name,
       }),
     )
-  }, [name, wsProvider?.roomname, ydoc?.guid])
+  }, [name])
+
+  const hasYjs = !!ydoc?.guid
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
@@ -109,7 +111,7 @@ const FullWaxEditor = ({
                   readonly,
                   authorComments,
                   false,
-                  getActiveViewDom,
+                  hasYjs,
                 )
               : FullWaxEditorLayout(readonly, getActiveViewDom)
           }

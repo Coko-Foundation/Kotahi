@@ -53,7 +53,7 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout =
-  (readOnly, authorComments = null, leftBar = true, getActiveViewDom) =>
+  (readOnly, authorComments = null, leftBar = true, hasYjs) =>
   /* eslint-disable-next-line react/function-component-definition */
   props => {
     const {
@@ -61,12 +61,6 @@ const ProductionWaxEditorLayout =
       activeView,
       options,
     } = useContext(WaxContext)
-
-    // useEffect(() => {
-    //   activeView.dom?.outerHTML &&
-    //     getActiveViewDom &&
-    //     getActiveViewDom(activeView.dom?.outerHTML)
-    // }, [activeView.dom, activeView])
 
     const [isWaxMounted, setWaxMounted] = useState(false)
 
@@ -95,7 +89,24 @@ const ProductionWaxEditorLayout =
           setWaxMounted(true)
         })
       }
-    }, [localStorage.getItem('activeTabKey')])
+
+      function handleClick(e) {
+        if (e.target?.parentNode?.getAttribute('contenteditable')) return
+
+        const text = e.target.textContent || e.target.innerText
+
+        if (
+          text === 'Editor' ||
+          text === 'Manuscript text' ||
+          text === 'Review'
+        ) {
+          setWaxMounted(true)
+        }
+      }
+
+      document.addEventListener('click', handleClick)
+      return () => document.removeEventListener('click', handleClick)
+    }, [localStorage.getItem('activeTabKey'), isWaxMounted])
 
     // added to bring in comments
 
@@ -123,6 +134,14 @@ const ProductionWaxEditorLayout =
       }
     }
 
+    let commentTrackToolBarStyles = {}
+
+    if (hasYjs) {
+      commentTrackToolBarStyles = {
+        position: 'static',
+      }
+    }
+
     return useMemo(
       () => (
         <div id="main-wax-editor" style={fullScreenStyles}>
@@ -144,7 +163,9 @@ const ProductionWaxEditorLayout =
                     </EditorContainer>
                     <CitationArea />
                     <CommentsContainer>
-                      <CommentTrackToolsContainer>
+                      <CommentTrackToolsContainer
+                        style={commentTrackToolBarStyles}
+                      >
                         <CommentTrackTools>
                           {commentsTracksCount + trackBlockNodesCount} COMMENTS
                           AND SUGGESTIONS
@@ -176,7 +197,7 @@ const ProductionWaxEditorLayout =
           </Grid>
         </div>
       ),
-      [isWaxMounted, options.fullScreen, activeView.dom, activeView],
+      [isWaxMounted, options.fullScreen, activeView.dom],
     )
   }
 
