@@ -84,27 +84,28 @@ const ProductionWaxEditorLayout =
     useEffect(() => {}, [delayedShowedNotes])
 
     useEffect(() => {
-      document.addEventListener(
-        'click',
-        e => {
-          const text = e.target.textContent || e.target.innerText
-
-          if (
-            text === 'Editor' ||
-            text === 'Manuscript text' ||
-            text === 'Review'
-          ) {
-            setWaxMounted(true)
-          }
-        },
-        false,
-      )
-
       if (localStorage.getItem('activeTabKey').includes('editor')) {
         setTimeout(() => {
           setWaxMounted(true)
         })
       }
+
+      function handleClick(e) {
+        if (e.target?.parentNode?.getAttribute('contenteditable')) return
+
+        const text = e.target.textContent || e.target.innerText
+
+        if (
+          text === 'Editor' ||
+          text === 'Manuscript text' ||
+          text === 'Review'
+        ) {
+          setWaxMounted(true)
+        }
+      }
+
+      document.addEventListener('click', handleClick)
+      return () => document.removeEventListener('click', handleClick)
     }, [localStorage.getItem('activeTabKey'), isWaxMounted])
 
     // added to bring in comments
