@@ -521,6 +521,12 @@ const esLa = {
       'Review page': 'Página de Revisión',
       showSummary:
         'Los revisores pueden ver los datos del formulario de Decisión',
+      hideDiscussionFromGroupAdminsManagers:
+        'Ocultar la discusión a los administradores y gerentes de grupo',
+      hideDiscussionFromEditorsReviewersAuthors:
+        'Ocultar debates a editores, revisores y autores',
+      hideDiscussionFromAuthors: 'Ocultar la discusión solo de los autores',
+      hideDiscussionFromReviewers: 'Ocultar la discusión solo a los revisores',
       Publishing: 'Publicación',
       Integrations: 'Integraciones',
       Hypothesis: 'Hipótesis',

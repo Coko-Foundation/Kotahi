@@ -25,6 +25,7 @@ const DecisionVersions = ({
   channels,
   form,
   handleChange,
+  hideChat,
   updateManuscript,
   manuscript,
   sendNotifyEmail,
@@ -113,7 +114,7 @@ const DecisionVersions = ({
     <Columns>
       <Manuscript>
         <ErrorBoundary>
-          <VersionSwitcher>
+          <VersionSwitcher fullWidth={hideChat}>
             {versions.map((version, index) => (
               <DecisionVersion
                 addReviewer={addReviewer}
@@ -180,30 +181,34 @@ const DecisionVersions = ({
           </VersionSwitcher>
         </ErrorBoundary>
       </Manuscript>
-      {isDiscussionVisible && (
-        <Chat>
-          <MessageContainer
-            channels={channels}
-            chatProps={chatProps}
-            currentUser={currentUser}
-            manuscriptId={manuscript.id}
-          />
-          <CollapseButton
-            iconName="ChevronRight"
-            onClick={toggleDiscussionVisibility}
-            title={t('chat.Hide Chat')}
-          />
-        </Chat>
-      )}
-      {!isDiscussionVisible && (
-        <ChatButton
-          iconName="MessageSquare"
-          onClick={toggleDiscussionVisibility}
-          title={t('chat.Show Chat')}
-          unreadMessagesCount={
-            chatProps.unreadMessagesQueryResult?.data?.unreadMessagesCount
-          }
-        />
+      {!hideChat && (
+        <>
+          {isDiscussionVisible && (
+            <Chat>
+              <MessageContainer
+                channels={channels}
+                chatProps={chatProps}
+                currentUser={currentUser}
+                manuscriptId={manuscript.id}
+              />
+              <CollapseButton
+                iconName="ChevronRight"
+                onClick={toggleDiscussionVisibility}
+                title={t('chat.Hide Chat')}
+              />
+            </Chat>
+          )}
+          {!isDiscussionVisible && (
+            <ChatButton
+              iconName="MessageSquare"
+              onClick={toggleDiscussionVisibility}
+              title={t('chat.Show Chat')}
+              unreadMessagesCount={
+                chatProps.unreadMessagesQueryResult?.data?.unreadMessagesCount
+              }
+            />
+          )}
+        </>
       )}
     </Columns>
   )

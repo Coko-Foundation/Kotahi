@@ -530,6 +530,13 @@ const fr = {
       'Review page': "Page d'évaluation",
       showSummary:
         'Les évaluateurs peuvent voir les données du formulaire de décision',
+      hideDiscussionFromGroupAdminsManagers:
+        'Masquer la discussion des administrateurs de groupe et des gestionnaires de groupe',
+      hideDiscussionFromEditorsReviewersAuthors:
+        'Masquer la discussion aux éditeurs, critiques et auteurs',
+      hideDiscussionFromAuthors: 'Masquer la discussion aux auteurs uniquement',
+      hideDiscussionFromReviewers:
+        'Masquer la discussion aux évaluateurs uniquement',
       Publishing: 'Publication',
       Integrations: 'Intégrations',
       Hypothesis: 'Hypothèse',

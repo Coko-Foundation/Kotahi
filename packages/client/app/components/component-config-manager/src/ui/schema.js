@@ -23,6 +23,7 @@ export const tabKeyBasedSchema = {
     'controlPanel',
     'submission',
     'review',
+    'discussionChannel',
     'taskManager',
     'report',
     'user',
@@ -368,6 +369,52 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.showSummary'),
               default: false,
+            },
+          },
+        },
+        discussionChannel: {
+          type: 'object',
+          title: t('configPage.discussionChannels'),
+          properties: {
+            hideDiscussionFromGroupAdminsManagers: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromGroupAdminsManagers'),
+              default: false,
+            },
+            hideDiscussionFromEditorsReviewersAuthors: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromEditorsReviewersAuthors'),
+              default: false,
+            },
+          },
+          dependencies: {
+            hideDiscussionFromEditorsReviewersAuthors: {
+              oneOf: [
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: false,
+                    },
+                    hideDiscussionFromAuthors: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromAuthors'),
+                      default: false,
+                    },
+                    hideDiscussionFromReviewers: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromReviewers'),
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: true,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -1372,6 +1419,52 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.showSummary'),
               default: false,
+            },
+          },
+        },
+        discussionChannel: {
+          type: 'object',
+          title: t('configPage.discussionChannels'),
+          properties: {
+            hideDiscussionFromGroupAdminsManagers: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromGroupAdminsManagers'),
+              default: false,
+            },
+            hideDiscussionFromEditorsReviewersAuthors: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromEditorsReviewersAuthors'),
+              default: false,
+            },
+          },
+          dependencies: {
+            hideDiscussionFromEditorsReviewersAuthors: {
+              oneOf: [
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: false,
+                    },
+                    hideDiscussionFromAuthors: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromAuthors'),
+                      default: false,
+                    },
+                    hideDiscussionFromReviewers: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromReviewers'),
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: true,
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -2385,6 +2478,52 @@ export const generateSchemas = (
             },
           },
         },
+        discussionChannel: {
+          type: 'object',
+          title: t('configPage.discussionChannels'),
+          properties: {
+            hideDiscussionFromGroupAdminsManagers: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromGroupAdminsManagers'),
+              default: false,
+            },
+            hideDiscussionFromEditorsReviewersAuthors: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromEditorsReviewersAuthors'),
+              default: false,
+            },
+          },
+          dependencies: {
+            hideDiscussionFromEditorsReviewersAuthors: {
+              oneOf: [
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: false,
+                    },
+                    hideDiscussionFromAuthors: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromAuthors'),
+                      default: false,
+                    },
+                    hideDiscussionFromReviewers: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromReviewers'),
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: true,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
         production: {
           type: 'object',
           title: t('configPage.production.Production'),
@@ -3392,6 +3531,52 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.showSummary'),
               default: false,
+            },
+          },
+        },
+        discussionChannel: {
+          type: 'object',
+          title: t('configPage.discussionChannels'),
+          properties: {
+            hideDiscussionFromGroupAdminsManagers: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromGroupAdminsManagers'),
+              default: false,
+            },
+            hideDiscussionFromEditorsReviewersAuthors: {
+              type: 'boolean',
+              title: t('configPage.hideDiscussionFromEditorsReviewersAuthors'),
+              default: false,
+            },
+          },
+          dependencies: {
+            hideDiscussionFromEditorsReviewersAuthors: {
+              oneOf: [
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: false,
+                    },
+                    hideDiscussionFromAuthors: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromAuthors'),
+                      default: false,
+                    },
+                    hideDiscussionFromReviewers: {
+                      type: 'boolean',
+                      title: t('configPage.hideDiscussionFromReviewers'),
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    hideDiscussionFromEditorsReviewersAuthors: {
+                      const: true,
+                    },
+                  },
+                },
+              ],
             },
           },
         },

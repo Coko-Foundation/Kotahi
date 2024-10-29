@@ -517,6 +517,13 @@ const en = {
         'Allow an author to submit a new version of their manuscript at any time',
       'Review page': 'Review page',
       showSummary: 'Reviewers can see the Decision form data',
+      discussionChannels: 'Discussion Channels',
+      hideDiscussionFromGroupAdminsManagers:
+        'Hide discussion from Group Admins and Group Managers',
+      hideDiscussionFromEditorsReviewersAuthors:
+        'Hide discussion from editors, reviewers and authors',
+      hideDiscussionFromAuthors: 'Hide discussion from authors only',
+      hideDiscussionFromReviewers: 'Hide discussion from reviewers only',
       Publishing: 'Publishing',
       Integrations: 'Integrations',
       Hypothesis: 'Hypothesis',

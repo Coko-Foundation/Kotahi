@@ -19,6 +19,7 @@ const {
 } = require('./userCommsUtils')
 
 const { cachedGet, evictFromCacheByPrefix } = require('../../querycache')
+const Config = require('../../../models/config/config.model')
 
 const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
   if (!user) return
@@ -212,7 +213,24 @@ const resolvers = {
         throw new Error('Channel not found.')
       }
 
-      const result = [...channelWithUsers.users]
+      const activeConfig = await Config.getCached(channelWithUsers.groupId)
+
+      const reviewerTeam = await Team.query()
+        .findOne({ objectId: channelWithUsers.manuscriptId, role: 'reviewer' })
+        .withGraphFetched('members')
+
+      const hideFromReviewers =
+        activeConfig.formData.discussionChannel?.hideDiscussionFromReviewers
+
+      let result = [...channelWithUsers.users]
+
+      if (hideFromReviewers && reviewerTeam) {
+        const memberUserIds = reviewerTeam.members.map(member => member.userId)
+
+        result = result.filter(
+          chatMember => !memberUserIds.includes(chatMember.id),
+        )
+      }
 
       if (channelWithUsers.type !== 'all') {
         const groupId = ctx.req.headers['group-id']
