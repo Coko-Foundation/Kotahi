@@ -531,6 +531,8 @@ const fr = {
         allowAuthorUploadWithForm:
           'Autoriser un auteur à télécharger un fichier de manuscrit avec un formulaire',
         allowAuthorSubmitForm: 'Autoriser un auteur à soumettre un formulaire',
+        allowAuthorSubmitFormWithBlankEditor:
+          'Autoriser un auteur à soumettre un formulaire et accéder à un éditeur vide',
       },
       coarNotify: 'COAR-Notifier',
       aiDesignStudio: 'AI Design Studio & AI Assistant ',

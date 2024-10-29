@@ -521,6 +521,8 @@ const en = {
         allowAuthorUploadWithForm:
           'Allow an author to upload a manuscript file with a form',
         allowAuthorSubmitForm: 'Allow an author to submit a form',
+        allowAuthorSubmitFormWithBlankEditor:
+          'Allow an author to submit a form and access a blank editor',
       },
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `OpenAI access key`,

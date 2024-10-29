@@ -32,15 +32,20 @@ const Dashboard = ({ currentUser, history }) => {
     submission: { submissionPage },
   } = useContext(ConfigContext)
 
-  const uploadAndSubmitForm = submissionPage.allowAuthorUploadWithForm
+  const { submitOptions } = submissionPage
 
-  const showSubmitUrl = uploadAndSubmitForm
-    ? true
-    : submissionPage.allowAuthorSubmitForm
+  let showSubmitUrl =
+    submitOptions === 'allowAuthorSubmitForm' ||
+    submitOptions === 'allowAuthorUploadWithForm'
 
-  const showUploadManuscript = uploadAndSubmitForm
-    ? true
-    : submissionPage.allowAuthorUploadOnly
+  let showUploadManuscript =
+    submitOptions === 'allowAuthorUploadOnly' ||
+    submitOptions === 'allowAuthorUploadWithForm'
+
+  if (!submitOptions) {
+    showSubmitUrl = true
+    showUploadManuscript = true
+  }
 
   return (
     <Container>

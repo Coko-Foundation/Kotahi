@@ -529,6 +529,8 @@ const ru = {
         allowAuthorUploadWithForm:
           'Разрешить автору загружать файл рукописи с формой',
         allowAuthorSubmitForm: 'Разрешить автору отправлять форму',
+        allowAuthorSubmitFormWithBlankEditor:
+          'Разрешить автору отправить форму и получить доступ к пустому редактору',
       },
       allowToSubmitNewVersion:
         'Авторам доступна возможность подачи новой версии статьи в любое время',

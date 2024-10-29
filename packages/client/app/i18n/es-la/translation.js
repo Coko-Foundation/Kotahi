@@ -526,6 +526,8 @@ const esLa = {
         allowAuthorUploadWithForm:
           'Permitir a un autor subir un archivo de manuscrito con un formulario',
         allowAuthorSubmitForm: 'Permitir a un autor enviar un formulario',
+        allowAuthorSubmitFormWithBlankEditor:
+          'Permitir a un autor enviar un formulario y acceder a un editor en blanco',
       },
       allowToSubmitNewVersion:
         'Permitir a un autor enviar una nueva versión de su manuscrito en cualquier momento',

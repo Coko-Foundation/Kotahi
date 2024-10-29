@@ -374,22 +374,20 @@ export const generateSchemas = (
                   description: t('configPage.SubmissionPage.description'),
                   default: null,
                 },
-                allowAuthorUploadOnly: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
-                  default: false,
-                },
-                allowAuthorUploadWithForm: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
-                  ),
-                  default: true,
-                },
-                allowAuthorSubmitForm: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
-                  default: false,
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
                 },
                 allowAuthorSubmitFormWithBlankEditor: {
                   type: 'boolean',
@@ -1417,22 +1415,20 @@ export const generateSchemas = (
                   description: t('configPage.SubmissionPage.description'),
                   default: null,
                 },
-                allowAuthorUploadOnly: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
-                  default: false,
-                },
-                allowAuthorUploadWithForm: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
-                  ),
-                  default: true,
-                },
-                allowAuthorSubmitForm: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
-                  default: false,
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
                 },
                 allowAuthorSubmitFormWithBlankEditor: {
                   type: 'boolean',
@@ -2466,22 +2462,20 @@ export const generateSchemas = (
                   description: t('configPage.SubmissionPage.description'),
                   default: null,
                 },
-                allowAuthorUploadOnly: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
-                  default: false,
-                },
-                allowAuthorUploadWithForm: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
-                  ),
-                  default: true,
-                },
-                allowAuthorSubmitForm: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
-                  default: false,
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
                 },
                 allowAuthorSubmitFormWithBlankEditor: {
                   type: 'boolean',
@@ -3515,22 +3509,20 @@ export const generateSchemas = (
                   description: t('configPage.SubmissionPage.description'),
                   default: null,
                 },
-                allowAuthorUploadOnly: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
-                  default: false,
-                },
-                allowAuthorUploadWithForm: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
-                  ),
-                  default: true,
-                },
-                allowAuthorSubmitForm: {
-                  type: 'boolean',
-                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
-                  default: false,
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
                 },
                 allowAuthorSubmitFormWithBlankEditor: {
                   type: 'boolean',
@@ -4323,6 +4315,9 @@ export const generateSchemas = (
             'ui:widget': ({ value, onChange }) => (
               <SimpleWaxEditor onChange={onChange} value={value} />
             ),
+          },
+          submitOptions: {
+            'ui:widget': 'radio',
           },
         },
       },
