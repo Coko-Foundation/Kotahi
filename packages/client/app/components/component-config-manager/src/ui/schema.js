@@ -30,6 +30,7 @@ export const tabKeyBasedSchema = {
   ],
   production: ['production'],
   integrations: ['integrations'],
+  submission: ['submission'],
   integrationsAndPublishing: ['publishing', 'integrations'],
   notifications: ['notification', 'eventNotification'],
 }
@@ -359,41 +360,45 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
             },
-            title: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.title'),
-              default: null,
-            },
-            subsection: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.subsection'),
-              default: null,
-            },
-            submissionPagedescription: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.description'),
-              default: null,
-            },
-            allowAuthorUploadOnly: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file only',
-              default: false,
-            },
-            allowAuthorUploadWithForm: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file and a form',
-              default: true,
-            },
-            allowAuthorSubmitForm: {
-              type: 'boolean',
-              title: 'Allow an author to submit a form only',
-              default: false,
-            },
-            allowAuthorSubmitFormWithBlankEditor: {
-              type: 'boolean',
-              title:
-                'Allow an author to submit a form and access a blank editor',
-              default: false,
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                allowAuthorUploadOnly: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                  default: false,
+                },
+                allowAuthorUploadWithForm: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
+                  ),
+                  default: true,
+                },
+                allowAuthorSubmitForm: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  default: false,
+                },
+                allowAuthorSubmitFormWithBlankEditor: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -1398,41 +1403,45 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
             },
-            title: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.title'),
-              default: null,
-            },
-            subsection: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.subsection'),
-              default: null,
-            },
-            submissionPagedescription: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.description'),
-              default: null,
-            },
-            allowAuthorUploadOnly: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file only',
-              default: false,
-            },
-            allowAuthorUploadWithForm: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file and a form',
-              default: true,
-            },
-            allowAuthorSubmitForm: {
-              type: 'boolean',
-              title: 'Allow an author to submit a form only',
-              default: false,
-            },
-            allowAuthorSubmitFormWithBlankEditor: {
-              type: 'boolean',
-              title:
-                'Allow an author to submit a form and access a blank editor',
-              default: false,
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                allowAuthorUploadOnly: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                  default: false,
+                },
+                allowAuthorUploadWithForm: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
+                  ),
+                  default: true,
+                },
+                allowAuthorSubmitForm: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  default: false,
+                },
+                allowAuthorSubmitFormWithBlankEditor: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -2443,41 +2452,45 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: true,
             },
-            title: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.title'),
-              default: null,
-            },
-            subsection: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.subsection'),
-              default: null,
-            },
-            submissionPagedescription: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.description'),
-              default: null,
-            },
-            allowAuthorUploadOnly: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file only',
-              default: false,
-            },
-            allowAuthorUploadWithForm: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file and a form',
-              default: true,
-            },
-            allowAuthorSubmitForm: {
-              type: 'boolean',
-              title: 'Allow an author to submit a form only',
-              default: false,
-            },
-            allowAuthorSubmitFormWithBlankEditor: {
-              type: 'boolean',
-              title:
-                'Allow an author to submit a form and access a blank editor',
-              default: false,
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                allowAuthorUploadOnly: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                  default: false,
+                },
+                allowAuthorUploadWithForm: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
+                  ),
+                  default: true,
+                },
+                allowAuthorSubmitForm: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  default: false,
+                },
+                allowAuthorSubmitFormWithBlankEditor: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -3488,41 +3501,45 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
             },
-            title: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.title'),
-              default: null,
-            },
-            subsection: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.subsection'),
-              default: null,
-            },
-            submissionPagedescription: {
-              type: ['string', 'null'],
-              description: t('configPage.Submission.description'),
-              default: null,
-            },
-            allowAuthorUploadOnly: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file only',
-              default: false,
-            },
-            allowAuthorUploadWithForm: {
-              type: 'boolean',
-              title: 'Allow an author to upload a manuscript file and a form',
-              default: true,
-            },
-            allowAuthorSubmitForm: {
-              type: 'boolean',
-              title: 'Allow an author to submit a form only',
-              default: false,
-            },
-            allowAuthorSubmitFormWithBlankEditor: {
-              type: 'boolean',
-              title:
-                'Allow an author to submit a form and access a blank editor',
-              default: false,
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                allowAuthorUploadOnly: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                  default: false,
+                },
+                allowAuthorUploadWithForm: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorUploadWithForm',
+                  ),
+                  default: true,
+                },
+                allowAuthorSubmitForm: {
+                  type: 'boolean',
+                  title: t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                  default: false,
+                },
+                allowAuthorSubmitFormWithBlankEditor: {
+                  type: 'boolean',
+                  title: t(
+                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -4297,10 +4314,16 @@ export const generateSchemas = (
         },
       },
       submission: {
-        submissionPagedescription: {
-          'ui:widget': ({ value, onChange }) => (
-            <SimpleWaxEditor onChange={onChange} value={value} />
-          ),
+        allowAuthorsSubmitNewVersion: {
+          classNames: 'col-md-12 col-md-offset-0',
+        },
+        submissionPage: {
+          classNames: 'col-md-12 col-md-offset-0',
+          submissionPagedescription: {
+            'ui:widget': ({ value, onChange }) => (
+              <SimpleWaxEditor onChange={onChange} value={value} />
+            ),
+          },
         },
       },
       integrations: {

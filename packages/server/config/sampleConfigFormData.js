@@ -20,13 +20,14 @@ module.exports = {
   },
   submission: {
     allowAuthorsSubmitNewVersion: true,
-    submissionPagedescription: '',
-    title: '',
-    subsection: '',
-    allowAuthorUploadOnly: false,
-    allowAuthorSubmitForm: false,
-    allowAuthorUploadWithForm: true,
-    allowAuthorSubmitFormWithBlankEditor: false,
+    submissionPage: {
+      submissionPagedescription: '',
+      title: '',
+      allowAuthorUploadOnly: false,
+      allowAuthorSubmitForm: false,
+      allowAuthorUploadWithForm: true,
+      allowAuthorSubmitFormWithBlankEditor: false,
+    },
   },
   production: {
     crossrefRetrievalEmail: '',

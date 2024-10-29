@@ -67,6 +67,12 @@ const EditorSection = ({
   editorSection,
   queryAI,
 }) => {
+  const {
+    submission: { submissionPage },
+  } = useContext(ConfigContext)
+
+  const { allowAuthorSubmitFormWithBlankEditor } = submissionPage
+
   const manuscriptFile = manuscript?.files?.find(file =>
     file.tags.includes('manuscript'),
   )
@@ -74,9 +80,10 @@ const EditorSection = ({
   const { t } = useTranslation()
 
   if (
-    manuscriptFile &&
-    manuscriptFile.storedObjects[0].mimetype !==
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    (manuscriptFile &&
+      manuscriptFile.storedObjects[0].mimetype !==
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+    (!manuscriptFile && allowAuthorSubmitFormWithBlankEditor === false)
   )
     return <Info>{t('editorSection.noSupportedView')}</Info>
 

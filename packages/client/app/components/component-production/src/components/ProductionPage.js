@@ -271,7 +271,7 @@ export const updateTemplateMutation = gql`
 `
 
 const ProductionPage = ({ currentUser, match, ...props }) => {
-  const { groupId, controlPanel } = useContext(ConfigContext)
+  const { groupId, controlPanel, submission } = useContext(ConfigContext)
   const client = useApolloClient()
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
@@ -481,6 +481,9 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
           <Production
             addNewVersion={addNewVersion}
             articleTemplate={articleTemplate}
+            canSubmitWithBlankEditor={
+              submission.submissionPage.allowAuthorSubmitFormWithBlankEditor
+            }
             client={client}
             currentUser={currentUser}
             currentUserRole={currentUserRole}

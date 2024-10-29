@@ -518,6 +518,15 @@ const esLa = {
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `Clave de acceso de OpenAI`,
       Submission: 'Envío',
+      SubmissionPage: {
+        title: 'Título',
+        description: 'Descripción',
+        allowAuthorUploadOnly:
+          'Permitir a un autor subir solo un archivo de manuscrito',
+        allowAuthorUploadWithForm:
+          'Permitir a un autor subir un archivo de manuscrito con un formulario',
+        allowAuthorSubmitForm: 'Permitir a un autor enviar un formulario',
+      },
       allowToSubmitNewVersion:
         'Permitir a un autor enviar una nueva versión de su manuscrito en cualquier momento',
       'Review page': 'Página de Revisión',

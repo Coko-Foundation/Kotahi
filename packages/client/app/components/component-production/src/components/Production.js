@@ -105,6 +105,7 @@ const Production = ({
   onAssetManager,
   isAuthorProofingVersion,
   isReadOnlyVersion,
+  canSubmitWithBlankEditor,
   authorList,
   addNewVersion,
 }) => {
@@ -188,13 +189,26 @@ const Production = ({
     CustomPrompts: config?.groupIdentity?.customAiInputs,
   }
 
+  let showContent = false
+
+  if (file) {
+    showContent =
+      file &&
+      file.storedObjects[0].mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+
+    if (!showContent) {
+      showContent = canSubmitWithBlankEditor || false
+    }
+  } else {
+    showContent = canSubmitWithBlankEditor || false
+  }
+
   const editorSection = {
     content: (
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <>
-        {file &&
-        file.storedObjects[0].mimetype ===
-          'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+        {showContent ? (
           <SectionContent>
             {manuscript ? (
               <ProductionWaxEditor

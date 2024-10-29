@@ -513,6 +513,15 @@ const en = {
       'Control pages visible to editors': 'Control pages visible to editors',
       Team: 'Team',
       Submission: 'Submission',
+      SubmissionPage: {
+        title: 'Title',
+        description: 'Description',
+        allowAuthorUploadOnly:
+          'Allow an author to upload a manuscript file only',
+        allowAuthorUploadWithForm:
+          'Allow an author to upload a manuscript file with a form',
+        allowAuthorSubmitForm: 'Allow an author to submit a form',
+      },
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `OpenAI access key`,
       allowToSubmitNewVersion:

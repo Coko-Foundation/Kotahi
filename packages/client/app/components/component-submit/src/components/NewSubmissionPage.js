@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { ApolloConsumer } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
-import { Container, Content, UploadContainer, Heading, Legend } from '../style'
+import { Container, Content, UploadContainer, Heading } from '../style'
 import UploadManuscript from './UploadManuscript'
 import { ConfigContext } from '../../../config/src'
 
@@ -27,35 +27,37 @@ const acceptFiles =
 
 const Dashboard = ({ currentUser, history }) => {
   const { t } = useTranslation()
-  const { submission } = useContext(ConfigContext)
 
-  const uploadAndSubmitForm = submission.allowAuthorUploadWithForm
+  const {
+    submission: { submissionPage },
+  } = useContext(ConfigContext)
+
+  const uploadAndSubmitForm = submissionPage.allowAuthorUploadWithForm
 
   const showSubmitUrl = uploadAndSubmitForm
     ? true
-    : submission.allowAuthorSubmitForm
+    : submissionPage.allowAuthorSubmitForm
 
   const showUploadManuscript = uploadAndSubmitForm
     ? true
-    : submission.allowAuthorUploadOnly
+    : submissionPage.allowAuthorUploadOnly
 
   return (
     <Container>
       <Heading>
-        {submission.title
-          ? submission.title
+        {submissionPage.title
+          ? submissionPage.title
           : t('newSubmission.New submission')}
       </Heading>
       <Content>
         <UploadContainer>
-          {submission.subsection && <Legend>{submission.subsection}</Legend>}
           <ApolloConsumer>
             {client => (
               <UploadManuscript
                 acceptFiles={acceptFiles}
                 client={client}
                 currentUser={currentUser}
-                description={submission.submissionPagedescription}
+                description={submissionPage.submissionPagedescription}
                 history={history}
                 showSubmitUrl={showSubmitUrl}
                 showUploadManuscript={showUploadManuscript}

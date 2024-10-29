@@ -521,6 +521,15 @@ const ru = {
       openAiApiKey: `Ключ доступа OpenAI`,
       acceptedIPs: 'Принятые IP-адреса',
       Submission: 'Подача',
+      SubmissionPage: {
+        title: 'Название',
+        description: 'Описание',
+        allowAuthorUploadOnly:
+          'Разрешить автору загружать только файл рукописи',
+        allowAuthorUploadWithForm:
+          'Разрешить автору загружать файл рукописи с формой',
+        allowAuthorSubmitForm: 'Разрешить автору отправлять форму',
+      },
       allowToSubmitNewVersion:
         'Авторам доступна возможность подачи новой версии статьи в любое время',
       'Review page': 'Раздел "Рецензирование"',

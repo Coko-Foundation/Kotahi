@@ -523,6 +523,15 @@ const fr = {
         'Pages de contrôle visibles aux éditeurs',
       Team: 'Équipe',
       Submission: 'Soumission',
+      SubmissionPage: {
+        title: 'Titre',
+        description: 'Description',
+        allowAuthorUploadOnly:
+          'Autoriser un auteur à télécharger un fichier de manuscrit uniquement',
+        allowAuthorUploadWithForm:
+          'Autoriser un auteur à télécharger un fichier de manuscrit avec un formulaire',
+        allowAuthorSubmitForm: 'Autoriser un auteur à soumettre un formulaire',
+      },
       coarNotify: 'COAR-Notifier',
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
       openAiApiKey: `Clé d'accès OpenAI`,
