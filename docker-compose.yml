@@ -5,8 +5,6 @@ services:
     build:
       context: ./packages/client
       dockerfile: ./Dockerfile-development
-    depends_on:
-      - server
     command: ['node_modules/.bin/coko-client-dev-js']
     ports:
       - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
@@ -30,7 +28,6 @@ services:
       dockerfile: ./Dockerfile-development
     depends_on:
       - db
-      - xsweet
       - fileHosting
     command: ['yarn', 'coko-server', 'start-dev']
     ports:
@@ -137,7 +134,7 @@ services:
   pagedjs:
     depends_on:
       - db-pagedjs
-    image: cokoapps/pagedjs:2.0.0
+    image: cokoapps/pagedjs:2.0.1
     ports:
       - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
     environment:
@@ -266,45 +263,29 @@ services:
   anystyle:
     depends_on:
       - db-anystyle
-    image: cokoapps/anystyle:1.1.1
+    image: cokoapps/anystyle:2.0.0
     ports:
       - ${SERVICE_ANYSTYLE_PORT:-4567}:${SERVICE_ANYSTYLE_PORT:-4567}
     environment:
+      - NODE_ENV=development
+      - SECRET=anystyle_dev_secret
       - SERVER_PORT=${SERVICE_ANYSTYLE_PORT:-4567}
-      - SERVER_PROTOCOL=http
-      - SERVER_HOST=localhost
-      - PUBSWEET_SECRET=anystyle_dev_secret
+      - POSTGRES_HOST=db-anystyle
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=anystyle_dev
       - POSTGRES_USER=anystyle_user_dev
       - POSTGRES_PASSWORD=anystyle_user_password
-      - POSTGRES_HOST=db-anystyle
-      - POSTGRES_DB=anystyle_dev
-      - POSTGRES_PORT=5432
-      - NODE_ENV=development
-    security_opt:
-      - seccomp:unconfined
-    entrypoint:
-      [
-        'node_modules/.bin/wait-for-it',
-        'db-anystyle:5432',
-        '--',
-        'sh',
-        'scripts/setupDevServer.sh',
-      ]
-    command: ['node', './server/startServer.js']
 
   db-anystyle:
-    image: postgres:12-alpine
+    image: postgres:16-alpine
     environment:
       - POSTGRES_USER=anystyle_user_dev
       - POSTGRES_DB=anystyle_dev
       - POSTGRES_PASSWORD=anystyle_user_password
-    volumes:
-      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   kotahi-flax-site:
     image: cokoapps/kotahi-flax:0.2.48
     depends_on:
-      - server
       - client
     ports:
       - ${FLAX_EXPRESS_PORT:-8082}:${FLAX_EXPRESS_PORT:-3000}
