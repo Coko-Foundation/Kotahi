@@ -256,7 +256,6 @@ const ReviewDetailsModal = (
           }
           shouldStoreFilesInForm
           showEditorOnlyFields={false}
-          submissionButtonText={t('reviewPage.Submit')}
           tagForFiles="review"
           threadedDiscussionProps={threadedDiscussionProps}
         />

@@ -9,12 +9,14 @@ const FullWaxEditorStyled = styled(FullWaxEditor)`
 `
 
 const FullWaxField = input => {
+  const { onChange, saveSource } = input
   return (
     <FullWaxEditorStyled
       {...input}
       commentsToolPosition="static"
       hideImages
       hideNotes
+      saveSource={saveSource || onChange}
       setComments={() => []}
       useComments
     />
