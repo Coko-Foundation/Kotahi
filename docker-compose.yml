@@ -263,7 +263,7 @@ services:
   anystyle:
     depends_on:
       - db-anystyle
-    image: cokoapps/anystyle:2.0.0
+    image: cokoapps/anystyle:2.0.1
     ports:
       - ${SERVICE_ANYSTYLE_PORT:-4567}:${SERVICE_ANYSTYLE_PORT:-4567}
     environment:

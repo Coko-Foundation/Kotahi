@@ -7,6 +7,8 @@ const axios = require('axios')
 const striptags = require('striptags')
 const config = require('config')
 
+const { logger } = require('@coko/server')
+
 const anystyleXmlToHtml = require('./anyStyleToHtml')
 const { formatCitation } = require('../../server/reference/src/formatting')
 
@@ -45,6 +47,7 @@ const serviceHandshake = async () => {
       })
       .catch(err => {
         const { response } = err
+        logger.error(err)
 
         if (!response) {
           return reject(new Error(`Request failed with message: ${err.code}`))
