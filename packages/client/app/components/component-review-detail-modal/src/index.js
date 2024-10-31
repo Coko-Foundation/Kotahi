@@ -90,6 +90,10 @@ const ReviewDetailsModal = (
   const { t } = useTranslation()
 
   useEffect(() => {
+    if (review?.id) {
+      wsProvider?.disconnect()
+    }
+
     if (review?.isCollaborative) {
       setTimeout(() => {
         if (!wsProvider || wsProvider?.roomname !== review?.id) {

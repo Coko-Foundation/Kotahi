@@ -59,6 +59,10 @@ const ReviewLayout = ({
   )
 
   useEffect(() => {
+    if (currentUserReview?.id) {
+      wsProvider?.disconnect()
+    }
+
     if (currentUserReview && currentUserReview.isCollaborative) {
       setTimeout(() => {
         if (!wsProvider || wsProvider?.roomname !== currentUserReview.id) {
