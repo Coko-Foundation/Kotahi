@@ -75,11 +75,11 @@ const ReviewLayout = ({
       }, 500)
     }
 
-    return () => {
-      if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
-        wsProvider?.disconnect()
-      }
-    }
+    // return () => {
+    //   if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
+    //     wsProvider?.disconnect()
+    //   }
+    // }
   }, [currentUserReview.id])
 
   const createMetaDataSection = latestManuscript => {

@@ -106,9 +106,9 @@ const ReviewDetailsModal = (
       }, 500)
     }
 
-    if (wsProvider && wsProvider?.roomname !== review?.id) {
-      return () => wsProvider?.disconnect()
-    }
+    // if (wsProvider && wsProvider?.roomname !== review?.id) {
+    //   return () => wsProvider?.disconnect()
+    // }
 
     return null
   }, [review?.id])
