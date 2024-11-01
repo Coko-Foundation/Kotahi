@@ -5,23 +5,25 @@ const PublishedArtifact = require('../../models/publishedArtifact/publishedArtif
 const upsertArtifact = async artifact => {
   let priorArtifact = null
 
-  if (artifact.externalId)
+  if (artifact.externalId) {
     priorArtifact = await PublishedArtifact.query().select('id').findOne({
       manuscriptId: artifact.manuscriptId,
       externalId: artifact.externalId,
     })
+  }
 
   const artifactId = priorArtifact ? priorArtifact.id : uuid()
 
-  if (priorArtifact)
+  if (priorArtifact) {
     await PublishedArtifact.query()
       .findById(artifactId)
       .patch({ ...artifact, id: artifactId })
-  else
+  } else {
     await PublishedArtifact.query().insert({
       ...artifact,
       id: artifactId,
     })
+  }
 
   return artifactId
 }

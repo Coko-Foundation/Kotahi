@@ -13,7 +13,7 @@ class PublishedArtifact extends BaseModel {
         externalId: { type: ['string', 'null'] },
         title: { type: ['string', 'null'] },
         content: { type: ['string', 'null'] },
-        hostedInKotahi: { type: ['boolean', 'false'] },
+        hostedInKotahi: { type: ['boolean', 'null'] },
         relatedDocumentUri: { type: ['string', 'null'] },
         relatedDocumentType: { type: ['string', 'null'] },
       },
