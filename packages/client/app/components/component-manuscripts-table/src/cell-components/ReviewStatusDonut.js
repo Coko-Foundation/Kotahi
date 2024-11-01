@@ -74,15 +74,45 @@ const ReviewStatusDonut = ({ manuscript }) => {
     statusOptions[item.value] = { text: item.label, color: item.color }
   })
 
-  const reviewerStatuses = getMembersOfTeam(manuscript, 'reviewer').map(
-    ({ status }) => status,
+  const filterInvitedUsers = reviewer => {
+    if (reviewer.status === 'invited') {
+      const foundInvitation = manuscript.invitations.find(
+        invitation =>
+          invitation.toEmail === reviewer.user.email &&
+          invitation.status === 'UNANSWERED',
+      )
+
+      if (foundInvitation) {
+        return false
+      }
+    }
+
+    return true
+  }
+
+  // Filter out invitations that have already been answered
+  // from the invitation list
+  const reviewerStatuses = getMembersOfTeam(manuscript, 'reviewer')
+    .filter(filterInvitedUsers)
+    .map(({ status }) => status)
+
+  const collaborativeReviewerStatuses = getMembersOfTeam(
+    manuscript,
+    'collaborativeReviewer',
   )
+    .filter(filterInvitedUsers)
+    .map(({ status }) => status)
 
   const invitationStatuses = (manuscript.invitations || [])
     .filter(({ status }) => status in invitationStatusMapping)
     .map(({ status }) => invitationStatusMapping[status])
 
-  const allStatuses = [...reviewerStatuses, ...invitationStatuses]
+  const allStatuses = [
+    ...reviewerStatuses,
+    ...collaborativeReviewerStatuses,
+    ...invitationStatuses,
+  ]
+
   const statusCounts = countBy(allStatuses)
   const statusTooltips = {}
   Object.keys(statusCounts).forEach(status => {

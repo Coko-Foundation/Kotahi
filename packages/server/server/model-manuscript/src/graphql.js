@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const { ref, raw } = require('objection')
 const axios = require('axios')
-const { map, chunk, orderBy } = require('lodash')
+const { map, chunk, orderBy, uniqBy } = require('lodash')
 const { subscriptionManager, File } = require('@coko/server')
 const cheerio = require('cheerio')
 
@@ -1639,7 +1639,17 @@ const resolvers = {
           .whereIn('id', someIds)
           .orderBy('created', 'desc')
 
-        allManuscriptsWithInfo.push(...someManuscriptsWithInfo)
+        allManuscriptsWithInfo.push(
+          ...someManuscriptsWithInfo.map(m => ({
+            ...m,
+            invitations: uniqBy(
+              m.invitations.sort(
+                (a, b) => new Date(b.responseDate) - new Date(a.responseDate),
+              ),
+              'toEmail',
+            ),
+          })),
+        )
       }
 
       // Get the latest version of each manuscript, and check the users role in that version
