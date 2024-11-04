@@ -139,10 +139,13 @@ const resolvers = {
       return null
     },
     async users(_, vars, ctx) {
-      return User.query().joinRelated('teams').where({
-        role: 'user',
-        objectId: ctx.req.headers['group-id'],
-      })
+      return User.query()
+        .joinRelated('teams')
+        .where({
+          role: 'user',
+          objectId: ctx.req.headers['group-id'],
+        })
+        .modify('orderByUsername')
     },
     async paginatedUsers(_, { sort, offset, limit }, ctx) {
       const currentUser = await User.query().findById(ctx.userId)
