@@ -12,6 +12,7 @@ const en = {
       assigned: 'Author proof assigned',
       inProgress: 'Author proofing in progress',
       completed: 'Author proof completed',
+      unpublished: 'Unpublished',
       unknown: 'Unknown',
     },
     reviewerStatus: {
@@ -286,6 +287,7 @@ const en = {
           'Publishing will add a new entry on the public website and can not be undone.',
         Publish: 'Publish',
         Republish: 'Republish',
+        Unpublish: 'Unpublish',
         publishedOn: 'This submission was published on {{date}}',
         doisToBeRegistered: 'DOIs to be registered: {{- dois}}',
         noDoisToBeRegistered:

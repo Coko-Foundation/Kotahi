@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import styled from 'styled-components'
 import { Button } from '../../../pubsweet'
 import {
   Title,
@@ -14,12 +15,38 @@ import { SectionContent } from '../../../shared'
 import Alert from './publishing/Alert'
 import PublishingResponse from './publishing/PublishingResponse'
 import { getLanguages } from '../../../../i18n'
+import { color } from '../../../../theme'
+import { FlexRow } from '../../../../globals'
+
+const ActionButtonsWrapper = styled(FlexRow)`
+  gap: 8px;
+`
+
+const UnpublishButton = styled(Button)`
+  background: #fff;
+  color: ${color.error.base};
+  cursor: pointer;
+  outline: 1px solid ${color.error.base};
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: ${color.error.base};
+    color: #fff;
+  }
+`
+
+const PublishButton = styled(Button)`
+  cursor: pointer;
+  outline: 1px solid ${color.brand1.base};
+`
 
 const Publish = ({
   manuscript,
   publishManuscript,
   dois,
   areVerdictOptionsComplete,
+  unpublish,
 }) => {
   // Hooks from the old world
   const [isPublishing, setIsPublishing] = useState(false)
@@ -47,6 +74,32 @@ const Publish = ({
     return !!curLang && !!curLang.funcs?.formatDate
       ? curLang.funcs?.formatDate(date, true, false)
       : date
+  }
+
+  const handlePublish = () => {
+    setIsPublishing(true)
+
+    publishManuscript({ variables: { id: manuscript.id } })
+      .then((res, error) => {
+        setIsPublishing(false)
+        setPublishResponse(res.data.publishManuscript, error)
+      })
+      .catch(error => {
+        console.error(error)
+        setIsPublishing(false)
+        setPublishingError(error.message)
+      })
+  }
+
+  const handleUnpublish = () => {
+    unpublish(manuscript.id)
+      .then(() => {
+        setPublishResponse(null)
+      })
+      .catch(error => {
+        console.error(error)
+        setPublishingError(error.message)
+      })
   }
 
   return (
@@ -85,30 +138,24 @@ const Publish = ({
           {publishingError && <Alert type="error">{publishingError}</Alert>}
         </SectionActionInfo>
         <SectionAction>
-          <Button
-            disabled={
-              (notAccepted && areVerdictOptionsComplete) || isPublishing
-            }
-            onClick={() => {
-              setIsPublishing(true)
-
-              publishManuscript({ variables: { id: manuscript.id } })
-                .then((res, error) => {
-                  setIsPublishing(false)
-                  setPublishResponse(res.data.publishManuscript, error)
-                })
-                .catch(error => {
-                  console.error(error)
-                  setIsPublishing(false)
-                  setPublishingError(error.message)
-                })
-            }}
-            primary
-          >
-            {manuscript.published
-              ? t('decisionPage.decisionTab.Republish')
-              : t('decisionPage.decisionTab.Publish')}
-          </Button>
+          <ActionButtonsWrapper>
+            {manuscript.published && manuscript.status !== 'unpublished' && (
+              <UnpublishButton onClick={handleUnpublish} primary>
+                {t('decisionPage.decisionTab.Unpublish')}
+              </UnpublishButton>
+            )}
+            <PublishButton
+              disabled={
+                (notAccepted && areVerdictOptionsComplete) || isPublishing
+              }
+              onClick={handlePublish}
+              primary
+            >
+              {manuscript.published
+                ? t('decisionPage.decisionTab.Republish')
+                : t('decisionPage.decisionTab.Publish')}
+            </PublishButton>
+          </ActionButtonsWrapper>
         </SectionAction>
       </SectionRowGrid>
     </SectionContent>

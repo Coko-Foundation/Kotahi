@@ -12,6 +12,7 @@ const fr = {
       assigned: "Epreuve d'auteur attribuée",
       inProgress: "Révision de l'auteur en cours",
       completed: "Epreuve d'auteur complétée",
+      unpublished: 'Non publié',
       unknown: 'Inconnu',
     },
     reviewerStatus: {
@@ -292,6 +293,7 @@ const fr = {
           'La publication ajoutera une nouvelle entrée sur le site public et ne pourra pas être annulée.',
         Publish: 'Publier',
         Republish: 'Republier',
+        Unpublish: 'Dépublier',
         publishedOn: 'Cette soumission a été publiée le {{date}}',
         doisToBeRegistered: 'DOIs à enregistrer : {{- dois}}',
         noDoisToBeRegistered:

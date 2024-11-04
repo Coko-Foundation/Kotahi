@@ -97,6 +97,7 @@ const DecisionVersion = ({
   manuscriptLatestVersionId,
   emailTemplates,
   queryAI,
+  unpublish,
 }) => {
   const teamLabelsTransformed = transformTeamsToLegacy(teamLabels)
 
@@ -488,6 +489,7 @@ const DecisionVersion = ({
                   submissionButtonText={t('decisionPage.decisionTab.Submit')}
                   tagForFiles="decision"
                   threadedDiscussionProps={threadedDiscussionExtendedProps}
+                  unpublish={unpublish}
                   urlFrag={urlFrag}
                   validateDoi={validateDoi}
                   validateSuffix={validateSuffix}
@@ -502,6 +504,7 @@ const DecisionVersion = ({
                 dois={dois}
                 manuscript={version}
                 publishManuscript={publishManuscript}
+                unpublish={unpublish}
               />
             </AdminSection>
           )}

@@ -67,6 +67,7 @@ const DecisionVersions = ({
   createTaskEmailNotificationLog,
   emailTemplates,
   queryAI,
+  unpublish,
 }) => {
   const { t } = useTranslation()
   const versions = gatherManuscriptVersions(manuscript)
@@ -158,6 +159,7 @@ const DecisionVersions = ({
                 teamLabels={teamLabels}
                 teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
+                unpublish={unpublish}
                 updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
