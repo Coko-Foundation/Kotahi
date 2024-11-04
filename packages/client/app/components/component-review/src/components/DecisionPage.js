@@ -476,6 +476,18 @@ const DecisionPage = ({ currentUser, match }) => {
       },
     })
 
+  const unpublish = (versionId, manuscriptDelta) =>
+    doUpdateManuscript({
+      variables: {
+        id: versionId,
+        input: JSON.stringify({
+          ...manuscriptDelta,
+          status: 'unpublished',
+          published: null,
+        }),
+      },
+    })
+
   const updateReview = async (reviewId, reviewData, manuscriptId) => {
     doUpdateReview({
       variables: {
@@ -665,6 +677,7 @@ const DecisionPage = ({ currentUser, match }) => {
       teamLabels={config.teams}
       teams={data?.manuscript?.teams}
       threadedDiscussionProps={threadedDiscussionProps}
+      unpublish={unpublish}
       updateCollaborativeTeamMember={updateCollaborativeTeamMember}
       updateManuscript={updateManuscript}
       updateReview={updateReview}

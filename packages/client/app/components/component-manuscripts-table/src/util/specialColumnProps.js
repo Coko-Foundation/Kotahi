@@ -89,6 +89,7 @@ const buildSpecialColumnProps = (
             { label: i18next.t('msStatus.revise'), value: 'revise' },
             { label: i18next.t('msStatus.revising'), value: 'revising' },
             { label: i18next.t('msStatus.published'), value: 'published' },
+            { label: i18next.t('msStatus.unpublished'), value: 'unpublished' },
             {
               label: i18next.t('msStatus.assigned'),
               value: 'assigned',
@@ -107,6 +108,7 @@ const buildSpecialColumnProps = (
             { label: i18next.t('msStatus.submitted'), value: 'submitted' },
             { label: i18next.t('msStatus.evaluated'), value: 'evaluated' },
             { label: i18next.t('msStatus.published'), value: 'published' },
+            { label: i18next.t('msStatus.unpublished'), value: 'unpublished' },
             {
               label: i18next.t('msStatus.assigned'),
               value: 'assigned',

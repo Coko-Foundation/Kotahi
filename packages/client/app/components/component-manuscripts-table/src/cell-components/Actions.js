@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { values } from 'lodash'
 import { Action, LinkAction } from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import Modal from '../../../component-modal/src/Modal'
@@ -28,12 +29,7 @@ const Actions = ({
       {!archived && (
         <>
           {['preprint1', 'preprint2'].includes(config.instanceName) &&
-            [
-              articleStatuses.submitted,
-              articleStatuses.evaluated,
-              articleStatuses.new,
-              articleStatuses.published,
-            ].includes(manuscript.status) && (
+            values(articleStatuses).includes(manuscript.status) && (
               <LinkAction
                 to={`${urlFrag}/versions/${manuscript.id}/evaluation`}
               >

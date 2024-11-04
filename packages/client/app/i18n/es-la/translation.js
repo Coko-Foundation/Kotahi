@@ -13,6 +13,7 @@ const esLa = {
       assigned: 'Prueba de autor asignada',
       inProgress: 'Revisión del autor en curso',
       completed: 'Prueba de autor completada',
+      unpublished: 'No publicado',
       unknown: 'Desconocido',
     },
     reviewerStatus: {
@@ -289,6 +290,7 @@ const esLa = {
           'La publicación agregará una nueva entrada en el sitio web público y no se puede deshacer.',
         Publish: 'Publicar',
         Republish: 'Volver a Publicar',
+        Unpublish: 'Despublicar',
         publishedOn: 'Esta presentación se publicó el {{date}}',
         doisToBeRegistered: 'DOIs a registrar: {{- dois}}',
         noDoisToBeRegistered:
