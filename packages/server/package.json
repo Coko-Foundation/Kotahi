@@ -66,7 +66,7 @@
     "nodemailer": "^6.6.2",
     "nunjucks": "^3.2.3",
     "objection": "^3.1.4",
-    "passport": "^0.4.1",
+    "passport": "^0.7.0",
     "passport-orcid": "0.0.4",
     "qrcode-svg": "^1.1.0",
     "sharp": "^0.29.3",

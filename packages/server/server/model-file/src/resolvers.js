@@ -27,7 +27,7 @@ const {
 const { FILES_UPLOADED, FILE_UPDATED, FILES_DELETED } = require('./consts')
 
 // const randomBytes = promisify(crypto.randomBytes)
-// const uploadsPath = config.get('pubsweet-server').uploads
+// const uploadsPath = config.get('uploads')
 
 // direct file upload using fileStorage does not create a entry in database experiment code
 // const upload = async file => {
