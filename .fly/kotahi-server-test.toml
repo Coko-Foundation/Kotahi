@@ -31,8 +31,8 @@ internal_port = 8081
 protocol = "tcp"     # Use TCP for WebSocket connections
 
 [[services.ports]]
-handlers = ["http"] # WebSocket handler
-port = 8081         # External port for WebSocket (same as internal port)
+handlers = ["tls", "http"] # WebSocket handler
+port = 8081                # External port for WebSocket (same as internal port)
 
 [[vm]]
 cpu_kind = "shared"
