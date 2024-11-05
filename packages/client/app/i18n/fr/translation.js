@@ -583,7 +583,7 @@ const fr = {
         'Définir le fuseau horaire pour les dates limites du gestionnaire de tâches',
       Emails: 'Emails',
       gmailAuthEmail: 'Adresse e-mail Gmail',
-      gmailSenderEmail: "Adresse e-mail de l'expéditeur Gmail",
+      gmailSenderName: "Nom de l'expéditeur Gmail",
       gmailAuthPassword: 'Mot de passe Gmail',
       eventNotification: "Notifications d'événement",
       reviewRejectedEmailTemplate:

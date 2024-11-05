@@ -56,7 +56,10 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
     manuscriptProductionLink: `<a href="${data.manuscriptProductionLink}" target="_blank">${data.manuscriptProductionLink}</a>`,
   })
 
-  mailOptions.from = activeConfig.formData.notification.gmailSenderEmail
+  mailOptions.from = {
+    name: activeConfig.formData.notification.gmailSenderName,
+    address: activeConfig.formData.notification.gmailAuthEmail,
+  }
 
   // Override recipient(s) if not running in production.
   // To avoid inadvertently emailing customers during testing/debugging.

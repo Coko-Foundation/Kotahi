@@ -567,7 +567,7 @@ const en = {
       teamTimezone: 'Set timezone for Task Manager due dates',
       Emails: 'Emails',
       gmailAuthEmail: 'Gmail email address',
-      gmailSenderEmail: 'Gmail sender email address',
+      gmailSenderName: 'Gmail sender name',
       gmailAuthPassword: 'Gmail password',
       eventNotification: 'Event Notifications',
       reviewRejectedEmailTemplate: 'Reviewer rejects an invitation to review',

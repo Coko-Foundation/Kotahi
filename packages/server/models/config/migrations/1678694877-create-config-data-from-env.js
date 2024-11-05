@@ -49,8 +49,9 @@ exports.up = async knex => {
 
       const notification = {
         gmailAuthEmail: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH || null,
-        gmailSenderEmail: process.env.GMAIL_NOTIFICATION_EMAIL_SENDER || null,
         gmailAuthPassword: process.env.GMAIL_NOTIFICATION_PASSWORD || null,
+        gmailSenderName:
+          process.env.GMAIL_NOTIFICATION_EMAIL_SENDER_NAME || null,
       }
 
       const groupIdentity = {

@@ -575,7 +575,7 @@ const ru = {
         'Установить часовой пояс в Диспетчере для сроков выполнения задач',
       Emails: 'Почта',
       gmailAuthEmail: 'Адрес электронной почты Gmail',
-      gmailSenderEmail: 'Адрес электронной почты Gmail отправителя',
+      gmailSenderName: 'Имя отправителя Gmail',
       gmailAuthPassword: 'Пароль Gmail',
       eventNotification: 'Уведомления',
       reviewRejectedEmailTemplate: 'Рецензент отклонил приглашение',
