@@ -139,37 +139,25 @@ services:
   xsweet:
     depends_on:
       - db-xsweet
-    image: cokoapps/xsweet:2.3.3
+    image: cokoapps/xsweet:3.0.0
     ports:
       - ${SERVICE_XSWEET_PORT:-3004}:${SERVICE_XSWEET_PORT:-3004}
     environment:
-      - PUBSWEET_SECRET=xsweet_dev_secret
+      - NODE_ENV=development
+      - SECRET=xsweet_dev_secret
+      - SERVER_PORT=${SERVICE_XSWEET_PORT:-3004}
+      - POSTGRES_HOST=db-xsweet
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=xsweet_dev
       - POSTGRES_USER=xsweet_user_dev
       - POSTGRES_PASSWORD=xsweet_user_password
-      - POSTGRES_HOST=db-xsweet
-      - POSTGRES_DB=xsweet_dev
-      - POSTGRES_PORT=5432
-      - SERVER_PORT=${SERVICE_XSWEET_PORT:-3004}
-      - NODE_ENV=development
-    entrypoint:
-      [
-        'sh',
-        'scripts/wait-for-it',
-        'db-xsweet:5432',
-        '--',
-        'sh',
-        'scripts/setupDevServer.sh',
-      ]
-    command: ['node', 'server/startServer.js']
 
   db-xsweet:
-    image: postgres:14.4-alpine
+    image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=xsweet_user_dev
       - POSTGRES_DB=xsweet_dev
+      - POSTGRES_USER=xsweet_user_dev
       - POSTGRES_PASSWORD=xsweet_user_password
-    volumes:
-      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   db:
     image: postgres:10-alpine
