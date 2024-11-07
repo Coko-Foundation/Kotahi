@@ -178,9 +178,16 @@ const cfg = {
 }
 
 if (process.env.POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES) {
-  cfg.db.ssl = {
-    rejectUnauthorized: false,
-  }
+  if (!cfg.db.ssl) cfg.db.ssl = {}
+  cfg.db.ssl.rejectUnauthorized = false
+}
+
+if (process.env.POSTGRES_CA_CERT) {
+  if (!cfg.db.ssl) cfg.db.ssl = {}
+
+  cfg.db.ssl.ca = Buffer.from(process.env.POSTGRES_CA_CERT, 'base64').toString(
+    'utf-8',
+  )
 }
 
 module.exports = cfg
