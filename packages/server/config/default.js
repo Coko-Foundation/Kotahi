@@ -186,9 +186,7 @@ if (process.env.POSTGRES_CA_CERT) {
   if (!cfg.db.ssl) cfg.db.ssl = {}
 
   cfg.db.ssl.rejectUnauthorized = true
-  cfg.db.ssl.ca = Buffer.from(process.env.POSTGRES_CA_CERT, 'base64').toString(
-    'utf-8',
-  )
+  cfg.db.ssl.ca = process.env.POSTGRES_CA_CERT
 }
 
 module.exports = cfg

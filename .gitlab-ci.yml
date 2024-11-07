@@ -22,7 +22,7 @@ stages:
   - Release
   - Publish
 
-build development:
+.build development:
   stage: Build development
   interruptible: true
   image: docker:27-dind
@@ -36,7 +36,7 @@ build development:
       -f Dockerfile .
     - docker push $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
 
-lint:
+.lint:
   stage: Lint & Unit test
   interruptible: true
   image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
