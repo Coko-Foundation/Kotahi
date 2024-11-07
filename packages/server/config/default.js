@@ -185,6 +185,7 @@ if (process.env.POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES) {
 if (process.env.POSTGRES_CA_CERT) {
   if (!cfg.db.ssl) cfg.db.ssl = {}
 
+  cfg.db.ssl.rejectUnauthorized = true
   cfg.db.ssl.ca = Buffer.from(process.env.POSTGRES_CA_CERT, 'base64').toString(
     'utf-8',
   )
