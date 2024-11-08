@@ -151,6 +151,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
+            submissionPage: {
+              allowAuthorUploadWithForm: true,
+            },
           },
           publishing,
           production,
@@ -200,6 +203,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
+            submissionPage: {
+              allowAuthorUploadWithForm: true,
+            },
           },
           publishing,
           production,
@@ -254,6 +260,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
+            submissionPage: {
+              allowAuthorUploadWithForm: true,
+            },
           },
           publishing,
           production,
@@ -310,6 +319,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
+            submissionPage: {
+              allowAuthorUploadWithForm: true,
+            },
           },
           publishing,
           production,
@@ -368,6 +380,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
           submission: {
             allowAuthorsSubmitNewVersion: false,
+            submissionPage: {
+              allowAuthorUploadWithForm: true,
+            },
           },
           publishing,
           production,

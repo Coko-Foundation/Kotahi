@@ -5,6 +5,7 @@ import BrandIcon from './BrandIcon'
 
 import { Select } from '../../../pubsweet'
 import { ColorPicker } from '../../../shared'
+import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 
 // QUESTION: should this two be on this file??
 export const tabLabels = {
@@ -29,6 +30,7 @@ export const tabKeyBasedSchema = {
   ],
   production: ['production'],
   integrations: ['integrations'],
+  submission: ['submission'],
   integrationsAndPublishing: ['publishing', 'integrations'],
   notifications: ['notification', 'eventNotification'],
 }
@@ -357,6 +359,41 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
+            },
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
+                },
+              },
             },
           },
         },
@@ -1360,6 +1397,41 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
+            },
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
+                },
+              },
             },
           },
         },
@@ -2370,6 +2442,41 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: true,
             },
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
+                },
+              },
+            },
           },
         },
         review: {
@@ -3379,6 +3486,41 @@ export const generateSchemas = (
               title: t('configPage.allowToSubmitNewVersion'),
               default: false,
             },
+            submissionPage: {
+              type: 'object',
+              title: 'Submission Page',
+              properties: {
+                title: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.title'),
+                  default: null,
+                },
+                submissionPagedescription: {
+                  type: ['string', 'null'],
+                  description: t('configPage.SubmissionPage.description'),
+                  default: null,
+                },
+                submitOptions: {
+                  type: 'string',
+                  description: 'Choose a submission view',
+                  enum: [
+                    'allowAuthorUploadOnly',
+                    'allowAuthorUploadWithForm',
+                    'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
+                  ],
+                  enumNames: [
+                    t('configPage.SubmissionPage.allowAuthorUploadOnly'),
+                    t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
+                    t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
+                  ],
+                  default: 'allowAuthorUploadWithForm',
+                },
+              },
+            },
           },
         },
         review: {
@@ -4149,6 +4291,22 @@ export const generateSchemas = (
         },
         showFeatures: {
           'ui:widget': 'checkboxes',
+        },
+      },
+      submission: {
+        allowAuthorsSubmitNewVersion: {
+          classNames: 'col-md-12 col-md-offset-0',
+        },
+        submissionPage: {
+          classNames: 'col-md-12 col-md-offset-0',
+          submissionPagedescription: {
+            'ui:widget': ({ value, onChange }) => (
+              <SimpleWaxEditor onChange={onChange} value={value} />
+            ),
+          },
+          submitOptions: {
+            'ui:widget': 'radio',
+          },
         },
       },
       integrations: {

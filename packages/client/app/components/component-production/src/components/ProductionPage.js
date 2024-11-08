@@ -271,7 +271,7 @@ export const updateTemplateMutation = gql`
 `
 
 const ProductionPage = ({ currentUser, match, ...props }) => {
-  const { groupId, controlPanel } = useContext(ConfigContext)
+  const { groupId, controlPanel, submission } = useContext(ConfigContext)
   const client = useApolloClient()
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
@@ -411,6 +411,10 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
     (['assigned', 'inProgress'].includes(manuscript.status) &&
       !isAuthorProofingMode)
 
+  const canSubmitWithBlankEditor =
+    submission.submissionPage.submitOptions ===
+    'allowAuthorSubmitFormWithBlankEditor'
+
   // console.log('Author proofing mode: ', isAuthorProofingMode)
   // console.log('Read only mode: ', isReadOnlyMode)
 
@@ -481,6 +485,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
           <Production
             addNewVersion={addNewVersion}
             articleTemplate={articleTemplate}
+            canSubmitWithBlankEditor={canSubmitWithBlankEditor}
             client={client}
             currentUser={currentUser}
             currentUserRole={currentUserRole}

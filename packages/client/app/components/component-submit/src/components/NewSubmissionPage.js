@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { ApolloConsumer } from '@apollo/client'
 import { useTranslation } from 'react-i18next'
 import { Container, Content, UploadContainer, Heading } from '../style'
 import UploadManuscript from './UploadManuscript'
+import { ConfigContext } from '../../../config/src'
 
 const acceptUploadFiles = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -26,9 +27,34 @@ const acceptFiles =
 
 const Dashboard = ({ currentUser, history }) => {
   const { t } = useTranslation()
+
+  const {
+    submission: { submissionPage },
+  } = useContext(ConfigContext)
+
+  const { submitOptions = '' } = submissionPage ?? {}
+
+  let showSubmitUrl =
+    submitOptions === 'allowAuthorSubmitForm' ||
+    submitOptions === 'allowAuthorUploadWithForm' ||
+    submitOptions === 'allowAuthorSubmitFormWithBlankEditor'
+
+  let showUploadManuscript =
+    submitOptions === 'allowAuthorUploadOnly' ||
+    submitOptions === 'allowAuthorUploadWithForm'
+
+  if (!submitOptions) {
+    showSubmitUrl = true
+    showUploadManuscript = true
+  }
+
   return (
     <Container>
-      <Heading>{t('newSubmission.New submission')}</Heading>
+      <Heading>
+        {submissionPage?.title
+          ? submissionPage.title
+          : t('newSubmission.New submission')}
+      </Heading>
       <Content>
         <UploadContainer>
           <ApolloConsumer>
@@ -37,7 +63,10 @@ const Dashboard = ({ currentUser, history }) => {
                 acceptFiles={acceptFiles}
                 client={client}
                 currentUser={currentUser}
+                description={submissionPage?.submissionPagedescription}
                 history={history}
+                showSubmitUrl={showSubmitUrl}
+                showUploadManuscript={showUploadManuscript}
               />
             )}
           </ApolloConsumer>

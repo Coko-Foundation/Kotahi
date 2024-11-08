@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled, { css, keyframes, withTheme } from 'styled-components'
 import { th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +6,7 @@ import { Icon } from '../../../pubsweet'
 import { ConfigContext } from '../../../config/src'
 import { XpubContext } from '../../../xpub-with-context/src'
 import upload from '../upload'
-import { Dropzone, Action } from '../../../shared'
+import { Dropzone, Action, Spinner } from '../../../shared'
 import { color } from '../../../../theme'
 
 const StatusIcon = withTheme(({ children, theme }) => (
@@ -149,7 +149,13 @@ const SubInfo = styled.div`
   text-align: center;
 `
 
-const UploadManuscript = ({ acceptFiles, ...props }) => {
+const UploadManuscript = ({
+  acceptFiles,
+  description,
+  showSubmitUrl,
+  showUploadManuscript,
+  ...props
+}) => {
   const config = useContext(ConfigContext)
   const { client, history, journals, currentUser } = props
 
@@ -193,49 +199,79 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
     }, 3000)
   }
 
+  useEffect(() => {
+    if (!showUploadManuscript && showSubmitUrl) {
+      uploadManuscript()
+    }
+  }, [])
+
+  if (!showUploadManuscript && showSubmitUrl) {
+    return <Spinner />
+  }
+
   return (
     <>
-      <Dropzone
-        accept={acceptFiles}
-        data-testid="dropzone"
-        disableUpload={converting ? 'disableUpload' : null}
-        onDrop={uploadManuscript}
-      >
-        {({ getRootProps, getInputProps }) => (
-          <Root {...getRootProps()}>
-            <Main>
-              <input {...getInputProps()} />
-              {completed && <StatusCompleted />}
-              {error && <StatusError />}
-              {converting && <StatusConverting />}
-              {!converting && !error && !completed && <StatusIdle />}
-              {error ? (
-                <Error>
-                  {t('newSubmission.errorUploading', { error: error.message })}
-                </Error>
-              ) : (
-                <Info completed={completed}>
-                  {completed
-                    ? t('newSubmission.Submission created')
-                    : t('newSubmission.Upload Manuscript')}
-                </Info>
-              )}
-            </Main>
-            <SubInfo>
-              {converting && t('newSubmission.converting')}
-              {!converting && (
-                <>
-                  <p>{t('newSubmission.dragNDrop')}</p>
-                  <em>{t('newSubmission.acceptedFiletypes')}</em>
-                </>
-              )}
-            </SubInfo>
-          </Root>
-        )}
-      </Dropzone>
-      <Action data-testid="submitUrl" onClick={() => uploadManuscript()}>
-        {t('newSubmission.Submit a URL instead')}
-      </Action>
+      {showUploadManuscript && (
+        <Dropzone
+          accept={acceptFiles}
+          data-testid="dropzone"
+          disableUpload={converting ? 'disableUpload' : null}
+          onDrop={uploadManuscript}
+        >
+          {({ getRootProps, getInputProps, open }) => {
+            useEffect(() => {
+              if (showUploadManuscript && !showSubmitUrl) {
+                open()
+              }
+            }, [])
+
+            return (
+              <Root {...getRootProps()}>
+                <Main>
+                  <input {...getInputProps()} />
+                  {completed && <StatusCompleted />}
+                  {error && <StatusError />}
+                  {converting && <StatusConverting />}
+                  {!converting && !error && !completed && <StatusIdle />}
+                  {error ? (
+                    <Error>
+                      {t('newSubmission.errorUploading', {
+                        error: error.message,
+                      })}
+                    </Error>
+                  ) : (
+                    <Info completed={completed}>
+                      {completed
+                        ? t('newSubmission.Submission created')
+                        : t('newSubmission.Upload Manuscript')}
+                    </Info>
+                  )}
+                </Main>
+                <SubInfo>
+                  {converting && t('newSubmission.converting')}
+                  {!converting && (
+                    <>
+                      <p>{t('newSubmission.dragNDrop')}</p>
+                      <em
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            description || t('newSubmission.acceptedFiletypes'),
+                        }}
+                      />
+                    </>
+                  )}
+                </SubInfo>
+              </Root>
+            )
+          }}
+        </Dropzone>
+      )}
+      {showSubmitUrl && (
+        <Action data-testid="submitUrl" onClick={() => uploadManuscript()}>
+          {t('newSubmission.Submit a URL instead')}
+        </Action>
+      )}
     </>
   )
 }
