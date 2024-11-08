@@ -186,7 +186,17 @@ if (process.env.POSTGRES_CA_CERT) {
   if (!cfg.db.ssl) cfg.db.ssl = {}
 
   cfg.db.ssl.rejectUnauthorized = true
-  cfg.db.ssl.ca = process.env.POSTGRES_CA_CERT
+
+  /**
+   * The value of the env variable should be the base64 encoded crt file.
+   * eg. the result of `base64 -w0 ca-certificate.crt`
+   * It gets decoded here. This is to prevent issues with newlines when trying
+   * to pass the contents of a cert file as an environment variable in some
+   * deployment environments.
+   */
+  cfg.db.ssl.ca = Buffer.from(process.env.POSTGRES_CA_CERT, 'base64').toString(
+    'utf-8',
+  )
 }
 
 module.exports = cfg
