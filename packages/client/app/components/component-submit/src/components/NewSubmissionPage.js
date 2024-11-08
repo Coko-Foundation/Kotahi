@@ -32,7 +32,7 @@ const Dashboard = ({ currentUser, history }) => {
     submission: { submissionPage },
   } = useContext(ConfigContext)
 
-  const { submitOptions } = submissionPage
+  const { submitOptions = '' } = submissionPage ?? {}
 
   let showSubmitUrl =
     submitOptions === 'allowAuthorSubmitForm' ||
@@ -50,7 +50,7 @@ const Dashboard = ({ currentUser, history }) => {
   return (
     <Container>
       <Heading>
-        {submissionPage.title
+        {submissionPage?.title
           ? submissionPage.title
           : t('newSubmission.New submission')}
       </Heading>
@@ -62,7 +62,7 @@ const Dashboard = ({ currentUser, history }) => {
                 acceptFiles={acceptFiles}
                 client={client}
                 currentUser={currentUser}
-                description={submissionPage.submissionPagedescription}
+                description={submissionPage?.submissionPagedescription}
                 history={history}
                 showSubmitUrl={showSubmitUrl}
                 showUploadManuscript={showUploadManuscript}
