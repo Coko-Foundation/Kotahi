@@ -90,6 +90,10 @@ const ReviewDetailsModal = (
   const { t } = useTranslation()
 
   useEffect(() => {
+    if (review?.id) {
+      wsProvider?.disconnect()
+    }
+
     if (review?.isCollaborative) {
       setTimeout(() => {
         if (!wsProvider || wsProvider?.roomname !== review?.id) {
@@ -106,7 +110,11 @@ const ReviewDetailsModal = (
       }, 500)
     }
 
-    return () => wsProvider?.disconnect()
+    // if (wsProvider && wsProvider?.roomname !== review?.id) {
+    //   return () => wsProvider?.disconnect()
+    // }
+
+    return null
   }, [review?.id])
 
   const LocalizedReviewFilterOptions = localizeReviewFilterOptions(
