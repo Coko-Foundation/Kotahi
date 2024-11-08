@@ -381,20 +381,17 @@ export const generateSchemas = (
                     'allowAuthorUploadOnly',
                     'allowAuthorUploadWithForm',
                     'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
                   ],
                   enumNames: [
                     t('configPage.SubmissionPage.allowAuthorUploadOnly'),
                     t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
                     t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
                   ],
                   default: 'allowAuthorUploadWithForm',
-                },
-                allowAuthorSubmitFormWithBlankEditor: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
-                  ),
-                  default: false,
                 },
               },
             },
@@ -1422,20 +1419,17 @@ export const generateSchemas = (
                     'allowAuthorUploadOnly',
                     'allowAuthorUploadWithForm',
                     'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
                   ],
                   enumNames: [
                     t('configPage.SubmissionPage.allowAuthorUploadOnly'),
                     t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
                     t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
                   ],
                   default: 'allowAuthorUploadWithForm',
-                },
-                allowAuthorSubmitFormWithBlankEditor: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
-                  ),
-                  default: false,
                 },
               },
             },
@@ -2469,20 +2463,17 @@ export const generateSchemas = (
                     'allowAuthorUploadOnly',
                     'allowAuthorUploadWithForm',
                     'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
                   ],
                   enumNames: [
                     t('configPage.SubmissionPage.allowAuthorUploadOnly'),
                     t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
                     t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
                   ],
                   default: 'allowAuthorUploadWithForm',
-                },
-                allowAuthorSubmitFormWithBlankEditor: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
-                  ),
-                  default: false,
                 },
               },
             },
@@ -3516,20 +3507,17 @@ export const generateSchemas = (
                     'allowAuthorUploadOnly',
                     'allowAuthorUploadWithForm',
                     'allowAuthorSubmitForm',
+                    'allowAuthorSubmitFormWithBlankEditor',
                   ],
                   enumNames: [
                     t('configPage.SubmissionPage.allowAuthorUploadOnly'),
                     t('configPage.SubmissionPage.allowAuthorUploadWithForm'),
                     t('configPage.SubmissionPage.allowAuthorSubmitForm'),
+                    t(
+                      'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
+                    ),
                   ],
                   default: 'allowAuthorUploadWithForm',
-                },
-                allowAuthorSubmitFormWithBlankEditor: {
-                  type: 'boolean',
-                  title: t(
-                    'configPage.SubmissionPage.allowAuthorSubmitFormWithBlankEditor',
-                  ),
-                  default: false,
                 },
               },
             },

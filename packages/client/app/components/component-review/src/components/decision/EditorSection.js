@@ -71,7 +71,8 @@ const EditorSection = ({
     submission: { submissionPage },
   } = useContext(ConfigContext)
 
-  const { allowAuthorSubmitFormWithBlankEditor } = submissionPage
+  const allowAuthorSubmitFormWithBlankEditor =
+    submissionPage.submitOptions === 'allowAuthorSubmitFormWithBlankEditor'
 
   const manuscriptFile = manuscript?.files?.find(file =>
     file.tags.includes('manuscript'),

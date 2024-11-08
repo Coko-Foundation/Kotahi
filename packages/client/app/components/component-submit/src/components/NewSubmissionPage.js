@@ -36,7 +36,8 @@ const Dashboard = ({ currentUser, history }) => {
 
   let showSubmitUrl =
     submitOptions === 'allowAuthorSubmitForm' ||
-    submitOptions === 'allowAuthorUploadWithForm'
+    submitOptions === 'allowAuthorUploadWithForm' ||
+    submitOptions === 'allowAuthorSubmitFormWithBlankEditor'
 
   let showUploadManuscript =
     submitOptions === 'allowAuthorUploadOnly' ||
