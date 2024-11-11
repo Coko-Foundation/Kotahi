@@ -84,6 +84,7 @@ const KanbanCard = ({
   isInvitation,
   manuscript,
   removeReviewer,
+  removeInvitation,
   status,
   reviewForm,
   review,
@@ -115,6 +116,7 @@ const KanbanCard = ({
         manuscriptShortId={manuscript.shortId}
         onClose={() => setOpen(false)}
         readOnly={!isCurrentVersion}
+        removeInvitation={removeInvitation}
         removeReviewer={removeReviewer}
         review={review}
         reviewerTeamMember={reviewer}

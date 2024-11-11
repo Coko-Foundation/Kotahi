@@ -61,6 +61,7 @@ const DecisionVersions = ({
   teams,
   updateTeamMember,
   updateCollaborativeTeamMember,
+  removeInvitation,
   removeReviewer,
   updateTaskNotification,
   deleteTaskNotification,
@@ -145,6 +146,7 @@ const DecisionVersions = ({
                 publishManuscript={publishManuscript}
                 queryAI={queryAI}
                 refetch={refetch}
+                removeInvitation={removeInvitation}
                 removeReviewer={removeReviewer}
                 reviewers={reviewers}
                 reviewForm={reviewForm}

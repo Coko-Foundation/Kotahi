@@ -19,6 +19,7 @@ import reviewStatuses from '../../../../config/journal/review-status'
 import recommendations from '../../../../config/journal/recommendations'
 import { UserAvatar } from '../../component-avatar/src'
 import DeleteReviewerModal from '../../component-review/src/components/reviewers/DeleteReviewerModal'
+import DeleteInvitationModal from '../../component-review/src/components/reviewers/DeleteInvitationModal'
 import ReadonlyFieldData from '../../component-review/src/components/metadata/ReadonlyFieldData'
 import FormTemplate from '../../component-submit/src/components/FormTemplate'
 import { ConfigContext } from '../../config/src'
@@ -73,6 +74,7 @@ const ReviewDetailsModal = (
     isOpen,
     isControlPage = true,
     readOnly = false,
+    removeInvitation,
     removeReviewer,
     manuscriptId,
     manuscriptShortId,
@@ -170,6 +172,7 @@ const ReviewDetailsModal = (
   const reviewData = review ? ensureJsonIsParsed(review?.jsonData) : {}
 
   const showForm = !readOnly && canEditReviews
+
   return (
     <Modal
       contentStyles={{ width: '80%', maxWidth: '80%' }}
@@ -192,19 +195,30 @@ const ReviewDetailsModal = (
       }
       onClose={onClose}
       rightActions={
-        !readOnly &&
-        !isInvitation && (
+        !readOnly && (
           <>
             <SecondaryButton onClick={() => setOpen(true)}>
               {t('modals.reviewReport.Delete')}
             </SecondaryButton>
-            <DeleteReviewerModal
-              isOpen={open}
-              manuscriptId={manuscriptId}
-              onClose={() => setOpen(false)}
-              removeReviewer={removeReviewer}
-              reviewer={reviewerTeamMember}
-            />
+            {isInvitation && (
+              <DeleteInvitationModal
+                isOpen={open}
+                manuscriptId={manuscriptId}
+                onClose={() => setOpen(false)}
+                removeInvitation={removeInvitation}
+                removeReviewer={removeReviewer}
+                reviewer={reviewerTeamMember}
+              />
+            )}
+            {!isInvitation && (
+              <DeleteReviewerModal
+                isOpen={open}
+                manuscriptId={manuscriptId}
+                onClose={() => setOpen(false)}
+                removeReviewer={removeReviewer}
+                reviewer={reviewerTeamMember}
+              />
+            )}
           </>
         )
       }

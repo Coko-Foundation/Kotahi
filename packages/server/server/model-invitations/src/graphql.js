@@ -20,7 +20,7 @@ const resolvers = {
       return invitation
     },
     async invitationStatus(_, { id }, ctx) {
-      const invitation = await Invitation.query().findById(id)
+      const invitation = await Invitation.query().findById(id).throwIfNotFound()
 
       const isLatestVersion = await isLatestVersionOfManuscript(
         invitation.manuscriptId,
@@ -64,6 +64,13 @@ const resolvers = {
     },
   },
   Mutation: {
+    async removeInvitation(_, { id }) {
+      const invitation = await Invitation.query().findById(id)
+      if (!invitation) return null
+
+      await Invitation.query().findById(id).delete()
+      return invitation
+    },
     async updateInvitationStatus(_, { id, status, userId, responseDate }, ctx) {
       const [result] = await Invitation.query()
         .patch({
@@ -235,6 +242,7 @@ extend type Mutation {
   addEmailToBlacklist(email: String!, groupId: ID!): BlacklistEmail
   assignUserAsAuthor(manuscriptId: ID!, userId: ID!): Team
   updateSharedStatusForInvitedReviewer(invitationId: ID!, isShared: Boolean!): Invitation!
+  removeInvitation(id: ID!): Invitation
 }
 `
 
