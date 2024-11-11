@@ -68,11 +68,11 @@ const EditorSection = ({
   queryAI,
 }) => {
   const {
-    submission: { submissionPage },
+    submission: { submissionPage = {} },
   } = useContext(ConfigContext)
 
   const allowAuthorSubmitFormWithBlankEditor =
-    submissionPage.submitOptions === 'allowAuthorSubmitFormWithBlankEditor'
+    submissionPage?.submitOptions === 'allowAuthorSubmitFormWithBlankEditor'
 
   const manuscriptFile = manuscript?.files?.find(file =>
     file.tags.includes('manuscript'),
