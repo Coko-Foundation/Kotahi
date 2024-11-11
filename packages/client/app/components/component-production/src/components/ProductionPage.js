@@ -391,7 +391,8 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
         Date.parse(new Date(b.created)) - Date.parse(new Date(a.created)),
     )
 
-  currentUserRole.isAuthor = sortedAuthors[0]?.user?.id === currentUser.id // This logic might change in the future! Now it uses the latest created author
+  currentUserRole.isAuthor =
+    sortedAuthors && sortedAuthors[0]?.user?.id === currentUser.id // This logic might change in the future! Now it uses the latest created author
 
   const editorTeam = manuscript.teams.find(team => team.role === 'editor')
 
@@ -412,7 +413,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
       !isAuthorProofingMode)
 
   const canSubmitWithBlankEditor =
-    submission.submissionPage.submitOptions ===
+    submission.submissionPage?.submitOptions ===
     'allowAuthorSubmitFormWithBlankEditor'
 
   // console.log('Author proofing mode: ', isAuthorProofingMode)
