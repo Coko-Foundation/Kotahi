@@ -59,6 +59,10 @@ const ReviewLayout = ({
   )
 
   useEffect(() => {
+    if (currentUserReview?.id) {
+      wsProvider?.disconnect()
+    }
+
     if (currentUserReview && currentUserReview.isCollaborative) {
       setTimeout(() => {
         if (!wsProvider || wsProvider?.roomname !== currentUserReview.id) {
@@ -75,11 +79,11 @@ const ReviewLayout = ({
       }, 500)
     }
 
-    return () => {
-      if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
-        wsProvider?.disconnect()
-      }
-    }
+    // return () => {
+    //   if (wsProvider && wsProvider?.roomname !== currentUserReview.id) {
+    //     wsProvider?.disconnect()
+    //   }
+    // }
   }, [currentUserReview.id])
 
   const createMetaDataSection = latestManuscript => {
