@@ -9,7 +9,16 @@ const FullWaxEditorStyled = styled(FullWaxEditor)`
 `
 
 const FullWaxField = input => {
-  return <FullWaxEditorStyled {...input} setComments={() => []} useComments />
+  return (
+    <FullWaxEditorStyled
+      {...input}
+      commentsToolPosition="static"
+      hideImages
+      hideNotes
+      setComments={() => []}
+      useComments
+    />
+  )
 }
 
 export default FullWaxField

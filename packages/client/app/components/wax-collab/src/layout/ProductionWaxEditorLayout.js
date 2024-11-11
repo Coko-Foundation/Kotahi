@@ -53,7 +53,7 @@ const LeftSideBar = ComponentPlugin('leftSideBar')
 const CitationArea = ComponentPlugin('citationArea')
 
 const ProductionWaxEditorLayout =
-  (readOnly, authorComments = null, leftBar = true, hasYjs) =>
+  (readOnly, authorComments = null, leftBar = true, commentsToolPosition) =>
   /* eslint-disable-next-line react/function-component-definition */
   props => {
     const {
@@ -136,9 +136,9 @@ const ProductionWaxEditorLayout =
 
     let commentTrackToolBarStyles = {}
 
-    if (hasYjs) {
+    if (commentsToolPosition) {
       commentTrackToolBarStyles = {
-        position: 'static',
+        position: commentsToolPosition,
       }
     }
 

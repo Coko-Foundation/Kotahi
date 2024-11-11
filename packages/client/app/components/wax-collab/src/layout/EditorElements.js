@@ -76,6 +76,11 @@ const EditorStyles = css`
     cursor: col-resize;
   }
 
+  .ProseMirror u {
+    /* stylelint-disable-next-line declaration-no-important */
+    text-decoration: underline !important;
+  }
+
   /* Give selected cells a blue overlay */
   .selectedCell::after {
     background: rgba(200, 200, 255, 0.4);

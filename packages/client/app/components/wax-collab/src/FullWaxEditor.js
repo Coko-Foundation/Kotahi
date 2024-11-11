@@ -32,6 +32,9 @@ const renderImage = file => {
 const FullWaxEditor = ({
   aiConfig,
   onAssetManager,
+  commentsToolPosition,
+  hideNotes,
+  hideImages,
   value,
   validationStatus,
   readonly,
@@ -42,7 +45,7 @@ const FullWaxEditor = ({
   placeholder,
   useComments,
   authorComments,
-  fileUpload,
+  // fileUpload,
   user,
   manuscriptId,
   getActiveViewDom,
@@ -51,6 +54,17 @@ const FullWaxEditor = ({
   name,
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
+
+  const [config, setConfig] = useState(
+    fullWaxEditorConfig(
+      handleAssetManager,
+      getComments,
+      setComments,
+      readonly,
+      aiConfig,
+    ),
+  )
+
   const journal = useContext(JournalContext)
 
   const debouncedSave = useCallback(
@@ -60,7 +74,19 @@ const FullWaxEditor = ({
     [],
   )
 
+  const removeToolFromConfig = tool => {
+    config.MenuService.forEach(menuItem => {
+      if (menuItem.templateArea === 'topBar') {
+        const index = menuItem.toolGroups.indexOf(tool)
+        menuItem.toolGroups.splice(index, 1)
+      }
+    })
+  }
+
   useEffect(() => {
+    if (hideNotes) removeToolFromConfig('Notes')
+    if (hideImages) removeToolFromConfig('Images')
+
     return () => !ydoc && debouncedSave.flush()
   }, [])
 
@@ -75,16 +101,6 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  const [config, setConfig] = useState(
-    fullWaxEditorConfig(
-      handleAssetManager,
-      getComments,
-      setComments,
-      readonly,
-      aiConfig,
-    ),
-  )
-
   useEffect(() => {
     setConfig(
       yjsConfig(config, {
@@ -94,8 +110,6 @@ const FullWaxEditor = ({
       }),
     )
   }, [name, wsProvider?.roomname, ydoc?.guid])
-
-  const hasYjs = !!ydoc?.guid
 
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
@@ -111,7 +125,7 @@ const FullWaxEditor = ({
                   readonly,
                   authorComments,
                   false,
-                  hasYjs,
+                  commentsToolPosition,
                 )
               : FullWaxEditorLayout(readonly, getActiveViewDom)
           }
@@ -134,7 +148,7 @@ FullWaxEditor.propTypes = {
   autoFocus: PropTypes.bool,
   saveSource: PropTypes.func,
   placeholder: PropTypes.string,
-  fileUpload: PropTypes.func,
+  // fileUpload: PropTypes.func,
   authorComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
@@ -155,7 +169,7 @@ FullWaxEditor.defaultProps = {
   saveSource: () => {},
   placeholder: '',
   authorComments: false,
-  fileUpload: () => {},
+  // fileUpload: () => {},
   useComments: false,
   user: {},
 }
