@@ -352,6 +352,16 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 }
 `
 
+export const removeInvitationMutation = gql`
+  mutation ($id: ID!) {
+    removeInvitation(id: $id) {
+      id
+      manuscriptId
+      toEmail
+    }
+  }
+`
+
 export const updateReviewMutation = gql`
   mutation($id: ID, $input: ReviewInput) {
     updateReview(id: $id, input: $input) {

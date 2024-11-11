@@ -22,6 +22,7 @@ import {
   publishManuscriptMutation,
   query,
   removeReviewerMutation,
+  removeInvitationMutation,
   sendEmail,
   setShouldPublishFieldMutation,
   updateReviewMutation,
@@ -314,6 +315,24 @@ const DecisionPage = ({ currentUser, match }) => {
   })
 
   const [removeReviewer] = useMutation(removeReviewerMutation)
+
+  const [removeInvitation] = useMutation(removeInvitationMutation, {
+    update: (cache, { data: { removeInvitation: removeRevisedObject } }) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Manuscript',
+          id: removeRevisedObject.manuscriptId,
+        }),
+        fields: {
+          invitations(existingInvitationRefs, { readField }) {
+            return existingInvitationRefs.filter(
+              ref => readField('id', ref) !== removeRevisedObject.id,
+            )
+          },
+        },
+      })
+    },
+  })
 
   const [createTaskEmailNotificationLog] = useMutation(
     CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
@@ -663,6 +682,7 @@ const DecisionPage = ({ currentUser, match }) => {
       refetch={() => {
         refetchManuscript()
       }}
+      removeInvitation={removeInvitation}
       removeReviewer={removeReviewer}
       reviewers={data?.manuscript?.reviews}
       reviewForm={reviewForm}

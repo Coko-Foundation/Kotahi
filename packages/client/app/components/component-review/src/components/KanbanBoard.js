@@ -74,6 +74,7 @@ const KanbanBoard = ({
   invitations,
   version,
   versionNumber,
+  removeInvitation,
   removeReviewer,
   reviews,
   reviewForm,
@@ -131,7 +132,6 @@ const KanbanBoard = ({
         existingReviewer.isEmail = true
 
         const {
-          id,
           isShared,
           user,
           userId,
@@ -223,6 +223,7 @@ const KanbanBoard = ({
                       isInvitation={reviewer.isEmail}
                       key={reviewer.id}
                       manuscript={version}
+                      removeInvitation={removeInvitation}
                       removeReviewer={removeReviewer}
                       review={
                         status.value === 'completed' ||

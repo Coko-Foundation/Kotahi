@@ -88,6 +88,7 @@ const DecisionVersion = ({
   updateTask,
   updateTasks,
   teams,
+  removeInvitation,
   removeReviewer,
   updateTeamMember,
   updateCollaborativeTeamMember,
@@ -346,6 +347,7 @@ const DecisionVersion = ({
             invitations={invitations}
             isCurrentVersion={isCurrentVersion}
             manuscript={version}
+            removeInvitation={removeInvitation}
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}

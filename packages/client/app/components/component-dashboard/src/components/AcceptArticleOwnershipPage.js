@@ -14,8 +14,12 @@ const AcceptArticleOwnershipPage = ({ match }) => {
     variables: { id: invitationId },
   })
 
-  if (loading || error) {
+  if (loading) {
     return null
+  }
+
+  if (error) {
+    return <InvitationLinkExpired />
   }
 
   if (data.invitationStatus.status === 'UNANSWERED') {
