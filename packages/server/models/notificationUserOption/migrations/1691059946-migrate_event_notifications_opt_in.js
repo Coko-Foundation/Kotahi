@@ -32,7 +32,6 @@ exports.up = async knex => {
         }
       }
 
-      // eslint-disable-next-line func-names
       await trx.schema.alterTable(User.tableName, table => {
         table.dropColumn('eventNotificationsOptIn')
       })
