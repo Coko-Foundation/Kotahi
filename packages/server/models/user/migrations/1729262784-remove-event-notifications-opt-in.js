@@ -1,12 +1,12 @@
 exports.up = async knex => {
   const hasOptInColumn = await knex.schema.hasColumn(
     'users',
-    'eventNotificationsOptIn',
+    'event_notifications_opt_in',
   )
 
   if (hasOptInColumn) {
     return knex.schema.table('users', table => {
-      table.dropColumn('eventNotificationsOptIn')
+      table.dropColumn('event_notifications_opt_in')
     })
   }
 
