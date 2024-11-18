@@ -199,6 +199,9 @@ const resolvers = {
           .findById(messageId)
           .withGraphJoined('user')
 
+        /* eslint-disable-next-line no-console */
+        console.log(message.content)
+
         return message
       },
       subscribe: async (_, vars, context) => {
