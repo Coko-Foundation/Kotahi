@@ -291,6 +291,9 @@ const esLa = {
         Publish: 'Publicar',
         Republish: 'Volver a Publicar',
         Unpublish: 'Despublicar',
+        unpublishResponse: 'El manuscrito ha sido despublicado con éxito',
+        postedTo: 'Publicado en {{stepLabel}}',
+        errorPosting: 'Error al publicar en {{stepLabel}}',
         publishedOn: 'Esta presentación se publicó el {{date}}',
         doisToBeRegistered: 'DOIs a registrar: {{- dois}}',
         noDoisToBeRegistered:

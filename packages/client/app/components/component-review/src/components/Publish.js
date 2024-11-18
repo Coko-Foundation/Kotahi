@@ -54,7 +54,9 @@ const Publish = ({
   const [publishingError, setPublishingError] = useState(null)
   const { t } = useTranslation()
 
-  const notAccepted = !['accepted', 'published'].includes(manuscript.status)
+  const notAccepted = !['accepted', 'published', 'unpublished'].includes(
+    manuscript.status,
+  )
 
   const doiMessage =
     dois !== null &&
@@ -94,7 +96,7 @@ const Publish = ({
   const handleUnpublish = () => {
     unpublish(manuscript.id)
       .then(() => {
-        setPublishResponse(null)
+        setPublishResponse({ steps: [{ unpublished: true }] })
       })
       .catch(error => {
         console.error(error)
@@ -110,7 +112,7 @@ const Publish = ({
 
       <SectionRowGrid>
         <SectionActionInfo>
-          {manuscript.published && (
+          {manuscript.published && manuscript.status !== 'unpublished' && (
             <Trans
               i18nKey="decisionPage.decisionTab.publishedOn"
               shouldUnescape
@@ -151,7 +153,7 @@ const Publish = ({
               onClick={handlePublish}
               primary
             >
-              {manuscript.published
+              {manuscript.published && manuscript.status !== 'unpublished'
                 ? t('decisionPage.decisionTab.Republish')
                 : t('decisionPage.decisionTab.Publish')}
             </PublishButton>

@@ -294,6 +294,9 @@ const fr = {
         Publish: 'Publier',
         Republish: 'Republier',
         Unpublish: 'Dépublier',
+        unpublishResponse: 'Le manuscrit a été dépublié avec succès',
+        postedTo: 'Publié sur {{stepLabel}}',
+        errorPosting: 'Erreur de publication sur {{stepLabel}}',
         publishedOn: 'Cette soumission a été publiée le {{date}}',
         doisToBeRegistered: 'DOIs à enregistrer : {{- dois}}',
         noDoisToBeRegistered:
