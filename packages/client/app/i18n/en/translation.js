@@ -288,6 +288,9 @@ const en = {
         Publish: 'Publish',
         Republish: 'Republish',
         Unpublish: 'Unpublish',
+        unpublishResponse: 'The manuscript has been unpublished successfully',
+        postedTo: 'Posted to {{stepLabel}}',
+        errorPosting: 'Error posting to {{stepLabel}}',
         publishedOn: 'This submission was published on {{date}}',
         doisToBeRegistered: 'DOIs to be registered: {{- dois}}',
         noDoisToBeRegistered:
