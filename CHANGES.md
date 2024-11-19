@@ -1,5 +1,12 @@
 ## Changes
 
+### Version 4.0.0
+
+The `GMAIL_NOTIFICATION_EMAIL_SENDER` variable has been renamed to `GMAIL_NOTIFICATION_EMAIL_SENDER_NAME`.
+
+There is a new optional environment variable `POSTGRES_CA_CERT`, which can accept an encoded ca cert to verify the database connection.  
+In order to create the encoded value, assuming that you've downloaded your certificate, run `base64 -w0 ca-certificate.crt` and set the output as the value of the variable.
+
 ### Version 3.9.0
 
 We now offer pre-built production images for both kotahi server and kotahi client. You can find them on dockerhub as `cokoapps/kotahi-server` and `cokoapps/kotahi-client`. Tags will be the version that is being published (eg. `cokoapps/kotahi-server:3.9.0`).
