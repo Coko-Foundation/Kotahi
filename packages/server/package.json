@@ -26,7 +26,7 @@
     "pg": "8.4.0"
   },
   "dependencies": {
-    "@coko/server": "4.0.0-beta.6",
+    "@coko/server": "4.1.1",
     "@pubsweet/job-xsweet": "^2.2.1",
     "@pubsweet/model-user": "6.0.3",
     "@dqbd/tiktoken": "^1.0.14",

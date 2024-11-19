@@ -12,6 +12,23 @@ module.exports = {
     database: 'POSTGRES_DB',
     user: 'POSTGRES_USER',
     password: 'POSTGRES_PASSWORD',
+    allowSelfSignedCertificates: {
+      __name: 'POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES',
+      __format: 'json',
+    },
+    caCert: 'POSTGRES_CA_CERT',
+  },
+  subscriptionsDb: {
+    host: 'SUBSCRIPTIONS_POSTGRES_HOST',
+    port: 'SUBSCRIPTIONS_POSTGRES_PORT',
+    database: 'SUBSCRIPTIONS_POSTGRES_DB',
+    user: 'SUBSCRIPTIONS_POSTGRES_USER',
+    password: 'SUBSCRIPTIONS_POSTGRES_PASSWORD',
+    allowSelfSignedCertificates: {
+      __name: 'SUBSCRIPTIONS_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES',
+      __format: 'json',
+    },
+    caCert: 'SUBSCRIPTIONS_POSTGRES_CA_CERT',
   },
   tempFolderPath: 'TEMP_FOLDER_PATH',
   useFileStorage: 'USE_FILE_STORAGE',
