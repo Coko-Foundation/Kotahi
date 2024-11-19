@@ -81,10 +81,11 @@ const EditorSection = ({
   const { t } = useTranslation()
 
   if (
-    (manuscriptFile &&
+    ((manuscriptFile &&
       manuscriptFile.storedObjects[0].mimetype !==
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
-    (!manuscriptFile && allowAuthorSubmitFormWithBlankEditor === false)
+      !manuscriptFile) &&
+    allowAuthorSubmitFormWithBlankEditor === false
   )
     return <Info>{t('editorSection.noSupportedView')}</Info>
 
