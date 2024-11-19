@@ -5,7 +5,8 @@
 The `GMAIL_NOTIFICATION_EMAIL_SENDER` variable has been renamed to `GMAIL_NOTIFICATION_EMAIL_SENDER_NAME`.
 
 There is a new optional environment variable `POSTGRES_CA_CERT`, which can accept an encoded ca cert to verify the database connection.  
-In order to create the encoded value, assuming that you've downloaded your certificate, run `base64 -w0 ca-certificate.crt` and set the output as the value of the variable.
+In order to create the encoded value, assuming that you've downloaded your certificate, run `base64 -w0 ca-certificate.crt` and set the output as the value of the variable.  
+Note that using this variable will override the value of `POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES`, effectively setting it to false.
 
 ### Version 3.9.0
 
