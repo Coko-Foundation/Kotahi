@@ -637,6 +637,7 @@ const en = {
           'Interval to automatically save a manuscript version in minutes',
       },
       allowedIPs: 'List of repository IPs allowed access',
+      scietyInboxUrl: 'Sciety Inbox URL',
       api: 'COAR Notify',
       semanticScholar: 'Semantic Scholar',
       semanticScholarPublishingServers: {

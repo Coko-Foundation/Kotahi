@@ -650,6 +650,7 @@ const esLa = {
           'Intervalo para guardar automáticamente una versión manuscrita en minutos',
       },
       allowedIPs: 'Lista de IP del repositorio a las que se permite el acceso',
+      scietyInboxUrl: 'URL de la bandeja de entrada de Sciety',
       api: 'API de Kotahi',
       // Since these are publishing servers, hence kept the original language
       semanticScholarPublishingServers: {

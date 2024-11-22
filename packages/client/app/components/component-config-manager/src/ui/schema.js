@@ -774,6 +774,10 @@ export const generateSchemas = (
                   type: ['string', 'null'],
                   description: t('configPage.allowedIPs'),
                 },
+                scietyInboxUrl: {
+                  type: ['string', 'null'],
+                  description: t('configPage.scietyInboxUrl'),
+                },
               },
             },
             aiDesignStudio: {
@@ -1811,6 +1815,10 @@ export const generateSchemas = (
                 repoIpAddress: {
                   type: ['string', 'null'],
                   description: t('configPage.allowedIPs'),
+                },
+                scietyInboxUrl: {
+                  type: ['string', 'null'],
+                  description: t('configPage.scietyInboxUrl'),
                 },
               },
             },
@@ -2856,6 +2864,10 @@ export const generateSchemas = (
                   type: ['string', 'null'],
                   description: t('configPage.allowedIPs'),
                 },
+                scietyInboxUrl: {
+                  type: ['string', 'null'],
+                  description: t('configPage.scietyInboxUrl'),
+                },
               },
             },
             aiDesignStudio: {
@@ -3899,6 +3911,10 @@ export const generateSchemas = (
                 repoIpAddress: {
                   type: ['string', 'null'],
                   description: t('configPage.allowedIPs'),
+                },
+                scietyInboxUrl: {
+                  type: ['string', 'null'],
+                  description: t('configPage.scietyInboxUrl'),
                 },
               },
             },

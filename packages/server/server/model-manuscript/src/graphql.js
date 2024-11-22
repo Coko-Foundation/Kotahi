@@ -31,6 +31,10 @@ const {
 } = require('../../coar-notify/coar-notify')
 
 const {
+  sendAnnouncementNotificationToSciety,
+} = require('../../coar-notify/sciety')
+
+const {
   getPublishableReviewFields,
   getPublishableSubmissionFields,
 } = require('../../publishing/flax/tools')
@@ -408,6 +412,11 @@ const publishOnCMS = async (groupId, manuscriptId) => {
 
 const sendNotificationToCoar = async (notification, manuscript) => {
   const response = await sendAnnouncementNotification(notification, manuscript)
+  return response
+}
+
+const sendNotificationToSciety = async manuscript => {
+  const response = await sendAnnouncementNotificationToSciety(manuscript)
   return response
 }
 
@@ -1570,6 +1579,21 @@ const resolvers = {
             errorMessage: err.message,
           })
         }
+      }
+
+      try {
+        if (await sendNotificationToSciety(manuscript))
+          steps.push({
+            stepLabel: 'COAR Notify review announcement sent to Sciety',
+            succeeded: true,
+          })
+      } catch (err) {
+        console.error(err)
+        steps.push({
+          stepLabel: 'COAR Notify review announcement sent to Sciety',
+          succeeded: false,
+          errorMessage: err.message,
+        })
       }
 
       let updatedManuscript

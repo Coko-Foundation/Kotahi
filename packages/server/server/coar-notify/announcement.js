@@ -125,4 +125,10 @@ const makeAnnouncementOnCOAR = async (notification, manuscript) => {
   }
 }
 
-module.exports = makeAnnouncementOnCOAR
+module.exports = {
+  makeAnnouncementOnCOAR,
+  getFlaxUrl,
+  getReviewer,
+  isReviewDoi,
+  isFlaxSetup,
+}
