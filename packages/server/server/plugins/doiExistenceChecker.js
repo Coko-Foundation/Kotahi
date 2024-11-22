@@ -8,7 +8,9 @@ class DoiExistenceChecker {
     this.archiveStatus = archiveStatus
   }
 
-  async doiExists(doi) {
+  async doiExists(doi, options = {}) {
+    const { trx } = options
+
     if (this.timeoutId) clearTimeout(this.timeoutId)
 
     while (this.doiSet === 'wait')
@@ -19,7 +21,7 @@ class DoiExistenceChecker {
       try {
         this.doiSet = 'wait' // Any other tasks trying to access simultaneously must wait until this becomes a proper Set with data loaded
 
-        const dois = await Manuscript.query()
+        const dois = await Manuscript.query(trx)
           .select(raw("submission->>'$doi'").as('doi'))
           .whereRaw("submission->>'$doi' IS NOT null")
           .whereRaw("submission->>'$doi' <> ''")
