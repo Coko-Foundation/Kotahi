@@ -649,6 +649,7 @@ const ru = {
           'Интервал автоматического сохранения версии рукописи в минутах.',
       },
       allowedIPs: 'Список IP-адресов репозитория, которым разрешен доступ',
+      scietyInboxUrl: 'URL-адрес папки «Входящие» Sciety',
       api: 'Один API',
       // Since these are publishing servers, hence kept the original language
       semanticScholarPublishingServers: {

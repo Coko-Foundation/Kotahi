@@ -1,5 +1,5 @@
 const { getCrossrefDataViaDoi } = require('./crossRef')
-const makeAnnouncementOnCOAR = require('./announcement')
+const { makeAnnouncementOnCOAR } = require('./announcement')
 
 const Manuscript = require('../../models/manuscript/manuscript.model')
 const Config = require('../../models/config/config.model')

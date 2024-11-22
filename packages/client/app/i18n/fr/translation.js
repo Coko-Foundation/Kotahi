@@ -661,6 +661,7 @@ const fr = {
           'Intervalle pour enregistrer automatiquement une version manuscrite en quelques minutes',
       },
       allowedIPs: 'Liste des adresses IP du référentiel autorisées à accéder',
+      scietyInboxUrl: 'URL de la boîte de réception de Sciety',
       api: 'API Kotahi',
       // Since these are publishing servers, hence kept the original language
       semanticScholarPublishingServers: {
