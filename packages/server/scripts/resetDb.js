@@ -29,7 +29,7 @@ const clearDb = async () => {
     DECLARE
         tab RECORD;
     BEGIN
-        FOR tab IN (SELECT tablename FROM pg_tables WHERE schemaname='public') LOOP
+        FOR tab IN (SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('migrations', 'coko_server_meta')) LOOP
             EXECUTE 'ALTER TABLE ' || quote_ident(tab.tablename) || ' DISABLE TRIGGER ALL;';
             EXECUTE 'DELETE FROM ' || quote_ident(tab.tablename) || ';';
             EXECUTE 'ALTER TABLE ' || quote_ident(tab.tablename) || ' ENABLE TRIGGER ALL;';
@@ -91,4 +91,4 @@ const resetDbAndApplyDump = async (dumpSql, dumpName) => {
   return reset && dump
 }
 
-module.exports = { resetDb, applyDump, resetDbAndApplyDump }
+module.exports = { clearDb, resetDb, applyDump, resetDbAndApplyDump }
