@@ -60,24 +60,36 @@ class Manuscript extends BaseModel {
     delete this.searchTsvector
   }
 
-  async getReviews() {
-    // TODO: Use relationships
+  static async getReviews(manuscriptId, statuses = [], options = {}) {
     /* eslint-disable-next-line global-require */
     const Review = require('../review/review.model')
 
-    const manuscriptReviews = await Review.query().where({
-      manuscript_id: this.id,
+    const appliedStatuses = [].concat(statuses || [])
+
+    const query = Review.query(options.trx).where({
+      manuscriptId,
     })
 
-    // await Promise.all(
-    //   manuscriptReviews.map(async review => {
-    //     // eslint-disable-next-line no-param-reassign
-    //     // eslint-disable-next-line
-    //     review.comments = await review.getComments()
-    //   }),
-    // )
+    if (appliedStatuses.length === 0) return query
 
-    return manuscriptReviews
+    return (
+      query
+        .leftJoin('teams', 'teams.object_id', 'reviews.manuscript_id')
+        /* eslint-disable-next-line func-names */
+        .leftJoin('team_members', function () {
+          this.on('team_members.team_id', '=', 'teams.id').andOn(
+            'team_members.user_id',
+            '=',
+            'reviews.user_id',
+          )
+        })
+        .where({ role: 'reviewer' })
+        .whereIn('status', appliedStatuses)
+    )
+  }
+
+  async getReviews(statuses = [], options = {}) {
+    return Manuscript.getReviews(this.id, statuses, options)
   }
 
   async getManuscriptAuthor(options = {}) {

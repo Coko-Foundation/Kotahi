@@ -1380,7 +1380,9 @@ const resolvers = {
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
-        .withGraphFetched('[reviews, publishedArtifacts]')
+        .withGraphFetched('[publishedArtifacts]')
+
+      manuscript.reviews = await manuscript.getReviews('completed')
 
       const containsElifeStyleEvaluations = hasElifeStyleEvaluations(manuscript)
 
