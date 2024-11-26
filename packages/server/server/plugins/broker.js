@@ -1,4 +1,4 @@
-const { logger } = require('@coko/server')
+const { logger, useTransaction } = require('@coko/server')
 
 const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
 const { importWorkersByGroup } = require('./imports')
@@ -21,8 +21,8 @@ const assertArgTypes = (args, ...typeSpecs) => {
   }
 }
 
-const getEmptySubmission = async groupId => {
-  const submissionForm = await getSubmissionForm(groupId)
+const getEmptySubmission = async (groupId, options = {}) => {
+  const submissionForm = await getSubmissionForm(groupId, options)
   if (!submissionForm) throw new Error('No submission form was found!')
 
   const fields = submissionForm.structure.children.filter(field =>
@@ -92,10 +92,10 @@ const getBroker = (groupId, workerName) => {
             })
             .first()
         : null,
-    getStubManuscriptObject: async () => ({
+    getStubManuscriptObject: async (options = {}) => ({
       status: 'new',
       isImported: false,
-      submission: await getEmptySubmission(groupId),
+      submission: await getEmptySubmission(groupId, options),
       meta: { title: '' },
       channels: [
         {
@@ -113,19 +113,25 @@ const getBroker = (groupId, workerName) => {
       reviews: [],
       teams: [],
     }),
-    getSubmissionForm: () => getSubmissionForm(groupId),
+    getSubmissionForm: (options = {}) => getSubmissionForm(groupId, options),
     /** Return true if a manuscript with this DOI exists in the group.
      * Optionally, search among archived manuscripts as well as non-archived ones.
      * For efficiency, this caches all DOIs in memory, clearing the cache only after
      * 10 seconds have elapsed without hasManuscriptWithDoi() being called. */
-    hasManuscriptWithDoi: async (doi, includeArchivedManuscripts = false) => {
+    hasManuscriptWithDoi: async (
+      doi,
+      includeArchivedManuscripts = false,
+      options = {},
+    ) => {
       return (
-        (await doiChecker.doiExists(doi)) ||
-        (includeArchivedManuscripts && archivedDoiChecker.doiExists(doi))
+        (await doiChecker.doiExists(doi, options)) ||
+        (includeArchivedManuscripts &&
+          archivedDoiChecker.doiExists(doi, options))
       )
     },
     groupId,
     logger,
+    useTransaction,
   }
 }
 
