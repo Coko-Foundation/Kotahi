@@ -246,7 +246,7 @@ const CMSFileBrowserPage = () => {
 
   if (error) return <CommsErrorBanner error={error} />
 
-  const { submissionForm } = metadata
+  const { submissionForm = {} } = metadata || {}
 
   const form = submissionForm?.structure ?? {
     name: '',
