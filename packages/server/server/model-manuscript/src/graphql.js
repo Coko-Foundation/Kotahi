@@ -163,6 +163,8 @@ const getRelatedReviews = async (
     (await Manuscript.relatedQuery('reviews').for(manuscript.id)) ||
     []
 
+  reviews = await ReviewModel.orderReviewPerUsername(reviews)
+
   // eslint-disable-next-line no-restricted-syntax
   for (const review of reviews) {
     // eslint-disable-next-line no-await-in-loop

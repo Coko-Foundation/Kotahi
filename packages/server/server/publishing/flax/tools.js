@@ -98,7 +98,7 @@ const getPublishableReviewFields = (
   threadedDiscussions,
   manuscript,
 ) => {
-  const resultReviews = reviews.sort((a, b) => a.created - b.created)
+  const resultReviews = reviews
 
   resultReviews.map(review => {
     const resultReview = review
