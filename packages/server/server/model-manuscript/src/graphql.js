@@ -2303,6 +2303,16 @@ const resolvers = {
         users = await User.query().where({ id: parent.userId })
       }
 
+      users = await Promise.all(
+        users.map(async user => {
+          const defaultIdentity = await cachedGet(
+            `defaultIdentityOfUser:${user.id}`,
+          )
+
+          return { defaultIdentity, ...user }
+        }),
+      )
+
       return users
     },
   },
@@ -2622,8 +2632,17 @@ const typeDefs = `
   type ReviewUser {
     id: ID
     username: String
+    defaultIdentity: ReviewIdentity
   }
 
+  type ReviewIdentity {
+    id: ID
+    name: String
+    aff: String # JATS <aff>
+    email: String # JATS <aff>
+    type: String
+    identifier: String
+  }
 `
 
 module.exports = {
