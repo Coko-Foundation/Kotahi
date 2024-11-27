@@ -1,15 +1,15 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
-const fetch = require('node-fetch')
 const fs = require('fs')
+const axios = require('axios')
 
-fetch(`http://localhost:3000/graphql`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    variables: {},
-    query: `
+axios
+  .post(
+    `http://localhost:3000/graphql`,
+    JSON.stringify({
+      variables: {},
+      query: `
       {
         __schema {
           types {
@@ -22,9 +22,11 @@ fetch(`http://localhost:3000/graphql`, {
         }
       }
     `,
-  }),
-})
-  .then(result => result.json())
+    }),
+    { responseType: 'json' },
+    { headers: { 'Content-Type': 'application/json' } },
+  )
+  .then(result => result.data)
   .then(result => {
     // here we're filtering out any type information unrelated to unions or interfaces
     const filteredData = result.data.__schema.types.filter(

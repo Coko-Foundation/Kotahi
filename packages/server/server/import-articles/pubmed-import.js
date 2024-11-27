@@ -2,7 +2,7 @@
 const axios = require('axios')
 const xml2json = require('xml-js')
 const FormData = require('form-data')
-const fetch = require('node-fetch')
+const { logger } = require('@coko/server')
 
 const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
 const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
@@ -208,10 +208,15 @@ const getData = async (groupId, ctx) => {
 
       const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi`
 
-      const idsResponse = await fetch(url, {
-        method: 'post',
-        body: formData,
-      }).then(response => response.text())
+      let idsResponse
+
+      try {
+        idsResponse = await axios
+          .post(url, formData, { responseType: 'text' })
+          .then(response => response.data)
+      } catch (fetchError) {
+        logger.error(`[PUBMED-IMPORT]: failed to fetch from url: ${url}`)
+      }
 
       const { PubmedArticleSet } = await JSON.parse(
         xml2json.xml2json(idsResponse, {
