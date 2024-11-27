@@ -27,9 +27,9 @@
   },
   "dependencies": {
     "@coko/server": "4.1.1",
+    "@dqbd/tiktoken": "^1.0.14",
     "@pubsweet/job-xsweet": "^2.2.1",
     "@pubsweet/model-user": "6.0.3",
-    "@dqbd/tiktoken": "^1.0.14",
     "archiver": "^5.3.0",
     "atob": "^2.1.2",
     "axios": "^0.21.1",
@@ -60,7 +60,6 @@
     "moment": "2.27.0",
     "moment-timezone": "^0.5.34",
     "multer": "^1.4.2",
-    "node-fetch": "^2.6.1",
     "node-html-parser": "^6.1.13",
     "node-schedule": "^2.1.0",
     "nodemailer": "^6.6.2",

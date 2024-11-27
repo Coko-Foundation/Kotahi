@@ -1,6 +1,5 @@
 const fs = require('fs-extra')
 const fsPromised = require('fs').promises
-const fetch = require('node-fetch')
 const axios = require('axios')
 const FormData = require('form-data')
 const crypto = require('crypto')
@@ -79,8 +78,10 @@ const getXsweet = async url => {
 
   // download the file. This could maybe be done with Coko Server?
 
-  const fetchResponse = await fetch(url)
-  const buffer = await fetchResponse.buffer()
+  const buffer = await axios
+    .get(url, { responseType: 'arraybuffer' })
+    .then(response => response.data)
+
   await fsPromised.appendFile(docxPath, buffer)
 
   // await fsPromised.appendFile(docxPath, url)
