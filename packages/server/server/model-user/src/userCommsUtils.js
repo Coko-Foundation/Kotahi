@@ -13,7 +13,11 @@ const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
-const sendEmailNotification = require('../../../services/emailNotifications')
+const {
+  sendEmailNotification,
+  submissionOverridenKeys,
+} = require('../../../services/emailNotifications')
+
 const { cachedGet } = require('../../querycache')
 
 const getUsersById = async userIds => User.query().findByIds(userIds)
@@ -263,10 +267,10 @@ const sendEmailWithPreparedData = async (
   const ccEmails = await getEditorEmails(manuscriptId, { trx })
 
   try {
-    const result = await sendEmailNotification(
-      receiverEmail,
-      selectedEmailTemplateData,
-      {
+    const result = await sendEmailNotification({
+      receiver: receiverEmail,
+      template: selectedEmailTemplateData,
+      data: {
         authorName,
         senderName: currentUser,
         recipientName: receiverName,
@@ -282,9 +286,10 @@ const sendEmailWithPreparedData = async (
         manuscriptTitle: manuscript.submission.$title,
         manuscriptTitleLink: manuscript.submission.$sourceUri,
         manuscriptProductionLink: manuscriptProductionPageUrl,
+        ...submissionOverridenKeys(manuscript.submission),
       },
-      manuscriptObject.groupId,
-    )
+      groupId: manuscriptObject.groupId,
+    })
 
     return { success: result }
   } catch (e) {

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { WaxContext, ComponentPlugin, WaxView } from 'wax-prosemirror-core'
 import { Grid, EditorDiv, Menu, FullWaxEditorGrid } from '../EditorStyles'
-
+import HandlebarsAutocomplete from '../../../../component-email-templates/src/handlebarsAutocomplete/components/HandleBarsAutocomplete'
 import 'wax-prosemirror-core/dist/index.css'
 import 'wax-prosemirror-services/dist/index.css'
 
@@ -16,7 +16,7 @@ const TopBar = ComponentPlugin('topBar')
 const ContentEditorLayout =
   readOnly =>
   /* eslint-disable-next-line react/function-component-definition */
-  props => {
+  ({ useHandlebarsAutocomplete, ...props }) => {
     const { options } = useContext(WaxContext)
 
     // added to bring in full screen
@@ -49,6 +49,7 @@ const ContentEditorLayout =
           >
             <EditorDiv className="wax-surface-scroll panelWrapper" hideComments>
               <WaxView {...props} />
+              {useHandlebarsAutocomplete && <HandlebarsAutocomplete />}
             </EditorDiv>
           </FullWaxEditorGrid>
         </Grid>

@@ -4,6 +4,8 @@ import { GET_EMAIL_TEMPLATES } from '../../../queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import EmailTemplates from './EmailTemplates'
 import { ConfigContext } from '../../config/src'
+import GET_VARIABLES from './handlebarsAutocomplete/graphql/graphql'
+import { handlebars } from './handlebarsAutocomplete/constants'
 
 const deleteEmailTemplateMutation = gql`
   mutation deleteEmailTemplate($id: ID!) {
@@ -49,7 +51,7 @@ export const updateEmailTemplateMutation = gql`
 
 const EmailTemplatesPage = ({ match, history, ...props }) => {
   const config = React.useContext(ConfigContext)
-  const { urlFrag } = config
+  const { urlFrag, groupId } = config
 
   const {
     loading,
@@ -58,13 +60,21 @@ const EmailTemplatesPage = ({ match, history, ...props }) => {
     refetch: refetchEmailTemplate,
   } = useQuery(GET_EMAIL_TEMPLATES)
 
-  const [isNewEmailTemplate, setIsNewEmailTemplate] = React.useState(false)
+  useQuery(GET_VARIABLES, {
+    variables: { groupId },
+    onCompleted: ({ getVariables: variables = [] }) => {
+      handlebars.store({ variables })
+    },
+  })
+
   const [deleteEmailTemplate] = useMutation(deleteEmailTemplateMutation)
   const [createEmailTemplate] = useMutation(createEmailTemplateMutation)
 
   const [updateEmailTemplate] = useMutation(updateEmailTemplateMutation, {
     onCompleted: refetchEmailTemplate,
   })
+
+  const [isNewEmailTemplate, setIsNewEmailTemplate] = React.useState(false)
 
   let currentEmailTemplateId = null
 

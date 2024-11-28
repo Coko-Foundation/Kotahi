@@ -7,10 +7,31 @@ const { clientUrl } = require('@coko/server')
 
 const Config = require('../models/config/config.model')
 const Group = require('../models/group/group.model')
+const { transformEntries } = require('../server/utils/objectUtils')
+
+/**
+ * Transforms the keys of the submission object to match the format received from the client.
+ *
+ * It takes the submission object, removes any leading '$' character from the keys,
+ * capitalizes the first letter of each key, and prefixes it with 'submission'.
+ * The transformed keys are then used to pass the corresponding submission values to handlebars.
+ *
+ * @param {Object} submission - The submission object with keys to be transformed.
+ * @returns {Object} - A new object with transformed keys and the corresponding values from the submission object.
+ */
+const submissionOverridenKeys = submission => {
+  return transformEntries(submission, (key, value) => {
+    const no$ = key.replace('$', '')
+    const capitalizedKey = `${no$.charAt(0).toUpperCase()}${no$.slice(1)}`
+    const newKey = `submission${capitalizedKey}`
+    // TODO: Handle non string values
+    return { [newKey]: String(value) }
+  })
+}
 
 const renderTemplate = async (templateContent, data) => {
   // Compile the template
-  const compiledTemplate = await Handlebars.compile(templateContent)
+  const compiledTemplate = Handlebars.compile(templateContent)
 
   // Render the template with the provided data
   const renderedTemplate = compiledTemplate(data)
@@ -18,7 +39,7 @@ const renderTemplate = async (templateContent, data) => {
   return renderedTemplate
 }
 
-const sendEmailNotification = async (receiver, template, data, groupId) => {
+const sendEmailNotification = async ({ receiver, template, data, groupId }) => {
   const activeConfig = await Config.getCached(groupId)
   const group = await Group.query().findById(groupId)
 
@@ -118,4 +139,4 @@ const sendEmailNotification = async (receiver, template, data, groupId) => {
   })
 }
 
-module.exports = sendEmailNotification
+module.exports = { sendEmailNotification, submissionOverridenKeys }

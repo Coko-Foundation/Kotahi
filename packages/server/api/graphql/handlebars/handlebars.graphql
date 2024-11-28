@@ -1,0 +1,10 @@
+type Variable {
+  label: String!
+  value: String!
+  type: String!
+  form: String!
+}
+
+type Query {
+  getVariables(groupId: ID!): [Variable!]!
+}

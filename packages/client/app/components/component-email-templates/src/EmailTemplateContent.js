@@ -40,6 +40,7 @@ const EmailTemplateContent = ({
     }
 
     const inputData = { ...data }
+
     await updateEmailTemplate({
       variables: { id, input: inputData },
     })
