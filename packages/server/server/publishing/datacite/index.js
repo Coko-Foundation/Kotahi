@@ -69,8 +69,7 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
   const { id: suffix, shortId, meta, submission } = manuscript
 
   const {
-    localcontext,
-    lcbadges,
+    $localContext,
     geolocation,
     $abstract,
     $authors,
@@ -108,7 +107,7 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
       publisher: getPublisher(formData),
       contributors: getContributors(formData),
       descriptions: getDescriptions($abstract),
-      rightsList: getRightsList(localcontext, lcbadges),
+      rightsList: getRightsList($localContext),
       fundingReferences: getFundingReferences(submission),
       relatedIdentifiers: getRelatedIdentifiers(meta, $dois),
       dates: getDates(issueYear, publishDate),

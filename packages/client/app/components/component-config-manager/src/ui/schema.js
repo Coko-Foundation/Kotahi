@@ -790,6 +790,16 @@ export const generateSchemas = (
                 },
               },
             },
+            localContextApiKey: {
+              type: 'object',
+              title: t('configPage.localContextApiKey'),
+              properties: {
+                apiKey: {
+                  type: ['string', 'null'],
+                  description: t('configPage.addLocalContextApiKey'),
+                },
+              },
+            },
           },
         },
         publishing: {
@@ -1829,6 +1839,16 @@ export const generateSchemas = (
                 apiKey: {
                   type: ['string', 'null'],
                   description: t('configPage.openAiApiKey'),
+                },
+              },
+            },
+            localContextApiKey: {
+              type: 'object',
+              title: t('configPage.localContextApiKey'),
+              properties: {
+                apiKey: {
+                  type: ['string', 'null'],
+                  description: t('configPage.addLocalContextApiKey'),
                 },
               },
             },
@@ -2880,6 +2900,16 @@ export const generateSchemas = (
                 },
               },
             },
+            localContextApiKey: {
+              type: 'object',
+              title: t('configPage.localContextApiKey'),
+              properties: {
+                apiKey: {
+                  type: ['string', 'null'],
+                  description: t('configPage.addLocalContextApiKey'),
+                },
+              },
+            },
           },
         },
         publishing: {
@@ -3928,6 +3958,16 @@ export const generateSchemas = (
                 },
               },
             },
+            localContextApiKey: {
+              type: 'object',
+              title: t('configPage.localContextApiKey'),
+              properties: {
+                apiKey: {
+                  type: ['string', 'null'],
+                  description: t('configPage.addLocalContextApiKey'),
+                },
+              },
+            },
           },
         },
         publishing: {
@@ -4363,6 +4403,9 @@ export const generateSchemas = (
           classNames: 'col-md-12 col-md-offset-0',
         },
         aiDesignStudio: {
+          classNames: 'col-md-12 col-md-offset-0',
+        },
+        localContextApiKey: {
           classNames: 'col-md-12 col-md-offset-0',
         },
       },

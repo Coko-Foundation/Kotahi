@@ -144,5 +144,8 @@ module.exports = {
     aiDesignStudio: {
       apiKey: 'text',
     },
+    localContextApiKey: {
+      apiKey: 'text',
+    },
   },
 }

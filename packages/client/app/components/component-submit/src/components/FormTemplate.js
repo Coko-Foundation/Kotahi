@@ -28,6 +28,7 @@ import {
 import FormCollaborateWax from '../../../component-formbuilder/src/components/FormCollaborativeWax'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
+import LocalContext from './LocalContext'
 import DoisInput from './MultipleDoi'
 import LinksInput from './LinksInput'
 import ValidatedFieldFormik from './ValidatedField'
@@ -142,6 +143,7 @@ const elements = {
   RadioGroup: SafeRadioGroup,
   CheckboxGroup,
   AuthorsInput,
+  LocalContext,
   DoisInput,
   Select,
   LinksInput,

@@ -538,8 +538,10 @@ const fr = {
           'Autoriser un auteur à soumettre un formulaire et accéder à un éditeur vide',
       },
       coarNotify: 'COAR-Notifier',
-      aiDesignStudio: 'AI Design Studio & AI Assistant ',
+      aiDesignStudio: 'Studio de conception IA et assistant IA ',
+      localContextApiKey: 'Clé API du contexte local',
       openAiApiKey: `Clé d'accès OpenAI`,
+      addLocalContextApiKey: 'Ajoutez votre clé API de contexte local',
       acceptedIPs: 'IP acceptées',
       allowToSubmitNewVersion:
         'Permettre à un auteur de soumettre une nouvelle version de son manuscrit à tout moment',
