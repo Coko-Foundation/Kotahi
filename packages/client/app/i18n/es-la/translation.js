@@ -518,8 +518,10 @@ const esLa = {
       'Control pages visible to editors':
         'Páginas de control visibles para editores',
       Team: 'Equipo',
-      aiDesignStudio: 'AI Design Studio & AI Assistant ',
+      aiDesignStudio: 'Estudio de diseño de IA y asistente de IA ',
+      localContextApiKey: 'Clave API de contexto local',
       openAiApiKey: `Clave de acceso de OpenAI`,
+      addLocalContextApiKey: 'Agregue su clave API de contexto local',
       Submission: 'Envío',
       SubmissionPage: {
         title: 'Título',

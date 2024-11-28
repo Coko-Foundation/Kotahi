@@ -1,0 +1,41 @@
+type localContext {
+  id: String!
+  notice: [Notice!]
+  label: [Label!]
+}
+
+type Notice {
+  id: String!
+  identifier: String!
+  name: String!
+  noticeType: String!
+  imgUrl: String!
+  svgUrl: String!
+  defaultText: String!
+}
+
+type Label {
+  id: String!
+  name: String!
+  identifier: String!
+  labelType: String!
+  language: String!
+  languageTag: String!
+  labelText: String!
+  imgUrl: String!
+  svgUrl: String!
+}
+
+input InputSearchlocalContext {
+  projectId: ID!
+  groupId: ID!
+}
+
+type LocalContextResponse {
+  localContext: localContext
+  errorMessage: String
+}
+
+extend type Query {
+  searchLocalContext(input: InputSearchlocalContext!): LocalContextResponse!
+}

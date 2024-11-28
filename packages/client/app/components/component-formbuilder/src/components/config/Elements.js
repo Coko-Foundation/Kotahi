@@ -477,6 +477,14 @@ const submissionFieldOptions = [
     permitPublishing: { ...permitPublishingField, defaultValue: 'always' },
   },
   {
+    fieldType: 'localContext',
+    label: 'LocalContext',
+    component: 'LocalContext',
+    title: requiredTextFieldWithDefault('Local Context'),
+    name: presetTextField('submission.$localContext'),
+    permitPublishing: { ...permitPublishingField, defaultValue: 'always' },
+  },
+  {
     fieldType: 'dois',
     label: 'Multiple DOIs',
     component: 'DoisInput',

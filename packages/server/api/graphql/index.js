@@ -4,6 +4,7 @@ const merge = require('lodash/merge')
 
 const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
 const openAiResolvers = require('./openAi/openAi.resolvers')
+const localContextResolvers = require('./localContext/localContext.resolvers')
 const rorResolvers = require('./ror/ror.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
 const teamResolvers = require('./team/team.resolvers')
@@ -12,6 +13,7 @@ const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 const typeDefFilePaths = [
   'anyStyle/anyStyle.graphql',
   'openAi/openAi.graphql',
+  'localContext/localContext.graphql',
   'team/team.graphql',
   'ror/ror.graphql',
   'orcid/orcid.graphql',
@@ -31,6 +33,7 @@ const resolvers = merge(
   anyStyleResolvers,
   teamResolvers,
   openAiResolvers,
+  localContextResolvers,
   orcidResolvers,
   rorResolvers,
   handlebarsResolvers,

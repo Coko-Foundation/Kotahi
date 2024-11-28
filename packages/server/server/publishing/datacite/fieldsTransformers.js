@@ -2,11 +2,7 @@ const cheerio = require('cheerio')
 const htmlToJats = require('../../jatsexport/htmlToJats')
 const { objIf, safeParse } = require('../../utils/objectUtils')
 
-const {
-  RIGHTS,
-  CITATION_SELECTOR,
-  CITATION_DATA_STRUCTURE,
-} = require('./constants')
+const { CITATION_SELECTOR, CITATION_DATA_STRUCTURE } = require('./constants')
 
 const calculateDataciteCitations = text => {
   const $ = cheerio.load(text)
@@ -99,16 +95,26 @@ const getContributors = formData => {
   return [contributor]
 }
 
-const getRightsList = (localcontext, lcbadges) => {
-  return [
-    {
-      rightsUri: localcontext,
-      rightsIdentifier: lcbadges,
+const getRightsList = localContext => {
+  const notices =
+    localContext.notice.map(n => ({
+      rightsUri: localContext.url,
+      rightsIdentifier: n.noticeType,
       rightsIdentifierScheme: 'Local Contexts',
       schemeUri: 'https://localcontexts.org/',
-      rights: RIGHTS[lcbadges],
-    },
-  ]
+      rights: n.defaultText,
+    })) || []
+
+  const labels =
+    localContext.label.map(l => ({
+      rightsUri: localContext.url,
+      rightsIdentifier: l.identifier,
+      rightsIdentifierScheme: 'Local Contexts',
+      schemeUri: 'https://localcontexts.org/',
+      rights: l.labelText,
+    })) || []
+
+  return notices.concat(labels)
 }
 
 const getFundingReferences = submission => {

@@ -520,8 +520,10 @@ const ru = {
         'Редакторам доступен просмотр разделов управления',
       Team: 'Исполнители',
       coarNotify: 'COAR-Уведомить',
-      aiDesignStudio: 'AI Design Studio & AI Assistant',
+      aiDesignStudio: 'Студия дизайна AI и помощник AI ',
+      localContextApiKey: 'Локальный контекстный API-ключ',
       openAiApiKey: `Ключ доступа OpenAI`,
+      addLocalContextApiKey: 'Добавьте свой ключ API локального контекста',
       acceptedIPs: 'Принятые IP-адреса',
       Submission: 'Подача',
       SubmissionPage: {

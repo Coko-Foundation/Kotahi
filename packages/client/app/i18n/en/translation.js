@@ -528,7 +528,9 @@ const en = {
           'Allow an author to submit a form and access a blank editor',
       },
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
+      localContextApiKey: 'Local Context Api Key',
       openAiApiKey: `OpenAI access key`,
+      addLocalContextApiKey: 'Add your Local Context Api Key',
       allowToSubmitNewVersion:
         'Allow an author to submit a new version of their manuscript at any time',
       'Review page': 'Review page',
@@ -1161,6 +1163,7 @@ const en = {
       fieldOpts: {
         title: 'Title',
         authors: 'Authors',
+        LocalContext: 'Local Context',
         abstract: 'Abstract',
         visualAbstract: 'Single image attachment',
         attachments: 'Attachments',
