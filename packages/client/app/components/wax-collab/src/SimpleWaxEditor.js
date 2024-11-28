@@ -18,12 +18,13 @@ const SimpleWaxEditor = ({
   wsProvider,
   ydoc,
   name,
+  autocompleteConfig,
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   useEffect(() => debounceChange.flush, [])
 
-  const config = yjsConfig(simpleWaxEditorConfig(), {
+  const config = yjsConfig(simpleWaxEditorConfig({ autocompleteConfig }), {
     wsProvider,
     ydoc,
     yjsType: name,

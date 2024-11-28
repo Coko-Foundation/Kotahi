@@ -7,6 +7,7 @@ const openAiResolvers = require('./openAi/openAi.resolvers')
 const rorResolvers = require('./ror/ror.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
 const teamResolvers = require('./team/team.resolvers')
+const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 
 const typeDefFilePaths = [
   'anyStyle/anyStyle.graphql',
@@ -14,6 +15,7 @@ const typeDefFilePaths = [
   'team/team.graphql',
   'ror/ror.graphql',
   'orcid/orcid.graphql',
+  'handlebars/handlebars.graphql',
 ]
 
 const createTotalTypeDefs = paths => {
@@ -31,6 +33,7 @@ const resolvers = merge(
   openAiResolvers,
   orcidResolvers,
   rorResolvers,
+  handlebarsResolvers,
 )
 
 module.exports = {

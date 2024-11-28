@@ -28,6 +28,7 @@ const ContentWaxEditor = ({
   readonly,
   user,
   onAssetManager,
+  autocompleteConfig,
   ...rest
 }) => {
   const waxUser = {
@@ -42,12 +43,14 @@ const ContentWaxEditor = ({
   const { simple } = rest
   const editorRef = useRef(null)
 
-  const config = simple ? SimpleWaxEditorConfig : ContentEditorConfig
+  const config = simple
+    ? SimpleWaxEditorConfig({ autocompleteConfig })
+    : ContentEditorConfig(onAssetManager)
 
   return (
     <CmsWidthAndHeightContainer>
       <Wax
-        config={config(onAssetManager)}
+        config={config}
         fileUpload={file => renderImage(file)}
         layout={ContentEditorLayout(readonly)}
         ref={editorRef}

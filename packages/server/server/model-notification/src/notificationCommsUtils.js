@@ -1,6 +1,9 @@
 const { clientUrl } = require('@coko/server')
 
-const sendEmailNotification = require('../../../services/emailNotifications')
+const {
+  sendEmailNotification,
+  submissionOverridenKeys,
+} = require('../../../services/emailNotifications')
 
 const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
 const NotificationUserOption = require('../../../models/notificationUserOption/notificationUserOption.model')
@@ -139,6 +142,7 @@ const sendChatNotification = async ({
           manuscriptTitle: manuscript.submission.$title,
           manuscriptTitleLink: manuscript.submission.$sourceUri,
           manuscriptProductionLink: manuscriptProductionPageUrl,
+          ...submissionOverridenKeys(manuscript.submission),
         }
       : {}),
   }
@@ -155,12 +159,12 @@ const sendChatNotification = async ({
     selectedTemplate,
   )
 
-  await sendEmailNotification(
-    recipient.email,
-    selectedEmailTemplate,
+  await sendEmailNotification({
+    receiver: recipient.email,
+    template: selectedEmailTemplate,
     data,
     groupId,
-  )
+  })
 }
 
 const getNotificationOptionForUser = async ({ userId, path, groupId }) => {

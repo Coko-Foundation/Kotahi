@@ -55,9 +55,37 @@ const safeParse = (str, fallback = {}) => {
   return tryParse(str) ?? fallback
 }
 
+/**
+ * Transforms the entries of an object using a mapping function.
+ * The mapping function can return an object with multiple key-value pairs.
+ *
+ * @param {Object} obj - The object to transform.
+ * @param {Function} mapFn - The mapping function that takes a key and value, and returns an object with new key-value pairs.
+ * @returns {Object} - The transformed object.
+ *
+ * @example
+ * const obj = { name: 'John', age: 30 };
+ * const result = transformEntries(obj, (key, value) => {
+ *   const newKey = `new_${key}`;
+ *   const newValue = typeof value === 'number' ? value * 2 : value;
+ *   return { [newKey]: newValue, [`original_${key}`]: value };
+ * });
+ * console.log(result);
+ * // Output: { new_name: 'John', original_name: 'John', new_age: 60, original_age: 30 }
+ */
+const transformEntries = (obj, mapFn) => {
+  return Object.fromEntries(
+    Object.entries(obj).flatMap(([key, value]) => {
+      const mappedEntries = mapFn(key, value)
+      return Object.entries(mappedEntries)
+    }),
+  )
+}
+
 module.exports = {
   deepMergeObjectsReplacingArrays,
   ensureJsonIsParsed,
   objIf,
   safeParse,
+  transformEntries,
 }

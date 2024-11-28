@@ -21,13 +21,14 @@ import {
 import ListsService from '../CustomWaxToolGroups/ListsService/ListsService'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import CharactersList from './CharactersList'
+import AutocompleteService from './AutocompleteService'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
   // console.log(`Title changed: ${title}`)
 }
 
-const simpleWaxEditorConfig = () => ({
+const simpleWaxEditorConfig = props => ({
   SchemaService: DefaultSchema,
   MenuService: [
     {
@@ -56,6 +57,10 @@ const simpleWaxEditorConfig = () => ({
 
   TitleService: { updateTitle },
 
+  ...(props?.autocompleteConfig
+    ? { AutocompleteService: { ...props?.autocompleteConfig } }
+    : {}),
+
   services: [
     // new AnnotationToolGroupService(),
     new BottomInfoService(),
@@ -73,6 +78,7 @@ const simpleWaxEditorConfig = () => ({
     new TextBlockLevelService(),
     // new TextToolGroupService(),
     // this is what I've added::
+    ...(props?.autocompleteConfig ? [new AutocompleteService()] : []),
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),
   ],
