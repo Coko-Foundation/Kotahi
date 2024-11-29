@@ -118,7 +118,7 @@ class Review extends BaseModel {
           users = await User.query().where({ id: review.userId })
         }
 
-        return { ...review, username: users[0].username }
+        return { ...review, username: users[0]?.username || '' } // imported manuscripts may have invalid reviewers
       }),
     )
 

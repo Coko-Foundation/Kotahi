@@ -31,7 +31,7 @@ const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]:nth(10)'
 
 // Decision + Publishing
 const PUBLISH_BUTTON =
-  '.General__SectionAction-sc-1chiust-11 > .Button__StyledButton-sc-qdm33h-0'
+  '.General__SectionAction-sc-1chiust-11 > .Publish__ActionButtonsWrapper-sc-1pyb416-0 > .Button__StyledButton-sc-qdm33h-0'
 // '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
 const DECISION_FIELD = '[contenteditable="true"]'
