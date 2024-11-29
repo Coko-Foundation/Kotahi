@@ -600,7 +600,7 @@ const publishReviewsToCrossref = async manuscript => {
         },
         doi_data: {
           doi: reviewDOI,
-          resource: `${config['flax-site'].clientFlaxSiteUrl}/${instanceName}/articles/${shortId}/index.html`,
+          resource: `${config['flax-site'].clientFlaxSiteUrl}/${instanceName}/articles/${shortId}/index.html#review-${review.id}`,
         },
       }
     }),
