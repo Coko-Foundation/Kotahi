@@ -92,7 +92,10 @@ This will:
 - Run the client with webpack dev server, with hot reload enabled
 - Start a Minio container for storage
 - Bring up a postgres container for use in development
-- Register the `job-xsweet` service (which converts .docx files to HTML)
+- Starts the `pagedjs` service (exports .pdf files from manuscripts)
+- Run the `xsweet` service (which converts .docx files to HTML)
+- Brings up `anystyle`, to handle academic references in manuscripts
+- Starts a Flax container, the publishing front-end
 
 By default you can then access your app at [http://localhost:4000/login](http://localhost:4000/login). If you have configured to use HTTPS protocol instead (and are using self-signed certificates), browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
 
@@ -126,7 +129,6 @@ docker-compose -f docker-compose.production.yml --env-file .env up
 This does the following:
 
 - Brings up the server, which will also serve a pre-built webpack static bundle
-- Register the `job-xsweet` service
 
 For production, we are making the assumption that you have a running postgres database somewhere. You only need to provide its location and credentials via the environment variables.
 
