@@ -9,7 +9,8 @@ const ORCID_API =
     : */ 'https://pub.orcid.org/v3.0'
 
 const orcidValidate = async orcidId => {
-  const url = `${ORCID_API}/${orcidId}`
+  const isUrl = orcidId.startsWith('http://') || orcidId.startsWith('https://')
+  const url = isUrl ? orcidId : `${ORCID_API}/${orcidId}`
 
   try {
     const response = await axios.get(url, {
@@ -20,14 +21,11 @@ const orcidValidate = async orcidId => {
 
     return response.status === 200
   } catch (error) {
-    if (error.response) {
-      if (error.response.status === 404) return false
-      throw new Error(
-        `Error: ${error.response.status} - ${error.response.statusText}`,
-      )
-    }
+    const { status, statusText } = error?.response || {}
 
-    throw new Error(`Network or other error: ${error.message}`)
+    if (!status) throw new Error('Network Error')
+    if (status === 404) return false
+    throw new Error(`Error: ${status} - ${statusText}`)
   }
 }
 
