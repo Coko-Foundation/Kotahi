@@ -444,6 +444,14 @@ const publishArticleToCrossref = async manuscript => {
   await fsPromised.mkdir(dirName)
   const fileName = `submission-${batchId}.xml`
   await fsPromised.appendFile(`${dirName}/${fileName}`, xml)
+
+  const fileContent = await fsPromised.readFile(
+    `${dirName}/${fileName}`,
+    'utf-8',
+  )
+
+  // eslint-disable-next-line
+  console.log(fileContent)
   const filePath = `${dirName}/${fileName}`
   await requestToCrossref([filePath], activeConfig)
   await fs.rmdirSync(dirName, { recursive: true })
