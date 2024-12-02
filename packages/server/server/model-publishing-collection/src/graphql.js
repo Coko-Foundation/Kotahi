@@ -170,7 +170,7 @@ const typeDefs = `
     updated: DateTime
     formData: PublishingCollectionFormData!
     active: Boolean!
-    manuscripts: [Manuscript!]!
+    manuscripts: [PublishedManuscript!]!
     groupId: ID!
   }
 
