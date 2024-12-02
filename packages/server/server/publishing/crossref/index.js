@@ -454,7 +454,10 @@ const publishArticleToCrossref = async manuscript => {
   console.log(fileContent)
   const filePath = `${dirName}/${fileName}`
   await requestToCrossref([filePath], activeConfig)
-  await fs.rmdirSync(dirName, { recursive: true })
+
+  // eslint-disable-next-line
+  console.log(dirName)
+  // await fs.rmdirSync(dirName, { recursive: true })
 }
 
 const populateUserInfo = async userIds => {
@@ -651,9 +654,20 @@ const publishReviewsToCrossref = async manuscript => {
   await fsPromised.mkdir(dirName)
   const fileName = `submission-${batchId}.xml`
   await fsPromised.appendFile(`${dirName}/${fileName}`, xml)
+
+  const fileContent = await fsPromised.readFile(
+    `${dirName}/${fileName}`,
+    'utf-8',
+  )
+
+  // eslint-disable-next-line
+  console.log(fileContent)
   const filePath = `${dirName}/${fileName}`
   await requestToCrossref([filePath], activeConfig)
-  return fs.rmdirSync(dirName, { recursive: true })
+
+  // eslint-disable-next-line
+  console.log(filePath)
+  // return fs.rmdirSync(dirName, { recursive: true })
 }
 
 module.exports = {
