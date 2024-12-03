@@ -141,12 +141,6 @@ const cfg = {
     cc_enabled: 'false',
     use_colab: 'false',
   },
-  fileStorage: {
-    accessKeyId: '',
-    secretAccessKey: '',
-    bucket: '',
-    url: '',
-  },
   manuscripts: {
     teamTimezone: 'Etc/UTC',
     autoImportHourUtc: '',
