@@ -32,6 +32,8 @@ module.exports = {
   production: {
     crossrefRetrievalEmail: '',
     getDataFromDatacite: false,
+    fallbackOnCrossrefAfterDatacite: false,
+
     citationStyles: {
       styleName: 'apa',
       localeName: 'en-US',

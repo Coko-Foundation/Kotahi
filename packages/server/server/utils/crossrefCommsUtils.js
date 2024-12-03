@@ -60,6 +60,47 @@ const getUrlByDoiFromDataCite = async doi => {
   }
 }
 
+const getCrossRefCitationFromDoi = async (doi, contactEmail) => {
+  const mailTo = contactEmail ?? defaultMailTo
+
+  try {
+    const response = await http.get(`${apiUrl}${doi}`, {
+      params: {
+        mailto: mailTo,
+      },
+      headers: {
+        'User-Agent': `Kotahi (Axios 0.21; mailto:${mailTo})`,
+      },
+    })
+
+    updateRateLimit(response)
+
+    if (response.status === 200) {
+      // console.log(
+      //   '\n\n\n\nComing back from CrossRef: ',
+      //   response?.data?.message?.items?.[0],
+      // )
+      return response.data.message?.resource?.primary?.URL
+    }
+
+    console.error(
+      `Could not retrieve citation from CrossRef for DOI ${doi}: ${response.statusText}`,
+    )
+    return null
+  } catch (error) {
+    // if (error.response?.status === 404) {
+    // }
+
+    // if (error.response?.status === 429) {
+    // }
+
+    console.error(
+      `Failed to retrieve URL from CrossRef for DOI ${doi}: ${error}`,
+    )
+    return null
+  }
+}
+
 /** Get the target URL that a DOI resolves to. This attempts to obtain it from CrossRef first (observing rate limiting),
  * and failing that, from DataCite.
  * @param contactEmail An email address to supply in the header to CrossRef in case they need to contact about rate limiting etc.
@@ -172,4 +213,70 @@ const getFormattedReferencesFromCrossRef = async (
   }
 }
 
-module.exports = { getUrlByDoi, getFormattedReferencesFromCrossRef }
+const getFormattedReferencesFromCrossRefDOI = async (
+  doi,
+  crossrefRetrievalEmail,
+  groupId,
+) => {
+  const params = {
+    'query.bibliographic': doi,
+    rows: 1,
+    select: 'DOI,author,issue,page,title,volume,container-title,issued',
+    order: 'desc',
+    sort: 'score',
+  }
+
+  if (crossrefRetrievalEmail) {
+    params.mailto = crossrefRetrievalEmail
+  } else {
+    console.error(
+      'No Crossref retrieval email. If this isn’t set in the config, we may run into problems with rate limiting.',
+    )
+  }
+
+  try {
+    const response = await http.get('https://api.crossref.org/v1/works', {
+      params,
+      timeout: 15000,
+      headers: {
+        'User-Agent': `Kotahi (Axios 0.21${
+          crossrefRetrievalEmail ? `; mailto:${crossrefRetrievalEmail}` : ''
+        })`,
+      },
+    })
+
+    updateRateLimit(response)
+
+    if (response.status === 200)
+      return response.data.message.items.reduce(
+        (accumulator, current, index) => {
+          accumulator.push(createFormattedReference(current, groupId, false))
+          return accumulator
+        },
+        [],
+      )
+
+    console.error('Crossref failure!', response)
+    return []
+  } catch (error) {
+    if (error.response?.status === 404) {
+      console.error('Crossref 404 error!')
+    }
+
+    if (error.response?.status === 429) {
+      // TODO Consider implementing a backoff
+      // return getUrlByDoiFromDataCite(doi) // Get from alternative service that's generally slower, but shouldn't give 429 error
+      console.error('Crossref rate limit error!!!')
+    }
+
+    console.error('Crossref failure!', error.message)
+    return []
+  }
+}
+
+module.exports = {
+  getUrlByDoi,
+  getFormattedReferencesFromCrossRef,
+  getCrossRefCitationFromDoi,
+  getFormattedReferencesFromCrossRefDOI,
+}

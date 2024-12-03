@@ -51,9 +51,9 @@ const getCrossRefQuery = gql`
   }
 `
 
-const getDatasiteQuery = gql`
+const getDataciteQuery = gql`
   query ($input: CitationSearchInput) {
-    getDatasiteCslFromDOI(input: $input) {
+    getDataciteCslFromDOI(input: $input) {
       success
       message
       matches {
@@ -131,7 +131,8 @@ const ProductionWaxEditor = ({
   manuscriptId,
   onAssetManager,
   isAuthorProofingVersion,
-  getDataFromDatacite,
+  getDataFromDatacite = false,
+  fallbackOnCrossrefAfterDatacite = false,
   yjsProvider,
   wsProvider,
   ydoc,
@@ -201,7 +202,7 @@ const ProductionWaxEditor = ({
     return text
       ? client
           .query({
-            query: useDatacite ? getDatasiteQuery : getCrossRefQuery,
+            query: useDatacite ? getDataciteQuery : getCrossRefQuery,
             variables: {
               input: {
                 text,
@@ -212,7 +213,7 @@ const ProductionWaxEditor = ({
           })
           .then(result => {
             // eslint-disable-next-line no-console
-            // console.log('Result:', result)
+            console.log('Result:', result)
 
             if (
               result?.data?.getFormattedReferences?.success &&
@@ -224,14 +225,18 @@ const ProductionWaxEditor = ({
             }
 
             if (
-              result?.data?.getDatasiteCslFromDOI?.success &&
-              result.data.getDatasiteCslFromDOI.matches &&
-              result.data.getDatasiteCslFromDOI.matches.length
+              result?.data?.getDataciteCslFromDOI?.success &&
+              result.data.getDataciteCslFromDOI.matches &&
+              result.data.getDataciteCslFromDOI.matches.length
             ) {
-              return result.data.getDatasiteCslFromDOI.matches
+              return {
+                matches: result.data.getDataciteCslFromDOI.matches,
+                fromCrossref:
+                  result.data.getDataciteCslFromDOI?.message === 'crossref',
+              }
             }
 
-            if (result?.data?.getDatasiteCslFromDOI?.message) {
+            if (result?.data?.getDataciteCslFromDOI?.message) {
               console.error('DOI not found at Datacite!')
               return []
             }
@@ -352,6 +357,7 @@ const ProductionWaxEditor = ({
         readonly,
         getDataFromDatacite || false,
         aiConfig,
+        fallbackOnCrossrefAfterDatacite || false,
       )
 
   config = yjsConfig(config, { wsProvider, ydoc, yjsType: name })

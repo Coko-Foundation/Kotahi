@@ -232,17 +232,16 @@ const CitationComponent = ({ node, getPos }) => {
     return { anyStyle: thisResponse }
   }
 
-  const sendToCrossRef = async (text, useDatacite) => {
+  const sendToCrossRef = async (text, useDatacite, noDoi) => {
     if (useDatacite) {
       // console.log('datacite being used!')
-      const response = await CrossRefTransformation(text, true)
-      // console.log('response from datacite: ', response)
+      const response = await CrossRefTransformation(text, true, noDoi)
 
       let dataciteCsl = null
 
-      if (response.length) {
+      if (response.matches && response.matches.length) {
         dataciteCsl = {
-          ...response[0],
+          ...response.matches[0],
           'citation-number': !potentialCitationNumber
             ? ''
             : potentialCitationNumber,
@@ -253,6 +252,10 @@ const CitationComponent = ({ node, getPos }) => {
         setCurrentText(dataciteCsl.formattedCitation)
         setInternalNeedsValidation(false)
         setInternalNeedsReview(false)
+      }
+
+      if (response.fromCrossref) {
+        return { crossRef: [dataciteCsl] || [], datacite: [] }
       }
 
       return { datacite: dataciteCsl || [] }
@@ -289,15 +292,19 @@ const CitationComponent = ({ node, getPos }) => {
           },
         }
 
+        const crossrefDoiCameBack = currentStructures.crossRef.length > 0
+
         const crossRef = {
-          crossRef: data[1]?.crossRef.map(c => {
-            return {
-              ...c,
-              'citation-number': !potentialCitationNumber
-                ? anystyleCitationNumber
-                : potentialCitationNumber,
-            }
-          }),
+          crossRef: crossrefDoiCameBack
+            ? currentStructures.crossRef
+            : data[1]?.crossRef.map(c => {
+                return {
+                  ...c,
+                  'citation-number': !potentialCitationNumber
+                    ? anystyleCitationNumber
+                    : potentialCitationNumber,
+                }
+              }),
         }
 
         const receivedDataciteData = !Array.isArray(currentStructures.datacite)
@@ -333,7 +340,10 @@ const CitationComponent = ({ node, getPos }) => {
         setStructures(newStructures)
         // console.log("Versions found. Setting status to 'needs review'")
 
-        if (dataciteHasBeenRun && receivedDataciteData) {
+        if (
+          crossrefDoiCameBack ||
+          (dataciteHasBeenRun && receivedDataciteData)
+        ) {
           setInternalNeedsValidation(false)
           setInternalNeedsReview(false)
           setContent(
@@ -383,8 +393,7 @@ const CitationComponent = ({ node, getPos }) => {
     const getDataciteData = async doi => {
       setLoading(true)
       // console.log('in getdatacitedata')
-      const result = await sendToCrossRef(doi, true) // .then(data => {
-      // console.log('res.datacite', result.datacite)
+      const result = await sendToCrossRef(doi, true, false) // .then(data => {
 
       if (result.datacite) {
         const newStructures = {

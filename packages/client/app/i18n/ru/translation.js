@@ -647,6 +647,8 @@ const ru = {
         citationStyles: 'Стили цитирования',
         manuscriptVersionHistory: 'История версий рукописи',
         getDataFromDatacite: 'Получить данные цитирования из Datacite',
+        fallbackOnCrossrefAfterDatacite:
+          'Если поиск Datacite не дал результата, выберите результат Crossref в качестве запасного варианта.',
         historyIntervalInMinutes:
           'Интервал автоматического сохранения версии рукописи в минутах.',
       },

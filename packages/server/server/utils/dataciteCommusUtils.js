@@ -1,40 +1,87 @@
 const { default: axios } = require('axios')
+const he = require('he')
 const { createFormattedReference } = require('../reference/src/formatting')
 
-const getFormattedReferencesFromDatacite = async (doi, groupId) => {
-  try {
-    const response = await axios.get(
-      `https://api.datacite.org/application/vnd.citationstyles.csl+json/${doi}`,
-      // `https://data.crosscite.org/application/vnd.citationstyles.csl+json/${doi}`,
-    )
+// Query: is it possible that the DOI is coming in with escape characters or something that is causing the Datacite API to not find it?
 
-    if (response.status === 200) {
-      // console.log('Response: ', response.data)
-
-      const formatted = await createFormattedReference(
-        response.data,
-        groupId,
-        true,
+const getFormattedReferencesFromDatacite = async (
+  doi,
+  groupId,
+  useTitle = false,
+) => {
+  if (useTitle) {
+    try {
+      // e.g. https://api.datacite.org/dois?query=titles.title:%22DataCite%20Connections:%20A%20Case%20Study%22
+      const response = await axios.get(
+        `https://api.datacite.org/dois?query=titles.title:%22${he.encode(
+          doi,
+        )}%22`,
+        // `https://data.crosscite.org/application/vnd.citationstyles.csl+json/${doi}`,
       )
 
-      // console.log('Formatted: ', formatted)
-      return [formatted]
-    }
+      if (response.status === 200) {
+        // console.log('Response: ', response.data)
 
-    console.error('Datacite failure!', response)
-    return []
-  } catch (error) {
-    if (error.response?.status === 404) {
-      console.error(`Datacite 404 error: DOI ${doi} not found at Datacite.`)
-    }
+        const formatted = await createFormattedReference(
+          response.data,
+          groupId,
+          true,
+        )
 
-    if (error.response?.status === 429) {
-      // TODO Consider implementing a backoff
-      console.error('Datacite rate limit error!')
-    }
+        // console.log('Formatted: ', formatted)
+        return [formatted]
+      }
 
-    console.error('Datacite failure!', error.message)
-    return []
+      console.error('Datacite failure!', response)
+      return []
+    } catch (error) {
+      if (error.response?.status === 404) {
+        console.error(`Datacite 404 error: DOI ${doi} not found at Datacite.`)
+      }
+
+      if (error.response?.status === 429) {
+        // TODO Consider implementing a backoff
+        console.error('Datacite rate limit error!')
+      }
+
+      console.error('Datacite failure!', error.message)
+      return []
+    }
+  } else {
+    try {
+      const response = await axios.get(
+        `https://api.datacite.org/application/vnd.citationstyles.csl+json/${doi}`,
+        // `https://data.crosscite.org/application/vnd.citationstyles.csl+json/${doi}`,
+      )
+
+      if (response.status === 200) {
+        // console.log('Response: ', response.data)
+
+        const formatted = await createFormattedReference(
+          response.data,
+          groupId,
+          true,
+        )
+
+        // console.log('Formatted: ', formatted)
+        return [formatted]
+      }
+
+      console.error('Datacite failure!', response)
+      return []
+    } catch (error) {
+      if (error.response?.status === 404) {
+        console.error(`Datacite 404 error: DOI ${doi} not found at Datacite.`)
+      }
+
+      if (error.response?.status === 429) {
+        // TODO Consider implementing a backoff
+        console.error('Datacite rate limit error!')
+      }
+
+      console.error('Datacite failure!', error.message)
+      return []
+    }
   }
 }
 

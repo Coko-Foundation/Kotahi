@@ -7,6 +7,7 @@ const {
 
 const {
   getFormattedReferencesFromCrossRef,
+  getFormattedReferencesFromCrossRefDOI,
 } = require('../../utils/crossrefCommsUtils')
 
 const {
@@ -16,6 +17,26 @@ const {
 const { formatCitation, formatMultipleCitations } = require('./formatting')
 
 const Config = require('../../../models/config/config.model')
+
+const tryCrossref = async (doi, crossrefRetrievalEmail, groupId) => {
+  try {
+    const matches = await await getFormattedReferencesFromCrossRefDOI(
+      doi,
+      crossrefRetrievalEmail,
+      groupId,
+    )
+
+    if (matches.length === 0) {
+      logger.error('Crossref timed out.')
+      return { matches: [], success: false, message: 'error' }
+    }
+
+    return { matches, success: true, message: 'crossref' }
+  } catch (error) {
+    logger.error('Crossref response error:', error.message)
+    return { matches: [], success: false, message: 'error' }
+  }
+}
 
 /* eslint-disable prefer-destructuring */
 const resolvers = {
@@ -53,31 +74,86 @@ const resolvers = {
         return { matches: [], success: false, message: 'error' }
       }
     },
-    async getDatasiteCslFromDOI(_, { input }, ctx) {
+    async getDataciteCslFromDOI(_, { input }, ctx) {
       const groupId = ctx.req.headers['group-id']
 
-      // const activeConfig = await Config.query().findOne({
-      //   groupId,
-      //   active: true,
-      // })
+      const activeConfig = await Config.query().findOne({
+        groupId,
+        active: true,
+      })
 
-      // const crossrefRetrievalEmail =
-      //   activeConfig.formData.production?.crossrefRetrievalEmail
+      const crossrefRetrievalEmail =
+        activeConfig.formData.production?.crossrefRetrievalEmail
 
       try {
         const matches = await getFormattedReferencesFromDatacite(
           input.text,
           groupId,
+          false,
+        )
+
+        if (
+          matches.length === 0 &&
+          activeConfig.formData.production.fallbackOnCrossrefAfterDatacite
+        ) {
+          logger.error('Datacite timed out.')
+          logger.error(
+            'Trying CrossRef instead – note this may be imprecise!',
+            input.text,
+          )
+
+          // NOTE: This will call CrossRef. HOWEVER: CrossRef always returns something! It could be wrong!
+          const result = tryCrossref(
+            input.text,
+            crossrefRetrievalEmail,
+            groupId,
+          )
+
+          return result
+        }
+
+        const toReturn = {
+          matches,
+          success: Boolean(matches.length),
+          message: matches.length ? '' : 'error',
+        }
+
+        return toReturn
+      } catch (error) {
+        logger.error('Datacite response error:', error.message)
+        return { matches: [], success: false, message: 'error' }
+      }
+    },
+    async getDataciteCslFromTitle(_, { input }, ctx) {
+      const groupId = ctx.req.headers['group-id']
+
+      const activeConfig = await Config.query().findOne({
+        groupId,
+        active: true,
+      })
+
+      const crossrefRetrievalEmail =
+        activeConfig.formData.production?.crossrefRetrievalEmail
+
+      try {
+        const matches = await getFormattedReferencesFromDatacite(
+          input.text,
+          groupId,
+          true,
         )
 
         if (matches.length === 0) {
-          logger.error('Datasite timed out.')
+          logger.error('Datacite timed out.')
+          logger.error('Trying CrossRef instead.', input.text)
+          // TODO: at this point, query CrossRef with the DOI
+          tryCrossref(input.text, crossrefRetrievalEmail)
+
           return { matches: [], success: false, message: 'error' }
         }
 
         return { matches, success: true, message: '' }
       } catch (error) {
-        logger.error('Datasite response error:', error.message)
+        logger.error('Datacite response error:', error.message)
         return { matches: [], success: false, message: 'error' }
       }
     },
@@ -190,7 +266,8 @@ const typeDefs = `
 
   extend type Query {
     getMatchingReferences(input: CitationSearchInput): CitationSearchResult
-		getDatasiteCslFromDOI(input: CitationSearchInput): FormattedCitationSearchResult
+		getDataciteCslFromDOI(input: CitationSearchInput): FormattedCitationSearchResult
+		getDataciteCslFromTitle(input: CitationSearchInput): FormattedCitationSearchResult
     getFormattedReferences(input: CitationSearchInput): FormattedCitationSearchResult
     getReferenceFromDoi(doi:String!): CitationSearchSingleResult
 		formatCitation(citation: String!): CitationFormatResult

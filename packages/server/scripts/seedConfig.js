@@ -118,6 +118,8 @@ const seedConfig = async (group, instanceName, index, options) => {
   const production = {
     crossrefRetrievalEmail: '',
     getDataFromDatacite: false,
+    fallbackOnCrossrefAfterDatacite: false,
+
     citationStyles: {
       styleName: 'apa',
       localeName: 'en-US',
