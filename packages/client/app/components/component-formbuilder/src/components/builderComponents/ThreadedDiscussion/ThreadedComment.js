@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Moment from 'react-moment'
+import { useTranslation } from 'react-i18next'
 import { Button } from '../../../../../pubsweet'
 import Tooltip from '../../../../../component-reporting/src/Tooltip'
 import {
@@ -19,6 +20,7 @@ import { UserAvatar } from '../../../../../component-avatar/src'
 import Modal from '../../../../../component-modal/src/ConfirmationModal'
 import SimpleWaxEditor from '../../../../../wax-collab/src/SimpleWaxEditor'
 import { hasValue } from '../../../../../../shared/htmlUtils'
+import { ConfigContext } from '../../../../../config/src'
 
 const ThreadedComment = ({
   comment,
@@ -37,11 +39,17 @@ const ThreadedComment = ({
   const {
     comment: value,
     author,
-    createdAt,
-    updatedAt,
+    updatedBy,
+    created: createdAt,
+    updated: updatedAt,
+    published: publishedAt,
     existingComment, // If this comment is in the process of being edited, existingComment contains the value prior to editing
     shouldExpandByDefault,
   } = comment
+
+  const { t } = useTranslation()
+
+  const { formData } = useContext(ConfigContext)
 
   const [openModal, setOpenModal] = useState(false)
 
@@ -100,11 +108,32 @@ const ThreadedComment = ({
             <Tooltip
               content={
                 <>
-                  Created at &nbsp;
+                  {t('formBuilder.submittedAt')} &nbsp;
                   <Moment format="YYYY-MM-DD HH:mm:ss">{createdAt}</Moment>
                   <br />
-                  Updated at &nbsp;
-                  <Moment format="YYYY-MM-DD HH:mm:ss">{updatedAt}</Moment>
+                  {formData &&
+                    JSON.parse(formData).controlPanel
+                      ?.editorsEditDiscussionPostsEnabled &&
+                    updatedAt &&
+                    updatedAt !== createdAt && (
+                      <div>
+                        {`${updatedBy.username} ${t('formBuilder.updatedAt')}`}{' '}
+                        &nbsp;
+                        <Moment format="YYYY-MM-DD HH:mm:ss">
+                          {updatedAt}
+                        </Moment>
+                        <br />
+                      </div>
+                    )}
+                  {publishedAt && (
+                    <div>
+                      {t('formBuilder.publishedAt')} &nbsp;
+                      <Moment format="YYYY-MM-DD HH:mm:ss">
+                        {publishedAt}
+                      </Moment>
+                      <br />
+                    </div>
+                  )}
                 </>
               }
             />
@@ -160,7 +189,7 @@ const ThreadedComment = ({
             }}
             primary
           >
-            Edit
+            {t('modals.editDiscussion.saveEdit')}
           </Button>
           &nbsp;
           <CancelButton
@@ -170,7 +199,7 @@ const ThreadedComment = ({
               onCancel()
             }}
           >
-            Cancel
+            {t('modals.editDiscussion.cancel')}
           </CancelButton>
         </ModalContainer>
       </Modal>

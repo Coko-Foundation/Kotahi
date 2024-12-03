@@ -185,6 +185,9 @@ const query = gql`
         comments {
           id
           manuscriptVersionId
+		  created
+		  updated
+		  published
           commentVersions {
             id
             author {

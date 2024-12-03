@@ -641,10 +641,21 @@ const DecisionPage = ({ currentUser, match }) => {
     updateReview(reviewId, reviewPayload, manuscriptVersionId)
   }
 
+  const handleCompleteComment = async options => {
+    await completeComment(options)
+    await refetchManuscript()
+  }
+
+  const handlePublishManuscript = async options => {
+    const res = await publishManuscript(options)
+    await refetchManuscript()
+    return res
+  }
+
   const threadedDiscussionProps = {
     threadedDiscussions,
     updatePendingComment,
-    completeComment,
+    completeComment: handleCompleteComment,
     completeComments,
     deletePendingComment,
     currentUser,
@@ -677,7 +688,7 @@ const DecisionPage = ({ currentUser, match }) => {
       lockUnlockReview={lockUnlockReview}
       makeDecision={makeDecision}
       manuscript={manuscript}
-      publishManuscript={publishManuscript}
+      publishManuscript={handlePublishManuscript}
       queryAI={queryAI}
       refetch={() => {
         refetchManuscript()

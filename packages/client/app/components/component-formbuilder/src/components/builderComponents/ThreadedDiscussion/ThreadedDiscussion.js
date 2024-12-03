@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { v4 as uuid } from 'uuid'
+import { useTranslation } from 'react-i18next'
 import ActionButton from '../../../../../shared/ActionButton'
 import SimpleWaxEditor from '../../../../../wax-collab/src/SimpleWaxEditor'
 import { SimpleWaxEditorWrapper } from '../../style'
@@ -16,6 +17,8 @@ const getExistingOrInitialComments = (
   manuscriptLatestVersionId,
   selectedManuscriptVersionId,
 ) => {
+  let hasPendingVersion = false
+
   const result = comments
     .filter(c => {
       if (c.pendingVersion) {
@@ -28,8 +31,11 @@ const getExistingOrInitialComments = (
       if (c.pendingVersion) {
         // This comment is currently being edited!
         // Note that the server gives us only a pendingVersion for the current user.
+        hasPendingVersion = true
+
         return {
           ...c.pendingVersion,
+          updated: c.updated,
           manuscriptVersionId: c.manuscriptVersionId,
           id: c.id,
           isEditing: true,
@@ -41,16 +47,24 @@ const getExistingOrInitialComments = (
 
       // This comment is not currently being edited.
       const cv = c.commentVersions[c.commentVersions.length - 1]
+      const firstCommentVersion = c.commentVersions[0]
       return {
         ...cv,
+        author: firstCommentVersion.author,
+        updatedBy: cv.author,
+        created: firstCommentVersion.created,
+        updated: c.updated,
+        published: c.published || undefined,
         id: c.id,
         manuscriptVersionId: c.manuscriptVersionId,
         existingComment: cv,
       }
     })
-
-  const lastComment = result.length ? result[result.length - 1] : null
-  const lastCommentIsByUser = lastComment?.author?.id === currentUser.id
+    .sort((a, b) => {
+      const aParsed = a.created ? new Date(a.created) : Number.MAX_SAFE_INTEGER
+      const bParsed = b.created ? new Date(b.created) : Number.MAX_SAFE_INTEGER
+      return aParsed - bParsed
+    })
 
   // By default the last completed comment in the thread is shown expanded; all others are collapsed
   const lastCompletedComment = result
@@ -67,7 +81,7 @@ const getExistingOrInitialComments = (
   if (
     selectedManuscriptVersionId === manuscriptLatestVersionId &&
     userCanAddComment &&
-    !lastCommentIsByUser
+    !hasPendingVersion
   )
     result.push({
       id: uuid(),
@@ -90,7 +104,6 @@ const ThreadedDiscussion = ({
     userCanAddThread,
     commentsToPublish: commsToPublish,
     setShouldPublishComment,
-    shouldRenderSubmitButton,
     selectedManuscriptVersionId,
     manuscriptLatestVersionId,
   },
@@ -103,6 +116,8 @@ const ThreadedDiscussion = ({
     userCanEditOwnComment,
     userCanEditAnyComment,
   } = threadedDiscussion || { userCanAddComment: userCanAddThread }
+
+  const { t } = useTranslation()
 
   const [threadedDiscussionId] = useState(threadedDiscussion?.id || uuid())
   const [threadId] = useState(threadedDiscussion?.threads?.[0]?.id || uuid())
@@ -190,7 +205,7 @@ const ThreadedDiscussion = ({
             }
           }
 
-          if (isLatestVersionOfManuscript && !comment.existingComment)
+          if (isLatestVersionOfManuscript && !comment.existingComment) {
             return (
               <div key={comment.id}>
                 <SimpleWaxEditorWrapper key={comment.id}>
@@ -200,13 +215,16 @@ const ThreadedDiscussion = ({
                     value={comment.comment}
                   />
                 </SimpleWaxEditorWrapper>
-                {shouldRenderSubmitButton && (
-                  <ActionButton onClick={handleSubmitButtonClick} primary>
-                    Submit
-                  </ActionButton>
-                )}
+                <ActionButton
+                  disabled={!hasValue(comment.comment)}
+                  onClick={handleSubmitButtonClick}
+                  primary
+                >
+                  {t('formBuilder.submitComment')}
+                </ActionButton>
               </div>
             )
+          }
 
           return (
             <ThreadedComment

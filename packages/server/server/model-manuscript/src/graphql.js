@@ -113,6 +113,7 @@ const {
 } = require('../../model-channel/src/channelCommsUtils')
 
 const { cachedGet } = require('../../querycache')
+const ThreadedDiscussion = require('../../../models/threadedDiscussion/threadedDiscussion.model')
 
 const getCss = async () => {
   const css = await generateCss()
@@ -1379,6 +1380,7 @@ const resolvers = {
       return updated
     },
 
+    // TODO: useTransaction to handle rollbacks
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
@@ -1606,6 +1608,45 @@ const resolvers = {
         updatedManuscript = await Manuscript.query().patchAndFetchById(
           id,
           update,
+        )
+
+        const commentsToPublish = []
+
+        updatedManuscript.formFieldsToPublish.forEach(formField => {
+          formField.fieldsToPublish.forEach(fieldToPublish => {
+            const publishFieldValues = fieldToPublish.split(':')
+
+            if (
+              publishFieldValues[0] === 'discussion' &&
+              publishFieldValues[1]
+            ) {
+              commentsToPublish.push(publishFieldValues[1])
+            }
+          })
+        })
+
+        const manuscriptThreadDiscussions =
+          await ThreadedDiscussion.query().where({
+            manuscriptId: updatedManuscript.parentId || updatedManuscript.id,
+          })
+
+        await Promise.all(
+          manuscriptThreadDiscussions.map(async threadDiscussion => {
+            const unsetThreads = threadDiscussion.threads.map(thread => ({
+              ...thread,
+              comments: thread.comments.map(comment => ({
+                ...comment,
+                published: commentsToPublish.includes(comment.id)
+                  ? newPublishedDate
+                  : undefined,
+              })),
+            }))
+
+            await ThreadedDiscussion.query().patchAndFetchById(
+              threadDiscussion.id,
+              { threads: JSON.stringify(unsetThreads) },
+            )
+          }),
         )
       } else {
         // Revert the changes to published date and status

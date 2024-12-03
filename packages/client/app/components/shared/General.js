@@ -98,7 +98,8 @@ export const ClickableSectionRow = styled(SectionRow)`
 export const SectionRowGrid = styled(SectionRow)`
   display: grid;
   grid-gap: ${grid(2)};
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: ${props =>
+    props.expandedWidthDetails ? '1fr 3fr' : 'repeat(4, minmax(0, 1fr))'};
 `
 
 export const SectionAction = styled.div`

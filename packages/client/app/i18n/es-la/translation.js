@@ -609,6 +609,8 @@ const esLa = {
         'Prueba del autor completada y comentarios enviados.',
       'Editors edit reviews':
         'Los editores pueden editar las reseñas enviadas.',
+      editorsEditDiscussionPosts:
+        'Los editores pueden editar las publicaciones de campo del formulario de discusión enviadas',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',
@@ -1108,6 +1110,10 @@ const esLa = {
         deleteCollection:
           '¿Estás seguro/a de que quieres eliminar esta colección?',
       },
+      editDiscussion: {
+        saveEdit: 'Guardar edición',
+        cancel: 'Cancelar',
+      },
     },
     newSubmission: {
       'New submission': 'Nueva presentación',
@@ -1131,6 +1137,10 @@ const esLa = {
       'Form title': 'Título del formulario',
       Description: 'Descripción',
       submitConfirmPage: '¿Mostrar una página de confirmación al enviar?',
+      submitComment: 'Enviar comentario',
+      submittedAt: 'Presentado en',
+      updatedAt: 'actualizado en',
+      publishedAt: 'Publicado en',
       'Popup Title': 'Título de la Ventana Emergente',
       'Field Properties': 'Propiedades del Campo',
       'Field type': 'Tipo de Campo',

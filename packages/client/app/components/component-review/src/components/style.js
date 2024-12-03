@@ -85,10 +85,8 @@ export const StyledNotifyButton = styled(Button)`
 
 export const Heading = styled.span`
   font-weight: inherit;
-  overflow: hidden;
+  overflow-wrap: break-word;
   padding: 0 1em 0 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 `
 
 export const Cell = styled.span`
