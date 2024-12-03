@@ -659,6 +659,8 @@ const fr = {
         manuscriptVersionHistory: 'Historique des versions du manuscrit',
         getDataFromDatacite:
           'Obtenez des données de citation à partir de Datacite',
+        fallbackOnCrossrefAfterDatacite:
+          'Si la récupération de Datacite ne donne aucun résultat, sélectionnez le résultat Crossref comme solution de secours',
         historyIntervalInMinutes:
           'Intervalle pour enregistrer automatiquement une version manuscrite en quelques minutes',
       },

@@ -204,6 +204,9 @@ const Production = ({
     showContent = canSubmitWithBlankEditor || false
   }
 
+  const fallbackOnCrossrefAfterDatacite =
+    config?.production?.fallbackOnCrossrefAfterDatacite
+
   const editorSection = {
     content: (
       // eslint-disable-next-line react/jsx-no-useless-fragment
@@ -214,6 +217,9 @@ const Production = ({
               <ProductionWaxEditor
                 aiConfig={aiConfig}
                 client={client}
+                fallbackOnCrossrefAfterDatacite={
+                  fallbackOnCrossrefAfterDatacite
+                }
                 getComments={debouncedSaveComments}
                 getDataFromDatacite={getDataFromDatacite}
                 isAuthorProofingVersion={isAuthorProofingVersion}

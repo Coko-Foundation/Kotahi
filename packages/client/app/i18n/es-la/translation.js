@@ -648,6 +648,8 @@ const esLa = {
         citationStyles: 'Estilos de citas',
         manuscriptVersionHistory: 'Historial de versiones del manuscrito',
         getDataFromDatacite: 'Obtener datos de citas de Datacite',
+        fallbackOnCrossrefAfterDatacite:
+          'Si la recuperación de Datacite no arroja ningún resultado, seleccione el resultado de Crossref como alternativa',
         historyIntervalInMinutes:
           'Intervalo para guardar automáticamente una versión manuscrita en minutos',
       },

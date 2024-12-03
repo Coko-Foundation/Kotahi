@@ -431,6 +431,11 @@ export const generateSchemas = (
               title: t('configPage.production.getDataFromDatacite'),
               default: false,
             },
+            fallbackOnCrossrefAfterDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.fallbackOnCrossrefAfterDatacite'),
+              default: false,
+            },
             citationStyles: {
               type: 'object',
               title: t('configPage.production.citationStyles'),
@@ -1481,6 +1486,11 @@ export const generateSchemas = (
             getDataFromDatacite: {
               type: 'boolean',
               title: t('configPage.production.getDataFromDatacite'),
+              default: false,
+            },
+            fallbackOnCrossrefAfterDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.fallbackOnCrossrefAfterDatacite'),
               default: false,
             },
             citationStyles: {
@@ -2541,6 +2551,11 @@ export const generateSchemas = (
               title: t('configPage.production.getDataFromDatacite'),
               default: false,
             },
+            fallbackOnCrossrefAfterDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.fallbackOnCrossrefAfterDatacite'),
+              default: false,
+            },
             citationStyles: {
               type: 'object',
               title: t('configPage.production.citationStyles'),
@@ -3597,6 +3612,11 @@ export const generateSchemas = (
             getDataFromDatacite: {
               type: 'boolean',
               title: t('configPage.production.getDataFromDatacite'),
+              default: false,
+            },
+            fallbackOnCrossrefAfterDatacite: {
+              type: 'boolean',
+              title: t('configPage.production.fallbackOnCrossrefAfterDatacite'),
               default: false,
             },
             citationStyles: {

@@ -634,6 +634,8 @@ const en = {
         'Select locale for citations': 'Select citation locale',
         getDataFromDatacite:
           'Search and retrieve citation results from Datacite',
+        fallbackOnCrossrefAfterDatacite:
+          'If Datacite retrieval yields no result, select Crossref result as a fallback',
         manuscriptVersionHistory: 'Manuscript version history',
         historyIntervalInMinutes:
           'Interval to automatically save a manuscript version in minutes',
