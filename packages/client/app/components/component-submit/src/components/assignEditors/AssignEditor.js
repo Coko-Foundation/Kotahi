@@ -94,7 +94,9 @@ const AssignEditor = ({ teamRole, manuscript }) => {
     }
   }, [selectedEditor])
 
-  const teamName = config?.teams[teamRole].name
+  const teamName = config?.teams.nonGlobal.find(
+    t => t.role === teamRole,
+  )?.displayName
 
   const { data, loading, error } = useQuery(query)
 
