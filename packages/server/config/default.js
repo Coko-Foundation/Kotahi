@@ -68,21 +68,6 @@ const cfg = {
     publishingWebhookSecret: null,
     publishingWebhookRef: null,
   },
-  'pubsweet-component-xpub-formbuilder': {
-    // TODO: remove as this path is only used in a formbuilder page unit test
-    // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
-    // path: deferConfig(cfg => {
-    //   const formTemplatePath = {
-    //     preprint1: '../app/storage/forms',
-    //     journal: '../app/storage/forms-journal',
-    //     preprint2: '../app/storage/forms-preprint2',
-    //     prc: '../app/storage/forms-prc',
-    //   }
-    //   const pathToFormTemplateFolder =
-    //     formTemplatePath[String(process.env.INSTANCE_NAME)]
-    //   return path.resolve(__dirname, pathToFormTemplateFolder)
-    // }),
-  },
   useGraphQLServer: true,
   useFileStorage: true,
   db: {},
