@@ -597,6 +597,9 @@ const FormTemplate = ({
                             innerOnChange(val, element.name)
                           }}
                           setTouched={setTouched}
+                          shouldAllowFieldSpecChanges={[
+                            'ThreadedDiscussion',
+                          ].includes(element.component)}
                           spellCheck
                           threadedDiscussionProps={threadedDiscussionProps}
                           validate={validateFormField(

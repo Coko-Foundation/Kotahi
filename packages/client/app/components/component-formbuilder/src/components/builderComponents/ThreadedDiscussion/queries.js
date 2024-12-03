@@ -10,6 +10,9 @@ const discussionFields = `
     comments {
       id
       manuscriptVersionId
+	  created
+	  updated
+	  published
       commentVersions {
         id
         author {

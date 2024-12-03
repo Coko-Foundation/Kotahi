@@ -597,6 +597,8 @@ const en = {
       authorProofingSubmittedEmailTemplate:
         'Author proof completed and submitted feedback',
       'Editors edit reviews': 'Editors can edit submitted reviews',
+      editorsEditDiscussionPosts:
+        'Editors can edit submitted discussion form field posts',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
@@ -1087,6 +1089,10 @@ const en = {
       metadata: {
         deleteCollection: 'Are you sure you want to delete this collection?',
       },
+      editDiscussion: {
+        saveEdit: 'Save edit',
+        cancel: 'Cancel',
+      },
     },
 
     newSubmission: {
@@ -1110,6 +1116,10 @@ const en = {
       'Form title': 'Form title',
       Description: 'Description',
       submitConfirmPage: 'Show confirmation page when submitting?',
+      submitComment: 'Submit comment',
+      submittedAt: 'Submitted at',
+      updatedAt: 'updated at',
+      publishedAt: 'Published at',
       'Popup Title': 'Popup Title',
       'Field Properties': 'Field Properties',
       'Field type': 'Field type',

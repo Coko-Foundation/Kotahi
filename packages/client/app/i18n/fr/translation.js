@@ -615,6 +615,8 @@ const fr = {
       authorProofingSubmittedEmailTemplate:
         "Preuve d'auteur complétée et commentaires soumis",
       'Editors edit reviews': 'Les éditeurs peuvent modifier les avis soumis',
+      editorsEditDiscussionPosts:
+        'Les éditeurs peuvent modifier les messages soumis sur le terrain du formulaire de discussion',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",
@@ -1117,6 +1119,10 @@ const fr = {
         deleteCollection:
           'Êtes-vous sûr de vouloir supprimer cette collection ?',
       },
+      editDiscussion: {
+        saveEdit: 'Enregistrer la modification',
+        cancel: 'Annuler',
+      },
     },
 
     newSubmission: {
@@ -1142,6 +1148,10 @@ const fr = {
       Description: 'Description',
       submitConfirmPage:
         'Afficher une page de confirmation lors de la soumission ?',
+      submitComment: 'Soumettre un commentaire',
+      submittedAt: 'Soumis à',
+      updatedAt: 'mis à jour à',
+      publishedAt: 'Publié à',
       'Popup Title': 'Titre de la popup',
       'Field Properties': 'Propriétés du champ',
       'Field type': 'Type de champ',

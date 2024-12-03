@@ -607,6 +607,8 @@ const ru = {
         'Автор завершил проверку и отправил отзыв',
       'Editors edit reviews':
         'Редакторы могут редактировать отправленные отзывы.',
+      editorsEditDiscussionPosts:
+        'Редакторы могут редактировать отправленные сообщения в полях формы обсуждения',
       Reports: 'Аналитика',
       reportShowInMenu:
         'Администратору и редактору доступен раздел “Аналитика”',
@@ -1102,6 +1104,10 @@ const ru = {
       metadata: {
         deleteCollection: 'Вы уверены, что хотите удалить эту коллекцию?',
       },
+      editDiscussion: {
+        saveEdit: 'Сохранить редактирование',
+        cancel: 'Отменить',
+      },
     },
     newSubmission: {
       'New submission': 'Загрузить новую статью',
@@ -1124,6 +1130,10 @@ const ru = {
       'Form title': 'Заголовок формы',
       Description: 'Описание',
       submitConfirmPage: 'Показывать страницу подтверждения при отправке?',
+      submitComment: 'Отправить комментарий',
+      submittedAt: 'Отправлено в',
+      updatedAt: 'обновлено в',
+      publishedAt: 'Опубликовано на',
       'Popup Title': 'Название всплывающего окна',
       'Field Properties': 'Свойства поля',
       'Field type': 'Тип поля',

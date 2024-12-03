@@ -2407,6 +2407,11 @@ export const generateSchemas = (
               title: t('configPage.Editors edit reviews'),
               default: false,
             },
+            editorsEditDiscussionPostsEnabled: {
+              type: 'boolean',
+              title: t('configPage.editorsEditDiscussionPosts'),
+              default: false,
+            },
             showTabs: {
               type: 'array',
               description: t('configPage.Control pages visible to editors'),
@@ -3468,6 +3473,11 @@ export const generateSchemas = (
             editorsEditReviewsEnabled: {
               type: 'boolean',
               title: t('configPage.Editors edit reviews'),
+              default: false,
+            },
+            editorsEditDiscussionPostsEnabled: {
+              type: 'boolean',
+              title: t('configPage.editorsEditDiscussionPosts'),
               default: false,
             },
             showTabs: {

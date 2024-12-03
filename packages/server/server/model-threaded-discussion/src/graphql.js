@@ -1,5 +1,6 @@
 const ThreadedDiscussion = require('../../../models/threadedDiscussion/threadedDiscussion.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
+const Config = require('../../../models/config/config.model')
 
 const {
   getIdOfLatestVersionOfManuscript,
@@ -23,6 +24,13 @@ const getOriginalVersionManuscriptId = async manuscriptId => {
   return parentId || manuscriptId
 }
 
+const getActiveConfigOfThreadedDiscussion = async discussion => {
+  const { groupId } = await Manuscript.query().findById(discussion.manuscriptId)
+  const config = await Config.getCached(groupId)
+
+  return config
+}
+
 /** Returns a threadedDiscussion that strips out all pendingVersions not for this userId,
  * then all comments that don't have any remaining pendingVersion or commentVersions,
  * then all threads that don't have any remaining comments.
@@ -38,6 +46,10 @@ const stripHiddenAndAddUserInfo = async (
     getUsersByIdFunc,
   )
 
+  const { formData } = await getActiveConfigOfThreadedDiscussion(discussion)
+
+  const { editorsEditDiscussionPostsEnabled = false } = formData.controlPanel
+
   const userRoles = await getUserRolesInManuscript(
     userId,
     await getIdOfLatestVersionOfManuscript(discussion.manuscriptId),
@@ -47,8 +59,12 @@ const stripHiddenAndAddUserInfo = async (
     ...stripPendingVersionsExceptByUser(discussionWithUsers, userId),
     userCanAddComment:
       userRoles.author || userRoles.anyEditor || userRoles.groupManager, // Current use case prohibits reviewers from commenting
-    userCanEditOwnComment: userRoles.anyEditor || userRoles.groupManager,
-    userCanEditAnyComment: userRoles.anyEditor || userRoles.groupManager,
+    userCanEditOwnComment:
+      !!editorsEditDiscussionPostsEnabled &&
+      (userRoles.anyEditor || userRoles.groupManager),
+    userCanEditAnyComment:
+      !!editorsEditDiscussionPostsEnabled &&
+      (userRoles.anyEditor || userRoles.groupManager),
   }
 }
 
@@ -285,6 +301,7 @@ type ThreadComment {
   id: ID!
   created: DateTime!
   updated: DateTime
+  published: DateTime
   manuscriptVersionId: ID
   commentVersions: [ThreadedCommentVersion!]!
   pendingVersion: PendingThreadComment
