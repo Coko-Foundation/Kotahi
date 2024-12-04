@@ -33,6 +33,7 @@ import PreviousFeedbackSubmissions from './PreviousFeedbackSubmissions'
 import { CssAssistantProvider } from '../../../component-ai-assistant/hooks/CssAssistantContext'
 import AiPDFDesigner from '../../../component-ai-assistant/AiPDFDesigner'
 import Versioning from './Versioning'
+import VerifyPayloadModal from './VerifyPayloadModal/VerifyPayloadModal'
 
 const useVersioning = true
 
@@ -412,6 +413,7 @@ const Production = ({
               manuscriptId={manuscript.id}
               manuscriptSource={manuscript.meta.source}
             />
+            <VerifyPayloadModal manuscriptId={manuscript.id} />
           </ControlsContainer>
         </FlexRow>
       </HeadingWithAction>

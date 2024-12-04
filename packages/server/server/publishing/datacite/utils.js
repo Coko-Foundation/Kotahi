@@ -15,6 +15,14 @@ const getDoi = (suffix, activeConfig) => {
   return `${prefix}/${suffix}`
 }
 
+const getDoiWithoutError = (suffix, activeConfig) => {
+  try {
+    return getDoi(suffix, activeConfig)
+  } catch (error) {
+    return ''
+  }
+}
+
 const getDataciteURL = useSandbox => {
   return useSandbox
     ? 'https://api.test.datacite.org'
@@ -24,4 +32,5 @@ const getDataciteURL = useSandbox => {
 module.exports = {
   getDoi,
   getDataciteURL,
+  getDoiWithoutError,
 }

@@ -1,0 +1,3 @@
+extend type Query {
+  checkApiPayload(id: String!, api: String!): String!
+}

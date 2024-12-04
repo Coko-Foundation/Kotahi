@@ -15,7 +15,7 @@ const {
   getDates,
 } = require('./fieldsTransformers')
 
-const { getDoi, getDataciteURL } = require('./utils')
+const { getDoi, getDataciteURL, getDoiWithoutError } = require('./utils')
 
 const { isArray } = Array
 
@@ -158,10 +158,64 @@ const publishToDatacite = async manuscript => {
   await requestToDatacite(method, path, payload, activeConfig)
 }
 
+const checkPayload = async (manuscript, activeConfig) => {
+  const { id: suffix, shortId, meta, submission } = manuscript
+
+  const {
+    $localContext,
+    geolocation,
+    $abstract,
+    $authors,
+    $dois,
+    $issueYear: issueYear,
+    objectType: resourceTypeGeneral = 'Other',
+    ifother: resourceType = 'project',
+    $title: title,
+  } = submission
+
+  const { formData } = activeConfig
+  const { datacite } = formData.publishing
+  const { doiPrefix: prefix, publishedArticleLocationPrefix } = datacite
+
+  const failureReason = []
+  const submissionErrors = verifySubmission(formData, submission)
+  if (submissionErrors) failureReason.concat(submissionErrors)
+
+  const doi = getDoiWithoutError(suffix, activeConfig)
+  const publishDate = new Date()
+
+  const payload = {
+    type: 'dois',
+    attributes: {
+      doi,
+      event: 'publish',
+      prefix,
+      suffix,
+      url: `${publishedArticleLocationPrefix}${shortId}`,
+      types: { resourceTypeGeneral, resourceType },
+      titles: title ? [{ title }] : [],
+      creators: $authors?.map(getContributor) ?? [],
+      geoLocations: geolocation ? [{ geoLocationPlace: geolocation }] : [],
+      publicationYear: publishDate.getUTCFullYear(),
+      publisher: getPublisher(formData),
+      contributors: getContributors(formData),
+      descriptions: getDescriptions($abstract),
+      rightsList: getRightsList($localContext),
+      fundingReferences: getFundingReferences(submission),
+      relatedIdentifiers: getRelatedIdentifiers(meta, $dois),
+      dates: getDates(issueYear, publishDate),
+      // relatedItems: getRelatedItems(submission, formData),
+    },
+  }
+
+  return { payload }
+}
+
 module.exports = {
   publishToDatacite,
   getDoi,
   doiIsAvailable,
   verifySubmission,
   getPathAndPayload,
+  checkPayload,
 }

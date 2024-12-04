@@ -54,6 +54,7 @@ const StyledButton = styled.button.attrs(props => ({
   border: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
   border-radius: ${th('borderRadius')};
   color: ${props => (props.color ? props.color : props.theme.colorText)};
+  cursor: ${p => (p.disabled ? 'not-allowed' : 'pointer')};
   font-family: ${th('fontInterface')};
   font-size: ${props =>
     props.size === 'small'
