@@ -851,8 +851,15 @@ const esLa = {
       invalidReviewers: 'Algunos revisores no son válidos',
     },
     invitationAcceptedPage: {
-      error:
-        'Esta invitación no pudo ser aceptada, porque ya has rechazado una invitación para este manuscrito.',
+      acceptError: 'Esta invitación no pudo ser aceptada',
+      declineError: 'Esta invitación no se pudo rechazar',
+      assignAuthorFailed: 'No se pudo asignar al autor',
+      assignReviewerFailed: 'No se pudo asignar el revisor',
+      invalidUser: 'Esta invitación no coincide con su usuario actual',
+      invitedAlreadyRejected: 'Esta invitación ya ha sido rechazada',
+      invitedAlreadyAccepted: 'Esta invitación ya ha sido aceptada',
+      invalidInviteId:
+        'La invitación no es válida. Por favor revisa el enlace y vuelve a intentarlo más tarde.',
       returnToDashboard: 'Regresar al Tablero',
     },
     reviewPreviewPage: {

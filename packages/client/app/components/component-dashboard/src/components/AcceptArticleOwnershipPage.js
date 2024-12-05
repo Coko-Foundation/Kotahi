@@ -1,14 +1,17 @@
 import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
+import { useTranslation } from 'react-i18next'
 import { Container } from '../../../shared'
 import { GET_INVITATION_STATUS } from '../../../../queries/invitation'
-import InvitationLinkExpired from './InvitationLinkExpired'
 import { ConfigContext } from '../../../config/src'
+import InvitationError from './InvitationError'
 
 const AcceptArticleOwnershipPage = ({ match }) => {
   const config = useContext(ConfigContext)
+  const { t } = useTranslation()
   const { invitationId } = match.params
+  const { urlFrag } = config
 
   const { loading, data, error } = useQuery(GET_INVITATION_STATUS, {
     variables: { id: invitationId },
@@ -19,10 +22,17 @@ const AcceptArticleOwnershipPage = ({ match }) => {
   }
 
   if (error) {
-    return <InvitationLinkExpired />
+    return (
+      <InvitationError
+        errorHeading={t('invitationAcceptedPage.acceptError')}
+        errorMessage={t(`invitationAcceptedPage.invalidInviteId`)}
+      />
+    )
   }
 
-  if (data.invitationStatus.status === 'UNANSWERED') {
+  const { status, manuscriptId, invitedPersonType } = data.invitationStatus
+
+  if (status === 'UNANSWERED') {
     window.localStorage.setItem('invitationId', invitationId)
     return (
       <Container>
@@ -34,7 +44,26 @@ const AcceptArticleOwnershipPage = ({ match }) => {
     )
   }
 
-  return <InvitationLinkExpired />
+  if (status === 'ACCEPTED') {
+    return (
+      <Redirect
+        to={`${urlFrag}/versions/${manuscriptId}/${
+          invitedPersonType === 'AUTHOR' ? 'submit' : 'review'
+        }`}
+      />
+    )
+  }
+
+  if (status === 'REJECTED') {
+    return (
+      <InvitationError
+        errorHeading={t('invitationAcceptedPage.acceptError')}
+        errorMessage={t(`invitationAcceptedPage.invitedAlreadyRejected`)}
+      />
+    )
+  }
+
+  return <InvitationError errorHeading={t('linkExpiredPage')} />
 }
 
 export default AcceptArticleOwnershipPage

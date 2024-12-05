@@ -326,13 +326,23 @@ const AdminPage = () => {
     ? window.localStorage.getItem('invitationId')
     : ''
 
+  const inviteAction = window.localStorage.getItem('inviteAction')
+    ? window.localStorage.getItem('inviteAction')
+    : ''
+
   const dashboardRedirectUrl = currentUser?.recentTab
     ? `${urlFrag}/dashboard/${currentUser.recentTab}`
     : dashboardSubmissionsLink
 
   const dashboardRedirect = () =>
     invitationId ? (
-      <Redirect to={`${urlFrag}/invitation/accepted`} />
+      <Redirect
+        to={`${urlFrag}/${
+          inviteAction === 'decline'
+            ? 'decline/'.concat(invitationId)
+            : 'invitation/accepted'
+        }`}
+      />
     ) : (
       <Redirect to={dashboardRedirectUrl} />
     )

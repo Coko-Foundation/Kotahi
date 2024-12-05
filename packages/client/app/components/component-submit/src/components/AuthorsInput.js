@@ -43,7 +43,7 @@ const AuthorContainer = styled.div`
   border: 1px solid ${color.gray80};
   border-radius: ${theme.borderRadius};
   display: flex;
-  max-width: 1000px;
+  ${({ fullWidth }) => (fullWidth ? 'width: 100%' : 'max-width: 1000px')};
   padding: ${grid(2)};
 `
 
@@ -101,11 +101,21 @@ const localizeFields = (fields, t) =>
     placeholder: t(`authorsInput.${field.name}.placeholder`),
   }))
 
+/**
+ * This component returns a customised author's input field, based on props.
+ * To customise the `AuthorsInput` component, provide the necessary field in the `getAuthorsField` method, and pass the required prop to `AuthorsInput`.
+ * @param {object} props contains flags and values used to customise the field. See props for more details.
+ * @returns `AuthorsInput` component
+ */
 const AuthorsInput = ({
+  fullWidth, // should the component be the full width of the parent
   onChange,
-  requireEmail,
+  requireEmail, // is the email address required
   value,
-  overrideButtonLabel = undefined,
+  overrideButtonLabel,
+  rorMenuPlacement, // ROR affiliation dropdown position
+  showMiddleName, // should the middle name field be used
+  showOrcidId, // should the ORCID field be used
 }) => {
   const [validatePerField, setValidatePerField] = useState([])
   const { t } = useTranslation()
@@ -120,7 +130,16 @@ const AuthorsInput = ({
 
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
 
-  const authorFieldOptions = { requireEmail, validationOrcid } // add more definitions here as needed
+  /**
+   * add more definitions here as needed, and define them in `getAuthorFields`.
+   * These are used to customise the `authorFields`. See function below for more details.
+   */
+  const authorFieldOptions = {
+    requireEmail,
+    showMiddleName,
+    showOrcidId,
+    validationOrcid,
+  }
 
   const authorFields = getAuthorFields(authorFieldOptions)
   const localizedFields = localizeFields(authorFields, t)
@@ -132,7 +151,7 @@ const AuthorsInput = ({
     const validate = async () => {
       const validationPerField = await Promise.all(
         cleanedVal.map(async author =>
-          validateAuthor(author, { validationOrcid }),
+          validateAuthor(author, { validationOrcid, requireEmail }),
         ),
       )
 
@@ -186,7 +205,7 @@ const AuthorsInput = ({
       </StyledButton>
       <Wrapper>
         {cleanedVal.map((author, index) => (
-          <AuthorContainer key={author.id}>
+          <AuthorContainer fullWidth={fullWidth} key={author.id}>
             <Author>
               {localizedFields.map(f => {
                 if (!f.label) return null
@@ -214,7 +233,7 @@ const AuthorsInput = ({
                         createOptionPosition="first"
                         isClearable
                         loadOptions={searchRor(filterOptions)}
-                        menuPlacement="auto"
+                        menuPlacement={rorMenuPlacement || 'auto'}
                         menuPortalTarget={document.querySelector('body')}
                         onChange={handleChange}
                         placeholder={f.placeholder}
@@ -251,8 +270,13 @@ const AuthorsInput = ({
 }
 
 AuthorsInput.propTypes = {
+  fullWidth: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
+  overrideButtonLabel: PropTypes.string,
   requireEmail: PropTypes.bool,
+  rorMenuPlacement: PropTypes.oneOf('bottom', 'top', 'auto'),
+  showMiddleName: PropTypes.bool,
+  showOrcidId: PropTypes.bool,
   value: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
@@ -268,7 +292,12 @@ AuthorsInput.propTypes = {
 }
 
 AuthorsInput.defaultProps = {
+  fullWidth: false,
+  overrideButtonLabel: undefined,
   requireEmail: false,
+  rorMenuPlacement: null,
+  showMiddleName: false,
+  showOrcidId: false,
   value: null,
 }
 

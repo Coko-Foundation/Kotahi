@@ -8,8 +8,17 @@ const isMalformedEmail = val =>
   ) &&
   'Not a valid email address'
 
+/**
+ * This function produces a dynamic list of author fields, based on the needs of the workflow.
+ * @param {object} options customises the fields returned, and their properties. This can be used to add additional fields needed by a certain use case, while not interfering with other uses of `AuthorsInput`
+ * @returns array of custom author fields
+ */
 export const getAuthorFields = (options = {}) => {
-  const { requireEmail } = options
+  const {
+    requireEmail, // makes the email value required
+    showMiddleName, // shows the `middleName` field, otherwise hidden by default
+    showOrcidId, // shows the `orcid` field, otherwise hidden by default
+  } = options
 
   return [
     {
@@ -18,11 +27,15 @@ export const getAuthorFields = (options = {}) => {
       placeholder: 'Enter first name…',
       validate: required,
     },
-    {
-      name: 'middleName',
-      label: 'Middle name',
-      placeholder: 'Enter middle name…',
-    },
+    ...(showMiddleName
+      ? [
+          {
+            name: 'middleName',
+            label: 'Middle name',
+            placeholder: 'Enter middle name…',
+          },
+        ]
+      : []),
     {
       name: 'lastName',
       label: 'Last name',
@@ -42,11 +55,15 @@ export const getAuthorFields = (options = {}) => {
       label: 'ROR',
       placeholder: 'Enter ROR...',
     },
-    {
-      name: 'orcid',
-      label: 'ORCID',
-      placeholder: 'Enter ORCID...',
-    },
+    ...(showOrcidId
+      ? [
+          {
+            name: 'orcid',
+            label: 'ORCID',
+            placeholder: 'Enter ORCID...',
+          },
+        ]
+      : []),
   ]
 }
 

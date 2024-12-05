@@ -25,6 +25,8 @@ export const GET_INVITATION_MANUSCRIPT_ID = gql`
     invitationManuscriptId(id: $id) {
       manuscriptId
       invitedPersonType
+      userId
+      status
     }
   }
 `
@@ -33,6 +35,9 @@ export const GET_INVITATION_STATUS = gql`
   query invitationStatus($id: ID) {
     invitationStatus(id: $id) {
       status
+      userId
+      manuscriptId
+      invitedPersonType
       suggestedReviewers {
         firstName
         lastName
@@ -81,6 +86,14 @@ export const UPDATE_INVITATION_STATUS = gql`
     ) {
       status
       responseDate
+    }
+  }
+`
+
+export const GET_LOGGED_IN_USER = gql`
+  query currentUser {
+    currentUser {
+      id
     }
   }
 `

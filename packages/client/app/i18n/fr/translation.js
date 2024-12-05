@@ -861,8 +861,16 @@ const fr = {
       invalidReviewers: 'Certains évaluateurs ne sont pas valides',
     },
     invitationAcceptedPage: {
-      error:
-        "Cette invitation n'a pas pu être acceptée, parce que vous avez déjà refusé une invitation pour ce manuscrit.",
+      acceptError: "Cette invitation n'a pas pu être acceptée",
+      declineError: "Cette invitation n'a pas pu être refusée",
+      assignAuthorFailed: "Échec de l'attribution de l'auteur",
+      assignReviewerFailed: "Échec de l'attribution du réviseur",
+      invalidUser:
+        'Cette invitation ne correspond pas à votre utilisateur actuel',
+      invitedAlreadyRejected: 'Cette invitation a déjà été rejetée',
+      invitedAlreadyAccepted: 'Cette invitation a déjà été acceptée',
+      invalidInviteId:
+        "L'invitation n'est pas valide. Veuillez vérifier le lien et réessayer plus tard.",
       returnToDashboard: 'Retour au Tableau de Bord',
     },
     reviewPreviewPage: {
