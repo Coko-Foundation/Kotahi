@@ -11,6 +11,8 @@ const fetchUserDetails = require('../../auth-orcid/fetchUserDetails')
 
 const User = require('../../../models/user/user.model')
 
+const Group = require('../../../models/group/group.model')
+
 const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
@@ -263,11 +265,11 @@ const emailRegex =
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
   const activeConfig = await Config.getCached(manuscript.groupId)
+  const group = await Group.query().findById(manuscript.groupId).first()
 
   const {
     formData: {
       publishing: { crossref },
-      instanceName,
       groupIdentity,
     },
   } = activeConfig
@@ -405,7 +407,7 @@ const publishArticleToCrossref = async manuscript => {
 
   journal.journal_article.doi_data = {
     doi,
-    resource: `${config['flax-site'].clientFlaxSiteUrl}/${instanceName}/articles/${shortId}/index.html`,
+    resource: `${config['flax-site'].clientFlaxSiteUrl}/${group.name}/articles/${shortId}/index.html`,
   }
 
   if (citations) journal.journal_article.citation_list = CITATIONS_PLACEHOLDER
@@ -487,10 +489,11 @@ const publishReviewsToCrossref = async manuscript => {
   const decisionForm = await getDecisionForm(manuscript.groupId)
   const reviewForm = await getReviewForm(manuscript.groupId)
 
+  const group = await Group.query().findById(manuscript.groupId).first()
+
   const {
     formData: {
       publishing: { crossref },
-      instanceName,
     },
   } = activeConfig
 
@@ -611,7 +614,7 @@ const publishReviewsToCrossref = async manuscript => {
         },
         doi_data: {
           doi: reviewDOI,
-          resource: `${config['flax-site'].clientFlaxSiteUrl}/${instanceName}/articles/${shortId}/index.html#review-${review.id}`,
+          resource: `${config['flax-site'].clientFlaxSiteUrl}/${group.name}/articles/${shortId}/index.html#review-${review.id}`,
         },
       }
     }),
