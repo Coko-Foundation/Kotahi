@@ -2,6 +2,7 @@ DO $$
 DECLARE
   g_id UUID;
   admin_team_id UUID;
+  ga_team_id UUID;
   gm_team_id UUID;
   user_team_id UUID;
   channel_id UUID;
@@ -25,6 +26,8 @@ INSERT INTO teams (id, object_id, object_type, display_name, role, global, type)
 SELECT id INTO g_id FROM groups WHERE name='journal' LIMIT 1;
 SELECT id INTO admin_team_id FROM teams
   WHERE global IS TRUE AND role='admin' LIMIT 1;
+SELECT id INTO ga_team_id FROM teams
+  WHERE object_id=g_id AND role='groupAdmin' LIMIT 1;
 SELECT id INTO gm_team_id FROM teams
   WHERE object_id=g_id AND role='groupManager' LIMIT 1;
 SELECT id INTO user_team_id FROM teams
@@ -32,7 +35,7 @@ SELECT id INTO user_team_id FROM teams
 SELECT id INTO channel_id FROM channels WHERE group_id=g_id AND topic='System-wide discussion';
 
 	
-UPDATE configs SET form_data = '{"user": {"isAdmin": false}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Reviews", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true,"authorProofingEnabled": false, "displayManuscriptShortId": true, "editorsEditReviewsEnabled": false}, "instanceName": "journal", "notification": {"gmailAuthEmail": null, "gmailSenderName": null, "gmailAuthPassword": null}, "groupIdentity": {"issn": "", "title": "", "contact": "", "logoPath": "/logo-kotahi.png", "brandName": "journal", "description": "", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}, "aiDesignStudio": {}, "semanticScholar": {"enableSemanticScholar": false}, "eventNotification": {"authorProofingSubmittedEmailTemplate": "03ea9b2e-edb6-4f41-8bd0-dd404785e803", "authorProofingInvitationEmailTemplate": "553f97d4-b9d8-478f-bc39-01ab23bf610b","reviewerInvitationPrimaryEmailTemplate": "ae7e01ca-fa91-4155-a248-a8b9f38c80a3"}}'
+UPDATE configs SET form_data = '{"user": {"isAdmin": false}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": true, "shouldAllowTagging": true}}, "submission": {"allowAuthorsSubmitNewVersion": false}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Reviews", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "editorsCanPublish": true, "authorProofingEnabled": false, "groupManagersCanPublish": true, "displayManuscriptShortId": true, "editorsEditReviewsEnabled": false}, "instanceName": "journal", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"issn": "", "title": "", "contact": "", "logoPath": "/logo-kotahi.png", "brandName": "journal", "description": "", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}, "aiDesignStudio": {}, "semanticScholar": {"enableSemanticScholar": false}, "eventNotification": {"authorProofingSubmittedEmailTemplate": "03ea9b2e-edb6-4f41-8bd0-dd404785e803", "authorProofingInvitationEmailTemplate": "553f97d4-b9d8-478f-bc39-01ab23bf610b","reviewerInvitationPrimaryEmailTemplate": "ae7e01ca-fa91-4155-a248-a8b9f38c80a3"}}'
 WHERE group_id = g_id;
 
 -- -- Add users to the tests
@@ -64,6 +67,7 @@ INSERT INTO "public"."team_members" ("id", "created", "updated", "team_id", "use
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', user_team_id, 'dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', admin_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', ga_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
 
 INSERT INTO "public"."channel_members" ("id", "created", "updated", "user_id", "channel_id", "last_viewed", "last_alert_triggered_time") VALUES 

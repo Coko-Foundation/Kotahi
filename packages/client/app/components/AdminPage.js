@@ -205,11 +205,12 @@ const AdminPage = () => {
 
   const isUser = currentUser?.groupRoles?.includes('user')
   const isGroupManager = currentUser?.groupRoles?.includes('groupManager')
+  const isGroupAdmin = currentUser?.groupRoles?.includes('groupAdmin')
   const isAdmin = currentUser?.globalRoles?.includes('admin')
 
   if (
     currentUser &&
-    (isUser || isGroupManager || isAdmin) &&
+    (isUser || isGroupManager || isGroupAdmin || isAdmin) &&
     ['journal', 'prc', 'preprint2'].includes(instanceName) // TODO: remove instance based logic and refactor it to be enabled and disabled from config manager
   ) {
     links.push({
@@ -220,13 +221,13 @@ const AdminPage = () => {
     })
   }
 
-  if (isGroupManager) {
+  if (isGroupManager || isGroupAdmin) {
     links.push({
       link: manuscriptsLink,
       name: t('leftMenu.Manuscripts'),
       icon: 'file-text',
     })
-    if (config?.report?.showInMenu)
+    if (config?.report?.showInMenu && isGroupAdmin)
       links.push({
         link: reportsLink,
         name: t('leftMenu.Reports'),
@@ -234,7 +235,7 @@ const AdminPage = () => {
       })
   }
 
-  if (isGroupManager || isAdmin) {
+  if (isGroupAdmin || isAdmin) {
     links.push({
       menu: 'Settings',
       name: t('leftMenu.Settings'),
@@ -368,7 +369,7 @@ const AdminPage = () => {
           path={profileLink}
           redirectLink={redirectLink}
         />
-        {(isUser || isGroupManager || isAdmin) && [
+        {(isUser || isGroupManager || isGroupAdmin || isAdmin) && [
           <PrivateRoute
             component={ProfilePage}
             currentUser={currentUser}
@@ -470,7 +471,7 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
         ]}
-        {(isGroupManager || isAdmin) && [
+        {(isGroupAdmin || isAdmin) && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
           <PrivateRoute
             component={FormBuilderPage}
@@ -582,7 +583,7 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />,
         ]}
-        {isGroupManager && [
+        {(isGroupManager || isGroupAdmin) && [
           <PrivateRoute
             component={ManuscriptPage}
             currentUser={currentUser}
@@ -598,6 +599,8 @@ const AdminPage = () => {
             path={`${urlFrag}/admin/manuscripts`}
             redirectLink={redirectLink}
           />,
+        ]}
+        {isGroupAdmin && [
           <PrivateRoute
             component={ReportPage}
             currentUser={currentUser}
@@ -607,7 +610,7 @@ const AdminPage = () => {
           />,
         ]}
 
-        {isUser || isGroupManager || isAdmin ? (
+        {isUser || isGroupManager || isGroupAdmin || isAdmin ? (
           <Route>
             <PageError errorCode={404} />
           </Route>

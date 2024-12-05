@@ -25,9 +25,18 @@ const User = ({
   const { t } = useTranslation()
   const roleOptions = []
 
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [roleConfirm, setRoleConfirm] = useState(null)
+
+  const [roles, setRoles] = useState([])
+
+  const isGroupAdmin = !!roles.find(r => r.value === 'groupAdmin')
+  const isGroupManager = !!roles.find(r => r.value === 'groupManager')
+
   if (
     currentUser.globalRoles.includes('admin') &&
     !user.groupRoles.includes('groupManager') &&
+    !user.groupRoles.includes('groupAdmin') &&
     !user.globalRoles.includes('admin')
   )
     roleOptions.push({
@@ -47,8 +56,19 @@ const User = ({
       scope: 'group',
       // We don't let someone unassign themselves from 'groupManager' role unless they're also an admin
       isFixed:
-        user.id === currentUser.id &&
-        !currentUser.globalRoles.includes('admin'),
+        ((user.id === currentUser.id || isGroupAdmin) &&
+          !currentUser.globalRoles.includes('admin')) ||
+        (currentUser.globalRoles.includes('admin') && isGroupAdmin),
+    },
+    {
+      value: 'groupAdmin',
+      label: t('common.roles.Group Admin'),
+      scope: 'group',
+      // We don't let someone unassign themselves from 'groupAdmin' role unless they're also an admin
+      isFixed:
+        ((user.id === currentUser.id || isGroupManager) &&
+          !currentUser.globalRoles.includes('admin')) ||
+        (currentUser.globalRoles.includes('admin') && isGroupManager),
     },
     {
       value: 'admin',
@@ -62,10 +82,6 @@ const User = ({
     },
   )
 
-  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
-  const [roleConfirm, setRoleConfirm] = useState(null)
-
-  const [roles, setRoles] = useState([])
   useEffect(
     () =>
       setRoles(

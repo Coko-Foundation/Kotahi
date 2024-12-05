@@ -2,19 +2,22 @@ DO $$
 DECLARE
   g_id UUID;
   admin_team_id UUID;
+  ga_team_id UUID;
   gm_team_id UUID;
   user_team_id UUID;
 BEGIN
 SELECT id INTO g_id FROM groups LIMIT 1;
 SELECT id INTO admin_team_id FROM teams
   WHERE global IS TRUE AND role='admin' LIMIT 1;
+SELECT id INTO ga_team_id FROM teams
+  WHERE object_id=g_id AND role='groupAdmin' LIMIT 1;
 SELECT id INTO gm_team_id FROM teams
   WHERE object_id=g_id AND role='groupManager' LIMIT 1;
 SELECT id INTO user_team_id FROM teams
   WHERE object_id=g_id AND role='user' LIMIT 1;
 
 
-UPDATE configs SET form_data = '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Reviews", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "journal", "notification": {"gmailAuthEmail": null, "gmailSenderName": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}'
+UPDATE configs SET form_data = '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, titleAndAbstract, created, updated, status, submission.$customStatus, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Team", "Decision", "Reviews", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "editorsCanPublish": true, "groupManagersCanPublish": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "journal", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}'
 WHERE group_id = g_id;
 
 INSERT INTO users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online, recent_tab, menu_pinned, chat_expanded) VALUES
@@ -36,6 +39,8 @@ INSERT INTO identities (id, user_id, created, updated, type, identifier, name, a
 (gen_random_uuid(), '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joane Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
 INSERT INTO team_members (id, created, updated, team_id, user_id, is_shared) VALUES
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', ga_team_id, '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL),
+(gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', ga_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, '231717dd-ba09-43d4-ac98-9d5542b27a0c', NULL),
 (gen_random_uuid(), '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', gm_team_id, 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL);
 

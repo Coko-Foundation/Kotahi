@@ -14,7 +14,7 @@ const fetchUserDetails = require('./fetchUserDetails')
 const CALLBACK_URL = '/auth/orcid/callback'
 const orcidBackURL = `${serverUrl}${CALLBACK_URL}`
 
-const addUserToAdminAndGroupManagerTeams = async (
+const addUserToAdminAndGroupAdminTeams = async (
   userId,
   groupId,
   options = {},
@@ -26,8 +26,8 @@ const addUserToAdminAndGroupManagerTeams = async (
 
   const { trx } = options
 
-  const groupManagerTeam = await Team.query(trx).findOne({
-    role: 'groupManager',
+  const groupAdminTeam = await Team.query(trx).findOne({
+    role: 'groupAdmin',
     objectId: groupId,
     objectType: 'Group',
   })
@@ -38,7 +38,7 @@ const addUserToAdminAndGroupManagerTeams = async (
   })
 
   await TeamMember.query(trx).insert({ userId, teamId: adminTeam.id })
-  await TeamMember.query(trx).insert({ userId, teamId: groupManagerTeam.id })
+  await TeamMember.query(trx).insert({ userId, teamId: groupAdminTeam.id })
 }
 
 const addUserToUserTeam = async (userId, groupId) => {
@@ -104,17 +104,22 @@ module.exports = app => {
         }
 
         let usersCountString
+        let groupUsersCount
 
         try {
           usersCountString = (await User.query().count())[0].count
+          groupUsersCount = await User.query()
+            .joinRelated('teams')
+            .where({ 'teams.objectId': groupId })
+            .resultSize()
         } catch (err) {
           console.error(err)
         }
 
         // TODO: Update the user details on every login, asynchronously
         try {
-          if (!user) {
-            await useTransaction(async trx => {
+          await useTransaction(async trx => {
+            if (!user) {
               user = await User.query(trx).insert({
                 username: params.name,
               })
@@ -131,7 +136,7 @@ module.exports = app => {
                 usersCountString === '0' ||
                 activeConfig.formData.user.isAdmin
               ) {
-                await addUserToAdminAndGroupManagerTeams(user.id, groupId, {
+                await addUserToAdminAndGroupAdminTeams(user.id, groupId, {
                   trx,
                 })
               }
@@ -151,8 +156,12 @@ module.exports = app => {
               })
 
               firstLogin = true
-            })
-          }
+            } else if (groupUsersCount === 0) {
+              await addUserToAdminAndGroupAdminTeams(user.id, groupId, {
+                trx,
+              })
+            }
+          })
         } catch (err) {
           done(err)
           return
@@ -199,7 +208,7 @@ module.exports = app => {
 
       // Based on configuration User Management -> All users are assigned Group Manager and Admin roles flag
       if (activeConfig.formData.user.isAdmin)
-        await addUserToAdminAndGroupManagerTeams(req.user.id, groupId)
+        await addUserToAdminAndGroupAdminTeams(req.user.id, groupId)
 
       // eslint-disable-next-line global-require
       const Team = require('../../models/team/team.model')

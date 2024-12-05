@@ -2412,6 +2412,16 @@ export const generateSchemas = (
               title: t('configPage.editorsEditDiscussionPosts'),
               default: false,
             },
+            groupManagersCanPublish: {
+              type: 'boolean',
+              title: t('configPage.groupManagersCanPublish'),
+              default: true,
+            },
+            editorsCanPublish: {
+              type: 'boolean',
+              title: t('configPage.editorsCanPublish'),
+              default: true,
+            },
             showTabs: {
               type: 'array',
               description: t('configPage.Control pages visible to editors'),
@@ -3479,6 +3489,16 @@ export const generateSchemas = (
               type: 'boolean',
               title: t('configPage.editorsEditDiscussionPosts'),
               default: false,
+            },
+            groupManagersCanPublish: {
+              type: 'boolean',
+              title: t('configPage.groupManagersCanPublish'),
+              default: true,
+            },
+            editorsCanPublish: {
+              type: 'boolean',
+              title: t('configPage.editorsCanPublish'),
+              default: true,
             },
             showTabs: {
               type: 'array',

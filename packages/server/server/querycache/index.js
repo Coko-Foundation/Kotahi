@@ -52,6 +52,21 @@ const queryFunctions = {
     const isAdmin = !!adminRecord
     return isAdmin
   },
+  userIsGroupAdmin: async (userId, groupId) => {
+    const Team = require('../../models/team/team.model')
+
+    const groupAdminRecord = await Team.query()
+      .withGraphJoined('members')
+      .findOne({
+        role: 'groupAdmin',
+        objectId: groupId,
+        objectType: 'Group',
+        userId,
+      })
+
+    const isGroupAdmin = !!groupAdminRecord
+    return isGroupAdmin
+  },
   userIsEditor: async (userId, manuscriptId) => {
     const User = require('../../models/user/user.model')
 

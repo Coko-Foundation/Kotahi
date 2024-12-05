@@ -55,6 +55,7 @@ const en = {
       },
       roles: {
         Admin: 'Admin',
+        'Group Admin': 'Group Admin',
         'Group Manager': 'Group Manager',
         User: 'User',
       },
@@ -599,6 +600,8 @@ const en = {
       'Editors edit reviews': 'Editors can edit submitted reviews',
       editorsEditDiscussionPosts:
         'Editors can edit submitted discussion form field posts',
+      groupManagersCanPublish: 'Group Managers can Publish articles/reviews',
+      editorsCanPublish: 'Editors can Publish articles/reviews',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',

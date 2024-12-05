@@ -110,7 +110,19 @@ const DecisionVersion = ({
     selectedManuscriptVersionId: version.id,
   }
 
+  const isGroupManager = currentUser?.groupRoles?.includes('groupManager')
+  const isGroupAdmin = currentUser?.groupRoles?.includes('groupAdmin')
+
+  const isEditor = version?.teams
+    .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
+    .some(t => t.members.some(m => m.user.id === currentUser?.id))
+
   const authorProofingEnabled = config.controlPanel?.authorProofingEnabled // let's set this based on the config
+
+  const canPublish =
+    isGroupAdmin ||
+    (isGroupManager && config.controlPanel?.groupManagersCanPublish) ||
+    (isEditor && config.controlPanel?.editorsCanPublish)
 
   const debouncedSave = useCallback(
     debounce(source => {
@@ -499,7 +511,7 @@ const DecisionVersion = ({
               </SectionContent>
             </AdminSection>
           )}
-          {isCurrentVersion && (
+          {isCurrentVersion && canPublish && (
             <AdminSection>
               <Publish
                 areVerdictOptionsComplete={areVerdictOptionsComplete}

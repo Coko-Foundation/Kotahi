@@ -563,6 +563,7 @@ const DecisionPage = ({ currentUser, match }) => {
   if (
     !(
       currentUser.groupRoles.includes('groupManager') ||
+      currentUser.groupRoles.includes('groupAdmin') ||
       ['seniorEditor', 'handlingEditor', 'editor'].some(editorRole =>
         currentUserRoles.includes(editorRole),
       )

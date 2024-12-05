@@ -107,10 +107,36 @@ const createGroupAndRelatedData = async (
       objectType: 'Group',
     })
 
-    console.log(`    Added ${userTeam.name} team for "${group.name}".`)
+    console.log(`    Added ${userTeam.displayName} team for "${group.name}".`)
   } else {
     console.log(
-      `    ${userTeamExists.name} team already exists in database for "${group.name}". Skipping.`,
+      `    ${userTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
+    )
+  }
+
+  // Seed groupAdmin role and link it to the created group
+  const groupAdminTeamExists = await Team.query(trx).findOne({
+    role: 'groupAdmin',
+    global: false,
+    objectId: group.id,
+    objectType: 'Group',
+  })
+
+  if (!groupAdminTeamExists) {
+    const groupAdminTeam = await Team.query(trx).insertAndFetch({
+      displayName: 'Group Admin',
+      role: 'groupAdmin',
+      global: false,
+      objectId: group.id,
+      objectType: 'Group',
+    })
+
+    console.log(
+      `    Added ${groupAdminTeam.displayName} team for "${group.name}".`,
+    )
+  } else {
+    console.log(
+      `    ${groupAdminTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
     )
   }
 
@@ -131,10 +157,12 @@ const createGroupAndRelatedData = async (
       objectType: 'Group',
     })
 
-    console.log(`    Added ${groupManagerTeam.name} team for "${group.name}".`)
+    console.log(
+      `    Added ${groupManagerTeam.displayName} team for "${group.name}".`,
+    )
   } else {
     console.log(
-      `    ${groupManagerTeamExists.name} team already exists in database for "${group.name}". Skipping.`,
+      `    ${groupManagerTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
     )
   }
 
