@@ -96,6 +96,8 @@ const getContributors = formData => {
 }
 
 const getRightsList = localContext => {
+  if (!localContext) return []
+
   const notices =
     localContext.notice.map(n => ({
       rightsUri: localContext.url,
