@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useTranslation } from 'react-i18next'
+import PropTypes from 'prop-types'
 import { ConfigContext } from '../../../config/src'
 
 import {
@@ -8,11 +8,11 @@ import {
   DeclinedInfoString,
   FeedbackForm,
   InvitationContainer,
+  ErrorMessage,
 } from '../style'
 
-const InvitationLinkExpired = () => {
+const InvitationError = ({ errorHeading, errorMessage, link }) => {
   const config = useContext(ConfigContext)
-  const { t } = useTranslation()
   return (
     <InvitationContainer>
       <Centered>
@@ -25,7 +25,9 @@ const InvitationLinkExpired = () => {
             }
           />
           <FeedbackForm>
-            <DeclinedInfoString>{t('linkExpiredPage')}</DeclinedInfoString>
+            <DeclinedInfoString>{errorHeading}</DeclinedInfoString>
+            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+            {link}
           </FeedbackForm>
         </InvitationContent>
       </Centered>
@@ -33,4 +35,15 @@ const InvitationLinkExpired = () => {
   )
 }
 
-export default InvitationLinkExpired
+InvitationError.propTypes = {
+  errorHeading: PropTypes.string.isRequired,
+  errorMessage: PropTypes.string,
+  link: PropTypes.element,
+}
+
+InvitationError.defaultProps = {
+  errorMessage: null,
+  link: null,
+}
+
+export default InvitationError

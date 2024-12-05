@@ -613,7 +613,7 @@ const permissions = {
     publishedManuscripts: allow,
     publishingCollection: allow,
     reviewersActivity: or(userIsGroupAdmin, userIsAdmin),
-    searchRor: isAuthenticated,
+    searchRor: allow,
     searchUsers: isAuthenticated,
     summaryActivity: or(userIsGroupAdmin, userIsAdmin),
     systemWideDiscussionChannel: or(userIsGm, userIsGroupAdmin, userIsAdmin),

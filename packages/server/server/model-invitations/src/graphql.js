@@ -121,7 +121,17 @@ const resolvers = {
 
       return result
     },
-    async assignUserAsAuthor(_, { manuscriptId, userId }, ctx) {
+    async assignUserAsAuthor(_, { manuscriptId, userId, invitationId }, ctx) {
+      const existingInvite = await Invitation.query().findById(invitationId)
+
+      if (!existingInvite || existingInvite.responseDate) {
+        throw new Error('Invalid Invitation ID')
+      }
+
+      if (existingInvite.userId && existingInvite.userId !== userId) {
+        throw new Error('Invalid User ID')
+      }
+
       await addUserToManuscriptChatChannel({
         manuscriptId,
         userId,
@@ -155,7 +165,7 @@ const resolvers = {
         objectId: manuscriptId,
         objectType: 'manuscript',
         role: 'author',
-        displayName: 'Authors',
+        displayName: 'Author',
       })
 
       await TeamMember.query().insert({
@@ -240,7 +250,7 @@ extend type Mutation {
   updateInvitationStatus(id: ID, status: String, userId: ID,  responseDate: DateTime ): Invitation
   updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String, suggestedReviewers:[SuggestedReviewerInput]): Invitation
   addEmailToBlacklist(email: String!, groupId: ID!): BlacklistEmail
-  assignUserAsAuthor(manuscriptId: ID!, userId: ID!): Team
+  assignUserAsAuthor(manuscriptId: ID!, userId: ID!, invitationId: ID!): Team
   updateSharedStatusForInvitedReviewer(invitationId: ID!, isShared: Boolean!): Invitation!
   removeInvitation(id: ID!): Invitation
 }

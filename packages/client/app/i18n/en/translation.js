@@ -834,8 +834,15 @@ const en = {
       invalidReviewers: 'Some reviewers are invalid',
     },
     invitationAcceptedPage: {
-      error:
-        'This invitation could not be accepted, because you have already declined an invitation for this manuscript.',
+      acceptError: 'This invitation could not be accepted',
+      declineError: 'This invitation could not be declined',
+      assignAuthorFailed: 'Failed to assign author',
+      assignReviewerFailed: 'Failed to assign reviewer',
+      invalidUser: 'This invitation does not match your current user',
+      invitedAlreadyRejected: 'This invitation has already been rejected',
+      invitedAlreadyAccepted: 'This invitation has already been accepted',
+      invalidInviteId:
+        'The invite is invalid. Please check the link, and try again later.',
       returnToDashboard: 'Return to Dashboard',
     },
     reviewPreviewPage: {

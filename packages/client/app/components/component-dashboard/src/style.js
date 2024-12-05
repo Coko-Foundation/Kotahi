@@ -125,6 +125,14 @@ export const DeclinedInfoString = styled.p`
   text-align: left;
 `
 
+export const ErrorMessage = styled.p`
+  color: ${color.text};
+  font-family: ${th('fontWriting')};
+  font-size: ${th('fontSizeBase')};
+  margin-bottom: 6px;
+  text-align: left;
+`
+
 export const InvitationContainer = styled.div`
   background: linear-gradient(
     134deg,

@@ -600,6 +600,8 @@ const FormTemplate = ({
                           shouldAllowFieldSpecChanges={[
                             'ThreadedDiscussion',
                           ].includes(element.component)}
+                          showMiddleName={element.component === 'AuthorsInput'}
+                          showOrcidId={element.component === 'AuthorsInput'}
                           spellCheck
                           threadedDiscussionProps={threadedDiscussionProps}
                           validate={validateFormField(

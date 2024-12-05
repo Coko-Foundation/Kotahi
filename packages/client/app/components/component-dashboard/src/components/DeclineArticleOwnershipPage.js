@@ -1,15 +1,17 @@
 import React, { useState, useContext } from 'react'
+import { Redirect } from 'react-router-dom'
 import { useMutation, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { Field, Formik } from 'formik'
 
-import { Button, Checkbox, TextArea } from '../../../pubsweet'
+import { Button, Checkbox, Spinner, TextArea } from '../../../pubsweet'
 import { ADD_EMAIL_TO_BLACKLIST } from '../../../../queries/index'
 import {
   UPDATE_INVITATION_RESPONSE,
   UPDATE_INVITATION_STATUS,
   GET_INVITATION_STATUS,
+  GET_LOGGED_IN_USER,
 } from '../../../../queries/invitation'
 import { ConfigContext } from '../../../config/src'
 
@@ -25,10 +27,10 @@ import {
   ThankYouString,
 } from '../style'
 
-import InvitationLinkExpired from './InvitationLinkExpired'
 import AuthorsInput from '../../../component-submit/src/components/AuthorsInput'
 import { validateAuthors } from '../../../../shared/authorsFieldDefinitions'
-import { InvalidLabel } from '../../../shared'
+import { InvalidLabel, LinkAction } from '../../../shared'
+import InvitationError from './InvitationError'
 
 const SuggestedReviewersContainer = styled.div`
   align-items: flex-start;
@@ -45,7 +47,7 @@ const SuggestedReviewersContainer = styled.div`
 `
 
 const SuggestedReviewersScrollable = styled.div`
-  max-height: 232px;
+  max-height: 256px;
   overflow-y: scroll;
   width: 100%;
 `
@@ -64,18 +66,30 @@ const StyledFormInput = styled(FormInput)`
 `
 
 const DeclineArticleOwnershipPage = ({ match }) => {
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false)
+  const [errorMessage, setErrorMessage] = useState(null)
+
   const config = useContext(ConfigContext)
   const { invitationId } = match.params
 
-  const { data } = useQuery(GET_INVITATION_STATUS, {
+  const { data, loading } = useQuery(GET_INVITATION_STATUS, {
     variables: { id: invitationId },
+    onError: () => {
+      setErrorMessage('invalidInviteId')
+    },
   })
+
+  const { data: loggedInUserData, loading: loggedInUserLoading } =
+    useQuery(GET_LOGGED_IN_USER)
+
+  const loggedInUserId = loggedInUserData?.currentUser?.id
 
   const { t } = useTranslation()
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
       localStorage.removeItem('invitationId')
+      localStorage.removeItem('inviteAction')
     },
   })
 
@@ -84,8 +98,6 @@ const DeclineArticleOwnershipPage = ({ match }) => {
       setIsFormSubmitted(true)
     },
   })
-
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false)
 
   const [updateInvitationResponse] = useMutation(UPDATE_INVITATION_RESPONSE, {
     onCompleted: blacklistData => {
@@ -130,7 +142,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
           firstName: reviewer.firstName,
           lastName: reviewer.lastName,
           email: reviewer.email,
-          affiliation: reviewer.affiliation,
+          affiliation: reviewer.ror?.label,
         })),
       },
     })
@@ -155,7 +167,55 @@ const DeclineArticleOwnershipPage = ({ match }) => {
     )
   }
 
-  if (data && data.invitationStatus.status === 'UNANSWERED') {
+  if (loading || loggedInUserLoading) return <Spinner />
+
+  if (errorMessage) {
+    localStorage.removeItem('invitationId')
+    localStorage.removeItem('inviteAction')
+    return (
+      <InvitationError
+        errorHeading={t('invitationAcceptedPage.declineError')}
+        errorMessage={t(`invitationAcceptedPage.${errorMessage}`)}
+        link={
+          loggedInUserId ? (
+            <LinkAction to={`${config.urlFrag}/dashboard`}>
+              {t('invitationAcceptedPage.returnToDashboard')}
+            </LinkAction>
+          ) : null
+        }
+      />
+    )
+  }
+
+  const { userId: invitedUserId, status } = data.invitationStatus
+
+  if (
+    !loggedInUserLoading &&
+    invitedUserId &&
+    loggedInUserId !== invitedUserId
+  ) {
+    if (!loggedInUserId) {
+      localStorage.setItem('inviteAction', 'decline')
+      localStorage.setItem('invitationId', invitationId)
+      return <Redirect to={`${config?.urlFrag}/login`} />
+    }
+
+    setErrorMessage('invalidUser')
+  }
+
+  if (status === 'REJECTED') {
+    setErrorMessage('invitedAlreadyRejected')
+  }
+
+  if (status === 'ACCEPTED') {
+    setErrorMessage('invitedAlreadyAccepted')
+  }
+
+  if (status === 'EXPIRED') {
+    setErrorMessage('linkExpiredPage')
+  }
+
+  if (status === 'UNANSWERED') {
     return (
       <InvitationContainer>
         <Centered>
@@ -223,6 +283,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                           <SuggestedReviewersScrollable>
                             <AuthorsInput
                               {...formikProps}
+                              fullWidth
                               onChange={newReviewers => {
                                 setFieldValue(
                                   'suggestedReviewers',
@@ -231,6 +292,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                               }}
                               overrideButtonLabel="Add Suggested Reviewer"
                               requireEmail
+                              rorMenuPlacement="top"
                               value={suggestedReviewers}
                             />
                           </SuggestedReviewersScrollable>
@@ -265,7 +327,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
     )
   }
 
-  return <InvitationLinkExpired />
+  return <Spinner />
 }
 
 export default DeclineArticleOwnershipPage
