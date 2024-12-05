@@ -55,6 +55,7 @@ const fr = {
       },
       roles: {
         Admin: 'Admin',
+        'Group Admin': 'Administrateur de groupe',
         'Group Manager': 'Gestionnaire de groupe',
         User: 'Utilisateur',
       },
@@ -617,6 +618,9 @@ const fr = {
       'Editors edit reviews': 'Les éditeurs peuvent modifier les avis soumis',
       editorsEditDiscussionPosts:
         'Les éditeurs peuvent modifier les messages soumis sur le terrain du formulaire de discussion',
+      groupManagersCanPublish:
+        'Les responsables de groupe peuvent publier des articles/avis',
+      editorsCanPublish: 'Les éditeurs peuvent publier des articles/critiques',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",

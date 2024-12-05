@@ -105,6 +105,8 @@ module.exports = {
     // showFeatures: ['Assign Editors', 'Reviews', 'Decision', 'Publish'],
     displayManuscriptShortId: true,
     authorProofingEnabled: true,
+    editorsCanPublish: true,
+    groupManagersCanPublish: true,
   },
   notification: {
     gmailAuthEmail: 'test@coko.foundation',

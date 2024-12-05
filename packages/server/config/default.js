@@ -52,6 +52,10 @@ const cfg = {
         displayName: 'Group Manager',
         role: 'groupManager',
       },
+      {
+        displayName: 'Group Admin',
+        role: 'groupAdmin',
+      },
     ],
   },
   permissions,

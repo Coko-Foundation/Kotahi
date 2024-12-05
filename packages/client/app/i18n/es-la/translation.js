@@ -56,6 +56,7 @@ const esLa = {
       },
       roles: {
         Admin: 'Administrador',
+        'Group Admin': 'Administrador de grupo',
         'Group Manager': 'Gerente de Grupo',
         User: 'Usuario',
       },
@@ -611,6 +612,9 @@ const esLa = {
         'Los editores pueden editar las reseñas enviadas.',
       editorsEditDiscussionPosts:
         'Los editores pueden editar las publicaciones de campo del formulario de discusión enviadas',
+      groupManagersCanPublish:
+        'Los administradores de grupo pueden publicar artículos/reseñas',
+      editorsCanPublish: 'Los editores pueden publicar artículos / reseñas',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',
