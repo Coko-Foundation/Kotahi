@@ -87,9 +87,12 @@ const ReviewDetailsModal = (
   } = props
 
   const { createYjsProvider, wsProvider } = useContext(YjsContext)
+  const { controlPanel } = useContext(ConfigContext)
 
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
+
+  const { editorsDeleteReviewsEnabled } = controlPanel ?? {}
 
   useEffect(() => {
     if (review?.id) {
@@ -195,7 +198,8 @@ const ReviewDetailsModal = (
       }
       onClose={onClose}
       rightActions={
-        !readOnly && (
+        !readOnly &&
+        editorsDeleteReviewsEnabled && (
           <>
             <SecondaryButton onClick={() => setOpen(true)}>
               {t('modals.reviewReport.Delete')}
@@ -305,8 +309,10 @@ const CheckboxActions = ({
   manuscriptId,
   updateReview,
 }) => {
-  const config = useContext(ConfigContext)
+  const { controlPanel } = useContext(ConfigContext)
   const { t } = useTranslation()
+
+  const { hideReview, sharedReview } = controlPanel ?? {}
 
   const toggleSharedStatus = async () => {
     if (isInvitation) {
@@ -357,7 +363,7 @@ const CheckboxActions = ({
 
   return (
     <>
-      {review && config.controlPanel?.hideReview && (
+      {review && hideReview && (
         <>
           <Checkbox
             checked={
@@ -375,7 +381,7 @@ const CheckboxActions = ({
           />
         </>
       )}
-      {config.controlPanel?.sharedReview && (
+      {sharedReview && (
         <Checkbox
           checked={reviewerTeamMember?.isShared}
           label={t('modals.reviewReport.Shared')}

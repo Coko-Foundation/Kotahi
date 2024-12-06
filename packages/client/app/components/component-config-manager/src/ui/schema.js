@@ -2503,6 +2503,10 @@ export const generateSchemas = (
             editorsEditDiscussionPostsEnabled: {
               type: 'boolean',
               title: t('configPage.editorsEditDiscussionPosts'),
+            },
+            editorsDeleteReviewsEnabled: {
+              type: 'boolean',
+              title: t('configPage.editorsDeleteReviews'),
               default: false,
             },
             groupManagersCanPublish: {
@@ -3627,6 +3631,10 @@ export const generateSchemas = (
             editorsEditDiscussionPostsEnabled: {
               type: 'boolean',
               title: t('configPage.editorsEditDiscussionPosts'),
+            },
+            editorsDeleteReviewsEnabled: {
+              type: 'boolean',
+              title: t('configPage.editorsDeleteReviews'),
               default: false,
             },
             groupManagersCanPublish: {

@@ -621,6 +621,8 @@ const esLa = {
       groupManagersCanPublish:
         'Los administradores de grupo pueden publicar artículos/reseñas',
       editorsCanPublish: 'Los editores pueden publicar artículos / reseñas',
+      editorsDeleteReviews:
+        'Los editores pueden eliminar las revisiones enviadas.',
       Reports: 'Reportes',
       reportShowInMenu:
         'El Gerente de Grupo y el administrador pueden acceder a los Reportes',

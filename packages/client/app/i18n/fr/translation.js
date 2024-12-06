@@ -628,6 +628,7 @@ const fr = {
       groupManagersCanPublish:
         'Les responsables de groupe peuvent publier des articles/avis',
       editorsCanPublish: 'Les éditeurs peuvent publier des articles/critiques',
+      editorsDeleteReviews: 'Les éditeurs peuvent supprimer les avis soumis',
       Reports: 'Rapports',
       reportShowInMenu:
         "Le gestionnaire de groupe et l'administrateur peuvent accéder aux rapports",
