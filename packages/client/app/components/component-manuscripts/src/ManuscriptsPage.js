@@ -262,12 +262,19 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   const groupManagerDiscussionChannel =
     systemWideDiscussionChannel?.data?.systemWideDiscussionChannel
 
+  const { hideDiscussionFromGroupAdminsManagers } =
+    config?.discussionChannel || {}
+
   const channels = [
-    {
-      id: groupManagerDiscussionChannel?.id,
-      name: t('chat.Group Manager discussion'),
-      type: groupManagerDiscussionChannel?.type,
-    },
+    ...(hideDiscussionFromGroupAdminsManagers
+      ? []
+      : [
+          {
+            id: groupManagerDiscussionChannel?.id,
+            name: t('chat.Group Manager discussion'),
+            type: groupManagerDiscussionChannel?.type,
+          },
+        ]),
   ]
 
   const chatProps = useChat(channels)
@@ -288,6 +295,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       exportManuscriptsToJson={exportManuscriptsToJson}
       getManuscriptsData={getManuscriptsData}
       groupManagerDiscussionChannel={groupManagerDiscussionChannel}
+      hideManuscriptsChat={hideDiscussionFromGroupAdminsManagers}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}
       isImporting={isImporting}

@@ -1,4 +1,4 @@
-const { logger, fileStorage } = require('@coko/server')
+const { logger, fileStorage, useTransaction } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@coko/server/src/errors')
 const { parseISO, addSeconds } = require('date-fns')
 const { chunk } = require('lodash')
@@ -19,6 +19,7 @@ const {
 } = require('./userCommsUtils')
 
 const { cachedGet, evictFromCacheByPrefix } = require('../../querycache')
+const Config = require('../../../models/config/config.model')
 
 const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
   if (!user) return
@@ -203,41 +204,67 @@ const resolvers = {
       }
     },
     channelUsersForMention: async (_, { channelId }, ctx) => {
-      if (!channelId) {
-        throw new Error('Channel ID is required.')
-      }
+      return useTransaction(async trx => {
+        if (!channelId) {
+          throw new Error('Channel ID is required.')
+        }
 
-      const channelWithUsers = await Channel.query()
-        .findById(channelId)
-        .withGraphFetched('users(orderByUsername)')
+        const channelWithUsers = await Channel.query(trx)
+          .findById(channelId)
+          .withGraphFetched('users(orderByUsername)')
 
-      if (!channelWithUsers) {
-        throw new Error('Channel not found.')
-      }
+        if (!channelWithUsers) {
+          throw new Error('Channel not found.')
+        }
 
-      const result = [...channelWithUsers.users]
+        const activeConfig = await Config.getCached(channelWithUsers.groupId, {
+          trx,
+        })
 
-      if (channelWithUsers.type !== 'all') {
-        const groupId = ctx.req.headers['group-id']
+        const reviewerTeam = await Team.query(trx)
+          .findOne({
+            objectId: channelWithUsers.manuscriptId,
+            role: 'reviewer',
+          })
+          .withGraphFetched('members')
 
-        const groupManagers = await Team.relatedQuery('users')
-          .for(
-            Team.query().where({
-              role: 'groupManager',
-              objectId: groupId,
-              objectType: 'Group',
-            }),
+        const hideFromReviewers =
+          activeConfig.formData.discussionChannel?.hideDiscussionFromReviewers
+
+        let result = [...channelWithUsers.users]
+
+        if (hideFromReviewers && reviewerTeam) {
+          const memberUserIds = reviewerTeam.members.map(
+            member => member.userId,
           )
-          .whereNotIn(
-            'users.id',
-            result.map(user => user.id),
+
+          result = result.filter(
+            chatMember => !memberUserIds.includes(chatMember.id),
           )
-          .modify('orderByUsername')
+        }
 
-        result.push(...groupManagers)
-      }
+        if (channelWithUsers.type !== 'all') {
+          const groupId = ctx.req.headers['group-id']
 
-      return result
+          const groupManagers = await Team.relatedQuery('users')
+            .for(
+              Team.query(trx).where({
+                role: 'groupManager',
+                objectId: groupId,
+                objectType: 'Group',
+              }),
+            )
+            .whereNotIn(
+              'users.id',
+              result.map(user => user.id),
+            )
+            .modify('orderByUsername')
+
+          result.push(...groupManagers)
+        }
+
+        return result
+      })
     },
 
     // Authentication

@@ -37,6 +37,7 @@ const ReviewLayout = ({
   createFile,
   deleteFile,
   decisionForm,
+  hideChat,
   threadedDiscussionProps,
   chatProps,
   updateReviewMutation,
@@ -390,31 +391,39 @@ const ReviewLayout = ({
     <Columns>
       <Manuscript>
         <ErrorBoundary>
-          <VersionSwitcher key={reviewTabs.length} versions={reviewTabs} />
+          <VersionSwitcher
+            fullWidth={hideChat}
+            key={reviewTabs.length}
+            versions={reviewTabs}
+          />
         </ErrorBoundary>
       </Manuscript>
-      {isDiscussionVisible && (
-        <Chat>
-          <MessageContainer
-            channelId={channelId}
-            channels={channels}
-            chatProps={chatProps}
-            currentUser={currentUser}
-          />
-          <CollapseButton
-            iconName="ChevronRight"
-            onClick={toggleSubmissionDiscussionVisibility}
-            title={t('chat.Hide Chat')}
-          />
-        </Chat>
-      )}
-      {!isDiscussionVisible && (
-        <ChatButton
-          iconName="MessageSquare"
-          onClick={toggleSubmissionDiscussionVisibility}
-          title={t('chat.Show Chat')}
-          unreadMessagesCount={channelData?.unreadMessagesCount}
-        />
+      {!hideChat && (
+        <>
+          {isDiscussionVisible && (
+            <Chat>
+              <MessageContainer
+                channelId={channelId}
+                channels={channels}
+                chatProps={chatProps}
+                currentUser={currentUser}
+              />
+              <CollapseButton
+                iconName="ChevronRight"
+                onClick={toggleSubmissionDiscussionVisibility}
+                title={t('chat.Hide Chat')}
+              />
+            </Chat>
+          )}
+          {!isDiscussionVisible && (
+            <ChatButton
+              iconName="MessageSquare"
+              onClick={toggleSubmissionDiscussionVisibility}
+              title={t('chat.Show Chat')}
+              unreadMessagesCount={channelData?.unreadMessagesCount}
+            />
+          )}
+        </>
       )}
     </Columns>
   )
@@ -440,6 +449,7 @@ ReviewLayout.propTypes = {
   ).isRequired,
   currentUserReview: PropTypes.shape({}),
   channelId: PropTypes.string.isRequired,
+  hideChat: PropTypes.bool,
   submissionForm: PropTypes.shape({
     children: PropTypes.arrayOf(
       PropTypes.shape({
@@ -458,6 +468,7 @@ ReviewLayout.propTypes = {
 ReviewLayout.defaultProps = {
   review: undefined,
   currentUserReview: undefined,
+  hideChat: false,
   status: undefined,
 }
 

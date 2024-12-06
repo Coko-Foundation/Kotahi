@@ -144,12 +144,24 @@ const SubmitPage = ({ currentUser, match, history }) => {
     channelId = editorialChannel?.id
   }
 
+  const {
+    hideDiscussionFromAuthors,
+    hideDiscussionFromEditorsReviewersAuthors,
+  } = config?.discussionChannel || {}
+
+  const hideChat =
+    hideDiscussionFromAuthors || hideDiscussionFromEditorsReviewersAuthors
+
   const channels = [
-    {
-      id: channelId,
-      name: t('chat.Discussion with editorial team'),
-      type: editorialChannel?.type,
-    },
+    ...(hideChat
+      ? []
+      : [
+          {
+            id: channelId,
+            name: t('chat.Discussion with editorial team'),
+            type: editorialChannel?.type,
+          },
+        ]),
   ]
 
   const chatProps = useChat(channels)
@@ -325,6 +337,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      hideChat={hideChat}
       manuscript={manuscript}
       manuscriptLatestVersionId={manuscriptLatestVersionId}
       match={match}

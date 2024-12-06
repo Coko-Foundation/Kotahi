@@ -542,6 +542,12 @@ const ru = {
         'Авторам доступна возможность подачи новой версии статьи в любое время',
       'Review page': 'Раздел "Рецензирование"',
       showSummary: 'Рецензентам доступен просмотр раздела “Решение”',
+      hideDiscussionFromGroupAdminsManagers:
+        'Скрыть обсуждение от администраторов и менеджеров групп',
+      hideDiscussionFromEditorsReviewersAuthors:
+        'Скрыть обсуждение от редакторов, рецензентов и авторов',
+      hideDiscussionFromAuthors: 'Скрыть обсуждение только от авторов',
+      hideDiscussionFromReviewers: 'Скрыть обсуждение только от рецензентов',
       Publishing: 'Публикация',
       Integrations: 'Интеграции',
       Hypothesis: 'Гипотезы',

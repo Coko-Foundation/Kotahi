@@ -324,12 +324,24 @@ const ReviewPage = ({ currentUser, history, match }) => {
     editorialChannelId = editorialChannel?.id
   }
 
+  const {
+    hideDiscussionFromReviewers,
+    hideDiscussionFromEditorsReviewersAuthors,
+  } = config?.discussionChannel || {}
+
+  const hideReviewerChat =
+    hideDiscussionFromReviewers || hideDiscussionFromEditorsReviewersAuthors
+
   const channels = [
-    {
-      id: editorialChannelId,
-      name: t('chat.Discussion with editorial team'),
-      type: 'editorial',
-    },
+    ...(hideReviewerChat
+      ? []
+      : [
+          {
+            id: editorialChannelId,
+            name: t('chat.Discussion with editorial team'),
+            type: 'editorial',
+          },
+        ]),
   ]
 
   const chatProps = useChat(channels)
@@ -404,6 +416,7 @@ const ReviewPage = ({ currentUser, history, match }) => {
       currentUserReview={currentUserReview}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      hideChat={hideReviewerChat}
       history={history}
       reviewForm={reviewForm}
       submissionForm={submissionForm}

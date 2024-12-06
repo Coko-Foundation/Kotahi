@@ -103,6 +103,7 @@ const Manuscripts = ({ history, ...props }) => {
     validateSuffix,
     setReadyToEvaluateLabels,
     deleteManuscriptMutations,
+    hideManuscriptsChat,
     importManuscripts,
     isImporting,
     publishManuscript,
@@ -346,7 +347,7 @@ const Manuscripts = ({ history, ...props }) => {
         }
         currentSearchQuery={currentSearchQuery}
       />
-      {!isAdminChatOpen && (
+      {!isAdminChatOpen && !hideManuscriptsChat && (
         <RoundIconButtonWrapper
           iconName="MessageSquare"
           onClick={() => {
@@ -471,7 +472,7 @@ const Manuscripts = ({ history, ...props }) => {
         </ManuscriptsPane>
 
         {/* Group Manager Discussion, Video Chat, Hide Chat, Chat component */}
-        {isAdminChatOpen && (
+        {isAdminChatOpen && !hideManuscriptsChat && (
           <MessageContainer
             channelId={groupManagerDiscussionChannel?.id}
             channels={channels}

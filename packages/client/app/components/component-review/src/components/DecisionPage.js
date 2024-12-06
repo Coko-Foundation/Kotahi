@@ -166,17 +166,33 @@ const DecisionPage = ({ currentUser, match }) => {
     allChannel = data?.manuscript.channels.find(c => c.type === 'all')
   }
 
+  const {
+    hideDiscussionFromAuthors,
+    hideDiscussionFromEditorsReviewersAuthors,
+  } = config?.discussionChannel || {}
+
+  const hideAuthorChat =
+    hideDiscussionFromAuthors || hideDiscussionFromEditorsReviewersAuthors
+
   const channels = [
-    {
-      id: allChannel?.id,
-      name: t('chat.Discussion with author'),
-      type: allChannel?.type,
-    },
-    {
-      id: editorialChannel?.id,
-      name: t('chat.Editorial discussion'),
-      type: editorialChannel?.type,
-    },
+    ...(hideAuthorChat
+      ? []
+      : [
+          {
+            id: allChannel?.id,
+            name: t('chat.Discussion with author'),
+            type: allChannel?.type,
+          },
+        ]),
+    ...(hideDiscussionFromEditorsReviewersAuthors
+      ? []
+      : [
+          {
+            id: editorialChannel?.id,
+            name: t('chat.Editorial discussion'),
+            type: editorialChannel?.type,
+          },
+        ]),
   ]
 
   const chatProps = useChat(channels)
@@ -686,6 +702,7 @@ const DecisionPage = ({ currentUser, match }) => {
       externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
+      hideChat={hideAuthorChat && hideDiscussionFromEditorsReviewersAuthors}
       lockUnlockReview={lockUnlockReview}
       makeDecision={makeDecision}
       manuscript={manuscript}

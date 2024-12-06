@@ -46,6 +46,7 @@ const Submit = ({
   onSubmit,
   channelId,
   chatProps,
+  hideChat,
   parent,
   match,
   channels,
@@ -246,33 +247,38 @@ const Submit = ({
       <Manuscript>
         <ErrorBoundary>
           <VersionSwitcher
+            fullWidth={hideChat}
             key={decisionSections.length}
             versions={decisionSections}
           />
         </ErrorBoundary>
       </Manuscript>
-      {isSubmisionDiscussionVisible && (
-        <Chat>
-          <MessageContainer
-            channelId={channelId}
-            channels={channels}
-            chatProps={chatProps}
-            currentUser={currentUser}
-          />
-          <CollapseButton
-            iconName="ChevronRight"
-            onClick={toggleSubmisionDiscussionVisibility}
-            title={t('chat.Hide Chat')}
-          />
-        </Chat>
-      )}
-      {!isSubmisionDiscussionVisible && (
-        <ChatButton
-          iconName="MessageSquare"
-          onClick={toggleSubmisionDiscussionVisibility}
-          title={t('chat.Show Chat')}
-          unreadMessagesCount={channelData?.unreadMessagesCount}
-        />
+      {!hideChat && (
+        <>
+          {isSubmisionDiscussionVisible && (
+            <Chat>
+              <MessageContainer
+                channelId={channelId}
+                channels={channels}
+                chatProps={chatProps}
+                currentUser={currentUser}
+              />
+              <CollapseButton
+                iconName="ChevronRight"
+                onClick={toggleSubmisionDiscussionVisibility}
+                title={t('chat.Hide Chat')}
+              />
+            </Chat>
+          )}
+          {!isSubmisionDiscussionVisible && (
+            <ChatButton
+              iconName="MessageSquare"
+              onClick={toggleSubmisionDiscussionVisibility}
+              title={t('chat.Show Chat')}
+              unreadMessagesCount={channelData?.unreadMessagesCount}
+            />
+          )}
+        </>
       )}
     </Columns>
   )
@@ -320,6 +326,7 @@ Submit.propTypes = {
   currentUser: PropTypes.shape({
     groupRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }),
+  hideChat: PropTypes.bool,
   parent: PropTypes.shape({
     channels: PropTypes.arrayOf(
       PropTypes.shape({
@@ -338,6 +345,7 @@ Submit.propTypes = {
 }
 Submit.defaultProps = {
   currentUser: { groupRoles: [] },
+  hideChat: false,
   parent: undefined,
 }
 
