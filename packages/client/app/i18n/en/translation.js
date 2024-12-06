@@ -602,6 +602,7 @@ const en = {
         'Editors can edit submitted discussion form field posts',
       groupManagersCanPublish: 'Group Managers can Publish articles/reviews',
       editorsCanPublish: 'Editors can Publish articles/reviews',
+      editorsDeleteReviews: 'Editors can delete submitted reviews',
       Reports: 'Reports',
       reportShowInMenu: 'Group Manager and admin can access Reports',
       'User Management': 'User Management',
