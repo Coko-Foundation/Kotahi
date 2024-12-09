@@ -47,6 +47,11 @@ const TitleLabel = styled.div`
   margin-bottom: ${grid(1)};
 `
 
+const NoProjectFound = styled.span`
+  color: red;
+  font-size: 22px;
+`
+
 const LocalContextResultContainer = styled.div`
   border: 1px solid ${color.brand1.base};
   display: flex;
@@ -159,7 +164,7 @@ const LocalContext = ({ onChange, value }) => {
         type="text"
         value={localContextValue}
       />
-      <SubNote>Type Your Local Context Url</SubNote>
+      <SubNote>Insert your Local Contexts URL</SubNote>
       <StyledButton
         disabled={false}
         onClick={retrieveData}
@@ -167,11 +172,17 @@ const LocalContext = ({ onChange, value }) => {
         title=""
         type="button"
       >
-        Retrieve Data
+        Update
       </StyledButton>
       {isSearching && <Spinner />}
       {localContextData?.notice?.length > 0 && !isSearching && (
         <TitleLabel>Notices</TitleLabel>
+      )}
+      {localContextData?.id === null && !isSearching && (
+        <NoProjectFound>No Project Found in Local Contexts</NoProjectFound>
+      )}
+      {localContextData?.notice?.length === 0 && !isSearching && (
+        <NoProjectFound>No Notices Found</NoProjectFound>
       )}
       {localContextData?.notice?.length > 0 &&
         !isSearching &&
