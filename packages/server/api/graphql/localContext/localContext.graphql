@@ -1,5 +1,5 @@
 type localContext {
-  id: String!
+  id: String
   notice: [Notice!]
   label: [Label!]
 }
