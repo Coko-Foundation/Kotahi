@@ -1,4 +1,4 @@
-const { logger, useTransaction } = require('@coko/server')
+const { useTransaction } = require('@coko/server')
 
 const Group = require('../../group/group.model')
 const Team = require('../../team/team.model')
@@ -15,7 +15,7 @@ exports.up = async knex => {
           .findOne({ global: false, objectId: group.id, role: 'groupManager' })
 
         if (!groupManagerTeam) {
-          groupManagerTeam = await Team.query(trx).insertAndFetch({
+          await Team.query(trx).insert({
             displayName: 'Group Manager',
             role: 'groupManager',
             global: false,
@@ -23,9 +23,13 @@ exports.up = async knex => {
             objectType: 'Group',
           })
 
-          logger.info(
-            `    Added ${groupManagerTeam.displayName} team for "${group.name}".`,
-          )
+          groupManagerTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupManager',
+            })
         }
 
         let groupAdminTeam = await Team.query(trx)
@@ -37,7 +41,7 @@ exports.up = async knex => {
           })
 
         if (!groupAdminTeam) {
-          groupAdminTeam = await Team.query(trx).insertAndFetch({
+          await Team.query(trx).insert({
             displayName: 'Group Admin',
             role: 'groupAdmin',
             global: false,
@@ -45,9 +49,13 @@ exports.up = async knex => {
             objectType: 'Group',
           })
 
-          logger.info(
-            `    Added ${groupAdminTeam.displayName} team for "${group.name}".`,
-          )
+          groupAdminTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupAdmin',
+            })
         }
 
         const groupAdminUserIds = groupAdminTeam.members.map(m => m.userId)
@@ -71,8 +79,6 @@ exports.up = async knex => {
         }
       }),
     )
-
-    logger.info('successfully migrated group managers to group admins')
   })
 }
 
@@ -91,7 +97,7 @@ exports.down = async knex => {
           })
 
         if (!groupAdminTeam) {
-          groupAdminTeam = await Team.query(trx).insertAndFetch({
+          await Team.query(trx).insert({
             displayName: 'Group Admin',
             role: 'groupAdmin',
             global: false,
@@ -99,9 +105,13 @@ exports.down = async knex => {
             objectType: 'Group',
           })
 
-          logger.info(
-            `    Added ${groupAdminTeam.displayName} team for "${group.name}".`,
-          )
+          groupAdminTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupAdmin',
+            })
         }
 
         let groupManagerTeam = await Team.query(trx)
@@ -109,7 +119,7 @@ exports.down = async knex => {
           .findOne({ global: false, objectId: group.id, role: 'groupManager' })
 
         if (!groupManagerTeam) {
-          groupManagerTeam = await Team.query(trx).insertAndFetch({
+          await Team.query(trx).insert({
             displayName: 'Group Manager',
             role: 'groupManager',
             global: false,
@@ -117,9 +127,13 @@ exports.down = async knex => {
             objectType: 'Group',
           })
 
-          logger.info(
-            `    Added ${groupManagerTeam.displayName} team for "${group.name}".`,
-          )
+          groupManagerTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupManager',
+            })
         }
 
         const groupManagerUserIds = groupManagerTeam.members.map(m => m.userId)
@@ -143,7 +157,5 @@ exports.down = async knex => {
         }
       }),
     )
-
-    logger.info('successfully reverted group admins to group managers')
   })
 }
