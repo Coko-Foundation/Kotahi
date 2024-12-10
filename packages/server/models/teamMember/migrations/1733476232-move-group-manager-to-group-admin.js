@@ -1,4 +1,4 @@
-const { logger, useTransaction } = require('@coko/server')
+const { useTransaction } = require('@coko/server')
 
 const Group = require('../../group/group.model')
 const Team = require('../../team/team.model')
@@ -10,11 +10,29 @@ exports.up = async knex => {
 
     await Promise.all(
       groups.map(async group => {
-        const groupManagerTeam = await Team.query(trx)
+        let groupManagerTeam = await Team.query(trx)
           .withGraphFetched('members')
           .findOne({ global: false, objectId: group.id, role: 'groupManager' })
 
-        const groupAdminTeam = await Team.query(trx)
+        if (!groupManagerTeam) {
+          await Team.query(trx).insert({
+            displayName: 'Group Manager',
+            role: 'groupManager',
+            global: false,
+            objectId: group.id,
+            objectType: 'Group',
+          })
+
+          groupManagerTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupManager',
+            })
+        }
+
+        let groupAdminTeam = await Team.query(trx)
           .withGraphFetched('members')
           .findOne({
             global: false,
@@ -22,11 +40,22 @@ exports.up = async knex => {
             role: 'groupAdmin',
           })
 
-        if (!(groupManagerTeam && groupAdminTeam)) {
-          logger.info(
-            `failed to find group admin/manager team for group ${group.id}`,
-          )
-          return
+        if (!groupAdminTeam) {
+          await Team.query(trx).insert({
+            displayName: 'Group Admin',
+            role: 'groupAdmin',
+            global: false,
+            objectId: group.id,
+            objectType: 'Group',
+          })
+
+          groupAdminTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupAdmin',
+            })
         }
 
         const groupAdminUserIds = groupAdminTeam.members.map(m => m.userId)
@@ -50,8 +79,6 @@ exports.up = async knex => {
         }
       }),
     )
-
-    logger.info('successfully migrated group managers to group admins')
   })
 }
 
@@ -61,23 +88,52 @@ exports.down = async knex => {
 
     await Promise.all(
       groups.map(async group => {
-        const groupAdminTeam = await Team.query(trx)
-          .withGraphFetched('members')
-          .findOne({ global: false, objectId: group.id, role: 'groupAdmin' })
-
-        const groupManagerTeam = await Team.query(trx)
+        let groupAdminTeam = await Team.query(trx)
           .withGraphFetched('members')
           .findOne({
             global: false,
             objectId: group.id,
-            role: 'groupManager',
+            role: 'groupAdmin',
           })
 
-        if (!(groupAdminTeam && groupManagerTeam)) {
-          logger.info(
-            `failed to find group admin/manager team for group ${group.id}`,
-          )
-          return
+        if (!groupAdminTeam) {
+          await Team.query(trx).insert({
+            displayName: 'Group Admin',
+            role: 'groupAdmin',
+            global: false,
+            objectId: group.id,
+            objectType: 'Group',
+          })
+
+          groupAdminTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupAdmin',
+            })
+        }
+
+        let groupManagerTeam = await Team.query(trx)
+          .withGraphFetched('members')
+          .findOne({ global: false, objectId: group.id, role: 'groupManager' })
+
+        if (!groupManagerTeam) {
+          await Team.query(trx).insert({
+            displayName: 'Group Manager',
+            role: 'groupManager',
+            global: false,
+            objectId: group.id,
+            objectType: 'Group',
+          })
+
+          groupManagerTeam = await Team.query(trx)
+            .withGraphFetched('members')
+            .findOne({
+              global: false,
+              objectId: group.id,
+              role: 'groupManager',
+            })
         }
 
         const groupManagerUserIds = groupManagerTeam.members.map(m => m.userId)
@@ -101,7 +157,5 @@ exports.down = async knex => {
         }
       }),
     )
-
-    logger.info('successfully reverted group admins to group managers')
   })
 }
