@@ -412,7 +412,7 @@ const addAllFieldsToTemplatingMap = (
   threadedDiscussions,
 ) => {
   form.structure.children.forEach(field => {
-    const value = get(formData, field.name)
+    let value = get(formData, field.name)
 
     if (field.component === 'ThreadedDiscussion') {
       if (!threadedDiscussions) return
@@ -430,6 +430,11 @@ const addAllFieldsToTemplatingMap = (
         })
       })
       return
+    }
+
+    // we might be dealing with a review
+    if (value === undefined) {
+      value = get(ensureJsonIsParsed(formData?.jsonData) ?? {}, field.name)
     }
 
     const content = getPublishableTextFromValue(value, field)
