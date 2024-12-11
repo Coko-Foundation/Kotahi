@@ -9,6 +9,7 @@ const LOCAL_CONTEXT_URL_API =
 const localContext = async ({ projectId, groupId }) => {
   let localContextData = {}
   let errorMessage = null
+  let errorCode = null
 
   try {
     const activeConfig = await Config.getCached(groupId)
@@ -77,9 +78,10 @@ const localContext = async ({ projectId, groupId }) => {
     }
   } catch (error) {
     errorMessage = error.message
+    errorCode = error.response.status
   }
 
-  return { localContext: localContextData, errorMessage }
+  return { localContext: localContextData, errorMessage, errorCode }
 }
 
 module.exports = { localContext }

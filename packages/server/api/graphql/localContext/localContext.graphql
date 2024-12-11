@@ -34,6 +34,7 @@ input InputSearchlocalContext {
 type LocalContextResponse {
   localContext: localContext
   errorMessage: String
+  errorCode: String
 }
 
 extend type Query {

@@ -102,6 +102,7 @@ const useLocalContext = gql`
         }
       }
       errorMessage
+      errorCode
     }
   }
 `
@@ -142,7 +143,7 @@ const LocalContext = ({ onChange, value }) => {
       },
     })
 
-    if (result?.data?.searchLocalContext?.errorMessage?.includes('403')) {
+    if (result?.data?.searchLocalContext?.errorCode === '403') {
       setIsAuthorized(false)
     } else {
       setLocalContextData(result?.data?.searchLocalContext.localContext)
