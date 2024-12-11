@@ -109,6 +109,7 @@ const useLocalContext = gql`
 const LocalContext = ({ onChange, value }) => {
   const config = useContext(ConfigContext)
   const [isSearching, setIsSearching] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(true)
   const [localContextData, setLocalContextData] = useState(value || [])
   const [localContextValue, setLocalContextValue] = useState(value?.url || '')
   const localContextRef = useRef(null)
@@ -141,7 +142,11 @@ const LocalContext = ({ onChange, value }) => {
       },
     })
 
-    setLocalContextData(result?.data?.searchLocalContext.localContext)
+    if (result?.data?.searchLocalContext?.errorMessage?.includes('403')) {
+      setIsAuthorized(false)
+    } else {
+      setLocalContextData(result?.data?.searchLocalContext.localContext)
+    }
 
     if (result?.data?.searchLocalContext.localContext) {
       const newObj = {
@@ -175,14 +180,18 @@ const LocalContext = ({ onChange, value }) => {
         Update
       </StyledButton>
       {isSearching && <Spinner />}
-      {localContextData?.notice?.length > 0 && !isSearching && (
-        <TitleLabel>Notices</TitleLabel>
+      {!isAuthorized && !isSearching && (
+        <NoProjectFound>Unauthorized. Please check you API KEY</NoProjectFound>
       )}
-      {localContextData?.id === null && !isSearching && (
+      {localContextData?.id === null && isAuthorized && !isSearching && (
         <NoProjectFound>No Project Found in Local Contexts</NoProjectFound>
       )}
       {localContextData?.notice?.length === 0 && !isSearching && (
         <NoProjectFound>No Notices Found</NoProjectFound>
+      )}
+
+      {localContextData?.notice?.length > 0 && !isSearching && (
+        <TitleLabel>Notices</TitleLabel>
       )}
       {localContextData?.notice?.length > 0 &&
         !isSearching &&

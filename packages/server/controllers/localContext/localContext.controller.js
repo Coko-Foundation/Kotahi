@@ -3,7 +3,8 @@ const axios = require('axios')
 const { uuid } = require('@coko/server')
 const Config = require('../../models/config/config.model')
 
-const LOCAL_CONTEXT_URL_API = 'https://localcontextshub.org/api/v2/projects/'
+const LOCAL_CONTEXT_URL_API =
+  'https://sandbox.localcontextshub.org/api/v2/projects/'
 
 const localContext = async ({ projectId, groupId }) => {
   let localContextData = {}
