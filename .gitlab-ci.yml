@@ -82,7 +82,7 @@ build preproduction server:
     - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $SERVER_PREPRODUCTION.latest
 
-deploy staging:
+.deploy staging:
   stage: Deploy staging
   interruptible: false
   image: $CI_REGISTRY/cokoinfra/ansible-deployer
