@@ -154,6 +154,7 @@ const EditorSection = ({
             useComments={
               !!(
                 currentUserIsEditor ||
+                currentUser.groupRoles.includes('groupAdmin') ||
                 currentUser.groupRoles.includes('groupManager') ||
                 (currentUserIsAuthor && readonly)
               )

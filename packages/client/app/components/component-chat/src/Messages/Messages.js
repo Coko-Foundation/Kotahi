@@ -144,10 +144,10 @@ const Messages = ({
 
   const { globalRoles = [] } = currentUser
   const isAdmin = globalRoles.includes('admin')
-  const isGroupManager = currentUser.groupRoles.includes('groupManager')
+  const isGroupAdmin = currentUser.groupRoles.includes('groupAdmin')
 
   // eslint-disable-next-line no-shadow
-  const renderDropdownAndEllipsis = (isAdmin, isGroupManager, message) => {
+  const renderDropdownAndEllipsis = (isAdmin, message) => {
     // System-generated logs in the chat don't have <p> tags. Until we move logs out of the chat we have this hack.
     const containsParagraphTag = /<p[^>]*>.*?<\/p>/.test(message.content)
 
@@ -155,7 +155,7 @@ const Messages = ({
     // all to be able to modify other users messages; but Admin users may not have
     // access to this page; so we require that they be Admin AND Group Manager.
     if (
-      ((isAdmin && isGroupManager) || currentUser.id === message.user.id) &&
+      ((isAdmin && isGroupAdmin) || currentUser.id === message.user.id) &&
       containsParagraphTag
     ) {
       return (
@@ -255,11 +255,7 @@ const Messages = ({
                         <Time>
                           {convertTimestampToTimeString(message.created)}
                         </Time>
-                        {renderDropdownAndEllipsis(
-                          isAdmin,
-                          isGroupManager,
-                          message,
-                        )}
+                        {renderDropdownAndEllipsis(isAdmin, message)}
                       </div>
                     </Byline>
                   )}
@@ -271,13 +267,7 @@ const Messages = ({
                         <InlineTime className="message-timestamp">
                           {convertTimestampToTimeString(message.created)}
                         </InlineTime>
-                        <div>
-                          {renderDropdownAndEllipsis(
-                            isAdmin,
-                            isGroupManager,
-                            message,
-                          )}
-                        </div>
+                        <div>{renderDropdownAndEllipsis(isAdmin, message)}</div>
                       </div>
                     )}
                   </Bubble>

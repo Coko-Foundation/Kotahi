@@ -131,9 +131,7 @@ const Profile = ({
   const isCurrentUsersOwnProfile = user.id === currentUser.id
 
   const canEditProfile =
-    isCurrentUsersOwnProfile ||
-    currentUser.groupRoles.includes('groupManager') ||
-    currentUser.globalRoles.includes('admin')
+    isCurrentUsersOwnProfile || currentUser.globalRoles.includes('admin')
 
   const toggleGlobalChatNotificationOptIn = async () => {
     const updatedGlobalChatNotificationOptIn =

@@ -347,7 +347,7 @@ const SubmitPage = ({ currentUser, match, history }) => {
       republish={republish}
       reviewForm={reviewForm}
       setShouldPublishField={
-        currentUser.groupRoles.includes('groupManager')
+        currentUser.groupRoles.includes('groupAdmin')
           ? setShouldPublishField
           : null
       }

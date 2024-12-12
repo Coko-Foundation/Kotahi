@@ -23,6 +23,7 @@ const Reviewer = ({
 }) => {
   const config = useContext(ConfigContext)
   const { t } = useTranslation()
+
   return (
     user && (
       <Name>
@@ -43,6 +44,7 @@ const Reviewer = ({
             )}
           </UserInfo>
         </UserCombo>
+
         {(currentUserIsEditor ||
           currentUser.groupRoles.includes('groupManager')) &&
           canBePublishedPublicly &&

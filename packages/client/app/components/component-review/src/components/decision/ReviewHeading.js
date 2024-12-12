@@ -123,7 +123,9 @@ const ReviewHeading = ({
       )}
       {canHideReviews &&
         (currentUserIsEditor ||
-          currentUser.groupRoles.includes('groupManager')) && (
+          currentUser.groupRoles.some(role =>
+            ['groupManager', 'groupAdmin'].includes(role),
+          )) && (
           <>
             <StyledCheckbox
               checked={isHiddenFromAuthor || isHiddenFromAuthor == null}

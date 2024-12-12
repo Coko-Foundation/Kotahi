@@ -102,7 +102,8 @@ const Submit = ({
     const userCanEditManuscriptAndFormData =
       index === 0 &&
       (['new', 'revising'].includes(version.status) ||
-        (currentUser.groupRoles.includes('groupManager') &&
+        ((currentUser.groupRoles.includes('groupAdmin') ||
+          currentUser.groupRoles.includes('groupManager')) &&
           version.status !== 'rejected'))
 
     const editorSection = {

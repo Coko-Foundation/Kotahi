@@ -51,8 +51,8 @@ const ChatPostDropdown = ({
 
   const isAdmin = globalRoles.includes('admin')
   const isAuthor = message.user.username === currentUser.username
-  const isGroupManager = groupRoles.includes('groupManager')
-  const canDeletePost = isAuthor || (isAdmin && isGroupManager)
+  const isGroupAdmin = groupRoles.includes('groupAdmin')
+  const canDeletePost = isAuthor || isAdmin || isGroupAdmin
   const canEditPost = isAuthor
   const { t } = useTranslation()
 

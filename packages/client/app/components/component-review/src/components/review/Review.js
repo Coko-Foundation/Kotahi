@@ -83,7 +83,9 @@ const Review = ({
       formData={ensureJsonIsParsed(localizedData) ?? {}}
       isCollaborativeForm={!!review?.isCollaborative}
       showEditorOnlyFields={
-        showEditorOnlyFields || user.groupRoles.includes('groupManager')
+        showEditorOnlyFields ||
+        user.groupRoles.includes('groupAdmin') ||
+        user.groupRoles.includes('groupManager')
       }
       threadedDiscussionProps={threadedDiscussionProps}
     />

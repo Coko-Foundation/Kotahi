@@ -241,7 +241,12 @@ const showAuthorProofingMode = (
   updateManuscript,
 ) => {
   // Admin and Group Manager roles don't need to be in author proofing mode
-  if (currentUserRole.isAdmin || currentUserRole.isGroupManager) return false
+  if (
+    currentUserRole.isAdmin ||
+    currentUserRole.isGroupAdmin ||
+    currentUserRole.isGroupManager
+  )
+    return false
 
   const isAuthorProofingAssignedToAuthor =
     manuscript.status === 'assigned' && currentUserRole.isAuthor
@@ -379,6 +384,7 @@ const ProductionPage = ({ currentUser, match, ...props }) => {
 
   const { globalRoles = [] } = currentUser
   currentUserRole.isAdmin = globalRoles.includes('admin')
+  currentUserRole.isGroupAdmin = currentUser.groupRoles.includes('groupAdmin')
   currentUserRole.isGroupManager =
     currentUser.groupRoles.includes('groupManager')
 
