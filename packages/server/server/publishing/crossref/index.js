@@ -558,8 +558,8 @@ const publishReviewsToCrossref = async manuscript => {
   const reviewsToPublish = await Promise.all(
     filteredReviews.map(async review => {
       const reviewDOI = getDoi(review.id, activeConfig)
-      if (!(await doiIsAvailable(reviewDOI)))
-        throw Error('Custom DOI is not available.')
+      // if (!(await doiIsAvailable(reviewDOI)))
+      //   throw Error('Custom DOI is not available.')
 
       const descriptionStart = review.isDecision
         ? 'Summary of'
