@@ -1387,6 +1387,9 @@ const resolvers = {
         .withGraphFetched('[publishedArtifacts]')
 
       manuscript.reviews = await manuscript.getReviews('completed')
+      const decisions = await manuscript.getDecisions()
+
+      manuscript.reviews = [...manuscript.reviews, ...decisions]
 
       const containsElifeStyleEvaluations = hasElifeStyleEvaluations(manuscript)
 

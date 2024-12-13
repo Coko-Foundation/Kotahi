@@ -60,6 +60,16 @@ class Manuscript extends BaseModel {
     delete this.searchTsvector
   }
 
+  static async getDecisions(manuscriptId, options = {}) {
+    /* eslint-disable-next-line global-require */
+    const Review = require('../review/review.model')
+
+    return Review.query(options.trx).where({
+      manuscriptId,
+      isDecision: true,
+    })
+  }
+
   static async getReviews(manuscriptId, statuses = [], options = {}) {
     /* eslint-disable-next-line global-require */
     const Review = require('../review/review.model')
@@ -90,6 +100,10 @@ class Manuscript extends BaseModel {
 
   async getReviews(statuses = [], options = {}) {
     return Manuscript.getReviews(this.id, statuses, options)
+  }
+
+  async getDecisions(options = {}) {
+    return Manuscript.getDecisions(this.id, options)
   }
 
   async getManuscriptAuthor(options = {}) {
