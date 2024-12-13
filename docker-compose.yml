@@ -272,7 +272,7 @@ services:
       - POSTGRES_PASSWORD=anystyle_user_password
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.48
+    image: cokoapps/kotahi-flax:0.5.1
     depends_on:
       - client
     ports:
@@ -282,7 +282,7 @@ services:
       - FLAX_EXPRESS_PORT=${FLAX_EXPRESS_PORT:-3000}
       - FLAX_CLIENT_ID=${FLAX_CLIENT_ID:-}
       - FLAX_CLIENT_SECRET=${FLAX_CLIENT_SECRET:-}
-      - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL:-http://server:3000}
+      - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL:-server:3000}
       - FLAX_DEFAULT_GROUP=${FLAX_DEFAULT_GROUP:-"kotahi"}
 
 volumes:

@@ -238,7 +238,7 @@ services:
       - POSTGRES_PASSWORD=anystyle_user_password
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.2.48
+    image: cokoapps/kotahi-flax:0.5.1
     depends_on:
       - server
     ports:
