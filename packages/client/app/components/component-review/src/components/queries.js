@@ -206,6 +206,7 @@ const formFields = `
         id
         label
         labelColor
+        defaultValue
         value
       }
       validate {

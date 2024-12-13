@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FieldArray } from 'formik'
 import { th, grid } from '@coko/client'
@@ -12,6 +12,25 @@ const Inline = styled.div`
   margin-right: 10px;
   position: relative;
   vertical-align: top;
+`
+
+const InlineDefaultValue = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  margin-right: 10px;
+  position: relative;
+  vertical-align: top;
+
+  span {
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: calc(8px);
+  }
+
+  input {
+    margin-top: calc(12px);
+  }
 `
 
 const UnbulletedList = styled.ul`
@@ -68,6 +87,8 @@ const ColorPicker = ({ name, value, onChange }) => {
 }
 
 const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
+  const [selectedDefaultValue, setSelectedDefaultValue] = useState(null)
+
   const hasNewOption = values.options?.some(
     opt => opt === undefined || !opt.label || !opt.value,
   )
@@ -80,6 +101,20 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
         // a newly-added option doesn't have an id yet, so we fall back on index
         <li key={option?.id ?? index}>
           <OptionsRow>
+            <InlineDefaultValue>
+              <span>Default Value</span>
+              <input
+                checked={selectedDefaultValue === index || option.defaultValue}
+                onChange={e => {
+                  setSelectedDefaultValue(index)
+                  setFieldValue(
+                    `options.${index}.defaultValue`,
+                    !!e.target.checked,
+                  )
+                }}
+                type="checkbox"
+              />
+            </InlineDefaultValue>
             <Inline>
               <ValidatedFieldFormik
                 component={LabelInput}

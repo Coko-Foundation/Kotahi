@@ -238,6 +238,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             label
             value
             labelColor
+            defaultValue
           }
           validateValue {
             minChars
@@ -250,6 +251,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             id
             label
             labelColor
+            defaultValue
             value
           }
           readonly

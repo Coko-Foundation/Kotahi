@@ -37,6 +37,7 @@ structure {
       id
       label
       labelColor
+      defaultValue
       value
     }
     validate {
