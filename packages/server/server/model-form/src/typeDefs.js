@@ -55,7 +55,7 @@ const typeDefs = `
     label: String!
     value: String!
     labelColor: String
-    defaultValue: Boolean
+    defaultValue: Int
     id: ID!
   }
 
