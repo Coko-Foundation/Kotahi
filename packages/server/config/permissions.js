@@ -1,8 +1,14 @@
 /* eslint-disable global-require */
 
 // Shield's `race` rule is misnamed, as it doesn't race the different rules but applies them sequentially until one succeeds. `or`, on the other hand, applies all rules in parallel.
-const { race: lazyOr } = require('graphql-shield')
-const { rule, and, or, allow, deny } = require('@coko/server/authorization')
+const {
+  rule,
+  and,
+  or,
+  allow,
+  deny,
+  race: lazyOr,
+} = require('@coko/server/authorization')
 
 const { cachedGet } = require('../server/querycache')
 

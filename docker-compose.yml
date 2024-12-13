@@ -203,17 +203,6 @@ services:
       - '-c'
       - 'wal_buffers=8'
 
-  # nginx:
-  #   image: nginx:1.19
-  #   depends_on:
-  #     - client
-  #   ports:
-  #     - 443:443
-  #     - 88:80
-  #   volumes:
-  #     - ./nginx/conf.d:/etc/nginx/conf.d
-  #     - ./certs:/etc/nginx/certs
-
   # Create the file server and give it a root user
   fileHosting:
     image: minio/minio:RELEASE.2023-05-04T21-44-30Z
@@ -274,7 +263,7 @@ services:
   kotahi-flax-site:
     image: cokoapps/kotahi-flax:0.5.1
     depends_on:
-      - client
+      - server
     ports:
       - ${FLAX_EXPRESS_PORT:-8082}:${FLAX_EXPRESS_PORT:-3000}
       - ${FLAX_SITE_PORT:-8081}:80

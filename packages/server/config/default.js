@@ -74,8 +74,6 @@ const cfg = {
   },
   useGraphQLServer: true,
   useFileStorage: true,
-  db: {},
-  subscriptionsDb: {},
   port: 3000,
   pool: {
     min: 0,
