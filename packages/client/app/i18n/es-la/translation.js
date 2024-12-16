@@ -1182,6 +1182,7 @@ const esLa = {
       'Label to display': 'Etiqueta a mostrar',
       'Color label': 'Etiqueta de color',
       'Enter label': 'Ingresar etiqueta...',
+      'Default Value': 'Valor predeterminado',
       'Internal name': 'Nombre interno',
       'Enter name': 'Ingresar nombre...',
       'Add another option': 'Agregar otra opción',

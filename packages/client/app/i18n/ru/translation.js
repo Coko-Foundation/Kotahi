@@ -1174,6 +1174,7 @@ const ru = {
       'FieldDescription publishingTag':
         'Вы можете указать тег для использования при публикации этого поля в виде аннотации Hypothesis.',
       'Label to display': 'Значение для отображения',
+      'Default Value': 'Значение по умолчанию',
       'Color label': 'Выбрать цвет',
       'Enter label': 'Введите значение',
       'Internal name': 'Значение',

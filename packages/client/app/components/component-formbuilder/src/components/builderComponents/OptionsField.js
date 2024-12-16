@@ -102,7 +102,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
         <li key={option?.id ?? index}>
           <OptionsRow>
             <InlineDefaultValue>
-              <span>Default Value</span>
+              <span>{t('formBuilder.Default Value')}</span>
               <input
                 checked={selectedDefaultValue === index || option.defaultValue}
                 name={`defaultValue-${index}`}
@@ -115,6 +115,9 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                   if (option.defaultValue === 0) {
                     setSelectedDefaultValue(index)
                     setFieldValue(`options.${index}.defaultValue`, 1)
+                  } else {
+                    setSelectedDefaultValue(null)
+                    setFieldValue(`options.${index}.defaultValue`, 0)
                   }
                 }}
                 type="checkbox"

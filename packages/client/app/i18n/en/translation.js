@@ -1158,6 +1158,7 @@ const en = {
       'FieldDescription publishingTag':
         'You may specify a tag to use when sharing this field as a Hypothesis annotation.',
       'Label to display': 'Label to display',
+      'Default Value': 'Default Value',
       'Color label': 'Color label',
       'Enter label': 'Enter label…',
       'Internal name': 'Internal name',
