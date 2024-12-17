@@ -113,7 +113,10 @@ export const Select = props => {
         setSelectedOption(foundValue)
       }
     } else if (!(isMulti || value)) {
-      setSelectedOption(null)
+      /* default Value from formBuilder */
+      setSelectedOption(
+        props?.options.find(option => option?.defaultValue === 1) || null,
+      )
     }
   }, [value, isMulti, hasGroupedOptions, options])
 

@@ -59,6 +59,7 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
         label
         value
         labelColor
+        defaultValue
       }
       validateValue {
         minChars
@@ -70,6 +71,7 @@ const formForPurposeAndCategoryFragment = `formForPurposeAndCategory(purpose: "s
         id
         label
         labelColor
+        defaultValue
         value
       }
       readonly

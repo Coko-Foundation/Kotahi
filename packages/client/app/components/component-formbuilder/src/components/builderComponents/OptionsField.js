@@ -14,6 +14,25 @@ const Inline = styled.div`
   vertical-align: top;
 `
 
+const InlineDefaultValue = styled.div`
+  display: inline-flex;
+  flex-direction: column;
+  margin-right: 10px;
+  position: relative;
+  vertical-align: top;
+
+  span {
+    display: block;
+    font-size: 14px;
+    line-height: 16px;
+    margin-bottom: calc(8px);
+  }
+
+  input {
+    margin-top: calc(12px);
+  }
+`
+
 const UnbulletedList = styled.ul`
   list-style-type: none;
   padding-left: 0;
@@ -80,6 +99,26 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
         // a newly-added option doesn't have an id yet, so we fall back on index
         <li key={option?.id ?? index}>
           <OptionsRow>
+            <InlineDefaultValue>
+              <span>{t('formBuilder.Default Value')}</span>
+              <input
+                checked={option.defaultValue}
+                name={`defaultValue-${index}`}
+                onChange={e => {
+                  values.options.forEach((el, i) => {
+                    if (el.defaultValue === 1)
+                      setFieldValue(`options.${i}.defaultValue`, 0)
+                  })
+
+                  if (option.defaultValue === 0) {
+                    setFieldValue(`options.${index}.defaultValue`, 1)
+                  } else {
+                    setFieldValue(`options.${index}.defaultValue`, 0)
+                  }
+                }}
+                type="checkbox"
+              />
+            </InlineDefaultValue>
             <Inline>
               <ValidatedFieldFormik
                 component={LabelInput}

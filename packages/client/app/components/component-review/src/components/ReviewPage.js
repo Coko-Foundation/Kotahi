@@ -139,6 +139,7 @@ const formStructure = `
         id
         label
         labelColor
+        defaultValue
         value
       }
       validate {

@@ -55,6 +55,7 @@ const typeDefs = `
     label: String!
     value: String!
     labelColor: String
+    defaultValue: Int
     id: ID!
   }
 
@@ -111,6 +112,7 @@ const typeDefs = `
     label: String!
     value: String!
     labelColor: String
+    defaultValue: Int
     id: ID!
   }
 

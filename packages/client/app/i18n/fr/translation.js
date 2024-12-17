@@ -1193,6 +1193,7 @@ const fr = {
       'FieldDescription publishingTag':
         "Vous pouvez spécifier une étiquette à utiliser lors du partage de ce champ en tant qu'annotation Hypothesis.",
       'Label to display': 'Étiquette à afficher',
+      'Default Value': 'Valeur par défaut',
       'Color label': 'Étiquette de couleur',
       'Enter label': 'Entrer une étiquette...',
       'Internal name': 'Nom interne',
