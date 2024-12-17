@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { FieldArray } from 'formik'
 import { th, grid } from '@coko/client'
@@ -87,8 +87,6 @@ const ColorPicker = ({ name, value, onChange }) => {
 }
 
 const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
-  const [selectedDefaultValue, setSelectedDefaultValue] = useState(null)
-
   const hasNewOption = values.options?.some(
     opt => opt === undefined || !opt.label || !opt.value,
   )
@@ -104,7 +102,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
             <InlineDefaultValue>
               <span>{t('formBuilder.Default Value')}</span>
               <input
-                checked={selectedDefaultValue === index || option.defaultValue}
+                checked={option.defaultValue}
                 name={`defaultValue-${index}`}
                 onChange={e => {
                   values.options.forEach((el, i) => {
@@ -113,10 +111,8 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                   })
 
                   if (option.defaultValue === 0) {
-                    setSelectedDefaultValue(index)
                     setFieldValue(`options.${index}.defaultValue`, 1)
                   } else {
-                    setSelectedDefaultValue(null)
                     setFieldValue(`options.${index}.defaultValue`, 0)
                   }
                 }}
