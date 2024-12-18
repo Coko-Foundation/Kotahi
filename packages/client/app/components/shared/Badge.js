@@ -47,8 +47,11 @@ export const safeLabel = status => {
 
 const statusColorsMap = {
   submitted: [theme.colorWarning, color.warning.shade50],
+  inProgress: [theme.colorWarning, color.warning.shade50],
+  underEmbargo: [theme.colorWarning, color.warning.shade50],
   published: [theme.colorSuccess, color.textReverse],
   completed: [theme.colorSuccess, color.textReverse],
+  embargoReleased: [theme.colorSuccess, color.textReverse],
   unpublished: [theme.colorError, color.textReverse],
   rejected: [theme.colorError, color.textReverse],
   default: ['#ddd', '#333'],

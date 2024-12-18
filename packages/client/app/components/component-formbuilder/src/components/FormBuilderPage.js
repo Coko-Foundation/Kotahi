@@ -28,6 +28,7 @@ structure {
     description
     doiValidation
     doiUniqueSuffixValidation
+    allowFutureDatesOnly
     placeholder
     inline
     sectioncss

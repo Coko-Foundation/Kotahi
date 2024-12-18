@@ -102,6 +102,14 @@ const buildSpecialColumnProps = (
               label: i18next.t('msStatus.completed'),
               value: 'completed',
             },
+            {
+              label: i18next.t('msStatus.underEmbargo'),
+              value: 'underEmbargo',
+            },
+            {
+              label: i18next.t('msStatus.embargoReleased'),
+              value: 'embargoReleased',
+            },
           ]
         : [
             { label: i18next.t('msStatus.new'), value: 'new' },
@@ -120,6 +128,14 @@ const buildSpecialColumnProps = (
             {
               label: i18next.t('msStatus.completed'),
               value: 'completed',
+            },
+            {
+              label: i18next.t('msStatus.underEmbargo'),
+              value: 'underEmbargo',
+            },
+            {
+              label: i18next.t('msStatus.embargoReleased'),
+              value: 'embargoReleased',
             },
           ],
       flex: '0.25 1 21em',

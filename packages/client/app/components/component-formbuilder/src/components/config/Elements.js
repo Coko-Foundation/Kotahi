@@ -292,6 +292,25 @@ const doiValidationField = {
   defaultValue: 'false',
 }
 
+const allowFutureDatesOnlyField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Select future date only?',
+  },
+  defaultValue: 'false',
+}
+
 /** Most fields have at least these properties.
  * Components and fields can override these */
 const prototypeComponent = category => ({
@@ -329,6 +348,7 @@ const propertiesOrder = [
   'format',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
+  'allowFutureDatesOnly',
   'hideFromAuthors',
   'hideFromReviewers',
   'permitPublishing',
@@ -401,6 +421,10 @@ const getBaseComponentProperties = category => ({
     inline: radiofield,
     sectioncss: textarea,
   },
+  DatePicker: {
+    label: 'Date Picker',
+    allowFutureDatesOnly: allowFutureDatesOnlyField,
+  },
 })
 
 /** Field types for free representation of arbitrary data, available in all forms.
@@ -446,6 +470,12 @@ const genericFieldOptions = [
     isCustom: true,
     fieldType: 'links',
     component: 'LinksInput',
+  },
+  {
+    label: 'Date picker',
+    isCustom: true,
+    fieldType: 'datePicker',
+    component: 'DatePicker',
   },
 ]
 
@@ -648,6 +678,19 @@ const submissionFieldOptions = [
     title: requiredTextFieldWithDefault('Attached manuscript'),
     name: presetTextField('manuscriptFile'),
     validate: null,
+  },
+  {
+    fieldType: 'embargoDate',
+    label: 'Embargo date',
+    component: 'DatePicker',
+    title: requiredTextFieldWithDefault('Embargo date'),
+    name: presetTextField('submission.$embargoDate'),
+    placeholder: null,
+    doiValidation: null,
+    doiUniqueSuffixValidation: null,
+    parse: null,
+    format: null,
+    validate: validateOther,
   },
   ...genericFieldOptions,
 ]

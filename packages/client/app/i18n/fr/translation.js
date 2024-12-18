@@ -12,6 +12,8 @@ const fr = {
       assigned: "Epreuve d'auteur attribuée",
       inProgress: "Révision de l'auteur en cours",
       completed: "Epreuve d'auteur complétée",
+      underEmbargo: 'Sous embargo',
+      embargoReleased: 'Embargo levé',
       unpublished: 'Non publié',
       unknown: 'Inconnu',
     },
@@ -1185,6 +1187,7 @@ const fr = {
       'Field doiValidation': 'Valider comme un DOI ?',
       'Field doiUniqueSuffixValidation':
         "Valider comme un suffixe DOI et s'assurer qu'il est unique ?",
+      'Field allowFutureDatesOnly': 'Sélectionner une date future uniquement ?',
       'Update Field': 'Mettre à jour le champ',
       'Correct invalid values before updating':
         'Corriger les valeurs invalides avant la mise à jour',
@@ -1231,6 +1234,8 @@ const fr = {
         volumeNumber: 'Numéro de volume',
         issueYear: 'Année de parution',
         fullWax: 'Document',
+        datePicker: 'Sélecteur de dates',
+        embargoDate: "Date d'embargo",
       },
       typeOptions: {
         Select: 'Sélection',

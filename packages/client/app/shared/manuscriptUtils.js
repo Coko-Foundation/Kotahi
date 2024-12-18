@@ -1,7 +1,10 @@
 import React from 'react'
 import { get } from 'lodash'
 import { validateFormField } from './formValidation'
-import { convertTimestampToRelativeDateString } from './dateUtils'
+import {
+  convertTimestampToRelativeDateString,
+  convertTimestampToDateWithoutTimeString,
+} from './dateUtils'
 import { StatusBadge } from '../components/shared'
 import TitleWithAbstractAsTooltip from '../components/component-manuscripts-table/src/cell-components/TitleWithAbstractAsTooltip'
 
@@ -83,6 +86,17 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
       {
         value: manuscript.submission.$title || '',
         displayValue: <TitleWithAbstractAsTooltip manuscript={manuscript} />,
+      },
+    ]
+  if (column.name === 'submission.$embargoDate')
+    return [
+      {
+        value: manuscript.submission?.$embargoDate,
+        displayValue: manuscript.submission?.$embargoDate
+          ? convertTimestampToDateWithoutTimeString(
+              manuscript.submission?.$embargoDate,
+            )
+          : '',
       },
     ]
   // if (column.name === 'shortId')

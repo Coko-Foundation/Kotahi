@@ -1,4 +1,5 @@
 import React from 'react'
+import Moment from 'react-moment'
 import { get } from 'lodash'
 import FormCollaborateWax from '../../../../component-formbuilder/src/components/FormCollaborativeWax'
 import CollaborativeTextFieldBuilder from '../../../../component-formbuilder/src/components/builderComponents/CollaborativeTextField'
@@ -205,6 +206,14 @@ const ReadonlyFieldData = ({
           return <span key={item}>{item}</span> // Fallback for data not matching any option
         })}
       </BadgeContainer>
+    )
+  }
+
+  if (fieldDefinition?.component === 'DatePicker' && data) {
+    return (
+      <p>
+        <Moment format="DD-MM-YYYY">{data}</Moment>
+      </p>
     )
   }
 

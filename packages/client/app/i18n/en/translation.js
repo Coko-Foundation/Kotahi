@@ -12,6 +12,8 @@ const en = {
       assigned: 'Author proof assigned',
       inProgress: 'Author proofing in progress',
       completed: 'Author proof completed',
+      underEmbargo: 'Under embargo',
+      embargoReleased: 'Embargo released',
       unpublished: 'Unpublished',
       unknown: 'Unknown',
     },
@@ -1152,6 +1154,7 @@ const en = {
       'Field doiValidation': 'Validate as a DOI?',
       'Field doiUniqueSuffixValidation':
         'Validate as a DOI suffix and ensure it is unique?',
+      'Field allowFutureDatesOnly': 'Select future date only?',
       'Update Field': 'Update Field',
       'Correct invalid values before updating':
         'Correct invalid values before updating',
@@ -1199,6 +1202,8 @@ const en = {
         volumeNumber: 'Volume Number',
         issueYear: 'Issue Year',
         fullWax: 'Document',
+        datePicker: 'Date Picker',
+        embargoDate: 'Embargo date',
       },
       typeOptions: {
         Select: 'Select',
@@ -1267,6 +1272,14 @@ const en = {
         false: 'No',
       },
       inline: {
+        true: 'Yes',
+        false: 'No',
+      },
+      allowFutureDatesOnly: {
+        true: 'Yes',
+        false: 'No',
+      },
+      embargo: {
         true: 'Yes',
         false: 'No',
       },
