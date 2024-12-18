@@ -100,9 +100,13 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
   const userIsAdmin = userId && (await cachedGet(`userIsAdmin:${userId}`))
   const userIsGM = userId && (await cachedGet(`userIsGM:${userId}:${groupId}`))
 
+  const userIsGroupAdmin =
+    userId && (await cachedGet(`userIsGroupAdmin:${userId}:${groupId}`))
+
   const result = {
     admin: userIsAdmin,
     groupManager: userIsGM,
+    groupAdmin: userIsGroupAdmin,
     author: false,
     reviewer: false,
     collaborativeReviewer: false,
@@ -140,7 +144,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
     result.managingEditor
 
   result.anyEditorOrManager =
-    result.anyEditor || result.admin || result.groupManager
+    result.anyEditor || result.admin || result.groupManager || result.groupAdmin
 
   return result
 }
