@@ -562,8 +562,7 @@ const en = {
       crossrefDepositorEmail: 'Crossref depositor email address',
       publicationType: 'Select publication type',
       crossrefDoiPrefix: 'Crossref DOI prefix',
-      crossrefPublishedArticleLocationPrefix:
-        'Crossref published article location',
+      crossrefPublishedArticleLocationPrefix: 'Crossref published domain',
       crossrefUseSandbox: 'Publish to Crossref sandbox',
       doajDoiPrefix: 'DOAJ DOI prefix',
       doajPublishedArticleLocationPrefix: 'DOAJ published article location',

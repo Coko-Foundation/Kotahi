@@ -576,8 +576,7 @@ const fr = {
       crossrefDepositorEmail: 'Adresse e-mail du déposant Crossref',
       publicationType: 'Sélectionner le type de publication',
       crossrefDoiPrefix: 'Préfixe DOI Crossref',
-      crossrefPublishedArticleLocationPrefix:
-        "Emplacement de l'article publié Crossref",
+      crossrefPublishedArticleLocationPrefix: 'Domaine publié par Crossref',
       crossrefUseSandbox: 'Publier dans le bac à sable Crossref',
       Datacite: 'Datacite',
       dataciteLogin: "Nom d'utilisateur Datacite",

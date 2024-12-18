@@ -264,6 +264,7 @@ const emailRegex =
 
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
+  let publishedDomain = config['flax-site'].clientFlaxSiteUrl
   const activeConfig = await Config.getCached(manuscript.groupId)
   const group = await Group.query().findById(manuscript.groupId).first()
 
@@ -274,8 +275,17 @@ const publishArticleToCrossref = async manuscript => {
     },
   } = activeConfig
 
-  const { depositorEmail, journalHomepage, depositorName, registrant } =
-    crossref
+  const {
+    depositorEmail,
+    journalHomepage,
+    depositorName,
+    registrant,
+    publishedArticleLocationPrefix,
+  } = crossref
+
+  if (publishedArticleLocationPrefix && publishedArticleLocationPrefix !== '') {
+    publishedDomain = publishedArticleLocationPrefix
+  }
 
   const {
     journalAbbreviatedName,
@@ -407,7 +417,7 @@ const publishArticleToCrossref = async manuscript => {
 
   journal.journal_article.doi_data = {
     doi,
-    resource: `${config['flax-site'].clientFlaxSiteUrl}/${group.name}/articles/${shortId}/index.html`,
+    resource: `${publishedDomain}/${group.name}/articles/${shortId}/index.html`,
   }
 
   if (citations) journal.journal_article.citation_list = CITATIONS_PLACEHOLDER
@@ -491,13 +501,24 @@ const publishReviewsToCrossref = async manuscript => {
 
   const group = await Group.query().findById(manuscript.groupId).first()
 
+  let publishedDomain = config['flax-site'].clientFlaxSiteUrl
+
   const {
     formData: {
       publishing: { crossref },
     },
   } = activeConfig
 
-  const { depositorEmail, depositorName, registrant } = crossref
+  const {
+    depositorEmail,
+    depositorName,
+    registrant,
+    publishedArticleLocationPrefix,
+  } = crossref
+
+  if (publishedArticleLocationPrefix && publishedArticleLocationPrefix !== '') {
+    publishedDomain = publishedArticleLocationPrefix
+  }
 
   const { submission, shortId, id: manuscriptId } = manuscript
 
@@ -614,7 +635,7 @@ const publishReviewsToCrossref = async manuscript => {
         },
         doi_data: {
           doi: reviewDOI,
-          resource: `${config['flax-site'].clientFlaxSiteUrl}/${group.name}/articles/${shortId}/index.html#review-${review.id}`,
+          resource: `${publishedDomain}/${group.name}/articles/${shortId}/index.html#review-${review.id}`,
         },
       }
     }),

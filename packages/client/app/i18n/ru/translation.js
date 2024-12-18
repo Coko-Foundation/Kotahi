@@ -567,8 +567,7 @@ const ru = {
       crossrefDepositorEmail: 'Email владельца Crossref',
       ublicationType: 'Выбрать тип публикации',
       crossrefDoiPrefix: 'Префикс DOI в Crossref',
-      crossrefPublishedArticleLocationPrefix:
-        'Размещение опубликованной статьи в Crossref',
+      crossrefPublishedArticleLocationPrefix: 'Опубликованный домен Crossref',
       crossrefUseSandbox: 'Опубликовать в Crossref sandbox',
       Datacite: 'Datacite',
       dataciteLogin: 'Имя пользователя Datacite',

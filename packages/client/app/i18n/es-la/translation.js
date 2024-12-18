@@ -567,8 +567,7 @@ const esLa = {
         'Dirección de Correo Electrónico del Depositante de Crossref',
       publicationType: 'Seleccionar tipo de publicación',
       crossrefDoiPrefix: 'Prefijo DOI de Crossref',
-      crossrefPublishedArticleLocationPrefix:
-        'Prefijo de Ubicación de Artículos Publicados de Crossref',
+      crossrefPublishedArticleLocationPrefix: 'Dominio publicado por Crossref',
       crossrefUseSandbox: 'Publicar en el entorno de prueba de Crossref',
       Datacite: 'Datacite',
       dataciteLogin: 'Nombre de Usuario de Datacite',
