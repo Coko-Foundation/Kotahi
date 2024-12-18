@@ -97,7 +97,7 @@ export const Select = props => {
   const [selectedOption, setSelectedOption] = useState(value)
 
   useEffect(() => {
-    if (!isMulti && value) {
+    if (value) {
       if (hasGroupedOptions) {
         options.some(option => {
           const optionMatched = option.options.find(
@@ -109,16 +109,15 @@ export const Select = props => {
           return !!optionMatched
         })
       } else {
-        const foundValue = options.find(option => option.value === value)
-        setSelectedOption(foundValue)
+        setSelectedOption(options.find(option => option.value === value))
       }
-    } else if (!(isMulti || value)) {
+    } else {
       /* default Value from formBuilder */
       setSelectedOption(
         props?.options.find(option => option?.defaultValue === 1) || null,
       )
     }
-  }, [value, isMulti, hasGroupedOptions, options])
+  }, [value, hasGroupedOptions, options])
 
   const myStyles = { ...styles(th), ...(customStyles || {}) }
 
