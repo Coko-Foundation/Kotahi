@@ -39,7 +39,7 @@ const OptionsDropdown = styled(FlexRow)`
 const Heading = styled(FlexRow)`
   background-color: ${color.brand1.shade25};
   color: #fff;
-  padding: ${grid(0.2)} ${grid(1.2)};
+  padding: ${grid(0.5)} ${grid(1.2)};
   width: 100%;
 `
 
@@ -50,6 +50,7 @@ const Options = styled.ul`
   height: fit-content;
   justify-content: space-between;
   list-style: none;
+  margin: 0;
   max-height: 202px;
   min-width: 260px;
   overflow-y: auto;
@@ -58,6 +59,19 @@ const Options = styled.ul`
   scroll-snap-stop: always;
   scroll-snap-type: y mandatory;
   width: fit-content;
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #ddd;
+  }
 
   > button:not(:last-child) {
     border-bottom: 1px solid ${color.brand1.tint70};

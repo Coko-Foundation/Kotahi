@@ -1,4 +1,19 @@
+import { color } from '../../../../theme'
 import { DROPDOWN_ID } from './constants'
+
+const { keys } = Object
+
+export const getFormBadgeBg = form => {
+  const colorVariations = {
+    common: '#f0f0f0',
+    decision: '#fffacb',
+    review: '#ffddc2',
+    submission: color.brand1.tint90,
+  }
+
+  const safeKey = keys(colorVariations).includes(form) ? form : 'common'
+  return colorVariations[safeKey]
+}
 
 export const normalize = str => str?.trim().toLowerCase()
 

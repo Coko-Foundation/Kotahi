@@ -1,5 +1,5 @@
 import { isFunction } from 'lodash'
-import { onEntries } from '../components/component-ai-assistant/utils/utils'
+import { onEntries } from '../shared/generalUtils'
 import GlobalState from './GlobalState'
 
 const { useEffect } = require('react')

@@ -1,4 +1,4 @@
-import { mapEntries, onEntries } from './utils'
+import { mapEntries, onEntries } from '../../../shared/generalUtils'
 
 export const srcdoc = (scope, css, template, scrollPos) => /* html */ `
     <!DOCTYPE html>
@@ -150,3 +150,13 @@ export const getScrollPercent = node =>
 
 export const setScrollFromPercent = (node, percentage) =>
   (percentage * node.scrollHeight) / 100
+
+export const autoResize = element => {
+  if (element) {
+    const node = element
+    node.style.height = 'auto'
+    node.value.length < 45
+      ? (node.style.height = `24px`)
+      : (node.style.height = `${node.scrollHeight}px`)
+  }
+}

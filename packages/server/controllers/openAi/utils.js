@@ -1,11 +1,4 @@
-/**
- * Checks if the provided callback is a function.
- *
- * @param {*} cb - The callback to check.
- * @returns {boolean} - Returns true if the callback is a function, false otherwise.
- */
-
-const isFunction = cb => typeof cb === 'function'
+const { isFunction } = require('lodash')
 
 /**
  * Safely returns the provided callback if it's a function, otherwise returns the fallback function.
@@ -56,6 +49,5 @@ const safeKey = async (key, existingKeys) => {
 module.exports = {
   callOn,
   safeCall,
-  isFunction,
   safeKey,
 }

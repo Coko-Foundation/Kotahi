@@ -10,6 +10,8 @@ class EmailTemplate extends BaseModel {
     const TaskEmailNotification = require('../taskEmailNotification/taskEmailNotification.model')
     /* eslint-disable-next-line global-require */
     const TaskEmailNotificationLog = require('../taskEmailNotificationLog/taskEmailNotificationLog.model')
+    /* eslint-disable-next-line global-require */
+    const Notification = require('../notification/notification.model')
 
     return {
       taskEmailNotification: {
@@ -26,6 +28,14 @@ class EmailTemplate extends BaseModel {
         join: {
           from: 'email_templates.id',
           to: 'task_email_notifications_logs.emailTemplateId',
+        },
+      },
+      notifications: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Notification,
+        join: {
+          from: 'email_templates.id',
+          to: 'notifications.emailTemplateId',
         },
       },
     }

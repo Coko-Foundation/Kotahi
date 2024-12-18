@@ -17,7 +17,6 @@ const Team = require('../../../models/team/team.model')
 const TeamMember = require('../../../models/teamMember/teamMember.model')
 const Group = require('../../../models/group/group.model')
 const CoarNotification = require('../../../models/coarNotification/coarNotification.model')
-const Message = require('../../../models/message/message.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const PublishedArtifact = require('../../../models/publishedArtifact/publishedArtifact.model')
 const User = require('../../../models/user/user.model')
@@ -77,7 +76,12 @@ const {
 
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
-const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
+
+const {
+  deepMergeObjectsReplacingArrays,
+  objIf,
+} = require('../../utils/objectUtils')
+
 const { tryPublishDocMaps } = require('../../publishing/docmaps')
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
@@ -104,7 +108,6 @@ const {
   getUsersById,
   getUserRolesInManuscript,
   getSharedReviewersIds,
-  sendEmailWithPreparedData,
 } = require('../../model-user/src/userCommsUtils')
 
 const {
@@ -113,6 +116,9 @@ const {
 } = require('../../model-channel/src/channelCommsUtils')
 
 const { cachedGet } = require('../../querycache')
+
+const seekEvent = require('../../../services/notification.service')
+
 const ThreadedDiscussion = require('../../../models/threadedDiscussion/threadedDiscussion.model')
 
 const getCss = async () => {
@@ -560,6 +566,7 @@ const resolvers = {
       const semanticScholarSucceeded =
         await importManuscriptsFromSemanticScholar(groupId, ctx)
 
+      seekEvent('manuscript-import', { groupId })
       return importsSucceeded && semanticScholarSucceeded
     },
 
@@ -617,13 +624,13 @@ const resolvers = {
 
       return archivedManuscript[0].id
     },
-
+    // TODO fix this typo: should be 'author'
     async assignAuthoForProofingManuscript(_, { id }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
         .withGraphFetched('[channels]')
 
-      const sender = await User.query().findById(ctx.userId)
+      const { groupId } = manuscript
       const author = await manuscript.getManuscriptAuthor()
       const authorName = author?.username || ''
 
@@ -657,15 +664,8 @@ const resolvers = {
         },
       )
 
-      const activeConfig = await Config.getCached(manuscript.groupId)
-
       const receiverEmail = author.email
-      /* eslint-disable-next-line */
       const receiverName = authorName
-
-      const selectedTemplate =
-        activeConfig.formData.eventNotification
-          ?.authorProofingInvitationEmailTemplate
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -674,52 +674,33 @@ const resolvers = {
         return updated
       }
 
-      if (selectedTemplate) {
-        const notificationInput = {
-          manuscript,
-          selectedEmail: receiverEmail,
-          selectedTemplate,
-          currentUser: sender?.username || '',
-          groupId: manuscript.groupId,
-        }
+      let channelId
 
-        try {
-          await sendEmailWithPreparedData(notificationInput, ctx, sender)
+      if (manuscript.parentId) {
+        const channel = await Manuscript.relatedQuery('channels')
+          .for(manuscript.parentId)
+          .findOne({ topic: 'Editorial discussion' })
 
-          let channelId
-
-          if (manuscript.parentId) {
-            const channel = await Manuscript.relatedQuery('channels')
-              .for(manuscript.parentId)
-              .findOne({ topic: 'Editorial discussion' })
-
-            channelId = channel.id
-          } else {
-            // Get channel ID
-            channelId = manuscript.channels.find(
-              channel => channel.topic === 'Editorial discussion',
-            ).id
-          }
-
-          Message.createMessage({
-            content: `Author proof assigned Email sent by Kotahi to ${author.username}`,
-            channelId,
-            userId: ctx.userId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
-        }
+        channelId = channel.id
       } else {
-        // eslint-disable-next-line no-console
-        console.info(
-          'No email template configured for notifying of author proof assigned. Email not sent.',
-        )
+        channelId = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        ).id
       }
 
+      const messageContent = {
+        content: `Author proof assigned Email sent by Kotahi to ${author.username}`,
+        channelId,
+        userId: ctx.userId,
+      }
+
+      seekEvent('author-proofing-assign', {
+        manuscript: updated,
+        context: { recipient: receiverEmail, messageContent },
+        groupId,
+      })
       return updated
     },
-
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
         await Promise.all(
@@ -829,92 +810,39 @@ const resolvers = {
         await ReviewModel.query().insert(review)
       }
 
-      if (action === 'rejected') {
-        // Automated email reviewReject on rejection
-        const reviewer = await User.query()
-          .findById(ctx.userId)
-          .withGraphJoined('[defaultIdentity]')
-
-        const reviewerName =
-          reviewer.username || reviewer.defaultIdentity.name || ''
-
-        const manuscript = await Manuscript.query()
-          .findById(team.objectId)
-          .withGraphFetched(
-            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
-          )
-
-        const handlingEditorTeam =
-          manuscript.teams &&
-          !!manuscript.teams.length &&
-          manuscript.teams.find(manuscriptTeam => {
-            return manuscriptTeam.role.includes('handlingEditor')
-          })
-
-        const handlingEditor =
-          handlingEditorTeam && !!handlingEditorTeam.members.length
-            ? handlingEditorTeam.members[0]
-            : null
-
-        if (!handlingEditor) {
-          // eslint-disable-next-line no-console
-          console.info('No handling editor assigned. Email not sent.')
-          return team
-        }
-
-        const receiverEmail = handlingEditor.user.email
-        /* eslint-disable-next-line */
-        const receiverName =
-          handlingEditor.user.username ||
-          handlingEditor.user.defaultIdentity.name ||
-          ''
-
-        const activeConfig = await Config.getCached(manuscript.groupId)
-
-        const selectedTemplate =
-          activeConfig.formData.eventNotification?.reviewRejectedEmailTemplate
-
-        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
-
-        // Get channel ID
-        const editorialChannel = manuscript.channels.find(
-          channel => channel.topic === 'Editorial discussion',
+      const manuscript = await Manuscript.query()
+        .findById(team.objectId)
+        .withGraphFetched(
+          '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
         )
 
-        if (!emailValidationResult || !receiverName) {
-          return team
-        }
+      const editorialChannel = manuscript?.channels.find(
+        channel => channel.topic === 'Editorial discussion',
+      )
 
-        if (selectedTemplate) {
-          const notificationInput = {
-            manuscript,
-            selectedEmail: receiverEmail,
-            selectedTemplate,
-            currentUser: reviewerName,
-            groupId: manuscript.groupId,
-          }
-
-          try {
-            await sendEmailWithPreparedData(notificationInput, ctx, reviewer)
-
-            // Send Notification in Editorial Discussion Panel
-            Message.createMessage({
-              content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
-              channelId: editorialChannel.id,
-              userId: manuscript.submitterId,
-            })
-          } catch (e) {
-            /* eslint-disable-next-line */
-            console.log('email was not sent', e)
-          }
-        } else {
-          // eslint-disable-next-line no-console
-          console.info(
-            'No email template configured for notifying of invited reviewer declining invitation. Email not sent.',
-          )
-        }
+      const messageContent = {
+        content: `Review Rejection Email sent by Kotahi to {{ receiverName }}`,
+        channelId: editorialChannel?.id,
+        userId: manuscript?.submitterId,
       }
+
+      const eventName =
+        team.role === 'collaborativeReviewer'
+          ? `collaborative-review-${action}`
+          : `review-${action}`
+
+      seekEvent(eventName, {
+        manuscript,
+        context: {
+          userId: ctx.userId,
+          reviewAction: action,
+          reviewerId: ctx.userId,
+          teamId,
+          recipient: 'handlingEditor',
+          messageContent,
+        },
+        groupId: manuscript.groupId,
+      })
 
       return team
     },
@@ -926,11 +854,11 @@ const resolvers = {
     async submitAuthorProofingFeedback(_, { id, input }, ctx) {
       let updated = await commonUpdateManuscript(id, input, ctx)
 
-      if (updated.status === 'completed') {
-        const manuscript = await Manuscript.query()
-          .findById(id)
-          .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
+      const manuscript = await Manuscript.query()
+        .findById(id)
+        .withGraphJoined('[teams.members.user.defaultIdentity, channels]')
 
+      if (updated.status === 'completed') {
         // after submission of feedback adding it to 'previousSubmissions' list
         let previousSubmissions = []
 
@@ -974,92 +902,54 @@ const resolvers = {
             ),
           },
         })
-
-        const author = await User.query().findById(ctx.userId)
-
-        const activeConfig = await Config.getCached(manuscript.groupId)
-
-        const editorTeam =
-          manuscript.teams &&
-          !!manuscript.teams.length &&
-          manuscript.teams.find(manuscriptTeam => {
-            return manuscriptTeam.role.includes('editor')
-          })
-
-        const editor =
-          editorTeam && !!editorTeam.members.length
-            ? editorTeam.members[0]
-            : null
-
-        if (!editor) {
-          // eslint-disable-next-line no-console
-          console.info('No editor assigned. Email not sent.')
-          return updated
-        }
-
-        const receiverEmail = editor.user.email
-        /* eslint-disable-next-line */
-        const receiverName = editor.user.username
-
-        const selectedTemplate =
-          activeConfig.formData.eventNotification
-            ?.authorProofingSubmittedEmailTemplate
-
-        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
-
-        if (!emailValidationResult || !receiverName) {
-          return updated
-        }
-
-        if (selectedTemplate) {
-          const notificationInput = {
-            manuscript,
-            selectedEmail: receiverEmail,
-            selectedTemplate,
-            currentUser: author?.username || '',
-            groupId: manuscript.groupId,
-          }
-
-          try {
-            await sendEmailWithPreparedData(notificationInput, ctx, author)
-
-            let channelId
-
-            if (manuscript.parentId) {
-              const channel = await Manuscript.relatedQuery('channels')
-                .for(manuscript.parentId)
-                .findOne({ topic: 'Editorial discussion' })
-
-              channelId = channel.id
-            } else {
-              channelId = manuscript.channels.find(
-                channel => channel.topic === 'Editorial discussion',
-              ).id
-            }
-
-            Message.createMessage({
-              content: `Author proof completed Email sent by Kotahi to ${editor.user.username}`,
-              channelId,
-              userId: editor.user.id,
-            })
-          } catch (e) {
-            /* eslint-disable-next-line */
-            console.log('email was not sent', e)
-          }
-        } else {
-          // eslint-disable-next-line no-console
-          console.info(
-            'No email template configured for notifying of author proof completed. Email not sent.',
-          )
-        }
       }
+
+      const author = await User.query().findById(ctx.userId)
+
+      const editorTeam = manuscript?.teams?.find(team => {
+        return team.role.includes('editor')
+      })
+
+      const [editor] = editorTeam?.members ?? []
+      let channelId
+
+      if (manuscript.parentId) {
+        const channel = await Manuscript.relatedQuery('channels')
+          .for(manuscript.parentId)
+          .findOne({ topic: 'Editorial discussion' })
+
+        channelId = channel.id
+      } else {
+        channelId = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        ).id
+      }
+
+      const messageContent = objIf(editor, {
+        content: `Author proof completed Email sent by Kotahi to ${editor.user.username}`,
+        channelId,
+        userId: editor.user.id,
+      })
+
+      updated.status === 'completed' &&
+        seekEvent('author-proofing-submit-feedback', {
+          manuscript,
+          author,
+          context: { recipient: 'Editor', messageContent },
+          groupId: manuscript.groupId,
+        })
 
       return updated
     },
 
-    async createNewVersion(_, { id }, ctx) {
+    async createNewVersion(_, { id }) {
       const manuscript = await Manuscript.query().findById(id)
+
+      seekEvent('manuscript-new-version', {
+        manuscript,
+        groupId: manuscript.groupId,
+      })
+
       return manuscript.createNewVersion()
     },
 
@@ -1069,74 +959,41 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[submitter.defaultIdentity, channels]')
 
-      const activeConfig = await Config.getCached(manuscript.groupId)
+      const recipient = await User.query().findById(ctx.userId)
 
-      const selectedTemplate =
-        activeConfig.formData.eventNotification
-          ?.submissionConfirmationEmailTemplate
+      let channelId
 
-      if (selectedTemplate && manuscript.submitter) {
-        const sender = await User.query().findById(ctx.userId)
-        const receiverEmail = manuscript.submitter.email
+      if (manuscript.parentId) {
+        const channel = await Manuscript.relatedQuery('channels')
+          .for(manuscript.parentId)
+          .findOne({ topic: 'Editorial discussion' })
 
-        const receiverName =
-          manuscript.submitter.username ||
-          manuscript.submitter.defaultIdentity.name ||
-          ''
-
-        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
-
-        if (!emailValidationResult || !receiverName) {
-          return commonUpdateManuscript(id, input, ctx)
-        }
-
-        const notificationInput = {
-          manuscript,
-          selectedEmail: receiverEmail,
-          selectedTemplate,
-          currentUser: sender?.username || '',
-          groupId: manuscript.groupId,
-        }
-
-        try {
-          await sendEmailWithPreparedData(notificationInput, ctx, sender)
-
-          let channelId
-
-          if (manuscript.parentId) {
-            const channel = await Manuscript.relatedQuery('channels')
-              .for(manuscript.parentId)
-              .findOne({ topic: 'Editorial discussion' })
-
-            channelId = channel.id
-          } else {
-            // Get channel ID
-            channelId = manuscript.channels.find(
-              channel => channel.topic === 'Editorial discussion',
-            ).id
-          }
-
-          Message.createMessage({
-            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
-            channelId,
-            userId: manuscript.submitterId,
-          })
-        } catch (e) {
-          /* eslint-disable-next-line */
-          console.log('email was not sent', e)
-        }
+        channelId = channel.id
       } else {
-        // eslint-disable-next-line no-console
-        console.info(
-          'No email template configured for notifying of submission confirmation. Email not sent.',
-        )
+        channelId = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        ).id
       }
+
+      const messageContent = {
+        content: `Submission Confirmation Email sent by Kotahi to ${manuscript?.submitter?.username}`,
+        channelId,
+        userId: manuscript?.submitterId,
+      }
+
+      seekEvent('manuscript-submit', {
+        manuscript,
+        context: {
+          recipient: recipient?.email,
+          messageContent,
+          groupId: manuscript.groupId,
+        },
+      })
 
       return commonUpdateManuscript(id, input, ctx)
     },
 
-    async makeDecision(_, { id, decision: decisionString }, ctx) {
+    async makeDecision(_, { id, decision: decisionKey }, ctx) {
       const manuscript = await Manuscript.query()
         .findById(id)
         .withGraphFetched(
@@ -1144,94 +1001,51 @@ const resolvers = {
         )
 
       const activeConfig = await Config.getCached(manuscript.groupId)
+      const currentUser = await User.query().findById(ctx.userId)
+      const { instanceName } = activeConfig.formData
+      const decisionHasChanged = manuscript.decision !== decisionKey
+      const isPreprint = ['preprint1', 'preprint2'].includes(instanceName)
 
-      switch (decisionString) {
-        case 'accept':
-          manuscript.decision = 'accepted'
-          manuscript.status = 'accepted'
-          break
-        case 'revise':
-          manuscript.decision = 'revise'
-          manuscript.status = 'revise'
-          break
-        case 'reject':
-          manuscript.decision = 'rejected'
-          manuscript.status = 'rejected'
-          break
-
-        default:
-          if (
-            ['preprint1', 'preprint2'].includes(
-              activeConfig.formData.instanceName,
-            )
-          ) {
-            manuscript.decision = 'evaluated'
-            manuscript.status = 'evaluated'
-          }
+      const decisionMap = {
+        accept: 'accepted',
+        revise: 'revise',
+        reject: 'rejected',
       }
+
+      const decision = decisionMap[decisionKey] || (isPreprint && 'evaluated')
+
+      manuscript.decision = decision
+      manuscript.status = decision
 
       if (manuscript.decision && manuscript.submitter) {
         // Automated email evaluationComplete on decision
-        const receiverEmail = manuscript.submitter.email
+        const recipientEmail = manuscript.submitter.email
 
-        const receiverName =
-          manuscript.submitter.username ||
-          manuscript.submitter.defaultIdentity.name ||
-          ''
+        // Add Email Notification Record in Editorial Discussion Panel
+        const channelId = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        ).id
 
-        const sender = await User.query().findById(ctx.userId)
-
-        const selectedTemplate =
-          activeConfig.formData.eventNotification
-            ?.evaluationCompleteEmailTemplate
-
-        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
-
-        if (emailValidationResult && receiverName) {
-          if (selectedTemplate) {
-            const notificationInput = {
-              manuscript,
-              selectedEmail: receiverEmail,
-              selectedTemplate,
-              currentUser: sender?.username || '',
-              groupId: manuscript.groupId,
-            }
-
-            try {
-              await sendEmailWithPreparedData(notificationInput, ctx, sender)
-
-              // Add Email Notification Record in Editorial Discussion Panel
-              const author = manuscript.teams.find(team => {
-                if (team.role === 'author') {
-                  return team
-                }
-
-                return null
-              }).members[0].user
-
-              const body = `Editor Decision sent by Kotahi to ${author.username}`
-
-              const channelId = manuscript.channels.find(
-                channel => channel.topic === 'Editorial discussion',
-              ).id
-
-              Message.createMessage({
-                content: body,
-                channelId,
-                userId: manuscript.submitterId,
-              })
-            } catch (e) {
-              /* eslint-disable-next-line */
-              console.log('email was not sent', e)
-            }
-          } else {
-            // eslint-disable-next-line no-console
-            console.info(
-              'No email template configured for notifying of evaluation complete. Email not sent.',
-            )
-          }
+        const messageContent = {
+          content: `Editor Decision sent by Kotahi to {{ recipientName }}`,
+          channelId,
+          userId: manuscript.submitterId,
         }
+
+        const hasVerdict = manuscript.decision !== 'evaluated'
+
+        const eventName = `decision-form-make-decision${
+          hasVerdict ? '-with-verdict' : ''
+        }`
+
+        decisionHasChanged &&
+          seekEvent(eventName, {
+            manuscript,
+            decision: decisionKey,
+            currentUser: currentUser?.username,
+            context: { recipient: recipientEmail, messageContent },
+            groupId: manuscript.groupId,
+          })
       }
 
       return Manuscript.query().updateAndFetchById(id, manuscript)
@@ -1240,7 +1054,6 @@ const resolvers = {
     async addReviewer(
       _,
       { manuscriptId, userId, invitationId, isCollaborative },
-      ctx,
     ) {
       const manuscript = await Manuscript.query().findById(manuscriptId)
       const status = invitationId ? 'accepted' : 'invited'
@@ -1655,6 +1468,11 @@ const resolvers = {
           status: prevStatus,
         })
       }
+
+      seekEvent('manuscript-publish', {
+        manuscript: updatedManuscript,
+        groupId: ctx.req.headers['group-id'],
+      })
 
       return { manuscript: updatedManuscript, steps }
     },

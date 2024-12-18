@@ -2,8 +2,9 @@ const permissions = require('./permissions')
 const components = require('./components')
 const journal = require('./journal')
 const startupScripts = require('./startup')
+const jobQueues = require('./jobHandlers')
 
-const cfg = {
+module.exports = {
   teams: {
     global: [
       {
@@ -159,6 +160,5 @@ const cfg = {
       mountPoint: '/profiles',
     },
   ],
+  jobQueues,
 }
-
-module.exports = cfg

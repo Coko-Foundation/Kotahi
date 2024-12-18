@@ -7,7 +7,6 @@ import { Select } from '../../../pubsweet'
 import { ColorPicker } from '../../../shared'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 
-// QUESTION: should this two be on this file??
 export const tabLabels = {
   general: 'General',
   workflow: 'Workflow',
@@ -33,12 +32,12 @@ export const tabKeyBasedSchema = {
   integrations: ['integrations'],
   submission: ['submission'],
   integrationsAndPublishing: ['publishing', 'integrations'],
-  notifications: ['notification', 'eventNotification'],
+  notifications: ['notification'],
 }
 
 export const allSections = Object.values(tabKeyBasedSchema).flat()
 
-export const generateSchemas = (
+export const generateSchemas = ({
   emailNotificationOptions,
   deleteFile,
   createFile,
@@ -48,8 +47,8 @@ export const generateSchemas = (
   defaultAuthorProofingInvitationTemplate,
   defaultAuthorProofingSubmittedTemplate,
   t,
-  tempStoredFiles,
-) => {
+  logoAndFavicon,
+}) => {
   const schemas = { data: {}, ui: {} }
 
   const limitInstanceNameProperties = (instanceName, sections) => {
@@ -2470,7 +2469,6 @@ export const generateSchemas = (
             },
           },
         },
-
         controlPanel: {
           type: 'object',
           title: t('configPage.Control panel'),
@@ -4551,7 +4549,7 @@ export const generateSchemas = (
                 fileType="brandLogo"
                 inputProps={props}
                 mimeTypesToAccept={'image/*'}
-                tempStoredFiles={tempStoredFiles}
+                tempStoredFiles={logoAndFavicon}
               />
             )
           },
@@ -4570,7 +4568,7 @@ export const generateSchemas = (
                 fileType="favicon"
                 inputProps={props}
                 mimeTypesToAccept="image/png,image/gif"
-                tempStoredFiles={tempStoredFiles}
+                tempStoredFiles={logoAndFavicon}
               />
             )
           },

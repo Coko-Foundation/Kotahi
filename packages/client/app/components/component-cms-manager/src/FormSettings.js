@@ -96,27 +96,27 @@ export const emailTemplateInputFields = [
     type: 'text-input',
     isRequired: true,
   },
-  {
-    component: inputComponents.TextField,
-    label: 'CC',
-    name: 'cc',
-    type: 'text-input',
-  },
-  {
-    component: inputComponents.Checkbox,
-    label: 'ccEditorsCheckboxDescription',
-    name: 'ccEditors',
-    type: 'checkbox',
-    containerStyle: {
-      display: 'flex',
-      alignItems: 'center',
-      flexDirection: 'row-reverse',
-      marginRight: 'auto',
-    },
-    itemStyle: {
-      marginBottom: '0px',
-    },
-  },
+  // {
+  //   component: inputComponents.TextField,
+  //   label: 'CC',
+  //   name: 'cc',
+  //   type: 'text-input',
+  // },
+  // {
+  //   component: inputComponents.Checkbox,
+  //   label: 'ccEditorsCheckboxDescription',
+  //   name: 'ccEditors',
+  //   type: 'checkbox',
+  //   containerStyle: {
+  //     display: 'flex',
+  //     alignItems: 'center',
+  //     flexDirection: 'row-reverse',
+  //     marginRight: 'auto',
+  //   },
+  //   itemStyle: {
+  //     marginBottom: '0px',
+  //   },
+  // },
   {
     component: inputComponents.SimpleWaxEditor,
     label: 'Body',

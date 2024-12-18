@@ -22,6 +22,8 @@ const {
 
 const { REVIEW_FORM_UPDATED } = require('./consts')
 
+const seekEvent = require('../../../services/notification.service')
+
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
@@ -129,14 +131,13 @@ const resolvers = {
         .findOne({ id })
         .returning('*')
 
-      const status = updatedReview.isLock ? 'closed' : 'inProgress'
-
       const team = await Team.query().findOne({
         role: 'collaborativeReviewer',
         objectId: updatedReview.manuscriptId,
         objectType: 'manuscript',
       })
 
+      const status = updatedReview.isLock ? 'closed' : 'inProgress'
       await TeamMember.query()
         .patch({ status })
         .where({ teamId: team.id })
@@ -148,6 +149,12 @@ const resolvers = {
         updatedReview.manuscriptId,
       )
 
+      const eventParam = updatedReview.isLock ? 'lock' : 'unlock'
+
+      seekEvent(`collaborative-review-${eventParam}`, {
+        manuscript,
+        groupId: manuscript.groupId,
+      })
       const form = await getReviewForm(manuscript.groupId)
 
       await convertFilesToFullObjects(
@@ -183,6 +190,13 @@ const resolvers = {
         )
         .andWhere({ userId: ctx.userId })
         .first()
+
+      if (status === 'completed') {
+        seekEvent(`review-completed`, {
+          manuscript,
+          groupId: manuscript.groupId,
+        })
+      }
 
       return member.$query().patchAndFetch({
         status,

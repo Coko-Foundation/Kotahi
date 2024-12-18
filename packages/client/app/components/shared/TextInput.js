@@ -4,7 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 import theme, { color } from '../../theme'
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input`
   background: ${color.gray99};
   border: 1px solid ${color.gray80};
   border-radius: ${theme.borderRadius};

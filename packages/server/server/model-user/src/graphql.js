@@ -21,6 +21,8 @@ const {
 const { cachedGet, evictFromCacheByPrefix } = require('../../querycache')
 const Config = require('../../../models/config/config.model')
 
+const seekEvent = require('../../../services/notification.service')
+
 const addGlobalAndGroupRolesToUserObject = async (ctx, user) => {
   if (!user) return
   const groupId = ctx.req.headers['group-id']
@@ -326,6 +328,7 @@ const resolvers = {
     async deleteUser(_, { id }, ctx) {
       return User.transaction(async trx => {
         const user = await User.query(trx).findById(id)
+
         await Manuscript.query(trx)
           .update({ submitterId: null })
           .where({ submitterId: id })
@@ -337,6 +340,10 @@ const resolvers = {
         await User.query(trx).where({ id }).delete()
         // eslint-disable-next-line no-console
         console.info(`User ${id} (${user.username}) deleted.`)
+        seekEvent('user-delete', {
+          user,
+          groupId: ctx.req.headers['group-id'],
+        })
         return user
       })
     },
@@ -373,10 +380,16 @@ const resolvers = {
       const user = await User.findById(userId)
       await addGlobalAndGroupRolesToUserObject(ctx, user)
       delete user.updated
+
+      seekEvent('user-set-group-role', {
+        user,
+        role,
+        groupId,
+      })
       return user
     },
     // Authentication
-    async loginUser(_, { input }, ctx) {
+    async loginUser(_, { input }) {
       /* eslint-disable-next-line global-require */
       const { createJWT } = require('@coko/server')
 
@@ -444,6 +457,8 @@ const resolvers = {
 
       return user
     },
+    // TODO: refactor: This is actually sending a invitation conditionally and also a email, in this case is invitation, should be renamed to sendInvitation
+    // regarding sendEmailWithPreparedData, once we refactor task notifications, should be renamed to somethig like eg: inviteAndSendEmail
     async sendEmail(_, { input }, ctx) {
       try {
         const result = await sendEmailWithPreparedData(input, ctx)
@@ -454,7 +469,6 @@ const resolvers = {
           },
         }
       } catch (error) {
-        // Return SendEmailPayload object with success=false and error message
         return {
           invitation: null,
           response: {

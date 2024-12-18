@@ -36,6 +36,10 @@ const ru = {
       No: 'Нет',
       Save: 'Сохранить',
       Update: 'Обновить',
+      Activate: 'Активировать',
+      Deactivate: 'Деактивировать',
+      Modified: 'Изменено',
+      Create: 'Создать',
       Confirm: 'Подтвердить',
       Delete: 'Удалить',
       View: 'Просмотреть',
@@ -471,6 +475,7 @@ const ru = {
       productionTab: 'Производство',
       integrationsAndPublishingTab: 'Интеграции и конечные точки публикации',
       notificationsTab: 'Уведомления и электронная почта',
+      emailTab: 'Шаблоны электронной почты',
       Configuration: 'Настройки',
       'Instance Type': 'Тип элемента',
       'Group Identity': 'Групповая идентификация',
@@ -713,6 +718,103 @@ const ru = {
         'Wolters Kluwer': 'Wolters Kluwer',
       },
     },
+    notificationPage: {
+      title: 'События Уведомлений',
+      messages: {
+        events: 'События',
+        noEvents: 'События уведомлений не найдены',
+        noSelectedEvent:
+          'Выберите уведомление для просмотра или создайте новое',
+      },
+      eventSettings: {
+        title: 'Настройки События',
+        displayName: 'Отображаемое Имя',
+        event: 'Событие',
+        type: 'Тип',
+        delay: 'Отправить через',
+        emailTemplate: 'Шаблон Электронной Почты',
+        newNotification: 'Новое Уведомление',
+      },
+      emailSettings: {
+        title: 'Настройки Электронной Почты',
+        recipient: 'кому',
+        ccEmails: 'копия',
+        subject: 'Тема',
+      },
+      filters: {
+        all: 'Все',
+        active: 'Активные',
+        inactive: 'Неактивные',
+        delayed: 'Отложенные',
+        activeEvents: 'Активные события',
+        inactiveEvents: 'Неактивные события',
+      },
+      eventDescriptions: {
+        // #region Manuscript
+        'manuscript-submit': 'Подтверждение отправки рукописи',
+        'manuscript-new-version': 'Отправлена новая версия рукописи',
+        'manuscript-import':
+          'Новые рукописи, статьи или препринты импортированы в Kotahi',
+        'manuscript-publish': 'Опубликовать',
+        // #endregion Manuscript
+        // #region Review
+        'review-invitation': 'Приглашение рецензента',
+        'review-invitation-follow-up':
+          'Рецензент был приглашен, но не принял приглашение на рецензию',
+        'review-accepted': 'Рецензент принят, но не отправил рецензию',
+        'review-rejected':
+          'Рецензент отклоняет приглашение участвовать в рецензировании',
+        'review-completed': 'Рецензия отправлена',
+        // #endregion Review
+        // #region Collaborative Review
+        'collaborative-review-invitation': 'Приглашение совместного рецензента',
+        'collaborative-review-invitation-follow-up':
+          'Совместный рецензент был приглашен, но не принял приглашение на рецензию',
+        'collaborative-review-accepted':
+          'Совместный рецензент принимает приглашение участвовать в рецензировании',
+        'collaborative-review-rejected':
+          'Совместный рецензент отклоняет приглашение участвовать в рецензировании',
+        'collaborative-review-lock': 'Совместное рецензирование заблокировано',
+        'collaborative-review-unlock':
+          'Совместное рецензирование разблокировано',
+        // #endregion Collaborative Review
+        // #region Author Invitation
+        'author-invitation': 'Автор приглашен к участию в рецензировании',
+        'author-accepted':
+          'Автор принимает приглашение участвовать в рецензировании',
+        'author-rejected':
+          'Автор отклоняет приглашение участвовать в рецензировании',
+        'author-invitation-follow-up':
+          'Автор приглашен, но не принял приглашение на рецензию',
+        // #endregion Author Invitation
+        // #region Chat
+        'chat-unread': 'Непрочитанное сообщение в обсуждении',
+        'chat-mention':
+          'Немедленное уведомление для пользователей, упомянутых в сообщении',
+        // #endregion Chat
+        // #region Author Proofing
+        'author-proofing-assign': 'Приглашение на корректуру автора',
+        'author-proofing-submit-feedback':
+          'Корректура автора завершена и отправлены комментарии',
+        // #endregion Author Proofing
+        // #region Team assignment
+        'team-editor-assigned': 'Назначен редактор',
+        'team-editor-unassigned': 'Редактор не назначен',
+        // #endregion Team assignment
+        // #region User
+        'user-first-login': 'Первый вход нового пользователя',
+        'user-set-group-role': 'Назначена роль пользователя',
+        'user-delete': 'Учетная запись пользователя удалена',
+        // #endregion User
+        // #region Decision form
+        'decision-form-make-decision': 'Редактор отправляет форму решения',
+        'decision-form-make-decision-with-verdict':
+          'Принять, пересмотреть или отклонить вердикт',
+        'decision-form-complete-comment':
+          'Новое сообщение в поле формы обсуждения',
+        // #endregion Decision form
+      },
+    },
     reportsPage: {
       Reports: 'Аналитика',
       Show: 'Показать',
@@ -817,6 +919,7 @@ const ru = {
       },
     },
     emailTemplate: {
+      pageTitle: 'Шаблоны уведомлений',
       'Email Templates': 'Шаблоны писем',
       'New Email Template': 'Новый шаблон письма',
       subject: 'Тема письма',

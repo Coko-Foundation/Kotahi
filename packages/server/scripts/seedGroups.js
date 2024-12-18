@@ -1,11 +1,7 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
-/* eslint-disable no-console */
 const { difference, map } = require('lodash')
 const path = require('path')
 const fs = require('fs-extra').promises
-
-const { useTransaction } = require('@coko/server')
+const { useTransaction, logger } = require('@coko/server')
 
 const Channel = require('../models/channel/channel.model')
 const Group = require('../models/group/group.model')
@@ -19,6 +15,7 @@ const seedForms = require('./seedForms')
 const seedCmsFiles = require('./seedCmsFiles')
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')
 const { generateCss } = require('../server/pdfexport/applyTemplate')
+const { seedNotifications } = require('./seedNotifications')
 
 const defaultTemplatePath = path.resolve(
   __dirname,
@@ -44,12 +41,12 @@ const createGroupAndRelatedData = async (
       isArchived: false,
     })
 
-    console.log(
+    logger.info(
       `  Group "${groupName}" already exists in database and has been unarchived.`,
     )
   } else if (groupExists) {
     group = groupExists
-    console.log(`  Group "${groupName}" already exists in database. Skipping.`)
+    logger.info(`  Group "${groupName}" already exists in database. Skipping.`)
   } else {
     // Seed group when a new entry is added to INSTANCE_GROUPS
     group = await Group.query(trx).insertAndFetch({
@@ -58,7 +55,7 @@ const createGroupAndRelatedData = async (
       type: 'Group',
     })
 
-    console.log(`  Added "${group.name}" group to database.`)
+    logger.info(`  Added "${group.name}" group to database.`)
   }
 
   // Seed config and link it to the created group
@@ -83,9 +80,9 @@ const createGroupAndRelatedData = async (
       groupId: group.id,
     })
 
-    console.log(`    Added ${channel.topic} for "${group.name}".`)
+    logger.info(`    Added ${channel.topic} for "${group.name}".`)
   } else {
-    console.log(
+    logger.info(
       `    ${channelExists.topic} already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -107,9 +104,9 @@ const createGroupAndRelatedData = async (
       objectType: 'Group',
     })
 
-    console.log(`    Added ${userTeam.displayName} team for "${group.name}".`)
+    logger.info(`    Added ${userTeam.displayName} team for "${group.name}".`)
   } else {
-    console.log(
+    logger.info(
       `    ${userTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -131,11 +128,11 @@ const createGroupAndRelatedData = async (
       objectType: 'Group',
     })
 
-    console.log(
+    logger.info(
       `    Added ${groupAdminTeam.displayName} team for "${group.name}".`,
     )
   } else {
-    console.log(
+    logger.info(
       `    ${groupAdminTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -157,11 +154,11 @@ const createGroupAndRelatedData = async (
       objectType: 'Group',
     })
 
-    console.log(
+    logger.info(
       `    Added ${groupManagerTeam.displayName} team for "${group.name}".`,
     )
   } else {
-    console.log(
+    logger.info(
       `    ${groupManagerTeamExists.displayName} team already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -183,7 +180,7 @@ const createGroupAndRelatedData = async (
 
       articleTemplate += userTemplateBuffer.toString()
     } catch {
-      console.error('No user PagedJS stylesheet found')
+      logger.error('No user PagedJS stylesheet found')
 
       const defaultTemplateBuffer = await fs.readFile(
         `${defaultTemplatePath}/article.njk`,
@@ -199,9 +196,9 @@ const createGroupAndRelatedData = async (
       isCms: false,
     })
 
-    console.log(`Added default group template for "${group.name}".`)
+    logger.info(`Added default group template for "${group.name}".`)
   } else {
-    console.log(
+    logger.info(
       `    ${existingArticleTemplate.length} group templates already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -244,7 +241,7 @@ const createGroupAndRelatedData = async (
       emailTemplatesData,
     )
 
-    console.log(
+    logger.info(
       `    Added ${insertedEmailTemplates.length} number of default email templates for "${group.name}".`,
     )
 
@@ -276,11 +273,11 @@ const createGroupAndRelatedData = async (
 
     await Config.query(trx).updateAndFetchById(config.id, newConfig)
 
-    console.log(
+    logger.info(
       `    Mapped default email templates in config formdata event notifications.`,
     )
   } else {
-    console.log(
+    logger.info(
       `    ${existingEmailTemplates.length} email templates already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -315,11 +312,11 @@ const createGroupAndRelatedData = async (
 
     await EmailTemplate.query(trx).insertGraph(emailTemplatesData)
 
-    console.log(
+    logger.info(
       `    Added @mention notification email template for "${group.name}".`,
     )
   } else {
-    console.log(
+    logger.info(
       `    @mention Notification email template already exists in database for "${group.name}". Skipping.`,
     )
   }
@@ -331,19 +328,21 @@ const createGroupAndRelatedData = async (
       .where({ group_id: group.id })
       .andWhereRaw("email_content->>'subject' = 'Kotahi | Task notification'")
 
-    console.log(
+    logger.info(
       `Updated email_template_type for the task notification email template.`,
     )
   } catch (error) {
-    console.error(
+    logger.error(
       `Error updating email_template_type for the task notification email template.`,
       error,
     )
   }
+
+  await seedNotifications(trx, group.id, config)
 }
 
 const group = async () => {
-  console.log(`INSTANCE_GROUPS: ${process.env.INSTANCE_GROUPS}`)
+  logger.info(`INSTANCE_GROUPS: ${process.env.INSTANCE_GROUPS}`)
 
   const instanceGroups =
     process.env.INSTANCE_GROUPS &&
@@ -351,7 +350,7 @@ const group = async () => {
       .map(g => g.trim())
       .filter(g => !!g)
 
-  console.log(`Number of groups in .env ${instanceGroups.length}`)
+  logger.info(`Number of groups in .env ${instanceGroups.length}`)
 
   const instanceGroupNames = []
 
@@ -366,11 +365,10 @@ const group = async () => {
       }),
     ).then(async () => {
       let groups = await Group.query(trx)
-
       const groupNames = groups.map(g => g.name)
 
       if (instanceGroups.length === groups.length) {
-        console.log(`Number of groups in database ${groups.length}`)
+        logger.info(`Number of groups in database ${groups.length}`)
       } else {
         // Archive groups that are removed from INSTANCE_GROUPS
         const archiveGroupNames = difference(groupNames, instanceGroupNames)
@@ -384,14 +382,14 @@ const group = async () => {
         })
 
         groups = await Group.query(trx)
-        console.log(
+        logger.info(
           `  Archived groups: "${
             archiveGroupNames.length > 1
               ? archiveGroupNames.join(', ')
               : archiveGroupNames
           }"`,
         )
-        console.log(`Number of groups in database ${groups.length}`)
+        logger.info(`Number of groups in database ${groups.length}`)
       }
     })
   })

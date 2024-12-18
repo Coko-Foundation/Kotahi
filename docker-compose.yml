@@ -129,6 +129,7 @@ services:
       - ./packages/server/models:/home/node/app/models
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
+      - ./packages/server/services:/home/node/app/services
     tty: true
 
   pagedjs:

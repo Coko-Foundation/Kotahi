@@ -1,83 +1,32 @@
 import React from 'react'
-import styled from 'styled-components'
-import { grid } from '@coko/client'
-// eslint-disable-next-line import/no-unresolved
-import { useTranslation } from 'react-i18next'
-import { RoundIconButton } from '../../shared'
 import EmailTemplateContent from './EmailTemplateContent'
 
-import {
-  Heading2,
-  SidebarPageRow,
-  RightArrow,
-  EditPageContainer,
-  EditPageLeft,
-  EditPageRight,
-} from '../../component-cms-manager/src/style'
+import EmailTemplatesHeader from './EmailTemplatesHeader'
+import EmailTemplatesNav from './EmailTemplatesNav'
+import { ConfirmationModal } from '../../component-modal/src/ConfirmationModal'
+import { color } from '../../../theme'
+import { useEmailTemplatesContext } from '../hooks/EmailTemplatesContext'
+import { Content, Root } from '../misc/styleds'
 
-import PageHeader from '../../component-cms-manager/src/components/PageHeader'
+const EmailTemplates = () => {
+  const { handleDelete, deleteModalState, t } = useEmailTemplatesContext()
 
-const AddNewEmailTemplate = styled(RoundIconButton)`
-  margin-left: ${grid(1)};
-  margin-top: ${grid(2)};
-  min-width: 0;
-`
-
-const EmailTemplates = ({
-  emailTemplates,
-  onNewItemButtonClick,
-  activeTemplate,
-  isNewEmailTemplate,
-  createEmailTemplate,
-  deleteEmailTemplate,
-  showEmailTemplate,
-  onItemClick,
-  updateEmailTemplate,
-}) => {
-  const { t } = useTranslation()
   return (
-    <EditPageContainer>
-      <EditPageLeft>
-        <div>
-          {emailTemplates.map(template => (
-            <SidebarPageRow key={template.id}>
-              <Heading2 onClick={() => onItemClick(template)}>
-                {template.emailContent.description}
-              </Heading2>
-              {template.id === activeTemplate?.id ? <RightArrow /> : null}
-            </SidebarPageRow>
-          ))}
-        </div>
-        <AddNewEmailTemplate
-          disabled={isNewEmailTemplate}
-          iconName="Plus"
-          onClick={onNewItemButtonClick}
-          primary
-          title={t('emailTemplate.addANewEmailTemplate')}
-        />
-      </EditPageLeft>
-      <EditPageRight key={activeTemplate?.id}>
-        <PageHeader
-          leftSideOnly
-          mainHeading={
-            isNewEmailTemplate
-              ? t('emailTemplate.New Email Template')
-              : t('emailTemplate.Email Templates')
-          }
-        />
-        {activeTemplate && (
-          <EmailTemplateContent
-            activeTemplate={activeTemplate}
-            createEmailTemplate={createEmailTemplate}
-            deleteEmailTemplate={deleteEmailTemplate}
-            emailTemplates={emailTemplates}
-            isNewEmailTemplate={isNewEmailTemplate}
-            showEmailTemplate={showEmailTemplate}
-            updateEmailTemplate={updateEmailTemplate}
-          />
-        )}
-      </EditPageRight>
-    </EditPageContainer>
+    <Root>
+      <EmailTemplatesHeader />
+      <Content>
+        <EmailTemplateContent />
+        <EmailTemplatesNav />
+      </Content>
+      <ConfirmationModal
+        buttonColor={color.error.base}
+        closeModal={deleteModalState.off}
+        confirmationAction={handleDelete}
+        confirmationButtonText={t('emailTemplate.delete')}
+        isOpen={deleteModalState.state}
+        message={t('emailTemplate.permanentlyDelete')}
+      />
+    </Root>
   )
 }
 

@@ -1,11 +1,6 @@
-const config = require('config')
-
-const { clientUrl } = require('@coko/server')
-
 const User = require('../../../models/user/user.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 const Team = require('../../../models/team/team.model')
-const Group = require('../../../models/group/group.model')
 const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
 const Invitation = require('../../../models/invitation/invitation.model')
 
@@ -13,12 +8,80 @@ const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
-const {
-  sendEmailNotification,
-  submissionOverridenKeys,
-} = require('../../../services/emailNotifications')
-
+const emailService = require('../../../services/emailNotifications.service')
+const handlebarsService = require('../../../services/handlebars.service')
+const seekEvent = require('../../../services/notification.service')
 const { cachedGet } = require('../../querycache')
+const { safeParse, objIf } = require('../../utils/objectUtils')
+
+const { overrideRecipient, sendEmail } = emailService
+const { processData, useHandlebars } = handlebarsService
+
+const INVITATION_TYPES = [
+  'authorInvitation',
+  'reviewerInvitation',
+  'collaborativeReviewerInvitation',
+]
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+$/
+
+const getReciever = async (selectedEmail, externalName, trx) => {
+  if (!selectedEmail) return { name: externalName, id: null }
+
+  const [userReceiver] = await User.query(trx)
+    .where({ email: selectedEmail })
+    .withGraphFetched('[defaultIdentity]')
+
+  return {
+    name: userReceiver.username || userReceiver.defaultIdentity.name || '',
+    id: userReceiver.id,
+  }
+}
+
+const sendInvitation = async input => {
+  const {
+    type,
+    emailSender,
+    externalName,
+    manuscriptId,
+    selectedEmail,
+    externalEmail,
+  } = input
+
+  const receiverEmail = externalEmail || selectedEmail
+  const isEmailValid = EMAIL_REGEX.test(receiverEmail)
+  const receiver = await getReciever(selectedEmail, externalName)
+
+  if (!isEmailValid || !receiver) return { success: false }
+
+  const invitedPersonTypes = {
+    authorInvitation: 'AUTHOR',
+    reviewerInvitation: 'REVIEWER',
+    collaborativeReviewerInvitation: 'COLLABORATIVE_REVIEWER',
+  }
+
+  const invitationData = {
+    manuscriptId,
+    toEmail: receiverEmail,
+    purpose: 'Inviting an author to accept a manuscript',
+    status: 'UNANSWERED',
+    senderId: emailSender ? emailSender.id : null,
+    invitedPersonType: invitedPersonTypes[type],
+    invitedPersonName: receiver.name,
+    userId: receiver.id,
+  }
+
+  const newInvitation = await Invitation.query().insert(invitationData)
+  const invitationId = newInvitation.id
+
+  return {
+    success: !!invitationId,
+    invitationId,
+    receiverName: receiver.name,
+    invitation: newInvitation,
+    ...invitationData,
+  }
+}
 
 const getUsersById = async userIds => User.query().findByIds(userIds)
 
@@ -30,6 +93,7 @@ const getUsersById = async userIds => User.query().findByIds(userIds)
  * "anyEditorOrManager" indicates any editorial role or groupManager or admin. */
 const getUserRolesInManuscript = async (userId, manuscriptId, options = {}) => {
   const { trx } = options
+  if (!manuscriptId) return {}
   const manuscript = await Manuscript.query(trx).findById(manuscriptId)
   const { groupId } = manuscript
 
@@ -101,6 +165,12 @@ const getSharedReviewersIds = async (manuscriptId, currentUserId) => {
   return reviewers.map(r => r.userId)
 }
 
+// TODO: This should be refactored:
+// we should have the invitation and email sending logic separated, or we can have it like this if this is the only purpose of this function,
+// the problem is that this is still beign used for sending task email nottifications, once we change that, we can refactor this and/or just rename it to inviteAndSendEmail maybe, and also rename the sendEmail mutation.
+//
+// Another issue is that we're relying on the emailTemplateType to determine the invitation type(and also if it should invite)
+// we need to change the implementation on 'Tasks & notifications' tab from the DecisionPage on the client to send invitations to reimplement this
 const sendEmailWithPreparedData = async (
   input,
   ctx,
@@ -108,188 +178,116 @@ const sendEmailWithPreparedData = async (
   options = {},
 ) => {
   const { trx } = options
-  let inputParsed = input
 
-  if (ctx && typeof input === 'string') {
-    inputParsed = JSON.parse(input)
-  }
-
-  // TODO:
-  // Maybe a better way to make this function less ambigious is by having a simpler object of the structure:
-  // { senderName, senderEmail, recieverName, recieverEmail }
-  // ANd send this as `input` from the Frontend
   const {
     manuscript,
     selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
-    selectedTemplate,
+    selectedTemplate, // selectedEmailTemplateId
     externalEmail, // New User Email
     externalName, // New User username
     currentUser, // Name of the currentUser or senderName
     groupId,
-  } = inputParsed
+  } = safeParse(input, input)
 
-  const selectedEmailTemplateData = await EmailTemplate.query(trx).findById(
-    selectedTemplate,
-  )
+  const template = await EmailTemplate.query(trx).findById(selectedTemplate)
 
-  const receiverEmail = externalEmail || selectedEmail
-
+  const to = externalEmail || selectedEmail
   let receiverName = externalName
 
-  const group = await Group.query(trx).findById(groupId)
-
-  const appUrl = `${clientUrl}/${group.name}`
-  let manuscriptPageUrl = `${appUrl}/versions/${manuscript.id}`
-  let roles = {}
-
   if (selectedEmail) {
-    // If the email of a pre-existing user is selected
-    // Get that user
     const [userReceiver] = await User.query(trx)
       .where({ email: selectedEmail })
       .withGraphFetched('[defaultIdentity]')
 
     receiverName =
       userReceiver.username || userReceiver.defaultIdentity.name || ''
-
-    roles = await getUserRolesInManuscript(userReceiver.id, manuscript.id, {
-      trx,
-    })
   }
 
-  // manuscriptPageUrl based on user roles
-  if (roles.groupManager || roles.anyEditor) {
-    manuscriptPageUrl += '/decision?tab=decision'
-  } else if (roles.reviewer || roles.collaborativeReviewer) {
-    manuscriptPageUrl += '/review'
-  } else if (roles.author) {
-    manuscriptPageUrl += '/submit'
-  } else {
-    manuscriptPageUrl = `${appUrl}/dashboard`
-  }
-
-  const manuscriptProductionPageUrl = `${appUrl}/versions/${manuscript.id}/production` // manuscriptProductionPageUrl used only for author proofing flow
   const manuscriptId = manuscript.id
-
+  // check why are we fetching the manuscript again? to use getManuscriptAuthor?
   const manuscriptObject = await Manuscript.query(trx).findById(manuscriptId)
-
   const author = await manuscriptObject.getManuscriptAuthor({ trx })
-
   const authorName = author ? author.username : ''
-
-  const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
-  const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+  const emailValidationResult = EMAIL_REGEX.test(to)
 
   if (!emailValidationResult || !receiverName) {
     return { success: false }
   }
 
-  let invitationSender = ''
+  const { emailTemplateType: type } = template
+  const isInvitation = INVITATION_TYPES.includes(type)
 
-  if (!ctx) {
-    invitationSender = emailSender
-  } else {
-    invitationSender = await User.findById(ctx.userId) // no trx!!
-  }
-
-  const toEmail = receiverEmail
-  const purpose = 'Inviting an author to accept a manuscript'
-  const status = 'UNANSWERED'
-  const senderId = invitationSender ? invitationSender.id : null
-
-  let invitationId = ''
-
-  // authorInvitation, reviewerInvitation create Invitation
-  if (
-    [
-      'authorInvitation',
-      'reviewerInvitation',
-      'collaborativeReviewerInvitation',
-    ].includes(selectedEmailTemplateData.emailTemplateType)
-  ) {
-    let userId = null
-    let invitedPersonName = ''
-
-    if (selectedEmail) {
-      // If the email of a pre-existing user is selected
-      // Get that user
-      const [userReceiver] = await User.query(trx)
-        .where({ email: selectedEmail })
-        .withGraphFetched('[defaultIdentity]')
-
-      userId = userReceiver.id
-      invitedPersonName = userReceiver.username
-    } else {
-      // Use the username provided
-      invitedPersonName = externalName
-    }
-
-    let invitedPersonType = 'REVIEWER'
-
-    if (selectedEmailTemplateData.emailTemplateType === 'authorInvitation') {
-      invitedPersonType = 'AUTHOR'
-    } else if (
-      selectedEmailTemplateData.emailTemplateType ===
-      'collaborativeReviewerInvitation'
-    ) {
-      invitedPersonType = 'COLLABORATIVE_REVIEWER'
-    }
-
-    const newInvitation = await Invitation.query().insert({
+  if (isInvitation) {
+    const invitationPayload = {
+      type,
+      emailSender: !ctx ? emailSender : await User.findById(ctx.userId),
+      externalName,
       manuscriptId,
-      toEmail,
-      purpose,
-      status,
-      senderId,
-      invitedPersonType,
-      invitedPersonName,
-      userId,
-    }) // no trx!!
+      selectedEmail,
+      externalEmail,
+    }
 
-    invitationId = newInvitation.id
-  }
+    const invitationResult = await sendInvitation(invitationPayload, ctx)
+    const { invitation, ...invitationData } = invitationResult
+    const { success } = invitationData
 
-  if (invitationId === '') {
-    console.error(
-      'Invitation Id is not available to be used for this template.',
-    )
-  }
+    if (success) {
+      // TODO: we're relying on the emailTemplateType until we change the 'Tasks & notifications' tab from the DecisionPage on the client
 
-  // TODO: check and remove instance is it still used? May be deadcode
-  let instance
+      const eventName = {
+        authorInvitation: 'author-invitation',
+        reviewerInvitation: 'review-invitation',
+        collaborativeReviewerInvitation: 'collaborative-review-invitation',
+      }[type]
 
-  if (config['notification-email'].use_colab === 'true') {
-    instance = 'prc'
-  } else {
-    instance = 'generic'
+      const eventData = {
+        manuscript: manuscriptObject,
+        authorName,
+        senderName: currentUser,
+        recipientName: receiverName,
+        ...invitationData,
+        context: { recipient: invitationData.toEmail, invitation },
+        groupId,
+      }
+
+      const eventResult = await seekEvent(eventName, eventData) // we need only the success from this
+      seekEvent(`${eventName}-follow-up`, eventData)
+
+      return { success: !!success && !!eventResult.success, ...invitation }
+    }
   }
 
   const ccEmails = await getEditorEmails(manuscriptId, { trx })
 
   try {
-    const result = await sendEmailNotification({
-      receiver: receiverEmail,
-      template: selectedEmailTemplateData,
-      data: {
-        authorName,
-        senderName: currentUser,
-        recipientName: receiverName,
-        ccEmails,
-        instance,
-        toEmail,
-        invitationId,
-        purpose,
-        status,
-        senderId,
-        manuscriptNumber: manuscript.shortId,
-        manuscriptLink: manuscriptPageUrl,
-        manuscriptTitle: manuscript.submission.$title,
-        manuscriptTitleLink: manuscript.submission.$sourceUri,
-        manuscriptProductionLink: manuscriptProductionPageUrl,
-        ...submissionOverridenKeys(manuscript.submission),
-      },
-      groupId: manuscriptObject.groupId,
-    })
+    const variables = {
+      authorName,
+      senderName: currentUser,
+      recipientName: receiverName,
+      ccEmails,
+      manuscript,
+    }
+
+    let { cc, body, subject, ccEditors } = template.emailContent ?? {}
+
+    // TODO: replace this as we dont have cc or ccEditors in the template anymore
+    if (ccEditors && ccEmails) {
+      cc += `,${ccEmails.join(',')}`
+    }
+
+    const override = overrideRecipient({ to, cc, subject })
+    const isProduction = !override || !override.to
+    const dataForHandlebars = processData(variables, groupId)
+
+    const mailOptions = {
+      to,
+      cc,
+      subject: useHandlebars(subject, dataForHandlebars),
+      html: useHandlebars(body, dataForHandlebars),
+      ...objIf(!isProduction, override),
+    }
+
+    const result = await sendEmail(mailOptions, groupId)
 
     return { success: result }
   } catch (e) {
@@ -345,4 +343,5 @@ module.exports = {
   sendEmailWithPreparedData,
   getGroupAndGlobalRoles,
   isAdminOrGroupManager,
+  sendInvitation,
 }

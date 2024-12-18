@@ -34,7 +34,6 @@ import SubmitPage from './component-submit/src/components/SubmitPage'
 import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
 import UsersPage from './component-users-manager/src/UsersPage'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
-import EmailTemplatesPage from './component-email-templates/src/EmailTemplatesPage'
 
 import CMSPagesPage from './component-cms-manager/src/CMSPagesPage'
 import CMSLayoutPage from './component-cms-manager/src/CMSLayoutPage'
@@ -184,7 +183,6 @@ const AdminPage = () => {
   const loginLink = `${urlFrag}/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `${urlFrag}/login?next=${homeLink}`
-  const emailTemplatesLink = `${urlFrag}/admin/email-templates`
 
   if (showLinks) {
     const params = getParams(pathname, path)
@@ -274,11 +272,6 @@ const AdminPage = () => {
           link: configurationLink,
           name: t('leftMenu.Configuration'),
           icon: 'sliders',
-        },
-        {
-          link: emailTemplatesLink,
-          name: t('leftMenu.Emails'),
-          icon: 'mail',
         },
         {
           menu: 'CMS',
@@ -584,12 +577,6 @@ const AdminPage = () => {
             component={ConfigManagerPage}
             key="configuration"
             path={`${urlFrag}/admin/configuration`}
-            redirectLink={redirectLink}
-          />,
-          <PrivateRoute
-            component={EmailTemplatesPage}
-            key="email-templates"
-            path={`${emailTemplatesLink}/:pageId?`}
             redirectLink={redirectLink}
           />,
         ]}

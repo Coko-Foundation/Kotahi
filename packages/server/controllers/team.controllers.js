@@ -16,7 +16,11 @@ const {
 
 const { evictFromCacheByPrefix } = require('../server/querycache')
 
-const createTeam = async input => {
+const seekEvent = require('../services/notification.service')
+
+const EDITOR_ROLES = ['editor', 'handlingEditor', 'seniorEditor']
+
+const createTeam = async (input, groupId) => {
   // TODO Only the relate option appears to be used by insertGraphAndFetch, according to Objection docs?
   const options = {
     relate: ['members.user'],
@@ -40,18 +44,25 @@ const createTeam = async input => {
     }),
   )
 
+  if (EDITOR_ROLES.includes(input.role)) {
+    const manuscript = await Manuscript.query().findById(input.objectId)
+    seekEvent('team-editor-assigned', {
+      manuscript,
+      membersAdded: input.members,
+      role: input.role,
+      groupId,
+    })
+  }
+
   return Team.query().insertGraphAndFetch(input, options)
 }
 
-const updateTeam = async (id, input) => {
+const updateTeam = async (id, input, groupId) => {
   evictFromCacheByPrefix('userIs')
   evictFromCacheByPrefix('membersOfTeam')
   const existing = await Team.query().select('role').findById(id)
 
-  if (
-    existing &&
-    ['editor', 'handlingEditor', 'seniorEditor'].includes(existing.role)
-  ) {
+  if (existing && EDITOR_ROLES.includes(existing.role)) {
     const existingMemberIds = (
       await TeamMember.query().select('userId').where({ teamId: id })
     ).map(m => m.userId)
@@ -67,6 +78,18 @@ const updateTeam = async (id, input) => {
     )
 
     const { objectId } = await Team.query().select('objectId').findById(id)
+    const manuscript = await Manuscript.query().findById(objectId)
+
+    const eventData = {
+      manuscript,
+      membersAdded,
+      membersRemoved,
+      groupId,
+      role: existing.role,
+    }
+
+    membersAdded.length && seekEvent('team-editor-assigned', eventData)
+    membersRemoved.length && seekEvent('team-editor-unassigned', eventData)
 
     await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
 
@@ -130,7 +153,9 @@ const updateTeam = async (id, input) => {
 }
 
 const updateTeamMember = async (id, input) => {
-  return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
+  // somehow updateandfetchbyid was not working here when changing the isShared field, not sure why
+  await TeamMember.query().where({ id }).patch(JSON.parse(input))
+  return TeamMember.query().findById(id)
 }
 
 const updateCollaborativeTeamMembers = async (manuscriptId, input) => {

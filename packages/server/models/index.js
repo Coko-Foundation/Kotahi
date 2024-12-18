@@ -36,6 +36,7 @@ const TeamMember = require('./teamMember/teamMember.model')
 const ThreadedDiscussion = require('./threadedDiscussion/threadedDiscussion.model')
 const User = require('./user/user.model')
 const CollaborativeDoc = require('./collaborative-doc/collaborativeDoc.model')
+const Notification = require('./notification/notification.model')
 
 module.exports = {
   ArticleImportHistory,
@@ -72,4 +73,5 @@ module.exports = {
   ThreadedDiscussion,
   User,
   CollaborativeDoc,
+  Notification,
 }

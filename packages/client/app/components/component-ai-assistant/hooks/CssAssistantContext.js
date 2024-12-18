@@ -2,14 +2,8 @@
 /* eslint-disable no-param-reassign */
 import React, { createContext, useMemo, useRef, useState } from 'react'
 import { takeRight } from 'lodash'
-import {
-  callOn,
-  htmlTagNames,
-  onEntries,
-  safeCall,
-  safeId,
-  setInlineStyle,
-} from '../utils'
+import { htmlTagNames, safeId, setInlineStyle } from '../utils'
+import { callOn, onEntries, safeCall } from '../../../shared/generalUtils'
 
 export const CssAssistantContext = createContext()
 

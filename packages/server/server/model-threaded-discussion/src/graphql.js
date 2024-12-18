@@ -17,6 +17,8 @@ const {
   stripPendingVersionsExceptByUser,
 } = require('./threadedDiscussionUtils')
 
+const seekEvent = require('../../../services/notification.service')
+
 const getOriginalVersionManuscriptId = async manuscriptId => {
   const ms = await Manuscript.query().select('parentId').findById(manuscriptId)
 
@@ -202,6 +204,7 @@ const resolvers = {
       ctx,
     ) {
       const now = new Date().toISOString()
+      const groupId = ctx.req.headers['group-id']
 
       const discussion = await ThreadedDiscussion.query().findById(
         threadedDiscussionId,
@@ -229,6 +232,19 @@ const resolvers = {
             threads: JSON.stringify(discussion.threads),
           })
           .where({ id: threadedDiscussionId })
+
+        seekEvent('decision-form-complete-comment', {
+          threadedDiscussionId,
+          threadId,
+          commentId,
+          context: {
+            threadedDiscussionId,
+            threadId,
+            commentId,
+            userId: ctx.userId,
+          },
+          groupId,
+        })
       }
 
       return stripHiddenAndAddUserInfo(discussion, ctx.userId, getUsersById)

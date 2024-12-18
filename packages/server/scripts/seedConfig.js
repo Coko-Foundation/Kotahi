@@ -3,6 +3,12 @@
 /* eslint-disable no-console */
 
 const Config = require('../models/config/config.model')
+const eventsSource = require('../services/notification/eventsSource')
+
+const eventsConfig = Object.keys(eventsSource).reduce((acc, key) => {
+  acc[key] = { active: true }
+  return acc
+}, {})
 
 const seedConfig = async (group, instanceName, index, options) => {
   const { trx } = options
@@ -93,11 +99,13 @@ const seedConfig = async (group, instanceName, index, options) => {
           gmailAuthPassword: process.env.GMAIL_NOTIFICATION_PASSWORD || null,
           gmailSenderName:
             process.env.GMAIL_NOTIFICATION_EMAIL_SENDER_NAME || null,
+          eventsConfig,
         }
       : {
           gmailAuthEmail: null,
           gmailAuthPassword: null,
           gmailSenderName: null,
+          eventsConfig,
         }
 
   const groupIdentity = {
