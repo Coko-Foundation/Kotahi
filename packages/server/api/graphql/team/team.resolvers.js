@@ -6,12 +6,14 @@ const {
   userTeams,
 } = require('../../../controllers/team.controllers')
 
-const createTeamResolver = async (_, { input }) => {
-  return createTeam(input)
+const createTeamResolver = async (_, { input }, ctx) => {
+  const groupId = ctx.req.headers['group-id']
+  return createTeam(input, groupId)
 }
 
-const updateTeamResolver = async (_, { id, input }) => {
-  return updateTeam(id, input)
+const updateTeamResolver = async (_, { id, input }, ctx) => {
+  const groupId = ctx.req.headers['group-id']
+  return updateTeam(id, input, groupId)
 }
 
 const updateTeamMemberResolver = async (_, { id, input }) => {

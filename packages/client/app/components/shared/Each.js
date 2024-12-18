@@ -24,7 +24,7 @@ Each.propTypes = {
   render: PropTypes.func,
   of: PropTypes.instanceOf(Array),
   condition: PropTypes.bool,
-  fallback: PropTypes.func,
+  fallback: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 }
 
 Each.defaultProps = {

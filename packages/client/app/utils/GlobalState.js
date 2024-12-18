@@ -1,9 +1,5 @@
 import { isFunction } from 'lodash'
-import {
-  callOn,
-  onEntries,
-  safeCall,
-} from '../components/component-ai-assistant/utils/utils'
+import { callOn, onEntries, safeCall } from '../shared/generalUtils'
 import createHandlebarsState from '../components/component-email-templates/src/handlebarsAutocomplete/config'
 
 const { defineProperty, keys } = Object

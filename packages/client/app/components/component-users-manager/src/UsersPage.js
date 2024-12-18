@@ -17,7 +17,7 @@ const defaultSortDirections = {
   groupManager: 'ASC',
 }
 
-const GET_USERS = gql`
+export const GET_USERS = gql`
   query Users($sort: UsersSort, $offset: Int, $limit: Int) {
     paginatedUsers(sort: $sort, offset: $offset, limit: $limit) {
       totalCount

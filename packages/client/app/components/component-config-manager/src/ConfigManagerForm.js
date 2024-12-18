@@ -1,3 +1,4 @@
+/* stylelint-disable declaration-no-important */
 /* eslint-disable react/jsx-handler-names */
 /* eslint-disable no-underscore-dangle */
 import React, { useMemo, useRef, useState } from 'react'
@@ -5,6 +6,7 @@ import Form from '@rjsf/core'
 import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { isEqual } from 'lodash'
+import { grid } from '@coko/client'
 import { generateSchemas, tabKeyBasedSchema, tabLabels } from './ui/schema' // Import the function that generates the schema and uiSchema
 
 import {
@@ -16,6 +18,12 @@ import {
   HiddenTabs,
 } from '../../shared'
 import { color, space } from '../../../theme'
+import EmailTemplatesPage from '../../component-email-templates/src/EmailTemplatesPage'
+import emailTemplatesToSchema from './helpers'
+import { EmailTemplatesProvider } from '../../component-email-templates/hooks/EmailTemplatesContext'
+import NotificationPage from '../../component-notification-event/NotificationPage'
+import { T } from '../../component-notification-event/misc/constants'
+import { getFormBadgeBg } from '../../component-email-templates/src/handlebarsAutocomplete/helpers'
 
 const StyledContainer = styled(Container)`
   --tabs-border: 1px solid #ddd;
@@ -28,6 +36,7 @@ const StyledSectionContent = styled(SectionContent)`
   margin: 0;
   overflow-y: auto;
   padding: ${space.g} ${space.g} 0 ${space.g};
+  width: 100%;
 `
 
 const StyledHeading = styled(Heading)`
@@ -74,6 +83,48 @@ const Footer = styled.div`
   }
 `
 
+const EmailsTabWrapper = styled(StyledSectionContent)`
+  height: inherit;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+  max-height: 100%;
+  overflow-y: visible;
+  padding: 0;
+
+  .ProseMirror {
+    padding: ${grid(1)} ${grid(2)};
+
+    span.handlebars {
+      background-color: ${getFormBadgeBg('common')};
+      border-radius: 5px;
+      box-shadow: 0 0 6px 0 #0001, inset 0 0 4px 0 #0002;
+      margin: 0;
+      padding: 2px 4px;
+      text-rendering: geometricPrecision;
+    }
+
+    span.handlebars.submission-form {
+      background-color: ${getFormBadgeBg('submission')};
+    }
+
+    span.handlebars.review-form {
+      background-color: ${getFormBadgeBg('review')};
+    }
+
+    span.handlebars.decision-form {
+      background-color: ${getFormBadgeBg('decision')};
+    }
+  }
+
+  .wax-surface-scroll {
+    height: 100%;
+
+    &:focus-within {
+      border-color: ${color.gray80};
+    }
+  }
+`
+
 // TODO Improve on this hardcoded hack to hide the "Publishing" heading.
 const StyledWrapper = styled.div`
   /* stylelint-disable-next-line selector-id-pattern */
@@ -85,11 +136,11 @@ const StyledWrapper = styled.div`
 
 const FieldTemplate = props => {
   const { classNames, description, children, showInstanceType, t } = props
-  const currentFieldName = key => description._owner.key === key
+  const getFieldName = key => description._owner.key === key
   // eslint-disable-next-line no-nested-ternary
   return !showInstanceType ? (
-    !currentFieldName('instanceName') ? (
-      <StyledWrapper $hideFirstLegend={currentFieldName('publishing')}>
+    !getFieldName('instanceName') ? (
+      <StyledWrapper $hideFirstLegend={getFieldName('publishing')}>
         <div className={classNames}>
           {description}
           {children}
@@ -100,7 +151,7 @@ const FieldTemplate = props => {
     )
   ) : (
     <div className={classNames}>
-      {!currentFieldName('instanceName') ? (
+      {!getFieldName('instanceName') ? (
         description
       ) : (
         <InstanceTypeLegend>{t('configPage.Instance Type')}</InstanceTypeLegend>
@@ -128,6 +179,9 @@ const ConfigManagerForm = ({
   const initialFormData = useRef(passedFormData)
   const storedFormData = useRef(initialFormData.current)
   const [pendingChanges, setPendingChanges] = useState({})
+  const [activeTab, setActiveTab] = useState('general')
+
+  const emailOptions = emailTemplatesToSchema(emailTemplates)
 
   const seekForPendingChanges = (formData, properties, key) =>
     setPendingChanges(prev => {
@@ -142,76 +196,19 @@ const ConfigManagerForm = ({
       return { ...prev, [key]: isChanged }
     })
 
+  const noPendingChanges =
+    updateConfigStatus !== 'pending' &&
+    Object.values(pendingChanges).every(change => !change)
+
   const schemas = useMemo(() => {
-    const emailNotificationOptions = emailTemplates.map(template => {
-      const emailOption = {
-        const: template.id,
-        title: template.emailContent.description,
-      }
-
-      return emailOption
-    })
-
-    // This will return first email template found of reviewer invitation type
-    const defaultReviewerInvitationEmail = emailTemplates.find(
-      emailTemplate => emailTemplate.emailTemplateType === 'reviewerInvitation',
-    )
-
-    // modifying the default reviewer invitation template into react json schema form structure
-    const defaultReviewerInvitationTemplate = {
-      const: defaultReviewerInvitationEmail.id,
-      title: defaultReviewerInvitationEmail.emailContent.description,
-    }
-
-    // modifying the default reviewer invitation template into react json schema form structure
-    const defaultCollaborativeReviewerInvitationEmail = emailTemplates.find(
-      emailTemplate =>
-        emailTemplate.emailTemplateType === 'collaborativeReviewerInvitation',
-    )
-
-    // modifying the default reviewer invitation template into react json schema form structure
-    const defaultCollaborativeReviewerInvitationTemplate = {
-      const: defaultCollaborativeReviewerInvitationEmail.id,
-      title:
-        defaultCollaborativeReviewerInvitationEmail.emailContent.description,
-    }
-
-    // This will return first email template found of author proofing invitation type
-    const defaultAuthorProofingInvitationEmail = emailTemplates.find(
-      emailTemplate =>
-        emailTemplate.emailTemplateType === 'authorProofingInvitation',
-    )
-
-    // modifying the default author proofing invitation template into react json schema form structure
-    const defaultAuthorProofingInvitationTemplate = {
-      const: defaultAuthorProofingInvitationEmail.id,
-      title: defaultAuthorProofingInvitationEmail.emailContent.description,
-    }
-
-    // This will return first email template found of author proofing submitted type
-    const defaultAuthorProofingSubmittedEmail = emailTemplates.find(
-      emailTemplate =>
-        emailTemplate.emailTemplateType === 'authorProofingSubmitted',
-    )
-
-    // modifying the default author proofing submitted template into react json schema form structure
-    const defaultAuthorProofingSubmittedTemplate = {
-      const: defaultAuthorProofingSubmittedEmail.id,
-      title: defaultAuthorProofingSubmittedEmail.emailContent.description,
-    }
-
-    return generateSchemas(
-      emailNotificationOptions,
+    return generateSchemas({
       deleteFile,
       createFile,
       config,
-      defaultReviewerInvitationTemplate,
-      defaultCollaborativeReviewerInvitationTemplate,
-      defaultAuthorProofingInvitationTemplate,
-      defaultAuthorProofingSubmittedTemplate,
       t,
       logoAndFavicon,
-    )
+      ...emailOptions,
+    })
   }, [])
 
   const handlers = {
@@ -284,9 +281,29 @@ const ConfigManagerForm = ({
     [],
   )
 
-  const noPendingChanges =
-    updateConfigStatus !== 'pending' &&
-    Object.values(pendingChanges).every(change => !change)
+  const emailTab = {
+    label: t('emailTemplate.pageTitle'),
+    tabStyles: { display: 'flex', height: '100%', flexDirection: 'row' },
+    key: 'emails',
+    content: (
+      <EmailTemplatesProvider>
+        <EmailTemplatesPage wrapper={EmailsTabWrapper} />,
+      </EmailTemplatesProvider>
+    ),
+  }
+
+  const eventTab = {
+    label: t(T.title),
+    tabStyles: { display: 'flex', height: '100%', flexDirection: 'row' },
+    key: 'events',
+    content: (
+      <NotificationPage
+        emailTemplates={emailTemplates}
+        key={activeTab}
+        wrapper={EmailsTabWrapper}
+      />
+    ),
+  }
 
   return (
     <>
@@ -302,21 +319,24 @@ const ConfigManagerForm = ({
         </HeadingWithAction>
         <HiddenTabs
           defaultActiveKey="general"
-          sections={tabSections}
+          onChange={setActiveTab}
+          sections={[...tabSections, emailTab, eventTab]}
           shouldFillFlex
         />
-        <Footer $pending={!noPendingChanges}>
-          <div>You have unsaved changes.</div>
-          <StyledActionButton
-            disabled={disabled}
-            onClick={handlers.form.onSubmit}
-            primary
-            status={updateConfigStatus}
-            type="submit"
-          >
-            {t('common.Save')}
-          </StyledActionButton>
-        </Footer>
+        {!['emails', 'events'].includes(activeTab) && (
+          <Footer $pending={!noPendingChanges}>
+            <div>You have unsaved changes.</div>
+            <StyledActionButton
+              disabled={disabled}
+              onClick={handlers.form.onSubmit}
+              primary
+              status={updateConfigStatus}
+              type="submit"
+            >
+              {t('common.Save')}
+            </StyledActionButton>
+          </Footer>
+        )}
       </StyledContainer>
     </>
   )

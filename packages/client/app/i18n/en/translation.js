@@ -36,6 +36,10 @@ const en = {
       No: 'No',
       Save: 'Save',
       Update: 'Update',
+      Activate: 'Activate',
+      Create: 'Create',
+      Deactivate: 'Deactivate',
+      Modified: 'Modified',
       Confirm: 'Confirm',
       Delete: 'Delete',
       View: 'View',
@@ -469,6 +473,7 @@ const en = {
       productionTab: 'Production',
       integrationsAndPublishingTab: 'Integrations and Publishing Endpoints',
       notificationsTab: 'Notifications and E-mail',
+      emailTab: 'E-mail Templates',
       Configuration: 'Configuration',
       'Instance Type': 'Instance Type',
       'Group Identity': 'Group Identity',
@@ -700,6 +705,100 @@ const en = {
         'Wolters Kluwer': 'Wolters Kluwer',
       },
     },
+    notificationPage: {
+      title: 'Notification Events',
+      messages: {
+        events: 'Events',
+        noEvents: 'No notification events found',
+        noSelectedEvent: 'Select a notification to view or create a new one',
+      },
+      eventSettings: {
+        title: 'Event settings',
+        displayName: 'Display Name',
+        event: 'Event',
+        type: 'Type',
+        delay: 'Send after',
+        emailTemplate: 'Email Template',
+        newNotification: 'New Notification',
+      },
+      emailSettings: {
+        title: 'Email settings',
+        recipient: 'to',
+        ccEmails: 'cc',
+        subject: 'Subject',
+      },
+      filters: {
+        all: 'All',
+        active: 'Active',
+        inactive: 'Inactive',
+        delayed: 'Delayed',
+        activeEvents: 'Active events',
+        inactiveEvents: 'Inactive events',
+      },
+      eventDescriptions: {
+        // #region Manuscript
+        'manuscript-submit': 'Confirmation of manuscript submission',
+        'manuscript-new-version': 'New manuscript version submitted',
+        'manuscript-import':
+          'New manuscripts, articles or preprints imported into Kotahi',
+        'manuscript-publish': 'Publish',
+        // #endregion Manuscript
+        // #region Review
+        'review-invitation': 'Reviewer invitation',
+        'review-invitation-follow-up':
+          'Reviewer has been invited, but has not accepted an invitation to review',
+        'review-accepted': 'Reviewer accepted, but has not submitted a review',
+        'review-rejected':
+          'Reviewer rejects an invitation to participate in a review',
+        'review-completed': 'Submitted review',
+        // #endregion Review
+        // #region Collaborative Review
+        'collaborative-review-invitation': 'Collaborative reviewer invitation',
+        'collaborative-review-invitation-follow-up':
+          'Collaborative reviewer has been invited, but has not accepted an invitation to review',
+        'collaborative-review-accepted':
+          'Collaborative Reviewer accepts an invitation to participate in a review',
+        'collaborative-review-rejected':
+          'Collaborative Reviewer rejects an invitation to participate in a review',
+        'collaborative-review-lock': 'Collaborative review has been locked',
+        'collaborative-review-unlock': 'Collaborative review has been unlocked',
+        // #endregion Collaborative Review
+        // #region Author Invitation
+        'author-invitation': 'Author invited to participate in a peer review',
+        'author-accepted':
+          'Author accepts an invitation to participate in a peer review',
+        'author-rejected':
+          'Author rejects an invitation to participate in a peer review',
+        'author-invitation-follow-up':
+          'Author invited but has not accepted an invitation to review',
+        // #endregion Author Invitation
+        // #region Chat
+        'chat-unread': 'Unread discussion message',
+        'chat-mention':
+          'Immediate Notification for users @mentioned in a message',
+        // #endregion Chat
+        // #region Author Proofing
+        'author-proofing-assign': 'Author proof assigned invitation',
+        'author-proofing-submit-feedback':
+          'Author proof completed and submitted feedback',
+        // #endregion Author Proofing
+        // #region Team assignment
+        'team-editor-assigned': 'Editor assigned',
+        'team-editor-unassigned': 'Editor unassigned',
+        // #endregion Team assignment
+        // #region User
+        'user-first-login': 'New user login',
+        'user-set-group-role': 'User role assigned',
+        'user-delete': 'User account deleted',
+        // #endregion User
+        // #region Decision form
+        'decision-form-make-decision': 'Editor submits a Decision form',
+        'decision-form-make-decision-with-verdict':
+          'Accept, Revise or Reject verdict',
+        'decision-form-complete-comment': 'New Discussion form field post',
+        // #endregion Decision form
+      },
+    },
     reportsPage: {
       Reports: 'Reports',
       Show: 'Show',
@@ -798,6 +897,7 @@ const en = {
       },
     },
     emailTemplate: {
+      pageTitle: 'Notification Templates',
       'Email Templates': 'Email Templates',
       'New Email Template': 'New Email Template',
       subject: 'Subject',

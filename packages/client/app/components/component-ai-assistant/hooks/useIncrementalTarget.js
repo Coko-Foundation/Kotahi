@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { safeCall } from '../utils'
+import { safeCall } from '../../../shared/generalUtils'
 
 const useIncrementalTarget = delay => {
   const clicksRef = useRef(0)

@@ -11,6 +11,8 @@ const {
 
 const fetchUserDetails = require('./fetchUserDetails')
 
+const seekEvent = require('../../services/notification.service')
+
 const CALLBACK_URL = '/auth/orcid/callback'
 const orcidBackURL = `${serverUrl}${CALLBACK_URL}`
 
@@ -249,6 +251,12 @@ module.exports = app => {
       } else {
         redirectionUrl = `${urlFrag}/dashboard`
       }
+
+      req.user.firstLogin &&
+        seekEvent('user-first-login', {
+          user: req.user,
+          groupId,
+        })
 
       res.redirect(
         `${clientUrl}${urlFrag}/login?token=${jwt}&redirectUrl=${redirectionUrl}`,

@@ -9,17 +9,15 @@ import { ArrowLeft, Download } from 'react-feather'
 import ReactCodeMirror from '@uiw/react-codemirror'
 import { json } from '@codemirror/lang-json'
 import { grid, th } from '@coko/client/dist/toolkit'
+import { isFunction } from 'lodash'
 import { Spinner } from '../../../../shared'
 import { CloseButton, PopUpH2 } from '../styles'
 import { FlexRow } from '../../../../../globals'
 import { color } from '../../../../../theme'
 import dataciteLogo from '../../../../../../public/datacite-logo-vector.svg'
 import { Button } from '../../../../pubsweet'
-import {
-  isFunction,
-  mapEntries,
-} from '../../../../component-ai-assistant/utils/utils'
 import CHECK_API_PAYLOAD from './queries'
+import { mapEntries } from '../../../../../shared/generalUtils'
 
 const { parse, stringify } = JSON
 // TODO: create separate dir for the component and decompose (perhaps do the same with the others similar components (DownloadPdf, Jats, ...etc) from DownloadDropdown, it wiil help to clean up a bit 'Production' component

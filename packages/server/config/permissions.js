@@ -639,6 +639,7 @@ const permissions = {
     validateDOI: isAuthenticated,
     validateSuffix: isAuthenticated,
     versionsOfManuscriptCurrentUserIsReviewerOf: allow,
+    events: or(userIsGm, userIsGroupAdmin, userIsAdmin),
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
@@ -804,6 +805,11 @@ const permissions = {
     updateCMSLayout: or(userIsGroupAdmin, userIsAdmin),
     rebuildFlaxSite: or(userIsGroupAdmin, userIsAdmin),
     updateMessage: or(userOwnsMessage, userIsGm, userIsGroupAdmin, userIsAdmin),
+    createNotification: or(userIsGm, userIsGroupAdmin, userIsAdmin),
+    updateNotification: or(userIsGm, userIsGroupAdmin, userIsAdmin),
+    deleteNotification: or(userIsGm, userIsGroupAdmin, userIsAdmin),
+    setNotificationActive: or(userIsGm, userIsGroupAdmin, userIsAdmin),
+    setEventActive: or(userIsGm, userIsGroupAdmin, userIsAdmin),
   },
   Subscription: {
     fileUpdated: isAuthenticated,

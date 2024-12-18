@@ -112,6 +112,7 @@ module.exports = {
     gmailAuthEmail: 'test@coko.foundation',
     gmailAuthPassword: 'test',
     gmailSenderName: 'Coko',
+    eventsConfig: {},
   },
   eventNotification: {
     reviewerInvitationPrimaryEmailTemplate: null,

@@ -1,23 +1,18 @@
-const { clientUrl } = require('@coko/server')
-
-const {
-  sendEmailNotification,
-  submissionOverridenKeys,
-} = require('../../../services/emailNotifications')
+const { clientUrl, logger } = require('@coko/server')
 
 const NotificationDigest = require('../../../models/notificationDigest/notificationDigest.model')
 const NotificationUserOption = require('../../../models/notificationUserOption/notificationUserOption.model')
 const User = require('../../../models/user/user.model')
 const Message = require('../../../models/message/message.model')
 const Channel = require('../../../models/channel/channel.model')
-const Config = require('../../../models/config/config.model')
-const EmailTemplate = require('../../../models/emailTemplate/emailTemplate.model')
 const Group = require('../../../models/group/group.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
   getUserRolesInManuscript,
 } = require('../../model-user/src/userCommsUtils')
+
+const seekEvent = require('../../../services/notification.service')
 
 const sendNotifications = async groupId => {
   // The following query results first row for every user and path string combination
@@ -56,8 +51,7 @@ const sendNotifications = async groupId => {
   )
 
   if (notificationCount > 0) {
-    // eslint-disable-next-line no-console
-    console.info(
+    logger.info(
       `Sent ${notificationCount} event notification${
         notificationCount === 1 ? '' : 's'
       } for group ${groupId}`,
@@ -83,13 +77,10 @@ const sendChatNotification = async ({
 
   // send email notification
   const appUrl = `${clientUrl}/${group.name}`
-  let manuscriptPageUrl = ''
-  let manuscriptProductionPageUrl = ''
   let authorName = ''
-
   let discussionUrl = appUrl
-
   let manuscript = null
+  let discussionBasedTrigger = ''
 
   if (!channel.manuscriptId) {
     discussionUrl += `/admin/manuscripts` // admin discussion
@@ -105,6 +96,7 @@ const sendChatNotification = async ({
       discussionUrl += '/decision'
 
       if (channel.type === 'editorial') {
+        discussionBasedTrigger = 'editorialDiscussion'
         discussionUrl += '?discussion=editorial'
       }
     } else if (roles.reviewer) {
@@ -116,12 +108,8 @@ const sendChatNotification = async ({
     }
 
     manuscript = await Manuscript.query().findById(channel.manuscriptId)
-
     const author = await manuscript.getManuscriptAuthor()
-
     authorName = author ? author.username : ''
-    manuscriptPageUrl = `${appUrl}/versions/${manuscript.id}`
-    manuscriptProductionPageUrl = `${appUrl}/versions/${manuscript.id}/production`
   }
 
   let currentUser
@@ -130,41 +118,21 @@ const sendChatNotification = async ({
     currentUser = await User.query().findById(currentUserId)
   }
 
+  const { id: channelId } = channel
+  const triggerParam = isMentioned ? 'mention' : 'unread'
+
   const data = {
+    manuscript,
     recipientName: recipient.username,
     discussionUrl,
     senderName: currentUser?.username || '',
-    ...(manuscript
-      ? {
-          authorName,
-          manuscriptNumber: manuscript.shortId,
-          manuscriptLink: manuscriptPageUrl,
-          manuscriptTitle: manuscript.submission.$title,
-          manuscriptTitleLink: manuscript.submission.$sourceUri,
-          manuscriptProductionLink: manuscriptProductionPageUrl,
-          ...submissionOverridenKeys(manuscript.submission),
-        }
-      : {}),
+    authorName,
+    context: { messageId, channelId, recipient },
+    groupId,
   }
 
-  const activeConfig = await Config.getCached(groupId)
-
-  const selectedTemplate = isMentioned
-    ? activeConfig.formData.eventNotification.mentionNotificationTemplate
-    : activeConfig.formData.eventNotification.alertUnreadMessageDigestTemplate
-
-  if (!selectedTemplate) return
-
-  const selectedEmailTemplate = await EmailTemplate.query().findById(
-    selectedTemplate,
-  )
-
-  await sendEmailNotification({
-    receiver: recipient.email,
-    template: selectedEmailTemplate,
-    data,
-    groupId,
-  })
+  seekEvent(`chat-${triggerParam}`, data)
+  seekEvent(`chat-${discussionBasedTrigger}`, data)
 }
 
 const getNotificationOptionForUser = async ({ userId, path, groupId }) => {

@@ -4,11 +4,11 @@ import styled from 'styled-components'
 import { debounce } from 'lodash'
 import { rotate360 } from '@coko/client'
 import PropTypes from 'prop-types'
-// import { gql, useLazyQuery } from '@apollo/client'
-import { autoResize, callOn } from './utils'
 import SendIcon from './SendButton'
 import { CssAssistantContext } from './hooks/CssAssistantContext'
 import { color } from '../../theme'
+import { callOn } from '../../shared/generalUtils'
+import { autoResize } from './utils'
 
 const StyledForm = styled.form`
   --color: ${color.brand1.base};

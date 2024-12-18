@@ -54,6 +54,7 @@ export const ConfirmationModal = ({
   confirmationButtonText,
   cancelButtonText,
   closeModal,
+  buttonColor,
 }) => {
   const { t } = useTranslation()
 
@@ -63,6 +64,7 @@ export const ConfirmationModal = ({
         <MessageString>{message}</MessageString>
         <LooseRowCentered>
           <ActionButton
+            color={buttonColor}
             onClick={e => {
               confirmationAction()
               closeModal()

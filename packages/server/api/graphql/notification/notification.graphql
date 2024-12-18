@@ -1,0 +1,53 @@
+type Notification {
+  id: ID!
+  event: String!
+  notificationType: String!
+  emailTemplateId: ID
+  ccEmails: [String]!
+  displayName: String!
+  recipient: String!
+  subject: String
+  isDefault: Boolean!
+  groupId: ID!
+  active: Boolean!
+  delay: Int!
+}
+
+input CreateNotificationInput {
+  event: String!
+  notificationType: String!
+  emailTemplateId: ID!
+  ccEmails: [String]!
+  subject: String!
+  displayName: String!
+  recipient: String!
+  delay: Int!
+}
+
+input UpdateNotificationInput {
+  notificationType: String!
+  emailTemplateId: ID!
+  subject: String!
+  ccEmails: [String]!
+  displayName: String!
+  recipient: String!
+  delay: Int!
+}
+
+type Event {
+  name: String!
+  active: Boolean!
+  notifications: [Notification!]!
+}
+
+type Query {
+  events: [Event!]!
+}
+
+type Mutation {
+  createNotification(input: CreateNotificationInput!): Notification!
+  updateNotification(id: ID!, input: UpdateNotificationInput!): Notification!
+  deleteNotification(id: ID!): ID!
+  setEventActive(name: String!): Boolean!
+  setNotificationActive(id: ID!): Notification!
+}

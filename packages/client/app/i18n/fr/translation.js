@@ -36,6 +36,10 @@ const fr = {
       No: 'Non',
       Save: 'Enregistrer',
       Update: 'Mettre à jour',
+      Activate: 'Activer',
+      Deactivate: 'Désactiver',
+      Create: 'Créer',
+      Modified: 'Modifié',
       Confirm: 'Confirmer',
       Delete: 'Supprimer',
       View: 'Voir',
@@ -119,7 +123,6 @@ const fr = {
       KeepMenuVisible: 'Garder le menu visible',
       MinimalSidebar: 'Barre latérale minimale',
     },
-
     profilePage: {
       'Your profile': 'Votre profil',
       'Profile: ': 'Profil : ',
@@ -474,6 +477,7 @@ const fr = {
       integrationsAndPublishingTab:
         'Intégrations et points de terminaison de publication',
       notificationsTab: 'Notifications et courrier électronique',
+      emailTab: "Modèles d'email",
       Configuration: 'Configuration',
       'Instance Type': "Type d'instance",
       'Group Identity': 'Identité du groupe',
@@ -725,6 +729,107 @@ const fr = {
         'Wolters Kluwer': 'Wolters Kluwer',
       },
     },
+    notificationPage: {
+      title: 'Événements de Notification',
+      messages: {
+        events: 'Événements',
+        noEvents: 'Aucun événement de notification trouvé',
+        noSelectedEvent:
+          'Sélectionnez un notification à afficher ou créez-en un nouveau',
+      },
+      eventSettings: {
+        title: "Paramètres de l'Événement",
+        displayName: "Nom d'Affichage",
+        event: 'Événement',
+        type: 'Type',
+        delay: 'Envoyer après',
+        emailTemplate: "Modèle d'Email",
+        newNotification: 'Nouvelle Notification',
+      },
+      emailSettings: {
+        title: "Paramètres de l'Email",
+        recipient: 'à',
+        ccEmails: 'cc',
+        subject: 'Objet',
+      },
+      filters: {
+        all: 'Tous',
+        active: 'Actif',
+        inactive: 'Inactif',
+        delayed: 'Retardé',
+        activeEvents: 'Événements actifs',
+        inactiveEvents: 'Événements inactifs',
+      },
+      eventDescriptions: {
+        // #region Manuscript
+        'manuscript-submit': 'Confirmation de la soumission du manuscrit',
+        'manuscript-new-version': 'Nouvelle version du manuscrit soumise',
+        'manuscript-import':
+          'Nouveaux manuscrits, articles ou prépublications importés dans Kotahi',
+        'manuscript-publish': 'Publier',
+        // #endregion Manuscript
+        // #region Review
+        'review-invitation': 'Invitation du réviseur',
+        'review-invitation-follow-up':
+          "Le réviseur a été invité, mais n'a pas accepté l'invitation à réviser",
+        'review-accepted': "Réviseur accepté, mais n'a pas soumis de révision",
+        'review-rejected':
+          'Le réviseur rejette une invitation à participer à une révision',
+        'review-completed': 'Révision soumise',
+        // #endregion Review
+        // #region Collaborative Review
+        'collaborative-review-invitation':
+          'Invitation du réviseur collaboratif',
+        'collaborative-review-invitation-follow-up':
+          "Le réviseur collaboratif a été invité, mais n'a pas accepté l'invitation à réviser",
+        'collaborative-review-accepted':
+          'Le réviseur collaboratif accepte une invitation à participer à une révision',
+        'collaborative-review-rejected':
+          'Le réviseur collaboratif rejette une invitation à participer à une révision',
+        'collaborative-review-lock':
+          'La révision collaborative a été verrouillée',
+        'collaborative-review-unlock':
+          'La révision collaborative a été déverrouillée',
+        // #endregion Collaborative Review
+        // #region Author Invitation
+        'author-invitation':
+          'Auteur invité à participer à une révision par les pairs',
+        'author-accepted':
+          "L'auteur accepte une invitation à participer à une révision par les pairs",
+        'author-rejected':
+          "L'auteur rejette une invitation à participer à une révision par les pairs",
+        'author-invitation-follow-up':
+          "Auteur invité mais n'a pas accepté l'invitation à réviser",
+        // #endregion Author Invitation
+        // #region Chat
+        'chat-unread': 'Message de discussion non lu',
+        'chat-mention':
+          'Notification immédiate pour les utilisateurs mentionnés dans un message',
+        // #endregion Chat
+        // #region Author Proofing
+        'author-proofing-assign': "Invitation à la correction de l'auteur",
+        'author-proofing-submit-feedback':
+          "Correction de l'auteur terminée et commentaires soumis",
+        // #endregion Author Proofing
+        // #region Team assignment
+        'team-editor-assigned': 'Éditeur assigné',
+        'team-editor-unassigned': 'Éditeur non assigné',
+        // #endregion Team assignment
+        // #region User
+        'user-first-login': 'Nouvelle connexion utilisateur',
+        'user-set-group-role': 'Rôle utilisateur assigné',
+        'user-delete': 'Compte utilisateur supprimé',
+        // #endregion User
+        // #region Decision form
+        'decision-form-make-decision':
+          "L'éditeur soumet un formulaire de décision",
+        'decision-form-make-decision-with-verdict':
+          'Acceptation, révision ou rejet du verdict',
+        'decision-form-complete-comment':
+          'Nouveau message de champ de formulaire de discussion',
+        // #endregion Decision form
+      },
+    },
     reportsPage: {
       Reports: 'Rapports',
       Show: 'Afficher',
@@ -825,6 +930,7 @@ const fr = {
       },
     },
     emailTemplate: {
+      pageTitle: 'Modèles de notification',
       'Email Templates': "Modèles d'email",
       'New Email Template': "Nouveau modèle d'email",
       subject: 'Sujet',

@@ -8,6 +8,7 @@ import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'
 import { color } from '../../theme'
 import RoundIconButton from './RoundIconButton'
+import { safeCall } from '../../shared/generalUtils'
 
 export const CompactChatButton = styled(RoundIconButton)`
   height: 33px;
@@ -91,10 +92,7 @@ const HiddenTabs = ({
 
   const setActiveKeyAndCallOnChange = incomingActiveKey => {
     setActiveKey(incomingActiveKey)
-
-    if (typeof onChange === 'function') {
-      onChange(incomingActiveKey)
-    }
+    safeCall(onChange)(incomingActiveKey)
   }
 
   const hideMethod = (section, key) =>
@@ -107,9 +105,6 @@ const HiddenTabs = ({
           display: 'flex',
         }
       : { display: key === section.key ? 'flex' : 'none' }
-  // const currentContent = (
-  //   sections.find(section => section.key === activeKey) || {}
-  // ).content
 
   localStorage.setItem('activeTabKey', activeKey)
 
@@ -152,6 +147,7 @@ const HiddenTabs = ({
             flex: shouldFillFlex ? '1' : undefined,
             flexDirection: 'column',
             minHeight: shouldFillFlex ? '0' : undefined,
+            ...(section?.tabStyles ?? {}),
             ...hideMethod(section, activeKey),
           }}
         >

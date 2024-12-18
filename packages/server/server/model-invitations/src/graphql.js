@@ -13,6 +13,8 @@ const {
   addUserToManuscriptChatChannel,
 } = require('../../model-channel/src/channelCommsUtils')
 
+const seekEvent = require('../../../services/notification.service')
+
 const resolvers = {
   Query: {
     async invitationManuscriptId(_, { id }, ctx) {
@@ -72,6 +74,8 @@ const resolvers = {
       return invitation
     },
     async updateInvitationStatus(_, { id, status, userId, responseDate }, ctx) {
+      const groupId = ctx.req.headers['group-id']
+
       const [result] = await Invitation.query()
         .patch({
           status,
@@ -85,6 +89,9 @@ const resolvers = {
         email: result.toEmail,
       })
 
+      const { invitedPersonType } = result
+      const type = invitedPersonType.toLowerCase()
+
       if (relatedUser) {
         await Team.relatedQuery('members')
           .for(
@@ -92,14 +99,32 @@ const resolvers = {
               objectId: result.manuscriptId,
               // TODO this is a temporary solution until we have a proper
               // solution for status with CAPITAL and UNDERSCORES.
-              role: result.invitedPersonType
-                .toLowerCase()
-                .replace('collaborative_reviewer', 'collaborativeReviewer'),
+              role: type.replace(
+                'collaborative_reviewer',
+                'collaborativeReviewer',
+              ),
             }),
           )
           .patch({ status: status.toLowerCase() })
           .where({ userId: relatedUser.id, status: 'invited' })
       }
+
+      const manuscript = await Manuscript.query().findById(result.manuscriptId)
+
+      const eventName = {
+        author: 'author',
+        reviewer: 'review',
+        collaborativeReviewer: 'collaborative-review',
+      }[type]
+
+      seekEvent(`${eventName}-${status.toLowerCase()}`, {
+        manuscript,
+        status,
+        userId,
+        responseDate,
+        context: { invitation: result, reviewerId: userId },
+        groupId,
+      })
 
       return result
     },

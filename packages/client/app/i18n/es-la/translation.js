@@ -37,6 +37,10 @@ const esLa = {
       No: 'No',
       Save: 'Guardar',
       Update: 'Actualizar',
+      Activate: 'Activar',
+      Deactivate: 'Desactivar',
+      Modified: 'Modificado',
+      Create: 'Crear',
       Confirm: 'Confirmar',
       Delete: 'Eliminar',
       View: 'Ver',
@@ -468,6 +472,7 @@ const esLa = {
       productionTab: 'Producción',
       integrationsAndPublishingTab: 'Integraciones y servicios de publicación',
       notificationsTab: 'Notificaciones y correo electrónico',
+      emailTab: 'Plantillas de E-mail',
       Configuration: 'Configuración',
       'Instance Type': 'Tipo de Instancia',
       'Group Identity': 'Identidad del Grupo',
@@ -714,6 +719,106 @@ const esLa = {
         'Wolters Kluwer': 'Wolters Kluwer',
       },
     },
+    notificationPage: {
+      title: 'Eventos de Notificación',
+      messages: {
+        events: 'Eventos',
+        noEvents: 'No se encontraron eventos de notificación',
+        noSelectedEvent: 'Seleccione un notificacion para ver o cree una nueva',
+      },
+      eventSettings: {
+        title: 'Configuración del Evento',
+        displayName: 'Nombre para Mostrar',
+        event: 'Evento',
+        type: 'Tipo',
+        delay: 'Enviar después de',
+        emailTemplate: 'Plantilla de Correo Electrónico',
+        newNotification: 'Nueva Notificación',
+      },
+      emailSettings: {
+        title: 'Configuración del Correo Electrónico',
+        recipient: 'para',
+        ccEmails: 'cc',
+        subject: 'Asunto',
+      },
+      filters: {
+        all: 'Todos',
+        active: 'Activo',
+        inactive: 'Inactivo',
+        delayed: 'Retrasado',
+        activeEvents: 'Eventos Activos',
+        inactiveEvents: 'Eventos Inactivos',
+      },
+      eventDescriptions: {
+        // #region Manuscript
+        'manuscript-submit': 'Confirmación de la presentación del manuscrito',
+        'manuscript-new-version': 'Nueva versión del manuscrito presentada',
+        'manuscript-import':
+          'Nuevos manuscritos, artículos o preprints importados a Kotahi',
+        'manuscript-publish': 'Publicar',
+        // #endregion Manuscript
+        // #region Review
+        'review-invitation': 'Invitación del revisor',
+        'review-invitation-follow-up':
+          'El revisor ha sido invitado, pero no ha aceptado la invitación para revisar',
+        'review-accepted': 'Revisor aceptado, pero no ha enviado una revisión',
+        'review-rejected':
+          'El revisor rechaza una invitación para participar en una revisión',
+        'review-completed': 'Revisión enviada',
+        // #endregion Review
+        // #region Collaborative Review
+        'collaborative-review-invitation':
+          'Invitación del revisor colaborativo',
+        'collaborative-review-invitation-follow-up':
+          'El revisor colaborativo ha sido invitado, pero no ha aceptado la invitación para revisar',
+        'collaborative-review-accepted':
+          'El revisor colaborativo acepta una invitación para participar en una revisión',
+        'collaborative-review-rejected':
+          'El revisor colaborativo rechaza una invitación para participar en una revisión',
+        'collaborative-review-lock':
+          'La revisión colaborativa ha sido bloqueada',
+        'collaborative-review-unlock':
+          'La revisión colaborativa ha sido desbloqueada',
+        // #endregion Collaborative Review
+        // #region Author Invitation
+        'author-invitation':
+          'Autor invitado a participar en una revisión por pares',
+        'author-accepted':
+          'El autor acepta una invitación para participar en una revisión por pares',
+        'author-rejected':
+          'El autor rechaza una invitación para participar en una revisión por pares',
+        'author-invitation-follow-up':
+          'Autor invitado pero no ha aceptado la invitación para revisar',
+        // #endregion Author Invitation
+        // #region Chat
+        'chat-unread': 'Mensaje de discusión no leído',
+        'chat-mention':
+          'Notificación inmediata para los usuarios mencionados en un mensaje',
+        // #endregion Chat
+        // #region Author Proofing
+        'author-proofing-assign': 'Invitación a la corrección del autor',
+        'author-proofing-submit-feedback':
+          'Corrección del autor completada y comentarios enviados',
+        // #endregion Author Proofing
+        // #region Team assignment
+        'team-editor-assigned': 'Editor asignado',
+        'team-editor-unassigned': 'Editor no asignado',
+        // #endregion Team assignment
+        // #region User
+        'user-first-login': 'Nuevo inicio de sesión de usuario',
+        'user-set-group-role': 'Rol de usuario asignado',
+        'user-delete': 'Cuenta de usuario eliminada',
+        // #endregion User
+        // #region Decision form
+        'decision-form-make-decision':
+          'El editor envía un formulario de decisión',
+        'decision-form-make-decision-with-verdict':
+          'Aceptar, revisar o rechazar el veredicto',
+        'decision-form-complete-comment':
+          'Nuevo mensaje de campo de formulario de discusión',
+        // #endregion Decision form
+      },
+    },
     reportsPage: {
       Reports: 'Reportes',
       Show: 'Mostrar',
@@ -814,6 +919,7 @@ const esLa = {
       },
     },
     emailTemplate: {
+      pageTitle: 'Plantillas de notificación',
       'Email Templates': 'Plantillas de Correo Electrónico',
       'New Email Template': 'Nueva Plantilla de Correo Electrónico',
       subject: 'Asunto',

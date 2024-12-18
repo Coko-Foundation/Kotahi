@@ -1,4 +1,4 @@
-import { callOn } from '../../../component-ai-assistant/utils/utils'
+import { callOn } from '../../../../shared/generalUtils'
 
 const { keys } = Object
 
