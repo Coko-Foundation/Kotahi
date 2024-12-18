@@ -49,6 +49,12 @@ const AuthorProofingLink = props => {
     completed: {
       text: t('manuscriptsTable.actions.View'),
     },
+    underEmbargo: {
+      text: t('manuscriptsTable.actions.View'),
+    },
+    embargoReleased: {
+      text: t('manuscriptsTable.actions.View'),
+    },
   }
 
   // #region action

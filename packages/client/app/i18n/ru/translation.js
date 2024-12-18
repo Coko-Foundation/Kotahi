@@ -13,6 +13,8 @@ const ru = {
       assigned: 'Доказательство автора присвоено',
       inProgress: 'Авторская проверка в процессе',
       completed: 'Доказательство автора завершено',
+      underEmbargo: 'Под эмбарго',
+      embargoReleased: 'Эмбарго снято',
       unpublished: 'Неопубликовано',
     },
     reviewerStatus: {
@@ -1289,6 +1291,7 @@ const ru = {
       'Field doiValidation': 'Утвердить в качестве DOI?',
       'Field doiUniqueSuffixValidation':
         'Утвердить в качестве суффикса DOI с гарантией его уникальности?',
+      'Field allowFutureDatesOnly': 'Выбрать только будущую дату?',
       'Update Field': 'Обновить поле',
       'Correct invalid values before updating':
         'Исправьте неверные значения перед обновлением',
@@ -1335,6 +1338,8 @@ const ru = {
         volumeNumber: 'номер тома',
         issueYear: 'год выпуска',
         fullWax: 'Документ',
+        datePicker: 'Выбор даты',
+        embargoDate: 'Дата эмбарго',
       },
       typeOptions: {
         Select: 'Выбор',
