@@ -58,7 +58,7 @@ const ReadonlyFieldData = ({
 
   if (fieldDefinition?.component === 'DoisInput' && Array.isArray(data)) {
     return (data || []).map((d, i) => {
-      const doi = d.name || '?'
+      const doi = d.name || d.doi || '?'
 
       return (
         // eslint-disable-next-line react/no-array-index-key
