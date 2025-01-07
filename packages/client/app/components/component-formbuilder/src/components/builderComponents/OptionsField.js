@@ -102,7 +102,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
             <InlineDefaultValue>
               <span>{t('formBuilder.Default Value')}</span>
               <input
-                checked={option.defaultValue}
+                checked={option?.defaultValue || false}
                 name={`defaultValue-${index}`}
                 onChange={e => {
                   values.options.forEach((el, i) => {
