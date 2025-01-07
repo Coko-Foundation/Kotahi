@@ -59,6 +59,8 @@ const StyledDeleteControl = styled(DeleteControl)`
   top: 0;
 `
 
+const defaultLabelColor = '#000000'
+
 const LabelInput = props => (
   <TextField
     label={i18next.t('formBuilder.Label to display')}
@@ -81,7 +83,7 @@ const ColorPicker = ({ name, value, onChange }) => {
       name={name}
       onChange={onChange}
       type="color"
-      value={value || '#f7f7ff'}
+      value={value || defaultLabelColor}
     />
   )
 }
@@ -140,25 +142,38 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                 }
               />
             </Inline>
-            <Inline>
-              <input
-                checked={!!option?.labelColor}
-                onChange={e => {
-                  setFieldValue(
-                    `options.${index}.labelColor`,
-                    e.target.checked ? option?.labelColor || '#bbbbff' : null,
-                  )
-                }}
-                type="checkbox"
-              />
-            </Inline>
-            <InlineColorPicker>
-              <div>{t('formBuilder.Color label')}</div>
-              <ValidatedFieldFormik
-                component={ColorPicker}
-                name={`options.${index}.labelColor`}
-              />
-            </InlineColorPicker>
+            {values.fieldType !== 'select' && (
+              <>
+                <Inline>
+                  <input
+                    checked={
+                      option?.labelColor &&
+                      option?.labelColor !== defaultLabelColor
+                    }
+                    disabled={
+                      !option.labelColor ||
+                      option.labelColor === defaultLabelColor
+                    }
+                    onChange={e => {
+                      setFieldValue(
+                        `options.${index}.labelColor`,
+                        e.target.checked
+                          ? option?.labelColor
+                          : defaultLabelColor,
+                      )
+                    }}
+                    type="checkbox"
+                  />
+                </Inline>
+                <InlineColorPicker>
+                  <div>{t('formBuilder.Color label')}</div>
+                  <ValidatedFieldFormik
+                    component={ColorPicker}
+                    name={`options.${index}.labelColor`}
+                  />
+                </InlineColorPicker>
+              </>
+            )}
             <StyledDeleteControl
               onClick={() => remove(index)}
               tooltip={t('formBuilder.Delete this option')}
