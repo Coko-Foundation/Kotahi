@@ -57,13 +57,45 @@ const ReadonlyFieldData = ({
     })
   }
 
-  if (fieldDefinition?.component === 'DoisInput' && Array.isArray(data)) {
+  if (fieldDefinition?.name === 'submission.$sourceUri') {
+    return (
+      <p key={data}>
+        <a href={data} rel="noopener noreferrer" target="_blank">
+          {data}
+        </a>
+      </p>
+    )
+  }
+
+  if (fieldDefinition?.name === 'submission.$doi') {
+    return (
+      <p key={data}>
+        <a
+          href={`https://doi.org/${data}`}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {data}
+        </a>
+      </p>
+    )
+  }
+
+  if (fieldDefinition?.name === 'submission.$dois' && Array.isArray(data)) {
     return (data || []).map((d, i) => {
       const doi = d.name || d.doi || '?'
 
       return (
         // eslint-disable-next-line react/no-array-index-key
-        <p key={i}>{doi}</p>
+        <p key={`doi-${i}`}>
+          <a
+            href={`https://doi.org/${doi}`}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {doi}
+          </a>
+        </p>
       )
     })
   }
