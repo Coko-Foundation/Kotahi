@@ -92,19 +92,37 @@ const ReviewStatusDonut = ({ manuscript }) => {
 
   // Filter out invitations that have already been answered
   // from the invitation list
-  const reviewerStatuses = getMembersOfTeam(manuscript, 'reviewer')
-    .filter(filterInvitedUsers)
-    .map(({ status }) => status)
+  const filteredReviewerMembers = getMembersOfTeam(
+    manuscript,
+    'reviewer',
+  ).filter(filterInvitedUsers)
 
-  const collaborativeReviewerStatuses = getMembersOfTeam(
+  const reviewerStatuses = filteredReviewerMembers.map(({ status }) => status)
+
+  const reviewerUserIds = filteredReviewerMembers
+    .map(({ user }) => user.id)
+    .filter(Boolean)
+
+  const filteredCollaborativeMembers = getMembersOfTeam(
     manuscript,
     'collaborativeReviewer',
-  )
-    .filter(filterInvitedUsers)
-    .map(({ status }) => status)
+  ).filter(filterInvitedUsers)
 
-  const invitationStatuses = (manuscript.invitations || [])
-    .filter(({ status }) => status in invitationStatusMapping)
+  const collaborativeReviewerStatuses = filteredCollaborativeMembers.map(
+    ({ status }) => status,
+  )
+
+  const collaborativeReviewerUserIds = filteredCollaborativeMembers.map(
+    ({ user }) => user.id,
+  )
+
+  const invitationStatuses = (manuscript.invitations || []) // email invites
+    .filter(
+      ({ status, user }) =>
+        status in invitationStatusMapping &&
+        !reviewerUserIds.includes(user?.id) &&
+        !collaborativeReviewerUserIds.includes(user?.id),
+    )
     .map(({ status }) => invitationStatusMapping[status])
 
   const allStatuses = [
