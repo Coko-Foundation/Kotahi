@@ -1321,6 +1321,7 @@ const ru = {
         doi: 'DOI',
         dois: 'Несколько DOI',
         doiSuffix: 'Суффикс DOI',
+        divider: 'Разделитель',
         sourceUri: 'URI источника рукописи',
         customStatus: 'Пользовательский статус',
         editDate: 'Дата последнего редактирования — только для чтения',

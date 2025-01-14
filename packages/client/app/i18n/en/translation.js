@@ -1303,6 +1303,7 @@ const en = {
         doi: 'DOI',
         dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',
+        divider: 'Divider',
         sourceUri: 'Manuscript source URI',
         customStatus: 'Custom status',
         editDate: 'Last edit date — read-only',

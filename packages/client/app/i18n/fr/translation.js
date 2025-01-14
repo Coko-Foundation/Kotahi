@@ -1343,6 +1343,7 @@ const fr = {
         doi: 'DOI',
         dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',
+        divider: 'Séparateur',
         sourceUri: 'URI de la source du manuscrit',
         customStatus: 'Statut personnalisé',
         editDate: 'Date de dernière modification (lecture seule)',
