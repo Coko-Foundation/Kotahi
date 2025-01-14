@@ -405,6 +405,20 @@ const getBaseComponentProperties = category => ({
     doiValidation: doiValidationField,
     doiUniqueSuffixValidation: doiUniqueSuffixValidationField,
   },
+  Divider: {
+    label: 'Text',
+    description: hiddenfield,
+    placeholder: hiddenfield,
+    validate: hiddenfield,
+    parse: hiddenfield,
+    format: hiddenfield,
+    doiValidation: hiddenfield,
+    doiUniqueSuffixValidation: hiddenfield,
+    hideFromAuthors: hiddenfield,
+    hideFromReviewers: hiddenfield,
+    permitPublishing: hiddenfield,
+    shortDescription: hiddenfield,
+  },
   CheckboxGroup: {
     label: 'Checkboxes',
     options: optionfield,
@@ -446,6 +460,12 @@ const genericFieldOptions = [
     isCustom: true,
     fieldType: 'select',
     component: 'Select',
+  },
+  {
+    label: 'Element Divider',
+    isCustom: true,
+    fieldType: 'divider',
+    component: 'Divider',
   },
   {
     label: 'Radio buttons',

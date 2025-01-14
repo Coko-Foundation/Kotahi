@@ -1330,6 +1330,7 @@ const esLa = {
         attachments: 'Adjuntos',
         doi: 'DOI',
         dois: 'Múltiples dois',
+        divider: 'Separador',
         doiSuffix: 'Sufijo DOI"',
         sourceUri: 'URI de la fuente del manuscrito',
         customStatus: 'Estado personalizado',

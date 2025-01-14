@@ -7,7 +7,7 @@ import TextArea from './TextArea'
 import FullWaxField from './FullWaxField'
 import ThreadedDiscussion from './ThreadedDiscussion/ThreadedDiscussion'
 import CollaborativeTextField from './CollaborativeTextField'
-import { Select } from '../../../../shared'
+import { Select, Divider } from '../../../../shared'
 
 export {
   CollaborativeTextField,
@@ -20,4 +20,5 @@ export {
   TextArea,
   ThreadedDiscussion,
   Select,
+  Divider,
 }
