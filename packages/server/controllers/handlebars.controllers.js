@@ -8,15 +8,33 @@ const {
 const ALLOWED_FORMS = ['submission' /* , 'review', 'decision' */]
 
 /**
+ * Converts a camelCase string to a more readable format.
+ *
+ * @param {string} camelCaseString - The camelCase string to convert.
+ * @returns {string} - The converted string in a more readable format.
+ */
+const toReadable = camelCaseString => {
+  if (!camelCaseString) return ''
+
+  // Insert spaces before each uppercase letter and capitalize the first letter
+  const readableString = camelCaseString
+    .replace(/([A-Z])/g, ' $1') // Insert space before each uppercase letter
+    .replace(/^./, str => str.toUpperCase()) // Capitalize the first letter
+
+  return readableString
+}
+
+/**
  * Builds an option object for a form variable.
  *
  * @param {string} category - The category of the form: eg.: submission, review, decision
  * @returns {(name: string, title: string) => {value: string, label: string, type: string, form: string} | false}
  */
 const buildOption = category => {
-  return ({ name, title: label }) => {
+  return ({ name, title }) => {
     if (!name || !ALLOWED_FORMS.includes(category)) return false
     const value = overrideFormKeys(category, name)
+    const label = title || toReadable(value.replace(category, ''))
 
     const option = {
       value,

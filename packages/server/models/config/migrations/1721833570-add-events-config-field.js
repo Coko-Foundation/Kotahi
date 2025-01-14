@@ -9,18 +9,15 @@ exports.up = async knex => {
     const configs = await Config.query(trx)
 
     if (configs.length > 0) {
+      const eventsConfig = Object.keys(eventsSource).reduce((acc, key) => {
+        acc[key] = { active: true }
+        return acc
+      }, {})
+
       await Promise.all(
         configs.map(async config => {
           const newConfig = config
-
-          newConfig.formData.eventsConfig = Object.keys(eventsSource).reduce(
-            (acc, key) => {
-              acc[key] = { active: true }
-              return acc
-            },
-            {},
-          )
-
+          newConfig.formData.notification.eventsConfig = eventsConfig
           await Config.query(trx).updateAndFetchById(config.id, newConfig)
         }),
       )
@@ -36,9 +33,7 @@ exports.down = async knex => {
       await Promise.all(
         configs.map(async config => {
           const newConfig = config
-
-          delete newConfig.formData.eventsConfig
-
+          delete newConfig.formData.notification.eventsConfig
           await Config.query(trx).updateAndFetchById(config.id, newConfig)
         }),
       )

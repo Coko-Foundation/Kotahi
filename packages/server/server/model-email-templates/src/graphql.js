@@ -100,9 +100,9 @@ const resolvers = {
     },
     async updateEmailTemplate(_, { input }, ctx) {
       try {
-        // Update the EmailTemplate in the database based on the provided ID and input
-        const updatedEmailTemplate =
-          await EmailTemplate.query().updateAndFetchById(input.id, {
+        const updatedEmailTemplate = await EmailTemplate.patchAndFetchById(
+          input.id,
+          {
             emailContent: {
               cc: input.emailContent.cc,
               subject: input.emailContent.subject,
@@ -110,7 +110,8 @@ const resolvers = {
               description: input.emailContent.description,
               ccEditors: input.emailContent.ccEditors,
             },
-          })
+          },
+        )
 
         if (updatedEmailTemplate) {
           return {
