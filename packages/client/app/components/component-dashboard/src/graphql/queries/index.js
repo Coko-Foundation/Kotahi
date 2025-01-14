@@ -42,6 +42,9 @@ invitations {
   id
   status
   toEmail
+  user {
+	id
+  }
 }
 rolesFound
 `
