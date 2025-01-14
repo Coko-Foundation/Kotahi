@@ -43,23 +43,23 @@ export const EmailTemplatesProvider = ({ children }) => {
 
   const isDraft = !activeTemplate.state?.id
 
-  const handleSave = async formData => {
+  const handleSave = formData => {
     const { id } = activeTemplate.state
     const emailContent = getEmailContentFrom(formData)
     const variables = { input: { id, emailContent } }
     savedState.set('pending')
-    await updateTemplate({ variables })
+    updateTemplate({ variables })
     savedState.set('success')
   }
 
-  const handleCreate = async formData => {
+  const handleCreate = formData => {
     const emailContent = getEmailContentFrom(formData)
     const variables = { input: { emailContent } }
-    await createTemplate({ variables })
+    createTemplate({ variables })
   }
 
-  const handleDelete = async () => {
-    await deleteTemplate({ variables: { id: activeTemplate.state.id } })
+  const handleDelete = () => {
+    deleteTemplate({ variables: { id: activeTemplate.state.id } })
     deleteModalState.off()
   }
 
@@ -85,11 +85,11 @@ export const EmailTemplatesProvider = ({ children }) => {
   const handleSubmit = isDraft ? handleCreate : handleSave
 
   const autoSave = useCallback(
-    debounce(async (id, input) => {
+    debounce((id, input) => {
       if (isDraft) return
-      await updateTemplate({ variables: { id, input } })
+      updateTemplate({ variables: { input: { ...input, id } } })
     }, AUTOSAVE_DELAY),
-    [JSON.stringify(activeTemplate.state), updateTemplate],
+    [JSON.stringify(activeTemplate.state)],
   )
 
   const context = useMemo(
