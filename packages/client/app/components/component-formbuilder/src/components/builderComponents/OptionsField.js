@@ -151,8 +151,8 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                       option?.labelColor !== defaultLabelColor
                     }
                     disabled={
-                      !option.labelColor ||
-                      option.labelColor === defaultLabelColor
+                      !option?.labelColor ||
+                      option?.labelColor === defaultLabelColor
                     }
                     onChange={e => {
                       setFieldValue(
