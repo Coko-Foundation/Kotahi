@@ -8,6 +8,7 @@ const components = [
   ...modelComponents,
   './api/graphql',
   './api/rest/assetUpload',
+  './api/rest/docmap',
 
   './server/model-notification/src/',
   './server/model-user/src',
