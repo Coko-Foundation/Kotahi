@@ -130,6 +130,8 @@ build docs:
     - docker:27-dind
   only:
     - main
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
     - cd packages/devdocs
     - docker build -f Dockerfile-production -t $DEV_DOCS.$CI_COMMIT_SHA .
