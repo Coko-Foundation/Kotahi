@@ -275,5 +275,20 @@ services:
       - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL:-server:3000}
       - FLAX_DEFAULT_GROUP=${FLAX_DEFAULT_GROUP:-"kotahi"}
 
+  devdocs:
+    build:
+      context: ./packages/devdocs
+      dockerfile: Dockerfile-development
+    command: 'yarn start --host 0.0.0.0'
+    ports:
+      - ${DEV_DOCS_PORT:-4001}:3000
+    volumes:
+      - ./packages/devdocs/docs:/home/node/app/docs
+      - ./packages/devdocs/src:/home/node/app/src
+      - ./packages/devdocs/static:/home/node/app/static
+      - ./packages/devdocs/docusaurus.config.js:/home/node/app/docusaurus.config.js
+      - ./packages/devdocs/sidebars.js:/home/node/app/sidebars.js
+    tty: true
+
 volumes:
   minio_storage:
