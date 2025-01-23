@@ -14,16 +14,16 @@ variables:
 
 stages:
   - Build development
-  # - Lint & Unit test
-  # - Build production
-  # - Deploy test
-  # - End to end testing
-  # - Tear down test
-  # - Deploy staging
+  - Lint & Unit test
+  - Build production
+  - Deploy test
+  - End to end testing
+  - Tear down test
+  - Deploy staging
   - Build docs
   - Deploy docs
-  # - Release
-  # - Publish
+  - Release
+  - Publish
 
 build development:
   stage: Build development
@@ -39,7 +39,7 @@ build development:
       -f Dockerfile .
     - docker push $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
 
-lint:
+.lint:
   stage: Lint & Unit test
   interruptible: true
   image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
@@ -47,7 +47,7 @@ lint:
     - cd /home/node/app
     - yarn coko-lint run
 
-build preproduction client:
+.build preproduction client:
   stage: Build production
   interruptible: true
   image: docker:27
@@ -66,7 +66,7 @@ build preproduction client:
     - docker push $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $CLIENT_PREPRODUCTION.latest
 
-build preproduction server:
+.build preproduction server:
   stage: Build production
   interruptible: true
   image: docker:27
@@ -112,7 +112,7 @@ build preproduction server:
     - cd /ansible
     - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
 
-deploy fly:
+.deploy fly:
   stage: Deploy staging
   interruptible: false
   image: cokoapps/fly
