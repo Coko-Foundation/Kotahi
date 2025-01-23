@@ -25,7 +25,7 @@ stages:
   - Release
   - Publish
 
-build development:
+.build development:
   stage: Build development
   interruptible: true
   image: docker:27-dind
@@ -125,7 +125,9 @@ build development:
 build docs:
   stage: Build docs
   interruptible: false
-  image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+  image: docker:27
+  services:
+    - docker:27-dind
   only:
     - main
   script:
