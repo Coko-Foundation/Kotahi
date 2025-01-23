@@ -38,3 +38,7 @@ cypress/screenshots
 
 packages/server/config/translation
 !packages/server/config/translationOverrides.example.js
+
+packages/devdocs/build
+packages/devdocs/.docusaurus
+packages/devdocs/.cache-loader

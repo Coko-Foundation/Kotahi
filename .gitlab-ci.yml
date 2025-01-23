@@ -9,18 +9,21 @@ variables:
   SERVER_PREPRODUCTION: $CI_REGISTRY/kotahi/kotahi/server-preproduction:$CI_COMMIT_REF_NAME
   CLIENT_PRODUCTION: cokoapps/kotahi-client
   SERVER_PRODUCTION: cokoapps/kotahi-server
+  DEV_DOCS: $CI_REGISTRY/kotahi/kotahi/devdocs:$CI_COMMIT_REF_NAME
   DEPLOY_COMPOSE_FILE: docker-compose.ci.yml
 
 stages:
   - Build development
-  - Lint & Unit test
-  - Build production
-  - Deploy test
-  - End to end testing
-  - Tear down test
-  - Deploy staging
-  - Release
-  - Publish
+  # - Lint & Unit test
+  # - Build production
+  # - Deploy test
+  # - End to end testing
+  # - Tear down test
+  # - Deploy staging
+  - Build docs
+  - Deploy docs
+  # - Release
+  # - Publish
 
 build development:
   stage: Build development
@@ -118,6 +121,26 @@ deploy fly:
   script:
     - FLY_API_TOKEN=$FLY_SERVER_TEST_TOKEN flyctl deploy --config .fly/kotahi-server-test.toml --image $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - FLY_API_TOKEN=$FLY_CLIENT_TEST_TOKEN flyctl deploy --config .fly/kotahi-client-test.toml --image $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
+
+build docs:
+  stage: Build docs
+  interruptible: false
+  image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
+  only:
+    - main
+  script:
+    - cd packages/devdocs
+    - docker build -f Dockerfile-production -t $DEV_DOCS.$CI_COMMIT_SHA .
+    - docker push $DEV_DOCS.$CI_COMMIT_SHA
+
+deploy docs:
+  stage: Deploy docs
+  interruptible: false
+  image: cokoapps/fly
+  only:
+    - main
+  script:
+    - FLY_API_TOKEN=$FLY_DEV_DOCS_TOKEN flyctl deploy --config .fly/kotahi-dev-docs.toml --image $DEV_DOCS.$CI_COMMIT_SHA
 
 release:
   stage: Release

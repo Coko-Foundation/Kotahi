@@ -1,0 +1,23 @@
+.main {
+  padding: 4rem 8rem;
+  margin: 10rem auto 0;
+  display: flex;
+}
+
+.flower {
+  height: 20rem;
+  width: 14rem;
+  margin-right: 3rem;
+}
+
+.name {
+  height: 12rem;
+  margin-top: 2rem;
+}
+
+.subtitle {
+  font-size: 2.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #38ab6c;
+}

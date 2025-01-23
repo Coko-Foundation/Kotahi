@@ -1,0 +1,22 @@
+##############################################################
+# IMAGE FOR BUILDING
+
+FROM node:18-bookworm-slim
+
+WORKDIR /home/node/app
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+RUN yarn build
+
+##############################################################
+# IMAGE FOR RUNNING
+
+FROM nginx:alpine
+
+COPY --from=0 /home/node/app/build /usr/share/nginx/html
