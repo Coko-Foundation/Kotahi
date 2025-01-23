@@ -32,6 +32,10 @@ Contributions are welcome! Please read our [Community Products Collaboration Gui
 
 To report a bug, [open a GitLab issue](https://gitlab.coko.foundation/kotahi/kotahi/-/issues/new) and use the bug-report template contained in the issue.
 
+## Deploying kotahi
+
+You can find our deployment documentation [here](https://kotahi-dev-docs.fly.dev/docs/deployment/Kotahi%20deployment%20guide).
+
 ## Getting started: the quick guide
 
 To install Kotahi locally, you'll need these things:
