@@ -1,58 +1,5 @@
 # FAQ
 
-## Getting started
-
-### How do I setup ORCID for development?
-
-Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, if `NODE_ENV` is set to `development`, the app will expect you to be using an account on ORCID's sandbox (this can be overridden via the `USE_SANDBOXED_ORCID` flag). ORCID's sandbox will only send emails to mailinator accounts, so you have to register on ORCID's sandbox with a mailinator one-time email address.
-
-**Mailinator (part 1)**:
-
-1. Go to [mailinator.com](https://mailinator.com)
-2. In the search bar at the top of the page enter your desired username (we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a username that is unlikely to be used already by someone else)
-3. You'll be taken to a new page. This is your inbox for `mycokotestemail@mailinator.com`. Keep this page open. (also keep in mind that this is a fully **public** inbox)
-
-**Orcid (part 1)**
-
-1. Go to [sandbox.orcid.org](https://sandbox.orcid.org)
-2. Click on "SIGN IN/REGISTER", then on "register now"
-3. Fill out the form. In the email field use your newly created mailinator email.
-4. Fill out the rest of the form until you register.
-5. You'll be taken to your dashboard. Click on your name at the top right, then "Developer Tools".
-6. Click on the "Verify your email address to get started" button.
-
-**Mailinator (part 2)**
-
-1. Go to your mailinator inbox. Open the email you received from orcid and click on the "Verify your email address" button.
-
-**Orcid (part 2)**
-
-1. Go back to your developer tools section in ORCID. Click on "Register for the free ORCID public API", check the consent box and click on "Continue".
-2. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development, so you could enter e.g. `kotahi dev`, `http://www.google.com` (any valid URL), `description`.
-3. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. For development, you'll probably be running the client on `localhost`, but ORCID requires a valid url, so replace that with `127.0.0.1`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://127.0.0.1:4000/auth/orcid/callback`. (Note: ORCID supports multiple redirect URIs, so you can add both http and https URIs if needed.)
-4. Click on the floating save icon on the right.
-5. You should now be presented with a gray box that gives you a client id and a client secret.
-
-**Kotahi**
-
-1. Edit your environment file (`.env` in your root folder) to include the client id and client secret from the step above, e.g.
-
-```
-USE_SANDBOXED_ORCID=true
-ORCID_CLIENT_ID=APP-B6O346VLWWXBQ427
-ORCID_CLIENT_SECRET=b37055db-4405-4dfb-a547-d393cd63bb2a
-```
-
-2. (Re-)Start the app via `docker-compose up`.
-
-You should now be able to use the login at `http://localhost:4000/login`.
-
-_Disclaimer: ORCID is a separate organisation from Coko and we are in no way affiliated with them. This is meant as a guide to make a developer's life easier. If you encounter issues with ORCID services not working as expected, please contact their support._
-
-#### Why is ORCID's login page not loading?
-
-ORCID seems to be reliant on Google Tag Manager, so ad-blocker or tracker-blocker extensions in your browser may interfere with authentication.
-
 ### Flax content management system
 
 Kotahi includes a microservice, Flax, which serves as a Content Management System (CMS) for Kotahi allowing publication of manuscripts, reviews and evaluations directly to a public-facing site.
@@ -79,37 +26,9 @@ When configuring DNS for a production installation, Flax and Kotahi will need tw
 
 Metadata (for SEO) can be set inside of Kotahi by going to **Settings > CMS > File browser**, then editing `kotahi/layouts/base.njk`.
 
-### What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
-
-These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
-
 ### All I see is a "Recent publications" page with no publications. How do I login?
 
 Click **Dashboard** in the upper right. You'll be taken to the login flow.
-
-### Can I run Kotahi without docker-compose?
-
-Certainly. In the absence of `docker-compose`, the server and client will still load the `.env` file, so that remains the preferred means of configuration. You should consult the `docker-compose.yml` and `docker-compose.production.yml` files as a kind of installation guide if for some reason you wish to not use docker.
-
-### What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
-
-Create a local postgres database named `kotahidev` and a superuser `kotahidev` using `psql`, set a password for it too. We're using `kotahidev`, as the app is configured for that by default, but your database details can of course be different.
-
-```
-> psql
-user=# create database kotahidev;
-user=# create user kotahidev with superuser;
-user=# alter role kotahidev with password 'kotahidev';
-```
-
-And then install the `pgcrypto` extension to the `kotahidev` database:
-
-```
-> psql -d kotahidev -U kotahidev
-kotahidev=# create extension pgcrypto;
-```
-
-Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
 ## Publishing
 
@@ -336,35 +255,6 @@ CrossRef searches for possible matching citations from a large database of citat
 
 You must provide a valid email address in `Configuration > Production > Email to use for citation search`. Here you can also choose citation style and locale for formatting.
 
-##### Setting up AnyStyle (optional)
-
-AnyStyle is an optional component of the tool, especially useful when CrossRef doesn't find a good match to a citation. It attempts to parse the citation as it appeared in the manuscript, to determine its semantic structure. To use AnyStyle, you must set up an AnyStyle server and database -- see `docker-compose.yml` for setup.
-Then add the following to your .env, substituting your own secrets:
-
-```
-SERVICE_ANYSTYLE_CLIENT_ID=59a3392b-0c4f-4318-bbe2-f86eff6d3de4
-SERVICE_ANYSTYLE_SECRET=asldkjLKJLaslkdf897kjhKUJH
-SERVICE_ANYSTYLE_PROTOCOL=http
-SERVICE_ANYSTYLE_HOST=anystyle
-SERVICE_ANYSTYLE_PORT=4567
-```
-
-For a non-local AnyStyle server, the host will be its `subdomain.domain`, and protocol will typically be `http`.
-
-## Setting up XSweet (optional)
-
-By default in development mode, the XSweet microservice is set up to run locally. To make XSweet run in production, you must provide the following environment variables in your `.env` file:
-
-```
-SERVICE_XSWEET_CLIENT_ID=59a3392b-0c4f-4318-bbe2-f86eff6d3de4
-SERVICE_XSWEET_SECRET=asldkjLKJLaslkdf897kjhKUJH
-SERVICE_XSWEET_PROTOCOL=http
-SERVICE_XSWEET_HOST=xsweet
-SERVICE_XSWEET_PORT=3004
-```
-
-These are the default dev values, as found in `.env.example`. In production, `PROTOCOL`, `HOST` and `PORT` should be set to the values of the XSweet server; `PORT` should probably be 443. If you're running XSweet as its own server, you'll need to generate a new client and secret as described here: https://gitlab.coko.foundation/cokoapps/xsweet/#creating-clients-credentials
-
 ## API
 
 Kotahi exposes a graphql API for external access. The available queries are:
@@ -406,48 +296,9 @@ To see what languages are currently available in Kotahi, visit your profile page
 
 ## Going further
 
-### Manipulating the database via yarn console
-
-If you open a terminal within your Docker **server** container, the console (`yarn console`) gives you a Node.js REPL with async/await support and models preloaded. You can access all of those as you can in the server-side code.
-
-A few examples:
-
-```js
-// returns all manuscripts
-const manuscripts = await Manuscript.query()
-```
-
-```js
-// get a channels messages
-const channel = await Channel.query().where({
-  manuscriptId: 'someUuid',
-  type: 'editorial',
-})
-const messages = await channel.$relatedQuery('messages')
-```
-
-And so on. For more information about the capabilities of the underlying Objection.js ORM, check out [its documentation](https://vincit.github.io/objection.js/).
-
-### Does Kotahi support collaborative real-time text editing?
-
-Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.
-
 ### How do I set the logo and branding colours?
 
 `app/brandConfig.json` allows logo, colors and brand name to be specified. Colors must be specified in hex format, e.g. "#9e9e9e".
-
-### Why are uploads not working?
-
-We store uploads in a Docker volume. When this volume is first created (e.g. when setting up a new deployment or a new dev environment) the owner of the volume is not set correctly: the owner should be `node` but it comes out as `root`. This prevents uploading any files, including new manuscripts.
-
-The workaround is to manually go into the server container as `root`, and change the owner of the uploads folder to `node`. This only needs to be done once; the volume will retain the correct permissions forever after. Do the following (your server name may differ from `kotahi_server_1`; run `docker ps` to list servers):
-
-```sh
-docker exec -u 0 -it kotahi_server_1 /bin/bash
-chown -R node:node uploads
-```
-
-We’re looking at fixing this.
 
 ## INSTANCE_GROUPS and Multitenancy
 

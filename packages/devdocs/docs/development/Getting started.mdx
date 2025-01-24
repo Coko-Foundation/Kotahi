@@ -1,0 +1,111 @@
+## Prerequisites
+
+You'll need the following in order to run the app locally without issues:
+* A recent version of `docker` (eg. 27 as of this writing)
+* `node` >= 18
+* `yarn` version 1.22.x
+* `git`
+
+It is strongly recommended that you are familiar with docker and docker compose
+before diving in. If you're not already, you can read 
+[our team's guide](https://devdocs.coko.app/docs/general/other-guides/docker).
+
+## Install modules locally
+
+Although not strictly necessary, this will let linters run without errors. It
+will be necessary if you're planning on modifying the dependencies, as the 
+`yarn.lock` file will need to be updated.
+
+To install everything after cloning the repository:
+```sh
+yarn install
+cd packages/server && yarn install & cd ../..
+cd packages/client && yarn install & cd ../..
+cd packages/devdocs && yarn install & cd ../..
+```
+
+## Set up ORCID for development
+
+The only to currently log in to Kotahi is by using ORCID. This makes it mandatory
+that ORCID is set up correctly. ORCID provides a sandbox version of its service,
+which is what we'll be using in development. ORCID's sandbox will only send emails 
+to mailinator accounts, so you have to register on ORCID's sandbox with a 
+mailinator email address.
+
+### Mailinator (part 1):
+
+* Go to [mailinator.com](mailinator.com).
+* In the search bar at the top of the page enter your desired username 
+(we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a 
+username that is unlikely to be used already by someone else)
+* You'll be taken to a new page. This is your inbox for mycokotestemail@mailinator.com. 
+
+Keep this page open. (also keep in mind that this is a fully public inbox)
+
+### Orcid (part 1)
+
+* Go to [sandbox.orcid.org](sandbox.orcid.org).
+* Click on "SIGN IN/REGISTER", then on "register now"
+* Fill out the form. In the email field use your newly created mailinator email.
+* Fill out the rest of the form until you register.
+* You'll be taken to your dashboard. Click on your name at the top right, then "Developer Tools".
+* Click on the "Verify your email address to get started" button.
+
+### Mailinator (part 2)
+
+* Go to your mailinator inbox.
+* Open the email you received from orcid and click on the "Verify your email address" button.
+
+### Orcid (part 2)
+
+* Go back to your developer tools section in ORCID.
+* Click on "Register for the free ORCID public API", check the consent box and 
+click on "Continue".
+* You should now be presented with a form. Fill in your application's name, 
+website and description. What you put in these fields shouldn't matter, as this 
+will only be used for development, so you could enter e.g. kotahi dev, 
+http://www.google.com (any valid URL), description.
+* Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. 
+For development, you'll probably be running the client on localhost, but ORCID 
+requires a valid url, so replace that with 127.0.0.1. So if in your browser you 
+can see your app under http://localhost:4000, the value here should be 
+http://127.0.0.1:4000/auth/orcid/callback. (Note: ORCID supports multiple 
+redirect URIs, so you can add both http and https URIs if needed.)
+* Click on the floating save icon on the right.
+
+You should now be presented with a gray box that gives you a client id and a client secret.
+
+### In Kotahi
+
+Edit your environment file (`.env` in your root folder) to include the client 
+id and client secret from the step above, e.g.
+
+```sh
+USE_SANDBOXED_ORCID=true
+ORCID_CLIENT_ID=your-client-id
+ORCID_CLIENT_SECRET=your-client-secret
+```
+
+:::warning Disclaimer
+ORCID is a separate organisation from Coko and we are in no way affiliated with 
+them. This is meant as a guide to make a developer's life easier. If you 
+encounter issues with ORCID services not working as expected, please contact 
+their support.
+:::
+
+:::tip Why is ORCID's login page not loading?
+ORCID seems to be reliant on Google Tag Manager, so ad-blocker or 
+tracker-blocker extensions in your browser may interfere with authentication.
+:::
+
+## Run the app
+
+Simply run
+```sh
+docker compose up
+```
+
+This will build all the necessary containers and run them. The file that 
+defines everything that will run is `docker-compose.yml`. All the environment
+variables that are being passed to the containers are also defined here. If 
+you need to override a variable, just add it to the `.env` file.

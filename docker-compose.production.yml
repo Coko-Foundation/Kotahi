@@ -249,3 +249,10 @@ services:
       - FLAX_CLIENT_ID=${FLAX_CLIENT_ID}
       - FLAX_CLIENT_SECRET=${FLAX_CLIENT_SECRET}
       - FLAX_CLIENT_API_URL=${FLAX_CLIENT_API_URL}
+
+  devdocs:
+    build:
+      context: ./packages/devdocs
+      dockerfile: ./Dockerfile-production
+    ports:
+      - ${DEV_DOCS_PORT:-4001}:80

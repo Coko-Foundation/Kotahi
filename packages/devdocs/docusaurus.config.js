@@ -9,7 +9,7 @@ import { themes as prismThemes } from 'prism-react-renderer'
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Kotahi dev docs',
-  tagline: 'Developer documentation for coko common libraries',
+  tagline: 'Developer documentation for kotahi',
   favicon: 'favicon.ico',
 
   // Set the production url of your site here
@@ -52,7 +52,6 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // disableTutorialButton: true,
       navbar: {
         title: 'Kotahi developer documentation',
         logo: {
@@ -62,7 +61,13 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'serverSidebar',
+            sidebarId: 'developmentSidebar',
+            position: 'left',
+            label: 'Development',
+          },
+          {
+            type: 'docSidebar',
+            sidebarId: 'deploymentSidebar',
             position: 'left',
             label: 'Deployment',
           },
@@ -72,55 +77,8 @@ const config = {
             className: 'header-gitlab-link',
             'aria-label': 'Gitlab repository',
           },
-          // {
-          //   type: 'html',
-          //   position: 'right',
-          //   value:
-          //     '<div><a href="https://gitlab.coko.foundation/cokoapps" target="_blank" class="header-gitlab-link">Gitlab</a></div>',
-          // },
         ],
       },
-      // footer: {
-      //   style: 'dark',
-      //   links: [
-      //     {
-      //       title: 'Docs',
-      //       items: [
-      //         {
-      //           label: 'Tutorial',
-      //           to: '/docs/intro',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'Community',
-      //       items: [
-      //         {
-      //           label: 'Stack Overflow',
-      //           href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-      //         },
-      //         {
-      //           label: 'Discord',
-      //           href: 'https://discordapp.com/invite/docusaurus',
-      //         },
-      //         {
-      //           label: 'Twitter',
-      //           href: 'https://twitter.com/docusaurus',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       title: 'More',
-      //       items: [
-      //         {
-      //           label: 'Gitlab',
-      //           href: 'https://gitlab.coko.foundation/cokoapps',
-      //         },
-      //       ],
-      //     },
-      //   ],
-      //   // copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-      // },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
