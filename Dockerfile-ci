@@ -51,7 +51,7 @@ RUN node -p "process.arch === 'arm64' ? 'Not downloading Firefox since we are on
   rm /tmp/firefox.tar.bz2 && \
   ln -fs /opt/firefox/firefox /usr/bin/firefox)
 
-  # versions of local tools
+# versions of local tools
 RUN echo  " node version:    $(node -v) \n" \
   "npm version:     $(npm -v) \n" \
   "yarn version:    $(yarn -v) \n" \
@@ -95,10 +95,10 @@ RUN yarn install --frozen-lockfile
 RUN mkdir -p ./packages/server
 RUN mkdir -p ./packages/client
 
-COPY ./packages/server/package.json ./packages/server/yarn.lock ./packages/server
+COPY ./packages/server/package.json ./packages/server/yarn.lock ./packages/server/
 RUN cd packages/server && yarn install --frozen-lockfile
 
-COPY ./packages/client/package.json ./packages/client/yarn.lock ./packages/client
+COPY ./packages/client/package.json ./packages/client/yarn.lock ./packages/client/
 RUN cd packages/client && yarn install --frozen-lockfile
 
 ENV NODE_ENV ${NODE_ENV}
