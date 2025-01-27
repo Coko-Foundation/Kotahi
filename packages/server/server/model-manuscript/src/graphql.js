@@ -996,8 +996,8 @@ const resolvers = {
         context: {
           recipient: recipient?.email,
           messageContent,
-          groupId: manuscript.groupId,
         },
+        groupId: manuscript.groupId,
       })
 
       return commonUpdateManuscript(id, input, ctx)
