@@ -6,6 +6,7 @@ const {
 } = require('../services/handlebars.service')
 
 const ALLOWED_FORMS = ['submission' /* , 'review', 'decision' */]
+const NON_ESCAPED_COMPONENTS = ['AbstractEditor', 'Abstract', 'FullWaxField']
 
 /**
  * Converts a camelCase string to a more readable format.
@@ -31,7 +32,7 @@ const toReadable = camelCaseString => {
  * @returns {(name: string, title: string) => {value: string, label: string, type: string, form: string} | false}
  */
 const buildOption = category => {
-  return ({ name, title }) => {
+  return ({ name, title, component }) => {
     if (!name || !ALLOWED_FORMS.includes(category)) return false
     const value = overrideFormKeys(category, name)
     const label = title || toReadable(value.replace(category, ''))
@@ -39,7 +40,7 @@ const buildOption = category => {
     const option = {
       value,
       label,
-      type: 'text',
+      type: NON_ESCAPED_COMPONENTS.includes(component) ? 'link' : 'text',
       form: category,
     }
 
