@@ -130,7 +130,9 @@ const processData = async (data, groupId) => {
     acceptInviteLink: `<a href="${appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
     declineInviteLink: `<a href="${appUrl}/decline/${data.invitationId}" target="_blank">Decline Invitation</a>`,
     loginLink: `<a href="${appUrl}/login" target="_blank">${appUrl}/login</a>`,
-    manuscriptTitleLink: `<a href="${manuscriptData.manuscriptTitleLink}">${manuscriptData.manuscriptTitle}</a>`,
+    manuscriptTitleLink: manuscriptData.manuscriptTitleLink
+      ? `<a href="${manuscriptData.manuscriptTitleLink}">${manuscriptData.manuscriptTitle}</a>`
+      : manuscriptData.manuscriptTitle,
     manuscriptLink: `<a href="${manuscriptLink}" target="_blank">${manuscriptLink}</a>`,
     manuscriptProductionLink: `<a href="${manuscriptProductionLink}" target="_blank">${manuscriptProductionLink}</a>`,
   }
