@@ -147,6 +147,8 @@ const atomicTags = [
 ]
 
 const makeDiffedSource = (html1, html2) => {
+  if (!html1 && !html2) return null
+
   const diffedVersion = diff(html1, html2, '', '', atomicTags.join(','))
     .replaceAll(/<del/g, '<span class="deletion"')
 
@@ -154,7 +156,6 @@ const makeDiffedSource = (html1, html2) => {
     .replaceAll(/\/del>/g, '/span>')
     .replaceAll(/\/ins>/g, '/span>')
 
-  // console.log('Diffed version: ', diffedVersion)
   return diffedVersion
 }
 
