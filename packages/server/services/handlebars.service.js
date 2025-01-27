@@ -1,7 +1,7 @@
 const Handlebars = require('handlebars')
 const { clientUrl } = require('@coko/server')
 const { Group } = require('../models')
-const { objIf, transformEntries } = require('../server/utils/objectUtils')
+const { transformEntries } = require('../server/utils/objectUtils')
 
 const HANDLEBARS_NON_FORM_VARIABLES = [
   { label: 'Author Name', value: 'authorName' },
@@ -117,12 +117,16 @@ const processData = async (data, groupId) => {
     recipientEmail: recipientUser?.email,
   }
 
+  let submissionData = {}
+  if (submission)
+    submissionData = transformFormToMatchOverridenKeys({ submission })
+
   const manuscriptData = {
     authorName: author?.username,
     manuscriptNumber: manuscript?.shortId,
     manuscriptTitle: submission?.$title,
     manuscriptTitleLink: submission?.$sourceUri,
-    ...objIf(submission, transformFormToMatchOverridenKeys({ submission })),
+    ...submissionData,
   }
 
   const linkNodes = {
