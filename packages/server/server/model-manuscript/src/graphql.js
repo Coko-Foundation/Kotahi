@@ -2413,7 +2413,7 @@ const typeDefs = `
   }
 
   type PreviousVersion {
-    source: String!
+    source: String
     title: String
     user: PreviousVersionUser!
     created: DateTime!
