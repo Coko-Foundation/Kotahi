@@ -4,7 +4,12 @@ import styled from 'styled-components'
 import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { useBool, useString } from '../../../hooks/dataTypeHooks'
-import { DRAFT_NOTIFICATION_SHAPE, FILTERS_LIST, T } from '../misc/constants'
+import {
+  COLLAPSED_STATE_INIT,
+  DRAFT_NOTIFICATION_SHAPE,
+  FILTERS_LIST,
+  T,
+} from '../misc/constants'
 import { ActionIcon, Col, Row } from '../misc/styleds'
 import {
   ActionContainer as ActionsContainer,
@@ -17,7 +22,7 @@ import {
   OptionsList,
 } from '../../component-email-templates/misc/styleds'
 import Each from '../../shared/Each'
-import { arrIf, transformEntries } from '../../../shared/generalUtils'
+import { arrIf } from '../../../shared/generalUtils'
 import EventListControls from './EventListControls'
 import { filterEventAndNotifications } from '../misc/helpers'
 import { color } from '../../../theme'
@@ -207,11 +212,14 @@ const EventsList = ({
   const search = useString()
 
   const collapseAll = useBool({
-    start: true,
-    onToggle: state =>
-      collapsedState.set(
-        transformEntries(collapsedState.state, k => ({ [k]: state })),
-      ),
+    start: COLLAPSED_STATE_INIT,
+    onToggle: state => {
+      const newCollapsedState = { ...collapsedState.state }
+      Object.keys(newCollapsedState).forEach(k => {
+        newCollapsedState[k] = state
+      })
+      collapsedState.update(newCollapsedState)
+    },
   })
 
   const filter = useString({
@@ -253,8 +261,8 @@ const EventsList = ({
               if (excludeEvent) return null
 
               const searchToLC = search.state.toLowerCase()
-              const srcEventToLC = name.toLowerCase()
-              const searchMatches = srcEventToLC.startsWith(searchToLC)
+              const srcEventToLC = t(T[name]).toLowerCase()
+              const searchMatches = srcEventToLC.includes(searchToLC)
 
               if (!searchMatches) return null
 
