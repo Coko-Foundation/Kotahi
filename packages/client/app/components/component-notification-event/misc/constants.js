@@ -1,5 +1,7 @@
 import { color } from '../../../theme'
 
+export const COLLAPSED_STATE_INIT = false
+
 export const DRAFT_NOTIFICATION_SHAPE = {
   id: '',
   event: {},

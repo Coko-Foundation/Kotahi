@@ -14,7 +14,7 @@ import EventContent from './components/EventContent'
 import { GET_USERS } from '../component-users-manager/src/UsersPage'
 import EventsList from './components/EventsList'
 import { Spinner } from '../shared'
-import { T } from './misc/constants'
+import { COLLAPSED_STATE_INIT, T } from './misc/constants'
 
 const NotificationPage = ({ emailTemplates, wrapper: Root = Fragment }) => {
   const { groupId } = useContext(ConfigContext)
@@ -23,8 +23,9 @@ const NotificationPage = ({ emailTemplates, wrapper: Root = Fragment }) => {
   const recipients = useObject()
   const selected = useObject()
 
-  const buildCollapsedState = () => {
-    const collapsedStateEntries = events?.map(e => [e.name, true])
+  const buildCollapsedState = evts => {
+    if (Object.keys(collapsedState.state).length) return
+    const collapsedStateEntries = evts?.map(e => [e.name, COLLAPSED_STATE_INIT])
     const newCollapsedState = Object.fromEntries(collapsedStateEntries)
     collapsedState.set(newCollapsedState)
   }
