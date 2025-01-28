@@ -74,6 +74,7 @@ const prepareAndSendToQueue = async ({ notification, data }) => {
     context: {
       notificationId: notification.id,
       ...objIf(message, message),
+      ...objIf(manuscriptId, { manuscriptId }),
       ...objIf(delay, {
         ...objIf(reviewerId, { reviewerId }),
         ...objIf(invitationId, { invitationId }),
