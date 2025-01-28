@@ -236,6 +236,8 @@ const resolvers = {
           })
           .where({ id: threadedDiscussionId })
 
+        const manuscript = await Manuscript.findById(discussion.manuscriptId)
+
         seekEvent('decision-form-complete-comment', {
           threadedDiscussionId,
           threadId,
@@ -247,6 +249,7 @@ const resolvers = {
             userId: ctx.userId,
           },
           groupId,
+          manuscript,
         })
       }
 
