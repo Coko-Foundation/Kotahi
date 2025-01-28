@@ -149,7 +149,8 @@ const sendEmail = async (mailOptions, groupId) => {
 
     // TODO: use @coko/server util once we divorce gmail XD
     const info = await transporter.sendMail(options)
-    logger.info(`Email sent: ${info.response}`)
+    logger.info(`Email report:`)
+    logger.info(info)
 
     return true
   } catch (err) {

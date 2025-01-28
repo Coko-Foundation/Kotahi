@@ -13,13 +13,13 @@ const checkIfReviewWasCompleted = async ctx => {
   const { TeamMember } = require('../../models')
   const { manuscriptId, userId } = ctx ?? {}
 
-  const teamMember = await TeamMember.query()
+  const member = await TeamMember.query()
     .joinRelated('team')
     .where('team.objectId', manuscriptId)
     .andWhere('team_members.userId', userId)
     .first()
 
-  const reviewIsCompleted = teamMember?.status === 'completed'
+  const reviewIsCompleted = member?.status === 'completed'
   const cancelReason = reviewIsCompleted && 'Review was completed'
   return cancelReason
 }
