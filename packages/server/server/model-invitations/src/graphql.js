@@ -122,7 +122,11 @@ const resolvers = {
         status,
         userId,
         responseDate,
-        context: { invitation: result, reviewerId: userId },
+        context: {
+          invitation: result,
+          reviewerId: userId,
+          recipient: 'handlingEditor',
+        },
         groupId,
       })
 
