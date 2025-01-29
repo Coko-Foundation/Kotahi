@@ -114,7 +114,7 @@ const resolvers = {
       const eventName = {
         author: 'author',
         reviewer: 'review',
-        collaborativeReviewer: 'collaborative-review',
+        collaborative_reviewer: 'collaborative-review',
       }[type]
 
       seekEvent(`${eventName}-${status.toLowerCase()}`, {
