@@ -19,12 +19,17 @@ import KanbanCard from './reviewers/KanbanCard'
 import { findReviewFromReviewer } from './reviewers/util'
 
 const Kanban = styled.div`
+  align-items: stretch;
+  display: flex;
   margin: 15px 7.5px;
+  min-height: 300px;
 `
 
 const Column = styled.div`
-  display: inline-block;
-  height: 300px;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   margin-inline: 7.5px;
   /* stylelint-disable-next-line scss/operator-no-unspaced */
   width: calc(${100 / (statuses.length - 2)}% - 15px);
@@ -37,6 +42,7 @@ const StatusLabel = styled.div`
   display: inline-block;
   font-weight: bold;
   margin-block: 4px;
+  margin-inline: 0;
   padding: 4px 10px;
 `
 
@@ -45,8 +51,6 @@ const CardsWrapper = styled.div`
   border-radius: 8px;
   height: 100%;
   margin-top: 8px;
-  overflow-x: hidden;
-  overflow-y: auto;
   width: 100%;
 `
 
