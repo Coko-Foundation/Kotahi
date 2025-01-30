@@ -1,6 +1,6 @@
 # Kotahi
 
-[Site & User docs](https://kotahi.community/)
+[Website](https://kotahi.community/)
 
 Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, data publications, data review, research labs and PRC (publish-review-curate) groups. Kotahi supports:
 
@@ -19,10 +19,11 @@ Kotahi is a modern submission, review and publishing system especially suited fo
 - modern interfaces, architecture, thinking
 
 
-Kotahi is currently under development by the [Coko Foundation](https://coko.foundation/). 
+Kotahi is currently under development by the [Kotahi Foundation](https://kotahi.foundation/).
+ 
 ## Project roadmap
 
-[The Kotahi project roadmap](https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280) can be viewed on Miro.
+[The Kotahi product roadmap]([https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280](https://miro.com/app/board/uXjVLmKGfek=/)) can be viewed on Miro.
 
 ## Contribute
 
