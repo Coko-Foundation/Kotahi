@@ -1,6 +1,7 @@
 # Kotahi
 
-[Website](https://kotahi.community/)
+[Website](https://kotahi.community/)  
+Join our [chat channel](https://mattermost.coko.foundation/coko/channels/kotahi).
 
 Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, data publications, data review, research labs and PRC (publish-review-curate) groups. Kotahi supports:
 
@@ -25,10 +26,6 @@ Kotahi is currently under development by the [Kotahi Foundation](https://kotahi.
 
 [The Kotahi product roadmap](https://miro.com/app/board/uXjVLmKGfek=/) can be viewed on Miro.
 
-## Contribute
-
-Contributions are welcome! Please read our [Community Products Collaboration Guidelines](https://docs.coko.foundation/s/community-collab) and join our [chat channel](https://mattermost.coko.foundation/coko/channels/kotahi).
-
 ## Bug reporting
 
 To report a bug, [open a GitLab issue](https://gitlab.coko.foundation/kotahi/kotahi/-/issues/new) and use the bug-report template contained in the issue.
@@ -43,6 +40,6 @@ You can find development documentation [here](https://kotahi-dev-docs.fly.dev/do
 
 ## Further info
 
-See [FAQ.md](FAQ.md).
+See [FAQ.md](FAQ.md).  
 Conventions for code changes, branching and merge requests are covered in [CONTRIBUTING.md](CONTRIBUTING.md).
 
