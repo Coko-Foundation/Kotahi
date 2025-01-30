@@ -23,7 +23,7 @@ Kotahi is currently under development by the [Kotahi Foundation](https://kotahi.
  
 ## Project roadmap
 
-[The Kotahi product roadmap]([https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280](https://miro.com/app/board/uXjVLmKGfek=/)) can be viewed on Miro.
+[The Kotahi product roadmap](https://miro.com/app/board/uXjVLmKGfek=/) can be viewed on Miro.
 
 ## Contribute
 
