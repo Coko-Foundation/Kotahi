@@ -130,6 +130,12 @@ services:
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
       - ./packages/server/services:/home/node/app/services
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
+      start_period: 30s # Give the server seconds to start before healthchecks begin
+      timeout: 5s
+      retries: 5
     tty: true
 
   pagedjs:
@@ -182,27 +188,13 @@ services:
       - POSTGRES_PASSWORD=xsweet_user_password
 
   db:
-    image: postgres:10-alpine
-    sysctls:
-      kernel.shmmax: 100663296
+    image: postgres:16-alpine
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
       - POSTGRES_USER=${POSTGRES_USER:-dev}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
-    command:
-      - 'postgres'
-      - '-c'
-      - 'max_connections=1000'
-      - '-c'
-      - 'shared_buffers=3GB'
-      - '-c'
-      - 'sort_mem=4096'
-      - '-c'
-      - 'effective_cache_size=4000'
-      - '-c'
-      - 'wal_buffers=8'
 
   # Create the file server and give it a root user
   fileHosting:
@@ -264,7 +256,8 @@ services:
   kotahi-flax-site:
     image: cokoapps/kotahi-flax:0.5.1
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     ports:
       - ${FLAX_EXPRESS_PORT:-8082}:${FLAX_EXPRESS_PORT:-3000}
       - ${FLAX_SITE_PORT:-8081}:80
