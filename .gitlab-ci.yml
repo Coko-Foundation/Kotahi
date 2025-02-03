@@ -54,7 +54,7 @@ build preproduction client:
   services:
     - docker:27-dind
   only:
-    - main
+    - staging
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
@@ -73,7 +73,7 @@ build preproduction server:
   services:
     - docker:27-dind
   only:
-    - main
+    - staging
   before_script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
   script:
@@ -85,39 +85,12 @@ build preproduction server:
     - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $SERVER_PREPRODUCTION.latest
 
-.deploy staging:
-  stage: Deploy staging
-  interruptible: false
-  image: $CI_REGISTRY/cokoinfra/ansible-deployer
-  services:
-    - docker:27:dind
-  only:
-    - main
-  variables:
-    ANSCOMPOSE_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES: true
-    ANSCOMPOSE_USE_SANDBOXED_ORCID: true
-    ANSCOMPOSE_ORCID_CLIENT_ID: $ORCID_CLIENT_ID
-    ANSCOMPOSE_ORCID_CLIENT_SECRET: $ORCID_CLIENT_SECRET
-    ANSCOMPOSE_INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1
-    ANSCOMPOSE_MANUSCRIPTS_TABLE_COLUMNS: 'shortId, submission.$title, created, updated, status, author'
-    COMPOSE_SERVICES: client,server
-    COMPOSE_SERVICES_CLIENT_URL: kotahi.coko.app
-    COMPOSE_SERVICES_CLIENT_IMAGE: $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
-    COMPOSE_SERVICES_SERVER_URL: kotahi-server.coko.app
-    COMPOSE_SERVICES_SERVER_IMAGE: $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
-  script:
-    - kubectl config get-contexts
-    - kubectl config use-context kotahi/agent:agent-1
-    - cp $DEPLOY_COMPOSE_FILE /ansible
-    - cd /ansible
-    - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
-
 deploy fly:
   stage: Deploy staging
   interruptible: false
   image: cokoapps/fly
   only:
-    - main
+    - staging
   script:
     - FLY_API_TOKEN=$FLY_SERVER_TEST_TOKEN flyctl deploy --config .fly/kotahi-server-test.toml --image $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - FLY_API_TOKEN=$FLY_CLIENT_TEST_TOKEN flyctl deploy --config .fly/kotahi-client-test.toml --image $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
@@ -159,6 +132,8 @@ release:
     - git config user.name "kotahi release bot"
   script:
     - node scripts/updatePackageJson.js
+    - VERSION=$(node -e "const packageJson = require('./package.json'); console.log(packageJson.version);")
+    - echo VERSION set to $VERSION
     - git add -A
     - git commit -m "release version $VERSION [skip ci]"
     - git show-ref --tags "$VERSION" > /dev/null 2>&1 && git tag -d "$VERSION" || echo "Tag '$VERSION' does not exist."
@@ -209,61 +184,3 @@ production server:
     - cd packages/server
     - docker build --tag $SERVER_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
     - docker push $SERVER_PRODUCTION:$RELEASE_VERSION
-# deploy test:
-#   stage: Deploy test
-#   image: $CI_REGISTRY/cokoinfra/ansible-deployer
-#   services:
-#     - docker:26-dind
-#   environment:
-#     name: review/$CI_COMMIT_REF_NAME
-#     url: https://$CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
-#     on_stop: teardown test
-#   variables:
-#     ANSCOMPOSE_POSTGRES_ALLOW_SELF_SIGNED_CERTIFICATES: true
-#     ANSCOMPOSE_ORCID_CLIENT_ID: $ORCID_CLIENT_ID_2
-#     ANSCOMPOSE_ORCID_CLIENT_SECRET: $ORCID_CLIENT_SECRET_2
-#     ANSCOMPOSE_USE_SANDBOXED_ORCID: true
-#     ANSCOMPOSE_INSTANCE_GROUPS: journal:journal
-#     ANSCOMPOSE_MANUSCRIPTS_TABLE_COLUMNS: 'shortId, submission.$title, created, updated, status, author'
-#     ANSCOMPOSE_E2E_TESTING_API: 1
-#     COMPOSE_SERVICES: client,server
-#     COMPOSE_SERVICES_CLIENT_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
-#     COMPOSE_SERVICES_CLIENT_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     COMPOSE_SERVICES_SERVER_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.server.coko.app
-#     COMPOSE_SERVICES_SERVER_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     do_spaces_access_key: $DIGITAL_OCEAN_SPACES_ACCESS_KEY
-#     do_spaces_secret_key: $DIGITAL_OCEAN_SPACES_SECRET_KEY
-#   script:
-#     - kubectl config get-contexts
-#     - kubectl config use-context kotahi/agent:agent-1
-#     - cp $DEPLOY_COMPOSE_FILE /ansible
-#     - cd /ansible
-#     - ANSIBLE_FORCE_COLOR=true ansible-playbook bootstrap.yml -e "compose_file=$DEPLOY_COMPOSE_FILE"
-
-# run end to end tests:
-#   stage: End to end testing
-#   image: $CI_REGISTRY/$IMAGE_NAME_DEVELOPMENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#   script:
-#     - yarn dlx cypress run --browser chrome --spec 'cypress/e2e/**/**.js --config $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
-
-# teardown test:
-#   stage: Tear down test
-#   image: $CI_REGISTRY/cokoinfra/ansible-deployer
-#   services:
-#     - docker:26-dind
-#   environment:
-#     name: review/$CI_COMMIT_REF_NAME
-#     action: stop
-#   variables:
-#     COMPOSE_SERVICES: client,server
-#     COMPOSE_SERVICES_CLIENT_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.coko.app
-#     COMPOSE_SERVICES_CLIENT_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_CLIENT:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     COMPOSE_SERVICES_SERVER_URL: $CI_PROJECT_NAMESPACE.$CI_PROJECT_NAME.$CI_COMMIT_REF_NAME.server.coko.app
-#     COMPOSE_SERVICES_SERVER_IMAGE: $CI_REGISTRY/$IMAGE_NAME_PREPRODUCTION_SERVER:$CI_COMMIT_REF_NAME.$CI_COMMIT_SHA
-#     do_spaces_access_key: $DIGITAL_OCEAN_SPACES_ACCESS_KEY
-#     do_spaces_secret_key: $DIGITAL_OCEAN_SPACES_SECRET_KEY
-#   script:
-#     - kubectl config get-contexts
-#     - kubectl config use-context kotahi/agent:agent-1
-#     - cd /ansible
-#     - ANSIBLE_FORCE_COLOR=true ansible-playbook teardown.yml

@@ -9,24 +9,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "__cleanNodeModules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
-    "client": "sh scripts/startTestClient.sh",
     "cz": "git-cz",
-    "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint .",
-    "lint:style": "stylelint **.js",
     "prepare": "husky install",
-    "seedFromDump": "node scripts/seedFromDump.js",
-    "server:test": "yarn dotenv sh ./scripts/startTestServer.sh",
-    "start:server-and-client": "start-test server 'http://localhost:3000/healthcheck' client",
-    "start:services": "docker-compose up db",
-    "storybook": "coko-storybook",
-    "test:server-and-client": "start-test server:test 'http://localhost:3000/healthcheck' client",
-    "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
-    "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
-    "test:chrome": "cypress run --browser chrome --spec 'cypress/e2e/**/**.js'",
-    "test:firefox": "cypress run --browser firefox --headless --spec 'cypress/e2e/**/**.js'",
-    "test": "dotenv cypress open"
+    "storybook": "coko-storybook"
   },
   "husky": {
     "hooks": {
@@ -53,8 +38,7 @@
     "dotenv": "^16.4.1",
     "dotenv-cli": "^4.0.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^27.1.0",
-    "start-server-and-test": "1.11.5"
+    "jest": "^27.1.0"
   },
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

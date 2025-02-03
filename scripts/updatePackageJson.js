@@ -6,28 +6,24 @@ const clientPackageJson = require('../packages/client/package.json')
 const serverPackageJson = require('../packages/server/package.json')
 
 const oldVersion = rootPackageJson.version
-const [oldMajor, oldMinor, oldPatch] = oldVersion.split('.')
+const [oldDate, oldIncrement] = oldVersion.split('-')
 
-const validValues = [
-  `${parseInt(oldMajor, 10) + 1}.0.0`,
-  `${oldMajor}.${parseInt(oldMinor, 10) + 1}.0`,
-  `${oldMajor}.${oldMinor}.${parseInt(oldPatch, 10) + 1}`,
-]
+const getDate = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, 0)
+  const day = String(date.getDate()).padStart(2, 0)
 
-const newVersion = process.env.VERSION?.trim()
-
-if (!newVersion) {
-  throw new Error(
-    `Cannot update package.json versions: Variable "VERSION" needs to be set.`,
-  )
+  return `${year}.${month}.${day}`
 }
 
-if (!validValues.includes(newVersion)) {
-  throw new Error(
-    `Cannot update package.json versions: Invalid new version value. Given the current value of ${oldVersion}, valid values are: ${validValues.join(
-      ', ',
-    )}`,
-  )
+const newDate = getDate()
+let newVersion = ''
+
+if (oldDate === newDate) {
+  newVersion = `${newDate}-${Number(oldIncrement) + 1}`
+} else {
+  newVersion = `${newDate}-0`
 }
 
 const files = [
