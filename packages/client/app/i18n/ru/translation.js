@@ -1134,6 +1134,7 @@ const ru = {
         anonymousReviewReport: 'Отчет о рецензировании',
         'Last Updated': 'Последнее обновление: {{dateString}}',
         Reviewer: 'Рецензент:',
+        email: 'Электронная почта:',
         Status: 'Статус',
         reviewNotCompleted: `Рецензирование не завершено`,
         Delete: 'Удалить',

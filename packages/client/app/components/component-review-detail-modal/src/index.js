@@ -250,10 +250,20 @@ const ReviewDetailsModal = (
               {inviteeName ?? reviewerName}
             </p>
             {showRealReviewer && (
-              <Secondary>
-                {reviewer?.defaultIdentity?.identifier ??
-                  reviewerTeamMember.toEmail}
-              </Secondary>
+              <div>
+                {reviewer?.defaultIdentity?.identifier && (
+                  <Secondary>
+                    <Primary>ORCID:</Primary>{' '}
+                    {reviewer.defaultIdentity.identifier}
+                  </Secondary>
+                )}
+                {reviewerTeamMember?.toEmail && (
+                  <Secondary>
+                    <Primary>{t('modals.reviewReport.email')}</Primary>{' '}
+                    {reviewerTeamMember.toEmail}
+                  </Secondary>
+                )}
+              </div>
             )}
           </UserInfo>
         </UserCombo>

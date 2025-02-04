@@ -1150,6 +1150,7 @@ const fr = {
         anonymousReviewReport: "Rapport d'évaluation",
         'Last Updated': 'Dernière mise à jour : {{dateString}}',
         Reviewer: 'Évaluateur :',
+        email: 'E-mail :',
         Status: 'Statut',
         reviewNotCompleted: "L'évaluation n'a pas encore été terminée",
         Delete: 'Supprimer',
