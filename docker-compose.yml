@@ -33,8 +33,10 @@ services:
     ports:
       - ${SERVER_PORT:-3000}:3000
       - ${WS_YJS_SERVER_PORT:-5010}:${WS_YJS_SERVER_PORT:-5010}
+      - ${INSPECTOR_PORT:-9229}:${INSPECTOR_PORT:-9229}
     environment:
       - NODE_ENV=development
+      - INSPECTOR_PORT=${INSPECTOR_PORT:-9229}
       - POSTGRES_USER=${POSTGRES_USER:-dev}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
