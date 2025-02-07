@@ -46,9 +46,14 @@ export const reloadTranslationsForGroup = async (
 
   // Force reload of resources
   await i18next.reloadResources()
-  i18next.changeLanguage(i18next.language)
 
   languages = getLanguagesLabels(groupName)
+
+  await i18next.changeLanguage(
+    languages.map(l => l.value).includes(i18next.language)
+      ? i18next.language
+      : 'en',
+  )
 }
 
 export default i18next

@@ -137,6 +137,7 @@ const ReviewDetailsModal = (
   )
 
   let reviewer = null
+  let inviteeName = null
 
   if (review?.isCollaborative) {
     reviewer = reviewerTeamMember?.user
@@ -144,6 +145,10 @@ const ReviewDetailsModal = (
     reviewer = review.user
   } else {
     reviewer = reviewerTeamMember?.user
+  }
+
+  if (!reviewer && reviewerTeamMember?.invitedPersonName) {
+    inviteeName = reviewerTeamMember.invitedPersonName
   }
 
   const showRealReviewer = !review?.isHiddenReviewerName || isControlPage
@@ -231,7 +236,7 @@ const ReviewDetailsModal = (
       })}
       title={generateModalTitle()}
     >
-      {reviewer && (
+      {(reviewer || inviteeName) && (
         <UserCombo style={{ marginBottom: '1em' }}>
           <UserAvatar
             isClickable
@@ -242,13 +247,23 @@ const ReviewDetailsModal = (
           <UserInfo>
             <p>
               <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
-              {reviewerName}
+              {inviteeName ?? reviewerName}
             </p>
             {showRealReviewer && (
-              <Secondary>
-                {reviewer?.defaultIdentity?.identifier ??
-                  reviewerTeamMember.toEmail}
-              </Secondary>
+              <div>
+                {reviewer?.defaultIdentity?.identifier && (
+                  <Secondary>
+                    <Primary>ORCID:</Primary>{' '}
+                    {reviewer.defaultIdentity.identifier}
+                  </Secondary>
+                )}
+                {reviewerTeamMember?.toEmail && (
+                  <Secondary>
+                    <Primary>{t('modals.reviewReport.email')}</Primary>{' '}
+                    {reviewerTeamMember.toEmail}
+                  </Secondary>
+                )}
+              </div>
             )}
           </UserInfo>
         </UserCombo>

@@ -1138,6 +1138,7 @@ const esLa = {
         anonymousReviewReport: 'Informe de revisión',
         'Last Updated': 'Última Actualización: {{dateString}}',
         Reviewer: 'Revisor:',
+        email: 'Correo electrónico:',
         Status: 'Estado',
         reviewNotCompleted: 'La revisión aún no se ha completado',
         Delete: 'Eliminar',
