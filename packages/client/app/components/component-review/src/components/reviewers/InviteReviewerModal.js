@@ -38,6 +38,10 @@ const StyledInfo = styled.div`
 
 const StyledCheckbox = styled.div`
   grid-column: 2 / 3;
+
+  label {
+    flex-wrap: wrap;
+  }
 `
 
 const InviteReviewerModal = ({
@@ -81,14 +85,21 @@ const InviteReviewerModal = ({
 
   const options = []
   if (config.controlPanel?.sharedReview)
-    options.push({ value: 'shared', label: t('modals.inviteReviewer.Shared') })
+    options.push({
+      value: 'shared',
+      label: t('modals.inviteReviewer.Shared'),
+      description: t('modals.inviteReviewer.SharedDesc'),
+    })
+
   options.push({
     value: 'email-notification',
     label: t('modals.inviteReviewer.Email Notification'),
+    description: t('modals.inviteReviewer.Email Notification Description'),
   })
   options.push({
     value: 'isCollaborative',
     label: t('modals.inviteReviewer.Collaborate'),
+    description: t('modals.inviteReviewer.Collaborate Description'),
   })
 
   return (

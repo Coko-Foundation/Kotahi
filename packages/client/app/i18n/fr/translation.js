@@ -1165,6 +1165,11 @@ const fr = {
         Collaborate: 'Collaborer',
         Cancel: 'Annuler',
         Invite: 'Inviter',
+        SharedDesc:
+          "Partager les avis avec d'autres évaluateurs une fois terminés",
+        'Email Notification Description': 'Envoyer une invitation par e-mail',
+        'Collaborate Description':
+          'Faire de cet évaluateur un évaluateur collaboratif',
       },
       deleteReviewer: {
         'Delete this reviewer': 'Supprimer cet évaluateur ?',

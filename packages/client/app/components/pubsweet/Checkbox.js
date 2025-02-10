@@ -24,8 +24,17 @@ const Root = styled.label`
   ${override('ui.Checkbox')};
 `
 
+const Desc = styled.div`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${th('fontSizeBaseSmaller')};
+  font-style: italic;
+  margin-left: 20px;
+  width: 100%;
+`
+
 const Checkbox = ({
   className,
+  description,
   disabled,
   inline,
   name,
@@ -50,6 +59,7 @@ const Checkbox = ({
         value={value}
       />
       <Label checked={checked}>{label}</Label>
+      {description && <Desc>{description}</Desc>}
     </Root>
   )
 }
