@@ -42,6 +42,7 @@ invitations {
   id
   status
   toEmail
+  invitedPersonType
   user {
 	id
   }
