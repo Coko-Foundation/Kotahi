@@ -118,8 +118,9 @@ const ReviewStatusDonut = ({ manuscript }) => {
 
   const invitationStatuses = (manuscript.invitations || []) // email invites
     .filter(
-      ({ status, user }) =>
+      ({ invitedPersonType, status, user }) =>
         status in invitationStatusMapping &&
+        ['REVIEWER', 'COLLABORATIVE_REVIEWER'].includes(invitedPersonType) &&
         !reviewerUserIds.includes(user?.id) &&
         !collaborativeReviewerUserIds.includes(user?.id),
     )
