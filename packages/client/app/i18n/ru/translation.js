@@ -1150,6 +1150,12 @@ const ru = {
         Collaborate: 'Сотрудничать',
         Cancel: 'Отменить',
         Invite: 'Пригласить',
+        SharedDesc:
+          'Поделиться отзывами с другими рецензентами после завершения',
+        'Email Notification Description':
+          'Отправить приглашение по электронной почте',
+        'Collaborate Description':
+          'Сделать этого рецензента совместным рецензентом',
       },
       deleteReviewer: {
         'Delete this reviewer': 'Удалить рецензента?',

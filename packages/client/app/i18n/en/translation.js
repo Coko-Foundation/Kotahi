@@ -1132,6 +1132,10 @@ const en = {
         Collaborate: 'Collaborate',
         Cancel: 'Cancel',
         Invite: 'Invite',
+        SharedDesc: 'Share reviews with other reviewers upon completion',
+        'Email Notification Description': 'Send email invitation',
+        'Collaborate Description':
+          'Make this reviewer a collaborative reviewer',
       },
       deleteReviewer: {
         'Delete this reviewer': 'Delete this reviewer?',

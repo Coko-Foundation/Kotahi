@@ -28,6 +28,7 @@ class CheckboxGroup extends React.Component {
         {options.map(option => (
           <Checkbox
             checked={Array.isArray(value) && value.includes(option.value)}
+            description={option.description}
             inline={inline}
             key={option.value}
             label={option.label}
