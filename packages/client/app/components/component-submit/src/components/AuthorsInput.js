@@ -9,6 +9,7 @@ import PropTypes from 'prop-types'
 import { v4 as uuid } from 'uuid'
 import { useTranslation } from 'react-i18next'
 import { PlusCircle } from 'react-feather'
+import { isEmpty } from 'lodash'
 import { Button } from '../../../pubsweet'
 import { DeleteControl, TextInput } from '../../../shared'
 import {
@@ -116,6 +117,7 @@ const AuthorsInput = ({
   rorMenuPlacement, // ROR affiliation dropdown position
   showMiddleName, // should the middle name field be used
   showOrcidId, // should the ORCID field be used
+  isRoRMulti = false, // should be multi-select
 }) => {
   const [validatePerField, setValidatePerField] = useState([])
   const { t } = useTranslation()
@@ -183,7 +185,7 @@ const AuthorsInput = ({
               lastName: '',
               email: '',
               id: uuid(),
-              ror: {},
+              ror: [],
               orcid: '',
             },
           ]
@@ -220,24 +222,31 @@ const AuthorsInput = ({
                   onChange(newVal)
                 }
 
+                // eslint-disable-next-line no-nested-ternary
+                const val = isRoRMulti
+                  ? isEmpty(author[f.name])
+                    ? []
+                    : author[f.name]
+                  : author[f.name]
+
                 return (
                   <div key={f.name}>
                     <FieldLabel $valid={!invalidity}>
                       <div>{f.label}</div>
                       <div>{invalidity && <>{invalidity}!</>}</div>
                     </FieldLabel>
-
                     {f.name === 'ror' ? (
                       <StyledSelect
                         classNamePrefix="react-select"
                         createOptionPosition="first"
                         isClearable
+                        isMulti={isRoRMulti}
                         loadOptions={searchRor(filterOptions)}
                         menuPlacement={rorMenuPlacement || 'auto'}
                         menuPortalTarget={document.querySelector('body')}
                         onChange={handleChange}
                         placeholder={f.placeholder}
-                        value={author[f.name]}
+                        value={val}
                       />
                     ) : (
                       <TextInput
@@ -276,6 +285,7 @@ AuthorsInput.propTypes = {
   requireEmail: PropTypes.bool,
   rorMenuPlacement: PropTypes.oneOf('bottom', 'top', 'auto'),
   showMiddleName: PropTypes.bool,
+  isRoRMulti: PropTypes.bool,
   showOrcidId: PropTypes.bool,
   value: PropTypes.oneOfType([
     PropTypes.arrayOf(
@@ -297,6 +307,7 @@ AuthorsInput.defaultProps = {
   requireEmail: false,
   rorMenuPlacement: null,
   showMiddleName: false,
+  isRoRMulti: false,
   showOrcidId: false,
   value: null,
 }

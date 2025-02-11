@@ -1,7 +1,19 @@
-{% extends '../layouts/base.njk' %}
+  {% extends '../layouts/base.njk' %}
 {% set currentPage = article %}
 {% set title = article.meta.title %}
 {% block content %}
+
+  {% set rorArray = [] %}
+  {% if article.headerInfo.authorNames.length > 0 %}
+   {% for authorRor in article.headerInfo.authorNames %}
+    {% for ror in authorRor.ror %}
+     {% if not (ror.label in rorArray) %}
+      {% set rorArray = (rorArray.push(ror.label), rorArray) %}
+     {% endif %}
+    {% endfor %}
+   {% endfor %}
+  {% endif %}
+
     <main>
         <div class="article-preview-header">
             <span class="topics">
@@ -12,18 +24,35 @@
             <ul class="authors metadata">
                 {% for author in article.headerInfo.authorNames %}
                     <li class="author metadata">
-                        <span class="author-name">{{- author.firstName -}}&nbsp;{{- author.lastName -}}</span>
+                        <span class="author-name">
+                          {{- author.firstName -}}{% if author.middleName %}&nbsp;{{- author.middleName -}}{% endif %}&nbsp;{{- author.lastName -}}
+                          {% for r in rorArray %}
+                             {% set outerIndex = loop.index %}
+                             {% for rr in author.ror %}
+                                {% if rr.label == r  %}
+                                  <sup>{{ outerIndex }}&nbsp;</sup>
+                                {% endif %}
+                             {% endfor %}
+                          {% endfor %}
+                      </span>
                         {% if author.email %}
-                            <a class="email" href="mailto:{{ author.email }}">{% include "_partials/icon-email.njk" %}</a>
+                            <a class="email" href="mailto:{{ author.email }}"></a>
+                        {% endif %}
+                        {% if author.orcid %}
+                            <a class="orcid" target="_blank" href="https://orcid.org/{{ author.orcid }}"></a>
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
-            <ul class="authors">
-                <li class="author metadata">
-                    <span class="author-affiliation">{{- article.headerInfo.authorNames | arrayToString('affiliation', 'trim') -}}</span>
+            {% if article.headerInfo.authorNames %}
+              <ol id="affiliations-list" style="margin-left: 20px;">
+                {% for re in rorArray %}
+                <li style="margin-left: 0px;">
+                    {{ re | safe }}
                 </li>
-            </ul>
+                {% endfor %} 
+              </ol>  
+            {% endif %}
 
             <span class="header-doi-and-licenses">
                 <a href="{{ article.headerInfo.DOI }}">
@@ -139,43 +168,11 @@
                         <section class="content">
                             {% for data in article.metaData %}
                                 <div class="review-field">
-                                   {% if data.text is string %}
                                     {{ data.text |safe }}
-                                 {% endif %}
                                 </div>
                             {% endfor %}
                         </section>
                     {% endif %}
-
-                {% if article.parsedSubmission.$localContext.notice.length > 0 or article.parsedSubmission.$localContext.label.length > 0 %}
-                        <h3 id="local-contexts">Local Contexts</h3>
-                        <section class="content">
-                            {% if article.parsedSubmission.$localContext.notice.length > 0  %}
-                               <h4>Notices</h4>
-                             {% for data in article.parsedSubmission.$localContext.notice %}
-                                <div class="review-field">
-                                    <div class="review-field">Name: {{ data.name |safe }}</div>
-                                    <div class="review-field">Default Text: {{ data.defaultText |safe }}</div>
-                                    <div class="review-field">Notice Type: {{ data.noticeType |safe }}</div>
-                                   <a href="{{ article.parsedSubmission.$localContext.url }}" target="_blank"><img src="{{ data.imgUrl }}"/></a>
-                                </div>
-                            {% endfor %}
-                             {% endif %}
-                             {% if article.parsedSubmission.$localContext.label.length > 0  %}
-                               <h4>Labels</h4>
-                            {% for data in article.parsedSubmission.$localContext.label %}
-                                <div class="review-field">
-                                    <div class="review-field">Name: {{ data.name |safe }}</div>
-                                    <div class="review-field">Language: {{ data.language |safe }}</div>
-                                    <div class="review-field">Label Text: {{ data.labelText |safe }}</div>
-                                    <div class="review-field">Label Type: {{ data.labelType |safe }}</div>
-                                   <a href="{{ article.parsedSubmission.$localContext.url }}" target="_blank"><img src="{{ data.imgUrl }}"/></a>
-                                </div>
-                            {% endfor %}
-                             {% endif %}
-                        </section>
-                    {% endif %}
-
                 </section>
             </article>
         </div>
