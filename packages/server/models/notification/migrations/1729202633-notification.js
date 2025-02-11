@@ -1,12 +1,12 @@
-const { logger, useTransaction } = require('@coko/server')
+const { useTransaction } = require('@coko/server')
 
 const { seedNotifications } = require('../../../scripts/seedNotifications')
 
 const Group = require('../../group/group.model')
 const Config = require('../../config/config.model')
 
-exports.up = knex =>
-  knex.schema.createTable('notifications', table => {
+exports.up = async knex => {
+  await knex.schema.createTable('notifications', table => {
     table.uuid('id').primary()
     table.uuid('groupId').notNullable()
     table.uuid('emailTemplateId').nullable()
@@ -30,29 +30,29 @@ exports.up = knex =>
       .references('id')
       .inTable('email_templates')
       .onDelete('SET NULL')
-
-    return useTransaction(async trx => {
-      try {
-        const groups = await Group.query(trx)
-        logger.info(`Seeding notification events for ${groups.length} groups`)
-
-        await Promise.all(
-          groups.map(async group => {
-            const config = await Config.query(trx).findOne({
-              groupId: group.id,
-            })
-
-            if (!config) throw new Error('No config found for group')
-            await seedNotifications(trx, group.id, config)
-          }),
-        )
-
-        logger.info('Seeding notification events completed')
-      } catch (error) {
-        logger.error('Error seeding notification events:', error)
-        throw error
-      }
-    })
   })
 
-exports.down = knex => knex.schema.dropTable('notifications')
+  return useTransaction(async trx => {
+    const groups = await Group.query(trx)
+
+    await Promise.all(
+      groups.map(async group => {
+        const config = await Config.query(trx).findOne({
+          groupId: group.id,
+        })
+
+        if (!config) throw new Error('No config found for group')
+
+        await seedNotifications(trx, group.id, config)
+      }),
+    )
+  })
+}
+
+exports.down = async knex => {
+  const tableExists = await knex.schema.hasTable('notifications')
+
+  if (tableExists) {
+    await knex.schema.dropTable('notifications')
+  }
+}

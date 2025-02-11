@@ -59,7 +59,7 @@ const eventsToTemplatesInConfig = async (config, groupId, trx) => {
         const { cc = '', subject } = emailContent ?? {}
         eventsToTemplates[event] = {
           emailTemplateId,
-          ccEmails: cc ? cc.split(',') : [],
+          ccEmails: cc ? cc.split(',').map(e => e.trim()) : [],
           subject,
         }
       }
