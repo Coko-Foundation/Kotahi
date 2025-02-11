@@ -137,12 +137,18 @@ const manuscriptIsActive = async (manuscriptId, options = {}) => {
 const getEditorIdsForManuscript = async (manuscriptId, options = {}) => {
   const { trx } = options
 
+  const roleOrder = ['editor', 'handlingEditor', 'seniorEditor']
+
   const teams = await Team.query(trx)
     .where({ objectId: manuscriptId })
-    .whereIn('role', ['editor', 'handlingEditor', 'seniorEditor'])
+    .whereIn('role', roleOrder)
     .withGraphFetched('members')
 
-  return [...new Set(teams.map(t => t.members.map(m => m.userId)).flat())]
+  const sortedTeams = teams.sort((a, b) => {
+    return roleOrder.indexOf(a.role) - roleOrder.indexOf(b.role)
+  })
+
+  return [...new Set(sortedTeams.map(t => t.members.map(m => m.userId)).flat())]
 }
 
 module.exports = {
