@@ -583,14 +583,17 @@ const publishReviewsToCrossref = async manuscript => {
       //   throw Error('Custom DOI is not available.')
 
       const descriptionStart = review.isDecision
-        ? 'Summary of'
+        ? 'Editorial assessment of'
         : 'Referee report of'
 
       let users
 
       if (review.isDecision) {
-        const editors = await getEditorIdsForManuscript(manuscriptId)
-        users = await populateUserInfo(editors)
+        const [editor] = await getEditorIdsForManuscript(manuscriptId)
+
+        if (editor) {
+          users = await populateUserInfo([editor])
+        }
       } else if (!review.isHiddenReviewerName && review.userId) {
         users = await populateUserInfo([review.userId])
       }
@@ -614,7 +617,7 @@ const publishReviewsToCrossref = async manuscript => {
             }),
           },
         }),
-        titles: { title: `Review: ${$title}` },
+        titles: { title: `Editorial Assessment: ${$title}` },
         review_date: {
           month: review.created.getUTCMonth() + 1, // +1 because the month is zero-based
           day: review.created.getUTCDate(),

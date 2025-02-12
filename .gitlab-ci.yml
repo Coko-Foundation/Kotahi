@@ -20,10 +20,9 @@ stages:
   - End to end testing
   - Tear down test
   - Deploy staging
-  - Build docs
-  - Deploy docs
   - Release
   - Publish
+  - Deploy production
 
 build development:
   stage: Build development
@@ -85,7 +84,7 @@ build preproduction server:
     - docker push $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - docker push $SERVER_PREPRODUCTION.latest
 
-deploy fly:
+deploy fly staging:
   stage: Deploy staging
   interruptible: false
   image: cokoapps/fly
@@ -95,29 +94,15 @@ deploy fly:
     - FLY_API_TOKEN=$FLY_SERVER_TEST_TOKEN flyctl deploy --config .fly/kotahi-server-test.toml --image $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
     - FLY_API_TOKEN=$FLY_CLIENT_TEST_TOKEN flyctl deploy --config .fly/kotahi-client-test.toml --image $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
 
-build docs:
-  stage: Build docs
-  interruptible: false
-  image: docker:27
-  services:
-    - docker:27-dind
-  only:
-    - main
-  before_script:
-    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
-  script:
-    - cd packages/devdocs
-    - docker build -f Dockerfile-production -t $DEV_DOCS.$CI_COMMIT_SHA .
-    - docker push $DEV_DOCS.$CI_COMMIT_SHA
-
-deploy docs:
-  stage: Deploy docs
+deploy fly main:
+  stage: Deploy staging
   interruptible: false
   image: cokoapps/fly
   only:
     - main
   script:
-    - FLY_API_TOKEN=$FLY_DEV_DOCS_TOKEN flyctl deploy --config .fly/kotahi-dev-docs.toml --image $DEV_DOCS.$CI_COMMIT_SHA
+    - FLY_API_TOKEN=$FLY_SERVER_MAIN_TOKEN flyctl deploy --config .fly/kotahi-server-main.toml --image $SERVER_PREPRODUCTION.$CI_COMMIT_SHA
+    - FLY_API_TOKEN=$FLY_CLIENT_MAIN_TOKEN flyctl deploy --config .fly/kotahi-client-main.toml --image $CLIENT_PREPRODUCTION.$CI_COMMIT_SHA
 
 release:
   stage: Release
@@ -184,3 +169,31 @@ production server:
     - cd packages/server
     - docker build --tag $SERVER_PRODUCTION:$RELEASE_VERSION -f Dockerfile-production .
     - docker push $SERVER_PRODUCTION:$RELEASE_VERSION
+
+build docs:
+  stage: Publish
+  interruptible: false
+  image: docker:27
+  services:
+    - docker:27-dind
+  needs:
+    - release
+  only:
+    - main
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+  script:
+    - cd packages/devdocs
+    - docker build -f Dockerfile-production -t $DEV_DOCS.$CI_COMMIT_SHA .
+    - docker push $DEV_DOCS.$CI_COMMIT_SHA
+
+deploy docs:
+  stage: Deploy production
+  interruptible: false
+  image: cokoapps/fly
+  needs:
+    - build docs
+  only:
+    - main
+  script:
+    - FLY_API_TOKEN=$FLY_DEV_DOCS_TOKEN flyctl deploy --config .fly/kotahi-dev-docs.toml --image $DEV_DOCS.$CI_COMMIT_SHA

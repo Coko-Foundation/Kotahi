@@ -1138,6 +1138,7 @@ const esLa = {
         anonymousReviewReport: 'Informe de revisión',
         'Last Updated': 'Última Actualización: {{dateString}}',
         Reviewer: 'Revisor:',
+        email: 'Correo electrónico:',
         Status: 'Estado',
         reviewNotCompleted: 'La revisión aún no se ha completado',
         Delete: 'Eliminar',
@@ -1153,6 +1154,11 @@ const esLa = {
         Collaborate: 'Colaborar',
         Cancel: 'Cancelar',
         Invite: 'Invitar',
+        SharedDesc: 'Compartir las reseñas con otros revisores al finalizar',
+        'Email Notification Description':
+          'Enviar invitación por correo electrónico',
+        'Collaborate Description':
+          'Convertir a este revisor en un revisor colaborativo',
       },
       deleteReviewer: {
         'Delete this reviewer': '¿Eliminar a este revisor?',

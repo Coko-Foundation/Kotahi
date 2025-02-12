@@ -192,6 +192,12 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
 
     if (isUserGM) return true
 
+    const isUserGroupAdmin = await cachedGet(
+      `userIsGroupAdmin:${ctx.userId}:${ctx.req.headers['group-id']}`,
+    )
+
+    if (isUserGroupAdmin) return true
+
     const isUserAdmin = await cachedGet(`userIsAdmin:${ctx.userId}`)
     if (isUserAdmin) return true
 

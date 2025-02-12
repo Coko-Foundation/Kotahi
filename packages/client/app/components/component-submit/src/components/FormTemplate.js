@@ -583,6 +583,7 @@ const FormTemplate = ({
                             element.component === 'Select' &&
                             element.name === 'submission.$customStatus'
                           }
+                          isRoRMulti={element.component === 'AuthorsInput'}
                           key={`validate-${element.id}`}
                           name={element.name}
                           onChange={value => {

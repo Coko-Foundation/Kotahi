@@ -43,6 +43,23 @@ const addUserToAdminAndGroupAdminTeams = async (
   await TeamMember.query(trx).insert({ userId, teamId: groupAdminTeam.id })
 }
 
+const addUserToGroupAdminTeam = async (userId, groupId, options = {}) => {
+  // eslint-disable-next-line global-require
+  const Team = require('../../models/team/team.model')
+  // eslint-disable-next-line global-require
+  const TeamMember = require('../../models/teamMember/teamMember.model')
+
+  const { trx } = options
+
+  const groupAdminTeam = await Team.query(trx).findOne({
+    role: 'groupAdmin',
+    objectId: groupId,
+    objectType: 'Group',
+  })
+
+  await TeamMember.query(trx).insert({ userId, teamId: groupAdminTeam.id })
+}
+
 const addUserToUserTeam = async (userId, groupId) => {
   // eslint-disable-next-line global-require
   const Team = require('../../models/team/team.model')
@@ -64,6 +81,7 @@ module.exports = app => {
   const Group = require('../../models/group/group.model')
   const User = require('../../models/user/user.model')
   const Identity = require('../../models/identity/identity.model')
+  const Team = require('../../models/team/team.model')
   /* eslint-enable global-require */
 
   // set up OAuth client
@@ -159,9 +177,22 @@ module.exports = app => {
 
               firstLogin = true
             } else if (groupUsersCount === 0) {
-              await addUserToAdminAndGroupAdminTeams(user.id, groupId, {
-                trx,
-              })
+              const isAlreadyAdmin = await Team.query(trx)
+                .withGraphJoined('members')
+                .findOne({
+                  userId: user.id,
+                  objectId: null,
+                  global: true,
+                  role: 'admin',
+                })
+
+              if (!isAlreadyAdmin) {
+                await addUserToAdminAndGroupAdminTeams(user.id, groupId, {
+                  trx,
+                })
+              } else {
+                await addUserToGroupAdminTeam(user.id, groupId, { trx })
+              }
             }
           })
         } catch (err) {
@@ -211,9 +242,6 @@ module.exports = app => {
       // Based on configuration User Management -> All users are assigned Group Manager and Admin roles flag
       if (activeConfig.formData.user.isAdmin)
         await addUserToAdminAndGroupAdminTeams(req.user.id, groupId)
-
-      // eslint-disable-next-line global-require
-      const Team = require('../../models/team/team.model')
 
       const groupManagerTeam = await Team.query()
         .withGraphJoined('members')

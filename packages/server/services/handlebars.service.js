@@ -98,7 +98,16 @@ const getManuscriptLink = async (appUrl, userId, manuscriptId) => {
 }
 
 const processData = async (data, groupId) => {
-  const { manuscript, user, discussionUrl, recipientUser, ...rest } = data
+  const {
+    manuscript,
+    user,
+    discussionUrl,
+    recipientUser,
+    recipientName,
+    toEmail,
+    ...rest
+  } = data
+
   const { submission } = manuscript || {}
   const group = await Group.query().findById(groupId)
   const appUrl = `${clientUrl}/${group.name}`
@@ -113,8 +122,8 @@ const processData = async (data, groupId) => {
   const author = manuscript ? await manuscript.getManuscriptAuthor() : {}
 
   const recipientData = {
-    recipientName: recipientUser?.username,
-    recipientEmail: recipientUser?.email,
+    recipientName: recipientUser?.username || recipientName,
+    recipientEmail: recipientUser?.email || toEmail,
   }
 
   let submissionData = {}

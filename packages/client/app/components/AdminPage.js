@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 import { ConfigContext } from './config/src'
+import { getLanguages } from '../i18n'
 
 import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
@@ -131,7 +132,12 @@ const AdminPage = () => {
         variables: { id: currentUser.id, preferredLanguage: i18next.language },
       })
     } else {
-      i18next.changeLanguage(currentUser.preferredLanguage)
+      const languageValues = getLanguages().map(l => l.value)
+      i18next.changeLanguage(
+        languageValues.includes(currentUser.preferredLanguage)
+          ? currentUser.preferredLanguage
+          : 'en',
+      )
     }
   }, [data?.currentUser])
 

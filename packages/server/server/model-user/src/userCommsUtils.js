@@ -71,14 +71,26 @@ const sendInvitation = async input => {
     userId: receiver.id,
   }
 
-  const newInvitation = await Invitation.query().insert(invitationData)
-  const invitationId = newInvitation.id
+  let invitation = await Invitation.findOne({
+    manuscriptId,
+    toEmail: receiverEmail,
+    purpose: 'Inviting an author to accept a manuscript',
+    status: 'UNANSWERED',
+    invitedPersonType: invitedPersonTypes[type],
+    userId: receiver.id,
+  })
+
+  if (!invitation) {
+    invitation = await Invitation.insert(invitationData)
+  }
+
+  const invitationId = invitation.id
 
   return {
     success: !!invitationId,
     invitationId,
     receiverName: receiver.name,
-    invitation: newInvitation,
+    invitation,
     ...invitationData,
   }
 }
@@ -185,13 +197,16 @@ const sendEmailWithPreparedData = async (
 
   const {
     manuscript,
-    selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
+    selectedEmail: rawSelectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
     selectedTemplate, // selectedEmailTemplateId
-    externalEmail, // New User Email
+    externalEmail: rawExternalEmail, // New User Email
     externalName, // New User username
     currentUser, // Name of the currentUser or senderName
     groupId,
   } = safeParse(input, input)
+
+  const selectedEmail = (rawSelectedEmail ?? '').toLowerCase()
+  const externalEmail = (rawExternalEmail ?? '').toLowerCase()
 
   const template = await EmailTemplate.query(trx).findById(selectedTemplate)
 

@@ -1,0 +1,37 @@
+# fly.toml app configuration file generated for kotahi-flax-main on 2025-02-11T17:17:23+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'kotahi-flax-main'
+primary_region = 'lhr'
+
+[build]
+image = 'cokoapps/kotahi-flax:0.5.2'
+
+[env]
+FLAX_CLIENT_API_URL = 'https://kotahi-server-main.fly.dev'
+FLAX_EXPRESS_PORT = '8081'
+
+[http_service]
+internal_port = 80
+force_https = true
+auto_stop_machines = 'off'
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[[services]]
+protocol = 'tcp'
+internal_port = 8081
+auto_stop_machines = 'off'
+auto_start_machines = true
+
+[[services.ports]]
+port = 8081
+handlers = ['tls', 'http']
+
+[[vm]]
+memory = '1gb'
+cpu_kind = 'shared'
+cpus = 1

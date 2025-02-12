@@ -133,4 +133,5 @@ module.exports = {
   },
   e2eTestingApi: 'E2E_TESTING_API',
   clientUrl: 'CLIENT_URL',
+  inspectorPort: 'INSPECTOR_PORT',
 }

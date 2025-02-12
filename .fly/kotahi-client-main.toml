@@ -1,0 +1,28 @@
+# fly.toml app configuration file generated for kotahi-client-main on 2025-02-11T17:13:36+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'kotahi-client-main'
+primary_region = 'lhr'
+
+# [build]
+#   image = 'cokoapps/kotahi-client:2025.02.11-0'
+
+[env]
+CLIENT_PORT = '4000'
+SERVER_URL = 'https://kotahi-server-main.fly.dev'
+YJS_WEBSOCKET_SERVER_URL = 'wss://kotahi-server-main.fly.dev:8081'
+
+[http_service]
+internal_port = 4000
+force_https = true
+auto_stop_machines = 'stop'
+auto_start_machines = true
+min_machines_running = 0
+processes = ['app']
+
+[[vm]]
+memory = '1gb'
+cpu_kind = 'shared'
+cpus = 1

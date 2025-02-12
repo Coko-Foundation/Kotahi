@@ -1116,6 +1116,7 @@ const en = {
         anonymousReviewReport: 'Review report',
         'Last Updated': 'Last Updated: {{dateString}}',
         Reviewer: 'Reviewer:',
+        email: 'Email:',
         Status: 'Status',
         reviewNotCompleted: 'Review hasn’t been completed yet',
         Delete: 'Delete',
@@ -1131,6 +1132,10 @@ const en = {
         Collaborate: 'Collaborate',
         Cancel: 'Cancel',
         Invite: 'Invite',
+        SharedDesc: 'Share reviews with other reviewers upon completion',
+        'Email Notification Description': 'Send email invitation',
+        'Collaborate Description':
+          'Make this reviewer a collaborative reviewer',
       },
       deleteReviewer: {
         'Delete this reviewer': 'Delete this reviewer?',
