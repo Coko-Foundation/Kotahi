@@ -530,7 +530,7 @@ export const GET_GROUPS = gql`
           ${fileFields}
         }
         flaxSiteUrl
-		translationOverrides
+    		translationOverrides
       }
     }
   }

@@ -36,7 +36,6 @@ const components = [
   './server/xsweet',
   './server/model-email-templates/src',
   './server/flax-site',
-  './server/model-group/src',
   './server/reference/src',
   './server/model-article-templates/src',
   './server/cms-upload',
