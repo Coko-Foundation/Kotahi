@@ -1069,10 +1069,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@coko/server@4.4.0":
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/@coko/server/-/server-4.4.0.tgz#3b5154ec4a682863febe292ac4d882c2a90323c1"
-  integrity sha512-KXrAYioXseCWLeY47JlHBJtuO/H4t+zf6TMccgq2bak2Z+xdr3O9gWVKkOQkvNy0yWF8ketBw69A50fFxmTYyw==
+"@coko/server@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@coko/server/-/server-4.6.0.tgz#028e76ab567116e10c7b84d79016a1a64fdda12c"
+  integrity sha512-14ThcqQK486hlYc/9kVuyoKFZrgUoG1PkkPv+h0E5CpZrwiMS3NVmPwmRmi+K5rbg//K/2vAi3zqf+es85ZqNw==
   dependencies:
     "@apollo/server" "^4.10.4"
     "@aws-sdk/client-s3" "^3.577.0"
