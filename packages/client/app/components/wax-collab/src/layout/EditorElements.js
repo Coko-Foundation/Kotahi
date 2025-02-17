@@ -33,6 +33,10 @@ const EditorStyles = css`
     & h6:first-child {
       margin-top: 0;
     }
+
+    strong {
+      font-weight: 900;
+    }
   }
 
   .ProseMirror footnote {
