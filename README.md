@@ -37,7 +37,7 @@ You can find our deployment documentation [here](https://kotahi-dev-docs.fly.dev
 ## Running kotahi for development
 
 You can find development documentation [here](https://kotahi-dev-docs.fly.dev/docs/development/Getting%20started).  
-Documentation for underlying coko libraries can be found [here](https://devdocs.coko.app/).
+Documentation for underlying coko libraries can be found [here](https://coko-dev-docs.fly.dev/).
 
 ## Further info
 
