@@ -1,6 +1,5 @@
-const { logger, fileStorage, useTransaction } = require('@coko/server')
+const { logger, fileStorage, useTransaction, File } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@coko/server/src/errors')
-const { parseISO, addSeconds } = require('date-fns')
 const { chunk } = require('lodash')
 
 const Invitation = require('../../../models/invitation/invitation.model')
@@ -512,44 +511,11 @@ const resolvers = {
       return identities
     },
     async profilePicture(parent, args, ctx) {
-      let { id: userId, profilePicture } = parent
-      const file = await cachedGet(`profilePicFileOfUser:${userId}`)
-
-      if (file) {
-        const params = new Proxy(new URLSearchParams(profilePicture), {
-          get: (searchParams, prop) => searchParams.get(prop),
-        })
-
-        const creationDate = parseISO(params['X-Amz-Date'])
-        const expiresInSecs = Number(params['X-Amz-Expires'])
-
-        const expiryDate = addSeconds(creationDate, expiresInSecs)
-        const isExpired = expiryDate < new Date()
-
-        // Re-generate URL only if the previous generated URL expired
-        if (isExpired) {
-          const objectKey = file.storedObjects.find(
-            storedObject => storedObject.type === 'small',
-          ).key
-
-          profilePicture = await fileStorage.getURL(objectKey)
-
-          await User.query().patchAndFetchById(userId, {
-            profilePicture,
-          })
-        }
-
-        return profilePicture
-      }
-
-      const avatarPlaceholder = '/profiles/default_avatar.svg'
-
-      if (profilePicture !== avatarPlaceholder) {
-        profilePicture = avatarPlaceholder
-        await User.query().patchAndFetchById(userId, { profilePicture })
-      }
-
-      return profilePicture
+      if (!parent.profilePicture) return null
+      const file = await File.query().findById(parent.profilePicture)
+      const small = file.getStoredObjectBasedOnType('small')
+      const url = fileStorage.getURL(small.key)
+      return url
     },
   },
 }
