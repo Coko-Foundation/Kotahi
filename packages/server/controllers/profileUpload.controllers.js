@@ -23,7 +23,7 @@ const profileUpload = async (userId, filePath) => {
       { trx },
     )
 
-    await User.query(trx).patch({
+    await User.query(trx).findById(userId).patch({
       profilePicture: createdProfilePicture.id,
     })
   })
