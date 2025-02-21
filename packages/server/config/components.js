@@ -8,6 +8,7 @@ const components = [
   ...modelComponents,
   './api/graphql',
   './api/rest/assetUpload',
+  './api/rest/profileUpload',
 
   './server/model-notification/src/',
   './server/model-user/src',
@@ -23,7 +24,6 @@ const components = [
   './server/model-message/src',
   './server/reports/src',
   './server/coar-notify',
-  './server/profile-upload',
   './server/auth-orcid',
   '@coko/server/src/models/file',
   './server/pdfexport',

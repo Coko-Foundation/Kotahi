@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
@@ -56,25 +56,15 @@ const UserPrivilegeAlert = styled.div`
   width: 100%;
 `
 
-const ProfileDropzone = ({
-  profilePicture,
-  replaceAvatarImage,
-  updateProfilePicture,
-  t,
-}) => {
-  const onDrop = useCallback(async acceptedFiles => {
-    await replaceAvatarImage(acceptedFiles)
-    updateProfilePicture()
-  }, [])
+const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
+  const onDrop = acceptedFiles => replaceAvatarImage(acceptedFiles)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      <BigProfileImage
-        src={`${profilePicture}` || `${serverUrl}/profiles/default_avatar.svg`}
-      />
+      <BigProfileImage src={profilePicture} />
       <Button>
         {isDragActive
           ? t('profilePage.Drop it here')
@@ -109,7 +99,6 @@ const Profile = ({
   logoutUser,
   match,
   replaceAvatarImage,
-  updateProfilePicture,
   updateUserEmail,
   updateUsername,
   updateLanguage,
@@ -146,11 +135,15 @@ const Profile = ({
     })
   }
 
+  const profilePicture =
+    user.profilePicture || `${serverUrl}/profiles/default_avatar.svg`
+
   return (
     <ProfileContainer>
       <Modal isOpen={isCurrentUsersOwnProfile && !user.email}>
         <EnterEmail updateUserEmail={updateUserEmail} user={user} />
       </Modal>
+
       <div>
         <HeadingWithAction>
           <Heading>
@@ -158,6 +151,7 @@ const Profile = ({
               ? t('profilePage.Your profile')
               : t('profilePage.Profile: ') + user.username}
           </Heading>
+
           {isCurrentUsersOwnProfile && (
             <Button onClick={() => logoutUser()} primary>
               {t('profilePage.Logout')}
@@ -176,26 +170,21 @@ const Profile = ({
             <div>
               {isCurrentUsersOwnProfile ? (
                 <ProfileDropzone
-                  profilePicture={user.profilePicture}
+                  profilePicture={profilePicture}
                   replaceAvatarImage={replaceAvatarImage}
                   t={t}
-                  updateProfilePicture={updateProfilePicture}
                 />
               ) : (
-                <BigProfileImage
-                  src={
-                    user.profilePicture === null
-                      ? `${serverUrl}/profiles/default_avatar.svg`
-                      : `${serverUrl}${user.profilePicture}`
-                  }
-                />
+                <BigProfileImage src={profilePicture} />
               )}
             </div>
           </SectionRow>
+
           <SectionRow>
             <label>{t('profilePage.ORCID')}</label>{' '}
             <div>{user.defaultIdentity.identifier}</div>
           </SectionRow>
+
           <SectionRow>
             <label htmlFor="2">{t('profilePage.Username')}</label>
             <div>
@@ -206,6 +195,7 @@ const Profile = ({
               )}
             </div>
           </SectionRow>
+
           <SectionRow>
             <label>{t('profilePage.Email')}</label>
             <div>
@@ -216,6 +206,7 @@ const Profile = ({
               )}
             </div>
           </SectionRow>
+
           <SectionRow>
             <label>{t('profilePage.Language')}</label>
             <div>
@@ -232,6 +223,7 @@ const Profile = ({
             </div>
           </SectionRow>
         </SectionContent>
+
         <SectionContent>
           <StyledCheckbox
             checked={hasGlobalChatNotificationOptIn === 'off'}

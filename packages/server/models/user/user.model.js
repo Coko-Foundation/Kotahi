@@ -1,8 +1,11 @@
-const { BaseModel } = require('@coko/server')
 const bcrypt = require('bcrypt')
 const pick = require('lodash/pick')
 const config = require('config')
 const { raw } = require('objection')
+
+const { BaseModel, modelJsonSchemaTypes } = require('@coko/server')
+
+const { idNullable } = modelJsonSchemaTypes
 
 const BCRYPT_COST = config.util.getEnv('NODE_ENV') === 'test' ? 1 : 12
 
@@ -24,8 +27,6 @@ class User extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable global-require */
-    const { File } = require('@coko/server')
-
     const Identity = require('../identity/identity.model')
     const Review = require('../review/review.model')
     /* eslint-enable global-require */
@@ -72,14 +73,6 @@ class User extends BaseModel {
           to: 'reviews.userId',
         },
       },
-      file: {
-        relation: BaseModel.HasOneRelation,
-        modelClass: File,
-        join: {
-          from: 'users.id',
-          to: 'files.objectId',
-        },
-      },
     }
   }
 
@@ -110,7 +103,7 @@ class User extends BaseModel {
             { type: 'null' },
           ],
         },
-        profilePicture: { type: ['string', 'null'] },
+        profilePicture: idNullable,
         lastOnline: {
           anyOf: [
             {
