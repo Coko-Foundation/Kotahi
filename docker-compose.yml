@@ -132,6 +132,7 @@ services:
       - ./packages/server/scripts:/home/node/app/scripts
       - ./packages/server/server:/home/node/app/server
       - ./packages/server/services:/home/node/app/services
+      - ./packages/server/utils:/home/node/app/utils
     healthcheck:
       test:
         ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']

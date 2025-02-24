@@ -1,6 +1,6 @@
-// eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
 const { set, get } = require('lodash')
+
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 const { formatSearchQueryForPostgres } = require('../../utils/searchUtils')

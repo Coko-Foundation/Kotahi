@@ -1,9 +1,10 @@
 /* eslint-disable prefer-destructuring */
 const { ref, raw } = require('objection')
 const axios = require('axios')
-const { map, chunk, orderBy, uniqBy } = require('lodash')
+const { chunk, orderBy, uniqBy } = require('lodash')
 const { subscriptionManager, File } = require('@coko/server')
-const cheerio = require('cheerio')
+
+const sanitizeWaxImages = require('../../../utils/sanitizeWaxImages')
 
 const {
   importManuscripts,
@@ -65,8 +66,6 @@ const {
   getFilesWithUrl,
   replaceImageSrc,
   replaceImageSrcResponsive,
-  base64Images,
-  uploadImage,
 } = require('../../utils/fileStorageUtils')
 
 const {
@@ -288,45 +287,6 @@ const manuscriptAndPublishedManuscriptSharedResolvers = {
   },
 }
 
-/** Modifies the supplied manuscript by replacing all inlined base64 images
- *  with actual images stored to file storage */
-const uploadAndConvertBase64ImagesInManuscript = async manuscript => {
-  const { source } = manuscript.meta
-
-  if (typeof source === 'string') {
-    const images = base64Images(source)
-
-    if (images.length > 0) {
-      const uploadedImages = await Promise.all(
-        map(images, async image => {
-          const uploadedImage = await uploadImage(image, manuscript.id)
-          return uploadedImage
-        }),
-      )
-
-      const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
-
-      const $ = cheerio.load(source)
-
-      map(images, (image, index) => {
-        const elem = $('img').get(image.index)
-        const $elem = $(elem)
-        $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-        $elem.attr('alt', uploadedImagesWithUrl[index].name)
-        $elem.attr(
-          'src',
-          uploadedImagesWithUrl[index].storedObjects.find(
-            storedObject => storedObject.type === 'medium',
-          ).url,
-        )
-      })
-
-      // eslint-disable-next-line no-param-reassign
-      manuscript.meta.source = $.html()
-    }
-  }
-}
-
 const commonUpdateManuscript = async (id, input, ctx) => {
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
   if (msDelta.submission?.$doi?.startsWith('https://doi.org/'))
@@ -385,7 +345,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   if (isSettingFirstLabels && !updatedMs.tasks.length)
     await populateTemplatedTasksForManuscript(id)
 
-  await uploadAndConvertBase64ImagesInManuscript(updatedMs)
+  updatedMs.meta.source = await sanitizeWaxImages(updatedMs.meta.source)
 
   // convert to json, otherwise you're bypassing validation
   return Manuscript.query().updateAndFetchById(id, updatedMs.$toJson())
@@ -552,7 +512,7 @@ const resolvers = {
         { relate: true },
       )
 
-      await uploadAndConvertBase64ImagesInManuscript(manuscript)
+      manuscript.meta.source = await sanitizeWaxImages(manuscript.meta.source)
 
       const updatedManuscript = await Manuscript.query().updateAndFetchById(
         manuscript.id,
