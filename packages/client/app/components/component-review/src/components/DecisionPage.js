@@ -280,15 +280,16 @@ const DecisionPage = ({ currentUser, match }) => {
   )
 
   const [assignAuthorForProofing] = useMutation(ASSIGN_AUTHOR_FOR_PROOFING, {
-    update: (cache, { data: { assignAuthoForProofingManuscript } }) => {
+    update: (cache, { data: { assignAuthorForProofingManuscript } }) => {
       cache.modify({
         id: cache.identify({
           __typename: 'Manuscript',
-          id: assignAuthoForProofingManuscript.id,
+          id: assignAuthorForProofingManuscript.id,
         }),
         fields: {
-          status: () => assignAuthoForProofingManuscript.status,
-          authorFeedback: () => assignAuthoForProofingManuscript.authorFeedback,
+          status: () => assignAuthorForProofingManuscript.status,
+          authorFeedback: () =>
+            assignAuthorForProofingManuscript.authorFeedback,
         },
       })
     },

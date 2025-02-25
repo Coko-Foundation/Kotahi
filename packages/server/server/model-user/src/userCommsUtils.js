@@ -6,7 +6,7 @@ const Invitation = require('../../../models/invitation/invitation.model')
 
 const {
   getEditorIdsForManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const emailService = require('../../../services/emailNotifications.service')
 const handlebarsService = require('../../../services/handlebars.service')

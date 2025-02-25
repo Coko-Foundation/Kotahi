@@ -13,7 +13,7 @@ const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 const {
   getFieldsMapForTemplating,
-} = require('../../model-manuscript/src/manuscriptUtils')
+} = require('../../../controllers/manuscript/manuscriptUtils')
 
 let allDocmapsScheme
 

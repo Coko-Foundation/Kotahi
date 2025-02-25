@@ -7,11 +7,11 @@ const ScheduleManager = require('./scheduleManager')
 const {
   importManuscripts,
   importManuscriptsFromSemanticScholar,
-} = require('../model-manuscript/src/importManuscripts')
+} = require('../../controllers/manuscript/importManuscripts')
 
 const {
   archiveOldManuscripts,
-} = require('../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   createNewTaskAlerts,

@@ -1,7 +1,7 @@
 const gql = require('graphql-tag')
 const { createGraphqlTestServer, migrationManager } = require('@coko/server')
 
-const { Group, User, Manuscript, Team, Config } = require('../../../models')
+const { Group, User, Manuscript, Team, Config } = require('../../../../models')
 
 const gqlServer = createGraphqlTestServer()
 

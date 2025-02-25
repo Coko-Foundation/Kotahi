@@ -1,13 +1,13 @@
 const config = require('config')
 const { subscriptionManager } = require('@coko/server')
 
-const Config = require('../../../models/config/config.model')
+const Config = require('../../models/config/config.model')
 
-const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
-const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
-const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
-const importArticlesFromSemanticScholar = require('../../import-articles/semantic-scholar-papers-import')
-const { runImports } = require('../../plugins/imports')
+const importArticlesFromBiorxiv = require('../../server/import-articles/biorxiv-import')
+const importArticlesFromBiorxivWithFullTextSearch = require('../../server/import-articles/biorxiv-full-text-import')
+const importArticlesFromPubmed = require('../../server/import-articles/pubmed-import')
+const importArticlesFromSemanticScholar = require('../../server/import-articles/semantic-scholar-papers-import')
+const { runImports } = require('../../server/plugins/imports')
 
 const importsInProgress = new Set()
 
