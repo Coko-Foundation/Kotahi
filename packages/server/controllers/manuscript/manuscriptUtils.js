@@ -1,16 +1,22 @@
-// eslint-disable-next-line import/no-unresolved
 const Handlebars = require('handlebars')
 const { set, get } = require('lodash')
-const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
-const { ensureJsonIsParsed } = require('../../utils/objectUtils')
-const { formatSearchQueryForPostgres } = require('../../utils/searchUtils')
-const { getPublishableTextFromValue } = require('../../utils/fieldFormatUtils')
+
+const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
+const { ensureJsonIsParsed } = require('../../server/utils/objectUtils')
+
+const {
+  formatSearchQueryForPostgres,
+} = require('../../server/utils/searchUtils')
+
+const {
+  getPublishableTextFromValue,
+} = require('../../server/utils/fieldFormatUtils')
 
 const {
   getStartOfDay,
   getEndOfDay,
   compactStringToDate,
-} = require('../../utils/dateUtils')
+} = require('../../server/utils/dateUtils')
 
 const URI_SEARCH_PARAM = 'search'
 

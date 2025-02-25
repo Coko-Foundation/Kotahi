@@ -6,6 +6,7 @@ const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
 const groupResolvers = require('./group/group.resolvers')
 const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 const localContextResolvers = require('./localContext/localContext.resolvers')
+const manuscriptResolvers = require('./manuscript/manuscript.resolvers')
 const notificationResolvers = require('./notification/notification.resolvers')
 const openAiResolvers = require('./openAi/openAi.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
@@ -18,6 +19,7 @@ const typeDefFilePaths = [
   'group/group.graphql',
   'handlebars/handlebars.graphql',
   'localContext/localContext.graphql',
+  'manuscript/manuscript.graphql',
   'notification/notification.graphql',
   'openAi/openAi.graphql',
   'orcid/orcid.graphql',
@@ -40,6 +42,7 @@ const resolvers = merge(
   groupResolvers,
   handlebarsResolvers,
   localContextResolvers,
+  manuscriptResolvers,
   notificationResolvers,
   openAiResolvers,
   orcidResolvers,

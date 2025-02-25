@@ -1,0 +1,368 @@
+extend type Query {
+  globalTeams: [Team]
+  manuscript(id: ID!): Manuscript!
+  manuscripts: [Manuscript]!
+  paginatedManuscripts(
+    offset: Int
+    limit: Int
+    sort: ManuscriptsSort
+    filters: [ManuscriptsFilter!]!
+    timezoneOffsetMinutes: Int
+    archived: Boolean!
+    groupId: ID!
+  ): PaginatedManuscripts
+  manuscriptsUserHasCurrentRoleIn(
+    reviewerStatus: String
+    wantedRoles: [String]!
+    offset: Int
+    limit: Int
+    sort: ManuscriptsSort
+    filters: [ManuscriptsFilter!]!
+    timezoneOffsetMinutes: Int
+    groupId: ID!
+    searchInAllVersions: Boolean!
+  ): PaginatedManuscripts
+  publishedManuscripts(
+    sort: String
+    offset: Int
+    limit: Int
+    groupId: ID!
+  ): PaginatedManuscripts
+  validateDOI(doiOrUrl: String): validateDOIResponse
+  validateSuffix(suffix: String, groupId: ID!): validateDOIResponse
+
+  """
+  Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit.
+  """
+  manuscriptsPublishedSinceDate(
+    startDate: DateTime
+    limit: Int
+    offset: Int
+    groupName: String
+  ): [PublishedManuscript!]!
+  """
+  Get a published manuscript by ID, or null if this manuscript is not published or not found
+  """
+  publishedManuscript(id: ID!): PublishedManuscript
+  unreviewedPreprints(token: String!, groupName: String): [Preprint!]!
+  doisToRegister(id: ID!): [String]
+  getManuscriptsData(selectedManuscripts: [ID!]!): [ManuscriptExport!]!
+  versionsOfManuscriptCurrentUserIsReviewerOf(manuscriptId: ID!): [ID!]!
+}
+
+input ManuscriptsFilter {
+  field: String!
+  value: String!
+}
+
+input ManuscriptsSort {
+  field: String!
+  isAscending: Boolean!
+}
+
+type validateDOIResponse {
+  isDOIValid: Boolean
+}
+
+type PaginatedManuscripts {
+  totalCount: Int
+  manuscripts: [Manuscript]
+}
+
+extend type Subscription {
+  manuscriptsImportStatus: Boolean
+}
+
+extend type Mutation {
+  createManuscript(input: ManuscriptInput): Manuscript!
+  updateManuscript(id: ID!, input: String): Manuscript!
+  submitManuscript(id: ID!, input: String): Manuscript!
+  submitAuthorProofingFeedback(id: ID!, input: String): Manuscript!
+  makeDecision(id: ID!, decision: String): Manuscript!
+  deleteManuscript(id: ID!): ID!
+  deleteManuscripts(ids: [ID]!): [ID]!
+  reviewerResponse(currentUserId: ID, action: String, teamId: ID!): Team
+  assignTeamEditor(id: ID!, input: String): [Team]
+  addReviewer(
+    manuscriptId: ID!
+    userId: ID!
+    invitationId: ID
+    isCollaborative: Boolean!
+  ): Team
+  removeReviewer(manuscriptId: ID!, userId: ID!): Team
+  publishManuscript(id: ID!): PublishingResult!
+  createNewVersion(id: ID!): Manuscript
+  importManuscripts(groupId: ID!): Boolean!
+  setShouldPublishField(
+    manuscriptId: ID!
+    objectId: ID!
+    fieldName: String!
+    shouldPublish: Boolean!
+  ): Manuscript!
+  archiveManuscript(id: ID!): ID!
+  archiveManuscripts(ids: [ID]!): [ID!]!
+  unarchiveManuscripts(ids: [ID]!): [ID!]!
+  assignAuthorForProofingManuscript(id: ID!): Manuscript!
+}
+
+type Manuscript {
+  id: ID!
+  parentId: ID
+  created: DateTime!
+  firstVersionCreated: DateTime!
+  updated: DateTime
+  manuscriptVersions: [Manuscript]
+  shortId: Int!
+  files: [File]
+  teams: [Team]
+  reviews: [Review]
+  status: String
+  decision: String
+  authors: [Author]
+  meta: ManuscriptMeta
+  submission: String
+  channels: [Channel]
+  submitter: User
+  submittedDate: DateTime
+  published: DateTime
+  publishedArtifacts: [PublishedArtifact!]!
+  formFieldsToPublish: [FormFieldsToPublish!]!
+  searchRank: Float
+  searchSnippet: String
+  importSourceServer: String
+  tasks: [Task!]
+  hasOverdueTasksForUser: Boolean
+  invitations: [Invitation]
+  authorFeedback: ManuscriptAuthorFeeback
+  rolesFound: [String!]
+}
+
+type ReviewExport {
+  created: DateTime!
+  updated: DateTime
+  username: String
+  isDecision: Boolean
+  isHiddenReviewerName: Boolean
+  isHiddenFromAuthor: Boolean
+  isCollaborative: Boolean!
+  isLock: Boolean!
+  jsonData: String
+}
+
+type ManuscriptExport {
+  versionIdentifier: Int!
+  created: DateTime!
+  updated: DateTime
+  manuscriptVersions: [ManuscriptExport]
+  shortId: Int!
+  teams: [Team]
+  reviews: [ReviewExport]
+  decisions: [ReviewExport]
+  status: String
+  decision: String
+  authors: [Author]
+  submission: String
+  importSourceServer: String
+}
+
+input ManuscriptInput {
+  files: [FileInput]
+  meta: ManuscriptMetaInput
+  submission: String
+  groupId: ID!
+}
+
+input ManuscriptMetaInput {
+  source: String
+  comments: String
+}
+
+type PublishingResult {
+  manuscript: Manuscript
+  steps: [PublishingStepResult]!
+}
+
+type PublishingStepResult {
+  stepLabel: String!
+  succeeded: Boolean!
+  errorMessage: String
+}
+
+input FileInput {
+  name: String!
+  storedObjects: [StoredObjectInput!]!
+  tags: [String]!
+}
+
+input ImageMetadataInput {
+  width: Int!
+  height: Int!
+  space: String
+  density: Int
+}
+
+input StoredObjectInput {
+  type: ImageSizeInput!
+  key: String!
+  size: Int
+  mimetype: String!
+  extension: String!
+  imageMetadata: ImageMetadataInput
+}
+
+enum ImageSizeInput {
+  original
+  full
+  medium
+  small
+}
+
+type Author {
+  firstName: String
+  lastName: String
+  email: String
+  affiliation: String
+}
+
+type PreviousVersionUser {
+  userName: String!
+  id: ID!
+}
+
+type PreviousVersion {
+  source: String
+  title: String
+  user: PreviousVersionUser!
+  created: DateTime!
+}
+
+type ManuscriptMeta {
+  title: String
+  source: String
+  comments: String
+  abstract: String
+  subjects: [String]
+  history: [MetaDate]
+  manuscriptId: ID
+  previousVersions: [PreviousVersion]
+}
+
+type ManuscriptAuthorFeeback {
+  text: String
+  fileIds: [String!]
+  submitter: User
+  edited: DateTime
+  submitted: DateTime
+  assignedAuthors: [AssignedAuthor!]
+  previousSubmissions: [previousSubmission!]
+}
+
+type AssignedAuthor {
+  authorId: ID!
+  authorName: String!
+  assignedOnDate: DateTime!
+}
+
+type previousSubmission {
+  text: String!
+  fileIds: [String!]
+  submitter: User
+  edited: DateTime
+  submitted: DateTime!
+}
+
+type Preprint {
+  id: ID!
+  shortId: Int!
+  title: String!
+  abstract: String
+  authors: [Author!]!
+  doi: String!
+  uri: String!
+}
+
+type ArticleId {
+  pubIdType: String
+  id: String
+}
+
+type MetaDate {
+  type: String
+  date: DateTime
+}
+
+type Note {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  notesType: String
+  content: String
+}
+
+type FormFieldsToPublish {
+  objectId: ID!
+  fieldsToPublish: [String!]!
+}
+
+"""
+A simplified Manuscript object containing only relevant fields for publishing
+"""
+type PublishedManuscript {
+  id: ID!
+  shortId: Int!
+  files: [File]
+  status: String
+  meta: ManuscriptMeta
+  submission: String!
+  submissionWithFields: String
+  supplementaryFiles: String
+  publishedArtifacts: [PublishedArtifact!]!
+  publishedDate: DateTime
+  printReadyPdfUrl: String
+  styledHtml: String
+  css: String
+  decision: String
+  totalCount: Int
+  editors: [Editor!]
+  reviews: [PublishedReview!]
+  decisions: [PublishedReview!]
+}
+
+type PublishedReview {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  isDecision: Boolean
+  open: Boolean
+  users: [ReviewUser!]!
+  isHiddenFromAuthor: Boolean
+  isCollaborative: Boolean
+  isLock: Boolean
+  isHiddenReviewerName: Boolean
+  isSharedWithCurrentUser: Boolean!
+  canBePublishedPublicly: Boolean!
+  jsonData: String
+  userId: String
+  files: [File]
+}
+
+type Editor {
+  id: ID
+  name: String!
+  role: String!
+}
+
+type ReviewUser {
+  id: ID
+  username: String
+  defaultIdentity: ReviewIdentity
+}
+
+type ReviewIdentity {
+  id: ID
+  name: String
+  aff: String # JATS <aff>
+  email: String # JATS <aff>
+  type: String
+  identifier: String
+}

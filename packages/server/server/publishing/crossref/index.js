@@ -15,7 +15,7 @@ const Group = require('../../../models/group/group.model')
 
 const {
   getEditorIdsForManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   getReviewForm,

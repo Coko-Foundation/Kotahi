@@ -15,7 +15,6 @@ const components = [
   './server/model-cms/src',
   './server/model-article-import-sources/src/',
   './server/model-article-import-history/src/',
-  './server/model-manuscript/src/',
   './server/model-invitations/src/',
   './server/model-file/src/',
   './server/model-review/src/',

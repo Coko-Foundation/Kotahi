@@ -7,7 +7,7 @@ const TeamMember = require('../../../models/teamMember/teamMember.model')
 
 const {
   isLatestVersionOfManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   addUserToManuscriptChatChannel,

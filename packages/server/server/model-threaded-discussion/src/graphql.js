@@ -4,7 +4,7 @@ const Config = require('../../../models/config/config.model')
 
 const {
   getIdOfLatestVersionOfManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   getUsersById,
