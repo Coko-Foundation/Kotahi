@@ -3,7 +3,7 @@ const cheerio = require('cheerio')
 
 const { createFile, request, logger } = require('@coko/server')
 
-const { isValidURL } = require('./generic')
+const { getExtensionFromMimetype, isValidURL } = require('./generic')
 
 class WaxImageSanitizerError extends Error {
   constructor(message) {
@@ -62,7 +62,7 @@ const sanitizeWaxImages = async (content, manuscriptId) => {
       if (src && isURL && !isBase64 && !fileId) {
         logger.info(`Wax image sanitizer: Downloading image from url: ${src}`)
 
-        let fileStream
+        let fileStream, extension
 
         try {
           const response = await request({
@@ -71,6 +71,17 @@ const sanitizeWaxImages = async (content, manuscriptId) => {
           })
 
           fileStream = response.data
+
+          const mimetype = response.headers.get('Content-Type').split(';')[0]
+          const isImage = mimetype.match(/^image\//)
+
+          if (!isImage) {
+            throw new WaxImageSanitizerError(
+              `Attempted to create image file from src ${src}, but mimetype is ${mimetype}`,
+            )
+          }
+
+          extension = getExtensionFromMimetype(mimetype)
         } catch (e) {
           throw new WaxImageSanitizerError(
             `Failed to download image from ${src}`,
@@ -78,7 +89,6 @@ const sanitizeWaxImages = async (content, manuscriptId) => {
         }
 
         const raw = await crypto.randomBytes(16)
-        const extension = src.split('/').pop().split('.').pop()
         const filename = `${raw.toString('hex')}.${extension}`
 
         const createdFile = await createFile(
