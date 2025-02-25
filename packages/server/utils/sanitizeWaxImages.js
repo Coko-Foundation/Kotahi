@@ -1,13 +1,36 @@
 const crypto = require('crypto')
 const cheerio = require('cheerio')
 
-const { createFile } = require('@coko/server')
+const { createFile, request, logger } = require('@coko/server')
+
+const { isValidURL } = require('./generic')
+
+class WaxImageSanitizerError extends Error {
+  constructor(message) {
+    super(message)
+
+    this.message = `Wax Image Sanitizer: ${this.message}`
+    this.name = 'WaxImageSanitizerError'
+  }
+}
+
+/**
+ * Find images in content and
+ * - capture src urls without a file id (ie. pasted images from url)
+ * - capture base64 images without a file id
+ *
+ * Captured images are uploaded to s3 and a new file is created.
+ * The new file id is stored on the image.
+ *
+ * Src urls are considered ephemeral and are deleted.
+ * New src urls will be created on read from s3.
+ */
 
 const sanitizeWaxImages = async (content, manuscriptId) => {
   if (!content) return content
 
   if (typeof content !== 'string') {
-    throw new Error('Wax image sanitizer: Content needs to be an HTML string!')
+    throw new WaxImageSanitizerError('Content needs to be an HTML string!')
   }
 
   const $ = cheerio.load(content)
@@ -29,14 +52,48 @@ const sanitizeWaxImages = async (content, manuscriptId) => {
 
       const base64Match = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
       const isBase64 = !!base64Match
+      const isURL = isValidURL(src)
 
-      if (!isBase64 && !fileId) {
-        throw new Error(
-          'Wax image sanitizer: No file id on an image that is not base 64!',
-        )
+      if (!fileId && !isURL && !isBase64) {
+        throw new WaxImageSanitizerError(`Invalid src ${src}`)
       }
 
-      if (isBase64) {
+      // where src is a url, most likely pasted
+      if (src && isURL && !isBase64 && !fileId) {
+        logger.info(`Wax image sanitizer: Downloading image from url: ${src}`)
+
+        let fileStream
+
+        try {
+          const response = await request({
+            url: src,
+            responseType: 'stream',
+          })
+
+          fileStream = response.data
+        } catch (e) {
+          throw new WaxImageSanitizerError(
+            `Failed to download image from ${src}`,
+          )
+        }
+
+        const raw = await crypto.randomBytes(16)
+        const extension = src.split('/').pop().split('.').pop()
+        const filename = `${raw.toString('hex')}.${extension}`
+
+        const createdFile = await createFile(
+          fileStream,
+          filename,
+          null,
+          null,
+          ['manuscriptImage'],
+          manuscriptId,
+        )
+
+        element.attr('data-fileid', createdFile.id)
+      }
+
+      if (isBase64 && !fileId) {
         const raw = await crypto.randomBytes(16)
         const extension = base64Match[0].split('/')[1]
         const filename = `${raw.toString('hex')}.${extension}`

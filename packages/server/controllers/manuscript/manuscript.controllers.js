@@ -402,7 +402,10 @@ const createManuscript = async (userId, input) => {
     { relate: true },
   )
 
-  manuscript.meta.source = await sanitizeWaxImages(manuscript.meta.source)
+  manuscript.meta.source = await sanitizeWaxImages(
+    manuscript.meta.source,
+    manuscript.id,
+  )
 
   const updatedManuscript = await Manuscript.query().updateAndFetchById(
     manuscript.id,
@@ -2022,7 +2025,10 @@ const updateManuscript = async (id, input) => {
     await populateTemplatedTasksForManuscript(id)
 
   if (msDelta.meta?.source) {
-    updatedMs.meta.source = await sanitizeWaxImages(updatedMs.meta.source)
+    updatedMs.meta.source = await sanitizeWaxImages(
+      updatedMs.meta.source,
+      updatedMs.id,
+    )
   }
 
   // convert to json, otherwise you're bypassing validation
