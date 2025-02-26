@@ -67,7 +67,6 @@
     "qrcode-svg": "^1.1.0",
     "sharp": "^0.29.3",
     "striptags": "^3.1.1",
-    "superagent": "^3.8.3",
     "turndown": "^7.0.0",
     "ws": "^8.18.0",
     "xml-js": "^1.6.11",

@@ -7,7 +7,7 @@ const config = require('config')
 
 const { uuid } = require('@coko/server')
 
-const fetchUserDetails = require('../../auth-orcid/fetchUserDetails')
+const { fetchUserDetails } = require('../../../controllers/orcid.controllers')
 
 const User = require('../../../models/user/user.model')
 
