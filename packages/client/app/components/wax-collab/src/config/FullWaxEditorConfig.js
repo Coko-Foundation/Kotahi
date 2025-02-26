@@ -99,7 +99,9 @@ const fullWaxEditorConfig = (
         'Notes',
         'Tables',
         'Images',
+
         'ToggleAi',
+        'FindAndReplaceTool',
         'TrackingAndEditing',
         'FullScreen',
       ],

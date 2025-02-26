@@ -108,6 +108,7 @@ const productionWaxEditorConfig = (
         'Tables',
         'Images',
         'ToggleAi',
+        'FindAndReplaceTool',
         'TrackingAndEditing',
         'FullScreen',
       ],

@@ -1,6 +1,6 @@
 {
   "name": "kotahi",
-  "version": "2025.02.17-0",
+  "version": "2025.02.26-0",
   "private": true,
   "description": "Kotahi - open journals",
   "repository": {
@@ -21,9 +21,9 @@
     "prosemirror-view": "1.30.2",
     "react": "17",
     "react-router-dom": "5.2.0",
-    "wax-prosemirror-core": "0.9.66",
-    "wax-prosemirror-services": "0.9.66",
-    "wax-table-service": "0.9.66"
+    "wax-prosemirror-core": "0.9.70",
+    "wax-prosemirror-services": "0.9.70",
+    "wax-table-service": "0.9.70"
   },
   "dependencies": {
     "@apollo/client": "3.10.1",
@@ -101,9 +101,9 @@
     "styled-components": "^5.2.3",
     "turndown": "^7.0.0",
     "uuid": "^8.3.2",
-    "wax-prosemirror-core": "0.9.66",
-    "wax-prosemirror-services": "0.9.66",
-    "wax-table-service": "0.9.66",
+    "wax-prosemirror-core": "0.9.70",
+    "wax-prosemirror-services": "0.9.70",
+    "wax-table-service": "0.9.70",
     "xpub-journal": "0.1.0",
     "xpub-validators": "0.0.28",
     "y-prosemirror": "1.2.0",
