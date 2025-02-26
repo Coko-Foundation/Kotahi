@@ -1291,6 +1291,9 @@ const ru = {
       'Internal name': 'Значение',
       'Enter name': 'Введите значение',
       'Add another option': 'Добавить другой параметр',
+      'Add options from a JSON file': 'Добавить параметры из файла JSON',
+      dropDownDescription:
+        "Загрузите JSON-файл, содержащий список полей. Каждое поле должно быть объектом с 'ключом' internalName (уникальный идентификатор поля) и 'значением' label (отображаемое имя).",
       'Delete this option': 'Убрать этот параметр',
       validateInputPlaceholder: 'Выбрать',
       'Field parse': 'Парсинг',
