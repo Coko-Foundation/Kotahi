@@ -8,8 +8,9 @@ const components = [
   ...modelComponents,
   './api/graphql',
   './api/rest/assetUpload',
-  './api/rest/profileUpload',
+  './api/rest/cmsUpload',
   './api/rest/orcid',
+  './api/rest/profileUpload',
 
   './server/model-notification/src/',
   './server/model-user/src',
@@ -37,7 +38,6 @@ const components = [
   './server/flax-site',
   './server/reference/src',
   './server/model-article-templates/src',
-  './server/cms-upload',
   './server/model-publishing-collection/src',
 ]
 
