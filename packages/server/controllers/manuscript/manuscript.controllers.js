@@ -26,6 +26,18 @@ const {
 } = require('./manuscriptUtils')
 
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
+const { getActiveForms } = require('../../server/model-form/src/formCommsUtils')
+const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
+const { cachedGet } = require('../../server/querycache')
+const seekEvent = require('../../services/notification.service')
+const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
+const { publishToDatacite } = require('../../server/publishing/datacite')
+const { publishToDOAJ } = require('../../server/publishing/doaj')
+const publishToGoogleSpreadSheet = require('../../server/publishing/google-spreadsheet')
+const { tryPublishDocMaps } = require('../../server/publishing/docmaps')
+const { rebuildCMSSite } = require('../../server/flax-site/flax-api')
+const { sendAnnouncementNotification } = require('../coar/coar.controllers')
+const { sendAnnouncementNotificationToSciety } = require('../coar/sciety')
 
 const {
   getPublishableReviewFields,
@@ -37,10 +49,6 @@ const {
   getDecisionForm,
   getSubmissionForm,
 } = require('../../server/model-review/src/reviewCommsUtils')
-
-const { getActiveForms } = require('../../server/model-form/src/formCommsUtils')
-
-const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
 
 const {
   deepMergeObjectsReplacingArrays,
@@ -64,12 +72,6 @@ const {
   importManuscriptsFromSemanticScholar,
 } = require('./importManuscripts')
 
-const { cachedGet } = require('../../server/querycache')
-
-const seekEvent = require('../../services/notification.service')
-
-const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
-
 const {
   getThreadedDiscussionsForManuscript,
 } = require('../../server/model-threaded-discussion/src/threadedDiscussionCommsUtils')
@@ -86,24 +88,6 @@ const {
   doiIsAvailable,
   doiExists,
 } = require('../../server/publishing/crossref')
-
-const { publishToDatacite } = require('../../server/publishing/datacite')
-
-const { publishToDOAJ } = require('../../server/publishing/doaj')
-
-const publishToGoogleSpreadSheet = require('../../server/publishing/google-spreadsheet')
-
-const { tryPublishDocMaps } = require('../../server/publishing/docmaps')
-
-const { rebuildCMSSite } = require('../../server/flax-site/flax-api')
-
-const {
-  sendAnnouncementNotification,
-} = require('../../server/coar-notify/coar-notify')
-
-const {
-  sendAnnouncementNotificationToSciety,
-} = require('../../server/coar-notify/sciety')
 
 const {
   getFilesWithUrl,

@@ -1,7 +1,6 @@
-const axios = require('axios')
 const config = require('config')
 
-const { serverUrl } = require('@coko/server')
+const { serverUrl, request } = require('@coko/server')
 
 const Group = require('../../models/group/group.model')
 const Review = require('../../models/review/review.model')
@@ -108,7 +107,7 @@ const makeAnnouncementOnCOAR = async (notification, manuscript) => {
   }
 
   try {
-    const response = await axios({
+    const response = await request({
       method: 'post',
       url: inboxUrl,
       headers: {

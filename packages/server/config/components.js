@@ -4,10 +4,12 @@ const modelComponents = require('../models/modelComponents')
 const components = [
   '@coko/server/src/models/team',
   '@coko/server/src/models/teamMember',
-
   ...modelComponents,
+
   './api/graphql',
+
   './api/rest/assetUpload',
+  './api/rest/coar',
   './api/rest/cmsUpload',
   './api/rest/orcid',
   './api/rest/profileUpload',
@@ -24,7 +26,6 @@ const components = [
   './server/model-channel/src',
   './server/model-message/src',
   './server/reports/src',
-  './server/coar-notify',
   '@coko/server/src/models/file',
   './server/pdfexport',
   './server/jatsexport',

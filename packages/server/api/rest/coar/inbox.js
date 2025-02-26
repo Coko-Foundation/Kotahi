@@ -1,13 +1,19 @@
-const Group = require('../../models/group/group.model')
+const { logger } = require('@coko/server')
 
-const { processNotification, validateIPs } = require('./coar-notify')
+const { Group } = require('../../../models')
+
+const {
+  processNotification,
+  validateIPs,
+} = require('../../../controllers/coar/coar.controllers')
 
 module.exports = async app => {
   app.post('/api/coar/inbox/:group', async (req, res) => {
     const payload = req.body
     const groupName = req.params.group
-    const group = await Group.query().findOne({ name: groupName })
     const requestIP = req.socket.localAddress.split(':').pop()
+
+    const group = await Group.query().findOne({ name: groupName })
 
     if (!group) {
       return res.status(404).send({ message: 'Group not found' })
@@ -21,7 +27,7 @@ module.exports = async app => {
       const result = await processNotification(group, payload, req)
       return res.status(result.status).send({ message: result.message })
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       return res.status(500).send({ message: 'Failed to create notification.' })
     }
   })

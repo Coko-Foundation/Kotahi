@@ -1,5 +1,4 @@
-const axios = require('axios')
-const { serverUrl, uuid } = require('@coko/server')
+const { serverUrl, uuid, request, logger } = require('@coko/server')
 
 const {
   getFlaxUrl,
@@ -85,7 +84,7 @@ const sendAnnouncementNotificationToSciety = async manuscript => {
   }
 
   try {
-    const response = await axios({
+    const response = await request({
       method: 'post',
       url: inboxUrl,
       headers: {
@@ -96,7 +95,7 @@ const sendAnnouncementNotificationToSciety = async manuscript => {
 
     return response ? response.data : false
   } catch (err) {
-    console.error(err)
+    logger.error(err)
     return false
   }
 }
