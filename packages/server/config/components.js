@@ -4,6 +4,7 @@ const modelComponents = require('../models/modelComponents')
 const components = [
   '@coko/server/src/models/team',
   '@coko/server/src/models/teamMember',
+  '@coko/server/src/models/file',
   ...modelComponents,
 
   './api/graphql',
@@ -26,14 +27,12 @@ const components = [
   './server/model-channel/src',
   './server/model-message/src',
   './server/reports/src',
-  '@coko/server/src/models/file',
   './server/pdfexport',
   './server/jatsexport',
   './server/model-threaded-discussion/src/',
   './server/model-task/src',
   './server/model-published-artifact/src',
   './server/model-docmap/src',
-  './server/config/src',
   './server/xsweet',
   './server/model-email-templates/src',
   './server/flax-site',

@@ -1,8 +1,8 @@
 const appConfig = require('config')
 
 const Group = require('../models/group/group.model')
-const { stripSensitiveInformation } = require('../server/utils/configUtils')
-const { getConfigJsonString } = require('../server/config/src/configObject')
+const { stripSensitiveInformation } = require('./config/configUtils')
+const { getConfigJsonString } = require('./config/configObject')
 
 const groupByName = async (_, { name }, ctx) => {
   const group = await Group.findOne({

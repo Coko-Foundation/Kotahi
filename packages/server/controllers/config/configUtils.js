@@ -1,5 +1,5 @@
 const schedule = require('node-schedule')
-const { initiateJobSchedules } = require('./jobUtils')
+const { initiateJobSchedules } = require('../../server/utils/jobUtils')
 
 const redact = str => {
   return str && str.replace(/./g, '*')

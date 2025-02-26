@@ -1,7 +1,13 @@
 const { useTransaction, logger } = require('@coko/server')
 
 const Config = require('../config.model')
-const brandConfig = require('../../../server/config/src/brandConfig.json')
+
+const brandConfig = {
+  logoPath: '/logo-kotahi.png',
+  primaryColor: '#3AAE2A',
+  secondaryColor: '#9e9e9e',
+  brandName: 'Kotahi',
+}
 
 exports.up = async knex => {
   try {

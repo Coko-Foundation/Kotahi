@@ -3,6 +3,7 @@ const path = require('path')
 const merge = require('lodash/merge')
 
 const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
+const configResolvers = require('./config/config.resolvers')
 const groupResolvers = require('./group/group.resolvers')
 const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 const localContextResolvers = require('./localContext/localContext.resolvers')
@@ -16,6 +17,7 @@ const teamResolvers = require('./team/team.resolvers')
 
 const typeDefFilePaths = [
   'anyStyle/anyStyle.graphql',
+  'config/config.graphql',
   'group/group.graphql',
   'handlebars/handlebars.graphql',
   'localContext/localContext.graphql',
@@ -39,6 +41,7 @@ const typeDefs = createTotalTypeDefs(typeDefFilePaths)
 const resolvers = merge(
   {},
   anyStyleResolvers,
+  configResolvers,
   groupResolvers,
   handlebarsResolvers,
   localContextResolvers,

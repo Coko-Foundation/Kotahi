@@ -1,0 +1,26 @@
+extend type Query {
+  config(id: ID!): Config!
+  oldConfig: String!
+}
+
+extend type Mutation {
+  updateConfig(id: ID!, input: ConfigInput): Config!
+}
+
+type Config {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  formData: String!
+  active: Boolean!
+  logo: File
+  icon: File
+  groupId: ID!
+  flaxSiteUrl: String
+  translationOverrides: String
+}
+
+input ConfigInput {
+  formData: String!
+  active: Boolean!
+}
