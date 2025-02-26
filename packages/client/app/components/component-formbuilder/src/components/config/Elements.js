@@ -12,6 +12,9 @@ const textfield = {
 const optionfield = {
   component: 'OptionsField',
   defaultValue: [],
+  props: {
+    description: i18next.t('formBuilder.dropDownDescription'),
+  },
 }
 
 const editorfield = {

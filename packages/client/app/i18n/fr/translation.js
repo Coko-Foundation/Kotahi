@@ -494,6 +494,8 @@ const fr = {
       Logo: 'Logo',
       Favicon: 'Icône de favori',
       Dashboard: 'Tableau de bord',
+      ReviewAssignmentsColumnFields:
+        'Champs de colonne des affectations de révision',
       landingPage:
         "Page d'accueil pour les utilisateurs du gestionnaire de groupe après la connexion",
       'Dashboard Page': 'Page du tableau de bord',
@@ -1312,6 +1314,10 @@ const fr = {
       'Internal name': 'Nom interne',
       'Enter name': 'Entrer un nom...',
       'Add another option': 'Ajouter une autre option',
+      'Add options from a JSON file':
+        "Ajouter des options à partir d'un fichier JSON",
+      dropDownDescription:
+        "Téléchargez un fichier JSON contenant une liste de champs. Chaque champ doit être un objet avec comme 'clé' le internalName (un identifiant unique pour le champ) et comme valeur le label (le nom affiché).",
       'Delete this option': 'Supprimer cette option',
       validateInputPlaceholder: 'Sélectionner...',
       'Field parse': 'Analyse spéciale',

@@ -1,0 +1,19 @@
+extend type Query {
+  group(id: ID!): Group!
+  groups: [Group]!
+  groupByName(name: String!): Group!
+}
+
+type Group {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  name: String!
+  isArchived: Boolean!
+  oldConfig: String!
+  configs: [Config!]!
+}
+
+input GroupInput {
+  name: String!
+}

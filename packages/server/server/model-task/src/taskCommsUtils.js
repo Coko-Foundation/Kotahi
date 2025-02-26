@@ -18,7 +18,7 @@ const {
   manuscriptIsActive,
   getEditorIdsForManuscript,
   getIdOfLatestVersionOfManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
   const manuscript = await Manuscript.query()

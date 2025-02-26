@@ -18,7 +18,7 @@ module.exports = [
     execute: async () => {
       const config = require('config')
       const { clientUrl } = require('@coko/server')
-      const { setConfig } = require('../server/config/src/configObject')
+      const { setConfig } = require('../controllers/config/configObject')
 
       setConfig({
         journal: config.journal,

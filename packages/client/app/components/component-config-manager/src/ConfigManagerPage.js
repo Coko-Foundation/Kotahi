@@ -7,6 +7,8 @@ import {
   createFileMutation,
   deleteFileMutation,
 } from '../../component-cms-manager/src/queries'
+
+import getSubmissionForm from './ConfigManager.queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import ConfigManagerForm from './ConfigManagerForm'
 
@@ -59,12 +61,21 @@ const ConfigManagerPage = ({ match, ...props }) => {
   const [deleteFile] = useMutation(deleteFileMutation)
   const [updateConfigStatus, setUpdateConfigStatus] = useState(null)
 
+  const { data: metadata, loading: loadingMetadata } = useQuery(
+    getSubmissionForm,
+    {
+      variables: {
+        groupId: config.groupId,
+      },
+    },
+  )
+
   const { loading, error, data } = useQuery(GET_CONFIG_AND_EMAIL_TEMPLATES, {
     variables: { id: config?.id },
     fetchPolicy: 'network-only',
   })
 
-  if (loading && !data) return <Spinner />
+  if ((loading && !data) || (!metadata && loadingMetadata)) return <Spinner />
 
   if (error) return <CommsErrorBanner error={error} />
 
@@ -86,6 +97,15 @@ const ConfigManagerPage = ({ match, ...props }) => {
     return response
   }
 
+  const { submissionForm = {} } = metadata || {}
+
+  const form = submissionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
   return (
     <ConfigManagerForm
       config={data.config}
@@ -95,6 +115,7 @@ const ConfigManagerPage = ({ match, ...props }) => {
       disabled={!data.config.active}
       emailTemplates={data.emailTemplates}
       formData={JSON.parse(data.config.formData)}
+      submissionForm={form}
       updateConfig={updateConfig}
       updateConfigStatus={updateConfigStatus}
     />

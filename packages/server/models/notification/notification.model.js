@@ -14,6 +14,8 @@ const {
 const EmailTemplate = require('../emailTemplate/emailTemplate.model')
 const Group = require('../group/group.model')
 
+// REFACTOR: MODELS
+
 const eventsSource = require('../../services/notification/eventsSource')
 
 const recipientType = {

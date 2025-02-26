@@ -7,7 +7,7 @@ const config = require('config')
 
 const { uuid } = require('@coko/server')
 
-const fetchUserDetails = require('../../auth-orcid/fetchUserDetails')
+const { fetchUserDetails } = require('../../../controllers/orcid.controllers')
 
 const User = require('../../../models/user/user.model')
 
@@ -15,7 +15,7 @@ const Group = require('../../../models/group/group.model')
 
 const {
   getEditorIdsForManuscript,
-} = require('../../model-manuscript/src/manuscriptCommsUtils')
+} = require('../../../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   getReviewForm,

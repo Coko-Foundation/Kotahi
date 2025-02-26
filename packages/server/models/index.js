@@ -12,6 +12,7 @@ const CmsFileTemplate = require('./cmsFileTemplate/cmsFileTemplate.model')
 const CmsLayout = require('./cmsLayout/cmsLayout.model')
 const CmsPage = require('./cmsPage/cmsPage.model')
 const CoarNotification = require('./coarNotification/coarNotification.model')
+const CollaborativeDoc = require('./collaborative-doc/collaborativeDoc.model')
 const Config = require('./config/config.model')
 const Docmap = require('./docmap/docmap.model')
 const EmailTemplate = require('./emailTemplate/emailTemplate.model')
@@ -22,6 +23,7 @@ const Identity = require('./identity/identity.model')
 const Invitation = require('./invitation/invitation.model')
 const Manuscript = require('./manuscript/manuscript.model')
 const Message = require('./message/message.model')
+const Notification = require('./notification/notification.model')
 const NotificationDigest = require('./notificationDigest/notificationDigest.model')
 const NotificationUserOption = require('./notificationUserOption/notificationUserOption.model')
 const PublishedArtifact = require('./publishedArtifact/publishedArtifact.model')
@@ -35,8 +37,6 @@ const Team = require('./team/team.model')
 const TeamMember = require('./teamMember/teamMember.model')
 const ThreadedDiscussion = require('./threadedDiscussion/threadedDiscussion.model')
 const User = require('./user/user.model')
-const CollaborativeDoc = require('./collaborative-doc/collaborativeDoc.model')
-const Notification = require('./notification/notification.model')
 
 module.exports = {
   ArticleImportHistory,
@@ -49,6 +49,7 @@ module.exports = {
   CmsLayout,
   CmsPage,
   CoarNotification,
+  CollaborativeDoc,
   Config,
   Docmap,
   EmailTemplate,
@@ -59,6 +60,7 @@ module.exports = {
   Invitation,
   Manuscript,
   Message,
+  Notification,
   NotificationDigest,
   NotificationUserOption,
   PublishedArtifact,
@@ -72,6 +74,4 @@ module.exports = {
   TeamMember,
   ThreadedDiscussion,
   User,
-  CollaborativeDoc,
-  Notification,
 }

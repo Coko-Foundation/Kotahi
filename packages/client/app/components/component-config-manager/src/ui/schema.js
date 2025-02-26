@@ -2,6 +2,7 @@
 // NOTE: If you're modifying the schema here, ensure updating those changes to the files 'packages/client/config/sampleConfigFormData.js' and 'packages/server/scripts/seedConfig.js' as well.
 import React from 'react'
 import BrandIcon from './BrandIcon'
+import ListSubmissionFields from './ListSubmissionFields'
 
 import { Select } from '../../../pubsweet'
 import { ColorPicker } from '../../../shared'
@@ -48,6 +49,7 @@ export const generateSchemas = ({
   defaultAuthorProofingSubmittedTemplate,
   t,
   logoAndFavicon,
+  submissionOptions,
 }) => {
   const schemas = { data: {}, ui: {} }
 
@@ -215,6 +217,17 @@ export const generateSchemas = ({
                 ],
               },
               uniqueItems: true,
+            },
+            tableColumns: {
+              description: t('configPage.ReviewAssignmentsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Short ID' },
+                { value: 'submission.$title', label: 'Title' },
+              ],
             },
           },
         },
@@ -1319,6 +1332,17 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            tableColumns: {
+              description: t('configPage.ReviewAssignmentsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Short ID' },
+                { value: 'submission.$title', label: 'Title' },
+              ],
+            },
           },
         },
         manuscript: {
@@ -2420,6 +2444,17 @@ export const generateSchemas = ({
                 ],
               },
               uniqueItems: true,
+            },
+            tableColumns: {
+              description: t('configPage.ReviewAssignmentsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Short ID' },
+                { value: 'submission.$title', label: 'Title' },
+              ],
             },
           },
         },
@@ -3548,6 +3583,17 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            tableColumns: {
+              description: t('configPage.ReviewAssignmentsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Short ID' },
+                { value: 'submission.$title', label: 'Title' },
+              ],
+            },
           },
         },
         manuscript: {
@@ -4580,6 +4626,16 @@ export const generateSchemas = ({
       dashboard: {
         showSections: {
           'ui:widget': 'checkboxes',
+        },
+        tableColumns: {
+          'ui:widget': props => {
+            return (
+              <ListSubmissionFields
+                submissionOptions={submissionOptions}
+                {...props}
+              />
+            )
+          },
         },
       },
       controlPanel: {

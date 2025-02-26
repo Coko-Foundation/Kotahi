@@ -300,7 +300,7 @@ const resolvers = {
     async addResourceToFolder(_, { id, type }, ctx) {
       const parent = await CMSFileTemplate.query().findOne({ id })
 
-      const name = type ? 'new folder' : 'new file'
+      const name = type ? 'new folder' : 'new file.njk'
 
       const insertedResource = await CMSFileTemplate.query()
         .insertGraph({

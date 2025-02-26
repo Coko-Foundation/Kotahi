@@ -104,10 +104,6 @@ const queryFunctions = {
     const User = require('../../models/user/user.model')
     return User.relatedQuery('defaultIdentity').for(userId).first()
   },
-  profilePicFileOfUser: async userId => {
-    const User = require('../../models/user/user.model')
-    return User.relatedQuery('file').for(userId).first()
-  },
   // TODO: rename this otherVersionsOfMs
   subVersionsOfMs: async manuscriptId => {
     const Manuscript = require('../../models/manuscript/manuscript.model')

@@ -489,6 +489,8 @@ const esLa = {
       Logo: 'Logotipo',
       Favicon: 'Favicon',
       Dashboard: 'Panel de Control',
+      ReviewAssignmentsColumnFields:
+        'Campos de columna de revisión de asignaciones',
       landingPage:
         'Página de Inicio para Usuarios del Gerente de Grupo al Iniciar Sesión',
       'Dashboard Page': 'Página de Inicio del Panel de Control',
@@ -1299,6 +1301,9 @@ const esLa = {
       'Internal name': 'Nombre interno',
       'Enter name': 'Ingresar nombre...',
       'Add another option': 'Agregar otra opción',
+      'Add options from a JSON file': 'Agregar opciones desde un archivo JSON',
+      dropDownDescription:
+        "Sube un archivo JSON que contenga una lista de campos. Cada campo debe ser un objeto con 'clave' como internalName (un identificador único para el campo) y 'valor' como label (el nombre visible).",
       'Delete this option': 'Eliminar esta opción',
       validateInputPlaceholder: 'Seleccionar...',
       'Field parse': 'Análisis especial',

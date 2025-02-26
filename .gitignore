@@ -42,3 +42,5 @@ packages/server/config/translation
 packages/devdocs/build
 packages/devdocs/.docusaurus
 packages/devdocs/.cache-loader
+
+packages/server/scripts/local

@@ -91,25 +91,18 @@ const UPDATE_GLOBAL_CHAT_NOTIFICATION_OPTION = gql`
 `
 
 const ProfilePage = ({ currentUser, match }) => {
-  const replaceAvatarImage = async acceptedFiles => {
-    const body = new FormData()
-    body.append('file', acceptedFiles[0])
-
-    await fetch(`${serverUrl}/api/uploadProfile`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body,
-    })
-  }
-
   const { id } = match.params
 
   const { urlFrag } = useContext(ConfigContext)
   const [didLogout, setDidLogout] = useState(false)
 
-  const { loading, error, data, client, refetch } = useQuery(GET_USER, {
+  const {
+    loading,
+    error,
+    data,
+    client,
+    refetch: refetchUser,
+  } = useQuery(GET_USER, {
     variables: { id: id || currentUser?.id },
     fetchPolicy: 'network-only',
   })
@@ -127,6 +120,21 @@ const ProfilePage = ({ currentUser, match }) => {
     UPDATE_GLOBAL_CHAT_NOTIFICATION_OPTION,
   )
 
+  const replaceAvatarImage = acceptedFiles => {
+    const body = new FormData()
+    body.append('file', acceptedFiles[0])
+
+    fetch(`${serverUrl}/api/uploadProfile`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+      body,
+    }).then(() => {
+      refetchUser()
+    })
+  }
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -143,7 +151,6 @@ const ProfilePage = ({ currentUser, match }) => {
   }
 
   // This is a bridge between the fetch results and the Apollo cache/state
-  const updateProfilePicture = () => refetch()
 
   const { user } = data
 
@@ -160,7 +167,6 @@ const ProfilePage = ({ currentUser, match }) => {
       replaceAvatarImage={replaceAvatarImage}
       updateGlobalChatNotificationOptIn={updateGlobalChatNotificationOptIn}
       updateLanguage={updateLanguage}
-      updateProfilePicture={updateProfilePicture}
       updateUserEmail={updateUserEmail}
       updateUsername={updateUsername}
       user={user}

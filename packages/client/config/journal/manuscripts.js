@@ -21,12 +21,18 @@ const ownerColumns = [
   'authorProofingLink',
 ]
 
-const reviewerColumns = [
-  'shortId',
-  'submission.$title',
-  'reviewerStatusBadge',
-  'reviewerLinks',
-]
+const reviewerColumns = columns => {
+  if (columns.length === 0) {
+    return [
+      'shortId',
+      'submission.$title',
+      'reviewerStatusBadge',
+      'reviewerLinks',
+    ]
+  }
+
+  return columns.concat(['reviewerStatusBadge', 'reviewerLinks'])
+}
 
 module.exports = {
   editorColumns,
