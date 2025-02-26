@@ -116,6 +116,7 @@ const authorProofingWaxEditorConfig = (
         'Notes',
         'Tables',
         'Images',
+        'FindAndReplaceTool',
         'TrackingAndEditing',
         'FullScreen',
       ],
