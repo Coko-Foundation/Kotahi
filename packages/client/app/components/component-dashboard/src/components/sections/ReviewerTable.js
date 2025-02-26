@@ -72,9 +72,11 @@ const ReviewerTable = ({
     currentSearchQuery,
   }
 
+  const rColumn = (config.dashboard?.tableColumns || []).map(tc => tc.value)
+
   const columnsProps = buildColumnDefinitions(
     config,
-    reviewerColumns,
+    reviewerColumns(rColumn),
     fieldDefinitions,
     specialComponentValues,
     displayProps,

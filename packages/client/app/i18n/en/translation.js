@@ -490,6 +490,7 @@ const en = {
       Logo: 'Logo',
       Favicon: 'Favicon',
       Dashboard: 'Dashboard',
+      ReviewAssignmentsColumnFields: 'Review Assignments Column Fields',
       landingPage: 'Landing page for Group Manager users upon login',
       'Dashboard Page': 'Dashboard Page',
       'Manuscript Page': 'Manuscript Page',
