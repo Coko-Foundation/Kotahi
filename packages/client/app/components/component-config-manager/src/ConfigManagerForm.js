@@ -165,6 +165,7 @@ const ConfigManagerForm = ({
   configId,
   disabled,
   formData: passedFormData,
+  submissionForm,
   deleteFile,
   createFile,
   config,
@@ -200,6 +201,11 @@ const ConfigManagerForm = ({
     updateConfigStatus !== 'pending' &&
     Object.values(pendingChanges).every(change => !change)
 
+  const submissionOptions = submissionForm.children.map(item => ({
+    value: item.name,
+    label: item.title,
+  }))
+
   const schemas = useMemo(() => {
     return generateSchemas({
       deleteFile,
@@ -207,6 +213,7 @@ const ConfigManagerForm = ({
       config,
       t,
       logoAndFavicon,
+      submissionOptions,
       ...emailOptions,
     })
   }, [])
