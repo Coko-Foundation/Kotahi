@@ -1270,6 +1270,9 @@ const en = {
       'Internal name': 'Internal name',
       'Enter name': 'Enter name...',
       'Add another option': 'Add another option',
+      'Add options from a JSON file': 'Add options from a JSON file',
+      dropDownDescription:
+        'Upload a JSON file containing a list of fields. Each field should be an object with "key" the internalName (a unique identifier for the field) and value the  label (the display name)',
       'Delete this option': 'Delete this option',
       validateInputPlaceholder: 'Select...',
       'Field parse': 'Special parsing',

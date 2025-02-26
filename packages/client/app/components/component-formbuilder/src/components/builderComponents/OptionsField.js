@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { FieldArray } from 'formik'
 import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { useDropzone } from 'react-dropzone'
 import { TextField, ValidatedFieldFormik, Button } from '../../../../pubsweet'
 import { DeleteControl } from '../../../../shared'
+import { color } from '../../../../../theme'
 
 const Inline = styled.div`
   display: inline-block;
@@ -35,7 +37,24 @@ const InlineDefaultValue = styled.div`
 
 const UnbulletedList = styled.ul`
   list-style-type: none;
+  margin-bottom: 10px;
   padding-left: 0;
+`
+
+const LiControlOptions = styled.li`
+  button,
+  div {
+    display: inline-block;
+    margin-left: 10px;
+  }
+`
+
+const ErrorMessageWrapper = styled.span`
+  color: ${color.error.base};
+  display: block;
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+  margin-left: 10px;
 `
 
 const InlineColorPicker = styled(Inline)`
@@ -85,6 +104,61 @@ const ColorPicker = ({ name, value, onChange }) => {
       type="color"
       value={value || defaultLabelColor}
     />
+  )
+}
+
+const FileReaderComponent = ({ push, setFieldValue }) => {
+  const [error, setError] = useState(null)
+  const { t } = useTranslation()
+
+  const onDrop = useCallback(acceptedFiles => {
+    const file = acceptedFiles[0]
+
+    if (file) {
+      const reader = new FileReader()
+
+      reader.onload = event => {
+        const content = event.target.result
+
+        try {
+          const options = JSON.parse(content)
+          setFieldValue('options', [])
+          options.forEach(option => {
+            const value = Object.keys(option)[0]
+            const label = option[value]
+            push({ value, label })
+          })
+
+          setError(null)
+        } catch (e) {
+          setError('Please select a valid JSON file.')
+        }
+      }
+
+      reader.readAsText(file)
+    }
+  }, [])
+
+  const { getRootProps, getInputProps, open } = useDropzone({
+    accept: ['application/json'], // Browser filtering
+    onDrop,
+    noClick: true,
+    noKeyboard: true,
+    multiple: false,
+  })
+
+  return (
+    <div>
+      <div className="container">
+        <div {...getRootProps({ className: 'dropzone' })}>
+          <input {...getInputProps()} />
+          <Button onClick={open} plain type="button">
+            {t('formBuilder.Add options from a JSON file')}
+          </Button>
+        </div>
+      </div>
+      {error && <ErrorMessageWrapper>{error}</ErrorMessageWrapper>}
+    </div>
   )
 }
 
@@ -181,7 +255,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
           </OptionsRow>
         </li>
       ))}
-      <li>
+      <LiControlOptions>
         <Button
           disabled={hasNewOption}
           onClick={() => push()}
@@ -190,7 +264,8 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
         >
           {t('formBuilder.Add another option')}
         </Button>
-      </li>
+        <FileReaderComponent push={push} setFieldValue={setFieldValue} />
+      </LiControlOptions>
     </UnbulletedList>
   )
 }
