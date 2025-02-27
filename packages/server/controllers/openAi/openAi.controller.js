@@ -11,7 +11,7 @@ const EMBEDDINGS_ENDPOINT = 'https://api.openai.com/v1/embeddings'
 const IMAGES_ENDPOINT = 'https://api.openai.com/v1/images/generations'
 const DALL_E_MODEL = 'dall-e-3'
 const EMBEDDINGS_MODEL = 'text-embedding-3-small'
-const GPT_MODEL = 'gpt-4o'
+const GPT_MODEL = 'gpt-4o-mini'
 
 const getHeaders = async CHAT_GPT_KEY => {
   return {

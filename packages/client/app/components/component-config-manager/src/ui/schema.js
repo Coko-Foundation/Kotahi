@@ -128,6 +128,11 @@ export const generateSchemas = ({
                       title: 'Use on Production editor',
                       default: true,
                     },
+                    AiSubmission: {
+                      type: 'boolean',
+                      title: 'Use on new submission',
+                      default: false,
+                    },
                     AiFreeTextPrompts: {
                       type: 'boolean',
                       title: 'Enable free text prompts',
@@ -1239,6 +1244,11 @@ export const generateSchemas = ({
                       type: 'boolean',
                       title: 'Use on Production editor',
                       default: true,
+                    },
+                    AiSubmission: {
+                      type: 'boolean',
+                      title: 'Use on new submission',
+                      default: false,
                     },
                     AiFreeTextPrompts: {
                       type: 'boolean',
@@ -2352,6 +2362,11 @@ export const generateSchemas = ({
                       type: 'boolean',
                       title: 'Use on Production editor',
                       default: true,
+                    },
+                    AiSubmission: {
+                      type: 'boolean',
+                      title: 'Use on new submission',
+                      default: false,
                     },
                     AiFreeTextPrompts: {
                       type: 'boolean',
@@ -3490,6 +3505,11 @@ export const generateSchemas = ({
                       type: 'boolean',
                       title: 'Use on Production editor',
                       default: true,
+                    },
+                    AiSubmission: {
+                      type: 'boolean',
+                      title: 'Use on new submission',
+                      default: false,
                     },
                     AiFreeTextPrompts: {
                       type: 'boolean',

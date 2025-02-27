@@ -182,7 +182,8 @@
       "name": "submission.$title",
       "placeholder": "Enter the manuscript's title",
       "permitPublishing": "always",
-      "hideFromReviewers": "false"
+      "hideFromReviewers": "false",
+      "aiPrompt": "Main title of the manuscript"
     },
     {
       "title": "Author names",
@@ -190,7 +191,8 @@
       "component": "AuthorsInput",
       "name": "submission.$authors",
       "permitPublishing": "always",
-      "hideFromReviewers": "false"
+      "hideFromReviewers": "false",
+      "aiPrompt": "Authors of the manuscript"
     },
     {
       "title": "Dois",
@@ -244,7 +246,8 @@
       "description": "<p>Please provide a short summary of your submission</p>",
       "placeholder": "Input your abstract...",
       "permitPublishing": "always",
-      "hideFromReviewers": "false"
+      "hideFromReviewers": "false",
+      "aiPrompt": "Abstract"
     },
     {
       "title": "Author correspondence ",

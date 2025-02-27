@@ -50,6 +50,7 @@ const typeDefs = `
     hideFromAuthors: String
     permitPublishing: String
     publishingTag: String
+    aiPrompt: String
     readonly: Boolean
   }
 
@@ -109,6 +110,7 @@ const typeDefs = `
     hideFromAuthors: String
     permitPublishing: String
     publishingTag: String
+    aiPrompt: String
     readonly: Boolean
   }
 
