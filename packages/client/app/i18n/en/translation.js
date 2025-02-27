@@ -1262,6 +1262,7 @@ const en = {
       'Field hideFromAuthors': 'Hide from authors?',
       'Field permitPublishing': 'Include when sharing or publishing?',
       'Field publishingTag': 'Hypothesis tag',
+      'Field aiPrompt': 'AI prompt',
       'FieldDescription publishingTag':
         'You may specify a tag to use when sharing this field as a Hypothesis annotation.',
       'Label to display': 'Label to display',

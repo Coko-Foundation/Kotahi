@@ -85,22 +85,38 @@ const getValuesPaddedWithDefaults = (
 }
 
 /** Remove any field properties that may have been disabled by configuration,
- * such as the Hypothesis tag.
+ * such as the Hypothesis tag and AI prompt.
  */
+
+// Utility function to filter properties based on a key and condition
+const filterProps = (props, key, shouldAllow) => {
+  return Object.fromEntries(
+    Object.entries(props).filter(([propKey]) => propKey !== key || shouldAllow),
+  )
+}
+
 const filterOutPropsDisabledByConfig = (
   fieldOpts,
   shouldAllowHypothesisTagging,
+  shouldAllowAiPrompt,
 ) =>
   fieldOpts.map(opt => ({
     ...opt,
     componentOptions: opt.componentOptions.map(x => {
-      const props = Object.fromEntries(
-        Object.entries(x.props).filter(
-          ([key]) => key !== 'publishingTag' || shouldAllowHypothesisTagging,
-        ),
+      // Filter properties based on the conditions sequentially
+      const propsAfterHypothesisTagging = filterProps(
+        x.props,
+        'publishingTag',
+        shouldAllowHypothesisTagging,
       )
 
-      return { ...x, props }
+      const finalProps = filterProps(
+        propsAfterHypothesisTagging,
+        'aiPrompt',
+        shouldAllowAiPrompt,
+      )
+
+      return { ...x, props: finalProps }
     }),
   }))
 
@@ -114,6 +130,7 @@ const FieldSettingsModal = ({
   category,
   field,
   onSubmit,
+  shouldAllowAiPrompt,
   shouldAllowHypothesisTagging,
   isOpen,
   onClose,
@@ -127,6 +144,7 @@ const FieldSettingsModal = ({
   const fieldOpts = filterOutPropsDisabledByConfig(
     fieldOptionsByCategory[category],
     shouldAllowHypothesisTagging,
+    shouldAllowAiPrompt,
   )
     .filter(fieldOpt => !usesReservedName(fieldOpt, reservedFieldNames))
     .map(fieldOpt => ({

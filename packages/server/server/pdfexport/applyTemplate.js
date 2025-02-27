@@ -1,11 +1,13 @@
 const path = require('path')
 const fs = require('fs-extra').promises
 const nunjucks = require('nunjucks')
+const { logger } = require('@coko/server')
 // const cheerio = require('cheerio')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 const articleMetadata = require('./pdfTemplates/articleMetadata')
 const makeSvgsFromLatex = require('../jatsexport/makeSvgsFromLatex')
 const { updateSrcUrl } = require('../utils/fileStorageUtils')
+const njkFilters = require('./pdfTemplates/njkFilters')
 
 // const fixMathTags = html => {
 //   const $ = cheerio.load(html)
@@ -46,10 +48,10 @@ const generateCss = async noPagedJs => {
       `${userTemplatePath}/textStyles.css`,
     )
 
-    console.error('Using user-defined text styles.')
+    logger.error('Using user-defined text styles.')
     outputCss += userCssBuffer.toString()
   } catch {
-    console.error('No user text stylesheet found')
+    logger.error('No user text stylesheet found')
   }
 
   if (!noPagedJs) {
@@ -58,10 +60,10 @@ const generateCss = async noPagedJs => {
         `${userTemplatePath}/pagedJsStyles.css`,
       )
 
-      console.error('Using user-defined PagedJS styles.')
+      logger.error('Using user-defined PagedJS styles.')
       outputCss += userCssBuffer.toString()
     } catch {
-      console.error('No user PagedJS stylesheet found')
+      logger.error('No user PagedJS stylesheet found')
 
       const pagedCssBuffer = await fs.readFile(
         `${defaultTemplatePath}/pagedJsStyles.css`,
@@ -71,7 +73,7 @@ const generateCss = async noPagedJs => {
     }
   }
 
-  // console.log('textStyles.css: ', outputCss)
+  // logger.log('textStyles.css: ', outputCss)
   return outputCss
 }
 
@@ -85,6 +87,11 @@ const userTemplateEnv = nunjucks.configure(userTemplatePath, {
   cache: false,
 })
 
+Object.entries(njkFilters).forEach(([name, filterFn]) => {
+  defaultTemplateEnv.addFilter(name, filterFn)
+  userTemplateEnv.addFilter(name, filterFn)
+})
+
 const applyTemplate = async (
   { articleData, groupData, activeConfig },
   includeFontLinks,
@@ -95,6 +102,7 @@ const applyTemplate = async (
   }
 
   let template = {}
+  let env = defaultTemplateEnv
 
   try {
     // if there is a group template use that
@@ -107,10 +115,12 @@ const applyTemplate = async (
     } else {
       // If there is a user template, use that instead
       template = userTemplateEnv.getTemplate('article.njk')
+      env = userTemplateEnv
     }
   } catch (e) {
-    console.error('No user template found, using default')
+    logger.error('No user template found, using default')
     template = defaultTemplateEnv.getTemplate('article.njk')
+    env = defaultTemplateEnv
   }
 
   const thisArticle = articleData
@@ -119,7 +129,7 @@ const applyTemplate = async (
   const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
 
   // add the metadata coming from the config of Kotahi
-  // console.log("this config", activeConfig.crossref)
+  // logger.log("this config", activeConfig.crossref)
   thisArticle.config = {
     groupIdentity: activeConfig.formData.groupIdentity,
     publishing: {
@@ -136,19 +146,25 @@ const applyTemplate = async (
 
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.articleMetadata = articleMetadata(thisArticle)
-  // console.log('thisArticle.articleMetadata: ', thisArticle.articleMetadata)
+  // logger.log('thisArticle.articleMetadata: ', thisArticle.articleMetadata)
 
-  let renderedHtml = nunjucks.renderString(template.tmplStr, {
-    article: thisArticle,
-  })
+  const templateContext = { article: thisArticle }
+
+  let renderedHtml
+
+  if (template.tmplStr) {
+    renderedHtml = env.renderString(template.tmplStr, templateContext)
+  } else {
+    renderedHtml = template.render(templateContext)
+  }
 
   if (includeFontLinks) {
     renderedHtml = renderedHtml.replace(
       '</head>',
       `<link rel="preconnect" href="https://fonts.googleapis.com">
-			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-			<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,700;1,300;1,700&display=swap" rel="stylesheet">
-	</head>`,
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,300;0,700;1,300;1,700&display=swap" rel="stylesheet">
+    </head>`,
     )
   }
 

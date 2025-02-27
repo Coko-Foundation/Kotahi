@@ -94,6 +94,7 @@ const FormBuilderLayout = ({
   updateField,
   setSelectedFieldId,
   setSelectedFormId,
+  shouldAllowAiPrompt,
   shouldAllowHypothesisTagging,
 }) => {
   const [openModal, setOpenModal] = useState(false)
@@ -299,6 +300,7 @@ const FormBuilderLayout = ({
           })
         }}
         reservedFieldNames={reservedFieldNames}
+        shouldAllowAiPrompt={shouldAllowAiPrompt}
         shouldAllowHypothesisTagging={shouldAllowHypothesisTagging}
       />
 

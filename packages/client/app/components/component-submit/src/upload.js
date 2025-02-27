@@ -1,6 +1,10 @@
 import { gql } from '@apollo/client'
-// import { map } from 'lodash'
 import * as cheerio from 'cheerio'
+
+import {
+  getInitialSubmissionDataForFilePromise,
+  getInitialSubmissionDataWithoutFile,
+} from './aiFormFilling'
 
 const fragmentFields = `
   id
@@ -11,7 +15,6 @@ const fragmentFields = `
 `
 
 const stripTags = file => {
-  // eslint-disable-next-line no-useless-escape
   const reg = /<container id="main">([\s\S]*?)<\/container>/
   return file.match(reg)[1]
 }
@@ -244,19 +247,6 @@ const cleanMath = file => {
   return $.html()
 }
 
-const generateTitle = name =>
-  name
-    .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
-    .replace(/\.[^.]+$/, '') // remove file extension
-
-// TODO: preserve italics (use parse5?)
-const extractTitle = source => {
-  const doc = new DOMParser().parseFromString(source, 'text/html')
-  const heading = doc.querySelector('h1')
-
-  return heading ? heading.textContent : null
-}
-
 const uploadManuscriptMutation = gql`
   mutation ($file: Upload!) {
     uploadFile(file: $file) {
@@ -473,6 +463,7 @@ const createManuscriptPromise = (
   fileURL,
   response,
   config,
+  submission,
 ) => {
   // In the case of a Docx file, response is the HTML
   // In the case of another type of file, response is true/false
@@ -482,12 +473,10 @@ const createManuscriptPromise = (
 
   // We support file-less submissions too
   let source
-  let title
   let files = []
 
   if (file) {
     source = typeof response === 'string' ? response : undefined
-    title = extractTitle(response) || generateTitle(file.name)
     /* eslint-disable-next-line no-param-reassign */
     delete data.uploadFile.storedObjects[0].url
     files = [
@@ -497,14 +486,12 @@ const createManuscriptPromise = (
         tags: ['manuscript'],
       },
     ]
-  } else {
-    title = `New submission ${new Date().toLocaleString()}`
   }
 
   const manuscript = {
     files,
     meta: { source },
-    submission: JSON.stringify({ $title: title }),
+    submission: JSON.stringify(submission),
     groupId: config.groupId,
   }
 
@@ -605,6 +592,20 @@ export default ({
           // console.log('uploadResponse after cleaning: ', uploadResponse.response)
         }
 
+        const aiConfig = {
+          AiOn:
+            config?.groupIdentity?.toggleAi &&
+            config?.groupIdentity?.AiSubmission,
+        }
+
+        const submission = await getInitialSubmissionDataForFilePromise(
+          file,
+          uploadResponse.response,
+          client,
+          config.groupId,
+          aiConfig,
+        )
+
         manuscriptData = await createManuscriptPromise(
           file,
           data,
@@ -613,8 +614,11 @@ export default ({
           uploadResponse.fileURL,
           uploadResponse.response,
           config,
+          submission,
         )
       } else {
+        const submission = getInitialSubmissionDataWithoutFile()
+
         // Create a manuscript without a file
         manuscriptData = await createManuscriptPromise(
           undefined,
@@ -624,6 +628,7 @@ export default ({
           undefined,
           undefined,
           config,
+          submission,
         )
       }
 
@@ -635,6 +640,7 @@ export default ({
         config,
       )
     } catch (error) {
+      console.error('Error uploading document:', error)
       setConversion({ error })
     }
 

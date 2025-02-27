@@ -55,6 +55,7 @@ structure {
     hideFromAuthors
     permitPublishing
     publishingTag
+    aiPrompt
     readonly
   }
 }
@@ -280,6 +281,9 @@ const FormBuilderPage = ({ category }) => {
       selectedFormId={selectedFormId}
       setSelectedFieldId={setSelectedFieldId}
       setSelectedFormId={setSelectedFormId}
+      shouldAllowAiPrompt={
+        config?.groupIdentity?.toggleAi && config?.groupIdentity?.AiSubmission
+      }
       shouldAllowHypothesisTagging={
         config?.publishing?.hypothesis?.shouldAllowTagging
       }
