@@ -1,5 +1,6 @@
-const { Config, Group } = require('../../models')
+const { File } = require('@coko/server')
 
+const { Config, Group } = require('../../models')
 const { getConfigJsonString } = require('./configObject')
 
 const {
