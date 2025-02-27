@@ -1,0 +1,23 @@
+extend type Query {
+  articleTemplate(groupId: ID!, isCms: Boolean!): ArticleTemplate!
+}
+
+extend type Mutation {
+  updateTemplate(id: ID!, input: UpdateTemplateInput!): ArticleTemplate!
+}
+
+type ArticleTemplate {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  name: String
+  article: String!
+  css: String!
+  groupId: ID!
+  files: [File!]
+}
+
+input UpdateTemplateInput {
+  article: String
+  css: String
+}

@@ -35,7 +35,7 @@ const { publishToDatacite } = require('../../server/publishing/datacite')
 const { publishToDOAJ } = require('../../server/publishing/doaj')
 const publishToGoogleSpreadSheet = require('../../server/publishing/google-spreadsheet')
 const { tryPublishDocMaps } = require('../../server/publishing/docmaps')
-const { rebuildCMSSite } = require('../../server/flax-site/flax-api')
+const { rebuildCMSSite } = require('../flax.controllers')
 const { sendAnnouncementNotification } = require('../coar/coar.controllers')
 const { sendAnnouncementNotificationToSciety } = require('../coar/sciety')
 

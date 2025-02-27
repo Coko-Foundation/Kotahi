@@ -1,6 +1,9 @@
-const { healthCheck, rebuildCMSSite } = require('./flax-api')
+const {
+  healthCheck,
+  rebuildCMSSite,
+} = require('../../../controllers/flax.controllers')
 
-const resolvers = {
+module.exports = {
   Query: {
     flaxHealthCheck: async (_, vars, ctx) => {
       let status = 'Nothing'
@@ -31,21 +34,3 @@ const resolvers = {
     },
   },
 }
-
-const typeDefs = `
-
-  extend type Query {
-    flaxHealthCheck : rebuildFlaxSiteResponse
-  }
-
-  extend type Mutation {
-		rebuildFlaxSite(params: String) : rebuildFlaxSiteResponse
-	}
-
-	type rebuildFlaxSiteResponse {
-		status: String!
-		error: String
-	}
-`
-
-module.exports = { resolvers, typeDefs }
