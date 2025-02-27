@@ -18,8 +18,6 @@ const components = [
   './server/model-notification/src/',
   './server/model-user/src',
   './server/model-cms/src',
-  './server/model-article-import-sources/src/',
-  './server/model-article-import-history/src/',
   './server/model-invitations/src/',
   './server/model-file/src/',
   './server/model-review/src/',
@@ -31,13 +29,10 @@ const components = [
   './server/jatsexport',
   './server/model-threaded-discussion/src/',
   './server/model-task/src',
-  './server/model-published-artifact/src',
   './server/model-docmap/src',
   './server/xsweet',
   './server/model-email-templates/src',
-  './server/flax-site',
   './server/reference/src',
-  './server/model-article-templates/src',
   './server/model-publishing-collection/src',
 ]
 

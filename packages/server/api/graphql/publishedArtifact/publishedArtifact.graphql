@@ -1,0 +1,17 @@
+extend type Query {
+  publishedArtifacts(manuscriptId: ID!): [PublishedArtifact!]!
+}
+
+type PublishedArtifact {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  manuscriptId: ID!
+  platform: String!
+  externalId: String
+  title: String
+  content: String
+  hostedInKotahi: Boolean!
+  relatedDocumentUri: String
+  relatedDocumentType: String
+}
