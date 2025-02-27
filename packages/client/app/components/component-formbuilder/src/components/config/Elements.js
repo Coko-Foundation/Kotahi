@@ -314,6 +314,15 @@ const allowFutureDatesOnlyField = {
   defaultValue: 'false',
 }
 
+const aiPromptField = {
+  component: 'TextField',
+  props: {
+    label: 'AI prompt',
+    description:
+      'The prompt should be clear and specific so the AI understands what you want it to do.',
+  },
+}
+
 /** Most fields have at least these properties.
  * Components and fields can override these */
 const prototypeComponent = category => ({
@@ -327,6 +336,7 @@ const prototypeComponent = category => ({
   hideFromReviewers: category === 'review' ? null : hideFromReviewersField,
   permitPublishing: permitPublishingField,
   publishingTag: publishingTagField,
+  aiPrompt: aiPromptField,
 })
 
 /** All properties from all components must appear in this list,
@@ -356,6 +366,7 @@ const propertiesOrder = [
   'hideFromReviewers',
   'permitPublishing',
   'publishingTag',
+  'aiPrompt',
 ]
 
 /** Component types refer to the React component used to represent the field
@@ -421,6 +432,8 @@ const getBaseComponentProperties = category => ({
     hideFromReviewers: hiddenfield,
     permitPublishing: hiddenfield,
     shortDescription: hiddenfield,
+    publishingTag: hiddenfield,
+    aiPrompt: hiddenfield,
   },
   CheckboxGroup: {
     label: 'Checkboxes',
