@@ -1,0 +1,12 @@
+extend type Query {
+  flaxHealthCheck: rebuildFlaxSiteResponse
+}
+
+extend type Mutation {
+  rebuildFlaxSite(params: String): rebuildFlaxSiteResponse
+}
+
+type rebuildFlaxSiteResponse {
+  status: String!
+  error: String
+}

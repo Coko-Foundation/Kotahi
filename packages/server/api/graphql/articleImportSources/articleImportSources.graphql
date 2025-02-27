@@ -1,0 +1,4 @@
+type ArticleImportSources {
+  id: ID!
+  server: String!
+}
