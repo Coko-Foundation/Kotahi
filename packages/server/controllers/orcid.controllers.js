@@ -293,10 +293,17 @@ const handleOrcidOAuthResponse = async user => {
     throw new Error(`Group not found or archived!`)
   }
 
+  const isAlreadyAdmin = await Team.query().withGraphJoined('members').findOne({
+    userId: user.id,
+    objectId: null,
+    global: true,
+    role: 'admin',
+  })
+
   const activeConfig = await Config.getCached(groupId)
 
   // Based on configuration User Management -> All users are assigned Group Manager and Admin roles flag
-  if (activeConfig.formData.user.isAdmin)
+  if (activeConfig.formData.user.isAdmin && !isAlreadyAdmin)
     await addUserToAdminAndGroupAdminTeams(user.id, groupId)
 
   const groupManagerTeam = await Team.query()
