@@ -1,0 +1,22 @@
+type NotificationUserOption {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  userId: ID!
+  objectId: ID
+  path: [String!]!
+  option: String!
+  groupId: ID!
+}
+
+extend type Query {
+  notificationOption(path: [String!]!): NotificationUserOption
+}
+
+extend type Mutation {
+  updateNotificationOption(
+    path: [String!]!
+    option: String!
+  ): NotificationUserOption!
+  reportUserIsActive(path: [String!]!): Boolean
+}

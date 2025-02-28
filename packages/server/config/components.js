@@ -15,7 +15,6 @@ const components = [
   './api/rest/orcid',
   './api/rest/profileUpload',
 
-  './server/model-notification/src/',
   './server/model-user/src',
   './server/model-invitations/src/',
   './server/model-review/src/',

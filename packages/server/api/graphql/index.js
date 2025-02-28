@@ -16,6 +16,7 @@ const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 const localContextResolvers = require('./localContext/localContext.resolvers')
 const manuscriptResolvers = require('./manuscript/manuscript.resolvers')
 const notificationResolvers = require('./notification/notification.resolvers')
+const notificationUserOptionResolvers = require('./notificationUserOption/notificationUserOption.resolvers')
 const openAiResolvers = require('./openAi/openAi.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
 const payloadVerifierResolvers = require('./payloadVerifier/payloadVerifier.resolvers')
@@ -40,6 +41,7 @@ const typeDefFilePaths = [
   'localContext/localContext.graphql',
   'manuscript/manuscript.graphql',
   'notification/notification.graphql',
+  'notificationUserOption/notificationUserOption.graphql',
   'openAi/openAi.graphql',
   'orcid/orcid.graphql',
   'payloadVerifier/payloadVerifier.graphql',
@@ -72,6 +74,7 @@ const resolvers = merge(
   localContextResolvers,
   manuscriptResolvers,
   notificationResolvers,
+  notificationUserOptionResolvers,
   openAiResolvers,
   orcidResolvers,
   payloadVerifierResolvers,

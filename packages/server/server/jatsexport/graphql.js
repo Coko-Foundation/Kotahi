@@ -1,4 +1,5 @@
 const { XMLValidator } = require('fast-xml-parser')
+
 const { makeJats } = require('../utils/jatsUtils')
 const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
