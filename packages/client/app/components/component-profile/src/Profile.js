@@ -59,7 +59,10 @@ const UserPrivilegeAlert = styled.div`
 const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
   const onDrop = acceptedFiles => replaceAvatarImage(acceptedFiles)
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: ['image/jpeg', 'image/png', 'image/webp'],
+    onDrop,
+  })
 
   return (
     <div {...getRootProps()}>
