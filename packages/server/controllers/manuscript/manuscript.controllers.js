@@ -3,6 +3,8 @@ const { chunk, orderBy, uniqBy } = require('lodash')
 const { ref, raw } = require('objection')
 const axios = require('axios')
 
+const { File } = require('@coko/server')
+
 const {
   CoarNotification,
   CollaborativeDoc,
