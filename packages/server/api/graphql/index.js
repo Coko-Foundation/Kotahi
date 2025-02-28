@@ -8,6 +8,7 @@ const channelResolvers = require('./channel/channel.resolvers')
 const cmsResolvers = require('./cms/cms.resolvers')
 const configResolvers = require('./config/config.resolvers')
 const docmapResolvers = require('./docmap/docmap.resolvers')
+const emailTemplateResolvers = require('./emailTemplate/emailTemplate.resolvers')
 const flaxResolvers = require('./flax/flax.resolvers')
 const groupResolvers = require('./group/group.resolvers')
 const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
@@ -30,6 +31,7 @@ const typeDefFilePaths = [
   'cms/cms.graphql',
   'config/config.graphql',
   'docmap/docmap.graphql',
+  'emailTemplate/emailTemplate.graphql',
   'flax/flax.graphql',
   'group/group.graphql',
   'handlebars/handlebars.graphql',
@@ -60,6 +62,7 @@ const resolvers = merge(
   cmsResolvers,
   configResolvers,
   docmapResolvers,
+  emailTemplateResolvers,
   flaxResolvers,
   groupResolvers,
   handlebarsResolvers,

@@ -28,7 +28,6 @@ const components = [
   './server/model-threaded-discussion/src/',
   './server/model-task/src',
   './server/xsweet',
-  './server/model-email-templates/src',
   './server/reference/src',
   './server/model-publishing-collection/src',
 ]
