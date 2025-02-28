@@ -1,0 +1,149 @@
+extend type Query {
+  cmsPage(id: ID!): CMSPage!
+  cmsPages: [CMSPage!]!
+  cmsLayout: CMSLayout!
+  getCmsFilesTree(folderId: ID): CmsFileTree!
+  getCmsFileContent(id: ID!): FileContent!
+  getFoldersList: [FolderView!]
+  getActiveCmsFilesTree: String!
+}
+
+extend type Mutation {
+  createCMSPage(input: CMSPageInput!): CreatePageResponse!
+  updateCMSPage(id: ID!, input: CMSPageInput!): CMSPage!
+  deleteCMSPage(id: ID!): DeletePageResponse!
+  updateCMSLayout(input: CMSLayoutInput!): CMSLayout!
+  addResourceToFolder(id: ID!, type: Boolean!): CmsFileTree!
+  deleteResource(id: ID!): CmsFileTree!
+  renameResource(id: ID!, name: String!): CmsFileTree!
+  updateResource(id: ID!, content: String!): FileContent!
+  updateFlaxRootFolder(id: ID!): FolderView!
+}
+
+type CMSPage {
+  id: ID!
+  url: String!
+  title: String!
+  status: String!
+  content: String
+  meta: String
+  creator: User
+  published: DateTime
+  edited: DateTime
+  created: DateTime!
+  updated: DateTime
+}
+
+type CreatePageResponse {
+  cmsPage: CMSPage
+  success: Boolean!
+  column: String
+  error: String
+  errorMessage: String
+}
+
+type DeletePageResponse {
+  success: Boolean!
+  error: String
+}
+
+type StoredPartner {
+  id: ID!
+  url: String
+  sequenceIndex: Int
+  file: File
+}
+
+type CMSLayout {
+  id: ID!
+  active: Boolean!
+  primaryColor: String!
+  secondaryColor: String!
+  logo: File
+  favicon: File
+  partners: [StoredPartner!]
+  footerText: String
+  isPrivate: Boolean
+  hexCode: String
+  published: DateTime
+  edited: DateTime!
+  created: DateTime!
+  updated: DateTime
+  flaxHeaderConfig: [FlaxPageHeaderConfig!]
+  flaxFooterConfig: [FlaxPageFooterConfig!]
+  publishConfig: String!
+  article: String!
+  css: String!
+  publishingCollection: PublishCollection!
+}
+
+type CmsFileTree {
+  id: ID!
+  name: String!
+  children: [CmsFileTree!]
+  fileId: ID
+  parentId: ID
+  url: String
+}
+
+type FolderView {
+  id: ID!
+  name: String!
+  rootFolder: Boolean!
+}
+
+type FileContent {
+  id: ID!
+  content: String!
+  name: String!
+  url: String!
+}
+
+type FlaxPageHeaderConfig {
+  id: ID!
+  title: String!
+  url: String!
+  sequenceIndex: Int
+  shownInMenu: Boolean
+}
+
+type FlaxPageFooterConfig {
+  id: ID!
+  title: String!
+  url: String!
+  sequenceIndex: Int
+  shownInMenu: Boolean
+}
+
+input CMSPageInput {
+  title: String
+  url: String
+  content: String
+  published: DateTime
+  edited: DateTime
+  flaxHeaderConfig: FlaxConfigInput
+  flaxFooterConfig: FlaxConfigInput
+}
+
+input StoredPartnerInput {
+  id: ID!
+  url: String
+  sequenceIndex: Int
+}
+
+input CMSLayoutInput {
+  primaryColor: String
+  secondaryColor: String
+  logoId: String
+  isPrivate: Boolean
+  hexCode: String
+  partners: [StoredPartnerInput]
+  footerText: String
+  published: DateTime
+  edited: DateTime
+}
+
+input FlaxConfigInput {
+  sequenceIndex: Int
+  shownInMenu: Boolean
+}
