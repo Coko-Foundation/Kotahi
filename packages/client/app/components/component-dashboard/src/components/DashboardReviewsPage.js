@@ -13,6 +13,8 @@ import mutations from '../graphql/mutations'
 import queries from '../graphql/queries'
 import ReviewerTable from './sections/ReviewerTable'
 import { CommsErrorBanner, Spinner } from '../../../shared'
+import { updateMutation } from '../../../component-submit/src/components/SubmitPage'
+import { updateManuscriptMutation } from '../../../component-review/src/components/DecisionPage'
 
 const DashboardReviewsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
@@ -57,6 +59,35 @@ const DashboardReviewsPage = ({ currentUser, history }) => {
     fetchPolicy: 'network-only',
   })
 
+  const [update] = useMutation(updateMutation)
+  const [doUpdateManuscript] = useMutation(updateManuscriptMutation)
+
+  const setReadyToEvaluateLabels = id => {
+    update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            $customStatus: 'readyToEvaluate',
+          },
+        }),
+      },
+    })
+  }
+
+  const unsetCustomStatus = id => {
+    update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            $customStatus: null,
+          },
+        }),
+      },
+    })
+  }
+
   const [updateTab] = useMutation(mutations.updateTab)
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
   const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS_MUTATION)
@@ -76,9 +107,12 @@ const DashboardReviewsPage = ({ currentUser, history }) => {
     <ReviewerTable
       applyQueryParams={applyQueryParams}
       currentUser={currentUser}
+      doUpdateManuscript={doUpdateManuscript}
       manuscriptsUserHasCurrentRoleIn={data.manuscriptsUserHasCurrentRoleIn}
       reviewerRespond={reviewerRespond}
+      setReadyToEvaluateLabels={setReadyToEvaluateLabels}
       submissionForm={data.formForPurposeAndCategory}
+      unsetCustomStatus={unsetCustomStatus}
       updateReviewerStatus={updateReviewerStatus}
       uriQueryParams={uriQueryParams}
     />

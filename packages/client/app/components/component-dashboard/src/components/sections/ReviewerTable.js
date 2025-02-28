@@ -19,9 +19,12 @@ import { ConfigContext } from '../../../../config/src'
 
 const ReviewerTable = ({
   currentUser,
+  doUpdateManuscript,
   manuscriptsUserHasCurrentRoleIn,
   reviewerRespond,
   submissionForm,
+  unsetCustomStatus,
+  setReadyToEvaluateLabels,
   updateReviewerStatus,
   uriQueryParams,
   applyQueryParams,
@@ -57,11 +60,17 @@ const ReviewerTable = ({
       : `${urlFrag}/versions/${manuscript.parentId || manuscript.id}/review`
   }
 
+  const setReadyToEvaluateLabel = id => {
+    return setReadyToEvaluateLabels(id)
+  }
+
   const specialComponentValues = {
     urlFrag,
     currentUser,
     reviewerRespond,
     updateReviewerStatus,
+    setReadyToEvaluateLabel,
+    unsetCustomStatus,
     getMainActionLink,
   }
 
@@ -80,6 +89,7 @@ const ReviewerTable = ({
     fieldDefinitions,
     specialComponentValues,
     displayProps,
+    doUpdateManuscript,
   )
 
   const { t } = useTranslation()

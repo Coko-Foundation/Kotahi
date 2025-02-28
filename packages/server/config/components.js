@@ -22,7 +22,6 @@ const components = [
   './server/model-file/src/',
   './server/model-review/src/',
   './server/model-form/src/',
-  './server/model-channel/src',
   './server/model-message/src',
   './server/reports/src',
   './server/pdfexport',

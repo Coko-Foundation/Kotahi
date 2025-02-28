@@ -4,6 +4,7 @@ const merge = require('lodash/merge')
 
 const anyStyleResolvers = require('./anyStyle/anyStyle.resolvers')
 const articleTemplatesResolvers = require('./articleTemplates/articleTemplates.resolvers')
+const channelResolvers = require('./channel/channel.resolvers')
 const configResolvers = require('./config/config.resolvers')
 const flaxResolvers = require('./flax/flax.resolvers')
 const groupResolvers = require('./group/group.resolvers')
@@ -23,6 +24,7 @@ const typeDefFilePaths = [
   'articleImportHistory/articleImportHistory.graphql',
   'articleImportSources/articleImportSources.graphql',
   'articleTemplates/articleTemplates.graphql',
+  'channel/channel.graphql',
   'config/config.graphql',
   'flax/flax.graphql',
   'group/group.graphql',
@@ -50,6 +52,7 @@ const resolvers = merge(
   {},
   anyStyleResolvers,
   articleTemplatesResolvers,
+  channelResolvers,
   configResolvers,
   flaxResolvers,
   groupResolvers,

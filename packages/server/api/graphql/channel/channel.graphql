@@ -1,0 +1,28 @@
+type Channel {
+  id: String
+  manuscript: Manuscript
+  topic: String
+  type: String
+  team: Team
+}
+
+extend type Team {
+  channels: [Channel]
+}
+
+type ChannelMember {
+  id: ID!
+  channelId: ID!
+  userId: ID!
+  lastViewed: DateTime
+  lastAlertTriggeredTime: DateTime
+}
+
+extend type Query {
+  systemWideDiscussionChannel(groupId: ID!): Channel!
+  updateChannelLastViewed: Channel!
+}
+
+extend type Mutation {
+  channelViewed(channelId: ID!): ChannelMember
+}

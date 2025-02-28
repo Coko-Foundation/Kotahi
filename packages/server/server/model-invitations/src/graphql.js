@@ -11,7 +11,7 @@ const {
 
 const {
   addUserToManuscriptChatChannel,
-} = require('../../model-channel/src/channelCommsUtils')
+} = require('../../../controllers/channel.controllers')
 
 const seekEvent = require('../../../services/notification.service')
 

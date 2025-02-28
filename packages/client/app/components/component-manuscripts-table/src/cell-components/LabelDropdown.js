@@ -118,11 +118,16 @@ const LabelDropdown = ({
     }
   }, [])
 
+  const setDropDownOpenFn = e => {
+    e.stopPropagation()
+    setIsDropdownOpen(!isDropdownOpen)
+  }
+
   return (
     <BaseDropdown ref={dropdownRef}>
       <DropdownElement
         aria-pressed="false"
-        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+        onClick={setDropDownOpenFn}
         role="button"
         tabindex="0"
       >
@@ -140,7 +145,7 @@ const LabelDropdown = ({
                   size={18}
                 />
               </StyledButton>
-              <StyledButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <StyledButton onClick={setDropDownOpenFn}>
                 <ChevronUp
                   color={
                     values[0]?.color && Color(values[0]?.color).isDark()
@@ -163,7 +168,7 @@ const LabelDropdown = ({
                   size={18}
                 />
               </StyledButton>
-              <StyledButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <StyledButton onClick={setDropDownOpenFn}>
                 <ChevronDown
                   color={
                     values[0]?.color && Color(values[0]?.color).isDark()
@@ -184,7 +189,10 @@ const LabelDropdown = ({
             <DropdownMenuItem
               isSelected={selectedOption && selectedOption === option.value}
               key={option.value}
-              onClick={() => handleDropdownItemClick(option.value)}
+              onClick={e => {
+                e.stopPropagation()
+                handleDropdownItemClick(option.value)
+              }}
             >
               {option.label}
             </DropdownMenuItem>

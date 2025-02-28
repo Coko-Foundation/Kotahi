@@ -11,7 +11,7 @@ const ChannelMember = require('../../../models/channelMember/channelMember.model
 const {
   getChannelMemberByChannel,
   addUsersToChatChannel,
-} = require('../../model-channel/src/channelCommsUtils')
+} = require('../../../controllers/channel.controllers')
 
 const {
   notify,
@@ -41,10 +41,10 @@ const resolvers = {
       const messages = (await messagesQuery).reverse()
       const total = await messagesQuery.resultSize()
 
-      const channelMember = await getChannelMemberByChannel({
+      const channelMember = await getChannelMemberByChannel(
         channelId,
-        userId: context.userId,
-      })
+        context.userId,
+      )
 
       let unreadMessagesCount = [{ count: 0 }]
       let firstUnreadMessage = null
@@ -76,10 +76,10 @@ const resolvers = {
     // Calculates the total number of unread  messages count from more then one channels for the current user.
     unreadMessagesCount: async (_, { channelIds }, context) => {
       const promises = channelIds.map(async channelId => {
-        const channelMember = await getChannelMemberByChannel({
+        const channelMember = await getChannelMemberByChannel(
           channelId,
-          userId: context.userId,
-        })
+          context.userId,
+        )
 
         if (channelMember) {
           const unreadMessagesCount = await Message.query()

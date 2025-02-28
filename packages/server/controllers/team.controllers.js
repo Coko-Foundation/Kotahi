@@ -12,7 +12,7 @@ const {
 const {
   addUserToManuscriptChatChannel,
   removeUserFromManuscriptChatChannel,
-} = require('../server/model-channel/src/channelCommsUtils')
+} = require('./channel.controllers')
 
 const { evictFromCacheByPrefix } = require('../server/querycache')
 

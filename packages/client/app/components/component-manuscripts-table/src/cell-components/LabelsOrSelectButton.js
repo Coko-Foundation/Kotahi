@@ -34,7 +34,10 @@ const LabelsOrSelectButton = ({
 
   return (
     <StyledButton
-      onClick={() => setReadyToEvaluateLabel(manuscript.id)}
+      onClick={e => {
+        e.stopPropagation()
+        setReadyToEvaluateLabel(manuscript.id)
+      }}
       primary
     >
       {t('manuscriptsPage.Select')}
