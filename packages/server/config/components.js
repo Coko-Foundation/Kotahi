@@ -18,7 +18,6 @@ const components = [
   './server/model-notification/src/',
   './server/model-user/src',
   './server/model-invitations/src/',
-  './server/model-file/src/',
   './server/model-review/src/',
   './server/model-form/src/',
   './server/model-message/src',
