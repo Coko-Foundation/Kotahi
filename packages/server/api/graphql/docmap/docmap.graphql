@@ -1,0 +1,3 @@
+extend type Query {
+  docmap(externalId: String!, groupName: String): String!
+}

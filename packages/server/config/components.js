@@ -27,7 +27,6 @@ const components = [
   './server/jatsexport',
   './server/model-threaded-discussion/src/',
   './server/model-task/src',
-  './server/model-docmap/src',
   './server/xsweet',
   './server/model-email-templates/src',
   './server/reference/src',
