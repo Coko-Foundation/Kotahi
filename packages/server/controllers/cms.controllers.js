@@ -19,6 +19,8 @@ const {
   setFileUrls,
 } = require('../server/utils/fileStorageUtils')
 
+const sanitizeWaxImages = require('../utils/sanitizeWaxImages')
+
 const addResourceToFolder = async (id, type) => {
   const parent = await CmsFileTemplate.query().findOne({ id })
 
@@ -79,11 +81,18 @@ const addSlashes = inputString => {
   return str
 }
 
-const cleanCMSPageInput = inputData => {
-  if (!inputData.url) return inputData
+const cleanCMSPageInput = async inputData => {
   const attrs = { ...inputData }
-  attrs.url = addSlashes(inputData.url)
-  return inputData
+
+  if (attrs.content) {
+    attrs.content = await sanitizeWaxImages(attrs.content)
+  }
+
+  if (attrs.url) {
+    attrs.url = addSlashes(attrs.url)
+  }
+
+  return attrs
 }
 
 const cmsFileTree = async (groupId, folderId) => {
@@ -150,9 +159,12 @@ const cmsPages = async groupId => {
 
 const createCMSPage = async (groupId, input) => {
   try {
-    const savedCmsPage = await CmsPage.query().insert(
-      cleanCMSPageInput({ ...input, groupId }),
-    )
+    const cleanedInput = await cleanCMSPageInput(input)
+
+    const savedCmsPage = await CmsPage.query().insert({
+      ...cleanedInput,
+      groupId,
+    })
 
     const cmsPage = await CmsPage.query().findById(savedCmsPage.id)
     return { success: true, error: null, cmsPage }
@@ -475,7 +487,7 @@ const updateCMSLayout = async (groupId, input) => {
 }
 
 const updateCMSPage = async (id, userId, input) => {
-  const attrs = cleanCMSPageInput(input)
+  const attrs = await cleanCMSPageInput(input)
 
   if (!input.creatorId) {
     attrs.creatorId = userId
