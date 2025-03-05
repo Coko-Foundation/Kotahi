@@ -62,7 +62,7 @@ const validateApiToken = require('../../server/utils/validateApiToken')
 const {
   populateTemplatedTasksForManuscript,
   deleteAlertsForManuscript,
-} = require('../../server/model-task/src/taskCommsUtils')
+} = require('../task.controllers')
 
 const {
   addUserToManuscriptChatChannel,

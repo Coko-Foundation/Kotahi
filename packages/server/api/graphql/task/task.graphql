@@ -1,0 +1,112 @@
+input TaskInput {
+  id: ID!
+  manuscriptId: ID
+  groupId: ID!
+  title: String!
+  description: String
+  assigneeUserId: ID
+  defaultDurationDays: Int
+  dueDate: DateTime
+  reminderPeriodDays: Int
+  status: String!
+  emailNotifications: [TaskEmailNotificationInput]
+  assigneeType: String
+  assigneeName: String
+  assigneeEmail: String
+}
+
+input UpdateTaskStatusInput {
+  id: ID!
+  status: String!
+}
+
+type Task {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  manuscriptId: ID
+  groupId: ID
+  title: String!
+  assigneeUserId: ID
+  assignee: User
+  description: String
+  defaultDurationDays: Int
+  dueDate: DateTime
+  reminderPeriodDays: Int
+  sequenceIndex: Int!
+  status: String!
+  emailNotifications: [TaskEmailNotification]
+  notificationLogs: [TaskEmailNotificationLog]
+  assigneeType: String
+  assigneeName: String
+  assigneeEmail: String
+}
+
+type TaskAlert {
+  taskId: ID
+  assigneeUserId: ID
+}
+
+extend type Query {
+  tasks(manuscriptId: ID, groupId: ID!): [Task!]!
+  userHasTaskAlerts: Boolean!
+}
+
+input TaskEmailNotificationInput {
+  id: ID!
+  taskId: ID!
+  recipientUserId: ID
+  recipientType: String
+  notificationElapsedDays: Int
+  emailTemplateId: ID
+  recipientName: String
+  recipientEmail: String
+  sentAt: DateTime
+}
+
+input TaskEmailNotificationLogInput {
+  taskId: ID!
+  senderEmail: String!
+  recipientEmail: String!
+  emailTemplateId: ID!
+  content: String!
+}
+
+type TaskEmailNotificationLog {
+  id: ID!
+  taskId: ID!
+  senderEmail: String!
+  recipientEmail: String!
+  emailTemplateId: ID
+  content: String!
+  created: DateTime!
+  updated: DateTime
+}
+
+type TaskEmailNotification {
+  id: ID!
+  taskId: ID!
+  recipientUserId: ID
+  recipientType: String
+  notificationElapsedDays: Int
+  emailTemplateId: ID
+  recipientName: String
+  recipientEmail: String
+  created: DateTime!
+  updated: DateTime
+  recipientUser: User
+  sentAt: DateTime
+}
+
+extend type Mutation {
+  updateTasks(manuscriptId: ID, groupId: ID!, tasks: [TaskInput!]!): [Task!]!
+  updateTask(task: TaskInput!): Task!
+  createNewTaskAlerts(groupId: ID!): Boolean
+  removeTaskAlertsForCurrentUser: Boolean
+  updateTaskStatus(task: UpdateTaskStatusInput!): Task!
+  updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!
+  deleteTaskNotification(id: ID!): Task!
+  createTaskEmailNotificationLog(
+    taskEmailNotificationLog: TaskEmailNotificationLogInput!
+  ): Task!
+}

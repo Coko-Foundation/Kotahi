@@ -5,9 +5,7 @@ const Message = require('../models/message/message.model')
 const Manuscript = require('../models/manuscript/manuscript.model')
 const NotificationDigest = require('../models/notificationDigest/notificationDigest.model')
 
-const {
-  updateAlertsUponTeamUpdate,
-} = require('../server/model-task/src/taskCommsUtils')
+const { updateAlertsUponTeamUpdate } = require('./task.controllers')
 
 const {
   addUserToManuscriptChatChannel,

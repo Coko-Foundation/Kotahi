@@ -16,7 +16,7 @@ const {
 const {
   createNewTaskAlerts,
   sendAutomatedTaskEmailNotifications,
-} = require('../model-task/src/taskCommsUtils')
+} = require('../../controllers/task.controllers')
 
 const {
   sendNotifications,

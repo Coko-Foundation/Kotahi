@@ -24,7 +24,6 @@ const components = [
   './server/pdfexport',
   './server/jatsexport',
   './server/model-threaded-discussion/src/',
-  './server/model-task/src',
   './server/xsweet',
   './server/reference/src',
   './server/model-publishing-collection/src',

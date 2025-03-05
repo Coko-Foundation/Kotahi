@@ -4,7 +4,7 @@ const Manuscript = require('../../manuscript/manuscript.model')
 
 const {
   populateTemplatedTasksForManuscript,
-} = require('../../../server/model-task/src/taskCommsUtils')
+} = require('../../../controllers/task.controllers')
 
 exports.up = async knex => {
   logger.info(
