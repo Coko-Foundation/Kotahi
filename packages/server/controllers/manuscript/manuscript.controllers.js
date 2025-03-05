@@ -28,7 +28,7 @@ const {
 } = require('./manuscriptUtils')
 
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
-const { getActiveForms } = require('../../server/model-form/src/formCommsUtils')
+const { getActiveForms } = require('../form.controllers')
 const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
 const { cachedGet } = require('../../server/querycache')
 const seekEvent = require('../../services/notification.service')

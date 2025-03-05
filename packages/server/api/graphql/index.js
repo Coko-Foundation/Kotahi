@@ -11,6 +11,7 @@ const docmapResolvers = require('./docmap/docmap.resolvers')
 const emailTemplateResolvers = require('./emailTemplate/emailTemplate.resolvers')
 const fileResolvers = require('./file/file.resolvers')
 const flaxResolvers = require('./flax/flax.resolvers')
+const formResolvers = require('./form/form.resolvers')
 const groupResolvers = require('./group/group.resolvers')
 const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
 const localContextResolvers = require('./localContext/localContext.resolvers')
@@ -38,6 +39,7 @@ const typeDefFilePaths = [
   'emailTemplate/emailTemplate.graphql',
   'file/file.graphql',
   'flax/flax.graphql',
+  'form/form.graphql',
   'group/group.graphql',
   'handlebars/handlebars.graphql',
   'localContext/localContext.graphql',
@@ -73,6 +75,7 @@ const resolvers = merge(
   emailTemplateResolvers,
   fileResolvers,
   flaxResolvers,
+  formResolvers,
   groupResolvers,
   handlebarsResolvers,
   localContextResolvers,
