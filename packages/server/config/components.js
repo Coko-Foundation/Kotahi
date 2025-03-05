@@ -23,7 +23,6 @@ const components = [
   './server/reports/src',
   './server/pdfexport',
   './server/jatsexport',
-  './server/model-threaded-discussion/src/',
   './server/xsweet',
   './server/reference/src',
   './server/model-publishing-collection/src',

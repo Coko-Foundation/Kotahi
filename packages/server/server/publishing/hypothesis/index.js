@@ -12,7 +12,7 @@ const { upsertArtifact, deleteArtifact } = require('../publishingCommsUtils')
 
 const {
   getThreadedDiscussionsForManuscript,
-} = require('../../model-threaded-discussion/src/threadedDiscussionCommsUtils')
+} = require('../../../controllers/threadedDiscussion.controllers')
 
 const REQUEST_URL = `https://api.hypothes.is/api/annotations`
 

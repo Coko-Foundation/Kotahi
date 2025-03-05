@@ -76,7 +76,7 @@ const {
 
 const {
   getThreadedDiscussionsForManuscript,
-} = require('../../server/model-threaded-discussion/src/threadedDiscussionCommsUtils')
+} = require('../threadedDiscussion.controllers')
 
 const {
   publishToHypothesis,
