@@ -16,8 +16,8 @@ module.exports = {
       const groupId = ctx.req.headers['group-id']
       return updateNotificationOption(ctx.userId, groupId, path, option)
     },
-    reportUserIsActive: async (_, { path }) => {
-      return reportUserIsActive(path)
+    reportUserIsActive: async (_, { path }, ctx) => {
+      return reportUserIsActive(path, ctx.userId)
     },
   },
 }

@@ -17,12 +17,12 @@ const notificationOption = async (userId, groupId, path) => {
   })
 }
 
-const reportUserIsActive = async path => {
+const reportUserIsActive = async (path, userId) => {
   if (path) {
     const pathString = path.join('/')
 
     await NotificationDigest.query().delete().where({
-      userId: context.userId,
+      userId,
       pathString,
       actioned: false,
     })
