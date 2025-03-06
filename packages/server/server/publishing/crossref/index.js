@@ -21,7 +21,7 @@ const {
   getReviewForm,
   getDecisionForm,
   getSubmissionForm,
-} = require('../../model-review/src/reviewCommsUtils')
+} = require('../../../controllers/review.controllers')
 
 const {
   htmlToJats,

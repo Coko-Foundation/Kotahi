@@ -1,0 +1,37 @@
+extend type Mutation {
+  updateReview(id: ID, input: ReviewInput): Review!
+  updateReviewerTeamMemberStatus(manuscriptId: ID!, status: String): TeamMember
+  lockUnlockCollaborativeReview(id: ID!): Review!
+}
+
+type Review {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  isDecision: Boolean
+  open: Boolean
+  user: User
+  isHiddenFromAuthor: Boolean
+  isHiddenReviewerName: Boolean
+  isSharedWithCurrentUser: Boolean!
+  isCollaborative: Boolean!
+  isLock: Boolean!
+  canBePublishedPublicly: Boolean!
+  jsonData: String
+  userId: String
+  files: [File]
+}
+
+input ReviewInput {
+  isDecision: Boolean
+  manuscriptId: ID!
+  isHiddenFromAuthor: Boolean
+  isHiddenReviewerName: Boolean
+  canBePublishedPublicly: Boolean
+  jsonData: String
+  userId: String
+}
+
+extend type Subscription {
+  reviewFormUpdated(formId: ID!): Review!
+}

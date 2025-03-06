@@ -17,7 +17,6 @@ const components = [
 
   './server/model-user/src',
   './server/model-invitations/src/',
-  './server/model-review/src/',
   './server/model-message/src',
   './server/reports/src',
   './server/jatsexport',

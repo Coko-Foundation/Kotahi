@@ -47,12 +47,6 @@ const {
 } = require('../../server/publishing/flax/tools')
 
 const {
-  getReviewForm,
-  getDecisionForm,
-  getSubmissionForm,
-} = require('../../server/model-review/src/reviewCommsUtils')
-
-const {
   deepMergeObjectsReplacingArrays,
   objIf,
 } = require('../../server/utils/objectUtils')
@@ -99,7 +93,10 @@ const {
 
 const {
   convertFilesToFullObjects,
-} = require('../../server/model-review/src/reviewUtils')
+  getReviewForm,
+  getDecisionForm,
+  getSubmissionForm,
+} = require('../review.controllers')
 
 const {
   getUsersById,
@@ -737,7 +734,6 @@ const getRelatedReviews = async (
       review,
       review.isDecision ? decisionForm : reviewForm,
       async ids => File.query().findByIds(ids),
-      getFilesWithUrl,
     )
   }
 

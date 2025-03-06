@@ -1,7 +1,7 @@
 const he = require('he')
 const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
 const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
-const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
+const { getSubmissionForm } = require('../../controllers/review.controllers')
 
 const getServerId = async serverLabel => {
   let [server] = await ArticleImportSources.query().where({

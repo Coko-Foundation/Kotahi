@@ -5,10 +5,7 @@ const sortBy = require('lodash/sortBy')
 
 const { BaseModel } = require('@coko/server')
 
-const {
-  getDecisionForm,
-} = require('../../server/model-review/src/reviewCommsUtils')
-
+// REFACTOR: models
 const { evictFromCache } = require('../../server/querycache')
 
 class Manuscript extends BaseModel {
@@ -157,6 +154,7 @@ class Manuscript extends BaseModel {
   async createNewVersion() {
     /* eslint-disable global-require */
     const Config = require('../config/config.model')
+    const Form = require('../form/form.model')
     const Task = require('../task/task.model')
     const TaskAlert = require('../taskAlert/taskAlert.model')
     /* eslint-enable global-require */
@@ -182,7 +180,11 @@ class Manuscript extends BaseModel {
       isDecision: true,
     })
 
-    const decisionForm = await getDecisionForm(this.groupId)
+    const decisionForm = await Form.query().findOne({
+      category: 'decision',
+      purpose: 'decision',
+      groupId: this.groupId,
+    })
 
     const threadedDiscussionFieldNames = decisionForm
       ? decisionForm.structure.children

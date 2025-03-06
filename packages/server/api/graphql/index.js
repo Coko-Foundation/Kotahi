@@ -23,6 +23,7 @@ const orcidResolvers = require('./orcid/orcid.resolvers')
 const payloadVerifierResolvers = require('./payloadVerifier/payloadVerifier.resolvers')
 const pdfExportResolvers = require('./pdfExport/pdfExport.resolvers')
 const publishedArtifactResolvers = require('./publishedArtifact/publishedArtifact.resolvers')
+const reviewResolvers = require('./review/review.resolvers')
 const rorResolvers = require('./ror/ror.resolvers')
 const taskResolvers = require('./task/task.resolvers')
 const teamResolvers = require('./team/team.resolvers')
@@ -53,6 +54,7 @@ const typeDefFilePaths = [
   'payloadVerifier/payloadVerifier.graphql',
   'pdfExport/pdfExport.graphql',
   'publishedArtifact/publishedArtifact.graphql',
+  'review/review.graphql',
   'ror/ror.graphql',
   'task/task.graphql',
   'team/team.graphql',
@@ -91,6 +93,7 @@ const resolvers = merge(
   payloadVerifierResolvers,
   pdfExportResolvers,
   publishedArtifactResolvers,
+  reviewResolvers,
   rorResolvers,
   taskResolvers,
   teamResolvers,

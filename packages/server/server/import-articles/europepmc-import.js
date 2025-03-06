@@ -5,7 +5,7 @@ const ArticleImportSources = require('../../models/articleImportSources/articleI
 const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
 const Manuscript = require('../../models/manuscript/manuscript.model')
 
-const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
+const { getSubmissionForm } = require('../../controllers/review.controllers')
 
 // Not sure if this code is used anymore could not find any relevant import triggers for europepmc?
 const getData = async (groupId, ctx) => {

@@ -1,5 +1,0 @@
-const REVIEW_FORM_UPDATED = 'REVIEW_FORM_UPDATED'
-
-module.exports = {
-  REVIEW_FORM_UPDATED,
-}
