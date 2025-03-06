@@ -1,8 +1,8 @@
 const { XMLValidator } = require('fast-xml-parser')
 
 const { makeJats } = require('../utils/jatsUtils')
-const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
-const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
+const articleMetadata = require('../../utils/pdfTemplates/articleMetadata')
+const publicationMetadata = require('../../utils/pdfTemplates/publicationMetadata')
 const validateJats = require('./validation')
 const makeZippedJats = require('./makeZippedJats')
 

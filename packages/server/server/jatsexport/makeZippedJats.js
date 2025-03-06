@@ -5,7 +5,7 @@ const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
 const { promisify } = require('util')
 const { createFile, fileStorage, File } = require('@coko/server')
-const makeZip = require('../pdfexport/ziputils')
+const makeZip = require('../../utils/ziputils')
 const makeSvgsFromLatex = require('./makeSvgsFromLatex')
 const { getFileWithUrl } = require('../utils/fileStorageUtils')
 

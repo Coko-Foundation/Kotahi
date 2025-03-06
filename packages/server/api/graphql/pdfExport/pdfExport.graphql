@@ -1,0 +1,12 @@
+extend type Query {
+  convertToPdf(manuscriptId: String!, useHtml: Boolean): ConvertToPdfType
+  builtCss: BuiltCssType
+}
+
+type ConvertToPdfType {
+  pdfUrl: String!
+}
+
+type BuiltCssType {
+  css: String!
+}

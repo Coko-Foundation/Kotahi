@@ -14,19 +14,16 @@ const {
   tempFolderPath,
 } = require('@coko/server')
 
-const Manuscript = require('../../models/manuscript/manuscript.model')
-const ArticleTemplate = require('../../models/articleTemplate/articleTemplate.model')
-const Config = require('../../models/config/config.model')
-
-const { applyTemplate, generateCss } = require('./applyTemplate')
-const makeZip = require('./ziputils')
-const publicationMetadata = require('./pdfTemplates/publicationMetadata')
+const { ArticleTemplate, Config, Manuscript } = require('../models')
+const { applyTemplate, generateCss } = require('../utils/applyTemplate')
+const makeZip = require('../utils/ziputils')
+const publicationMetadata = require('../utils/pdfTemplates/publicationMetadata')
 
 const {
   getFilesWithUrl,
   getFileWithUrl,
   replaceImageSrc,
-} = require('../utils/fileStorageUtils')
+} = require('../server/utils/fileStorageUtils')
 
 const copyFile = promisify(fs.copyFile)
 
@@ -284,35 +281,7 @@ const htmlHandler = async manuscriptId => {
   return `${tempPath}`
 }
 
-const resolvers = {
-  Query: {
-    convertToPdf: async (_, { manuscriptId, useHtml }, ctx) => {
-      const outUrl = await (useHtml
-        ? htmlHandler(manuscriptId, ctx)
-        : pdfHandler(manuscriptId, ctx))
-
-      return { pdfUrl: outUrl || 'busted!' }
-    },
-    builtCss: async () => {
-      const css = await generateCss(true)
-      return { css }
-    },
-  },
+module.exports = {
+  htmlHandler,
+  pdfHandler,
 }
-
-const typeDefs = `
-	extend type Query {
-		convertToPdf(manuscriptId: String!, useHtml: Boolean): ConvertToPdfType
-		builtCss: BuiltCssType
-	}
-
-	type ConvertToPdfType {
-		pdfUrl: String!
-	}
-
-	type BuiltCssType {
-		css: String!
-	}
-`
-
-module.exports = { resolvers, typeDefs }

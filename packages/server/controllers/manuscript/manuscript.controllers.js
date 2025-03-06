@@ -107,10 +107,7 @@ const {
   getSharedReviewersIds,
 } = require('../../server/model-user/src/userCommsUtils')
 
-const {
-  applyTemplate,
-  generateCss,
-} = require('../../server/pdfexport/applyTemplate')
+const { applyTemplate, generateCss } = require('../../utils/applyTemplate')
 
 // #endregion import
 

@@ -5,7 +5,6 @@ const FormData = require('form-data')
 const crypto = require('crypto')
 const { promisify } = require('util')
 const config = require('config')
-const { logger } = require('@coko/server')
 
 // To test:
 // POST http://localhost:3004/healthCheck
@@ -145,36 +144,4 @@ const getXsweet = async url => {
   })
 }
 
-const resolvers = {
-  Query: {
-    docxToHtml: async (_, { url }, ctx) => {
-      let outHtml = ''
-      let error = ''
-
-      try {
-        outHtml = await getXsweet(url)
-      } catch (e) {
-        error = e.message
-        logger.error(e)
-      }
-
-      return {
-        html: outHtml || '',
-        error: error || '',
-      }
-    },
-  },
-}
-
-const typeDefs = `
-	extend type Query {
-		docxToHtml(url: String!): docxToHtmlType
-	}
-
-	type docxToHtmlType {
-		html: String!
-		error: String
-	}
-`
-
-module.exports = { resolvers, typeDefs }
+module.exports = { getXsweet }

@@ -21,11 +21,13 @@ const notificationUserOptionResolvers = require('./notificationUserOption/notifi
 const openAiResolvers = require('./openAi/openAi.resolvers')
 const orcidResolvers = require('./orcid/orcid.resolvers')
 const payloadVerifierResolvers = require('./payloadVerifier/payloadVerifier.resolvers')
+const pdfExportResolvers = require('./pdfExport/pdfExport.resolvers')
 const publishedArtifactResolvers = require('./publishedArtifact/publishedArtifact.resolvers')
 const rorResolvers = require('./ror/ror.resolvers')
 const taskResolvers = require('./task/task.resolvers')
 const teamResolvers = require('./team/team.resolvers')
 const threadedDiscussionResolvers = require('./threadedDiscussion/threadedDiscussion.resolvers')
+const xsweetResolvers = require('./xsweet/xsweet.resolvers')
 
 const typeDefFilePaths = [
   'anyStyle/anyStyle.graphql',
@@ -49,11 +51,13 @@ const typeDefFilePaths = [
   'openAi/openAi.graphql',
   'orcid/orcid.graphql',
   'payloadVerifier/payloadVerifier.graphql',
+  'pdfExport/pdfExport.graphql',
   'publishedArtifact/publishedArtifact.graphql',
   'ror/ror.graphql',
   'task/task.graphql',
   'team/team.graphql',
   'threadedDiscussion/threadedDiscussion.graphql',
+  'xsweet/xsweet.graphql',
 ]
 
 const createTotalTypeDefs = paths => {
@@ -85,11 +89,13 @@ const resolvers = merge(
   openAiResolvers,
   orcidResolvers,
   payloadVerifierResolvers,
+  pdfExportResolvers,
   publishedArtifactResolvers,
   rorResolvers,
   taskResolvers,
   teamResolvers,
   threadedDiscussionResolvers,
+  xsweetResolvers,
 )
 
 module.exports = {

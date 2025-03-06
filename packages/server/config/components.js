@@ -20,9 +20,7 @@ const components = [
   './server/model-review/src/',
   './server/model-message/src',
   './server/reports/src',
-  './server/pdfexport',
   './server/jatsexport',
-  './server/xsweet',
   './server/reference/src',
   './server/model-publishing-collection/src',
 ]
