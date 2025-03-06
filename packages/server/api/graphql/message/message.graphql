@@ -1,0 +1,43 @@
+type Message {
+  content: String
+  user: User
+  id: String
+  created: DateTime
+  updated: DateTime
+}
+
+type PageInfo {
+  startCursor: String
+  hasPreviousPage: Boolean
+  hasNextPage: Boolean
+}
+
+type MessagesRelay {
+  edges: [Message]
+  pageInfo: PageInfo
+  unreadMessagesCount: Int!
+  firstUnreadMessageId: ID
+}
+
+extend type Query {
+  message(messageId: ID): Message
+  messages(
+    channelId: ID
+    first: Int
+    after: String
+    before: String
+  ): MessagesRelay
+  unreadMessagesCount(channelIds: [ID!]!): Int!
+}
+
+extend type Mutation {
+  createMessage(content: String, channelId: String, userId: String): Message
+  deleteMessage(messageId: ID!): Message!
+  updateMessage(messageId: ID!, content: String!): Message!
+}
+
+extend type Subscription {
+  messageCreated(channelId: ID!): Message!
+  messageUpdated(channelId: ID!): Message!
+  messageDeleted(channelId: ID!): Message!
+}
