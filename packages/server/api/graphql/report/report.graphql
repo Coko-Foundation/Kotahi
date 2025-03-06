@@ -1,0 +1,110 @@
+extend type Query {
+  summaryActivity(
+    startDate: DateTime
+    endDate: DateTime
+    groupId: ID!
+    timeZoneOffset: Int
+  ): SummaryActivity
+  manuscriptsActivity(
+    startDate: DateTime
+    endDate: DateTime
+    groupId: ID!
+  ): [ManuscriptActivity]
+  editorsActivity(
+    startDate: DateTime
+    endDate: DateTime
+    groupId: ID!
+  ): [EditorActivity]
+  reviewersActivity(
+    startDate: DateTime
+    endDate: DateTime
+    groupId: ID!
+  ): [ReviewerActivity]
+  authorsActivity(
+    startDate: DateTime
+    endDate: DateTime
+    groupId: ID!
+  ): [AuthorActivity]
+}
+
+type SummaryActivity {
+  avgPublishTimeDays: Float!
+  avgReviewTimeDays: Float!
+  unsubmittedCount: Int!
+  submittedCount: Int!
+  unassignedCount: Int!
+  reviewInvitedCount: Int!
+  reviewInviteAcceptedCount: Int!
+  reviewedCount: Int!
+  rejectedCount: Int!
+  revisingCount: Int!
+  acceptedCount: Int!
+  publishedCount: Int!
+  publishedTodayCount: Int!
+  avgPublishedDailyCount: Float!
+  revisingNowCount: Int!
+  avgInProgressDailyCount: Float!
+  durationsData: [ManuscriptDuration]
+  reviewAvgsTrace: [Vector]
+  completionAvgsTrace: [Vector]
+}
+
+type ManuscriptDuration {
+  date: DateTime!
+  reviewDuration: Float
+  fullDuration: Float
+}
+
+type Vector {
+  x: Float!
+  y: Float!
+}
+
+type ReviewerWithStatus {
+  id: ID!
+  name: String!
+  status: String
+}
+
+type ManuscriptActivity {
+  shortId: String!
+  entryDate: DateTime!
+  title: String!
+  authors: [User!]!
+  editors: [User!]!
+  reviewers: [ReviewerWithStatus!]!
+  status: String!
+  publishedDate: DateTime
+  versionReviewDurations: [Float]!
+}
+
+type EditorActivity {
+  name: String!
+  assignedCount: Int!
+  givenToReviewersCount: Int!
+  revisedCount: Int!
+  rejectedCount: Int!
+  acceptedCount: Int!
+  publishedCount: Int!
+}
+
+type ReviewerActivity {
+  name: String!
+  invitesCount: Int!
+  declinedCount: Int!
+  reviewsCompletedCount: Int!
+  avgReviewDuration: Float!
+  reccReviseCount: Int!
+  reccAcceptCount: Int!
+  reccRejectCount: Int!
+}
+
+type AuthorActivity {
+  name: String!
+  unsubmittedCount: Int!
+  submittedCount: Int!
+  rejectedCount: Int!
+  revisionCount: Int!
+  acceptedCount: Int!
+  publishedCount: Int!
+}

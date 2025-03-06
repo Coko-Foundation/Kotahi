@@ -1,7 +1,7 @@
-const Manuscript = require('../../../models/manuscript/manuscript.model')
+const { Manuscript } = require('../models')
 
-const { ensureJsonIsParsed } = require('../../utils/objectUtils')
-const generateMovingAverages = require('./movingAverages')
+const { ensureJsonIsParsed } = require('../server/utils/objectUtils')
+const generateMovingAverages = require('../utils/movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
 
@@ -177,7 +177,7 @@ const wasRejected = m => getLastVersion(m).status === 'rejected'
 const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
-const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
+const getDateRangeSummaryStats = async (startDate, endDate, groupId) => {
   const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreatedDesc).[teams, reviews]]',
@@ -235,7 +235,7 @@ const getDateRangeSummaryStats = async (startDate, endDate, groupId, ctx) => {
   }
 }
 
-const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
+const getPublishedTodayCount = async (groupId, timeZoneOffset) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
 
   const query = Manuscript.query()
@@ -246,7 +246,7 @@ const getPublishedTodayCount = async (groupId, timeZoneOffset, ctx) => {
   return query.resultSize()
 }
 
-const getRevisingNowCount = async (groupId, ctx) => {
+const getRevisingNowCount = async groupId => {
   const manuscripts = await Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreatedDesc)]')
     .where({ parentId: null, groupId })
@@ -257,7 +257,7 @@ const getRevisingNowCount = async (groupId, ctx) => {
   ).length
 }
 
-const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
+const getDurationsTraces = async (startDate, endDate, groupId) => {
   const windowSizeForAvg = week
   const smoothingSize = day
 
@@ -309,7 +309,7 @@ const getDurationsTraces = async (startDate, endDate, groupId, ctx) => {
   }
 }
 
-const getDailyAverageStats = async (startDate, endDate, groupId, ctx) => {
+const getDailyAverageStats = async (startDate, endDate, groupId) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
   const manuscripts = await Manuscript.query()
@@ -437,7 +437,7 @@ const getVersionReviewDurations = ms => {
   return reviewDurations
 }
 
-const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
+const getManuscriptsActivity = async (startDate, endDate, groupId) => {
   const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members]]]',
@@ -471,7 +471,7 @@ const getManuscriptsActivity = async (startDate, endDate, groupId, ctx) => {
   })
 }
 
-const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
+const getEditorsActivity = async (startDate, endDate, groupId) => {
   const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
@@ -522,7 +522,7 @@ const getEditorsActivity = async (startDate, endDate, groupId, ctx) => {
   return Object.values(editorsData)
 }
 
-const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
+const getReviewersActivity = async (startDate, endDate, groupId) => {
   const manuscripts = await Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members], reviews]]',
@@ -614,7 +614,7 @@ const getReviewersActivity = async (startDate, endDate, groupId, ctx) => {
   }))
 }
 
-const getAuthorsActivity = async (startDate, endDate, groupId, ctx) => {
+const getAuthorsActivity = async (startDate, endDate, groupId) => {
   const query = Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
@@ -662,141 +662,14 @@ const getAuthorsActivity = async (startDate, endDate, groupId, ctx) => {
   return Object.values(authorsData)
 }
 
-const resolvers = {
-  Query: {
-    async summaryActivity(
-      _,
-      { startDate, endDate, groupId, timeZoneOffset },
-      ctx,
-    ) {
-      const [
-        dateRangeSummaryStats,
-        publishedTodayCount,
-        revisingNowCount,
-        durationsTraces,
-        dailyAverageStats,
-      ] = await Promise.all([
-        getDateRangeSummaryStats(startDate, endDate, groupId, ctx),
-        getPublishedTodayCount(groupId, timeZoneOffset, ctx),
-        getRevisingNowCount(groupId, ctx),
-        getDurationsTraces(startDate, endDate, groupId, ctx),
-        getDailyAverageStats(startDate, endDate, groupId, ctx),
-      ])
-
-      return {
-        ...dateRangeSummaryStats,
-        publishedTodayCount,
-        revisingNowCount,
-        ...durationsTraces,
-        ...dailyAverageStats,
-      }
-    },
-    manuscriptsActivity(_, { startDate, endDate, groupId }, ctx) {
-      return getManuscriptsActivity(startDate, endDate, groupId, ctx)
-    },
-    editorsActivity(_, { startDate, endDate, groupId }, ctx) {
-      return getEditorsActivity(startDate, endDate, groupId, ctx)
-    },
-    reviewersActivity(_, { startDate, endDate, groupId }, ctx) {
-      return getReviewersActivity(startDate, endDate, groupId, ctx)
-    },
-    authorsActivity(_, { startDate, endDate, groupId }, ctx) {
-      return getAuthorsActivity(startDate, endDate, groupId, ctx)
-    },
-  },
+module.exports = {
+  getAuthorsActivity,
+  getDailyAverageStats,
+  getDateRangeSummaryStats,
+  getDurationsTraces,
+  getEditorsActivity,
+  getManuscriptsActivity,
+  getPublishedTodayCount,
+  getReviewersActivity,
+  getRevisingNowCount,
 }
-
-const typeDefs = `
-  extend type Query {
-    summaryActivity(startDate: DateTime, endDate: DateTime, groupId: ID!, timeZoneOffset: Int) : SummaryActivity
-    manuscriptsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [ManuscriptActivity]
-    editorsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [EditorActivity]
-    reviewersActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [ReviewerActivity]
-    authorsActivity(startDate: DateTime, endDate: DateTime, groupId: ID!): [AuthorActivity]
-  }
-
-  type SummaryActivity {
-    avgPublishTimeDays: Float!
-    avgReviewTimeDays: Float!
-    unsubmittedCount: Int!
-    submittedCount: Int!
-    unassignedCount: Int!
-    reviewInvitedCount: Int!
-    reviewInviteAcceptedCount: Int!
-    reviewedCount: Int!
-    rejectedCount: Int!
-    revisingCount: Int!
-    acceptedCount: Int!
-    publishedCount: Int!
-    publishedTodayCount: Int!
-    avgPublishedDailyCount: Float!
-    revisingNowCount: Int!
-    avgInProgressDailyCount: Float!
-    durationsData: [ManuscriptDuration]
-    reviewAvgsTrace: [Vector]
-    completionAvgsTrace: [Vector]
-  }
-
-  type ManuscriptDuration {
-    date: DateTime!
-    reviewDuration: Float
-    fullDuration: Float
-  }
-
-  type Vector {
-    x: Float!
-    y: Float!
-  }
-
-  type ReviewerWithStatus {
-    id: ID!
-    name: String!
-    status: String
-  }
-
-  type ManuscriptActivity {
-    shortId: String!
-    entryDate: DateTime!
-    title: String!
-    authors: [User!]!
-    editors: [User!]!
-    reviewers: [ReviewerWithStatus!]!
-    status: String!
-    publishedDate: DateTime
-    versionReviewDurations: [Float]!
-  }
-
-  type EditorActivity {
-    name: String!
-    assignedCount: Int!
-    givenToReviewersCount: Int!
-    revisedCount: Int!
-    rejectedCount: Int!
-    acceptedCount: Int!
-    publishedCount: Int!
-  }
-
-  type ReviewerActivity {
-    name: String!
-    invitesCount: Int!
-    declinedCount: Int!
-    reviewsCompletedCount: Int!
-    avgReviewDuration: Float!
-    reccReviseCount: Int!
-    reccAcceptCount: Int!
-    reccRejectCount: Int!
-  }
-
-
-  type AuthorActivity {
-    name: String!
-    unsubmittedCount: Int!
-    submittedCount: Int!
-    rejectedCount: Int!
-    revisionCount: Int!
-    acceptedCount: Int!
-    publishedCount: Int!
-  }
-`
-
-module.exports = { resolvers, typeDefs }
