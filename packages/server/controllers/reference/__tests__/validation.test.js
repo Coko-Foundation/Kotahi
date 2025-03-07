@@ -1,7 +1,7 @@
 const {
   getMatchingReferencesFromCrossRef,
   getReferenceWithDoi,
-} = require('../src/validation')
+} = require('../reference.controllers')
 
 const crossrefRetrievalEmail = 'test@gmail.com'
 

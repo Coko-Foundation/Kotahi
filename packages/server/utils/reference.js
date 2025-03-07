@@ -1,20 +1,79 @@
 const fs = require('fs')
-const citeproc = require('citeproc-js-node')
 const path = require('path')
 
-const { uuid } = require('@coko/server')
+const citeproc = require('citeproc-js-node')
 
-const Config = require('../../../models/config/config.model')
-const { pluckAuthors, pluckTitle, pluckJournalTitle } = require('./helpers')
+const { logger, uuid } = require('@coko/server')
 
-// Big question about this: is it worth doing this as a microservice? My impulse has been no, but maybe this should be throught about?
+const { Config } = require('../models')
 
 // eslint-disable-next-line new-cap
 const sys = new citeproc.simpleSys()
 
-// const getStyleNameFromTitle = title => {
-//   return title
-// }
+const createFormattedReference = async (data, groupId, isDatacite = false) => {
+  const {
+    DOI: doi,
+    author,
+    page,
+    title,
+    issue,
+    volume,
+    'container-title': journalTitle,
+  } = data
+
+  // logger.info('issued data:', data.issued)
+
+  const rawDate = data.issued?.raw ? data.issued.raw : false
+
+  const yearFromDateParts = data.issued['date-parts']?.length
+    ? String(data.issued['date-parts'][0][0] || '')
+    : ''
+
+  const year = rawDate || yearFromDateParts
+
+  const outputData = {
+    doi,
+    DOI: doi,
+    author: pluckAuthors(author),
+    page,
+    issue,
+    volume,
+    issued: { raw: String(year) },
+    title: pluckTitle(title),
+    journalTitle: pluckJournalTitle(journalTitle),
+  }
+
+  const formattedCitation = await formatCitation(
+    isDatacite ? data : outputData,
+    groupId,
+  )
+
+  outputData.formattedCitation = formattedCitation.result
+  outputData.citeHtml = formattedCitation.citeHtml
+  return outputData
+}
+
+const createReference = data => {
+  const {
+    DOI: doi,
+    author,
+    page,
+    title,
+    issue,
+    volume,
+    'container-title': journalTitle,
+  } = data
+
+  return {
+    doi,
+    author: pluckAuthors(author),
+    page,
+    issue,
+    volume,
+    title: pluckTitle(title),
+    journalTitle: pluckJournalTitle(journalTitle),
+  }
+}
 
 const getFirstPageFromPageRange = range => {
   const match = range.match(/(?<=^\s*)\d+/)
@@ -51,7 +110,7 @@ const formatCitation = async (cslObject, groupId) => {
 
   // const styleName = getStyleNameFromTitle(styleTitle)
 
-  // console.log('Citeproc settings: ', localeName, styleName)
+  // logger.info('Citeproc settings: ', localeName, styleName)
 
   // localeName can be either 'en-US' or 'en-GB'
 
@@ -77,8 +136,8 @@ const formatCitation = async (cslObject, groupId) => {
   let citeText = ''
 
   try {
-    // console.log('stringifiedCSL: ', stringifiedCSL)
-    // console.log(typeof stringifiedCSL)
+    // logger.info('stringifiedCSL: ', stringifiedCSL)
+    // logger.info(typeof stringifiedCSL)
     referenceCSL[thisRef] = csl
 
     sys.items = referenceCSL
@@ -111,7 +170,7 @@ const formatCitation = async (cslObject, groupId) => {
 
     citeText = citeData.citeHtml
 
-    // console.log('Citation ID:', citeData.id)
+    // logger.info('Citation ID:', citeData.id)
 
     const bib = engine.makeBibliography()
     // bib is the bibliography array. The first item is a metadata object; the second is an array of HTML strings.
@@ -138,93 +197,39 @@ const formatCitation = async (cslObject, groupId) => {
   } catch (e) {
     /*
 
-This (a result coming back from CrossRef) is crashing it:
+      This (a result coming back from CrossRef) is crashing it:
 
-kotahi-server-1            | Reference CSL:  {
-kotahi-server-1            |   '80bb49ae-380d-40e9-978f-61cf7d45211b': {
-kotahi-server-1            |     DOI: '10.1016/s0033-3506(73)80126-x',
-kotahi-server-1            |     issue: '3',
-kotahi-server-1            |     page: '94',
-kotahi-server-1            |     title: [
-kotahi-server-1            |       'The Work of the World Health Organization in 1971, Annual Report of the Director-General 4071 Geneva World Health Organization 1972 £1.50'
-kotahi-server-1            |     ],
-kotahi-server-1            |     volume: '87',
-kotahi-server-1            |     'container-title': [ 'Public Health' ],
-kotahi-server-1            |     id: '80bb49ae-380d-40e9-978f-61cf7d45211b'
-kotahi-server-1            |   }
-kotahi-server-1            | } 
-kotahi-server-1            | 
+      kotahi-server-1            | Reference CSL:  {
+      kotahi-server-1            |   '80bb49ae-380d-40e9-978f-61cf7d45211b': {
+      kotahi-server-1            |     DOI: '10.1016/s0033-3506(73)80126-x',
+      kotahi-server-1            |     issue: '3',
+      kotahi-server-1            |     page: '94',
+      kotahi-server-1            |     title: [
+      kotahi-server-1            |       'The Work of the World Health Organization in 1971, Annual Report of the Director-General 4071 Geneva World Health Organization 1972 £1.50'
+      kotahi-server-1            |     ],
+      kotahi-server-1            |     volume: '87',
+      kotahi-server-1            |     'container-title': [ 'Public Health' ],
+      kotahi-server-1            |     id: '80bb49ae-380d-40e9-978f-61cf7d45211b'
+      kotahi-server-1            |   }
+      kotahi-server-1            | } 
+      kotahi-server-1            | 
 
-Plugging this into a CSL validator says that it's missing a type and that title and container-title should not be arrays.
-But: arrayed titles are being used for other references that correctly work; they don't have types either.
+      Plugging this into a CSL validator says that it's missing a type and that title and container-title should not be arrays.
+      But: arrayed titles are being used for other references that correctly work; they don't have types either.
 
-If we can't format it, we're not showing it as a choice on the front end. It would be nice to fix this though.
+      If we can't format it, we're not showing it as a choice on the front end. It would be nice to fix this though.
 
-*/
+      */
 
-    console.error('\n\n\nCiteproc error', e)
-    console.error('Reference CSL: ', referenceCSL, '\n\n\n')
+    logger.error('\n\n\nCiteproc error', e)
+    logger.error('Reference CSL: ', referenceCSL, '\n\n\n')
     error = e.message
   }
 
-  // console.log('Comming out of formatting.js:', result, citeHtml, error)
+  // logger.info('Comming out of formatting.js:', result, citeHtml, error)
   return { result, citeHtml: citeText, error }
 }
 
-const createFormattedReference = async (data, groupId, isDatacite = false) => {
-  const {
-    DOI: doi,
-    author,
-    page,
-    title,
-    issue,
-    volume,
-    'container-title': journalTitle,
-  } = data
-
-  // console.log('issued data:', data.issued)
-
-  const rawDate = data.issued?.raw ? data.issued.raw : false
-
-  const yearFromDateParts = data.issued['date-parts']?.length
-    ? String(data.issued['date-parts'][0][0] || '')
-    : ''
-
-  const year = rawDate || yearFromDateParts
-
-  const outputData = {
-    doi,
-    DOI: doi,
-    author: pluckAuthors(author),
-    page,
-    issue,
-    volume,
-    issued: { raw: String(year) },
-    title: pluckTitle(title),
-    journalTitle: pluckJournalTitle(journalTitle),
-  }
-
-  const formattedCitation = await formatCitation(
-    isDatacite ? data : outputData,
-    groupId,
-  )
-
-  outputData.formattedCitation = formattedCitation.result
-  outputData.citeHtml = formattedCitation.citeHtml
-  return outputData
-}
-
-// Note: We probably want to have a version of this that handles multiple citations – the usecase would be that you have a
-// Reference List with citations in it, and you want to alphabetize them according to the formatting rules in the CSL style
-// library. Maybe we could do this using the UUID attached to each citation; we could pass back an array of objects, and something
-// in the ReferenceList Wax code could use the UUID to match the formatted citation to what it should be inserted into.
-//
-// Note that this usecase requires us to have CSL versions of all the citations in the Reference List; we might not have that
-// because some of the citations might be just strings of text that haven't gone through Crossref or Anystyle. If we fed those in,
-// they'd come out in the wrong place because Citeproc won't know how to deal with them.
-
-// The below code hanldes the multiple citations and above note usecase.
-// It takes valid Reference list and valid callouts data as inputs and it outputs calloutTexts, orderedCitations list
 const formatMultipleCitations = async (
   groupId,
   referenceData = {},
@@ -250,7 +255,7 @@ const formatMultipleCitations = async (
 
   // const styleName = getStyleNameFromTitle(styleTitle)
 
-  // console.log('Citeproc settings: ', localeName, styleName)
+  // logger.info('Citeproc settings: ', localeName, styleName)
 
   // localeName can be either 'en-US' or 'en-GB'
 
@@ -288,9 +293,9 @@ const formatMultipleCitations = async (
     // eslint-disable-next-line no-unused-vars
     const { citeData, preCitationIds } = calloutData.reduce(
       (accumulator, citation) => {
-        // console.log('citation', citation)
-        // console.log('accumulator', accumulator)
-        // console.log('preCitationIds', accumulator.preCitationIds)
+        // logger.info('citation', citation)
+        // logger.info('accumulator', accumulator)
+        // logger.info('preCitationIds', accumulator.preCitationIds)
         // eslint-disable-next-line no-unused-vars
         const [res, [[_, citeHtml, id]]] = engine.processCitationCluster(
           citation,
@@ -309,13 +314,13 @@ const formatMultipleCitations = async (
     // eslint-disable-next-line no-unused-vars
     preCitations = preCitationIds
 
-    // console.log(preCitationIds)
+    // logger.info(preCitationIds)
 
     const bib = engine.makeBibliography()
     // eslint-disable-next-line no-unused-vars
     orderedReferenceIds = bib[0].entry_ids.flat()
-    // console.log(bib)
-    // console.log(bib[0]['entry_ids']) // order of citations by ids
+    // logger.info(bib)
+    // logger.info(bib[0]['entry_ids']) // order of citations by ids
     // bib is the bibliography array. The first item is a metadata object; the second is an array of HTML strings.
 
     if (bib.length > 1) {
@@ -343,11 +348,11 @@ const formatMultipleCitations = async (
       result = results.map(r => `<p class="ref">${r.trim()}</p>`)
     }
   } catch (e) {
-    console.error('\n\n\nCiteproc error', e)
+    logger.error('\n\n\nCiteproc error', e)
     error = e.message
   }
 
-  // console.log(
+  // logger.info(
   //   'Comming out of formatting.js:',
   //   result, // reoredered citation array of html - p.ref
   //   calloutTexts, // callout text array of {id, text}
@@ -359,8 +364,20 @@ const formatMultipleCitations = async (
   return { result, calloutTexts, orderedReferenceIds, error }
 }
 
+const pluckAuthors = authors => {
+  if (!authors) return authors
+  return authors.map(({ given, family, sequence }) => {
+    return { given, family, sequence }
+  })
+}
+
+const pluckJournalTitle = journalTitle => journalTitle && journalTitle[0]
+
+const pluckTitle = title => title && title[0]
+
 module.exports = {
-  formatCitation,
   createFormattedReference,
+  createReference,
+  formatCitation,
   formatMultipleCitations,
 }
