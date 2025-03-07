@@ -16,7 +16,6 @@ const components = [
   './api/rest/profileUpload',
 
   './server/model-user/src',
-  './server/model-invitations/src/',
   './server/reference/src',
 ]
 

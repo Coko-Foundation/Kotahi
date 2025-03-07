@@ -1,0 +1,71 @@
+type SuggestedReviewer {
+  firstName: String
+  lastName: String
+  email: String
+  affiliation: String
+}
+
+input SuggestedReviewerInput {
+  firstName: String
+  lastName: String
+  email: String
+  affiliation: String
+}
+
+type Invitation {
+  id: ID
+  created: DateTime!
+  updated: DateTime
+  manuscriptId: ID!
+  purpose: String!
+  toEmail: String!
+  status: String!
+  senderId: ID!
+  invitedPersonType: String!
+  invitedPersonName: String!
+  responseDate: DateTime
+  responseComment: String
+  suggestedReviewers: [SuggestedReviewer]!
+  declinedReason: String
+  userId: ID
+  user: User
+  isShared: Boolean!
+}
+
+type BlacklistEmail {
+  id: ID
+  created: DateTime
+  updated: DateTime
+  email: String!
+  groupId: ID!
+}
+
+extend type Query {
+  invitationManuscriptId(id: ID): Invitation
+  invitationStatus(id: ID): Invitation
+  getInvitationsForManuscript(id: ID): [Invitation!]
+  getBlacklistInformation(email: String!, groupId: ID!): [BlacklistEmail]
+  getEmailInvitedReviewers(manuscriptId: ID!): [Invitation!]!
+}
+
+extend type Mutation {
+  updateInvitationStatus(
+    id: ID
+    status: String
+    userId: ID
+    responseDate: DateTime
+  ): Invitation
+  updateInvitationResponse(
+    id: ID
+    responseComment: String
+    declinedReason: String
+    suggestedReviewers: [SuggestedReviewerInput]
+  ): Invitation
+  addEmailToBlacklist(email: String!, groupId: ID!): BlacklistEmail
+  assignUserAsAuthor(manuscriptId: ID!, userId: ID!, invitationId: ID!): Team
+  updateSharedStatusForInvitedReviewer(
+    invitationId: ID!
+    isShared: Boolean!
+  ): Invitation!
+  removeInvitation(id: ID!): Invitation
+}
