@@ -1,5 +1,5 @@
 const cheerio = require('cheerio')
-const htmlToJats = require('../../jatsexport/htmlToJats')
+const htmlToJats = require('../../../services/jatsexport/htmlToJats')
 const { objIf, safeParse } = require('../../utils/objectUtils')
 
 const { CITATION_SELECTOR, CITATION_DATA_STRUCTURE } = require('./constants')

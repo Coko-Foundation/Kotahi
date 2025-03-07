@@ -14,6 +14,7 @@ const flaxResolvers = require('./flax/flax.resolvers')
 const formResolvers = require('./form/form.resolvers')
 const groupResolvers = require('./group/group.resolvers')
 const handlebarsResolvers = require('./handlebars/handlebars.resolvers')
+const jatsResolvers = require('./jats/jats.resolvers')
 const localContextResolvers = require('./localContext/localContext.resolvers')
 const manuscriptResolvers = require('./manuscript/manuscript.resolvers')
 const messageResolvers = require('./message/message.resolvers')
@@ -47,6 +48,7 @@ const typeDefFilePaths = [
   'form/form.graphql',
   'group/group.graphql',
   'handlebars/handlebars.graphql',
+  'jats/jats.graphql',
   'localContext/localContext.graphql',
   'manuscript/manuscript.graphql',
   'message/message.graphql',
@@ -88,6 +90,7 @@ const resolvers = merge(
   formResolvers,
   groupResolvers,
   handlebarsResolvers,
+  jatsResolvers,
   localContextResolvers,
   manuscriptResolvers,
   messageResolvers,

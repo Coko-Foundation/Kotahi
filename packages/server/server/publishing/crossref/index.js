@@ -26,7 +26,7 @@ const {
 const {
   htmlToJats,
   getCrossrefCitationsFromList,
-} = require('../../utils/jatsUtils')
+} = require('../../../services/jatsexport/jatsUtils')
 
 const Config = require('../../../models/config/config.model')
 

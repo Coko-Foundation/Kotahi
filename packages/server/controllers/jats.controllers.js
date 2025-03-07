@@ -1,13 +1,13 @@
 const { XMLValidator } = require('fast-xml-parser')
 
-const { makeJats } = require('../utils/jatsUtils')
-const articleMetadata = require('../../utils/pdfTemplates/articleMetadata')
-const publicationMetadata = require('../../utils/pdfTemplates/publicationMetadata')
-const validateJats = require('./validation')
-const makeZippedJats = require('./makeZippedJats')
+const { makeJats } = require('../services/jatsexport/jatsUtils')
+const validateJats = require('../services/jatsexport/validation')
+const makeZippedJats = require('../services/jatsexport/makeZippedJats')
 
-const Manuscript = require('../../models/manuscript/manuscript.model')
-const Config = require('../../models/config/config.model')
+const articleMetadata = require('../utils/pdfTemplates/articleMetadata')
+const publicationMetadata = require('../utils/pdfTemplates/publicationMetadata')
+
+const { Config, Manuscript } = require('../models')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 const skipValidation = false
@@ -30,12 +30,8 @@ fe</publisher>
 </list-item>ng the need for further species-specific land use studies to inform tailored land management.</title>
 </sec>`
 
-const getManuscriptById = async id => {
-  return Manuscript.query().findById(id)
-}
-
 const jatsHandler = async manuscriptId => {
-  const manuscript = await getManuscriptById(manuscriptId)
+  const manuscript = await Manuscript.findById(manuscriptId)
   const activeConfig = await Config.getCached(manuscript.groupId)
   const html = manuscript.meta.source
 
@@ -69,37 +65,18 @@ const jatsHandler = async manuscriptId => {
   return { jats, error: parseError }
 }
 
-const resolvers = {
-  Query: {
-    convertToJats: async (_, { manuscriptId }, ctx) => {
-      const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      // eslint-disable-next-line prefer-const
-      let returnedJats = { link: '', jats }
+const convertToJats = async manuscriptId => {
+  const { jats, error } = await jatsHandler(manuscriptId)
 
-      if (jats) {
-        returnedJats = await makeZippedJats(manuscriptId, jats)
-      }
+  let returnedJats = { link: '', jats }
 
-      return {
-        xml: returnedJats.jats || '',
-        zipLink: returnedJats.link,
-        error: error ? JSON.stringify(error) : '',
-      }
-    },
-  },
+  if (jats) returnedJats = await makeZippedJats(manuscriptId, jats)
+
+  return {
+    xml: returnedJats.jats || '',
+    zipLink: returnedJats.link,
+    error: error ? JSON.stringify(error) : '',
+  }
 }
 
-const typeDefs = `
-	extend type Query {
-		convertToJats(manuscriptId: String!): ConvertToJatsType
-	}
-
-	type ConvertToJatsType {
-		xml: String!
-		zipLink: String
-		error: String
-	}
-
-`
-
-module.exports = { resolvers, typeDefs }
+module.exports = { convertToJats }

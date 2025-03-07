@@ -1,13 +1,18 @@
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
-const makeCitations = require('../jatsexport/makeCitations')
-const htmlToJats = require('../jatsexport/htmlToJats')
-const { getCrossrefCitationsFromList } = require('./crossrefUtils')
-const processFunding = require('../jatsexport/processFunding')
-const processKeywords = require('../jatsexport/processKeywords')
-const processGlossary = require('../jatsexport/processGlossary')
-const processAppendices = require('../jatsexport/processAppendices')
-const processTablesWithCaptions = require('../jatsexport/processTablesWithCaptions')
+
+const makeCitations = require('./makeCitations')
+const htmlToJats = require('./htmlToJats')
+
+const {
+  getCrossrefCitationsFromList,
+} = require('../../server/utils/crossrefUtils')
+
+const processFunding = require('./processFunding')
+const processKeywords = require('./processKeywords')
+const processGlossary = require('./processGlossary')
+const processAppendices = require('./processAppendices')
+const processTablesWithCaptions = require('./processTablesWithCaptions')
 
 // const { lte } = require('semver')
 

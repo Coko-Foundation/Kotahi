@@ -5,7 +5,7 @@ const { logger } = require('@coko/server')
 // const cheerio = require('cheerio')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 const articleMetadata = require('./pdfTemplates/articleMetadata')
-const makeSvgsFromLatex = require('../server/jatsexport/makeSvgsFromLatex')
+const makeSvgsFromLatex = require('../services/jatsexport/makeSvgsFromLatex')
 const { updateSrcUrl } = require('../server/utils/fileStorageUtils')
 const njkFilters = require('./pdfTemplates/njkFilters')
 
