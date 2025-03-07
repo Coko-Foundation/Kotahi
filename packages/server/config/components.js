@@ -18,7 +18,6 @@ const components = [
   './server/model-user/src',
   './server/model-invitations/src/',
   './server/reference/src',
-  './server/model-publishing-collection/src',
 ]
 
 if (
