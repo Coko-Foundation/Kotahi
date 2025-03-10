@@ -3,6 +3,7 @@ const Form = require('../models/form/form.model')
 const {
   overrideFormKeys,
   HANDLEBARS_NON_FORM_VARIABLES,
+  EDITORS_DATA_VARIABLES,
 } = require('../services/handlebars.service')
 
 const ALLOWED_FORMS = ['submission' /* , 'review', 'decision' */]
@@ -56,7 +57,11 @@ const getVariables = async groupId => {
     return children.map(buildOption(category)).filter(Boolean)
   })
 
-  return [...HANDLEBARS_NON_FORM_VARIABLES, ...formVars].flat()
+  return [
+    ...HANDLEBARS_NON_FORM_VARIABLES,
+    ...EDITORS_DATA_VARIABLES,
+    ...formVars,
+  ].flat()
 }
 
 module.exports = {

@@ -1,6 +1,7 @@
 const { default: axios } = require('axios')
 const he = require('he')
-const { createFormattedReference } = require('../reference/src/formatting')
+
+const { createFormattedReference } = require('../../utils/reference')
 
 // Query: is it possible that the DOI is coming in with escape characters or something that is causing the Datacite API to not find it?
 

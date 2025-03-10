@@ -28,7 +28,7 @@ const {
 } = require('./manuscriptUtils')
 
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
-const { getActiveForms } = require('../../server/model-form/src/formCommsUtils')
+const { getActiveForms } = require('../form.controllers')
 const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
 const { cachedGet } = require('../../server/querycache')
 const seekEvent = require('../../services/notification.service')
@@ -47,12 +47,6 @@ const {
 } = require('../../server/publishing/flax/tools')
 
 const {
-  getReviewForm,
-  getDecisionForm,
-  getSubmissionForm,
-} = require('../../server/model-review/src/reviewCommsUtils')
-
-const {
   deepMergeObjectsReplacingArrays,
   objIf,
 } = require('../../server/utils/objectUtils')
@@ -62,7 +56,7 @@ const validateApiToken = require('../../server/utils/validateApiToken')
 const {
   populateTemplatedTasksForManuscript,
   deleteAlertsForManuscript,
-} = require('../../server/model-task/src/taskCommsUtils')
+} = require('../task.controllers')
 
 const {
   addUserToManuscriptChatChannel,
@@ -76,7 +70,7 @@ const {
 
 const {
   getThreadedDiscussionsForManuscript,
-} = require('../../server/model-threaded-discussion/src/threadedDiscussionCommsUtils')
+} = require('../threadedDiscussion.controllers')
 
 const {
   publishToHypothesis,
@@ -99,7 +93,10 @@ const {
 
 const {
   convertFilesToFullObjects,
-} = require('../../server/model-review/src/reviewUtils')
+  getReviewForm,
+  getDecisionForm,
+  getSubmissionForm,
+} = require('../review.controllers')
 
 const {
   getUsersById,
@@ -107,10 +104,7 @@ const {
   getSharedReviewersIds,
 } = require('../../server/model-user/src/userCommsUtils')
 
-const {
-  applyTemplate,
-  generateCss,
-} = require('../../server/pdfexport/applyTemplate')
+const { applyTemplate, generateCss } = require('../../utils/applyTemplate')
 
 // #endregion import
 
@@ -740,7 +734,6 @@ const getRelatedReviews = async (
       review,
       review.isDecision ? decisionForm : reviewForm,
       async ids => File.query().findByIds(ids),
-      getFilesWithUrl,
     )
   }
 

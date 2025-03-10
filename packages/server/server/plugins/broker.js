@@ -1,6 +1,6 @@
 const { logger, useTransaction } = require('@coko/server')
 
-const { getSubmissionForm } = require('../model-review/src/reviewCommsUtils')
+const { getSubmissionForm } = require('../../controllers/review.controllers')
 const { importWorkersByGroup } = require('./imports')
 const { DoiExistenceChecker } = require('./doiExistenceChecker')
 

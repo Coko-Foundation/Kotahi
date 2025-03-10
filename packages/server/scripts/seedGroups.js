@@ -14,14 +14,10 @@ const seedConfig = require('./seedConfig')
 const seedForms = require('./seedForms')
 const seedCmsFiles = require('./seedCmsFiles')
 const defaultEmailTemplates = require('../config/defaultEmailTemplates')
-const { generateCss } = require('../server/pdfexport/applyTemplate')
+const { generateCss } = require('../utils/applyTemplate')
 const { seedNotifications } = require('./seedNotifications')
 
-const defaultTemplatePath = path.resolve(
-  __dirname,
-  '../server/pdfexport/pdfTemplates',
-)
-
+const defaultTemplatePath = path.resolve(__dirname, '../utils//pdfTemplates')
 const userTemplatePath = path.resolve(__dirname, '../config/journal/export')
 
 const createGroupAndRelatedData = async (

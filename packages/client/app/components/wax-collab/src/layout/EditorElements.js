@@ -35,7 +35,11 @@ const EditorStyles = css`
     }
 
     strong {
-      font-weight: 900;
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
     }
   }
 

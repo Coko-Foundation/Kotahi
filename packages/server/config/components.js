@@ -15,24 +15,7 @@ const components = [
   './api/rest/orcid',
   './api/rest/profileUpload',
 
-  './server/model-notification/src/',
   './server/model-user/src',
-  './server/model-cms/src',
-  './server/model-invitations/src/',
-  './server/model-file/src/',
-  './server/model-review/src/',
-  './server/model-form/src/',
-  './server/model-message/src',
-  './server/reports/src',
-  './server/pdfexport',
-  './server/jatsexport',
-  './server/model-threaded-discussion/src/',
-  './server/model-task/src',
-  './server/model-docmap/src',
-  './server/xsweet',
-  './server/model-email-templates/src',
-  './server/reference/src',
-  './server/model-publishing-collection/src',
 ]
 
 if (

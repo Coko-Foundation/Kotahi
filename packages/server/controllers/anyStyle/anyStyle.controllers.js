@@ -10,7 +10,7 @@ const config = require('config')
 const { logger } = require('@coko/server')
 
 const anystyleXmlToHtml = require('./anyStyleToHtml')
-const { formatCitation } = require('../../server/reference/src/formatting')
+const { formatCitation } = require('../../utils/reference')
 
 const randomBytes = promisify(crypto.randomBytes)
 

@@ -1,5 +1,5 @@
 const cheerio = require('cheerio')
-const htmlToJats = require('../../jatsexport/htmlToJats')
+const htmlToJats = require('../../../services/jatsexport/htmlToJats')
 const { objIf, safeParse } = require('../../utils/objectUtils')
 
 const { CITATION_SELECTOR, CITATION_DATA_STRUCTURE } = require('./constants')
@@ -99,7 +99,7 @@ const getRightsList = localContext => {
   if (!localContext) return []
 
   const notices =
-    localContext.notice.map(n => ({
+    localContext.notice?.map(n => ({
       rightsUri: localContext.url,
       rightsIdentifier: n.noticeType,
       rightsIdentifierScheme: 'Local Contexts',
@@ -108,7 +108,7 @@ const getRightsList = localContext => {
     })) || []
 
   const labels =
-    localContext.label.map(l => ({
+    localContext.label?.map(l => ({
       rightsUri: localContext.url,
       rightsIdentifier: l.identifier,
       rightsIdentifierScheme: 'Local Contexts',

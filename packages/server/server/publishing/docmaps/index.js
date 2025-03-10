@@ -9,7 +9,7 @@ const Config = require('../../../models/config/config.model')
 const Docmap = require('../../../models/docmap/docmap.model')
 
 const { publishSpecificAnnotationToHypothesis } = require('../hypothesis')
-const { getActiveForms } = require('../../model-form/src/formCommsUtils')
+const { getActiveForms } = require('../../../controllers/form.controllers')
 
 const {
   getFieldsMapForTemplating,

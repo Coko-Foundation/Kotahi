@@ -2,7 +2,7 @@ const axios = require('axios')
 const { uuid } = require('@coko/server')
 const Config = require('../../../models/config/config.model')
 
-const { getSubmissionForm } = require('../../model-review/src/reviewCommsUtils')
+const { getSubmissionForm } = require('../../../controllers/review.controllers')
 
 const checkIfRequiredFieldsArePublishable = (
   manuscript,

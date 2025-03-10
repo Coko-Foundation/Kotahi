@@ -1,0 +1,95 @@
+input CitationSearchInput {
+  text: String!
+  count: Int
+}
+
+input CitationData {
+  references: String
+  callouts: String
+}
+
+extend type Query {
+  getMatchingReferences(input: CitationSearchInput): CitationSearchResult
+  getDataciteCslFromDOI(
+    input: CitationSearchInput
+  ): FormattedCitationSearchResult
+  getDataciteCslFromTitle(
+    input: CitationSearchInput
+  ): FormattedCitationSearchResult
+  getFormattedReferences(
+    input: CitationSearchInput
+  ): FormattedCitationSearchResult
+  getReferenceFromDoi(doi: String!): CitationSearchSingleResult
+  formatCitation(citation: String!): CitationFormatResult
+  formatMultipleCitations(input: CitationData): ReorderedCitationFormatResult
+}
+
+type CitationSearchSingleResult {
+  success: Boolean
+  message: String
+  reference: Reference
+}
+
+type CitationSearchResult {
+  success: Boolean
+  message: String
+  matches: [Reference]
+}
+
+type FormattedCitationSearchResult {
+  success: Boolean
+  message: String
+  matches: [FormattedReference]
+}
+
+type ReferenceAuthor {
+  given: String
+  family: String
+  sequence: String
+}
+
+type IssuedDate {
+  raw: String
+}
+
+type Reference {
+  doi: String
+  author: [ReferenceAuthor]
+  issue: String
+  issued: IssuedDate
+  page: String
+  title: String
+  volume: String
+  journalTitle: String
+}
+
+type FormattedReference {
+  doi: String
+  author: [ReferenceAuthor]
+  issue: String
+  issued: IssuedDate
+  page: String
+  title: String
+  volume: String
+  journalTitle: String
+  formattedCitation: String
+  citeHtml: String
+}
+
+type CitationFormatResult {
+  formattedCitation: String
+  citeHtml: String
+  error: String
+}
+
+type CalloutText {
+  id: String
+  text: String
+}
+
+type ReorderedCitationFormatResult {
+  orderedCitations: [String]
+  calloutTexts: [CalloutText]
+  orderedReferenceIds: [String]
+  error: String
+}

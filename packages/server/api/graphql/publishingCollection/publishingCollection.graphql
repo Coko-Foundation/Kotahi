@@ -1,0 +1,55 @@
+extend type Query {
+  publishingCollection(groupId: ID!): [PublishCollection!]!
+}
+
+extend type Mutation {
+  createCollection(input: PublishCollectionInput!): PublishCollection!
+  updateCollection(id: ID!, input: PublishCollectionInput!): PublishCollection!
+  deleteCollection(id: ID!): PublishingCollectionDeleteResponse!
+}
+
+type PublishCollection {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  formData: PublishingCollectionFormData!
+  active: Boolean!
+  manuscripts: [PublishedManuscript!]!
+  groupId: ID!
+}
+
+type formJournalData {
+  title: String!
+  description: String!
+  contact: String!
+  logoPath: String!
+  issn: String!
+  electronicIssn: String!
+}
+
+type PublishingCollectionFormData {
+  title: String!
+  description: String!
+  publicationDate: String!
+  image: String!
+  issueNumber: String!
+  file: File
+}
+
+input PublishCollectionInput {
+  formData: PublishingCollectionFormDataInput!
+  active: Boolean!
+  manuscripts: [ID!]!
+}
+
+input PublishingCollectionFormDataInput {
+  title: String!
+  description: String!
+  publicationDate: String!
+  image: Upload
+  issueNumber: String!
+}
+
+type PublishingCollectionDeleteResponse {
+  success: Boolean!
+}

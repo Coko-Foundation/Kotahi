@@ -1,0 +1,47 @@
+type EmailTemplate {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  emailTemplateType: String
+  emailContent: EmailContent!
+  groupId: ID!
+}
+
+type EmailContent {
+  cc: String
+  subject: String!
+  body: String!
+  description: String!
+  ccEditors: Boolean!
+}
+
+input EmailContentInput {
+  cc: String
+  subject: String!
+  body: String!
+  description: String!
+  ccEditors: Boolean!
+}
+
+input EmailTemplateInput {
+  id: ID
+  emailTemplateType: String
+  emailContent: EmailContentInput!
+  groupId: ID
+}
+
+type EmailTemplateResponse {
+  emailTemplate: EmailTemplate
+  success: Boolean!
+  error: String
+}
+
+extend type Query {
+  emailTemplates: [EmailTemplate!]!
+}
+
+extend type Mutation {
+  createEmailTemplate(input: EmailTemplateInput!): EmailTemplateResponse!
+  deleteEmailTemplate(id: ID!): EmailTemplateResponse!
+  updateEmailTemplate(input: EmailTemplateInput!): EmailTemplateResponse!
+}

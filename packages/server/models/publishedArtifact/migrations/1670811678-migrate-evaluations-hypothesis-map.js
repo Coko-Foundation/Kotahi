@@ -4,7 +4,7 @@ const {
   getSubmissionForm,
   getReviewForm,
   getDecisionForm,
-} = require('../../../server/model-review/src/reviewCommsUtils')
+} = require('../../../controllers/review.controllers')
 
 const Manuscript = require('../../manuscript/manuscript.model')
 const PublishedArtifact = require('../publishedArtifact.model')

@@ -21,12 +21,12 @@ const {
   getReviewForm,
   getDecisionForm,
   getSubmissionForm,
-} = require('../../model-review/src/reviewCommsUtils')
+} = require('../../../controllers/review.controllers')
 
 const {
   htmlToJats,
   getCrossrefCitationsFromList,
-} = require('../../utils/jatsUtils')
+} = require('../../../services/jatsexport/jatsUtils')
 
 const Config = require('../../../models/config/config.model')
 

@@ -1,0 +1,68 @@
+extend type Query {
+  threadedDiscussions(manuscriptId: ID!): [ThreadedDiscussion!]!
+}
+
+extend type Mutation {
+  updatePendingComment(
+    manuscriptId: ID!
+    threadedDiscussionId: ID!
+    threadId: ID!
+    commentId: ID!
+    comment: String
+    manuscriptVersionId: ID
+  ): ThreadedDiscussion!
+  completeComments(threadedDiscussionId: ID!): ThreadedDiscussion!
+  completeComment(
+    threadedDiscussionId: ID!
+    threadId: ID!
+    commentId: ID!
+  ): ThreadedDiscussion!
+  deletePendingComment(
+    threadedDiscussionId: ID!
+    threadId: ID!
+    commentId: ID!
+  ): ThreadedDiscussion!
+}
+
+type ThreadedDiscussion {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  manuscriptId: ID!
+  threads: [DiscussionThread!]!
+  userCanAddComment: Boolean!
+  userCanEditOwnComment: Boolean!
+  userCanEditAnyComment: Boolean!
+}
+
+type DiscussionThread {
+  id: ID
+  created: DateTime
+  updated: DateTime
+  comments: [ThreadComment]
+}
+
+type ThreadComment {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  published: DateTime
+  manuscriptVersionId: ID
+  commentVersions: [ThreadedCommentVersion!]!
+  pendingVersion: PendingThreadComment
+}
+
+type ThreadedCommentVersion {
+  id: ID!
+  created: DateTime!
+  updated: DateTime
+  author: User!
+  comment: String!
+}
+
+type PendingThreadComment {
+  created: DateTime!
+  updated: DateTime
+  author: User!
+  comment: String!
+}

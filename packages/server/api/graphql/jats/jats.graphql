@@ -1,0 +1,9 @@
+extend type Query {
+  convertToJats(manuscriptId: String!): ConvertToJatsType
+}
+
+type ConvertToJatsType {
+  xml: String!
+  zipLink: String
+  error: String
+}
