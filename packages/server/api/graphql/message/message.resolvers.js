@@ -20,9 +20,8 @@ module.exports = {
       return getMessageById(messageId)
     },
 
-    // TO DO: before is never used?
     messages: async (_, { channelId, first = 20, before }, ctx) => {
-      return getMessages(channelId, first, ctx.userId)
+      return getMessages(channelId, first, before, ctx.userId)
     },
 
     // Calculates the total number of unread  messages count from more then one channels for the current user.
