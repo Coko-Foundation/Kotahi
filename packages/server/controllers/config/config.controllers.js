@@ -66,14 +66,14 @@ const translationOverrides = async groupId => {
 
   try {
     // eslint-disable-next-line import/no-dynamic-require, global-require
-    groupOverrides = require(`../../../config/translation/${groupName}/translationOverrides`)
+    groupOverrides = require(`../../config/translation/${groupName}/translationOverrides`)
   } catch {
     groupOverrides = {}
   }
 
   try {
     // eslint-disable-next-line global-require, import/no-unresolved, import/extensions
-    globalOverrides = require('../../../config/translation/translationOverrides')
+    globalOverrides = require('../../config/translation/translationOverrides')
   } catch {
     globalOverrides = {}
   }
