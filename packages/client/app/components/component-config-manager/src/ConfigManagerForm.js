@@ -114,6 +114,10 @@ const EmailsTabWrapper = styled(StyledSectionContent)`
     span.handlebars.decision-form {
       background-color: ${getFormBadgeBg('decision')};
     }
+
+    span.handlebars.editors-form {
+      background-color: ${getFormBadgeBg('editors')};
+    }
   }
 
   .wax-surface-scroll {

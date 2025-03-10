@@ -1,5 +1,5 @@
 const Handlebars = require('handlebars')
-const { clientUrl } = require('@coko/server')
+const { clientUrl, Team, logger } = require('@coko/server')
 const { Group } = require('../models')
 const { transformEntries } = require('../server/utils/objectUtils')
 
@@ -31,6 +31,48 @@ const HANDLEBARS_NON_FORM_VARIABLES = [
   },
   { label: 'Discussion URL', value: 'discussionUrl', type: 'link' },
 ].map(v => ({ ...v, form: 'common', type: v.type || 'text' }))
+
+const EDITORS_DATA_VARIABLES = [
+  { label: 'Editor Name', value: 'editorName' },
+  { label: 'Editor Email', value: 'editorEmail' },
+  { label: 'Handling Editor Name', value: 'handlingEditorName' },
+  { label: 'Handling Editor Email', value: 'handlingEditorEmail' },
+  { label: 'Senior Editor Name', value: 'seniorEditorName' },
+  { label: 'Senior Editor Email', value: 'seniorEditorEmail' },
+].map(v => ({ ...v, form: 'editors', type: 'text' }))
+
+/**
+ * Get the editors data for a manuscript.
+ * @param {*} manuscriptId
+ * @returns {Promise<{editorName: string, editorEmail: string, handlingEditorName: string, handlingEditorEmail: string, seniorEditorName: string, seniorEditorEmail: string}>}
+ */
+const getEditorsData = async manuscriptId => {
+  const editorsData = {}
+
+  if (manuscriptId) {
+    const editorRoles = ['editor', 'handlingEditor', 'seniorEditor']
+
+    const editorTeams = await Team.query()
+      .where({ objectId: manuscriptId })
+      .whereIn('role', editorRoles)
+      .withGraphFetched('members.user')
+
+    editorRoles.forEach(role => {
+      const team = editorTeams.find(t => t.role === role)
+
+      if (team && team.members.length > 0 && team.members[0].user) {
+        const editorUser = team.members[0].user
+        editorsData[`${role}Name`] =
+          editorUser.username || editorUser.name || ''
+        editorsData[`${role}Email`] = editorUser.email || ''
+      }
+    })
+  }
+
+  logger.info('editorsData', JSON.stringify(editorsData, null, 2))
+
+  return editorsData
+}
 
 /**
  * Transforms form keys by capitalizing each part of the property name
@@ -138,6 +180,8 @@ const processData = async (data, groupId) => {
     ...submissionData,
   }
 
+  const editorsData = await getEditorsData(manuscript?.id)
+
   const linkNodes = {
     discussionUrl: `<a href="${discussionUrl}" target="_blank">${discussionUrl}</a>`,
     acceptInviteLink: `<a href="${appUrl}/acceptarticle/${data.invitationId}" target="_blank">Accept Invitation</a>`,
@@ -156,6 +200,7 @@ const processData = async (data, groupId) => {
     ...rest,
     ...recipientData,
     ...manuscriptData,
+    ...editorsData,
     ...linkNodes,
   }
 }
@@ -172,4 +217,5 @@ module.exports = {
   overrideFormKeys,
   processData,
   useHandlebars,
+  EDITORS_DATA_VARIABLES,
 }
