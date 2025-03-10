@@ -298,6 +298,7 @@ const updateReviewerTeamMemberStatus = async (manuscriptId, status, userId) => {
 }
 
 module.exports = {
+  convertFilesToFullObjects,
   getDecisionForm,
   getReviewForm,
   getSubmissionForm,
