@@ -17,6 +17,7 @@ const getFormBadgeBg = ({ $form }) => {
     decision: '#d89400',
     review: '#803c01',
     submission: color.brand1.base(),
+    editors: '#c46b28',
   }
 
   const safeKey = keys(colorVariations).includes($form) ? $form : 'common'

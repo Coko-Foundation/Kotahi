@@ -9,6 +9,7 @@ export const getFormBadgeBg = form => {
     decision: '#fffacb',
     review: '#ffddc2',
     submission: color.brand1.tint90,
+    editors: '#fae5b4',
   }
 
   const safeKey = keys(colorVariations).includes(form) ? form : 'common'
