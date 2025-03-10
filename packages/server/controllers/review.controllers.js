@@ -214,7 +214,7 @@ const updateReview = async (id, input, userId) => {
     isCollaborative: !!roles.collaborativeReviewer,
     ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
     // Prevent reassignment of userId or manuscriptId:
-    userIdToApply,
+    userId: userIdToApply,
     manuscriptId: existingReview.manuscriptId || input.manuscriptId,
   }
 
