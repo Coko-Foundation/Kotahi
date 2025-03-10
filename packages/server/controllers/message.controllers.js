@@ -80,7 +80,7 @@ const getMessageById = async (messageId, withUser) => {
   return Message.findById(messageId)
 }
 
-const getMessages = async (channelId, first, userId) => {
+const getMessages = async (channelId, first, before, userId) => {
   let messagesQuery = Message.query()
     .where({ channelId })
     .withGraphJoined('user')
