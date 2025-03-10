@@ -46,7 +46,7 @@ const DecisionReviews = ({
   currentUser,
 }) => {
   const collaborativeReviewToShow =
-    manuscript.reviews.find(r => r.isCollaborative) ?? null
+    manuscript.reviews.find(r => r.isCollaborative && !r.isDecision) ?? null
 
   const reviewsToShow = manuscript?.reviews?.length
     ? manuscript.reviews
