@@ -102,7 +102,7 @@ const prepareAndSendToQueue = async ({ notification, data }) => {
  */
 const seekEvent = async (event, data) => {
   try {
-    const { groupId, context } = data
+    const { groupId, context, currentUser } = data
     const { formData } = (await Config.getCached(groupId)) ?? {}
     const { eventsConfig } = formData?.notification ?? {}
     const eventIsActive = eventsConfig?.[event]?.active
@@ -143,7 +143,7 @@ const seekEvent = async (event, data) => {
 
       return prepareAndSendToQueue({
         notification,
-        data: { ...data, context: newContext },
+        data: { ...data, context: newContext, senderName: currentUser },
       })
     })
 
