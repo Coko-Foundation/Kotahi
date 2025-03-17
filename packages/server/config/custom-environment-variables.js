@@ -133,5 +133,6 @@ module.exports = {
   },
   e2eTestingApi: 'E2E_TESTING_API',
   clientUrl: 'CLIENT_URL',
+  corsOrigin: 'CORS_ORIGIN',
   inspectorPort: 'INSPECTOR_PORT',
 }
