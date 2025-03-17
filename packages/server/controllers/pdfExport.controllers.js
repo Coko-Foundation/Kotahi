@@ -161,7 +161,7 @@ const pdfHandler = async manuscriptId => {
   // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
   await Promise.all(
     publicationMetadata.fonts.map(async fontPath => {
-      const thisFont = path.join(__dirname, `../../profiles/${fontPath}`)
+      const thisFont = path.join(__dirname, `../profiles/${fontPath}`)
 
       const targetFont = `${dirName}/${fontPath}`
       await copyFile(thisFont, targetFont)
