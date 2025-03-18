@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:m="http://www.w3.org/1998/Math/MathML"
-           elementFormDefault="qualified"
-           targetNamespace="http://www.w3.org/1998/Math/MathML">
-   <xs:include schemaLocation="server/jatsexport/schemas/mathml3-content.xsd"/>
-   <xs:include schemaLocation="server/jatsexport/schemas/mathml3-presentation.xsd"/>
-   <xs:include schemaLocation="server/jatsexport/schemas/mathml3-common.xsd"/>
+        xmlns:m="http://www.w3.org/1998/Math/MathML"
+        elementFormDefault="qualified"
+        targetNamespace="http://www.w3.org/1998/Math/MathML">
+        <xs:include schemaLocation="services/jatsexport/schemas/mathml3-content.xsd" />
+        <xs:include schemaLocation="services/jatsexport/schemas/mathml3-presentation.xsd" />
+        <xs:include schemaLocation="services/jatsexport/schemas/mathml3-common.xsd" />
 </xs:schema>

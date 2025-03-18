@@ -1,21 +1,21 @@
 <?xml-stylesheet href="xsd.xsl" type="text/xsl"?>
 <xsd:schema xmlns:mtl="http://www.mulberrytech.com/taglib"
-            xmlns:c="http://www.w3.org/ns/xproc-step"
-            xmlns:mml="http://www.w3.org/1998/Math/MathML"
-            xmlns:ali="http://www.niso.org/schemas/ali/1.0/"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   xmlns:c="http://www.w3.org/ns/xproc-step"
+   xmlns:mml="http://www.w3.org/1998/Math/MathML"
+   xmlns:ali="http://www.niso.org/schemas/ali/1.0/"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xsd="http://www.w3.org/2001/XMLSchema">
    <xsd:annotation>
       <xsd:documentation>
          <div xmlns:dxdy="http://mulberrytech.com/2014/dxdy"
-              xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
-              xmlns="http://www.w3.org/1999/xhtml"
-              class="bodytext">
+            xmlns:xsd="http://www.w3.org/2000/10/XMLSchema"
+            xmlns="http://www.w3.org/1999/xhtml"
+            class="bodytext">
             <h1>MODULE: JATS-journalpublishing1-3-mathml3 DTD in XSD form (driver file)</h1>
             <h2>MODEL: Journal Publishing DTD (MathML 3.0)</h2>
-            <h2>VERSION:   1.3</h2>
-            <h2>DATE:  June 2021</h2>
+            <h2>VERSION: 1.3</h2>
+            <h2>DATE: June 2021</h2>
             <dl>
                <dt>SYSTEM</dt>
                <dd>
@@ -34,12 +34,13 @@
       </xsd:documentation>
    </xsd:annotation>
    <xsd:import namespace="http://www.w3.org/1999/xlink"
-               schemaLocation="server/jatsexport/schemas/xlink.xsd" />
+      schemaLocation="services/jatsexport/schemas/xlink.xsd" />
    <xsd:import namespace="http://www.w3.org/1998/Math/MathML"
-               schemaLocation="server/jatsexport/schemas/mathml3.xsd"/>
+      schemaLocation="services/jatsexport/schemas/mathml3.xsd" />
    <xsd:import namespace="http://www.niso.org/schemas/ali/1.0/"
-               schemaLocation="server/jatsexport/schemas/module-ali.xsd"/>
+      schemaLocation="services/jatsexport/schemas/module-ali.xsd" />
    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-               schemaLocation="server/jatsexport/schemas/xml.xsd" />
-   <xsd:include schemaLocation="server/jatsexport/schemas/JATS-journalpublishing1-3-mathml3-elements.xsd"/>
+      schemaLocation="services/jatsexport/schemas/xml.xsd" />
+   <xsd:include
+      schemaLocation="services/jatsexport/schemas/JATS-journalpublishing1-3-mathml3-elements.xsd" />
 </xsd:schema>
