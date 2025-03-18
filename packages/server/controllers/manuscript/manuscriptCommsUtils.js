@@ -2,12 +2,9 @@ const Manuscript = require('../../models/manuscript/manuscript.model')
 const Config = require('../../models/config/config.model')
 const Team = require('../../models/team/team.model')
 
-const getManuscriptLink = async (appUrl, userId, manuscriptId) => {
-  const {
-    getUserRolesInManuscript,
-    // eslint-disable-next-line global-require
-  } = require('../../server/model-user/src/userCommsUtils')
+const { getUserRolesInManuscript } = require('../user.controllers')
 
+const getManuscriptLink = async (appUrl, userId, manuscriptId) => {
   const roles = manuscriptId
     ? await getUserRolesInManuscript(userId, manuscriptId)
     : {}

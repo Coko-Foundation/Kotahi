@@ -5,7 +5,7 @@ const axios = require('axios')
 const Config = require('../../../models/config/config.model')
 const PublishedArtifact = require('../../../models/publishedArtifact/publishedArtifact.model')
 
-const { getUsersById } = require('../../model-user/src/userCommsUtils')
+const { getUsersById } = require('../../../controllers/user.controllers')
 const { getActiveForms } = require('../../../controllers/form.controllers')
 const { getPublishableFields, normalizeUri } = require('./hypothesisTools')
 const { upsertArtifact, deleteArtifact } = require('../publishingCommsUtils')

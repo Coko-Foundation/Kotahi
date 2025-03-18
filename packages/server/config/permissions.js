@@ -676,7 +676,6 @@ const permissions = {
       userIsGroupAdmin,
       userIsAdmin,
     ), // TODO scrap this mutation in favour of an 'assignEditor' mutation
-    createUser: deny, // Never used
     deleteCollection: or(userIsGm, userIsGroupAdmin, userIsAdmin),
     deleteFile: isAuthenticated,
     deleteFiles: isAuthenticated,

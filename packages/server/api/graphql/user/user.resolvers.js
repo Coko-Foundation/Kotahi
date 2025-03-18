@@ -1,0 +1,136 @@
+const {
+  channelUsersForMention,
+  defaultIdentity,
+  deleteUser,
+  expandChat,
+  getCurrentUser,
+  getUser,
+  getUsers,
+  isUserOnline,
+  loginUser,
+  paginatedUsers,
+  profilePicture,
+  searchUsers,
+  sendEmail,
+  setGlobalRole,
+  setGroupRole,
+  updateEmail,
+  updateLanguage,
+  updateMenuUI,
+  updateRecentTab,
+  updateUser,
+  updateUsername,
+  userIdentities,
+} = require('../../../controllers/user.controllers')
+
+module.exports = {
+  Query: {
+    async channelUsersForMention(_, { channelId }, ctx) {
+      return channelUsersForMention(channelId, ctx.req.headers['group-id'])
+    },
+
+    async currentUser(_, __, ctx) {
+      return getCurrentUser(ctx.userId, ctx.req.headers['group-id'])
+    },
+
+    async paginatedUsers(_, { sort, offset, limit }, ctx) {
+      return paginatedUsers(
+        ctx.userId,
+        ctx.req.headers['group-id'],
+        sort,
+        offset,
+        limit,
+      )
+    },
+
+    async searchUsers(_, { teamId, query }, ctx) {
+      return searchUsers(teamId, query)
+    },
+
+    async user(_, { id, username }, ctx) {
+      return getUser(id, username, ctx.req.headers['group-id'])
+    },
+
+    async users(_, __, ctx) {
+      return getUsers(ctx.req.headers['group-id'])
+    },
+  },
+
+  Mutation: {
+    async deleteUser(_, { id }, ctx) {
+      return deleteUser(id, ctx.req.headers['group-id'])
+    },
+
+    async expandChat(_, { state }, ctx) {
+      return expandChat(ctx.userId, state)
+    },
+
+    async loginUser(_, { input }) {
+      return loginUser(input)
+    },
+
+    async sendEmail(_, { input }, ctx) {
+      return sendEmail(input, ctx)
+    },
+
+    async setGlobalRole(_, { userId, role, shouldEnable }, ctx) {
+      return setGlobalRole(
+        userId,
+        ctx.req.headers['group-id'],
+        role,
+        shouldEnable,
+      )
+    },
+
+    async setGroupRole(_, { userId, role, shouldEnable }, ctx) {
+      return setGroupRole(
+        userId,
+        ctx.req.headers['group-id'],
+        role,
+        shouldEnable,
+      )
+    },
+
+    async updateEmail(_, { id, email }) {
+      return updateEmail(id, email)
+    },
+
+    async updateLanguage(_, { id, preferredLanguage }) {
+      return updateLanguage(id, preferredLanguage)
+    },
+
+    async updateMenuUI(_, { expanded }, ctx) {
+      return updateMenuUI(ctx.userId, expanded)
+    },
+
+    async updateRecentTab(_, { tab }, ctx) {
+      return updateRecentTab(ctx.userId, tab)
+    },
+
+    async updateUser(_, { id, input }) {
+      return updateUser(id, input)
+    },
+
+    async updateUsername(_, { id, username }) {
+      return updateUsername(id, username)
+    },
+  },
+
+  User: {
+    async defaultIdentity(parent) {
+      return defaultIdentity(parent)
+    },
+
+    async identities(parent) {
+      return userIdentities(parent)
+    },
+
+    async isOnline(parent) {
+      return isUserOnline(parent)
+    },
+
+    async profilePicture(parent) {
+      return profilePicture(parent)
+    },
+  },
+}

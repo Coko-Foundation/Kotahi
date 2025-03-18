@@ -118,7 +118,7 @@ const getManuscriptLink = async (appUrl, userId, manuscriptId) => {
   const {
     getUserRolesInManuscript,
     // eslint-disable-next-line global-require
-  } = require('../server/model-user/src/userCommsUtils')
+  } = require('../controllers/user.controllers')
 
   const roles = manuscriptId
     ? await getUserRolesInManuscript(userId, manuscriptId)

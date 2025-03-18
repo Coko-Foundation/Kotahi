@@ -14,8 +14,6 @@ const components = [
   './api/rest/cmsUpload',
   './api/rest/orcid',
   './api/rest/profileUpload',
-
-  './server/model-user/src',
 ]
 
 if (

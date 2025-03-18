@@ -10,7 +10,7 @@ const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
   getUserRolesInManuscript,
-} = require('../../model-user/src/userCommsUtils')
+} = require('../../../controllers/user.controllers')
 
 const seekEvent = require('../../../services/notification.service')
 
