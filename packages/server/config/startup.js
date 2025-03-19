@@ -31,7 +31,7 @@ module.exports = [
   {
     label: 'Register plugins',
     execute: async () => {
-      const { registerPlugins } = require('../server/plugins/plugins')
+      const { registerPlugins } = require('../services/plugins/plugins')
       registerPlugins()
     },
   },

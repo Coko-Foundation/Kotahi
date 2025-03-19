@@ -131,7 +131,6 @@ services:
       - ./packages/server/controllers:/home/node/app/controllers
       - ./packages/server/models:/home/node/app/models
       - ./packages/server/scripts:/home/node/app/scripts
-      - ./packages/server/server:/home/node/app/server
       - ./packages/server/services:/home/node/app/services
       - ./packages/server/utils:/home/node/app/utils
     healthcheck:

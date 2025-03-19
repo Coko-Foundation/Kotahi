@@ -3,11 +3,11 @@ const { subscriptionManager } = require('@coko/server')
 
 const Config = require('../../models/config/config.model')
 
-const importArticlesFromBiorxiv = require('../../server/import-articles/biorxiv-import')
-const importArticlesFromBiorxivWithFullTextSearch = require('../../server/import-articles/biorxiv-full-text-import')
-const importArticlesFromPubmed = require('../../server/import-articles/pubmed-import')
-const importArticlesFromSemanticScholar = require('../../server/import-articles/semantic-scholar-papers-import')
-const { runImports } = require('../../server/plugins/imports')
+const importArticlesFromBiorxiv = require('../../services/importArticles/biorxiv-import')
+const importArticlesFromBiorxivWithFullTextSearch = require('../../services/importArticles/biorxiv-full-text-import')
+const importArticlesFromPubmed = require('../../services/importArticles/pubmed-import')
+const importArticlesFromSemanticScholar = require('../../services/importArticles/semantic-scholar-papers-import')
+const { runImports } = require('../../services/plugins/imports')
 
 const importsInProgress = new Set()
 
