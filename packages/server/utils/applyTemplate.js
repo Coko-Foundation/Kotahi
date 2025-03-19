@@ -6,7 +6,7 @@ const { logger } = require('@coko/server')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 const articleMetadata = require('./pdfTemplates/articleMetadata')
 const makeSvgsFromLatex = require('../services/jatsexport/makeSvgsFromLatex')
-const { updateSrcUrl } = require('../server/utils/fileStorageUtils')
+const { updateSrcUrl } = require('./fileStorageUtils')
 const njkFilters = require('./pdfTemplates/njkFilters')
 
 // const fixMathTags = html => {

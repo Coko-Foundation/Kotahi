@@ -1,7 +1,7 @@
 const { createFile, deleteFiles, File } = require('@coko/server')
 
 const { Manuscript, PublishingCollection } = require('../models')
-const { getFileWithUrl } = require('../server/utils/fileStorageUtils')
+const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const collectionFormDataFile = async collectionFormData => {
   let file = null

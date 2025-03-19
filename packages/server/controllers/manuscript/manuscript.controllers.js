@@ -29,7 +29,7 @@ const {
 
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 const { getActiveForms } = require('../form.controllers')
-const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
+const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const { cachedGet } = require('../../server/querycache')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
@@ -49,9 +49,9 @@ const {
 const {
   deepMergeObjectsReplacingArrays,
   objIf,
-} = require('../../server/utils/objectUtils')
+} = require('../../utils/objectUtils')
 
-const validateApiToken = require('../../server/utils/validateApiToken')
+const validateApiToken = require('../../utils/validateApiToken')
 
 const {
   populateTemplatedTasksForManuscript,
@@ -89,7 +89,7 @@ const {
   getFilesWithUrl,
   replaceImageSrc,
   replaceImageSrcResponsive,
-} = require('../../server/utils/fileStorageUtils')
+} = require('../../utils/fileStorageUtils')
 
 const {
   convertFilesToFullObjects,

@@ -4,10 +4,7 @@ const { File, fileStorage, request } = require('@coko/server')
 
 const { ArticleTemplate, CmsFileTemplate } = require('../models')
 
-const {
-  getFilesWithUrl,
-  getFileWithUrl,
-} = require('../server/utils/fileStorageUtils')
+const { getFilesWithUrl, getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const getArticleTemplate = async (groupId, isCms) => {
   return ArticleTemplate.query().findOne({ groupId, isCms }).throwIfNotFound()

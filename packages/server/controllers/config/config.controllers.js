@@ -9,7 +9,7 @@ const {
   rescheduleJobsOnChange,
 } = require('./configUtils')
 
-const { setFileUrls } = require('../../server/utils/fileStorageUtils')
+const { setFileUrls } = require('../../utils/fileStorageUtils')
 
 const getFile = async (config, fieldName) => {
   try {

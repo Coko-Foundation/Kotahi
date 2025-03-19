@@ -1,27 +1,27 @@
-const NotificationDigest = require('../../models/notificationDigest/notificationDigest.model')
-const Config = require('../../models/config/config.model')
-const Group = require('../../models/group/group.model')
+const NotificationDigest = require('../models/notificationDigest/notificationDigest.model')
+const Config = require('../models/config/config.model')
+const Group = require('../models/group/group.model')
 
 const ScheduleManager = require('./scheduleManager')
 
 const {
   importManuscripts,
   importManuscriptsFromSemanticScholar,
-} = require('../../controllers/manuscript/importManuscripts')
+} = require('../controllers/manuscript/importManuscripts')
 
 const {
   archiveOldManuscripts,
-} = require('../../controllers/manuscript/manuscriptCommsUtils')
+} = require('../controllers/manuscript/manuscriptCommsUtils')
 
 const {
   createNewTaskAlerts,
   sendAutomatedTaskEmailNotifications,
-} = require('../../controllers/task.controllers')
+} = require('../controllers/task.controllers')
 
 const {
   sendNotifications,
   deleteActionedEntries,
-} = require('../model-notification/src/notificationCommsUtils')
+} = require('../server/model-notification/src/notificationCommsUtils')
 
 const getJobs = async (activeConfig, groupId) => {
   const jobs = []

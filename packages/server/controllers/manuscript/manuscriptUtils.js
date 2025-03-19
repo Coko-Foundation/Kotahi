@@ -1,22 +1,17 @@
 const Handlebars = require('handlebars')
 const { set, get } = require('lodash')
 
-const checkIsAbstractValueEmpty = require('../../server/utils/checkIsAbstractValueEmpty')
-const { ensureJsonIsParsed } = require('../../server/utils/objectUtils')
+const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
+const { ensureJsonIsParsed } = require('../../utils/objectUtils')
+const { formatSearchQueryForPostgres } = require('../../utils/searchUtils')
 
-const {
-  formatSearchQueryForPostgres,
-} = require('../../server/utils/searchUtils')
-
-const {
-  getPublishableTextFromValue,
-} = require('../../server/utils/fieldFormatUtils')
+const { getPublishableTextFromValue } = require('../../utils/fieldFormatUtils')
 
 const {
   getStartOfDay,
   getEndOfDay,
   compactStringToDate,
-} = require('../../server/utils/dateUtils')
+} = require('../../utils/dateUtils')
 
 const URI_SEARCH_PARAM = 'search'
 

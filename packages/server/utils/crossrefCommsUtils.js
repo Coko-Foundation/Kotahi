@@ -1,7 +1,7 @@
 const { default: axios } = require('axios')
 const rateLimit = require('axios-rate-limit')
 
-const { createFormattedReference } = require('../../utils/reference')
+const { createFormattedReference } = require('./reference')
 
 const http = rateLimit(axios.create(), {
   maxRequests: 10,

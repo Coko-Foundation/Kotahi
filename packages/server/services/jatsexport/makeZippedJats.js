@@ -7,7 +7,7 @@ const { promisify } = require('util')
 const { createFile, fileStorage, File } = require('@coko/server')
 const makeZip = require('../../utils/ziputils')
 const makeSvgsFromLatex = require('./makeSvgsFromLatex')
-const { getFileWithUrl } = require('../../server/utils/fileStorageUtils')
+const { getFileWithUrl } = require('../../utils/fileStorageUtils')
 
 const randomBytes = promisify(crypto.randomBytes)
 

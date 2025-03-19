@@ -38,7 +38,7 @@ module.exports = [
   {
     label: 'Initiate job schedules',
     execute: async () => {
-      const { initiateJobSchedules } = require('../server/utils/jobUtils')
+      const { initiateJobSchedules } = require('../utils/jobUtils')
       initiateJobSchedules() // Initiate all job schedules
     },
   },

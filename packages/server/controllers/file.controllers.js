@@ -9,7 +9,7 @@ const {
   getFileWithUrl,
   getFilesWithUrl,
   imageFinder,
-} = require('../server/utils/fileStorageUtils')
+} = require('../utils/fileStorageUtils')
 
 const createFileFn = async (file, meta) => {
   const { createReadStream, filename } = await file

@@ -3,7 +3,7 @@ const fs = require('fs-extra')
 const { createFile, fileStorage, File } = require('@coko/server')
 
 const ArticleTemplate = require('../models/articleTemplate/articleTemplate.model')
-const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
+const { getFilesWithUrl } = require('../utils/fileStorageUtils')
 
 const uploadAsset = async (files, fileType, groupTemplateId, options = {}) => {
   const tags = ['templateGroupAsset']

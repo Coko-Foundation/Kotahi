@@ -8,7 +8,7 @@ const { useTransaction, logger, createFile } = require('@coko/server')
 const {
   // Blob,
   getFilesWithUrl,
-} = require('../../../server/utils/fileStorageUtils')
+} = require('../../../utils/fileStorageUtils')
 
 const Manuscript = require('../manuscript.model')
 

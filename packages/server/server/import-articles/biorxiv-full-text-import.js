@@ -4,7 +4,7 @@ const axios = require('axios')
 const ArticleImportHistory = require('../../models/articleImportHistory/articleImportHistory.model')
 const Manuscript = require('../../models/manuscript/manuscript.model')
 
-const { dateToIso8601 } = require('../utils/dateUtils')
+const { dateToIso8601 } = require('../../utils/dateUtils')
 
 const {
   getServerId,

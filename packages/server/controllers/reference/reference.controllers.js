@@ -7,11 +7,11 @@ const { Config } = require('../../models')
 const {
   getFormattedReferencesFromCrossRef,
   getFormattedReferencesFromCrossRefDOI,
-} = require('../../server/utils/crossrefCommsUtils')
+} = require('../../utils/crossrefCommsUtils')
 
 const {
   getFormattedReferencesFromDatacite,
-} = require('../../server/utils/dataciteCommusUtils')
+} = require('../../utils/dataciteCommusUtils')
 
 const {
   createReference,

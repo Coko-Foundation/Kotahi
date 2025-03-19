@@ -1,6 +1,6 @@
 const { Manuscript } = require('../models')
 
-const { ensureJsonIsParsed } = require('../server/utils/objectUtils')
+const { ensureJsonIsParsed } = require('../utils/objectUtils')
 const generateMovingAverages = require('../utils/movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']

@@ -1,5 +1,8 @@
 const { get } = require('lodash')
-const { getPublishableTextFromValue } = require('../../utils/fieldFormatUtils')
+
+const {
+  getPublishableTextFromValue,
+} = require('../../../utils/fieldFormatUtils')
 
 const MAX_REVIEW_COUNT = 10
 
