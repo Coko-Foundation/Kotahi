@@ -34,6 +34,7 @@ const rorResolvers = require('./ror/ror.resolvers')
 const taskResolvers = require('./task/task.resolvers')
 const teamResolvers = require('./team/team.resolvers')
 const threadedDiscussionResolvers = require('./threadedDiscussion/threadedDiscussion.resolvers')
+const userResolvers = require('./user/user.resolvers')
 const xsweetResolvers = require('./xsweet/xsweet.resolvers')
 
 const typeDefFilePaths = [
@@ -71,6 +72,7 @@ const typeDefFilePaths = [
   'task/task.graphql',
   'team/team.graphql',
   'threadedDiscussion/threadedDiscussion.graphql',
+  'user/user.graphql',
   'xsweet/xsweet.graphql',
 ]
 
@@ -116,6 +118,7 @@ const resolvers = merge(
   taskResolvers,
   teamResolvers,
   threadedDiscussionResolvers,
+  userResolvers,
   xsweetResolvers,
 )
 

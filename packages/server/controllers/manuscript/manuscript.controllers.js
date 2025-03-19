@@ -102,7 +102,7 @@ const {
   getUsersById,
   getUserRolesInManuscript,
   getSharedReviewersIds,
-} = require('../../server/model-user/src/userCommsUtils')
+} = require('../user.controllers')
 
 const { applyTemplate, generateCss } = require('../../utils/applyTemplate')
 

@@ -14,9 +14,7 @@ const {
 const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
 const seekEvent = require('../services/notification.service')
 
-const {
-  getUserRolesInManuscript,
-} = require('../server/model-user/src/userCommsUtils')
+const { getUserRolesInManuscript } = require('./user.controllers')
 
 const {
   ensureJsonIsParsed,

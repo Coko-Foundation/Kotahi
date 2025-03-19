@@ -16,9 +16,7 @@ const {
   User,
 } = require('../models')
 
-const {
-  sendEmailWithPreparedData,
-} = require('../server/model-user/src/userCommsUtils')
+const { sendEmailWithPreparedData } = require('./user.controllers')
 
 const {
   manuscriptIsActive,

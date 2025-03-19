@@ -6,11 +6,7 @@ const {
   getIdOfLatestVersionOfManuscript,
 } = require('./manuscript/manuscriptCommsUtils')
 
-const {
-  getUsersById,
-  getUserRolesInManuscript,
-} = require('../server/model-user/src/userCommsUtils')
-
+const { getUsersById, getUserRolesInManuscript } = require('./user.controllers')
 const seekEvent = require('../services/notification.service')
 
 /** Get the threaded discussion with "author" user object added to each commentVersion and pendingVersion */

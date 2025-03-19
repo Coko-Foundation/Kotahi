@@ -45,7 +45,7 @@ module.exports = [
   {
     label: 'Init yjs websocket',
     execute: () => {
-      const yjsWebsocket = require('../server/yjsWebsocket/yjsWebsocket')
+      const yjsWebsocket = require('../services/yjsWebsocket/yjsWebsocket')
       yjsWebsocket()
     },
   },
