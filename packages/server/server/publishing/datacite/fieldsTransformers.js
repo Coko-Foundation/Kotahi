@@ -41,7 +41,10 @@ const getContributor = author => {
   const { ror: affiliation, orcid, firstName, lastName } = author
   if (!firstName || !lastName)
     throw new Error(`Incomplete author record ${JSON.stringify(author)}`)
-  const isRor = affiliation?.value.includes('ror.org')
+
+  const affiliations = (
+    Array.isArray(affiliation) ? [...affiliation] : [affiliation]
+  ).filter(a => a?.value?.includes('ror.org'))
 
   const contributor = {
     nameType: 'Personal',
@@ -56,18 +59,14 @@ const getContributor = author => {
         },
       ],
     }),
-    ...objIf(affiliation, {
-      affiliation: [
-        {
-          ...objIf(isRor, {
-            affiliationIdentifier: affiliation?.value,
-            affiliationIdentifierScheme: 'ROR',
-            schemeUri: 'https://ror.org',
-          }),
-          name: affiliation?.label,
-        },
-      ],
-    }),
+    affiliation: affiliations.length
+      ? affiliations.map(a => ({
+          affiliationIdentifier: a.value,
+          affiliationIdentifierScheme: 'ROR',
+          schemeUri: 'https://ror.org',
+          name: a.label,
+        }))
+      : [],
   }
 
   return contributor
