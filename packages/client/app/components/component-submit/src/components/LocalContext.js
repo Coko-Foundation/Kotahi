@@ -1,8 +1,9 @@
 import React, { useState, useRef, useContext } from 'react'
+import PropTypes from 'prop-types'
 import { gql, useQuery } from '@apollo/client'
 import { last } from 'lodash'
 import styled from 'styled-components'
-import { grid, th } from '@coko/client'
+import { grid, th, uuid } from '@coko/client'
 import { Spinner } from '../../../shared'
 import { ConfigContext } from '../../../config/src'
 import { Button } from '../../../pubsweet'
@@ -107,7 +108,7 @@ const useLocalContext = gql`
   }
 `
 
-const LocalContext = ({ onChange, value }) => {
+const LocalContext = ({ onChange, readonly, value }) => {
   const config = useContext(ConfigContext)
   const [isSearching, setIsSearching] = useState(false)
   const [isAuthorized, setIsAuthorized] = useState(true)
@@ -177,23 +178,27 @@ const LocalContext = ({ onChange, value }) => {
 
   return (
     <>
-      <Input
-        name=""
-        onChange={handleChange}
-        ref={localContextRef}
-        type="text"
-        value={localContextValue}
-      />
-      <SubNote>Insert your Local Contexts URL</SubNote>
-      <StyledButton
-        disabled={false}
-        onClick={retrieveData}
-        plain
-        title=""
-        type="button"
-      >
-        Update
-      </StyledButton>
+      {!readonly && (
+        <div>
+          <Input
+            name=""
+            onChange={handleChange}
+            ref={localContextRef}
+            type="text"
+            value={localContextValue}
+          />
+          <SubNote>Insert your Local Contexts URL</SubNote>
+          <StyledButton
+            disabled={false}
+            onClick={retrieveData}
+            plain
+            title=""
+            type="button"
+          >
+            Update
+          </StyledButton>
+        </div>
+      )}
       {isSearching && <Spinner />}
       {!isAuthorized && !isSearching && (
         <NoProjectFound>Unauthorized. Please check you API KEY</NoProjectFound>
@@ -211,7 +216,7 @@ const LocalContext = ({ onChange, value }) => {
       {localContextData?.notice?.length > 0 &&
         !isSearching &&
         localContextData?.notice?.map(singleNotice => (
-          <LocalContextResultContainer>
+          <LocalContextResultContainer key={uuid()}>
             <ItemContainer>
               <ItemTag>Name: </ItemTag>{' '}
               <ItemValue>{singleNotice.name}</ItemValue>
@@ -238,7 +243,7 @@ const LocalContext = ({ onChange, value }) => {
       {localContextData?.label?.length > 0 &&
         !isSearching &&
         localContextData?.label?.map(singleLabel => (
-          <LocalContextResultContainer>
+          <LocalContextResultContainer key={uuid()}>
             <ItemContainer>
               <ItemTag>Name: </ItemTag>{' '}
               <ItemValue>{singleLabel.name} </ItemValue>
@@ -269,6 +274,44 @@ const LocalContext = ({ onChange, value }) => {
         ))}
     </>
   )
+}
+
+LocalContext.propTypes = {
+  onChange: PropTypes.func,
+  readonly: PropTypes.bool,
+  value: PropTypes.shape({
+    id: PropTypes.string,
+    label: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        identifier: PropTypes.string,
+        name: PropTypes.string,
+        language: PropTypes.string,
+        languageTag: PropTypes.string,
+        labelType: PropTypes.string,
+        labelText: PropTypes.string,
+        imgUrl: PropTypes.string,
+        svgUrl: PropTypes.string,
+      }),
+    ),
+    notice: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        identifier: PropTypes.string,
+        noticeType: PropTypes.string,
+        name: PropTypes.string,
+        imgUrl: PropTypes.string,
+        svgUrl: PropTypes.string,
+        defaultText: PropTypes.string,
+      }),
+    ),
+  }),
+}
+
+LocalContext.defaultProps = {
+  onChange: () => {},
+  readonly: false,
+  value: {},
 }
 
 export default LocalContext
