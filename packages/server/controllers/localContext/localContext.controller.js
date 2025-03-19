@@ -77,7 +77,7 @@ const localContext = async ({ projectId, groupId }) => {
     }
   } catch (error) {
     errorMessage = error.message
-    errorCode = error.response.status
+    errorCode = error.response?.status
   }
 
   return { localContext: localContextData, errorMessage, errorCode }

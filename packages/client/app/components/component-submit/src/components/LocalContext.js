@@ -133,7 +133,14 @@ const LocalContext = ({ onChange, value }) => {
 
     const projectId = inputUrl.split('/')
 
-    if (inputUrl === '' || projectId.length === 1) return
+    if (inputUrl === '' || projectId.length === 1) {
+      if (inputUrl === '') {
+        onChange({ url: '' })
+      }
+
+      return
+    }
+
     setIsSearching(true)
 
     const result = await refetch({
