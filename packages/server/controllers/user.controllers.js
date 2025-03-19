@@ -37,7 +37,10 @@ const {
 
 const { processData, useHandlebars } = require('../services/handlebars.service')
 
-const { cachedGet, evictFromCacheByPrefix } = require('../server/querycache')
+const {
+  cachedGet,
+  evictFromCacheByPrefix,
+} = require('../services/queryCache.service')
 
 const { safeParse, objIf } = require('../utils/objectUtils')
 

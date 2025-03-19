@@ -10,7 +10,7 @@ const {
   race: lazyOr,
 } = require('@coko/server/authorization')
 
-const { cachedGet } = require('../server/querycache')
+const { cachedGet } = require('../services/queryCache.service')
 
 const userIsEditor = rule({
   cache: 'strict',

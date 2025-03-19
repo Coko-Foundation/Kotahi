@@ -21,7 +21,7 @@ const {
 const {
   sendNotifications,
   deleteActionedEntries,
-} = require('../server/model-notification/src/notificationCommsUtils')
+} = require('../controllers/notification.controllers')
 
 const getJobs = async (activeConfig, groupId) => {
   const jobs = []

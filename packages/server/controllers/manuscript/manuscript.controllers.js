@@ -30,7 +30,7 @@ const {
 const { manuscriptHasOverdueTasksForUser } = require('./manuscriptCommsUtils')
 const { getActiveForms } = require('../form.controllers')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
-const { cachedGet } = require('../../server/querycache')
+const { cachedGet } = require('../../services/queryCache.service')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
 const { publishToDatacite } = require('../../server/publishing/datacite')
