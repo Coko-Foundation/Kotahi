@@ -111,7 +111,7 @@ const LocalContext = ({ onChange, value }) => {
   const config = useContext(ConfigContext)
   const [isSearching, setIsSearching] = useState(false)
   const [isAuthorized, setIsAuthorized] = useState(true)
-  const [localContextData, setLocalContextData] = useState(value || [])
+  const [localContextData, setLocalContextData] = useState(value || {})
   const [localContextValue, setLocalContextValue] = useState(value?.url || '')
   const localContextRef = useRef(null)
 
@@ -135,7 +135,14 @@ const LocalContext = ({ onChange, value }) => {
 
     if (inputUrl === '' || projectId.length === 1) {
       if (inputUrl === '') {
-        onChange({ url: '' })
+        const emptyObj = {
+          id: '',
+          notice: null,
+          label: null,
+        }
+
+        setLocalContextData(emptyObj)
+        onChange({ ...emptyObj, url: '' })
       }
 
       return
