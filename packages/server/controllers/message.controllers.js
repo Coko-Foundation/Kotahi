@@ -5,9 +5,7 @@ const {
   addUsersToChatChannel,
 } = require('./channel.controllers')
 
-const {
-  notify,
-} = require('../server/model-notification/src/notificationCommsUtils')
+const { notify } = require('./notification.controllers')
 
 const createMessage = async (content, channelId, userId) => {
   const currentUserId = userId

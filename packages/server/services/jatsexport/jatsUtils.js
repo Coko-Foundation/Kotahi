@@ -4,9 +4,7 @@ const cheerio = require('cheerio')
 const makeCitations = require('./makeCitations')
 const htmlToJats = require('./htmlToJats')
 
-const {
-  getCrossrefCitationsFromList,
-} = require('../../server/utils/crossrefUtils')
+const { getCrossrefCitationsFromList } = require('../../utils/crossrefUtils')
 
 const processFunding = require('./processFunding')
 const processKeywords = require('./processKeywords')

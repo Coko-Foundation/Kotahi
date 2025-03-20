@@ -5,7 +5,7 @@ const {
   convertTagsAndRemoveTags,
   convertCharacterEntities,
   removeIllegalCharacters,
-} = require('../../server/utils/htmlUtils')
+} = require('../../utils/htmlUtils')
 
 const sectionRegexes = [
   /<h1>((?:(?!<\/h1>)[\s\S])*)<\/h1>((?:(?!<h1>)[\s\S])*)/g,

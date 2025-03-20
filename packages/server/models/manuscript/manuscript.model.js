@@ -6,7 +6,7 @@ const sortBy = require('lodash/sortBy')
 const { BaseModel } = require('@coko/server')
 
 // REFACTOR: models
-const { evictFromCache } = require('../../server/querycache')
+const { evictFromCache } = require('../../services/queryCache.service')
 
 class Manuscript extends BaseModel {
   static get tableName() {

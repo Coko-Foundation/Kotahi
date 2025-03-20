@@ -17,7 +17,7 @@ const {
   replaceImageFromNunjucksTemplate,
   replaceImageSrc,
   setFileUrls,
-} = require('../server/utils/fileStorageUtils')
+} = require('../utils/fileStorageUtils')
 
 const sanitizeWaxImages = require('../utils/sanitizeWaxImages')
 

@@ -12,7 +12,7 @@ const {
   removeUserFromManuscriptChatChannel,
 } = require('./channel.controllers')
 
-const { evictFromCacheByPrefix } = require('../server/querycache')
+const { evictFromCacheByPrefix } = require('../services/queryCache.service')
 
 const seekEvent = require('../services/notification.service')
 

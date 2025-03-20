@@ -1,6 +1,6 @@
 const { logger, jobManager } = require('@coko/server')
 const { Config, EmailTemplate, Notification } = require('../models')
-const { objIf } = require('../server/utils/objectUtils')
+const { objIf } = require('../utils/objectUtils')
 
 const {
   overrideRecipient,

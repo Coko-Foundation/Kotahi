@@ -8,7 +8,7 @@ const ArticleImportHistory = require('../../models/articleImportHistory/articleI
 const ArticleImportSources = require('../../models/articleImportSources/articleImportSources.model')
 const Manuscript = require('../../models/manuscript/manuscript.model')
 
-const flattenObj = require('../utils/flattenObj')
+const flattenObj = require('../../utils/flattenObj')
 const { getSubmissionForm } = require('../../controllers/review.controllers')
 
 const selectVersionRegexp = /(v)(?!.*\1)/g

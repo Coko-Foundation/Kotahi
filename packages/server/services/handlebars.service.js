@@ -1,7 +1,7 @@
 const Handlebars = require('handlebars')
 const { clientUrl, Team, logger } = require('@coko/server')
 const { Group } = require('../models')
-const { transformEntries } = require('../server/utils/objectUtils')
+const { transformEntries } = require('../utils/objectUtils')
 
 const HANDLEBARS_NON_FORM_VARIABLES = [
   { label: 'Author Name', value: 'authorName' },

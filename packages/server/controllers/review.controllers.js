@@ -11,7 +11,7 @@ const {
   User,
 } = require('../models')
 
-const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
+const { getFilesWithUrl } = require('../utils/fileStorageUtils')
 const seekEvent = require('../services/notification.service')
 
 const { getUserRolesInManuscript } = require('./user.controllers')
@@ -19,7 +19,7 @@ const { getUserRolesInManuscript } = require('./user.controllers')
 const {
   ensureJsonIsParsed,
   deepMergeObjectsReplacingArrays,
-} = require('../server/utils/objectUtils')
+} = require('../utils/objectUtils')
 
 /**
  * For all fields containing files, convert files expressed as simple IDs into

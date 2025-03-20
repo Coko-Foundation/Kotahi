@@ -23,7 +23,7 @@ const {
   getFilesWithUrl,
   getFileWithUrl,
   replaceImageSrc,
-} = require('../server/utils/fileStorageUtils')
+} = require('../utils/fileStorageUtils')
 
 const copyFile = promisify(fs.copyFile)
 

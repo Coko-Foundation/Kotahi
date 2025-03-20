@@ -1,7 +1,10 @@
 // We need to make this utility bit more generic so that we can use it in different publishing sites.
 
 const { get } = require('lodash')
-const { getPublishableTextFromValue } = require('../../utils/fieldFormatUtils')
+
+const {
+  getPublishableTextFromValue,
+} = require('../../../utils/fieldFormatUtils')
 
 const getPublishableTextFromComment = commentObject => {
   if (!commentObject.commentVersions || !commentObject.commentVersions.length)

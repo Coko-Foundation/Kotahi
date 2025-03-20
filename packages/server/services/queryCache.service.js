@@ -9,7 +9,7 @@ const cache = new LRUCache({
 
 const queryFunctions = {
   userIsGM: async (userId, groupId) => {
-    const Team = require('../../models/team/team.model')
+    const Team = require('../models/team/team.model')
 
     const groupManagerRecord = await Team.query()
       .withGraphJoined('members')
@@ -23,8 +23,8 @@ const queryFunctions = {
    */
   msOfFile: async fileId => {
     const { File } = require('@coko/server')
-    const Review = require('../../models/review/review.model')
-    const Manuscript = require('../../models/manuscript/manuscript.model')
+    const Review = require('../models/review/review.model')
+    const Manuscript = require('../models/manuscript/manuscript.model')
 
     const file = await File.query().findById(fileId)
 
@@ -43,7 +43,7 @@ const queryFunctions = {
     return manuscript
   },
   userIsAdmin: async userId => {
-    const Team = require('../../models/team/team.model')
+    const Team = require('../models/team/team.model')
 
     const adminRecord = await Team.query()
       .withGraphJoined('members')
@@ -53,7 +53,7 @@ const queryFunctions = {
     return isAdmin
   },
   userIsGroupAdmin: async (userId, groupId) => {
-    const Team = require('../../models/team/team.model')
+    const Team = require('../models/team/team.model')
 
     const groupAdminRecord = await Team.query()
       .withGraphJoined('members')
@@ -68,7 +68,7 @@ const queryFunctions = {
     return isGroupAdmin
   },
   userIsEditor: async (userId, manuscriptId) => {
-    const User = require('../../models/user/user.model')
+    const User = require('../models/user/user.model')
 
     const teamRecord = await User.relatedQuery('teams')
       .for(userId)
@@ -85,7 +85,7 @@ const queryFunctions = {
     return isEditor
   },
   userIsEditorOfAnyManuscript: async userId => {
-    const User = require('../../models/user/user.model')
+    const User = require('../models/user/user.model')
 
     const record = await User.relatedQuery('teams')
       .for(userId)
@@ -101,12 +101,12 @@ const queryFunctions = {
     return isEditor
   },
   defaultIdentityOfUser: async userId => {
-    const User = require('../../models/user/user.model')
+    const User = require('../models/user/user.model')
     return User.relatedQuery('defaultIdentity').for(userId).first()
   },
   // TODO: rename this otherVersionsOfMs
   subVersionsOfMs: async manuscriptId => {
-    const Manuscript = require('../../models/manuscript/manuscript.model')
+    const Manuscript = require('../models/manuscript/manuscript.model')
 
     const thisMs = await Manuscript.query()
       .findById(manuscriptId)
@@ -129,23 +129,23 @@ const queryFunctions = {
     return [...children.filter(v => v.id !== manuscriptId), parent]
   },
   teamsForObject: async objectId => {
-    const Team = require('../../models/team/team.model')
+    const Team = require('../models/team/team.model')
     return Team.query().where({ objectId })
   },
   membersOfTeam: async teamId => {
-    const Team = require('../../models/team/team.model')
+    const Team = require('../models/team/team.model')
     return Team.relatedQuery('members').for(teamId)
   },
   userForTeamMember: async teamMemberId => {
-    const TeamMember = require('../../models/teamMember/teamMember.model')
+    const TeamMember = require('../models/teamMember/teamMember.model')
     return TeamMember.relatedQuery('user').for(teamMemberId).first()
   },
   submitterOfMs: async manuscriptId => {
-    const Manuscript = require('../../models/manuscript/manuscript.model')
+    const Manuscript = require('../models/manuscript/manuscript.model')
     return Manuscript.relatedQuery('submitter').for(manuscriptId).first()
   },
   form: async (category, purpose, groupId) => {
-    const Form = require('../../models/form/form.model')
+    const Form = require('../models/form/form.model')
     const form = await Form.query().where({ category, purpose, groupId })
     if (!form || !form.length) throw new Error(`No form found for "${purpose}"`)
     return form[0]

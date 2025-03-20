@@ -1,7 +1,7 @@
 const { TeamMember: TeamMemberBase } = require('@coko/server')
 
 // REFACTOR: MODELS
-const { evictFromCacheByPrefix } = require('../../server/querycache')
+const { evictFromCacheByPrefix } = require('../../services/queryCache.service')
 
 class TeamMember extends TeamMemberBase {
   static get modifiers() {

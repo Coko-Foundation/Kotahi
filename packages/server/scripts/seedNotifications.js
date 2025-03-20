@@ -1,6 +1,6 @@
 const { Notification, EmailTemplate } = require('../models')
 const eventsSource = require('../services/notification/eventsSource')
-const { objIf } = require('../server/utils/objectUtils')
+const { objIf } = require('../utils/objectUtils')
 
 const { entries } = Object
 

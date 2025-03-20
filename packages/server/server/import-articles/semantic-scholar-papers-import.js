@@ -14,7 +14,7 @@ const {
 } = require('./importTools')
 
 const semanticScholarServers = require('./semanitc-scholar-servers.json')
-const { getUrlByDoi } = require('../utils/crossrefCommsUtils')
+const { getUrlByDoi } = require('../../utils/crossrefCommsUtils')
 
 const SAVE_CHUNK_SIZE = 50
 

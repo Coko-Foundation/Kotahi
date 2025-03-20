@@ -11,7 +11,7 @@ class NotificationDigest extends BaseModel {
 
     const {
       sendAutomatedNotifications,
-    } = require('../../server/utils/jobUtils') /* eslint-disable-line global-require */
+    } = require('../../utils/jobUtils') /* eslint-disable-line global-require */
 
     const debounceSendAutomatedNotifications = debounce(
       sendAutomatedNotifications,

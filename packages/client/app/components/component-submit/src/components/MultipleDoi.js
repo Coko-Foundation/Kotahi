@@ -40,8 +40,7 @@ const InvalidLabel = styled.div`
 `
 
 const StyledDeleteControl = styled(DeleteControl)`
-  margin: 32px 10px 0 1em;
-  top: 66px;
+  margin: 16px 10px 0 1em;
 `
 
 const localizeFields = (origFields, t) => {
