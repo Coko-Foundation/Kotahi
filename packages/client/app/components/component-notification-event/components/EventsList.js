@@ -159,7 +159,10 @@ const NotificationItem = ({
     <StyledListItem $selected={isSelected}>
       <OptionButton
         $warning={isInactive}
-        onClick={() => selected.set(notification)}
+        onClick={() => {
+          if (!notification.id && isInactive) return
+          selected.set(notification)
+        }}
         title={name}
       >
         <p>{name}</p>
