@@ -6,6 +6,7 @@ const {
   deleteFiles,
   getEntityFiles,
   getSpecificFiles,
+  getFilesByTagOrId,
   updateFile,
   updateTagsFile,
   uploadFile,
@@ -23,6 +24,9 @@ const resolvers = {
     },
     async getSpecificFiles(_, { ids }) {
       return getSpecificFiles(ids)
+    },
+    async getFilesByTagOrId(_, { input }) {
+      return getFilesByTagOrId(input)
     },
   },
   Mutation: {

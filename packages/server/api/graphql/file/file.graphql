@@ -2,6 +2,7 @@ extend type Query {
   file(id: ID!): File!
   files: [File!]!
   getEntityFiles(input: EntityFilesInput): [File!]!
+  getFilesByTagOrId(input: EntityTagOrId): [File!]!
   getSpecificFiles(ids: [ID!]!): [File!]!
 }
 
@@ -14,6 +15,12 @@ extend type Mutation {
   deleteFiles(ids: [ID!]!): [ID]!
   updateFile(input: UpdateFileInput!): File!
   updateTagsFile(input: UpdateTagsFileInput!): File!
+}
+
+input EntityTagOrId {
+  id: ID
+  objectId: ID
+  tag: String
 }
 
 input EntityFilesInput {
