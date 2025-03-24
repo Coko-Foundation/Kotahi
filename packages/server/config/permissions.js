@@ -596,6 +596,7 @@ const permissions = {
       userIsGroupAdmin,
       userIsAdmin,
     ),
+    getFilesByTagOrId: allow,
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
     group: allow,
