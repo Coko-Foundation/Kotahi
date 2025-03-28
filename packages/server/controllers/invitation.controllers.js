@@ -113,7 +113,7 @@ const getInvitationsForManuscript = async id => {
 }
 
 const invitationStatus = async id => {
-  const invitation = await Invitation.findById(id).throwIfNotFound()
+  const invitation = await Invitation.findById(id)
 
   const isLatestVersion = await isLatestVersionOfManuscript(
     invitation.manuscriptId,

@@ -1,7 +1,8 @@
 const isValidDOI = doi => {
   // Define the regular expression for a DOI
-  // eslint-disable-next-line no-useless-escape
-  const doiRegex = /^(https:\/\/doi\.org\/)?10.\d{4,9}\/[-._;()\/:A-Z0-9]+$/i
+  const doiRegex =
+    // eslint-disable-next-line no-useless-escape
+    /^(https?:\/\/(dx\.)?doi\.org\/|doi:)?10.\d{4,9}\/[-._;()\/:A-Z0-9]+$/i
 
   // Test if the DOI matches the regex
   return !doiRegex.test(doi)

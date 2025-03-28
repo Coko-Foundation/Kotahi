@@ -80,9 +80,10 @@ const ReadonlyFormTemplate = ({
         })
         .map(element => (
           <SectionRowGrid
-            expandedWidthDetails={['ThreadedDiscussion'].includes(
-              element.component,
-            )}
+            expandedWidthDetails={[
+              'ThreadedDiscussion',
+              'LocalContext',
+            ].includes(element.component)}
             key={element.id}
           >
             <Heading>{element.shortDescription || element.title}</Heading>

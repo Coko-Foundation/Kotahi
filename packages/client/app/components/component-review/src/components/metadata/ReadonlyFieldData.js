@@ -7,6 +7,7 @@ import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Affiliation, Email, BadgeContainer } from '../style'
 import { Attachment, ColorBadge } from '../../../../shared'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
+import LocalContext from '../../../../component-submit/src/components/LocalContext'
 
 const parseIdentifierAndName = id => {
   const lastIndex = id.lastIndexOf('-')
@@ -39,6 +40,10 @@ const ReadonlyFieldData = ({
 }) => {
   const data = get(formData, fieldName)
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
+
+  if (fieldDefinition?.component === 'LocalContext') {
+    return <LocalContext readonly value={data} />
+  }
 
   if (fieldDefinition?.component === 'AuthorsInput' && Array.isArray(data)) {
     return (data || []).map((author, i) => {

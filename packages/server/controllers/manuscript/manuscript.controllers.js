@@ -18,6 +18,7 @@ const {
   TeamMember,
   ThreadedDiscussion,
   User,
+  Channel,
 } = require('../../models')
 
 const {
@@ -796,8 +797,12 @@ const makeDecision = async (id, decisionKey, userId) => {
   const manuscript = await Manuscript.query()
     .findById(id)
     .withGraphFetched(
-      '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
+      '[submitter.[defaultIdentity], teams.members.user, reviews.user]',
     )
+
+  manuscript.channels = await Channel.query().where({
+    manuscriptId: manuscript.parentId || manuscript.id,
+  })
 
   const activeConfig = await Config.getCached(manuscript.groupId)
   const currentUser = await User.query().findById(userId)

@@ -478,13 +478,18 @@ const DecisionVersion = ({
                     )
                   }}
                   onSubmit={async (values, actions) => {
-                    await makeDecision({
-                      variables: {
-                        id: version.id,
-                        decision: values.$verdict,
-                      },
-                    })
-                    actions.setSubmitting(false)
+                    try {
+                      await makeDecision({
+                        variables: {
+                          id: version.id,
+                          decision: values.$verdict,
+                        },
+                      })
+
+                      actions.setSubmitting(false)
+                    } catch (decisionError) {
+                      actions.setErrors({ makeDecision: decisionError.message })
+                    }
                   }}
                   reviewId={currentDecisionData.id}
                   setShouldPublishField={async (fieldName, shouldPublish) =>

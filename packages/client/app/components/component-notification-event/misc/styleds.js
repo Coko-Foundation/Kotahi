@@ -45,10 +45,14 @@ export const EventTitle = styled.h4`
 `
 
 export const EditSection = styled(Col)`
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   gap: 0;
   justify-content: flex-start;
   max-height: ${p => (p.$collapsed ? '0' : '100%')};
-  overflow: hidden;
+  min-height: 0;
+  overflow: auto;
   padding: 0 ${grid(4)};
   transition: all 0.3s;
 

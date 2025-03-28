@@ -92,6 +92,25 @@ const getSpecificFiles = async ids => {
   return data
 }
 
+const getFilesByTagOrId = async input => {
+  const { objectId, tag, id } = input
+
+  let files = []
+
+  if (tag) {
+    files = await File.query()
+      .where({ objectId })
+      .andWhere('tags', '@>', JSON.stringify([tag]))
+  }
+
+  if (id) {
+    files = await File.query().where({ id })
+  }
+
+  const data = await getFilesWithUrl(files)
+  return data
+}
+
 const updateFile = async input => {
   const { id, name, alt } = input
 
@@ -167,6 +186,7 @@ module.exports = {
   deleteFile,
   deleteFiles: deleteFilesFn,
   getEntityFiles,
+  getFilesByTagOrId,
   getSpecificFiles,
   updateFile,
   updateTagsFile,

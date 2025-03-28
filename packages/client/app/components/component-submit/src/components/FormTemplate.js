@@ -342,7 +342,7 @@ const FormTemplate = ({
                     values.status === articleStatuses.submitted ||
                     !haspopup
                   ) {
-                    handleSubmit()
+                    await handleSubmit()
                     setSubmitSucceeded(!hasErrors)
                   } else {
                     toggleConfirming()
@@ -371,7 +371,7 @@ const FormTemplate = ({
                     : publishingResponse?.steps?.some(step => !step.succeeded)
                     ? 'failure'
                     : Object.keys(errors).length && submitCount
-                    ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
+                    ? 'failure' // TODO Make this case 'failure', once we've fixed the validation delays in the form
                     : submitSucceeded
                     ? 'success'
                     : ''
