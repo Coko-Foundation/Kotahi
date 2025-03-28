@@ -691,7 +691,6 @@ const permissions = {
       and(userIsGm, userIsGroupAdmin, userIsAdmin),
     ),
     importManuscripts: or(userIsGm, userIsGroupAdmin, userIsAdmin),
-    loginUser: deny, // Never used
     makeDecision: or(
       userIsEditorOfAnyManuscript,
       userIsGm,

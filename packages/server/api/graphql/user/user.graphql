@@ -1,5 +1,5 @@
 extend type Query {
-  user(id: ID, username: String): User
+  user(id: ID): User
   users: [User]
   paginatedUsers(sort: UsersSort, offset: Int, limit: Int): PaginatedUsers
   searchUsers(teamId: ID, query: String): [User]
@@ -101,11 +101,6 @@ input UserInput {
 extend type Query {
   # Get the currently authenticated user based on the JWT in the HTTP headers
   currentUser: User
-}
-
-extend type Mutation {
-  # Authenticate a user using username and password
-  loginUser(input: LoginUserInput): LoginResult
 }
 
 # User details and bearer token

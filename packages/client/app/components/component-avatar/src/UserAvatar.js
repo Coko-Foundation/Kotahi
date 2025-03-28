@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 
 import React, { useContext } from 'react'
-import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 
 import { serverUrl } from '@coko/client'
@@ -11,37 +10,7 @@ import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
 import { ConfigContext } from '../../config/src'
 
-export const GET_USER = gql`
-  query user($id: ID, $username: String) {
-    user(id: $id, username: $username) {
-      id
-      username
-      profilePicture
-      isOnline
-    }
-  }
-`
 const UserHoverProfile = styled.div``
-
-const GetUserByUsername = props => {
-  const { username, showHoverProfile = true } = props
-  const { data } = useQuery(GET_USER, { variables: { username } })
-
-  if (!data || !data.user) return null
-  return (
-    <ConditionalWrap
-      condition={showHoverProfile}
-      /* eslint-disable-next-line react/no-unstable-nested-components */
-      wrap={() => (
-        <UserHoverProfile username={username}>
-          <Avatar user={data.user} {...props} />
-        </UserHoverProfile>
-      )}
-    >
-      <Avatar user={data.user} {...props} />
-    </ConditionalWrap>
-  )
-}
 
 const Avatar = props => {
   const config = useContext(ConfigContext)
@@ -101,13 +70,7 @@ const Avatar = props => {
 }
 
 const AvatarHandler = props => {
-  const {
-    showHoverProfile = true,
-    isClickable,
-    user,
-    size = 32,
-    username,
-  } = props
+  const { showHoverProfile = true, user, size = 32 } = props
 
   if (user) {
     return (
@@ -123,10 +86,6 @@ const AvatarHandler = props => {
         <Avatar size={size} {...props} />
       </ConditionalWrap>
     )
-  }
-
-  if (!user && username) {
-    return <GetUserByUsername isClickable={isClickable} username={username} />
   }
 
   return <Avatar {...props} />

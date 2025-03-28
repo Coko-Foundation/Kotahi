@@ -14,8 +14,8 @@ import { ConfigContext } from '../../config/src'
 const { version: kotahiVersion } = packageJson
 
 const GET_USER = gql`
-  query user($id: ID, $username: String) {
-    user(id: $id, username: $username) {
+  query user($id: ID) {
+    user(id: $id) {
       id
       username
       profilePicture

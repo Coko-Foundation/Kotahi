@@ -1,14 +1,6 @@
 const chunk = require('lodash/chunk')
 
-const {
-  createJWT,
-  File,
-  fileStorage,
-  logger,
-  useTransaction,
-} = require('@coko/server')
-
-const { AuthorizationError } = require('@coko/server/src/errors')
+const { File, fileStorage, logger, useTransaction } = require('@coko/server')
 
 const {
   Channel,
@@ -233,15 +225,9 @@ const getSharedReviewersIds = async (manuscriptId, currentUserId) => {
   return reviewers.map(r => r.userId)
 }
 
-const getUser = async (id, username, groupId) => {
+const getUser = async (id, groupId) => {
   if (id) {
     const u = await User.query().findById(id)
-    await addGlobalAndGroupRolesToUserObject(u, groupId)
-    return u
-  }
-
-  if (username) {
-    const u = await User.query().findOne({ username })
     await addGlobalAndGroupRolesToUserObject(u, groupId)
     return u
   }
@@ -328,27 +314,6 @@ const getUsersById = async userIds => User.query().findByIds(userIds)
 const isUserOnline = async user => {
   const currentDateTime = new Date()
   return user.lastOnline && currentDateTime - user.lastOnline < 5 * 60 * 1000
-}
-
-const loginUser = async input => {
-  let isValid = false
-  let user
-
-  try {
-    user = await User.query.findOne({ username: input.username })
-    isValid = await user.validPassword(input.password)
-  } catch (err) {
-    logger.debug(err)
-  }
-
-  if (!isValid) {
-    throw new AuthorizationError('Wrong username or password.')
-  }
-
-  return {
-    user,
-    token: createJWT(user),
-  }
 }
 
 const paginatedUsers = async (userId, groupId, sort, offset, limit) => {
@@ -864,7 +829,6 @@ module.exports = {
   getUsers,
   getUsersById,
   isUserOnline,
-  loginUser,
   paginatedUsers,
   profilePicture,
   searchUsers,

@@ -1,17 +1,5 @@
 import gql from 'graphql-tag'
 
-export const GET_USER = gql`
-  query user($id: ID, $username: String) {
-    user(id: $id, username: $username) {
-      id
-      username
-      profilePicture
-      isOnline
-      email
-    }
-  }
-`
-
 export const CREATE_MESSAGE = gql`
   mutation createMessage($content: String, $channelId: String) {
     createMessage(content: $content, channelId: $channelId) {
