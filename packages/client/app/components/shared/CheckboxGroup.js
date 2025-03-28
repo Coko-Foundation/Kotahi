@@ -26,7 +26,7 @@ export const CheckboxGroup = ({
       {options.map(option => (
         <Checkbox
           {...option}
-          checked={values.includes(option.value)}
+          checked={values?.includes(option.value)}
           handleChange={handleChange}
           key={option.id}
         />
