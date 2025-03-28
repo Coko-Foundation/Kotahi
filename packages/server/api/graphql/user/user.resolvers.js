@@ -7,7 +7,6 @@ const {
   getUser,
   getUsers,
   isUserOnline,
-  loginUser,
   paginatedUsers,
   profilePicture,
   searchUsers,
@@ -47,8 +46,8 @@ module.exports = {
       return searchUsers(teamId, query)
     },
 
-    async user(_, { id, username }, ctx) {
-      return getUser(id, username, ctx.req.headers['group-id'])
+    async user(_, { id }, ctx) {
+      return getUser(id, ctx.req.headers['group-id'])
     },
 
     async users(_, __, ctx) {
@@ -63,10 +62,6 @@ module.exports = {
 
     async expandChat(_, { state }, ctx) {
       return expandChat(ctx.userId, state)
-    },
-
-    async loginUser(_, { input }) {
-      return loginUser(input)
     },
 
     async sendEmail(_, { input }, ctx) {

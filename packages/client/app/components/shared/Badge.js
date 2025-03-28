@@ -59,7 +59,7 @@ const statusColorsMap = {
 
 // IDEA: This could be extended to be a prop: an array of objects where each: { [statuskey] : [...array of statuses to override] }
 // Slightly changes on the component's implementation will be needed though
-const statusesToOverride = ['accepted', 'evaluated']
+const statusesToOverride = ['evaluated']
 
 /**
  * StatusBadge component to display status with optional published badge.

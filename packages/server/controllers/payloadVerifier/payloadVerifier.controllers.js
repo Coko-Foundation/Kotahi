@@ -4,7 +4,7 @@ const Manuscript = require('../../models/manuscript/manuscript.model')
 const {
   verifySubmission,
   checkPayload,
-} = require('../../server/publishing/datacite')
+} = require('../../services/publishing/datacite')
 
 const apiChecks = {
   Datacite: {

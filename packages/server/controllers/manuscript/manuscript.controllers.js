@@ -18,6 +18,7 @@ const {
   TeamMember,
   ThreadedDiscussion,
   User,
+  Channel,
 } = require('../../models')
 
 const {
@@ -33,10 +34,10 @@ const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty
 const { cachedGet } = require('../../services/queryCache.service')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
-const { publishToDatacite } = require('../../server/publishing/datacite')
-const { publishToDOAJ } = require('../../server/publishing/doaj')
-const publishToGoogleSpreadSheet = require('../../server/publishing/google-spreadsheet')
-const { tryPublishDocMaps } = require('../../server/publishing/docmaps')
+const { publishToDatacite } = require('../../services/publishing/datacite')
+const { publishToDOAJ } = require('../../services/publishing/doaj')
+const publishToGoogleSpreadSheet = require('../../services/publishing/google-spreadsheet')
+const { tryPublishDocMaps } = require('../../services/publishing/docmaps')
 const { rebuildCMSSite } = require('../flax.controllers')
 const { sendAnnouncementNotification } = require('../coar/coar.controllers')
 const { sendAnnouncementNotificationToSciety } = require('../coar/sciety')
@@ -44,7 +45,7 @@ const { sendAnnouncementNotificationToSciety } = require('../coar/sciety')
 const {
   getPublishableReviewFields,
   getPublishableSubmissionFields,
-} = require('../../server/publishing/flax/tools')
+} = require('../../services/publishing/flax/tools')
 
 const {
   deepMergeObjectsReplacingArrays,
@@ -75,7 +76,7 @@ const {
 const {
   publishToHypothesis,
   deletePublication,
-} = require('../../server/publishing/hypothesis')
+} = require('../../services/publishing/hypothesis')
 
 const {
   publishToCrossref,
@@ -83,7 +84,7 @@ const {
   getDoi,
   doiIsAvailable,
   doiExists,
-} = require('../../server/publishing/crossref')
+} = require('../../services/publishing/crossref')
 
 const {
   getFilesWithUrl,
@@ -796,8 +797,12 @@ const makeDecision = async (id, decisionKey, userId) => {
   const manuscript = await Manuscript.query()
     .findById(id)
     .withGraphFetched(
-      '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
+      '[submitter.[defaultIdentity], teams.members.user, reviews.user]',
     )
+
+  manuscript.channels = await Channel.query().where({
+    manuscriptId: manuscript.parentId || manuscript.id,
+  })
 
   const activeConfig = await Config.getCached(manuscript.groupId)
   const currentUser = await User.query().findById(userId)

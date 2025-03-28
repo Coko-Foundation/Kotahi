@@ -10,31 +10,6 @@ class Review extends BaseModel {
     this.type = 'Review'
   }
 
-  // async user() {
-  //   const User = require('../user/user.model')
-  //   return User.findById(this.userId)
-  // }
-
-  // async getComments() {
-  //   const File = require('../../model-file/src/file')
-
-  //   await Promise.all(
-  //     (this.comments || []).map(async comment => {
-  //       const files = await File.query().where({
-  //         objectType: 'Review',
-  //         objectId: this.id,
-  //       })
-  //       const commentFile = files.find(file => file.fileType === comment.type)
-  //       if (commentFile) {
-  //         comment.files = [commentFile]
-  //       }
-  //       return comment
-  //     }),
-  //   )
-
-  //   this.user = this.user()
-  //   return this.comments
-  // }
   static get relatedFindQueryMutates() {
     return false
   }
