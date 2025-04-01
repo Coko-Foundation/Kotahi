@@ -7,18 +7,7 @@ exports.up = async knex => {
       table.boolean('is_imported').notNullable().defaultTo('false')
     })
 
-    const importedReviews = await Review.query(trx).where({ userId: null })
-
-    // mark reviews as imports.
-    // if no reviews were found, do not attempt to patch empty rows
-    if (importedReviews.length > 0) {
-      await Review.query(trx)
-        .whereIn(
-          'id',
-          importedReviews.map(r => r.id),
-        )
-        .patch({ isImported: true })
-    }
+    await Review.query(trx).where({ userId: null }).patch({ isImported: true })
   })
 }
 
