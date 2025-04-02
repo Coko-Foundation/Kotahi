@@ -90,8 +90,15 @@ class Manuscript extends BaseModel {
             'reviews.user_id',
           )
         })
-        .where({ role: 'reviewer' })
-        .whereIn('status', appliedStatuses)
+        .where(outerBuilder => {
+          outerBuilder
+            .where(innerBuilder =>
+              innerBuilder
+                .where({ role: 'reviewer' })
+                .whereIn('status', appliedStatuses),
+            )
+            .orWhere({ isImported: true })
+        })
     )
   }
 
