@@ -4,6 +4,9 @@ primary_region = "lhr"
 # [build]
 # image = "cokoapps/kotahi-server:test"
 
+[processes]
+app = "bash -c 'sh /custom/start.sh && exec yarn coko-server start'"
+
 [http_service]
 auto_start_machines = true
 auto_stop_machines = true
@@ -16,6 +19,7 @@ processes = ["app"]
 [[services]]
 internal_port = 8080
 protocol = "tcp"
+processes = ['app']
 
 [[services.ports]]
 handlers = ["http"]
@@ -29,6 +33,7 @@ port = 443                 # Map internal HTTP service (8080) to external HTTPS 
 [[services]]
 internal_port = 8081
 protocol = "tcp"     # Use TCP for WebSocket connections
+processes = ['app']
 
 [[services.ports]]
 handlers = ["tls", "http"] # WebSocket handler
@@ -38,6 +43,10 @@ port = 8081                # External port for WebSocket (same as internal port)
 cpu_kind = "shared"
 cpus = 1
 memory = "1gb"
+
+[[mounts]]
+source = 'kotahi_test_plugins'
+destination = '/custom'
 
 [env]
 NODE_ENV = "production"
