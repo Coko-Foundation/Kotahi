@@ -10,7 +10,6 @@ const {
   CollaborativeDoc,
   Config,
   Group,
-  Invitation,
   Manuscript,
   PublishedArtifact,
   Review: ReviewModel,
@@ -115,63 +114,12 @@ const addReviewer = async (
   invitationId,
   isCollaborative,
 ) => {
-  const manuscript = await Manuscript.query().findById(manuscriptId)
-  const status = invitationId ? 'accepted' : 'invited'
-
-  const team = isCollaborative
-    ? {
-        role: 'collaborativeReviewer',
-        displayName: 'Collaborative Reviewers',
-      }
-    : { role: 'reviewer', displayName: 'Reviewers' }
-
-  let invitationData
-
-  if (invitationId) {
-    invitationData = await Invitation.query().findById(invitationId)
-  }
-
-  const existingTeam = await manuscript
-    .$relatedQuery('teams')
-    .where('role', team.role)
-    .first()
-
-  // Add the reviewer to the existing team of reviewers
-  if (existingTeam) {
-    const reviewerExists =
-      (await existingTeam
-        .$relatedQuery('users')
-        .where('users.id', userId)
-        .resultSize()) > 0
-
-    if (!reviewerExists) {
-      await TeamMember.query().insert({
-        teamId: existingTeam.id,
-        status,
-        userId,
-        isShared: invitationData ? invitationData.isShared : null,
-      })
-    }
-
-    return existingTeam.$query()
-  }
-
-  // Create a new team of reviewers if it doesn't exist
-
-  const newTeam = await Team.query().insert({
-    objectId: manuscriptId,
-    objectType: 'manuscript',
-    role: team.role,
-    displayName: team.displayName,
-  })
-
-  await TeamMember.query().insert({
+  return Manuscript.addReviewer(
+    manuscriptId,
     userId,
-    teamId: newTeam.id,
-    status,
-  })
-
-  return newTeam
+    invitationId,
+    isCollaborative,
+  )
 }
 
 const archiveManuscript = async id => {
