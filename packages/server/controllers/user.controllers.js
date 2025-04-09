@@ -739,36 +739,70 @@ const setUserMembershipInTeam = async (
 }
 
 const updateEmail = async (id, email) => {
-  const user = await User.findById(id)
+  return useTransaction(async trx => {
+    const user = await User.findById(id, { trx })
 
-  if (user.email === email) {
-    return { success: true }
-  }
+    if (user.email === email) {
+      return { success: true }
+    }
 
-  const emailValidationRegexp =
-    /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
+    const emailValidationRegexp =
+      /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
 
-  const emailValidationResult = emailValidationRegexp.test(email)
+    const emailValidationResult = emailValidationRegexp.test(email)
 
-  if (!emailValidationResult) {
-    return { success: false, error: 'invalidEmail' }
-  }
+    if (!emailValidationResult) {
+      return { success: false, error: 'invalidEmail' }
+    }
 
-  const userWithSuchEmail = await User.query().findOne({ email })
+    const userWithSuchEmail = await User.findOne({ email }, { trx })
 
-  if (userWithSuchEmail) {
-    return { success: false, error: 'emailTaken' }
-  }
+    if (userWithSuchEmail) {
+      return { success: false, error: 'emailTaken' }
+    }
 
-  try {
-    const updatedUser = await User.query().updateAndFetchById(id, {
-      email,
-    })
+    // if first login, check for existing invites across all groups for email
+    if (!user.email) {
+      const { result: invitations } = await Invitation.find(
+        {
+          toEmail: email,
+          status: 'UNANSWERED',
+          userId: null,
+        },
+        { trx },
+      )
 
-    return { success: true, user: updatedUser }
-  } catch (e) {
-    return { success: false, error: 'smthWentWrong', user: null }
-  }
+      if (invitations.length) {
+        await Promise.all(
+          invitations.map(async invite => {
+            await invite.patch({ userId: user.id })
+
+            await Manuscript.addReviewer(
+              invite.manuscriptId,
+              user.id,
+              null, // do not accept yet
+              invite.invitedPersonType === 'COLLABORATIVE_REVIEWER',
+              { trx },
+            )
+          }),
+        )
+      }
+    }
+
+    try {
+      const updatedUser = await User.patchAndFetchById(
+        id,
+        {
+          email,
+        },
+        { trx },
+      )
+
+      return { success: true, user: updatedUser }
+    } catch (e) {
+      return { success: false, error: 'smthWentWrong', user: null }
+    }
+  })
 }
 
 const updateLanguage = async (id, preferredLanguage) => {
