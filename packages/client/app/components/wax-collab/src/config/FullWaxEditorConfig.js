@@ -144,7 +144,7 @@ const fullWaxEditorConfig = (
     AiOn: aiConfig?.AiOn,
     CustomPromptsOn: aiConfig?.CustomPromptsOn,
     FreeTextPromptsOn: aiConfig?.FreeTextPromptsOn,
-    CustomPrompts: aiConfig?.CustomPrompts,
+    CustomPrompts: aiConfig?.CustomPrompts || [],
   },
 
   services: [

@@ -145,11 +145,11 @@ const productionWaxEditorConfig = (
   },
 
   AskAiContentService: {
-    AskAiContentTransformation: aiConfig.AskAiContentTransformation,
-    AiOn: aiConfig.AiOn,
-    CustomPromptsOn: aiConfig.CustomPromptsOn,
-    FreeTextPromptsOn: aiConfig.FreeTextPromptsOn,
-    CustomPrompts: aiConfig.CustomPrompts,
+    AskAiContentTransformation: aiConfig?.AskAiContentTransformation,
+    AiOn: aiConfig?.AiOn,
+    CustomPromptsOn: aiConfig?.CustomPromptsOn,
+    FreeTextPromptsOn: aiConfig?.FreeTextPromptsOn,
+    CustomPrompts: aiConfig?.CustomPrompts || [],
   },
 
   CalloutService: {

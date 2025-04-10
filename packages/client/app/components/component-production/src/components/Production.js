@@ -187,7 +187,7 @@ const Production = ({
       config?.groupIdentity?.AiProductionEditor,
     FreeTextPromptsOn: config?.groupIdentity?.AiFreeTextPrompts,
     CustomPromptsOn: config?.groupIdentity?.customAiPrompts,
-    CustomPrompts: config?.groupIdentity?.customAiInputs,
+    CustomPrompts: config?.groupIdentity?.customAiInputs || [],
   }
 
   let showContent = false
