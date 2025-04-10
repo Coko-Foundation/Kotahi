@@ -3,7 +3,7 @@ const cloneDeep = require('lodash/cloneDeep')
 const { raw } = require('objection')
 const sortBy = require('lodash/sortBy')
 
-const { BaseModel } = require('@coko/server')
+const { BaseModel, useTransaction } = require('@coko/server')
 
 // REFACTOR: models
 const { evictFromCache } = require('../../services/queryCache.service')
@@ -90,8 +90,15 @@ class Manuscript extends BaseModel {
             'reviews.user_id',
           )
         })
-        .where({ role: 'reviewer' })
-        .whereIn('status', appliedStatuses)
+        .where(outerBuilder => {
+          outerBuilder
+            .where(innerBuilder =>
+              innerBuilder
+                .where({ role: 'reviewer' })
+                .whereIn('status', appliedStatuses),
+            )
+            .orWhere({ isImported: true })
+        })
     )
   }
 
@@ -288,6 +295,80 @@ class Manuscript extends BaseModel {
       .distinct()
 
     return records.map(r => r.topLevelId)
+  }
+
+  static async addReviewer(
+    manuscriptId,
+    userId,
+    invitationId,
+    isCollaborative,
+    options = {},
+  ) {
+    /* eslint-disable global-require */
+    const Invitation = require('../invitation/invitation.model')
+    const TeamMember = require('../teamMember/teamMember.model')
+    const Team = require('../team/team.model')
+    /* eslint-enable global-require */
+
+    return useTransaction(async trx => {
+      const manuscript = await Manuscript.query(trx).findById(manuscriptId)
+      const status = invitationId ? 'accepted' : 'invited'
+
+      const team = isCollaborative
+        ? {
+            role: 'collaborativeReviewer',
+            displayName: 'Collaborative Reviewers',
+          }
+        : { role: 'reviewer', displayName: 'Reviewers' }
+
+      let invitationData
+
+      if (invitationId) {
+        invitationData = await Invitation.query(trx).findById(invitationId)
+      }
+
+      const existingTeam = await manuscript
+        .$relatedQuery('teams', trx)
+        .where('role', team.role)
+        .first()
+
+      // Add the reviewer to the existing team of reviewers
+      if (existingTeam) {
+        const reviewerExists =
+          (await existingTeam
+            .$relatedQuery('users', trx)
+            .where('users.id', userId)
+            .resultSize()) > 0
+
+        if (!reviewerExists) {
+          await TeamMember.query(trx).insert({
+            teamId: existingTeam.id,
+            status,
+            userId,
+            isShared: invitationData ? invitationData.isShared : null,
+          })
+        }
+
+        return existingTeam.$query(trx)
+      }
+
+      // Create a new team of reviewers if it doesn't exist
+
+      const newTeam = await Team.query(trx).insert({
+        objectId: manuscriptId,
+        objectType: 'manuscript',
+        role: team.role,
+        displayName: team.displayName,
+      })
+
+      await TeamMember.query(trx).insert({
+        userId,
+        teamId: newTeam.id,
+        status,
+      })
+
+      return newTeam
+    }, options)
   }
 
   static get relationMappings() {

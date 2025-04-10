@@ -4,6 +4,8 @@ const Team = require('../../team/team.model')
 const User = require('../../user/user.model')
 
 const { clearDb } = require('../../../scripts/resetDb')
+const TeamMember = require('../../teamMember/teamMember.model')
+const Invitation = require('../../invitation/invitation.model')
 
 describe('Manuscript model', () => {
   beforeEach(async () => {
@@ -67,5 +69,74 @@ describe('Manuscript model', () => {
 
     const allReviews = await manuscript.getReviews(['invited', 'accepted'])
     expect(allReviews).toHaveLength(3)
+  })
+
+  it('adds a reviewer', async () => {
+    const manuscriptOne = await Manuscript.insert({})
+    const reviewerOne = await User.insert({})
+    const reviewerTwo = await User.insert({})
+
+    let reviewerTeamOne = await Manuscript.addReviewer(
+      manuscriptOne.id,
+      reviewerOne.id,
+      null,
+      true,
+    )
+
+    expect(reviewerTeamOne.role).toBe('collaborativeReviewer')
+
+    let reviewerTeamOneMembers = await TeamMember.query().where({
+      teamId: reviewerTeamOne.id,
+    })
+
+    expect(reviewerTeamOneMembers.length).toBe(1)
+    expect(reviewerTeamOneMembers[0].status).toBe('invited')
+
+    reviewerTeamOne = await Manuscript.addReviewer(
+      manuscriptOne.id,
+      reviewerTwo.id,
+      null,
+      true,
+    )
+
+    reviewerTeamOneMembers = await TeamMember.query().where({
+      teamId: reviewerTeamOne.id,
+    })
+
+    expect(reviewerTeamOneMembers.length).toBe(2)
+
+    const manuscriptThree = await Manuscript.insert({})
+
+    const reviewerThree = await User.insert({
+      email: 'reviewer3@email.com',
+      username: 'Reviewer Three',
+    })
+
+    const editor = await User.insert({})
+
+    const inviteThree = await Invitation.insert({
+      manuscriptId: manuscriptThree.id,
+      toEmail: reviewerThree.email,
+      status: 'UNANSWERED',
+      invitedPersonType: 'REVIEWER',
+      invitedPersonName: reviewerThree.username,
+      senderId: editor.id,
+    })
+
+    const reviewerTeamThree = await Manuscript.addReviewer(
+      manuscriptThree.id,
+      reviewerThree.id,
+      inviteThree.id,
+      false,
+    )
+
+    expect(reviewerTeamThree.role).toBe('reviewer')
+
+    const reviewerTeamThreeMembers = await TeamMember.query().where({
+      teamId: reviewerTeamThree.id,
+    })
+
+    expect(reviewerTeamThreeMembers.length).toBe(1)
+    expect(reviewerTeamThreeMembers[0].status).toBe('accepted')
   })
 })
