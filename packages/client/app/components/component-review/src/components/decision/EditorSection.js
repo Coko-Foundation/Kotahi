@@ -127,7 +127,7 @@ const EditorSection = ({
       config?.groupIdentity?.toggleAi && config?.groupIdentity?.[editorType],
     FreeTextPromptsOn: config?.groupIdentity?.AiFreeTextPrompts,
     CustomPromptsOn: config?.groupIdentity?.customAiPrompts,
-    CustomPrompts: config?.groupIdentity?.customAiInputs,
+    CustomPrompts: config?.groupIdentity?.customAiInputs || [],
   }
 
   return (
