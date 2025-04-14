@@ -58,6 +58,14 @@ const UserPrivilegeAlert = styled.div`
   width: 100%;
 `
 
+const ErrorContainer = styled.div`
+  background: ${th('colorWarningLight')};
+  border: 3px solid ${th('colorWarning')};
+  color: ${th('colorWarningDark')};
+  padding: 10px 5px;
+  width: 100%;
+`
+
 const acceptedMimes = ['image/jpeg', 'image/png', 'image/webp']
 
 const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
@@ -115,7 +123,7 @@ const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
           : t('profilePage.Change profile picture')}
       </Button>
       <Popup closeOnDocumentClick closeOnEscape modal open={isErrorOpen}>
-        Invalid file! Please use an image!
+        <ErrorContainer>Invalid file! Please use an image!</ErrorContainer>
       </Popup>
     </div>
   )
