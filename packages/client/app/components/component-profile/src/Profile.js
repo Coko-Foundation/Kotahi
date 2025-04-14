@@ -5,6 +5,8 @@ import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { fileTypeFromBlob } from 'file-type'
+import Popup from 'reactjs-popup'
 
 import { th, grid, serverUrl } from '@coko/client'
 
@@ -56,11 +58,58 @@ const UserPrivilegeAlert = styled.div`
   width: 100%;
 `
 
+const ErrorContainer = styled.div`
+  background: ${th('colorWarningLight')};
+  border: 3px solid ${th('colorWarning')};
+  color: ${th('colorWarningDark')};
+  padding: 10px 5px;
+  width: 100%;
+`
+
+const acceptedMimes = ['image/jpeg', 'image/png', 'image/webp']
+
 const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
-  const onDrop = acceptedFiles => replaceAvatarImage(acceptedFiles)
+  const [isErrorOpen, setErrorOpen] = useState(false)
+
+  const onDrop = async acceptedFiles => {
+    setErrorOpen(false)
+
+    const disallowedExtensions = ['.jfif']
+    const validatedFiles = []
+
+    await Promise.all(
+      acceptedFiles.map(async file => {
+        const ext = `.${file.name.toLowerCase().split('.').pop()}`
+
+        if (disallowedExtensions.includes(ext)) {
+          console.warn(`Rejected based on extension: ${file.name}`)
+          return
+        }
+
+        const result = await fileTypeFromBlob(file)
+
+        if (result && acceptedMimes.includes(result.mime)) {
+          validatedFiles.push(file)
+        } else {
+          console.warn(
+            `Rejected file: ${file.name} — Detected as: ${
+              result?.mime || 'unknown'
+            }`,
+          )
+        }
+      }),
+    )
+
+    if (acceptedFiles?.length && !validatedFiles.length) {
+      setErrorOpen(true)
+      return
+    }
+
+    replaceAvatarImage(validatedFiles)
+  }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: ['image/jpeg', 'image/png', 'image/webp'],
+    accept: acceptedMimes,
     onDrop,
   })
 
@@ -73,6 +122,9 @@ const ProfileDropzone = ({ profilePicture, replaceAvatarImage, t }) => {
           ? t('profilePage.Drop it here')
           : t('profilePage.Change profile picture')}
       </Button>
+      <Popup closeOnDocumentClick closeOnEscape modal open={isErrorOpen}>
+        <ErrorContainer>Invalid file! Please use an image!</ErrorContainer>
+      </Popup>
     </div>
   )
 }
