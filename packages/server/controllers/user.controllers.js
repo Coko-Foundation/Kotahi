@@ -375,7 +375,15 @@ const paginatedUsers = async (userId, groupId, sort, offset, limit) => {
 const profilePicture = async user => {
   if (!user.profilePicture) return null
   const file = await File.query().findById(user.profilePicture)
-  const small = file.getStoredObjectBasedOnType('small')
+
+  let small
+
+  try {
+    small = file.getStoredObjectBasedOnType('small')
+  } catch (e) {
+    return null
+  }
+
   const url = fileStorage.getURL(small.key)
   return url
 }
