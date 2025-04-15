@@ -283,7 +283,7 @@ AuthorsInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   overrideButtonLabel: PropTypes.string,
   requireEmail: PropTypes.bool,
-  rorMenuPlacement: PropTypes.oneOf('bottom', 'top', 'auto'),
+  rorMenuPlacement: PropTypes.oneOf(['bottom', 'top', 'auto']),
   showMiddleName: PropTypes.bool,
   isRoRMulti: PropTypes.bool,
   showOrcidId: PropTypes.bool,
