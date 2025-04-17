@@ -443,7 +443,7 @@ const sendEmailWithPreparedData = async (
   const { trx } = options
 
   const {
-    manuscript,
+    manuscript: inputManuscript,
     selectedEmail: rawSelectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
     selectedTemplate, // selectedEmailTemplateId
     externalEmail: rawExternalEmail, // New User Email
@@ -469,10 +469,9 @@ const sendEmailWithPreparedData = async (
       userReceiver.username || userReceiver.defaultIdentity.name || ''
   }
 
+  const manuscript = await Manuscript.findById(inputManuscript.id, { trx })
   const manuscriptId = manuscript.id
-  // check why are we fetching the manuscript again? to use getManuscriptAuthor?
-  const manuscriptObject = await Manuscript.query(trx).findById(manuscriptId)
-  const author = await manuscriptObject.getManuscriptAuthor({ trx })
+  const author = await manuscript.getManuscriptAuthor({ trx })
   const authorName = author ? author.username : ''
   const emailValidationResult = EMAIL_REGEX.test(to)
 
@@ -507,7 +506,7 @@ const sendEmailWithPreparedData = async (
       }[type]
 
       const eventData = {
-        manuscript: manuscriptObject,
+        manuscript,
         authorName,
         senderName: currentUser,
         recipientName: receiverName,
@@ -543,7 +542,7 @@ const sendEmailWithPreparedData = async (
 
     const override = overrideRecipient({ to, cc, subject })
     const isProduction = !override || !override.to
-    const dataForHandlebars = processData(variables, groupId)
+    const dataForHandlebars = await processData(variables, groupId)
 
     const mailOptions = {
       to,
