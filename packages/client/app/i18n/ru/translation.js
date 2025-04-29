@@ -492,7 +492,9 @@ const ru = {
       Logo: 'Логотип',
       Favicon: 'Фавикон',
       Dashboard: 'Панель управления',
+      MySubmissionsColumnFields: 'Поля столбца «Мои заявки»',
       ReviewAssignmentsColumnFields: 'Поля столбцов проверки назначений',
+      EditingQueueColumnFields: 'Редактирование полей столбца очереди',
       landingPage:
         'Лендинг страница входа в систему для пользователей в роли администратора',
       'Dashboard Page': 'Страница панели управления',

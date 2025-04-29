@@ -19,8 +19,11 @@ import { ConfigContext } from '../../../../config/src'
 
 const EditorTable = ({
   currentUser,
+  doUpdateManuscript,
   manuscriptsUserHasCurrentRoleIn,
   submissionForm,
+  unsetCustomStatus,
+  setReadyToEvaluateLabels,
   uriQueryParams,
   applyQueryParams,
 }) => {
@@ -45,9 +48,15 @@ const EditorTable = ({
   const limit = config?.manuscript?.paginationCount || 10
   const { totalCount } = manuscriptsUserHasCurrentRoleIn
 
+  const setReadyToEvaluateLabel = id => {
+    return setReadyToEvaluateLabels(id)
+  }
+
   const specialComponentValues = {
     urlFrag,
     currentUser,
+    setReadyToEvaluateLabel,
+    unsetCustomStatus,
   }
 
   const displayProps = {
@@ -57,13 +66,15 @@ const EditorTable = ({
     currentSearchQuery,
   }
 
+  const rColumn = (config.dashboard?.editingQueue || []).map(tc => tc.value)
+
   const columnsProps = buildColumnDefinitions(
     config,
-    editorColumns,
+    editorColumns(rColumn),
     fieldDefinitions,
     specialComponentValues,
     displayProps,
-    false,
+    doUpdateManuscript,
   )
 
   const { t } = useTranslation()

@@ -494,8 +494,11 @@ const fr = {
       Logo: 'Logo',
       Favicon: 'Icône de favori',
       Dashboard: 'Tableau de bord',
+      MySubmissionsColumnFields: 'Champs de la colonne Mes soumissions',
       ReviewAssignmentsColumnFields:
         'Champs de colonne des affectations de révision',
+      EditingQueueColumnFields:
+        "Édition des champs de la colonne de la file d'attente",
       landingPage:
         "Page d'accueil pour les utilisateurs du gestionnaire de groupe après la connexion",
       'Dashboard Page': 'Page du tableau de bord',

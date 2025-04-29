@@ -489,8 +489,10 @@ const esLa = {
       Logo: 'Logotipo',
       Favicon: 'Favicon',
       Dashboard: 'Panel de Control',
+      MySubmissionsColumnFields: 'Campos de la columna Mis envíos',
       ReviewAssignmentsColumnFields:
         'Campos de columna de revisión de asignaciones',
+      EditingQueueColumnFields: 'Editando campos de la columna de la cola',
       landingPage:
         'Página de Inicio para Usuarios del Gerente de Grupo al Iniciar Sesión',
       'Dashboard Page': 'Página de Inicio del Panel de Control',

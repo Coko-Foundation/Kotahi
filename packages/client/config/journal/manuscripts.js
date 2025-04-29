@@ -1,25 +1,42 @@
 /*
 Journals may want to display their manuscript tables with different columns
 */
-const editorColumns = [
-  'shortId',
-  'overdueTooltip',
-  'submission.$title',
-  'status',
-  'manuscriptVersions',
-  'statusCounts',
-  'lastUpdated',
-  'editorLinks',
-]
+const editorColumns = columns => {
+  if (columns.length === 0) {
+    return [
+      'shortId',
+      'overdueTooltip',
+      'submission.$title',
+      'status',
+      'manuscriptVersions',
+      'statusCounts',
+      'lastUpdated',
+      'editorLinks',
+    ]
+  }
 
-const ownerColumns = [
-  'shortId',
-  'submission.$title',
-  'status',
-  'created',
-  'updated',
-  'authorProofingLink',
-]
+  return columns.concat([
+    'overdueTooltip',
+    'statusCounts',
+    'lastUpdated',
+    'editorLinks',
+  ])
+}
+
+const authorColumns = columns => {
+  if (columns.length === 0) {
+    return [
+      'shortId',
+      'submission.$title',
+      'status',
+      'created',
+      'updated',
+      'authorProofingLink',
+    ]
+  }
+
+  return columns.concat(['authorProofingLink'])
+}
 
 const reviewerColumns = columns => {
   if (columns.length === 0) {
@@ -35,7 +52,7 @@ const reviewerColumns = columns => {
 }
 
 module.exports = {
+  authorColumns,
   editorColumns,
-  ownerColumns,
   reviewerColumns,
 }
