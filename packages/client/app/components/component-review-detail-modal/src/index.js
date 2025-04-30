@@ -71,9 +71,11 @@ const ReviewDetailsModal = (
     onClose,
     threadedDiscussionProps,
     showEditorOnlyFields,
+    isAuthorCard,
     isOpen,
     isControlPage = true,
     readOnly = false,
+    removeAuthor,
     removeInvitation,
     removeReviewer,
     manuscriptId,
@@ -158,6 +160,10 @@ const ReviewDetailsModal = (
     : 'Anonymous Reviewer'
 
   const generateModalTitle = () => {
+    if (isAuthorCard) {
+      return t('modals.reviewReport.authorReport', { name: reviewerName })
+    }
+
     if (!showRealReviewer || !reviewer) {
       return t('modals.reviewReport.anonymousReviewReport')
     }
@@ -186,7 +192,8 @@ const ReviewDetailsModal = (
       contentStyles={{ width: '80%', maxWidth: '80%' }}
       isOpen={isOpen}
       leftActions={
-        !readOnly && (
+        !readOnly &&
+        !isAuthorCard && (
           <CheckboxActions
             isInvitation={isInvitation}
             manuscriptId={manuscriptId}
@@ -204,18 +211,22 @@ const ReviewDetailsModal = (
       onClose={onClose}
       rightActions={
         !readOnly &&
-        editorsDeleteReviewsEnabled && (
+        (!['closed', 'completed'].includes(statusToDisplay) ||
+          editorsDeleteReviewsEnabled) && (
           <>
             <SecondaryButton onClick={() => setOpen(true)}>
               {t('modals.reviewReport.Delete')}
             </SecondaryButton>
             {isInvitation && (
               <DeleteInvitationModal
+                isAuthorCard={isAuthorCard}
                 isOpen={open}
                 manuscriptId={manuscriptId}
                 onClose={() => setOpen(false)}
                 removeInvitation={removeInvitation}
-                removeReviewer={removeReviewer}
+                removeUserFromTeam={
+                  isAuthorCard ? removeAuthor : removeReviewer
+                }
                 reviewer={reviewerTeamMember}
               />
             )}
@@ -246,7 +257,11 @@ const ReviewDetailsModal = (
           />
           <UserInfo>
             <p>
-              <Primary>{t('modals.reviewReport.Reviewer')} </Primary>{' '}
+              <Primary>
+                {t(
+                  `modals.reviewReport.${isAuthorCard ? 'Author' : 'Reviewer'}`,
+                )}{' '}
+              </Primary>{' '}
               {inviteeName ?? reviewerName}
             </p>
             {showRealReviewer && (
@@ -305,7 +320,7 @@ const ReviewDetailsModal = (
           threadedDiscussionProps={threadedDiscussionProps}
         />
       )}
-      {!review && (
+      {!review && !isAuthorCard && (
         <ReviewItemsContainer>
           <i>{t('modals.reviewReport.reviewNotCompleted')}</i>
         </ReviewItemsContainer>

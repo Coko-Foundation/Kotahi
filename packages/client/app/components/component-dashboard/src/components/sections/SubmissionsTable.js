@@ -1,6 +1,6 @@
 import React, { useMemo, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ownerColumns } from '../../../../../../config/journal/manuscripts'
+import { authorColumns } from '../../../../../../config/journal/manuscripts'
 import {
   extractSortData,
   URI_PAGENUM_PARAM,
@@ -60,9 +60,13 @@ const SubmissionsTable = props => {
     currentSearchQuery,
   }
 
+  const configColumns = (config.dashboard?.mySubmissions || []).map(
+    tc => tc.value,
+  )
+
   const columnsProps = buildColumnDefinitions(
     config,
-    ownerColumns,
+    authorColumns(configColumns),
     fieldDefinitions,
     specialComponentValues,
     displayProps,

@@ -12,6 +12,9 @@ import queries from '../graphql/queries'
 import EditorTable from './sections/EditorTable'
 import { CommsErrorBanner, Spinner } from '../../../shared'
 
+import { updateMutation } from '../../../component-submit/src/components/SubmitPage'
+import { updateManuscriptMutation } from '../../../component-review/src/components/DecisionPage'
+
 const DashboardEditsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
   const wantedRoles = ['seniorEditor', 'handlingEditor', 'editor']
@@ -44,6 +47,35 @@ const DashboardEditsPage = ({ currentUser, history }) => {
 
   const [updateTab] = useMutation(mutations.updateTab)
 
+  const [update] = useMutation(updateMutation)
+  const [doUpdateManuscript] = useMutation(updateManuscriptMutation)
+
+  const setReadyToEvaluateLabels = id => {
+    update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            $customStatus: 'readyToEvaluate',
+          },
+        }),
+      },
+    })
+  }
+
+  const unsetCustomStatus = id => {
+    update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            $customStatus: null,
+          },
+        }),
+      },
+    })
+  }
+
   const [removeTaskAlertsForCurrentUser] = useMutation(
     mutations.removeTaskAlertsForCurrentUserMutation,
   )
@@ -64,8 +96,11 @@ const DashboardEditsPage = ({ currentUser, history }) => {
     <EditorTable
       applyQueryParams={applyQueryParams}
       currentUser={currentUser}
+      doUpdateManuscript={doUpdateManuscript}
       manuscriptsUserHasCurrentRoleIn={data.manuscriptsUserHasCurrentRoleIn}
+      setReadyToEvaluateLabels={setReadyToEvaluateLabels}
       submissionForm={data.formForPurposeAndCategory}
+      unsetCustomStatus={unsetCustomStatus}
       uriQueryParams={uriQueryParams}
     />
   )

@@ -53,6 +53,24 @@ export const generateSchemas = ({
 }) => {
   const schemas = { data: {}, ui: {} }
 
+  const authorSubmissionOptions = submissionOptions.concat([
+    { label: 'Created', value: 'created' },
+    { label: 'Updated', value: 'updated' },
+    { label: 'Status', value: 'status' },
+  ])
+
+  const reviewerSubmissionOptions = submissionOptions.concat([
+    { label: 'Created', value: 'created' },
+    { label: 'Updated', value: 'updated' },
+  ])
+
+  const editorSubmissionOptions = submissionOptions.concat([
+    { label: 'Created', value: 'created' },
+    { label: 'Updated', value: 'updated' },
+    { label: 'Version', value: 'manuscriptVersions' },
+    { label: 'Status', value: 'status' },
+  ])
+
   const limitInstanceNameProperties = (instanceName, sections) => {
     const properties = {
       preprint1: {
@@ -223,6 +241,19 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            mySubmissions: {
+              description: t('configPage.MySubmissionsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'created', label: 'Created' },
+                { value: 'updated', label: 'Updated' },
+              ],
+            },
             tableColumns: {
               description: t('configPage.ReviewAssignmentsColumnFields'),
               type: 'array',
@@ -230,8 +261,21 @@ export const generateSchemas = ({
                 type: 'object',
               },
               default: [
-                { value: 'shortId', label: 'Short ID' },
+                { value: 'shortId', label: 'Manuscript Number' },
                 { value: 'submission.$title', label: 'Title' },
+              ],
+            },
+            editingQueue: {
+              description: t('configPage.EditingQueueColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'status', label: 'Status' },
+                { value: 'manuscriptVersions', label: 'Version' },
               ],
             },
           },
@@ -1342,6 +1386,19 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            mySubmissions: {
+              description: t('configPage.MySubmissionsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'created', label: 'Created' },
+                { value: 'updated', label: 'Updated' },
+              ],
+            },
             tableColumns: {
               description: t('configPage.ReviewAssignmentsColumnFields'),
               type: 'array',
@@ -1349,8 +1406,21 @@ export const generateSchemas = ({
                 type: 'object',
               },
               default: [
-                { value: 'shortId', label: 'Short ID' },
+                { value: 'shortId', label: 'Manuscript Number' },
                 { value: 'submission.$title', label: 'Title' },
+              ],
+            },
+            editingQueue: {
+              description: t('configPage.EditingQueueColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'status', label: 'Status' },
+                { value: 'manuscriptVersions', label: 'Version' },
               ],
             },
           },
@@ -2460,6 +2530,19 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            mySubmissions: {
+              description: t('configPage.MySubmissionsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'created', label: 'Created' },
+                { value: 'updated', label: 'Updated' },
+              ],
+            },
             tableColumns: {
               description: t('configPage.ReviewAssignmentsColumnFields'),
               type: 'array',
@@ -2467,8 +2550,21 @@ export const generateSchemas = ({
                 type: 'object',
               },
               default: [
-                { value: 'shortId', label: 'Short ID' },
+                { value: 'shortId', label: 'Manuscript Number' },
                 { value: 'submission.$title', label: 'Title' },
+              ],
+            },
+            editingQueue: {
+              description: t('configPage.EditingQueueColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'status', label: 'Status' },
+                { value: 'manuscriptVersions', label: 'Version' },
               ],
             },
           },
@@ -3603,6 +3699,19 @@ export const generateSchemas = ({
               },
               uniqueItems: true,
             },
+            mySubmissions: {
+              description: t('configPage.MySubmissionsColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'created', label: 'Created' },
+                { value: 'updated', label: 'Updated' },
+              ],
+            },
             tableColumns: {
               description: t('configPage.ReviewAssignmentsColumnFields'),
               type: 'array',
@@ -3610,8 +3719,21 @@ export const generateSchemas = ({
                 type: 'object',
               },
               default: [
-                { value: 'shortId', label: 'Short ID' },
+                { value: 'shortId', label: 'Manuscript Number' },
                 { value: 'submission.$title', label: 'Title' },
+              ],
+            },
+            editingQueue: {
+              description: t('configPage.EditingQueueColumnFields'),
+              type: 'array',
+              items: {
+                type: 'object',
+              },
+              default: [
+                { value: 'shortId', label: 'Manuscript Number' },
+                { value: 'submission.$title', label: 'Title' },
+                { value: 'status', label: 'Status' },
+                { value: 'manuscriptVersions', label: 'Version' },
               ],
             },
           },
@@ -4647,11 +4769,31 @@ export const generateSchemas = ({
         showSections: {
           'ui:widget': 'checkboxes',
         },
+        mySubmissions: {
+          'ui:widget': props => {
+            return (
+              <ListSubmissionFields
+                submissionOptions={authorSubmissionOptions}
+                {...props}
+              />
+            )
+          },
+        },
         tableColumns: {
           'ui:widget': props => {
             return (
               <ListSubmissionFields
-                submissionOptions={submissionOptions}
+                submissionOptions={reviewerSubmissionOptions}
+                {...props}
+              />
+            )
+          },
+        },
+        editingQueue: {
+          'ui:widget': props => {
+            return (
+              <ListSubmissionFields
+                submissionOptions={editorSubmissionOptions}
                 {...props}
               />
             )

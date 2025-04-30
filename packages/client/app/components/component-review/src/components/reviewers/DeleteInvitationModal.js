@@ -25,10 +25,11 @@ const ReviewerName = styled.span`
 const DeleteInvitationModal = ({
   reviewer,
   manuscriptId,
+  isAuthorCard,
   isOpen,
   onClose,
   removeInvitation,
-  removeReviewer,
+  removeUserFromTeam,
 }) => {
   const { t } = useTranslation()
 
@@ -43,7 +44,7 @@ const DeleteInvitationModal = ({
           })
 
           if (reviewer.user) {
-            removeReviewer({
+            removeUserFromTeam({
               variables: {
                 userId: reviewer.user.id,
                 manuscriptId,
@@ -66,14 +67,20 @@ const DeleteInvitationModal = ({
     <Modal isOpen={isOpen} leftActions={actions}>
       <ModalContainer>
         <StackedHeader
-          title={t('modals.deleteReviewer.Delete this reviewer')}
+          title={t(
+            `modals.deleteReviewer.deleteThis${
+              isAuthorCard ? 'Author' : 'Reviewer'
+            }`,
+          )}
         />
         {reviewer && (
           <UserCombo>
             <UserAvatar user={reviewer?.user ?? ''} />
             <UserInfo>
               <Primary>
-                Reviewer:{' '}
+                {t(
+                  `modals.reviewReport.${isAuthorCard ? 'Author' : 'Reviewer'}`,
+                )}{' '}
                 <ReviewerName>
                   {reviewer.user?.username ?? reviewer?.invitedPersonName}
                 </ReviewerName>

@@ -251,6 +251,7 @@ const fr = {
       'Tasks & Notifications': 'Tâches et notifications',
       'Assign Editors': 'Attribuer des éditeurs',
       'Reviewer Status': 'Statut du réviseur',
+      authorStatus: "Statut d'auteur",
       Version: 'Version',
       'See Declined': 'Voir refusé ({{count}})',
       'Hide Declined': 'Masquer refusé',
@@ -494,8 +495,11 @@ const fr = {
       Logo: 'Logo',
       Favicon: 'Icône de favori',
       Dashboard: 'Tableau de bord',
+      MySubmissionsColumnFields: 'Champs de la colonne Mes soumissions',
       ReviewAssignmentsColumnFields:
         'Champs de colonne des affectations de révision',
+      EditingQueueColumnFields:
+        "Édition des champs de la colonne de la file d'attente",
       landingPage:
         "Page d'accueil pour les utilisateurs du gestionnaire de groupe après la connexion",
       'Dashboard Page': 'Page du tableau de bord',
@@ -1148,11 +1152,13 @@ const fr = {
       },
       reviewReport: {
         reviewReport: "Rapport d'évaluation de {{name}}",
+        authorReport: "Rapport de l'auteur de {{name}}",
         collaborativeReview: 'Révision collaborative de {{name}}',
         anonymousReviewReport: "Rapport d'évaluation",
         'Last Updated': 'Dernière mise à jour : {{dateString}}',
         Reviewer: 'Évaluateur :',
         email: 'E-mail :',
+        Author: 'Auteur:',
         Status: 'Statut',
         reviewNotCompleted: "L'évaluation n'a pas encore été terminée",
         Delete: 'Supprimer',
@@ -1175,7 +1181,8 @@ const fr = {
           'Faire de cet évaluateur un évaluateur collaboratif',
       },
       deleteReviewer: {
-        'Delete this reviewer': 'Supprimer cet évaluateur ?',
+        deleteThisReviewer: 'Supprimer cet évaluateur ?',
+        deleteThisAuthor: 'Supprimer cet auteur ?',
         Reviewer: 'Évaluateur :',
         Ok: 'Ok',
         Cancel: 'Annuler',
