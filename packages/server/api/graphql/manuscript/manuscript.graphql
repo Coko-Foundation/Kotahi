@@ -89,6 +89,7 @@ extend type Mutation {
     invitationId: ID
     isCollaborative: Boolean!
   ): Team
+  removeAuthor(manuscriptId: ID!, userId: ID!): Team
   removeReviewer(manuscriptId: ID!, userId: ID!): Team
   publishManuscript(id: ID!): PublishingResult!
   createNewVersion(id: ID!): Manuscript

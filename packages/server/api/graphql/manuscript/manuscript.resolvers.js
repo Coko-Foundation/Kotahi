@@ -53,6 +53,7 @@ const {
   supplementaryFiles,
   metaSource,
   publishedReviewUsers,
+  removeAuthor,
 } = require('../../../controllers/manuscript/manuscript.controllers')
 
 const manuscriptAndPublishedManuscriptSharedResolvers = {
@@ -150,6 +151,9 @@ const resolvers = {
       return removeReviewer(manuscriptId, userId)
     },
 
+    async removeAuthor(_, { manuscriptId, userId }) {
+      return removeAuthor(manuscriptId, userId)
+    },
     async setShouldPublishField(
       _,
       { manuscriptId, objectId, fieldName, shouldPublish },

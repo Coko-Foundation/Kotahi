@@ -25,15 +25,15 @@ const Kanban = styled.div`
   min-height: 300px;
 `
 
-const Column = styled.div`
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  margin-inline: 7.5px;
+const Column = styled.div(({ columns }) => ({
+  alignItems: 'flex-start',
+  display: 'flex',
+  flexDirection: 'column',
+  flexGrow: 1,
+  marginInline: '7.5px',
   /* stylelint-disable-next-line scss/operator-no-unspaced */
-  width: calc(${100 / (statuses.length - 2)}% - 15px);
-`
+  width: `calc(${100 / columns ?? 4}% - 15px)`,
+}))
 
 const StatusLabel = styled.div`
   background-color: ${props => props.statusColor || '#ffffff'};
@@ -54,7 +54,7 @@ const CardsWrapper = styled.div`
   width: 100%;
 `
 
-const ReviewerStatusHeader = styled.div`
+const BoardStatusHeader = styled.div`
   display: flex;
   justify-content: space-between;
 `
@@ -76,14 +76,17 @@ const KanbanBoard = ({
   currentUser,
   deleteFile,
   invitations,
+  isAuthorBoard,
   version,
   versionNumber,
+  removeAuthor,
   removeInvitation,
   removeReviewer,
   reviews,
   reviewForm,
   isCurrentVersion,
   manuscript,
+  title,
   updateSharedStatusForInvitedReviewer,
   updateTeamMember,
   updateCollaborativeTeamMember,
@@ -96,6 +99,11 @@ const KanbanBoard = ({
     version,
     'collaborativeReviewer',
   ).map(reviewer => ({ ...reviewer, isCollaborative: true }))
+
+  const authors = getMembersOfTeam(version, 'author').map(author => ({
+    ...author,
+    status: normalizeStatus(author.status ?? ''),
+  }))
 
   const { t } = useTranslation()
 
@@ -118,21 +126,25 @@ const KanbanBoard = ({
   invitations
     .filter(
       i =>
-        i.invitedPersonType === 'REVIEWER' ||
-        i.invitedPersonType === 'COLLABORATIVE_REVIEWER',
+        (!isAuthorBoard &&
+          (i.invitedPersonType === 'REVIEWER' ||
+            i.invitedPersonType === 'COLLABORATIVE_REVIEWER')) ||
+        (isAuthorBoard && i.invitedPersonType === 'AUTHOR'),
     )
     .map(i => ({ ...i, status: normalizeStatus(i.status) }))
     .forEach(invitation => {
-      const existingReviewer = emailAndWebReviewers.find(
-        r =>
-          r.user &&
-          (r.user.id === invitation.user?.id ||
-            r.user.email === invitation.toEmail),
-      )
+      const findExistingUser = r =>
+        r.user &&
+        (r.user.id === invitation.user?.id ||
+          r.user.email === invitation.toEmail)
+
+      const existingReviewer = emailAndWebReviewers.find(findExistingUser)
+
+      const existingAuthor = authors.find(findExistingUser)
       // TODO Currently, you can't reinvite someone who's already declined.
       // If we do allow this, we'll need to make sure we only merge one invite with the teamMember record, and only if the dates are correct.
 
-      if (existingReviewer) {
+      if (existingReviewer && !isAuthorBoard) {
         existingReviewer.isEmail = true
 
         const {
@@ -145,14 +157,35 @@ const KanbanBoard = ({
         } = invitation
 
         Object.assign(existingReviewer, invitationChosenFields)
-      } else {
+      } else if (!isAuthorBoard) {
         emailAndWebReviewers.push({ ...invitation, isEmail: true })
+      }
+
+      if (isAuthorBoard && existingAuthor) {
+        existingAuthor.isEmail = true
+
+        const { isShared, user, userId, updated, ...invitationChosenFields } =
+          invitation
+
+        Object.assign(existingAuthor, invitationChosenFields)
+      } else if (isAuthorBoard) {
+        authors.push({ ...invitation, isEmail: true })
       }
     })
 
-  const LocalizedReviewFilterOptions = localizeReviewFilterOptions(statuses, t)
+  const LocalizedStatusOptions = localizeReviewFilterOptions(statuses, t)
+
+  const filterOptions = isAuthorBoard
+    ? ['rejected', 'closed', 'inprogress', 'completed']
+    : ['rejected', 'closed']
 
   emailAndWebReviewers.sort((a, b) => {
+    const aDate = a.responseComment ? a.responseDate : a.updated
+    const bDate = b.responseComment ? b.responseDate : b.updated
+    return new Date(bDate) - new Date(aDate)
+  })
+
+  authors.sort((a, b) => {
     const aDate = a.responseComment ? a.responseDate : a.updated
     const bDate = b.responseComment ? b.responseDate : b.updated
     return new Date(bDate) - new Date(aDate)
@@ -188,26 +221,27 @@ const KanbanBoard = ({
       : status?.label
   }
 
+  const members = isAuthorBoard ? authors : emailAndWebReviewers
+
   return (
     <AdminSection>
       <SectionContent>
         <SectionHeader>
-          <ReviewerStatusHeader>
-            <Title>{t('decisionPage.Reviewer Status')}</Title>
+          <BoardStatusHeader>
+            <Title>{title}</Title>
             <Title>
               <VersionNumber>
                 {t('decisionPage.Version')} {versionNumber}
               </VersionNumber>
             </Title>
-          </ReviewerStatusHeader>
+          </BoardStatusHeader>
         </SectionHeader>
         <SectionRow style={{ padding: 0 }}>
           <Kanban>
-            {LocalizedReviewFilterOptions.filter(
-              status =>
-                !['rejected', 'closed'].includes(status.value.toLowerCase()),
+            {LocalizedStatusOptions.filter(
+              status => !filterOptions.includes(status.value.toLowerCase()),
             ).map(status => (
-              <Column key={status.value}>
+              <Column columns={isAuthorBoard ? 2 : 4} key={status.value}>
                 <StatusLabel
                   lightText={status.lightText}
                   statusColor={status.color}
@@ -215,53 +249,55 @@ const KanbanBoard = ({
                   {statusLabel(status)}
                 </StatusLabel>
                 <CardsWrapper>
-                  {getReviewersWithoutDuplicates(
-                    status,
-                    emailAndWebReviewers,
-                  ).map(reviewer => (
-                    <KanbanCard
-                      createFile={createFile}
-                      currentUser={currentUser}
-                      deleteFile={deleteFile}
-                      isCurrentVersion={isCurrentVersion}
-                      isInvitation={reviewer.isEmail}
-                      key={reviewer.id}
-                      manuscript={version}
-                      removeInvitation={removeInvitation}
-                      removeReviewer={removeReviewer}
-                      review={
-                        status.value === 'completed' ||
-                        (status.value === 'inProgress' &&
-                          reviewer.isCollaborative === true)
-                          ? findReviewFromReviewer(allReviews, reviewer)
-                          : null
-                      }
-                      reviewer={reviewer}
-                      reviewForm={reviewForm}
-                      showEmailInvitation={
-                        reviewer.isEmail && status.value === 'invited'
-                      }
-                      status={
-                        status.value === 'completed' && reviewer.isCollaborative
-                          ? 'closed'
-                          : status.value
-                      }
-                      updateCollaborativeTeamMember={
-                        updateCollaborativeTeamMember
-                      }
-                      updateReview={updateReview}
-                      updateReviewJsonData={updateReviewJsonData}
-                      updateSharedStatusForInvitedReviewer={
-                        updateSharedStatusForInvitedReviewer
-                      }
-                      updateTeamMember={updateTeamMember}
-                    />
-                  ))}
+                  {getReviewersWithoutDuplicates(status, members).map(
+                    reviewer => (
+                      <KanbanCard
+                        createFile={createFile}
+                        currentUser={currentUser}
+                        deleteFile={deleteFile}
+                        isAuthorCard={isAuthorBoard}
+                        isCurrentVersion={isCurrentVersion}
+                        isInvitation={reviewer.isEmail}
+                        key={reviewer.id}
+                        manuscript={version}
+                        removeAuthor={removeAuthor}
+                        removeInvitation={removeInvitation}
+                        removeReviewer={removeReviewer}
+                        review={
+                          status.value === 'completed' ||
+                          (status.value === 'inProgress' &&
+                            reviewer.isCollaborative === true)
+                            ? findReviewFromReviewer(allReviews, reviewer)
+                            : null
+                        }
+                        reviewer={reviewer}
+                        reviewForm={reviewForm}
+                        showEmailInvitation={
+                          reviewer.isEmail && status.value === 'invited'
+                        }
+                        status={
+                          status.value === 'completed' &&
+                          reviewer.isCollaborative
+                            ? 'closed'
+                            : status.value
+                        }
+                        updateCollaborativeTeamMember={
+                          updateCollaborativeTeamMember
+                        }
+                        updateReview={updateReview}
+                        updateReviewJsonData={updateReviewJsonData}
+                        updateSharedStatusForInvitedReviewer={
+                          updateSharedStatusForInvitedReviewer
+                        }
+                        updateTeamMember={updateTeamMember}
+                      />
+                    ),
+                  )}
                 </CardsWrapper>
               </Column>
             ))}
           </Kanban>
-          <ReviewersDeclined emailAndWebReviewers={emailAndWebReviewers} />
+          <ReviewersDeclined members={members} />
         </SectionRow>
       </SectionContent>
     </AdminSection>
@@ -269,7 +305,17 @@ const KanbanBoard = ({
 }
 
 KanbanBoard.propTypes = {
+  isAuthorBoard: PropTypes.bool,
+  removeAuthor: PropTypes.func,
+  removeReviewer: PropTypes.func,
+  title: PropTypes.string.isRequired,
   versionNumber: PropTypes.number.isRequired,
+}
+
+KanbanBoard.defaultProps = {
+  isAuthorBoard: false,
+  removeAuthor: () => {},
+  removeReviewer: () => {},
 }
 
 export default KanbanBoard

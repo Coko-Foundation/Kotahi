@@ -56,9 +56,7 @@ const DeleteReviewerModal = ({
   return (
     <Modal isOpen={isOpen} leftActions={actions}>
       <ModalContainer>
-        <StackedHeader
-          title={t('modals.deleteReviewer.Delete this reviewer')}
-        />
+        <StackedHeader title={t('modals.deleteReviewer.deleteThisReviewer')} />
         {reviewer && (
           <UserCombo>
             <UserAvatar user={reviewer?.user ?? ''} />
