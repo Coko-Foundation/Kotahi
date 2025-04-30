@@ -34,11 +34,11 @@ const AddBorder = styled.div`
   }
 `
 
-const ReviewersDeclined = ({ emailAndWebReviewers }) => {
+const ReviewersDeclined = ({ members }) => {
   const [open, setOpen] = useState(false)
   const { t } = useTranslation()
 
-  const declinations = emailAndWebReviewers.filter(user => {
+  const declinations = members.filter(user => {
     return user.status === 'rejected' // internal name for "Declined"
   })
 

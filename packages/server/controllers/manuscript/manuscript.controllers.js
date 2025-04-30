@@ -1513,7 +1513,7 @@ const publishOnCMS = async (groupId, manuscriptId) => {
 }
 
 const removeReviewer = async (manuscriptId, userId) => {
-  const manuscript = await Manuscript.query().findById(manuscriptId)
+  const manuscript = await Manuscript.findById(manuscriptId)
 
   const reviewerTeams = await manuscript
     .$relatedQuery('teams')
@@ -1541,6 +1541,32 @@ const removeReviewer = async (manuscriptId, userId) => {
   })
 
   return reviewerTeam.$query().withGraphFetched('members.user')
+}
+
+const removeAuthor = async (manuscriptId, userId) => {
+  const manuscript = await Manuscript.findById(manuscriptId)
+
+  const authorTeam = await Team.findTeamByRoleAndObject('author', manuscript.id)
+
+  const [deletedTeamMember] = await TeamMember.query()
+    .where({
+      teamId: authorTeam.id,
+      userId,
+    })
+    .delete()
+    .returning('*')
+
+  if (!deletedTeamMember) {
+    throw new Error('Invalid author team member')
+  }
+
+  await removeUserFromManuscriptChatChannel({
+    manuscriptId,
+    userId,
+    type: 'all',
+  })
+
+  return authorTeam.$query().withGraphFetched('members.user')
 }
 
 // TODO Rename to something like 'setReviewerResponse'
@@ -2096,6 +2122,7 @@ module.exports = {
   publishedManuscripts,
   publishedReviewUsers,
   publishManuscript,
+  removeAuthor,
   removeReviewer,
   reviewerResponse,
   setShouldPublishField,

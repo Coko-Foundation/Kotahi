@@ -349,6 +349,14 @@ mutation($manuscriptId: ID!, $userId: ID!, $isCollaborative: Boolean!) {
 }
 `
 
+export const removeAuthorMutation = gql`
+mutation($manuscriptId: ID!, $userId: ID!) {
+  removeAuthor(manuscriptId: $manuscriptId, userId: $userId) {
+    ${teamFields}
+  }
+}
+`
+
 export const removeReviewerMutation = gql`
 mutation($manuscriptId: ID!, $userId: ID!) {
   removeReviewer(manuscriptId: $manuscriptId, userId: $userId) {

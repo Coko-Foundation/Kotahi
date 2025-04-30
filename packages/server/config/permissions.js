@@ -698,6 +698,12 @@ const permissions = {
       userIsAdmin,
     ),
     publishManuscript: userCanPublishManuscript,
+    removeAuthor: or(
+      userIsEditorOfAnyManuscript,
+      userIsGm,
+      userIsGroupAdmin,
+      userIsAdmin,
+    ),
     removeReviewer: or(
       userIsEditorOfAnyManuscript,
       userIsGm,

@@ -81,8 +81,10 @@ const KanbanCard = ({
   currentUser,
   deleteFile,
   reviewer,
+  isAuthorCard,
   isInvitation,
   manuscript,
+  removeAuthor,
   removeReviewer,
   removeInvitation,
   status,
@@ -102,7 +104,7 @@ const KanbanCard = ({
 
   const isCollaborative =
     reviewer.invitedPersonType === 'COLLABORATIVE_REVIEWER' ||
-    isCurrentUserCollaborative(manuscript, reviewer.user)
+    (isCurrentUserCollaborative(manuscript, reviewer.user) && !isAuthorCard)
 
   return (
     <>
@@ -110,12 +112,14 @@ const KanbanCard = ({
         createFile={createFile}
         currentUser={currentUser}
         deleteFile={deleteFile}
+        isAuthorCard={isAuthorCard}
         isInvitation={isInvitation}
         isOpen={open}
         manuscriptId={manuscript.id}
         manuscriptShortId={manuscript.shortId}
         onClose={() => setOpen(false)}
         readOnly={!isCurrentVersion}
+        removeAuthor={removeAuthor}
         removeInvitation={removeInvitation}
         removeReviewer={removeReviewer}
         review={review}

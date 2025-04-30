@@ -21,6 +21,7 @@ import {
   makeDecisionMutation,
   publishManuscriptMutation,
   query,
+  removeAuthorMutation,
   removeReviewerMutation,
   removeInvitationMutation,
   sendEmail,
@@ -331,6 +332,7 @@ const DecisionPage = ({ currentUser, match }) => {
     },
   })
 
+  const [removeAuthor] = useMutation(removeAuthorMutation)
   const [removeReviewer] = useMutation(removeReviewerMutation)
 
   const [removeInvitation] = useMutation(removeInvitationMutation, {
@@ -712,6 +714,7 @@ const DecisionPage = ({ currentUser, match }) => {
       refetch={() => {
         refetchManuscript()
       }}
+      removeAuthor={removeAuthor}
       removeInvitation={removeInvitation}
       removeReviewer={removeReviewer}
       reviewers={data?.manuscript?.reviews}

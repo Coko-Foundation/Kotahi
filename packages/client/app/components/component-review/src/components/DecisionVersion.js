@@ -88,6 +88,7 @@ const DecisionVersion = ({
   updateTask,
   updateTasks,
   teams,
+  removeAuthor,
   removeInvitation,
   removeReviewer,
   updateTeamMember,
@@ -352,6 +353,7 @@ const DecisionVersion = ({
               </SectionRow>
             </SectionContent>
           )}
+          {/* Reviewer Kanban Board */}
           <KanbanBoard
             createFile={createFile}
             currentUser={currentUser}
@@ -363,6 +365,7 @@ const DecisionVersion = ({
             removeReviewer={removeReviewer}
             reviewForm={reviewForm}
             reviews={reviewers}
+            title={t('decisionPage.Reviewer Status')}
             updateCollaborativeTeamMember={updateCollaborativeTeamMember}
             updateReview={updateReview}
             updateReviewJsonData={updateReviewJsonData}
@@ -392,6 +395,30 @@ const DecisionVersion = ({
               />
             </AdminSection>
           )}
+          {/* Author Kanban Board */}
+          <KanbanBoard
+            createFile={createFile}
+            currentUser={currentUser}
+            deleteFile={deleteFile}
+            invitations={invitations}
+            isAuthorBoard
+            isCurrentVersion={isCurrentVersion}
+            manuscript={version}
+            removeAuthor={removeAuthor}
+            removeInvitation={removeInvitation}
+            reviewForm={reviewForm}
+            reviews={reviewers}
+            title={t('decisionPage.authorStatus')}
+            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
+            updateReview={updateReview}
+            updateReviewJsonData={updateReviewJsonData}
+            updateSharedStatusForInvitedReviewer={
+              updateSharedStatusForInvitedReviewer
+            }
+            updateTeamMember={updateTeamMember}
+            version={version}
+            versionNumber={versionNumber}
+          />
           {authorProofingEnabled && (
             <AdminSection>
               <AssignAuthorForProofing
