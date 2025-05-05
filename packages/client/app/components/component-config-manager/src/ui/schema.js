@@ -56,18 +56,22 @@ export const generateSchemas = ({
   const authorSubmissionOptions = submissionOptions.concat([
     { label: 'Created', value: 'created' },
     { label: 'Updated', value: 'updated' },
+    { value: 'shortId', label: 'Manuscript Number' },
     { label: 'Status', value: 'status' },
   ])
 
   const reviewerSubmissionOptions = submissionOptions.concat([
     { label: 'Created', value: 'created' },
     { label: 'Updated', value: 'updated' },
+    { value: 'shortId', label: 'Manuscript Number' },
+    { label: 'Status', value: 'status' },
   ])
 
   const editorSubmissionOptions = submissionOptions.concat([
     { label: 'Created', value: 'created' },
     { label: 'Updated', value: 'updated' },
     { label: 'Version', value: 'manuscriptVersions' },
+    { value: 'shortId', label: 'Manuscript Number' },
     { label: 'Status', value: 'status' },
   ])
 
