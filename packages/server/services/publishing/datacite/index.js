@@ -66,7 +66,7 @@ const verifySubmission = (formData, submission) => {
 }
 
 const getPathAndPayload = async (manuscript, activeConfig) => {
-  const { id: suffix, shortId, meta, submission } = manuscript
+  const { id, shortId, meta, submission } = manuscript
 
   const {
     $localContext,
@@ -74,6 +74,7 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
     $abstract,
     $authors,
     $dois,
+    $doi,
     $issueYear: issueYear,
     resourcetype: resourceTypeGeneral = 'Other',
     ifother: resourceType = 'project',
@@ -84,12 +85,22 @@ const getPathAndPayload = async (manuscript, activeConfig) => {
   const { datacite } = formData.publishing
   const { doiPrefix: prefix, publishedArticleLocationPrefix } = datacite
 
+  let suffix = id
+
+  if ($doi) {
+    const [, extractedSuffix] = $doi.match(/10\.\d{4,9}\/(.+)$/i) || []
+
+    if (extractedSuffix) {
+      suffix = extractedSuffix
+    }
+  }
+
   const doi = getDoi(suffix, activeConfig)
   const publishDate = new Date()
 
-  const doiExists = await doiIsAvailable(doi, activeConfig)
-  const path = doiExists ? 'dois' : `dois/${doi}`
-  const method = doiExists ? 'post' : 'put'
+  const doiAvailable = await doiIsAvailable(doi, activeConfig)
+  const path = doiAvailable ? 'dois' : `dois/${doi}`
+  const method = doiAvailable ? 'post' : 'put'
 
   const payload = {
     type: 'dois',
@@ -154,8 +165,15 @@ const publishToDatacite = async manuscript => {
     activeConfig,
   )
 
-  logger.info(JSON.stringify(payload))
-  await requestToDatacite(method, path, payload, activeConfig)
+  logger.info(`SERVICES: publishToDatacite payload: ${JSON.stringify(payload)}`)
+
+  const {
+    data: { data },
+  } = await requestToDatacite(method, path, payload, activeConfig)
+
+  const { doi } = data.attributes
+
+  return doi
 }
 
 const checkPayload = async (manuscript, activeConfig) => {
