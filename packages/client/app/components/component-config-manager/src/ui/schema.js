@@ -340,6 +340,11 @@ export const generateSchemas = ({
               title: t('configPage.Display manuscript short id'),
               default: true,
             },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
+            },
             sharedReview: {
               type: 'boolean',
               title: t('configPage.Reviewers can see submitted reviews'),
@@ -1484,6 +1489,11 @@ export const generateSchemas = ({
               title: t('configPage.Display manuscript short id'),
               default: true,
             },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
+            },
             sharedReview: {
               type: 'boolean',
               title: t('configPage.Reviewers can see submitted reviews'),
@@ -2627,6 +2637,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',
@@ -3797,6 +3812,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',

@@ -396,29 +396,31 @@ const DecisionVersion = ({
             </AdminSection>
           )}
           {/* Author Kanban Board */}
-          <KanbanBoard
-            createFile={createFile}
-            currentUser={currentUser}
-            deleteFile={deleteFile}
-            invitations={invitations}
-            isAuthorBoard
-            isCurrentVersion={isCurrentVersion}
-            manuscript={version}
-            removeAuthor={removeAuthor}
-            removeInvitation={removeInvitation}
-            reviewForm={reviewForm}
-            reviews={reviewers}
-            title={t('decisionPage.authorStatus')}
-            updateCollaborativeTeamMember={updateCollaborativeTeamMember}
-            updateReview={updateReview}
-            updateReviewJsonData={updateReviewJsonData}
-            updateSharedStatusForInvitedReviewer={
-              updateSharedStatusForInvitedReviewer
-            }
-            updateTeamMember={updateTeamMember}
-            version={version}
-            versionNumber={versionNumber}
-          />
+          {config?.controlPanel?.displayAuthorKanban && (
+            <KanbanBoard
+              createFile={createFile}
+              currentUser={currentUser}
+              deleteFile={deleteFile}
+              invitations={invitations}
+              isAuthorBoard
+              isCurrentVersion={isCurrentVersion}
+              manuscript={version}
+              removeAuthor={removeAuthor}
+              removeInvitation={removeInvitation}
+              reviewForm={reviewForm}
+              reviews={reviewers}
+              title={t('decisionPage.authorStatus')}
+              updateCollaborativeTeamMember={updateCollaborativeTeamMember}
+              updateReview={updateReview}
+              updateReviewJsonData={updateReviewJsonData}
+              updateSharedStatusForInvitedReviewer={
+                updateSharedStatusForInvitedReviewer
+              }
+              updateTeamMember={updateTeamMember}
+              version={version}
+              versionNumber={versionNumber}
+            />
+          )}
           {authorProofingEnabled && (
             <AdminSection>
               <AssignAuthorForProofing

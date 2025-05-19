@@ -529,6 +529,7 @@ const fr = {
       'Control panel': 'Panneau de contrôle',
       'Display manuscript short id':
         "Afficher l'identifiant court du manuscrit",
+      displayAuthorKanban: "Afficher le tableau de l'équipe auteur",
       'Author proofing enabled':
         'Autoriser les auteurs à participer aux cycles de relecture',
       'Reviewers can see submitted reviews':
