@@ -522,6 +522,7 @@ const ru = {
         'Импортировать рукописи вручную с помощью функции "Обновить"',
       'Control panel': 'Панель управления',
       'Display manuscript short id': 'Показывать краткий ID статей',
+      displayAuthorKanban: 'Отобразить таблицу группы авторов',
       'Author proofing enabled':
         'Разрешить авторам участвовать в циклах корректуры',
       'Reviewers can see submitted reviews':

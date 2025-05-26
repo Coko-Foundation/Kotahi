@@ -519,6 +519,7 @@ const en = {
         'Import manuscripts manually using the ‘Refresh’ action',
       'Control panel': 'Control panel',
       'Display manuscript short id': 'Display manuscript short id',
+      displayAuthorKanban: 'Display author team table',
       'Author proofing enabled':
         'Allow authors to participate in proofreading rounds',
       'Reviewers can see submitted reviews':

@@ -522,6 +522,7 @@ const esLa = {
         'Importar manuscritos manualmente usando la acción "Actualizar"',
       'Control panel': 'Panel de Control',
       'Display manuscript short id': 'Mostrar ID corto del manuscrito',
+      displayAuthorKanban: 'Mostrar tabla del equipo de autores',
       'Author proofing enabled':
         'Permitir a los autores participar en rondas de corrección de pruebas',
       'Reviewers can see submitted reviews':
