@@ -34,10 +34,6 @@ module.exports = {
   useFileStorage: 'USE_FILE_STORAGE',
   serverUrl: 'SERVER_URL',
   wsYjsServerPort: 'WS_YJS_SERVER_PORT',
-  'client-features': {
-    displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
-    manuscriptsTableColumns: 'MANUSCRIPTS_TABLE_COLUMNS',
-  },
   'publishing-webhook': {
     publishingWebhookUrl: 'PUBLISHING_WEBHOOK_URL',
     publishingWebhookToken: 'PUBLISHING_WEBHOOK_TOKEN',
@@ -76,12 +72,6 @@ module.exports = {
   review: {
     shared: 'REVIEW_SHARED',
     hide: 'REVIEW_HIDE',
-  },
-  'notification-email': {
-    automated: 'NOTIFICATION_EMAIL_AUTOMATED',
-    cc_enabled: 'NOTIFICATION_EMAIL_CC_ENABLED',
-    use_colab: 'USE_COLAB_EMAIL',
-    testEmailRecipient: 'TEST_EMAIL_RECIPIENT',
   },
   fileStorage: {
     accessKeyId: 'S3_ACCESS_KEY_ID',

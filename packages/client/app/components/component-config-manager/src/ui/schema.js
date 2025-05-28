@@ -8,12 +8,12 @@ import { Select } from '../../../pubsweet'
 import { ColorPicker } from '../../../shared'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 
-export const tabLabels = {
+export const configTabLabels = {
   general: 'General',
   workflow: 'Workflow',
   production: 'Production',
   integrationsAndPublishing: 'Integrations and Publishing Endpoints',
-  notifications: 'Notifications and E-mail',
+  emailNotifications: 'E-mail Settings',
 }
 
 export const tabKeyBasedSchema = {
@@ -33,7 +33,7 @@ export const tabKeyBasedSchema = {
   integrations: ['integrations'],
   submission: ['submission'],
   integrationsAndPublishing: ['publishing', 'integrations'],
-  notifications: ['notification'],
+  emailNotifications: ['emailNotification'],
 }
 
 export const allSections = Object.values(tabKeyBasedSchema).flat()
@@ -339,6 +339,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',
@@ -1096,22 +1101,35 @@ export const generateSchemas = ({
             },
           },
         },
-        notification: {
+        emailNotification: {
           type: 'object',
-          title: t('configPage.Emails'),
+          title: t('configPage.emailNotification.smtpSettings'),
+          description: t('configPage.emailNotification.description'),
           properties: {
-            gmailAuthEmail: {
+            from: {
               type: ['string', 'null'],
-              description: t('configPage.gmailAuthEmail'),
-              // format: 'email',
+              title: t('configPage.emailNotification.from'),
+              description: t('configPage.emailNotification.fromDescription'),
             },
-            gmailAuthPassword: {
+            host: {
               type: ['string', 'null'],
-              description: t('configPage.gmailAuthPassword'),
+              title: t('configPage.emailNotification.host'),
+              description: t('configPage.emailNotification.hostDescription'),
             },
-            gmailSenderName: {
+            port: {
               type: ['string', 'null'],
-              description: t('configPage.gmailSenderName'),
+              title: t('configPage.emailNotification.port'),
+              description: t('configPage.emailNotification.portDescription'),
+            },
+            user: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.user'),
+              description: t('configPage.emailNotification.userDescription'),
+            },
+            pass: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.pass'),
+              description: t('configPage.emailNotification.passDescription'),
             },
           },
         },
@@ -1483,6 +1501,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',
@@ -2259,6 +2282,38 @@ export const generateSchemas = ({
             },
           },
         },
+        emailNotification: {
+          type: 'object',
+          title: t('configPage.emailNotification.smtpSettings'),
+          description: t('configPage.emailNotification.description'),
+          properties: {
+            from: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.from'),
+              description: t('configPage.emailNotification.fromDescription'),
+            },
+            host: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.host'),
+              description: t('configPage.emailNotification.hostDescription'),
+            },
+            port: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.port'),
+              description: t('configPage.emailNotification.portDescription'),
+            },
+            user: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.user'),
+              description: t('configPage.emailNotification.userDescription'),
+            },
+            pass: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.pass'),
+              description: t('configPage.emailNotification.passDescription'),
+            },
+          },
+        },
         eventNotification: {
           type: 'object',
           title: t('configPage.eventNotification'),
@@ -2627,6 +2682,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',
@@ -3428,6 +3488,38 @@ export const generateSchemas = ({
             },
           },
         },
+        emailNotification: {
+          type: 'object',
+          title: t('configPage.emailNotification.smtpSettings'),
+          description: t('configPage.emailNotification.description'),
+          properties: {
+            from: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.from'),
+              description: t('configPage.emailNotification.fromDescription'),
+            },
+            host: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.host'),
+              description: t('configPage.emailNotification.hostDescription'),
+            },
+            port: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.port'),
+              description: t('configPage.emailNotification.portDescription'),
+            },
+            user: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.user'),
+              description: t('configPage.emailNotification.userDescription'),
+            },
+            pass: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.pass'),
+              description: t('configPage.emailNotification.passDescription'),
+            },
+          },
+        },
         eventNotification: {
           type: 'object',
           title: t('configPage.eventNotification'),
@@ -3797,6 +3889,11 @@ export const generateSchemas = ({
               type: 'boolean',
               title: t('configPage.Display manuscript short id'),
               default: true,
+            },
+            displayAuthorKanban: {
+              type: 'boolean',
+              title: t('configPage.displayAuthorKanban'),
+              default: false,
             },
             sharedReview: {
               type: 'boolean',
@@ -4599,6 +4696,38 @@ export const generateSchemas = ({
             },
           },
         },
+        emailNotification: {
+          type: 'object',
+          title: t('configPage.emailNotification.smtpSettings'),
+          description: t('configPage.emailNotification.description'),
+          properties: {
+            from: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.from'),
+              description: t('configPage.emailNotification.fromDescription'),
+            },
+            host: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.host'),
+              description: t('configPage.emailNotification.hostDescription'),
+            },
+            port: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.port'),
+              description: t('configPage.emailNotification.portDescription'),
+            },
+            user: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.user'),
+              description: t('configPage.emailNotification.userDescription'),
+            },
+            pass: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.pass'),
+              description: t('configPage.emailNotification.passDescription'),
+            },
+          },
+        },
         eventNotification: {
           type: 'object',
           title: t('configPage.eventNotification'),
@@ -4902,6 +5031,13 @@ export const generateSchemas = ({
         gmailAuthPassword: {
           'ui:widget': 'password',
         },
+      },
+      emailNotification: {
+        from: { 'ui:placeholder': 'eg. noreply@example.com' },
+        host: { 'ui:placeholder': 'eg. stmp.emailprovider.com' },
+        port: { 'ui:placeholder': 'eg. 465' },
+        user: { 'ui:placeholder': 'eg. my_username' },
+        pass: { 'ui:placeholder': 'eg. password1234', 'ui:widget': 'password' },
       },
     }
 

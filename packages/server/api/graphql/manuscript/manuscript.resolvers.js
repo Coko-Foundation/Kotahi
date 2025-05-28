@@ -104,7 +104,7 @@ const resolvers = {
     },
 
     async assignAuthorForProofingManuscript(_, { id }, ctx) {
-      assignAuthorForProofingManuscript(id, ctx.userId)
+      return assignAuthorForProofingManuscript(id, ctx.userId)
     },
 
     async deleteManuscripts(_, { ids }) {

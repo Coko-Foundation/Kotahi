@@ -1268,7 +1268,13 @@ const publishManuscript = async (id, groupId) => {
     manuscriptId: manuscript.id,
   })
 
-  const update = { published: newPublishedDate, status: 'published' } // This will also collect any properties we may want to update in the DB
+  // This will also collect any properties we may want to update in the DB
+  const update = {
+    published: newPublishedDate,
+    status: 'published',
+    submission: manuscript.submission,
+  }
+
   const steps = []
 
   if (activeConfig.formData.publishing.crossref?.login) {
@@ -1301,7 +1307,15 @@ const publishManuscript = async (id, groupId) => {
 
     if (containsElifeStyleEvaluations || manuscript.status !== 'evaluated') {
       try {
-        await publishToDatacite(manuscript)
+        const doi = await publishToDatacite(manuscript)
+
+        update.submission = {
+          ...update.submission,
+          $doi: doi,
+        }
+
+        update.doi = doi
+
         succeeded = true
       } catch (e) {
         console.error('error publishing to datacite')
@@ -1348,7 +1362,7 @@ const publishManuscript = async (id, groupId) => {
     try {
       await publishToGoogleSpreadSheet(manuscript)
       update.submission = {
-        ...manuscript.submission,
+        ...update.submission,
         $editDate: new Date().toISOString().split('T')[0],
       }
       succeeded = true

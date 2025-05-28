@@ -1,6 +1,4 @@
 module.exports = {
-  db: {},
-  port: 3000,
   pool: {
     min: 0,
     max: 1000,

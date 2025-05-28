@@ -22,10 +22,7 @@ const {
 
 const seekEvent = require('../services/notification.service')
 
-const {
-  overrideRecipient,
-  sendEmail,
-} = require('../services/emailNotifications.service')
+const { sendEmail } = require('../services/emailNotifications.service')
 
 const { processData, useHandlebars } = require('../services/handlebars.service')
 
@@ -34,7 +31,7 @@ const {
   evictFromCacheByPrefix,
 } = require('../services/queryCache.service')
 
-const { safeParse, objIf } = require('../utils/objectUtils')
+const { safeParse } = require('../utils/objectUtils')
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+$/
 
@@ -540,19 +537,16 @@ const sendEmailWithPreparedData = async (
       cc += `,${ccEmails.join(',')}`
     }
 
-    const override = overrideRecipient({ to, cc, subject })
-    const isProduction = !override || !override.to
     const dataForHandlebars = await processData(variables, groupId)
 
-    const mailOptions = {
+    const mailPayload = {
       to,
       cc,
       subject: useHandlebars(subject, dataForHandlebars),
-      html: useHandlebars(body, dataForHandlebars),
-      ...objIf(!isProduction, override),
+      content: useHandlebars(body, dataForHandlebars),
     }
 
-    const result = await sendEmail(mailOptions, groupId)
+    const result = await sendEmail(mailPayload, groupId)
 
     return { success: result }
   } catch (e) {

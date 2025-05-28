@@ -7,7 +7,7 @@ const oldContent = require('./content')
 
 // const oldContent = `<h1>chapter title</h1><br/><h2>notes with drag and drop</h2><br/><span class="comment" data-id="6b46da14-ebc3-4398-a243-018d8c0f9c79" data-conversation="[{&quot;content&quot;:&quot;demo comment&quot;,&quot;displayName&quot;:&quot;demo&quot;,&quot;timestamp&quot;:1601559766164}]" data-viewid="main" data-group="main"><bold>item</bold></span>`
 
-describe('Migrations', () => {
+describe('Manuscript Migrations', () => {
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')

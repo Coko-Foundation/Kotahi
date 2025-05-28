@@ -79,7 +79,10 @@ const ReviewStatusDonut = ({ manuscript }) => {
       const foundInvitation = manuscript.invitations.find(
         invitation =>
           invitation.toEmail === reviewer.user.email &&
-          invitation.status === 'UNANSWERED',
+          invitation.status === 'UNANSWERED' &&
+          ['REVIEWER', 'COLLABORATIVE_REVIEWER'].includes(
+            invitation.invitedPersonType,
+          ),
       )
 
       if (foundInvitation) {
