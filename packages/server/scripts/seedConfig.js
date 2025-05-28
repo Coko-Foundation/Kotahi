@@ -92,21 +92,9 @@ const seedConfig = async (group, instanceName, index, options) => {
           },
         }
 
-  const notification =
-    index === 0
-      ? {
-          gmailAuthEmail: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH || null,
-          gmailAuthPassword: process.env.GMAIL_NOTIFICATION_PASSWORD || null,
-          gmailSenderName:
-            process.env.GMAIL_NOTIFICATION_EMAIL_SENDER_NAME || null,
-          eventsConfig,
-        }
-      : {
-          gmailAuthEmail: null,
-          gmailAuthPassword: null,
-          gmailSenderName: null,
-          eventsConfig,
-        }
+  const notification = {
+    eventsConfig,
+  }
 
   const groupIdentity = {
     brandName: group.name || 'Kotahi',

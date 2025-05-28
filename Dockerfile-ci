@@ -76,16 +76,14 @@ ARG node_env
 ARG client_protocol
 ARG client_host
 ARG client_port
-ARG use_colab_email
 
-ENV NODE_ENV "development"
-ENV SERVER_PROTOCOL "http"
-ENV SERVER_HOST "0.0.0.0"
-ENV SERVER_PORT "3000"
-ENV CLIENT_PROTOCOL "http"
-ENV CLIENT_HOST "0.0.0.0"
-ENV CLIENT_PORT "4000"
-ENV USE_COLAB_EMAIL $use_colab_email
+ENV NODE_ENV="development"
+ENV SERVER_PROTOCOL="http"
+ENV SERVER_HOST="0.0.0.0"
+ENV SERVER_PORT="3000"
+ENV CLIENT_PROTOCOL="http"
+ENV CLIENT_HOST="0.0.0.0"
+ENV CLIENT_PORT="4000"
 
 WORKDIR /home/node/app
 
@@ -101,7 +99,7 @@ RUN cd packages/server && yarn install --frozen-lockfile
 COPY ./packages/client/package.json ./packages/client/yarn.lock ./packages/client/
 RUN cd packages/client && yarn install --frozen-lockfile
 
-ENV NODE_ENV ${NODE_ENV}
+ENV NODE_ENV=${NODE_ENV}
 
 # The copy everything else that changes frequently
 COPY . .

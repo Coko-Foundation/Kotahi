@@ -1,10 +1,7 @@
-const config = require('config')
-const nodemailer = require('nodemailer')
-const { clientUrl, logger, User } = require('@coko/server')
+const { logger, sendEmail, User } = require('@coko/server')
 const { Team, TeamMember } = require('../models')
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const { NODE_ENV } = process.env
 
 // TODO: find another place for this one
 const getSeconds = unit => {
@@ -14,37 +11,6 @@ const getSeconds = unit => {
     mins: unit * secondsInAMinute,
     days: unit * secondsInADay,
     weeks: unit * 7 * secondsInADay,
-  }
-}
-
-const overrideRecipient = ({ subject, cc, to }) => {
-  const { hostname } = new URL(clientUrl)
-  const isLocalHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname)
-  const isProduction = NODE_ENV === 'production' || !isLocalHost
-
-  if (isProduction) return false
-
-  const description = `email with subject '${subject}' to ${to}${
-    cc && ` (CCing ${cc})`
-  }, because Kotahi is running in ${NODE_ENV} mode on ${hostname}`
-
-  const testEmail = config['notification-email'].testEmailRecipient || ''
-
-  if (!testEmail) {
-    logger.info(
-      `Suppressing ${description}. Set TEST_EMAIL_RECIPIENT in your .env file if you wish to redirect rather than suppress emails.`,
-    )
-    return true
-  }
-
-  logger.info(
-    `Overriding recipient(s) for ${description}. This is instead being sent to ${testEmail}.`,
-  )
-
-  return {
-    to: testEmail,
-    cc: '',
-    bcc: '',
   }
 }
 
@@ -124,34 +90,44 @@ const getRecipient = async (recipient, manuscriptId, groupId, getTeam) => {
   return []
 }
 
-const sendEmail = async (mailOptions, groupId) => {
+const send = async (mailPayload, groupId) => {
   // eslint-disable-next-line global-require
   const { Config } = require('../models')
 
   try {
     const { formData } = (await Config.getCached(groupId)) ?? {}
 
-    const {
-      gmailSenderName: name,
-      gmailAuthEmail: address,
-      gmailAuthPassword: pass,
-      service = 'gmail',
-    } = formData.notification
+    const { from, host, port, user, pass } = formData.emailNotification || {}
 
-    const options = { ...mailOptions, from: { name, address } }
+    let mailer = {}
 
-    const transport = {
-      service,
-      auth: { user: address, pass },
+    if (host && port && user && pass) {
+      mailer = {
+        host,
+        port,
+        auth: {
+          user,
+          pass,
+        },
+        secure: true,
+      }
     }
 
-    const transporter = nodemailer.createTransport(transport)
+    const { attachments, cc, content, subject, text, to } = mailPayload
 
-    // TODO: use @coko/server util once we divorce gmail XD
-    const info = await transporter.sendMail(options)
+    const emailData = {
+      to,
+      cc,
+      from,
+      html: `<div>${content}</div>`,
+      subject: `${subject}`,
+      text: text || content,
+      attachments: attachments || [],
+    }
+
+    const info = await sendEmail(emailData, mailer)
     logger.info(`Email report:`)
     logger.info(info)
-
     return true
   } catch (err) {
     logger.error(err)
@@ -160,8 +136,7 @@ const sendEmail = async (mailOptions, groupId) => {
 }
 
 module.exports = {
-  sendEmail,
+  sendEmail: send,
   getSeconds,
-  overrideRecipient,
   getRecipientsEmails,
 }

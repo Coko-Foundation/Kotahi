@@ -65,9 +65,6 @@ module.exports = {
     from: 'dev@example.com',
     path: `${__dirname}/mailer`, // eslint-disable-line node/no-path-concat
   },
-  'client-features': {
-    displayShortIdAsIdentifier: 'false',
-  },
   'publishing-webhook': {
     publishingWebhookUrl: null,
     publishingWebhookSecret: null,
@@ -123,11 +120,6 @@ module.exports = {
   review: {
     shared: '',
     hide: '',
-  },
-  'notification-email': {
-    automated: 'false',
-    cc_enabled: 'false',
-    use_colab: 'false',
   },
   manuscripts: {
     teamTimezone: 'Etc/UTC',

@@ -43,7 +43,10 @@ const DeleteInvitationModal = ({
             },
           })
 
-          if (reviewer.user) {
+          if (
+            reviewer.user &&
+            !(isAuthorCard && reviewer.status !== 'accepted')
+          ) {
             removeUserFromTeam({
               variables: {
                 userId: reviewer.user.id,

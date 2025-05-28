@@ -20,12 +20,6 @@ const hideSensitiveInformation = async configData => {
       config.formData.publishing.datacite.password,
     )
 
-  // Notifications - Gmail password
-  if (config.formData.notification.gmailAuthPassword)
-    config.formData.notification.gmailAuthPassword = redact(
-      config.formData.notification.gmailAuthPassword,
-    )
-
   return config
 }
 
@@ -55,17 +49,6 @@ const revertHiddenSensitiveInformation = async (
     if (passwordIsHidden)
       formData.publishing.datacite.password =
         existingConfig.formData.publishing.datacite?.password
-  }
-
-  // Notifications - Gmail password
-  if (formData.notification.gmailAuthPassword) {
-    const gmailAuthPasswordIsHidden =
-      redact(existingConfig.formData.notification.gmailAuthPassword) ===
-      formData.notification.gmailAuthPassword
-
-    if (gmailAuthPasswordIsHidden)
-      formData.notification.gmailAuthPassword =
-        existingConfig.formData.notification.gmailAuthPassword
   }
 
   return formData

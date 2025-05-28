@@ -480,6 +480,7 @@ const fr = {
       integrationsAndPublishingTab:
         'Intégrations et points de terminaison de publication',
       notificationsTab: 'Notifications et courrier électronique',
+      emailNotificationsTab: 'Paramètres de messagerie',
       emailTab: "Modèles d'email",
       Configuration: 'Configuration',
       'Instance Type': "Type d'instance",
@@ -618,9 +619,25 @@ const fr = {
       teamTimezone:
         'Définir le fuseau horaire pour les dates limites du gestionnaire de tâches',
       Emails: 'Emails',
-      gmailAuthEmail: 'Adresse e-mail Gmail',
-      gmailSenderName: "Nom de l'expéditeur Gmail",
-      gmailAuthPassword: 'Mot de passe Gmail',
+      emailNotification: {
+        smtpSettings: 'Paramètres SMTP',
+        description:
+          'Kotahi vous permet de vous connecter au fournisseur de messagerie de votre choix (par exemple SendGrid, Mailgun, etc.) via SMTP. Si vous ne savez pas quelles valeurs utiliser ci-dessous, veuillez consulter la documentation SMTP de votre fournisseur.',
+        from: 'Expéditeur',
+        host: 'Hôte',
+        port: 'Port',
+        user: 'Utilisateur',
+        pass: 'Mot de passe',
+        fromDescription:
+          "L'adresse e-mail de l'expéditeur telle qu'elle apparaît pour le destinataire. Notez que vous devrez peut-être configurer cette adresse dans les paramètres de votre fournisseur de messagerie.",
+        hostDescription: "Le nom d'hôte SMTP de votre fournisseur.",
+        portDescription:
+          "Le port SMTP utilisé par votre fournisseur de messagerie. Veuillez noter que nous utilisons une connexion SSL sécurisée, alors assurez-vous d'utiliser le port SSL tel que défini dans la documentation de votre fournisseur de messagerie (généralement 465).",
+        userDescription:
+          "Le nom d'utilisateur utilisé pour se connecter à votre fournisseur de messagerie à des fins d'authentification. Notez qu'il s'agit du nom d'utilisateur de votre compte de messagerie, et non de votre nom d'utilisateur Kotahi.",
+        passDescription:
+          "Le mot de passe qui sera utilisé avec le nom d'utilisateur pour l'authentification.",
+      },
       eventNotification: "Notifications d'événement",
       reviewRejectedEmailTemplate:
         "L'évaluateur rejette une invitation à évaluer",

@@ -7,7 +7,11 @@ import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import { isEqual } from 'lodash'
 import { grid } from '@coko/client'
-import { generateSchemas, tabKeyBasedSchema, tabLabels } from './ui/schema' // Import the function that generates the schema and uiSchema
+import {
+  generateSchemas,
+  tabKeyBasedSchema,
+  configTabLabels,
+} from './ui/schema' // Import the function that generates the schema and uiSchema
 
 import {
   ActionButton,
@@ -139,14 +143,35 @@ const StyledWrapper = styled.div`
 // #endregion Styleds
 
 const FieldTemplate = props => {
-  const { classNames, description, children, showInstanceType, t } = props
+  const {
+    children,
+    classNames,
+    description,
+    id,
+    label,
+    showInstanceType,
+    showLabel,
+    t,
+  } = props
+
+  const suppressedLabels = [
+    'root_emailNotification',
+    'form-emailNotifications_emailNotification__description',
+    'form-emailNotifications_emailNotification',
+  ]
+
+  const hideLabel = suppressedLabels.includes(id)
+
   const getFieldName = key => description._owner.key === key
   // eslint-disable-next-line no-nested-ternary
   return !showInstanceType ? (
     !getFieldName('instanceName') ? (
       <StyledWrapper $hideFirstLegend={getFieldName('publishing')}>
         <div className={classNames}>
-          {description}
+          {label && showLabel && !hideLabel && (
+            <label htmlFor={id}>{label}</label>
+          )}
+          {!hideLabel && description}
           {children}
         </div>
       </StyledWrapper>
@@ -244,7 +269,7 @@ const ConfigManagerForm = ({
         initialFormData.current = toSubmit
         storedFormData.current = toSubmit
 
-        Object.keys(tabLabels).forEach(key =>
+        Object.keys(configTabLabels).forEach(key =>
           seekForPendingChanges(toSubmit, tabKeyBasedSchema[key], key),
         )
 
@@ -255,7 +280,7 @@ const ConfigManagerForm = ({
 
   const tabSections = useMemo(
     () =>
-      Object.entries(tabLabels).map(([key, v]) => ({
+      Object.entries(configTabLabels).map(([key, v]) => ({
         label: t(`configPage.${key}Tab`),
         key,
         content: (
@@ -266,6 +291,7 @@ const ConfigManagerForm = ({
               FieldTemplate={props => (
                 <FieldTemplate
                   showInstanceType={key === 'general'}
+                  showLabel={key === 'emailNotifications'}
                   t={t}
                   {...props}
                 />
