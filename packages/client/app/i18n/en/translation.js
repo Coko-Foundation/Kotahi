@@ -476,6 +476,7 @@ const en = {
       productionTab: 'Production',
       integrationsAndPublishingTab: 'Integrations and Publishing Endpoints',
       notificationsTab: 'Notifications and E-mail',
+      emailNotificationsTab: 'Email Settings',
       emailTab: 'E-mail Templates',
       Configuration: 'Configuration',
       'Instance Type': 'Instance Type',
@@ -601,9 +602,25 @@ const en = {
       'Task Manager': 'Task Manager',
       teamTimezone: 'Set timezone for Task Manager due dates',
       Emails: 'Emails',
-      gmailAuthEmail: 'Gmail email address',
-      gmailSenderName: 'Gmail sender name',
-      gmailAuthPassword: 'Gmail password',
+      emailNotification: {
+        smtpSettings: 'SMTP settings',
+        description:
+          "Kotahi lets you connect to the email provider of your choice (eg. sendgrid, mailgun etc.) via SMTP. If you are unsure what the values below should be, make sure you refer to your provider's SMTP documentation.",
+        from: 'Sender',
+        host: 'Host',
+        port: 'Port',
+        user: 'User',
+        pass: 'Password',
+        fromDescription:
+          "The sender email as it appears for the recipient. Note that you might have to configure this address on your email provider's settings as well.",
+        hostDescription: 'The SMTP hostname of your provider.',
+        portDescription:
+          "The SMTP port that your email provider uses. Note that we use a secure SSL connection, so make sure you use the SSL port as defined in your email provider's documentation (usually 465).",
+        userDescription:
+          'The username that will connect to your email provider for authentication purposes. Note that this is the username of your email provider account, not your Kotahi username.',
+        passDescription:
+          'The password that will be used alongside the username for authentication purposes.',
+      },
       eventNotification: 'Event Notifications',
       reviewRejectedEmailTemplate: 'Reviewer rejects an invitation to review',
       reviewerInvitationPrimaryEmailTemplate: 'Reviewer invitation',

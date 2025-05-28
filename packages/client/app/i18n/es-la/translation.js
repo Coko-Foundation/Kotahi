@@ -475,6 +475,7 @@ const esLa = {
       productionTab: 'Producción',
       integrationsAndPublishingTab: 'Integraciones y servicios de publicación',
       notificationsTab: 'Notificaciones y correo electrónico',
+      emailNotificationsTab: 'Configuración de correo electrónico',
       emailTab: 'Plantillas de E-mail',
       Configuration: 'Configuración',
       'Instance Type': 'Tipo de Instancia',
@@ -610,9 +611,25 @@ const esLa = {
       teamTimezone:
         'Establecer zona horaria para las fechas de vencimiento del Administrador de Tareas',
       Emails: 'Correos Electrónicos',
-      gmailAuthEmail: 'Dirección de Correo Electrónico de Gmail',
-      gmailSenderName: 'Nombre del remitente de Gmail',
-      gmailAuthPassword: 'Contraseña de Gmail',
+      emailNotification: {
+        smtpSettings: 'Configuración SMTP',
+        description:
+          'Kotahi te permite conectarte al proveedor de correo electrónico de tu elección (por ejemplo, SendGrid, Mailgun, etc.) mediante SMTP. Si no estás seguro de qué valores debes usar a continuación, asegúrate de consultar la documentación SMTP de tu proveedor.',
+        from: 'Remitente',
+        host: 'Host',
+        port: 'Puerto',
+        user: 'Usuario',
+        pass: 'Contraseña',
+        fromDescription:
+          'El correo electrónico del remitente tal como aparece para el destinatario. Ten en cuenta que es posible que también debas configurar esta dirección en la configuración de tu proveedor de correo electrónico.',
+        hostDescription: 'El nombre de host SMTP de tu proveedor.',
+        portDescription:
+          'El puerto SMTP que utiliza tu proveedor de correo electrónico. Tenga en cuenta que utilizamos una conexión SSL segura, así que asegúrese de usar el puerto SSL como se define en la documentación de su proveedor de correo electrónico (normalmente 465)',
+        userDescription:
+          'El nombre de usuario que se conectará a tu proveedor de correo electrónico para propósitos de autenticación. Ten en cuenta que este es el nombre de usuario de tu cuenta de proveedor de correo, no tu nombre de usuario de Kotahi.',
+        passDescription:
+          'La contraseña que se utilizará junto con el nombre de usuario para propósitos de autenticación.',
+      },
       eventNotification: 'Notificaciones de Eventos',
       reviewRejectedEmailTemplate:
         'El revisor rechaza una invitación a revisar',

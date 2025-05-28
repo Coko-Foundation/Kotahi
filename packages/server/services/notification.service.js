@@ -3,7 +3,6 @@ const { Config, EmailTemplate, Notification } = require('../models')
 const { objIf } = require('../utils/objectUtils')
 
 const {
-  overrideRecipient,
   getRecipientsEmails,
   getSeconds,
 } = require('./emailNotifications.service')
@@ -47,8 +46,6 @@ const prepareAndSendToQueue = async ({ notification, data }) => {
 
   const variables = { ...restData, recipientUser }
   const handlebarsData = await processData(variables, groupId)
-  const override = overrideRecipient({ to, cc, subject: templateSubject })
-  const isProduction = !override || !override.to
 
   const subject = notification.subject || templateSubject
 
@@ -56,8 +53,7 @@ const prepareAndSendToQueue = async ({ notification, data }) => {
     to,
     cc,
     subject: useHandlebars(subject, handlebarsData),
-    html: useHandlebars(body, handlebarsData),
-    ...objIf(!isProduction, override),
+    content: useHandlebars(body, handlebarsData),
   }
 
   const { invitation, reviewerId, reviewAction, messageContent } = context ?? {}
