@@ -97,7 +97,18 @@ const send = async (mailPayload, groupId) => {
   try {
     const { formData } = (await Config.getCached(groupId)) ?? {}
 
-    const { from, host, port, user, pass } = formData.emailNotification || {}
+    const {
+      from,
+      host: hostRaw,
+      port,
+      user,
+      pass,
+      advancedSettings,
+    } = formData.emailNotification || {}
+
+    const { requireTLS, secure } = advancedSettings || {}
+
+    const host = hostRaw?.trim() || ''
 
     let mailer = {}
 
@@ -109,7 +120,8 @@ const send = async (mailPayload, groupId) => {
           user,
           pass,
         },
-        secure: true,
+        secure,
+        requireTLS: !secure && requireTLS,
       }
     }
 

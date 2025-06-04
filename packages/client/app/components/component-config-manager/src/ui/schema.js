@@ -1131,6 +1131,31 @@ export const generateSchemas = ({
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
             },
+            advancedSettings: {
+              type: 'object',
+              title: t('configPage.emailNotification.advancedSettings'),
+              description: t(
+                'configPage.emailNotification.advancedSettingsDescription',
+              ),
+              properties: {
+                secure: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.secure'),
+                  description: t(
+                    'configPage.emailNotification.secureDescription',
+                  ),
+                  default: true,
+                },
+                requireTLS: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.requireTLS'),
+                  description: t(
+                    'configPage.emailNotification.requireTLSDescription',
+                  ),
+                  default: false,
+                },
+              },
+            },
           },
         },
         eventNotification: {
@@ -2311,6 +2336,31 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
+            },
+            advancedSettings: {
+              type: 'object',
+              title: t('configPage.emailNotification.advancedSettings'),
+              description: t(
+                'configPage.emailNotification.advancedSettingsDescription',
+              ),
+              properties: {
+                secure: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.secure'),
+                  description: t(
+                    'configPage.emailNotification.secureDescription',
+                  ),
+                  default: true,
+                },
+                requireTLS: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.requireTLS'),
+                  description: t(
+                    'configPage.emailNotification.requireTLSDescription',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -3517,6 +3567,31 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
+            },
+            advancedSettings: {
+              type: 'object',
+              title: t('configPage.emailNotification.advancedSettings'),
+              description: t(
+                'configPage.emailNotification.advancedSettingsDescription',
+              ),
+              properties: {
+                secure: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.secure'),
+                  description: t(
+                    'configPage.emailNotification.secureDescription',
+                  ),
+                  default: true,
+                },
+                requireTLS: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.requireTLS'),
+                  description: t(
+                    'configPage.emailNotification.requireTLSDescription',
+                  ),
+                  default: false,
+                },
+              },
             },
           },
         },
@@ -4726,6 +4801,31 @@ export const generateSchemas = ({
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
             },
+            advancedSettings: {
+              type: 'object',
+              title: t('configPage.emailNotification.advancedSettings'),
+              description: t(
+                'configPage.emailNotification.advancedSettingsDescription',
+              ),
+              properties: {
+                secure: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.secure'),
+                  description: t(
+                    'configPage.emailNotification.secureDescription',
+                  ),
+                  default: true,
+                },
+                requireTLS: {
+                  type: 'boolean',
+                  title: t('configPage.emailNotification.requireTLS'),
+                  description: t(
+                    'configPage.emailNotification.requireTLSDescription',
+                  ),
+                  default: false,
+                },
+              },
+            },
           },
         },
         eventNotification: {
@@ -5033,7 +5133,9 @@ export const generateSchemas = ({
         },
       },
       emailNotification: {
-        from: { 'ui:placeholder': 'eg. noreply@example.com' },
+        from: {
+          'ui:placeholder': 'eg. "Kotahi Journal" <noreply@example.com>',
+        },
         host: { 'ui:placeholder': 'eg. stmp.emailprovider.com' },
         port: { 'ui:placeholder': 'eg. 465' },
         user: { 'ui:placeholder': 'eg. my_username' },

@@ -612,7 +612,7 @@ const en = {
         user: 'User',
         pass: 'Password',
         fromDescription:
-          "The sender email as it appears for the recipient. Note that you might have to configure this address on your email provider's settings as well.",
+          "The sender email as it appears for the recipient, and the sender email address. Note that you might have to configure this address on your email provider's settings as well.",
         hostDescription: 'The SMTP hostname of your provider.',
         portDescription:
           "The SMTP port that your email provider uses. Note that we use a secure SSL connection, so make sure you use the SSL port as defined in your email provider's documentation (usually 465).",
@@ -620,6 +620,15 @@ const en = {
           'The username that will connect to your email provider for authentication purposes. Note that this is the username of your email provider account, not your Kotahi username.',
         passDescription:
           'The password that will be used alongside the username for authentication purposes.',
+        advancedSettings: 'Advanced settings',
+        advancedSettingsDescription:
+          'Mail providers will often require a secure connection to work. Typically connections using port 465 establish a secure connection immediately and connections using port 587 do not, but try to upgrade their security once contact is established. <strong>It is not recommended to keep both options off.</strong>',
+        secure: 'Secure connection',
+        secureDescription:
+          'Establish a secure connection with your email server. Typically should be on for connections using port 465.',
+        requireTLS: 'Require TLS',
+        requireTLSDescription:
+          'Only applicable if secure connection is off. This will establish a non-secure connection to your email server and immediately upgrade to a secure one once the connection is  established.',
       },
       eventNotification: 'Event Notifications',
       reviewRejectedEmailTemplate: 'Reviewer rejects an invitation to review',
