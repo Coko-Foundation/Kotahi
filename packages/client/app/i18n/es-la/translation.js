@@ -621,7 +621,7 @@ const esLa = {
         user: 'Usuario',
         pass: 'Contraseña',
         fromDescription:
-          'El correo electrónico del remitente tal como aparece para el destinatario. Ten en cuenta que es posible que también debas configurar esta dirección en la configuración de tu proveedor de correo electrónico.',
+          'El correo electrónico del remitente tal como aparece para el destinatario y la dirección de correo electrónico del remitente. Ten en cuenta que es posible que también debas configurar esta dirección en la configuración de tu proveedor de correo electrónico.',
         hostDescription: 'El nombre de host SMTP de tu proveedor.',
         portDescription:
           'El puerto SMTP que utiliza tu proveedor de correo electrónico. Tenga en cuenta que utilizamos una conexión SSL segura, así que asegúrese de usar el puerto SSL como se define en la documentación de su proveedor de correo electrónico (normalmente 465)',
@@ -629,6 +629,15 @@ const esLa = {
           'El nombre de usuario que se conectará a tu proveedor de correo electrónico para propósitos de autenticación. Ten en cuenta que este es el nombre de usuario de tu cuenta de proveedor de correo, no tu nombre de usuario de Kotahi.',
         passDescription:
           'La contraseña que se utilizará junto con el nombre de usuario para propósitos de autenticación.',
+        advancedSettings: 'Configuración avanzada',
+        advancedSettingsDescription:
+          'Los proveedores de correo suelen requerir una conexión segura para funcionar. Normalmente, las conexiones que usan el puerto 465 establecen una conexión segura de inmediato y las conexiones que usan el puerto 587 no lo hacen, pero intentan mejorar su seguridad una vez que se establece el contacto. <strong>No se recomienda mantener ambas opciones desactivadas.</strong>',
+        secure: 'Conexión segura',
+        secureDescription:
+          'Establece una conexión segura con tu servidor de correo electrónico. Normalmente debe estar activada para conexiones que usan el puerto 465.',
+        requireTLS: 'Requiere TLS',
+        requireTLSDescription:
+          'Solo se aplica si la conexión segura está desactivada. Esto establecerá una conexión no segura con tu servidor de correo electrónico y la actualizará inmediatamente a una segura una vez establecida.',
       },
       eventNotification: 'Notificaciones de Eventos',
       reviewRejectedEmailTemplate:

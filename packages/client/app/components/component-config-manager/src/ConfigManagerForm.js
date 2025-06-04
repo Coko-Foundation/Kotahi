@@ -28,6 +28,7 @@ import { EmailTemplatesProvider } from '../../component-email-templates/hooks/Em
 import NotificationPage from '../../component-notification-event/NotificationPage'
 import { T } from '../../component-notification-event/misc/constants'
 import { getFormBadgeBg } from '../../component-email-templates/src/handlebarsAutocomplete/helpers'
+import DescriptionField from './ui/DescriptionField'
 
 const StyledContainer = styled(Container)`
   --tabs-border: 1px solid #ddd;
@@ -158,9 +159,16 @@ const FieldTemplate = props => {
     'root_emailNotification',
     'form-emailNotifications_emailNotification__description',
     'form-emailNotifications_emailNotification',
+    'form-emailNotifications_emailNotification_advancedSettings',
+  ]
+
+  const supressedDescriptions = [
+    'form-emailNotifications_emailNotification_advancedSettings_secure',
+    'form-emailNotifications_emailNotification_advancedSettings_requireTLS',
   ]
 
   const hideLabel = suppressedLabels.includes(id)
+  const hideDescription = supressedDescriptions.includes(id)
 
   const getFieldName = key => description._owner.key === key
   // eslint-disable-next-line no-nested-ternary
@@ -168,10 +176,10 @@ const FieldTemplate = props => {
     !getFieldName('instanceName') ? (
       <StyledWrapper $hideFirstLegend={getFieldName('publishing')}>
         <div className={classNames}>
-          {label && showLabel && !hideLabel && (
+          {label && showLabel && !hideLabel && !hideDescription && (
             <label htmlFor={id}>{label}</label>
           )}
-          {!hideLabel && description}
+          {!hideLabel && !hideDescription && description}
           {children}
         </div>
       </StyledWrapper>
@@ -287,6 +295,7 @@ const ConfigManagerForm = ({
           <StyledSectionContent>
             <StyledForm
               disabled={disabled}
+              fields={{ DescriptionField }}
               /* eslint-disable-next-line react/no-unstable-nested-components */
               FieldTemplate={props => (
                 <FieldTemplate

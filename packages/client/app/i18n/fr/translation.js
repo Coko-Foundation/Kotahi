@@ -629,7 +629,7 @@ const fr = {
         user: 'Utilisateur',
         pass: 'Mot de passe',
         fromDescription:
-          "L'adresse e-mail de l'expéditeur telle qu'elle apparaît pour le destinataire. Notez que vous devrez peut-être configurer cette adresse dans les paramètres de votre fournisseur de messagerie.",
+          "L'e-mail de l'expéditeur tel qu'il apparaît pour le destinataire et l'adresse e-mail de l'expéditeur. Notez que vous devrez peut-être configurer cette adresse dans les paramètres de votre fournisseur de messagerie.",
         hostDescription: "Le nom d'hôte SMTP de votre fournisseur.",
         portDescription:
           "Le port SMTP utilisé par votre fournisseur de messagerie. Veuillez noter que nous utilisons une connexion SSL sécurisée, alors assurez-vous d'utiliser le port SSL tel que défini dans la documentation de votre fournisseur de messagerie (généralement 465).",
@@ -637,6 +637,15 @@ const fr = {
           "Le nom d'utilisateur utilisé pour se connecter à votre fournisseur de messagerie à des fins d'authentification. Notez qu'il s'agit du nom d'utilisateur de votre compte de messagerie, et non de votre nom d'utilisateur Kotahi.",
         passDescription:
           "Le mot de passe qui sera utilisé avec le nom d'utilisateur pour l'authentification.",
+        advancedSettings: 'Paramètres avancés',
+        advancedSettingsDescription:
+          'Les fournisseurs de messagerie exigent souvent une connexion sécurisée pour fonctionner. En général, les connexions utilisant le port 465 établissent une connexion sécurisée immédiatement, tandis que celles utilisant le port 587 ne le font pas mais essaient de passer à une connexion sécurisée une fois le contact établi. <strong>Il n’est pas recommandé de laisser les deux options désactivées.</strong>',
+        secure: 'Connexion sécurisée',
+        secureDescription:
+          'Établit une connexion sécurisée avec votre serveur de messagerie. Devrait généralement être activée pour les connexions utilisant le port 465.',
+        requireTLS: 'Exiger TLS',
+        requireTLSDescription:
+          'Applicable uniquement si la connexion sécurisée est désactivée. Cela établira une connexion non sécurisée avec votre serveur de messagerie et passera immédiatement à une connexion sécurisée une fois la connexion établie.',
       },
       eventNotification: "Notifications d'événement",
       reviewRejectedEmailTemplate:
