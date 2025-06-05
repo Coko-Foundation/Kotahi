@@ -110,7 +110,7 @@ const articleMetadata = manuscript => {
 
       // make the qrcode
       const qrcode = new QRCode({
-        content: `https://dx.doi.org/${manuscript.submission.DOI}`,
+        content: `https://dx.doi.org/${manuscript.submission.$doi}`,
         padding: 4,
         width: 80,
         height: 80,
