@@ -1,5 +1,17 @@
 ## Changes
 
+### Version 2025.06.02-0
+
+The following environment variables have been dropped:
+- `GMAIL_NOTIFICATION_EMAIL_AUTH`
+- `GMAIL_NOTIFICATION_EMAIL_SENDER_NAME`
+- `GMAIL_NOTIFICATION_PASSWORD`
+- `USE_COLAB_EMAIL`
+- `NOTIFICATION_EMAIL_AUTOMATED`
+- `NOTIFICATION_EMAIL_CC_ENABLED`
+
+Email provider setup is now configured through the email settings in the admin settings. The email provider can now be any SMTP provider, not just gmail.
+
 ### Version 4.0.0
 
 The `GMAIL_NOTIFICATION_EMAIL_SENDER` variable has been renamed to `GMAIL_NOTIFICATION_EMAIL_SENDER_NAME`.
