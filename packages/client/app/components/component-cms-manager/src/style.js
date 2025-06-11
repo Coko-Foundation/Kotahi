@@ -197,16 +197,17 @@ export const ErrorMessage = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
 `
 
-export const WarningBlock = styled.div`
+export const InfoBlock = styled.div`
+  background-color: ${th('colorSecondaryBackground')};
+  border: 1px solid ${th('colorBorder')};
+  border-radius: ${grid(1)};
+  padding: ${grid(2)};
+  width: 100%;
+`
+
+export const WarningBlock = styled(InfoBlock)`
   background-color: ${th('colorWarning')};
   border: 1px solid ${th('colorWarningDark')};
-  border-radius: ${grid(1)};
-  color: ${th('colorWarningDark')};
-  display: flex;
-  flex-direction: column;
-  gap: ${grid(2)};
-  padding: ${grid(2)};
-  width: ${grid(64)};
 `
 
 export const LayoutHeaderListContainer = styled.div`

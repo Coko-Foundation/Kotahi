@@ -392,9 +392,7 @@ const en = {
         Footer: 'Footer',
         Status: 'Status',
         draftModeWarning:
-          'Enabling draft mode will make your production site temporarily unavailable while Flax rebuilds the site. Your site will remain inaccessible until draft mode is disabled again.',
-        MakeFlaxSitePrivate:
-          'Your publishing website will only be visible to those who have access to the Draft link',
+          'Enabling draft mode will make your production site temporarily unavailable while Flax rebuilds the site. Your site will remain inaccessible until draft mode is disabled again. Your publishing website will only be visible to those who have access to the Draft link.',
         DraftCheckbox: 'Draft',
         Partners: 'Partners',
         'Footer Text': 'Footer Text',

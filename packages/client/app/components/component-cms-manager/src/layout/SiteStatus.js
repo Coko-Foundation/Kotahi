@@ -38,10 +38,7 @@ const SiteStatus = ({ cmsLayout, flaxSiteUrlForGroup, triggerAutoSave }) => {
         />
         {t('cmsPage.layout.DraftCheckbox')}
       </label>
-      <WarningBlock>
-        <span>{t('cmsPage.layout.draftModeWarning')}</span>
-        <span>{t('cmsPage.layout.MakeFlaxSitePrivate')}</span>
-      </WarningBlock>
+      <WarningBlock>{t('cmsPage.layout.draftModeWarning')}</WarningBlock>
       <div>
         <a href={`${url}`} target="blank">{`${url}`}</a>
       </div>
