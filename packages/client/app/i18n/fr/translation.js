@@ -402,6 +402,8 @@ const fr = {
         'Footer Text': 'Texte du pied de page',
         'Footer Page links': 'Liens des pages du pied de page',
         Status: 'Statut',
+        draftModeWarning:
+          "L'activation du mode brouillon rendra votre site de production temporairement indisponible pendant la reconstruction du site par Flax. Votre site restera inaccessible jusqu'à sa désactivation.",
         MakeFlaxSitePrivate:
           'Votre site Web de publication ne sera visible que par ceux qui ont accès au lien Draft.',
         DraftCheckbox: 'Brouillon',

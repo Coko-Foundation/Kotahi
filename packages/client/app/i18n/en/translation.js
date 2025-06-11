@@ -391,6 +391,8 @@ const en = {
           'Use checkbox to show and hide the page in the menu. Click and Drag to order them.',
         Footer: 'Footer',
         Status: 'Status',
+        draftModeWarning:
+          'Enabling draft mode will make your production site temporarily unavailable while Flax rebuilds the site. Your site will remain inaccessible until draft mode is disabled again.',
         MakeFlaxSitePrivate:
           'Your publishing website will only be visible to those who have access to the Draft link',
         DraftCheckbox: 'Draft',

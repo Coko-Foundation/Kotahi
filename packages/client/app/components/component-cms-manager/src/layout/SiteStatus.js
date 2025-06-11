@@ -2,7 +2,7 @@ import React from 'react'
 import fnv from 'fnv-plus'
 import { useTranslation } from 'react-i18next'
 
-import { LayoutSecondaryHeading, LayoutMainHeading } from '../style'
+import { LayoutMainHeading, WarningBlock } from '../style'
 
 const SiteStatus = ({ cmsLayout, flaxSiteUrlForGroup, triggerAutoSave }) => {
   const { t } = useTranslation()
@@ -38,9 +38,10 @@ const SiteStatus = ({ cmsLayout, flaxSiteUrlForGroup, triggerAutoSave }) => {
         />
         {t('cmsPage.layout.DraftCheckbox')}
       </label>
-      <LayoutSecondaryHeading>
-        {t('cmsPage.layout.MakeFlaxSitePrivate')}
-      </LayoutSecondaryHeading>
+      <WarningBlock>
+        <span>{t('cmsPage.layout.draftModeWarning')}</span>
+        <span>{t('cmsPage.layout.MakeFlaxSitePrivate')}</span>
+      </WarningBlock>
       <div>
         <a href={`${url}`} target="blank">{`${url}`}</a>
       </div>
