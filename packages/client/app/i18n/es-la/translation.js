@@ -399,8 +399,8 @@ const esLa = {
         'Footer Text': 'Texto del Pie de Página',
         'Footer Page links': 'Enlaces de Páginas en el Pie de Página',
         Status: 'Estado',
-        MakeFlaxSitePrivate:
-          'Su sitio web de publicación solo será visible para quienes tengan acceso al enlace Borrador.',
+        draftModeWarning:
+          'Al habilitar el modo borrador, su sitio de producción no estará disponible temporalmente mientras Flax lo reconstruye. Su sitio permanecerá inaccesible hasta que se desactive el modo borrador. Su sitio web de publicación solo será visible para quienes tengan acceso al enlace Borrador.',
         DraftCheckbox: 'Borrador',
       },
       fileBrowser: {
