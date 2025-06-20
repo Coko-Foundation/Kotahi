@@ -620,6 +620,7 @@ const esLa = {
         port: 'Puerto',
         user: 'Usuario',
         pass: 'Contraseña',
+        bcc: 'BCC',
         fromDescription:
           'El correo electrónico del remitente tal como aparece para el destinatario y la dirección de correo electrónico del remitente. Ten en cuenta que es posible que también debas configurar esta dirección en la configuración de tu proveedor de correo electrónico.',
         hostDescription: 'El nombre de host SMTP de tu proveedor.',
@@ -629,6 +630,8 @@ const esLa = {
           'El nombre de usuario que se conectará a tu proveedor de correo electrónico para propósitos de autenticación. Ten en cuenta que este es el nombre de usuario de tu cuenta de proveedor de correo, no tu nombre de usuario de Kotahi.',
         passDescription:
           'La contraseña que se utilizará junto con el nombre de usuario para propósitos de autenticación.',
+        bccDescription:
+          'Incluya una dirección de correo electrónico opcional para enviar en copia oculta todos los correos electrónicos salientes de Kotahi.',
         advancedSettings: 'Configuración avanzada',
         advancedSettingsDescription:
           'Los proveedores de correo suelen requerir una conexión segura para funcionar. Normalmente, las conexiones que usan el puerto 465 establecen una conexión segura de inmediato y las conexiones que usan el puerto 587 no lo hacen, pero intentan mejorar su seguridad una vez que se establece el contacto. <strong>No se recomienda mantener ambas opciones desactivadas.</strong>',
