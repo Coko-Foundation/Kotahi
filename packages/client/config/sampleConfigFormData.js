@@ -110,6 +110,7 @@ module.exports = {
   },
   notification: {
     eventsConfig: {},
+    bcc: '',
   },
   eventNotification: {
     reviewerInvitationPrimaryEmailTemplate: null,
