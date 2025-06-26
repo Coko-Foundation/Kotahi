@@ -386,7 +386,7 @@ const en = {
           primaryColor: 'Primary color',
           secondaryColor: 'Secondary color',
         },
-        Header: 'Header',
+        Header: 'Menu',
         useCheckbox:
           'Use checkbox to show and hide the page in the menu. Click and Drag to order them.',
         Footer: 'Footer',

@@ -391,7 +391,7 @@ const esLa = {
           primaryColor: 'Color Primario',
           secondaryColor: 'Color Secundario',
         },
-        Header: 'Encabezado',
+        Header: 'Menú',
         useCheckbox:
           'Utilice casillas de verificación para mostrar u ocultar la página en el menú. Arrastre y suelte para ordenarlos.',
         Footer: 'Pie de Página',
