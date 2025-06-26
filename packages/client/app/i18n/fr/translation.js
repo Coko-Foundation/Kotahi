@@ -394,7 +394,7 @@ const fr = {
           primaryColor: 'Couleur primaire',
           secondaryColor: 'Couleur secondaire',
         },
-        Header: 'En-tête',
+        Header: 'Menu',
         useCheckbox:
           'Utilisez la case à cocher pour afficher ou masquer la page dans le menu. Cliquez et faites glisser pour les réorganiser.',
         Footer: 'Pied de page',
