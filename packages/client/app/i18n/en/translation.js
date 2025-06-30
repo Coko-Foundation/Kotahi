@@ -386,7 +386,7 @@ const en = {
           primaryColor: 'Primary color',
           secondaryColor: 'Secondary color',
         },
-        Header: 'Header',
+        Header: 'Menu',
         useCheckbox:
           'Use checkbox to show and hide the page in the menu. Click and Drag to order them.',
         Footer: 'Footer',
@@ -611,6 +611,7 @@ const en = {
         port: 'Port',
         user: 'User',
         pass: 'Password',
+        bcc: 'BCC',
         fromDescription:
           "The sender email as it appears for the recipient, and the sender email address. Note that you might have to configure this address on your email provider's settings as well.",
         hostDescription: 'The SMTP hostname of your provider.',
@@ -620,6 +621,8 @@ const en = {
           'The username that will connect to your email provider for authentication purposes. Note that this is the username of your email provider account, not your Kotahi username.',
         passDescription:
           'The password that will be used alongside the username for authentication purposes.',
+        bccDescription:
+          'Include an optional email address to BCC all outgoing emails from Kotahi.',
         advancedSettings: 'Advanced settings',
         advancedSettingsDescription:
           'Mail providers will often require a secure connection to work. Typically connections using port 465 establish a secure connection immediately and connections using port 587 do not, but try to upgrade their security once contact is established. <strong>It is not recommended to keep both options off.</strong>',

@@ -1131,6 +1131,11 @@ export const generateSchemas = ({
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
             },
+            bcc: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.bcc'),
+              description: t('configPage.emailNotification.bccDescription'),
+            },
             advancedSettings: {
               type: 'object',
               title: t('configPage.emailNotification.advancedSettings'),
@@ -2337,6 +2342,11 @@ export const generateSchemas = ({
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
             },
+            bcc: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.bcc'),
+              description: t('configPage.emailNotification.bccDescription'),
+            },
             advancedSettings: {
               type: 'object',
               title: t('configPage.emailNotification.advancedSettings'),
@@ -3536,6 +3546,10 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               description: t('configPage.gmailSenderName'),
             },
+            bcc: {
+              type: ['string', 'null'],
+              description: t('configPage.bcc'),
+            },
           },
         },
         emailNotification: {
@@ -3567,6 +3581,11 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
+            },
+            bcc: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.bcc'),
+              description: t('configPage.emailNotification.bccDescription'),
             },
             advancedSettings: {
               type: 'object',
@@ -4769,6 +4788,10 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               description: t('configPage.gmailSenderName'),
             },
+            bcc: {
+              type: ['string', 'null'],
+              description: t('configPage.bcc'),
+            },
           },
         },
         emailNotification: {
@@ -4800,6 +4823,11 @@ export const generateSchemas = ({
               type: ['string', 'null'],
               title: t('configPage.emailNotification.pass'),
               description: t('configPage.emailNotification.passDescription'),
+            },
+            bcc: {
+              type: ['string', 'null'],
+              title: t('configPage.emailNotification.bcc'),
+              description: t('configPage.emailNotification.bccDescription'),
             },
             advancedSettings: {
               type: 'object',

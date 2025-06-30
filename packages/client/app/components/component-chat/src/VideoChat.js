@@ -30,7 +30,7 @@ const VideoChat = ({ manuscriptId }) => {
       iconName="Video"
       onClick={() =>
         openInNewTab(
-          `https://8x8.vc${config.urlFrag}/${chatRoomId}`,
+          `https://meet.jit.si${config.urlFrag}/${chatRoomId}`,
           chatRoomId,
         )
       }

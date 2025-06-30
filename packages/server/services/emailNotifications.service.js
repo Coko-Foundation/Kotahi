@@ -103,6 +103,7 @@ const send = async (mailPayload, groupId) => {
       port,
       user,
       pass,
+      bcc,
       advancedSettings,
     } = formData.emailNotification || {}
 
@@ -130,6 +131,7 @@ const send = async (mailPayload, groupId) => {
     const emailData = {
       to,
       cc,
+      bcc,
       from,
       html: `<div>${content}</div>`,
       subject: `${subject}`,

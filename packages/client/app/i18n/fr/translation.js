@@ -394,7 +394,7 @@ const fr = {
           primaryColor: 'Couleur primaire',
           secondaryColor: 'Couleur secondaire',
         },
-        Header: 'En-tête',
+        Header: 'Menu',
         useCheckbox:
           'Utilisez la case à cocher pour afficher ou masquer la page dans le menu. Cliquez et faites glisser pour les réorganiser.',
         Footer: 'Pied de page',
@@ -628,6 +628,7 @@ const fr = {
         port: 'Port',
         user: 'Utilisateur',
         pass: 'Mot de passe',
+        bcc: 'BCC',
         fromDescription:
           "L'e-mail de l'expéditeur tel qu'il apparaît pour le destinataire et l'adresse e-mail de l'expéditeur. Notez que vous devrez peut-être configurer cette adresse dans les paramètres de votre fournisseur de messagerie.",
         hostDescription: "Le nom d'hôte SMTP de votre fournisseur.",
@@ -637,6 +638,8 @@ const fr = {
           "Le nom d'utilisateur utilisé pour se connecter à votre fournisseur de messagerie à des fins d'authentification. Notez qu'il s'agit du nom d'utilisateur de votre compte de messagerie, et non de votre nom d'utilisateur Kotahi.",
         passDescription:
           "Le mot de passe qui sera utilisé avec le nom d'utilisateur pour l'authentification.",
+        bccDescription:
+          'Incluez une adresse e-mail facultative pour mettre en copie cachée tous les e-mails sortants de Kotahi.',
         advancedSettings: 'Paramètres avancés',
         advancedSettingsDescription:
           'Les fournisseurs de messagerie exigent souvent une connexion sécurisée pour fonctionner. En général, les connexions utilisant le port 465 établissent une connexion sécurisée immédiatement, tandis que celles utilisant le port 587 ne le font pas mais essaient de passer à une connexion sécurisée une fois le contact établi. <strong>Il n’est pas recommandé de laisser les deux options désactivées.</strong>',

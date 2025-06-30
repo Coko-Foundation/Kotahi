@@ -120,4 +120,47 @@ describe('Config Migrations', () => {
     ).toBeUndefined()
     expect(rolledbackConfig.formData.emailNotification).toBeUndefined()
   })
+
+  it('adds BCC to notification config', async () => {
+    await migrationManager.migrate({
+      to: '1748427621-migrate-gmail-to-smtp.js',
+    })
+
+    const group1 = await Group.insert({})
+    const group2 = await Group.insert({})
+
+    let config1 = await Config.insert({
+      active: true,
+      groupId: group1.id,
+      formData: {},
+    })
+
+    let config2 = await Config.insert({
+      active: true,
+      groupId: group2.id,
+      formData: {},
+    })
+
+    expect(config1.formData.emailNotification).toBe(undefined)
+    expect(config2.formData.emailNotification).toBe(undefined)
+
+    await migrationManager.migrate({ step: 1 })
+
+    config1 = await Config.findById(config1.id)
+    config2 = await Config.findById(config2.id)
+
+    expect(config1.formData.emailNotification).not.toBe(undefined)
+    expect(config2.formData.emailNotification).not.toBe(undefined)
+
+    expect(config1.formData.emailNotification.bcc).toBe('')
+    expect(config2.formData.emailNotification.bcc).toBe('')
+
+    await migrationManager.rollback({ step: 1 })
+
+    config1 = await Config.findById(config1.id)
+    config2 = await Config.findById(config2.id)
+
+    expect(config1.formData.emailNotification.bcc).toBe(undefined)
+    expect(config2.formData.emailNotification.bcc).toBe(undefined)
+  })
 })
