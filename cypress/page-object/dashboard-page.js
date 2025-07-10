@@ -14,6 +14,7 @@ const SECTION_PLACEHOLDER = 'style__Placeholder'
 const SUBMISSION_TITLE = '[name="submission.$title"] > div'
 const SUBMISSION_BUTTON = '+ New submission'
 const SUBMISSION_FILE_UPLOAD_INPUT = 'input[type=file]'
+const SUBMISSION_CREATED = 'Submission created'
 
 /* My Submissions */
 const SUBMITTED_MANUSCRIPTS = '[class*=style__ClickableManuscriptsRow]'
@@ -54,6 +55,9 @@ export const DashboardPage = {
   },
   getSubmissionFileUploadInput() {
     return cy.get(SUBMISSION_FILE_UPLOAD_INPUT)
+  },
+  confirmSubmissionCreated() {
+    cy.contains(SUBMISSION_CREATED).should('exist')
   },
   clickSubmitButton() {
     this.getSubmitButton().click()
@@ -111,7 +115,7 @@ export const DashboardPage = {
   },
   clickAcceptReviewButton() {
     this.getAcceptReviewButton().click({ force: true })
-    cy.reload()
+    // cy.reload()
   },
   getRejectReviewButton() {
     return cy.getByDataTestId(REJECT_REVIEW_BUTTON)

@@ -4,18 +4,18 @@
     "secondaryColor": "rgb(10, 157, 217)",
     "tertiaryColor": "rgba(0, 0, 0, 0)",
     "logoPath": "/logo-elife.svg",
-    "brandName": "eLife"
+    "brandName": "single_form"
   },
   "preprint2": {
-    "primaryColor": "#0A9DD9",
-    "secondaryColor": "#0A9DD9",
-    "logoPath": "/logo-ncrc.jpg",
-    "brandName": "Novel Coronavirus Research Compendium"
+    "primaryColor": "#3aae2a",
+    "secondaryColor": "#9e9e9e",
+    "logoPath": "/logo-kotahi.png",
+    "brandName": "preprint2"
   },
   "prc": {
     "primaryColor": "#bc2325",
     "secondaryColor": "#bc2325",
     "logoPath": "/biophysics-colab.png",
-    "brandName": "Colab"
+    "brandName": "prc"
   }
 }

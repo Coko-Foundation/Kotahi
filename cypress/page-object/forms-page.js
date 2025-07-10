@@ -8,6 +8,7 @@ const FORM_OPTION_LIST = '[class*=FormBuilder__Element] > button:nth-child(1)'
 const NAME_FIELD = '[data-testid="name"]'
 const COMPONENT_TYPE = '[role=listbox]'
 const FIELD_VALIDATE = '[data-testid="validate"]'
+const FIELD_TYPE = '[data-testid="fieldType"]'
 const DOI_VALIDATION = '[class*=RadioBox__RadioGroup]'
 const UPDATE_FORM_BUTTON = '[type=submit]'
 
@@ -39,6 +40,9 @@ export const FormsPage = {
   },
   getComponentType() {
     return cy.get(COMPONENT_TYPE)
+  },
+  getFieldType() {
+    return cy.get(FIELD_TYPE)
   },
   getFieldValidate() {
     return cy.get(FIELD_VALIDATE)

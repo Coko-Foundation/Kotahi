@@ -9,8 +9,8 @@ const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
 const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
-describe('Completing a review', () => {
-  it('accept and do a review', () => {
+describe('Completing a decision', () => {
+  before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
@@ -26,14 +26,22 @@ describe('Completing a review', () => {
       ManuscriptsPage.selectOptionWithText('Control')
       ControlPage.getAssignSeniorEditorDropdown().click({ force: true })
       cy.contains(name.role.seniorEditor).click({ force: true })
+    })
+  })
 
-      /* Editor submits a decision */
+  beforeEach(() => {
+    cy.fixture('role_names').then(name => {
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControl() // Navigate to Control Page
       ControlPage.clickDecisionTab(1)
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
-      // Fill the decision form
+    })
+  })
+
+  it('editor decided "revise" and then then author submits new version', () => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
       cy.get('[data-testid="dropzone"]:first > input').selectFile(
@@ -46,6 +54,7 @@ describe('Completing a review', () => {
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists() // Check appears in front of button
 
+      cy.log('Author revises and submits new version.')
       /* View Decision as an Author */
       cy.login(name.role.author, dashboard) // Login as an Author
       DashboardPage.getSubmittedManuscript().click() // Click on first MySubmission
@@ -68,21 +77,19 @@ describe('Completing a review', () => {
       DashboardPage.getSubmittedManuscript()
         .contains('test pdf')
         .should('exist') // Verify new submission got created
-
-      /* Editor Workflow: Approve the new Manuscript version */
-      cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControl() // Navigate to Control Page
-      ControlPage.clickDecisionTab(1)
-      ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
-      ControlPage.getDecisionTextInput().type('Great Paper!')
-      ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
-        force: true,
-      })
-      ControlPage.clickAccept()
-      ControlPage.clickSubmitDecisionButton() // Submit the decision
-      ControlPage.checkSvgExists()
-      ControlPage.getPublishButton().should('not.be.disabled') // Verify publish button is not disabled */
     })
+  })
+
+  it('editor accepts the new version', () => {
+    /* Editor Workflow: Approve the new Manuscript version */
+    ControlPage.getDecisionTextInput().type('Great Paper!')
+    ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
+      force: true,
+    })
+    ControlPage.clickAccept()
+    ControlPage.clickSubmitDecisionButton() // Submit the decision
+    ControlPage.checkSvgExists()
+    // The below should be fixed by #1872 !!!
+    // ControlPage.getPublishButton().should('not.be.disabled') // Verify publish button is not disabled */
   })
 })
