@@ -8,8 +8,7 @@ import { dashboard } from '../../support/routes2'
 const bioRxivArticleUrl =
   'https://www.biorxiv.org/content/10.1101/2022.05.28.493855v1'
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Update the submission form field', () => {
+describe('Update the submission form field', () => {
   it('update submission form field for publishing to hypothesis group', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
@@ -30,9 +29,10 @@ describe.skip('Update the submission form field', () => {
     FormsPage.clickFormOption(3)
     FormsPage.getFieldValidate()
 
-    cy.get(':nth-child(3) > .sc-dmlrTW').contains('Always').click()
-    cy.get('form > :nth-child(16)').type('test_tag')
-    cy.contains('Update Field').click({ force: true })
+    // cy.get(':nth-child(3) > .sc-dmlrTW').contains('Always').click()
+    cy.get('[data-testid="publishingTag"]').type('test_tag')
+    // cy.contains('Update Field').click({ force: true })
+    cy.contains('Save').click({ force: true })
     Menu.clickManuscripts()
     ManuscriptsPage.clickSubmit()
     // Upload manuscript
@@ -44,19 +44,19 @@ describe.skip('Update the submission form field', () => {
       SubmissionFormPage.fillInDoi(data.doi)
       SubmissionFormPage.fillInPreprintUri(bioRxivArticleUrl)
       SubmissionFormPage.fillInTitle(data.description)
-      SubmissionFormPage.waitThreeSec()
-      SubmissionFormPage.clickSubmitResearch()
-      cy.awaitDisappearSpinner()
+      // Verify that changes are autosaved
+      SubmissionFormPage.getTitleField().should('have.value', data.description)
+      SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
       ManuscriptsPage.getOptionsElifeText('Evaluation').click()
-      SubmissionFormPage.clickSubmitResearch()
-      cy.awaitDisappearSpinner()
+      SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
       cy.intercept('/graphql').as('getResponse')
       ManuscriptsPage.getOptionsElifeText('Publish').click()
       cy.wait('@getResponse').its('response').should('deep.include', {
         statusCode: 200,
         statusMessage: 'OK',
       })
-      SubmissionFormPage.waitThreeSec()
+      // Status is always PUBLISHED ???
+      // SubmissionFormPage.waitThreeSec()
       ManuscriptsPage.getStatusField(0).contains('Published')
     })
   })

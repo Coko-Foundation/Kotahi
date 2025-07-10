@@ -6,8 +6,8 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
-describe('Assigning senior editor', () => {
-  it('admin can give decision', () => {
+describe('Assigning editors and decision reject', () => {
+  it('Assign editors and admin rejects a submission', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
@@ -24,7 +24,7 @@ describe('Assigning senior editor', () => {
 
         ManuscriptsPage.selectOptionWithText('Control')
         cy.reload()
-        // added a reload here because tests where failing on an unhandled promise.
+        // added a reload here because tests were failing on an unhandled promise.
 
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
@@ -36,11 +36,13 @@ describe('Assigning senior editor', () => {
         ControlPage.clickAssignEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.admin)
 
-        // assert the reviews
+        // reject submission
+        cy.log('Admin rejects a submission.')
         ControlPage.clickDecisionTab(1)
-        ControlPage.fillInDecision(data.decision)
-        ControlPage.clickAccept()
+        ControlPage.fillInDecision(data.rejectedDecision)
+        ControlPage.clickReject()
         ControlPage.clickSubmit()
+        ControlPage.checkSvgExists()
       })
     })
 

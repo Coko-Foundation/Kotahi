@@ -1,36 +1,25 @@
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
-import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { dashboard } from '../../support/routes'
+import { dashboard } from '../../support/routes1'
 
 const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
 const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
 describe('checking manuscript version', () => {
-  it('editor checks for new manuscript version', () => {
+  before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
-    cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
     cy.request('POST', `${seedUrl}/three_reviews_completed`)
+  })
 
+  it('editor checks for new manuscript version', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      /* login as admin */
-      cy.login(name.role.admin, dashboard)
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      DashboardPage.clickManuscriptNavButton()
-      ManuscriptsPage.selectOptionWithText('Control')
-      /* Assign Editor */
-      ControlPage.getAssignSeniorEditorDropdown().click({ force: true })
-      ControlPage.getAssignSeniorEditorDropdown().type(
-        `${name.role.seniorEditor}{enter}`,
-        { force: true },
-      )
-
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
@@ -41,10 +30,13 @@ describe('checking manuscript version', () => {
       /* Fill the decision form */
       ControlPage.clickDecisionTextInput()
       ControlPage.getDecisionTextInput().type(decisionTextContent)
-      ControlPage.getDecisionFileInput().eq(0).selectFile(decisinFilePath, {
+      ControlPage.getDecisionFileInput().selectFile(decisinFilePath, {
         force: true,
       })
-      ControlPage.clickRevise()
+      cy.contains('test-pdf.pdf').should('exist')
+      cy.contains('Decision Status').scrollIntoView()
+      // ReviewPage.clickRevise()
+      cy.get('[class*=FormTemplate__SafeRadioGroup]').eq(1).click()
       /* Submit the decision */
       ControlPage.clickSubmitDecisionButton()
       /* Check appears in front of button */
@@ -54,17 +46,27 @@ describe('checking manuscript version', () => {
       cy.login(name.role.author, dashboard)
       /* Click on first MySubmission */
       DashboardPage.getSubmittedManuscript().click()
-      // Verify Decision Content
+      /* Verify Decision Content */
       DashboardPage.getDecisionField(0).should('contain', decisionTextContent)
       DashboardPage.getDecisionField(1).should('contain', decisionFileName)
       DashboardPage.getDecisionField(2).should('contain', 'Revise')
       /* Create new manuscript version */
       DashboardPage.clickCreateNewVersionButton()
-      SubmissionFormPage.fillInField(
-        'submission.$abstract',
-        'New abstract',
-        true,
-      )
+      cy.contains('Edit submission info').should('exist')
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInAbstractColab(data.abstract)
+        SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInPreprintUri(data.doi)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.fillInKeywords(data.keywords)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
+      })
       SubmissionFormPage.clickSubmitResearch()
       SubmissionFormPage.clickSubmitYourManuscript()
       /* Verify new submission got created */
@@ -74,6 +76,7 @@ describe('checking manuscript version', () => {
 
       /* Login as editor and check the new version submission form */
       cy.login(name.role.seniorEditor, dashboard)
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControl() // Navigate to Control Page
       ControlPage.clickDecisionTab(1)
       /* Verify publish button is disabled */

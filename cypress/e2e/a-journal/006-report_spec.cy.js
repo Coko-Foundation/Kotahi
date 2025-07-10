@@ -3,8 +3,8 @@ import { dashboard } from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
 import { ReportPage } from '../../page-object/reports-page'
 
-describe('Report Spec', () => {
-  it('Can log in as admin (and logout)', () => {
+describe('Report Page', () => {
+  it('Admin views and interacts with the reports page', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 

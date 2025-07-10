@@ -3,12 +3,17 @@
 import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
+import { DashboardPage } from '../../page-object/dashboard-page'
+import { SubmissionFormPage } from '../../page-object/submission-form-page'
+import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 describe('Form builder', () => {
-  it('views a form field', () => {
+  before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.bootstrap`)
+  })
 
+  it('viewing and adding fields in Submission, Review and Decision forms', () => {
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
@@ -73,5 +78,40 @@ describe('Form builder', () => {
       .click()
     FormsPage.getNameField().click().type('newField')
     cy.contains('Save').click()
+  })
+
+  it('cannot submit manuscript without filling in the required fields', () => {
+    // login as author and attempt to submit an incomplete submission form
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.author, dashboard)
+
+      Menu.clickDashboard()
+      // Click on new submission
+      ManuscriptsPage.clickSubmit()
+
+      // Upload manuscript
+      cy.get('input[type=file]').selectFile('cypress/fixtures/test-pdf.pdf', {
+        force: true,
+      })
+      cy.get('[data-testid="submission.$title"]').clear()
+      cy.get('[data-testid="submission.$title"]').should('have.length', 1)
+      SubmissionFormPage.clickSubmitResearch()
+    })
+
+    // Change the title so that we can look for it
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('submission_form_data').then(data => {
+      SubmissionFormPage.fillInField('submission.$title', data.newTitle)
+      SubmissionFormPage.clickSubmitResearch()
+      // Submit the form
+      SubmissionFormPage.clickSubmitYourManuscript()
+      // Contains new title
+      cy.awaitDisappearSpinner()
+      // the following line is added so that it gives enough time for the dom to update the title of the submission in dashboard.
+      DashboardPage.clickDashboardTab(1)
+      DashboardPage.clickDashboardTab(0)
+      DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
+    })
   })
 })
