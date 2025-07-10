@@ -1,6 +1,7 @@
-FROM node:18-bookworm-slim
+FROM node:20-bookworm-slim
 
 RUN apt-get update && apt-get install -y curl
+RUN corepack enable
 
 WORKDIR /home/node/app
 
@@ -10,6 +11,6 @@ COPY yarn.lock .
 RUN chown -R node:node .
 USER node
 
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN yarn install --immutable && yarn cache clean && rm -rf ~/.npm
 
 COPY --chown=node:node . .

@@ -1,14 +1,15 @@
 ##############################################################
 # IMAGE FOR BUILDING
 
-FROM node:18-bookworm-slim
+FROM node:20-bookworm-slim
 
+RUN corepack enable
 WORKDIR /home/node/app
 
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --immutable
 
 COPY . .
 
