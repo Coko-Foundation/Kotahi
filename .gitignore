@@ -44,3 +44,12 @@ packages/devdocs/.docusaurus
 packages/devdocs/.cache-loader
 
 packages/server/scripts/local
+
+# yarn v4
+**/.pnp.*
+**/.yarn/*
+!**/.yarn/patches
+!**/.yarn/plugins
+!**/.yarn/releases
+!**/.yarn/sdks
+!**/.yarn/versions

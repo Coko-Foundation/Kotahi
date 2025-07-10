@@ -109,7 +109,7 @@ deploy fly main:
 release:
   stage: Release
   interruptible: false
-  image: node:18
+  image: node:20
   when: manual
   only:
     - main

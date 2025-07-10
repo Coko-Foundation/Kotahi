@@ -19,10 +19,10 @@ RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
 
 # Only copy things needed for the yarn install
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock .yarnrc.yml ./
 
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
-RUN if [ -z "$packagechanged" ] ; then echo packagechanged not provided ; else [ "yarn", "install", "--frozen-lockfile" ] ; fi
+RUN if [ -z "$packagechanged" ] ; then echo packagechanged not provided ; else [ "yarn", "install", "--immutable" ] ; fi
 
 ENV NODE_ENV=${NODE_ENV}
 
