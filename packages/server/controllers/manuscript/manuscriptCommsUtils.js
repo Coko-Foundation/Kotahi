@@ -1,6 +1,5 @@
 const Manuscript = require('../../models/manuscript/manuscript.model')
 const Config = require('../../models/config/config.model')
-const Team = require('../../models/team/team.model')
 
 const { getUserRolesInManuscript } = require('../user.controllers')
 
@@ -130,31 +129,12 @@ const manuscriptIsActive = async (manuscriptId, options = {}) => {
   return manuscriptId === latestVersionId
 }
 
-/** Returns a list of user IDs for editors, handlingEditors and seniorEditors. */
-const getEditorIdsForManuscript = async (manuscriptId, options = {}) => {
-  const { trx } = options
-
-  const roleOrder = ['editor', 'handlingEditor', 'seniorEditor']
-
-  const teams = await Team.query(trx)
-    .where({ objectId: manuscriptId })
-    .whereIn('role', roleOrder)
-    .withGraphFetched('members')
-
-  const sortedTeams = teams.sort((a, b) => {
-    return roleOrder.indexOf(a.role) - roleOrder.indexOf(b.role)
-  })
-
-  return [...new Set(sortedTeams.map(t => t.members.map(m => m.userId)).flat())]
-}
-
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   archiveOldManuscripts,
   manuscriptHasOverdueTasksForUser,
   manuscriptIsActive,
-  getEditorIdsForManuscript,
   isLatestVersionOfManuscript,
   getManuscriptLink,
 }

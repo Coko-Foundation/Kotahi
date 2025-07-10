@@ -31,7 +31,7 @@
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
     "@codemirror/lang-json": "^6.0.1",
-    "@coko/client": "1.0.0-beta.1",
+    "@coko/client": "1.0.6",
     "@fontsource/roboto": "^4.5.8",
     "@rjsf/core": "4.2.3",
     "@uiw/react-codemirror": "^4.21.20",
@@ -120,5 +120,6 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "jest": "^27.1.0"
-  }
+  },
+  "packageManager": "yarn@4.9.2"
 }
