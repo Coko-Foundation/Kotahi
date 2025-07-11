@@ -1306,9 +1306,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@coko/server@npm:^4.14.0":
-  version: 4.14.0
-  resolution: "@coko/server@npm:4.14.0"
+"@coko/server@npm:^4.17.0":
+  version: 4.17.1
+  resolution: "@coko/server@npm:4.17.1"
   dependencies:
     "@apollo/server": "npm:^4.10.4"
     "@aws-sdk/client-s3": "npm:^3.806.0"
@@ -1325,7 +1325,7 @@ __metadata:
     config: "npm:^3.3.11"
     cookie-parser: "npm:^1.4.5"
     cors: "npm:^2.8.5"
-    cron-validate: "npm:^1.4.5"
+    cron-validate: "npm:1.4.5"
     cronstrue: "npm:^2.50.0"
     dataloader: "npm:^1.4.0"
     docx: "npm:^8.5.0"
@@ -1368,7 +1368,7 @@ __metadata:
     ws: "npm:^8.18.0"
   bin:
     coko-server: ./src/cli/coko-server.js
-  checksum: 10c0/7654f5eb6d06472139abcbe3b2f97bc150bd46d001f9a4c9e2b03382fbe7fc42ff875c33b094d96f25bd39d1243e97a9d3ea942b43c210122cfca2841cfe3bc6
+  checksum: 10c0/4221929b75a73fc8c71d6d2c03bb6ee52f1647ec724f3061d0c944bbccc408fcf3ece061cd7b0f84e5c7f8751e321fd599c3233702a002cf3bf5ef536e7c3d59
   languageName: node
   linkType: hard
 
@@ -4628,7 +4628,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron-validate@npm:^1.4.5":
+"cron-validate@npm:1.4.5":
   version: 1.4.5
   resolution: "cron-validate@npm:1.4.5"
   dependencies:
@@ -7596,7 +7596,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "kotahi@workspace:."
   dependencies:
-    "@coko/server": "npm:^4.14.0"
+    "@coko/server": "npm:^4.17.0"
     "@dqbd/tiktoken": "npm:^1.0.14"
     archiver: "npm:^5.3.0"
     atob: "npm:^2.1.2"
