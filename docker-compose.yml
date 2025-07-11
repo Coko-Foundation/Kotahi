@@ -250,7 +250,7 @@ services:
       - POSTGRES_PASSWORD=anystyle_user_password
 
   kotahi-flax-site:
-    image: cokoapps/kotahi-flax:0.5.3
+    image: cokoapps/kotahi-flax:0.5.10
     depends_on:
       server:
         condition: service_healthy
