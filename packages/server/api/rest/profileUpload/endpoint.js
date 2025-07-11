@@ -36,7 +36,7 @@ module.exports = app => {
     upload.single('file'),
     async (req, res, next) => {
       await profileUpload(req.user, req.file.path)
-      res.send(200)
+      res.sendStatus(200)
     },
   )
 }
