@@ -176,6 +176,7 @@ const FilesUpload = ({
   onFileAdded,
   onFileRemoved,
   confirmBeforeDelete,
+  formElementId,
 }) => {
   let existingFiles = []
 
@@ -188,6 +189,7 @@ const FilesUpload = ({
       fileType,
       manuscriptId,
       reviewId,
+      formElementId,
     }
 
     if (!meta.reviewId && initializeReview)

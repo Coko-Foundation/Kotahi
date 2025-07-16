@@ -51,6 +51,7 @@ const ValidatedField = ({
         let validationStatus
         if (get(touched, name)) validationStatus = 'success'
         if (get(touched, name) && get(errors, name)) validationStatus = 'error'
+
         return (
           <div ref={fieldRef}>
             <Component

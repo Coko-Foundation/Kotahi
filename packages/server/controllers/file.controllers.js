@@ -1,7 +1,7 @@
-const map = require('lodash/map')
-const uniq = require('lodash/uniq')
-
 const { fileStorage, createFile, deleteFiles, File } = require('@coko/server')
+const { map, uniq, flatten } = require('lodash')
+const { decrypt } = require('../utils/encryptDecryptUtils')
+const Form = require('../models/form/form.model')
 
 const { Manuscript } = require('../models')
 
@@ -15,22 +15,69 @@ const createFileFn = async (file, meta) => {
   const { createReadStream, filename } = await file
   const fileStream = createReadStream()
 
+  const options = {}
+  const tags = []
+
+  if (meta.formElementId) {
+    const form = await Form.query()
+
+    const formsElements = flatten(form.map(f => f.structure.children))
+
+    const element = formsElements.find(el => el.id === meta.formElementId)
+
+    if (element.uploadAttachmentSource === 'external') {
+      options.s3 = {
+        accessKeyId: decrypt(element.s3AccessId),
+        secretAccessKey: decrypt(element.s3AccessToken),
+        bucket: element.s3Bucket,
+        region: element.s3Region,
+        url: element.s3Url,
+      }
+
+      options.meta = { formElementId: element.id }
+
+      tags.push('externalAttachmentSource')
+    }
+  }
+
   const createdFile = await createFile(
     fileStream,
     filename,
     null,
     null,
-    [meta.fileType],
+    [meta.fileType, ...tags],
     meta.reviewId || meta.manuscriptId,
+    options,
   )
 
-  const data = await getFileWithUrl(createdFile)
+  const data = await getFileWithUrl(createdFile, options)
 
   return data
 }
 
 const deleteFile = async id => {
-  await deleteFiles([id], true)
+  const options = {}
+  const file = await File.findById(id)
+
+  if (
+    file.meta.formElementId &&
+    file.tags.includes('externalAttachmentSource')
+  ) {
+    const forms = await Form.query()
+    const formsElements = flatten(forms.map(f => f.structure.children))
+
+    const element = formsElements.find(el => el.id === file.meta.formElementId)
+
+    options.s3 = {
+      accessKeyId: decrypt(element.s3AccessId),
+      secretAccessKey: decrypt(element.s3AccessToken),
+      bucket: element.s3Bucket,
+      region: element.s3Region,
+      url: element.s3Url,
+    }
+  }
+
+  await deleteFiles([id], true, options)
   return id
 }
 

@@ -1,16 +1,21 @@
-const { fileStorage } = require('@coko/server')
+const { FileStorageConstructor } = require('@coko/server')
 
 const cheerio = require('cheerio')
 const find = require('lodash/find')
 
 /* Get files with temporary, time-limited URLs generated */
-const getFilesWithUrl = async files => {
+const getFilesWithUrl = async (files, options = {}) => {
+  const { s3: globalS3 } = options
+
   const filesWithUrl = await Promise.all(
     files.map(async file => {
       /* eslint-disable-next-line no-param-reassign */
       file.storedObjects = await Promise.all(
         file.storedObjects.map(async storedObject => {
-          const url = await fileStorage.getURL(storedObject.key)
+          const url = await new FileStorageConstructor(
+            file.s3 || globalS3,
+          ).getURL(storedObject.key)
+
           return { ...storedObject, url }
         }),
       )
@@ -22,11 +27,13 @@ const getFilesWithUrl = async files => {
 }
 
 /* Get file with temporary, time-limited URL generated */
-const getFileWithUrl = async file => {
+const getFileWithUrl = async (file, options = {}) => {
+  const { s3 } = options
+
   /* eslint-disable-next-line no-param-reassign */
   file.storedObjects = await Promise.all(
     file.storedObjects.map(async storedObject => {
-      const url = await fileStorage.getURL(storedObject.key)
+      const url = await new FileStorageConstructor(s3).getURL(storedObject.key)
       return { ...storedObject, url }
     }),
   )
@@ -34,11 +41,15 @@ const getFileWithUrl = async file => {
 }
 
 /* Set Url for file */
-const setFileUrls = async storedObjects => {
+const setFileUrls = async (storedObjects, options = {}) => {
+  const { s3 } = options
+
   const updatedStoredObjects = await Promise.all(
     Object.keys(storedObjects).map(async key => {
       const storedObject = storedObjects[key]
-      storedObject.url = await fileStorage.getURL(storedObject.key)
+      storedObject.url = await new FileStorageConstructor(s3).getURL(
+        storedObject.key,
+      )
       return storedObject
     }),
   )

@@ -1,3 +1,5 @@
+scalar Password
+
 input FormInput {
   id: ID!
   created: DateTime
@@ -30,6 +32,12 @@ input FormElementInput {
   title: String
   shortDescription: String
   id: ID!
+  uploadAttachmentSource: String
+  s3Url: String
+  s3Region: String
+  s3Bucket: String
+  s3AccessId: Password
+  s3AccessToken: Password
   component: String
   name: String
   label: String
@@ -94,6 +102,10 @@ type FormElement {
   component: String
   name: String
   description: String
+  uploadAttachmentSource: String
+  s3Url: String
+  s3Region: String
+  s3Bucket: String
   doiValidation: String
   doiUniqueSuffixValidation: String
   allowFutureDatesOnly: String
