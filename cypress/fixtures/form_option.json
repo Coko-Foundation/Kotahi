@@ -24,6 +24,8 @@
   },
   "preprint2": {
     "title": "NCRC Submission Form",
+    "articleDoi": "Article DOI",
+    "articleUri": "Article",
     "articleUrl": "Article URL",
     "description": "Article Description",
     "studyDesign": "Study design",
@@ -31,6 +33,7 @@
     "valueAdded": "Value added",
     "studyPopulation": "Study population setting",
     "subTopics": "Sub Topics",
+    "label": "Label",
     "subTopicTypes": {
       "epidemiologyPopulationsMostVulnerable": "epidemiology_populations-most-vulnerable",
       "epidemiologyIncubationPeriodSignsAndSymptomsAndViralShedding": "epidemiology_incubation-period-signs-and-symptoms-and-viral-shedding",

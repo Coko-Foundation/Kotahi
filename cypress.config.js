@@ -15,7 +15,23 @@ module.exports = defineConfig({
   viewportWidth: 1200,
   e2e: {
     baseUrl: 'http://localhost:4000',
-    // experimentalRunAllSpecs: true,
+
+    // 🛠 Correct place for on() and task handlers
+    // setupNodeEvents(on, config) {
+    //   on('task', {
+    //     restore(name) {
+    //       if (name === 'email_notification') {
+    //         console.log('Restoring email_notification test data...')
+    //         // Your custom logic here
+    //         return null // or a promise, or true/false
+    //       }
+
+    //       return null
+    //     },
+    //   })
+
+    //   return config
+    // },
   },
   screenshotOnRunFailure: false,
   video: false,

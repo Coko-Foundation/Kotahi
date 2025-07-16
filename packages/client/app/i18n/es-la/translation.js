@@ -1375,6 +1375,7 @@ const esLa = {
         abstract: 'Resumen',
         visualAbstract: 'Adjunto de imagen única',
         attachments: 'Adjuntos',
+        s3Uploader: 'Cargador S3',
         doi: 'DOI',
         dois: 'Múltiples dois',
         divider: 'Separador',
@@ -1425,6 +1426,20 @@ const esLa = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        title: 'Seleccionar servicio S3',
+        description:
+          "Selecciona 'Externo' para subir archivos adjuntos a un proveedor externo de buckets.",
+        internal: 'Interno',
+        external: 'Externo',
+        s3Url: 'URL del servicio S3',
+        s3Bucket: 'Bucket del servicio S3',
+        s3Region: 'Región S3',
+        s3AccessId: 'ID de acceso S3',
+        s3AccessToken: 'Token de acceso S3',
+        updateCredentials: 'Actualizar credenciales',
+        setCredentials: 'Establecer credenciales',
+      },
       hideFromReviewers: {
         true: 'Sí',
         false: 'No',

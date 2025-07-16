@@ -59,5 +59,6 @@
   "firstAuthor": "Author",
   "datePublished": "12/04/2022",
   "link": "https://doi.org/10.6084/m9.figshare.913521.v1",
-  "decision": "This can be published"
+  "decision": "This can be published",
+  "rejectedDecision": "This cannot be published"
 }

@@ -1,7 +1,7 @@
 ##############################################################
 # IMAGE FOR BUILDING
 
-FROM node:18-bookworm-slim
+FROM cokoapps/base:20
 
 ENV NODE_ENV='production'
 ENV CLIENT_STATIC_FOLDER_PATH=../public
@@ -9,19 +9,20 @@ ENV CLIENT_PAGE_TITLE='Kotahi - Open Journals'
 
 WORKDIR /home/node/app
 
+COPY .yarnrc.yml .
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install --frozen-lockfile
+RUN yarn workspaces focus --production
 
 COPY . .
 
-RUN yarn coko-client-build
+RUN yarn coko-client-build-js
 
 ##############################################################
 # IMAGE FOR RUNNING
 
-FROM node:18-bookworm-slim
+FROM cokoapps/base:20
 
 WORKDIR /home/node/app
 

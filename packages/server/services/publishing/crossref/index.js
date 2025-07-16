@@ -10,12 +10,8 @@ const { uuid } = require('@coko/server')
 const { fetchUserDetails } = require('../../../controllers/orcid.controllers')
 
 const User = require('../../../models/user/user.model')
-
 const Group = require('../../../models/group/group.model')
-
-const {
-  getEditorIdsForManuscript,
-} = require('../../../controllers/manuscript/manuscriptCommsUtils')
+const Manuscript = require('../../../models/manuscript/manuscript.model')
 
 const {
   getReviewForm,
@@ -589,7 +585,7 @@ const publishReviewsToCrossref = async manuscript => {
       let users
 
       if (review.isDecision) {
-        const [editor] = await getEditorIdsForManuscript(manuscriptId)
+        const [editor] = await Manuscript.getEditorIds(manuscriptId)
 
         if (editor) {
           users = await populateUserInfo([editor])

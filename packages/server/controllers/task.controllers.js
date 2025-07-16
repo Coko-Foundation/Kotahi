@@ -20,7 +20,6 @@ const { sendEmailWithPreparedData } = require('./user.controllers')
 
 const {
   manuscriptIsActive,
-  getEditorIdsForManuscript,
   getIdOfLatestVersionOfManuscript,
 } = require('./manuscript/manuscriptCommsUtils')
 
@@ -50,7 +49,7 @@ const createNewTaskAlerts = async groupId => {
       const isActive = await manuscriptIsActive(manuscriptId)
 
       const editorIds = isActive
-        ? await getEditorIdsForManuscript(manuscriptId)
+        ? await Manuscript.getEditorIds(manuscriptId)
         : []
 
       manuscriptMap[manuscriptId] = { editorIds, shouldSkip: !editorIds }
@@ -503,7 +502,7 @@ const updateAlertsForTask = async (task, trx) => {
   // TODO once we start creating alerts for assignees, we need to address that here.
 
   if (needsAlert) {
-    const editorIds = await getEditorIdsForManuscript(task.manuscriptId)
+    const editorIds = await Manuscript.getEditorIds(task.manuscriptId)
 
     await TaskAlert.query(trx)
       .insert(editorIds.map(userId => ({ taskId: task.id, userId })))

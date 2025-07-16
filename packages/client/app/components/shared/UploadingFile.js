@@ -102,6 +102,7 @@ const UploadingFile = ({
   const extension = getFileExtension(file)
   const isImage = file?.storedObjects[0]?.mimetype.startsWith('image/')
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const icon = (
     <Icon>
@@ -145,11 +146,14 @@ const UploadingFile = ({
 
       {!!deleteFile && !!remove && (
         <Action
-          onClick={() =>
-            confirmBeforeDelete
+          disabled={isDeleting}
+          onClick={async () => {
+            setIsDeleting(true)
+            await (confirmBeforeDelete
               ? setIsConfirmingDelete(true)
-              : deleteFile(file, index, remove)
-          }
+              : deleteFile(file, index, remove))
+            setIsDeleting(false)
+          }}
         >
           {t('dragndrop.Remove')}
         </Action>

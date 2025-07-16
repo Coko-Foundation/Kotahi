@@ -83,7 +83,7 @@ export const ControlPage = {
     this.clickInviteReviewerSubmit()
     this.clickReviewerSubmitModalButton()
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000)
+    // cy.wait(1000)
   },
   getInviteReviewerOptionList() {
     return cy.getByContainsId(INVITE_REVIEWER_OPTION_LIST)
@@ -190,7 +190,8 @@ export const ControlPage = {
   clickHideReviewToAuthor() {
     this.getHideReviewToAuthorCheckbox().click()
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2000)
+    // cy.wait(2000)
+    // cy.getHideReviewToAuthorCheckbox('should', 'not.be.checked')
   },
   getHideReviewerNameCheckbox() {
     return cy.get(REVIEW_OPTION_CHECKBOX).eq(1)
@@ -198,7 +199,7 @@ export const ControlPage = {
   clickHideReviewerNameToAuthor() {
     this.getHideReviewerNameCheckbox().click()
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(2000)
+    // cy.wait(2000)
   },
   getReviewerSubmitModalButton() {
     return cy.getByDataTestId(INVITE_REVIEWER_SUBMIT_MODAL_BUTTON)

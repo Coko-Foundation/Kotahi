@@ -1,5 +1,5 @@
 // #region import
-const { chunk, orderBy, uniqBy } = require('lodash')
+const { chunk, orderBy, uniqBy, flatten } = require('lodash')
 const { ref, raw } = require('objection')
 const axios = require('axios')
 
@@ -18,6 +18,7 @@ const {
   ThreadedDiscussion,
   User,
   Channel,
+  Form,
 } = require('../../models')
 
 const {
@@ -105,6 +106,7 @@ const {
 } = require('../user.controllers')
 
 const { applyTemplate, generateCss } = require('../../utils/applyTemplate')
+const { decrypt } = require('../../utils/encryptDecryptUtils')
 
 // #endregion import
 
@@ -579,14 +581,33 @@ const getCss = async () => {
 }
 
 const getManuscriptFiles = async (manuscriptId, manuscriptFiles) => {
+  const forms = await Form.query()
+  const formsElements = flatten(forms.map(f => f.structure.children))
+
   const files = (
     manuscriptFiles ||
     (await Manuscript.relatedQuery('files').for(manuscriptId))
-  ).map(f => ({
-    ...f,
-    tags: f.tags || [],
-    storedObjects: f.storedObjects || [],
-  }))
+  ).map(f => {
+    let s3
+
+    if (f.meta.formElementId && f.tags.includes('externalAttachmentSource')) {
+      const element = formsElements.find(el => el.id === f.meta.formElementId)
+      s3 = {
+        accessKeyId: decrypt(element.s3AccessId),
+        secretAccessKey: decrypt(element.s3AccessToken),
+        bucket: element.s3Bucket,
+        region: element.s3Region,
+        url: element.s3Url,
+      }
+    }
+
+    return {
+      ...f,
+      tags: f.tags || [],
+      storedObjects: f.storedObjects || [],
+      s3,
+    }
+  })
 
   return getFilesWithUrl(files)
 }

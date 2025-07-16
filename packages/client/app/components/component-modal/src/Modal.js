@@ -111,6 +111,7 @@ const ModalContainer = styled.div`
   flex: 1 1 100%;
   overflow-y: auto;
   padding: ${grid(2.5)} ${grid(3)};
+  position: relative;
   width: 100%;
 `
 
@@ -189,7 +190,7 @@ const Modal = ({
       flexDirection: 'column',
       inset: 'unset',
       margin: '0px',
-      maxHeight: '80%',
+      maxHeight: '90%',
       maxWidth: '60%',
       overflow: 'hidden',
       padding: '0px',

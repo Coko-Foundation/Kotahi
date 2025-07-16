@@ -158,6 +158,29 @@ class Manuscript extends BaseModel {
     return editor.user
   }
 
+  /** Returns a list of user IDs for editors, handlingEditors and seniorEditors. */
+  static async getEditorIds(manuscriptId, options = {}) {
+    /* eslint-disable-next-line global-require */
+    const Team = require('../team/team.model')
+
+    const { trx } = options
+
+    const roleOrder = ['editor', 'handlingEditor', 'seniorEditor']
+
+    const teams = await Team.query(trx)
+      .where({ objectId: manuscriptId })
+      .whereIn('role', roleOrder)
+      .withGraphFetched('members')
+
+    const sortedTeams = teams.sort((a, b) => {
+      return roleOrder.indexOf(a.role) - roleOrder.indexOf(b.role)
+    })
+
+    return [
+      ...new Set(sortedTeams.map(t => t.members.map(m => m.userId)).flat()),
+    ]
+  }
+
   async createNewVersion() {
     /* eslint-disable global-require */
     const Config = require('../config/config.model')

@@ -2,7 +2,7 @@ app = 'kotahi-flax-main'
 primary_region = 'lhr'
 
 [build]
-image = 'cokoapps/kotahi-flax:0.5.3'
+image = 'cokoapps/kotahi-flax:0.5.10'
 
 [http_service]
 internal_port = 80

@@ -176,7 +176,7 @@ export const ManuscriptsPage = {
     cy.get(
       '[class*="ManuscriptsHeaderRow"] [data-testid="submission.$customStatus"]',
     )
-      .scrollIntoView()
+      // .scrollIntoView()
       .click()
     cy.get('[class*="react-select__option"]').contains(statusLabel).click()
   },

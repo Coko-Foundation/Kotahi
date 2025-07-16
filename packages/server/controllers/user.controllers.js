@@ -16,10 +16,6 @@ const {
   User,
 } = require('../models')
 
-const {
-  getEditorIdsForManuscript,
-} = require('./manuscript/manuscriptCommsUtils')
-
 const seekEvent = require('../services/notification.service')
 
 const { sendEmail } = require('../services/emailNotifications.service')
@@ -160,7 +156,7 @@ const getCurrentUser = async (userId, groupId) => {
 
 const getEditorEmails = async (manuscriptId, options = {}) => {
   const { trx } = options
-  const userIds = await getEditorIdsForManuscript(manuscriptId, { trx })
+  const userIds = await Manuscript.getEditorIds(manuscriptId, { trx })
   const users = await User.query(trx).whereIn('id', userIds)
   return users.map(user => user.email)
 }
