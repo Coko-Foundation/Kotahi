@@ -29,6 +29,10 @@ structure {
     doiValidation
     doiUniqueSuffixValidation
     allowFutureDatesOnly
+    uploadAttachmentSource
+    s3Url
+    s3Bucket
+    s3Region
     placeholder
     inline
     sectioncss

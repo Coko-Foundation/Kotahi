@@ -9,6 +9,18 @@ const textfield = {
   component: 'TextField',
 }
 
+const showHideTextfield = (toggleShow, componentProps, additionalProps) => {
+  return {
+    component: 'TextFieldShowHide',
+    props: {
+      validate: required,
+      toggleShow,
+      ...componentProps,
+    },
+    ...additionalProps,
+  }
+}
+
 const optionfield = {
   component: 'OptionsField',
   defaultValue: [],
@@ -209,6 +221,80 @@ const permitPublishingField = {
   defaultValue: 'false',
 }
 
+const showHideCredentials = formValues => {
+  return formValues.uploadAttachmentSource === 'external'
+}
+
+const s3InputFields = {
+  uploadAttachmentSource: {
+    component: 'RadioBox',
+    props: {
+      inline: true,
+      options: [
+        {
+          value: 'internal',
+          label: 'Internal',
+        },
+        {
+          value: 'external',
+          label: 'External',
+        },
+      ],
+      label: 'Select S3 Service',
+      description: i18next.t('fields.uploadAttachmentSource.description'),
+    },
+    defaultValue: 'internal',
+    showFieldTitle: true,
+    title: i18next.t('fields.uploadAttachmentSource.title'),
+  },
+  s3Url: showHideTextfield(
+    showHideCredentials,
+    {},
+    {
+      title: i18next.t('fields.uploadAttachmentSource.s3Url'),
+      showFieldTitle: true,
+    },
+  ),
+  s3Bucket: showHideTextfield(
+    showHideCredentials,
+    {
+      validate: null,
+    },
+    {
+      title: i18next.t('fields.uploadAttachmentSource.s3Bucket'),
+      showFieldTitle: true,
+    },
+  ),
+  s3Region: showHideTextfield(
+    showHideCredentials,
+    {},
+    {
+      title: i18next.t('fields.uploadAttachmentSource.s3Region'),
+      showFieldTitle: true,
+    },
+  ),
+  s3AccessToken: showHideTextfield(
+    showHideCredentials,
+    {
+      placeholder: '*********',
+    },
+    {
+      title: i18next.t('fields.uploadAttachmentSource.s3AccessToken'),
+      showFieldTitle: true,
+    },
+  ),
+  s3AccessId: showHideTextfield(
+    showHideCredentials,
+    {
+      placeholder: '*********',
+    },
+    {
+      title: i18next.t('fields.uploadAttachmentSource.s3AccessId'),
+      showFieldTitle: true,
+    },
+  ),
+}
+
 const publishingTagField = {
   component: 'TextField',
   props: {
@@ -359,6 +445,12 @@ const propertiesOrder = [
   'validate',
   'parse',
   'format',
+  'uploadAttachmentSource',
+  's3Url',
+  's3Bucket',
+  's3Region',
+  's3AccessId',
+  's3AccessToken',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',
@@ -513,6 +605,13 @@ const genericFieldOptions = [
     fieldType: 'datePicker',
     component: 'DatePicker',
   },
+  {
+    label: 'S3 Uploader',
+    isCustom: true,
+    fieldType: 's3Uploader',
+    component: 'GenericFiles',
+    ...s3InputFields,
+  },
 ]
 
 /** Field options for use in the submission form. Some are specialised, imposing
@@ -625,6 +724,7 @@ const submissionFieldOptions = [
     component: 'SupplementaryFiles',
     title: requiredTextFieldWithDefault('Attachments'),
     name: presetTextField('fileName'),
+    ...s3InputFields,
   },
   {
     fieldType: 'doi',
@@ -754,6 +854,7 @@ const decisionFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
+    ...s3InputFields,
   },
   {
     fieldType: 'doiSuffix',
@@ -794,6 +895,7 @@ const reviewFieldOptions = [
     fieldType: 'attachments',
     label: 'Attachments',
     component: 'SupplementaryFiles',
+    ...s3InputFields,
   },
   {
     fieldType: 'doiSuffix',

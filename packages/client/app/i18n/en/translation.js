@@ -1346,6 +1346,7 @@ const en = {
         abstract: 'Abstract',
         visualAbstract: 'Single image attachment',
         attachments: 'Attachments',
+        s3Uploader: 'S3 Uploader',
         doi: 'DOI',
         dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',
@@ -1396,6 +1397,20 @@ const en = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        title: 'Select S3 Service',
+        description:
+          "Select 'External' to upload attachments to a third party bucket provider.",
+        internal: 'Internal',
+        external: 'External',
+        s3Url: 'S3 Service Url',
+        s3Bucket: 'S3 Service Bucket',
+        s3Region: 'S3 Region',
+        s3AccessId: 'S3 Access ID',
+        s3AccessToken: 'S3 Access Token',
+        updateCredentials: 'Update Credentials',
+        setCredentials: 'Set Credentials',
+      },
       hideFromReviewers: {
         true: 'Yes',
         false: 'No',

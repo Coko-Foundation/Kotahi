@@ -1,3 +1,5 @@
+const { GraphQLScalarType, Kind } = require('graphql')
+
 const {
   createForm,
   deleteForm,
@@ -10,7 +12,33 @@ const {
   updateFormElement,
 } = require('../../../controllers/form.controllers')
 
+const { encrypt } = require('../../../utils/encryptDecryptUtils')
+
+const PasswordScalar = new GraphQLScalarType({
+  name: 'Password',
+  description: 'Password scalar type for encryption',
+
+  // Encrypt the value when the input is received
+  parseValue(value) {
+    return encrypt(value)
+  },
+
+  serialize(value) {
+    return value
+  },
+
+  parseLiteral(ast) {
+    if (ast.kind === Kind.STRING) {
+      // eslint-disable-next-line no-return-await
+      return this.parseValue(ast.value)
+    }
+
+    return null
+  },
+})
+
 module.exports = {
+  Password: PasswordScalar,
   Query: {
     form: async (_, { formId }) => {
       return getFormById(formId)

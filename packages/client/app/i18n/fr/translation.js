@@ -1389,6 +1389,7 @@ const fr = {
         abstract: 'Résumé',
         visualAbstract: 'Pièce jointe : Image unique',
         attachments: 'Pièces jointes',
+        s3Uploader: 'Téléchargeur S3',
         doi: 'DOI',
         dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',
@@ -1439,6 +1440,20 @@ const fr = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        title: 'Sélectionner le service S3',
+        description:
+          "Sélectionnez 'Externe' pour télécharger des pièces jointes vers un fournisseur de bucket tiers.",
+        internal: 'Interne',
+        external: 'Externe',
+        s3Url: 'URL du service S3',
+        s3Bucket: 'Bucket du service S3',
+        s3Region: 'Région S3',
+        s3AccessId: "ID d'accès S3",
+        s3AccessToken: "Jeton d'accès S3",
+        updateCredentials: "Mettre à jour les informations d'identification",
+        setCredentials: "Définir les informations d'identification",
+      },
       hideFromReviewers: {
         true: 'Oui',
         false: 'Non',

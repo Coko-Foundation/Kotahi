@@ -1,5 +1,6 @@
 import OptionsField from './OptionsField'
 import TextField from './TextField'
+import TextFieldShowHide from './TextFieldShowHide'
 import AbstractField from './AbstractField'
 import CheckBox from './CheckBox'
 import RadioBox from './RadioBox'
@@ -14,6 +15,7 @@ export {
   FullWaxField,
   OptionsField,
   TextField,
+  TextFieldShowHide,
   AbstractField,
   CheckBox,
   RadioBox,

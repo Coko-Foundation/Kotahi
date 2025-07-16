@@ -1,4 +1,5 @@
 const { NotFoundError } = require('@coko/server/src/errors')
+const { mergeWith } = require('lodash')
 
 const { Form } = require('../models')
 
@@ -117,8 +118,45 @@ const updateFormElement = async (element, formId) => {
     field => field.id === element.id,
   )
 
+  let name = null
+
+  if (indexToReplace > 0) {
+    name = form.structure.children[indexToReplace].name
+  }
+
+  const customMerge = (objValue, srcValue) => {
+    // If both are arrays, return the updated array (srcValue)
+    if (Array.isArray(srcValue)) {
+      return srcValue
+    }
+
+    return undefined
+  }
+
   if (indexToReplace < 0) form.structure.children.push(element)
-  else form.structure.children[indexToReplace] = element
+  else {
+    if (
+      element.uploadAttachmentSource === 'external' &&
+      (!element.s3AccessId || !element.s3AccessToken)
+    ) {
+      const { s3AccessId, s3AccessToken } =
+        form.structure.children[indexToReplace]
+
+      /* eslint-disable no-param-reassign */
+      element.s3AccessId = s3AccessId
+      element.s3AccessToken = s3AccessToken
+      /* eslint-enable no-param-reassign */
+    }
+
+    form.structure.children[indexToReplace] =
+      element.name === name
+        ? mergeWith(
+            form.structure.children[indexToReplace],
+            element,
+            customMerge,
+          )
+        : element
+  }
 
   return Form.query().patchAndFetchById(formId, {
     structure: form.structure,

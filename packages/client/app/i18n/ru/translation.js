@@ -1365,6 +1365,7 @@ const ru = {
         abstract: 'Аннотация',
         visualAbstract: 'Одиночное изображение вложения',
         attachments: 'Вложения',
+        s3Uploader: 'Загрузчик S3',
         doi: 'DOI',
         dois: 'Несколько DOI',
         doiSuffix: 'Суффикс DOI',
@@ -1415,6 +1416,20 @@ const ru = {
       },
     },
     fields: {
+      uploadAttachmentSource: {
+        title: 'Выбор сервиса S3',
+        description:
+          "Выберите 'Внешний', чтобы загружать вложения в стороннего поставщика хранилища.",
+        internal: 'Внутренний',
+        external: 'Внешний',
+        s3Url: 'URL сервиса S3',
+        s3Bucket: 'Bucket сервиса S3',
+        s3Region: 'Регион S3',
+        s3AccessId: 'Идентификатор доступа S3',
+        s3AccessToken: 'Токен доступа S3',
+        updateCredentials: 'Обновить учетные данные',
+        setCredentials: 'Установить учетные данные',
+      },
       hideFromReviewers: {
         true: 'Да',
         false: 'Нет',
