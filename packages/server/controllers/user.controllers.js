@@ -107,7 +107,7 @@ const defaultIdentity = async user => {
 }
 
 const expandChat = async (userId, state) => {
-  const user = await User.query().updateAndFetchById(userId, {
+  const user = await User.query().patchAndFetchById(userId, {
     chatExpanded: state,
   })
 
@@ -377,7 +377,7 @@ const profilePicture = async user => {
     return null
   }
 
-  const url = fileStorage.getURL(small.key)
+  const url = await fileStorage.getURL(small.key)
   return url
 }
 
@@ -807,7 +807,7 @@ const updateLanguage = async (id, preferredLanguage) => {
 }
 
 const updateMenuUI = async (userId, expanded) => {
-  const user = await User.query().updateAndFetchById(userId, {
+  const user = await User.query().patchAndFetchById(userId, {
     menuPinned: expanded,
   })
 
@@ -815,7 +815,7 @@ const updateMenuUI = async (userId, expanded) => {
 }
 
 const updateRecentTab = async (userId, tab) => {
-  const user = await User.query().updateAndFetchById(userId, {
+  const user = await User.query().patchAndFetchById(userId, {
     recentTab: tab,
   })
 
@@ -831,9 +831,10 @@ const updateUser = async (id, input) => {
   }
 
   const updatedUser = JSON.parse(input)
+
   delete updatedUser.globalRoles
   delete updatedUser.groupRoles
-  return User.query().updateAndFetchById(id, updatedUser)
+  return User.query().patchAndFetchById(id, updatedUser)
 }
 
 const updateUsername = async (id, username) => {
