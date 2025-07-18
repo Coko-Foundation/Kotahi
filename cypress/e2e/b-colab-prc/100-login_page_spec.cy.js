@@ -10,7 +10,7 @@ describe('Login page tests', () => {
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
   })
 
-  it.skip('page should display prc branding settings', () => {
+  it('page should display prc branding settings', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
       const primaryAsRgb = Color(settings.prc.primaryColor).string()
