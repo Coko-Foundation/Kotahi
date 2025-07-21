@@ -55,6 +55,12 @@ const PublishWrapper = styled.div`
   }
 `
 
+const PublishWrapper = styled.div`
+  div {
+    margin-bottom: ${grid(2)};
+  }
+`
+
 const Publish = ({
   manuscript,
   publishManuscript,
