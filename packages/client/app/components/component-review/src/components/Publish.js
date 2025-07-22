@@ -55,12 +55,6 @@ const PublishWrapper = styled.div`
   }
 `
 
-const PublishWrapper = styled.div`
-  div {
-    margin-bottom: ${grid(2)};
-  }
-`
-
 const Publish = ({
   manuscript,
   publishManuscript,
@@ -148,12 +142,14 @@ const Publish = ({
               </Trans>
             )}
 
-            {!manuscript.published && notAccepted && areVerdictOptionsComplete && (
-              <div>
-                <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
-                {doiMessage}
-              </div>
-            )}
+            {!manuscript.published &&
+              notAccepted &&
+              areVerdictOptionsComplete && (
+                <div>
+                  <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
+                  {doiMessage}
+                </div>
+              )}
             {!manuscript.published &&
               !(notAccepted && areVerdictOptionsComplete) && (
                 <div>

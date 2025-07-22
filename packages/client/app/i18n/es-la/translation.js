@@ -1387,7 +1387,6 @@ const esLa = {
         dois: 'Múltiples dois',
         divider: 'Separador',
         doiSuffix: 'Sufijo DOI"',
-        divider: 'Separador',
         sourceUri: 'URI de la fuente del manuscrito',
         customStatus: 'Estado personalizado',
         editDate: 'Fecha de última edición (solo lectura)',
