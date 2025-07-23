@@ -151,4 +151,5 @@ module.exports = {
     },
   ],
   jobQueues,
+  tokenExpiresIn: '7 days',
 }
