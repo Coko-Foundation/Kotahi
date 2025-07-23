@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client'
+import { useApolloClient, useMutation, useQuery } from '@apollo/client'
 import { throttle } from 'lodash'
 import PropTypes from 'prop-types'
 import React, { useContext, useEffect, useRef } from 'react'
@@ -116,6 +116,7 @@ const AdminPage = () => {
   const { urlFrag, instanceName } = config
   const location = useLocation()
   const { t } = useTranslation()
+  const client = useApolloClient()
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
     fetchPolicy: 'network-only',
@@ -152,6 +153,12 @@ const AdminPage = () => {
     if (error?.networkError) {
       notice = 'You are offline.'
     } else {
+      if (localStorage.getItem('token') !== null) {
+        localStorage.removeItem('token')
+      }
+
+      client.cache.reset()
+
       localStorage.setItem('intendedPage', location.pathname + location.search)
       const redirectlocation = `${urlFrag}/login`
       return <Redirect to={redirectlocation} />
