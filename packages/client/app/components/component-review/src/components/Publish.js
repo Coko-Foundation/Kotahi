@@ -69,7 +69,6 @@ const Publish = ({
   const [publishResponse, setPublishResponse] = useState(null)
   const [publishAdaResponse, setPublishAdaResponse] = useState(null)
   const [publishingError, setPublishingError] = useState(null)
-  // const [publishingErrorDetails, setPublishingErrorDetails] = useState(null)
   const { t } = useTranslation()
 
   const notAccepted = !['accepted', 'published', 'unpublished'].includes(
