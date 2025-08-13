@@ -4,7 +4,7 @@
     "secondaryColor": "rgb(10, 157, 217)",
     "tertiaryColor": "rgba(0, 0, 0, 0)",
     "logoPath": "/logo-elife.svg",
-    "brandName": "single_form"
+    "brandName": "eLife"
   },
   "preprint2": {
     "primaryColor": "#3aae2a",
@@ -16,6 +16,6 @@
     "primaryColor": "#bc2325",
     "secondaryColor": "#bc2325",
     "logoPath": "/biophysics-colab.png",
-    "brandName": "prc"
+    "brandName": "Colab"
   }
 }

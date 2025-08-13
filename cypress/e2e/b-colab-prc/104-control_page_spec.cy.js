@@ -301,6 +301,7 @@ describe('control page tests', () => {
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.selectOptionWithText('Control')
       cy.awaitDisappearSpinner()
+      cy.contains('Tasks & Notifications').click()
     })
 
     it('sending notification to unregistered user', () => {
@@ -309,27 +310,28 @@ describe('control page tests', () => {
         title: 'First task for unregistered user',
       })
 
-      // eslint-disable-next-line cypress/unsafe-to-chain-command
-      cy.get('[data-cy="new-user-email"]')
-        .focus()
-        .type('uku.sidorela@gmail.com')
+      cy.get('[data-cy="new-user-email"]').should('be.visible')
+      cy.get('[data-cy="new-user-email"]').type('uku.sidorela@gmail.com', {
+        delay: 10,
+      })
       cy.get('[data-cy="new-user-name"]').type('QA tester')
-      // cy.contains('Unregistered User').click({ force: true})
-      // cy.get('#react-select-12-option-0-0').click({ force: true })
+
+      cy.get('[data-cy="new-user-email"]').should(
+        'have.value',
+        'uku.sidorela@gmail.com',
+      )
+      cy.get('[data-cy="new-user-name"]').should('have.value', 'QA tester')
     })
 
-    // The following is a flaky test
-    it.skip('sending 3 notifications via task details modal', () => {
+    it('sending 3 notifications via task details modal', () => {
       createTask({
-        assignee: 'Reviewer',
+        assignee: 'Collaborative reviewer',
         title: 'First task for registered users',
       })
       cy.get('[class*=MinimalButton]').last().click()
       cy.get('[class*=Task__EditLabel]').last().click()
       cy.contains('Task details').should('exist')
       cy.contains('span', 'Add Notification Recipient').should('be.visible')
-      // cy.contains('span', 'Add Notification Recipient').click()
-      // cy.contains('button', 'Add Notification Recipient').click()
       cy.contains('button', 'Add Notification Recipient').click()
 
       cy.contains('button', 'Add Notification Recipient')
@@ -424,10 +426,22 @@ function sendNotification({
 }
 
 function createTask({ assignee, title }) {
-  cy.contains('Tasks & Notifications').click()
   cy.get('[title="Add a new task"]').click()
-  cy.get('[class*="TextInput__StyledInput"]:last').type(title)
-  cy.get('[data-testid="Assignee_select"]').last().type(`${assignee}{enter}`)
+
+  cy.get('[class*="TextInput__StyledInput"]:last').type(`${title}`)
+
+  // Open the assignee select field
+  cy.get('[data-testid="Assignee_select"]').last().click()
+
+  cy.get('[data-testid="Assignee_select"] input').last().type(`${assignee}`, {
+    delay: 100,
+  })
+
+  // Wait for the dropdown option to appear and click it
+  cy.get('.react-select__option:last')
+    .contains(`${assignee}`)
+    .should('be.visible')
+    .click()
 }
 
 function sendTaskNotification({ recipient, template }) {

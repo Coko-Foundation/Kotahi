@@ -39,7 +39,7 @@ describe('Completing a decision', () => {
     })
   })
 
-  it('editor decided "revise" and then then author submits new version', () => {
+  it('editor decided "revise" and then the author submits a new version', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       ControlPage.clickDecisionTextInput()
