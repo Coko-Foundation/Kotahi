@@ -1414,6 +1414,7 @@ const ru = {
       decision: {
         title: 'Конструктор формы решения',
       },
+      errorIncompleteOption: 'Заполните и Метку, и Внутреннее имя',
     },
     fields: {
       uploadAttachmentSource: {

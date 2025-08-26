@@ -1438,6 +1438,8 @@ const fr = {
       decision: {
         title: 'Créateur de formulaire de décision',
       },
+      errorIncompleteOption:
+        'Remplissez à la fois le libellé et le nom interne',
     },
     fields: {
       uploadAttachmentSource: {

@@ -1395,6 +1395,7 @@ const en = {
       decision: {
         title: 'Decision Form Builder',
       },
+      errorIncompleteOption: 'Fill both Label and Internal name',
     },
     fields: {
       uploadAttachmentSource: {
