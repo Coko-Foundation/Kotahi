@@ -475,6 +475,7 @@ const propertiesOrder = [
   's3Region',
   's3AccessId',
   's3AccessToken',
+  'isReadOnly',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',

@@ -191,7 +191,7 @@ const FieldSettingsModal = ({
           prepareForSubmit(
             values,
             componentOption.props,
-            fieldOption.isReadOnly,
+            fieldOption.isReadOnly || values.isReadOnly,
             fieldOption.isS3Component,
           ),
         )
