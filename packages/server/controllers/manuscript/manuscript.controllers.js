@@ -594,8 +594,12 @@ const getManuscriptFiles = async (manuscriptId, manuscriptFiles) => {
     if (f.meta.formElementId && f.tags.includes('externalAttachmentSource')) {
       const element = formsElements.find(el => el.id === f.meta.formElementId)
       s3 = {
-        accessKeyId: decrypt(element.s3AccessId),
-        secretAccessKey: decrypt(element.s3AccessToken),
+        accessKeyId: element.s3AccessId
+          ? decrypt(element.s3AccessId)
+          : element.s3AccessId,
+        secretAccessKey: element.s3AccessToken
+          ? decrypt(element.s3AccessToken)
+          : element.s3AccessToken,
         bucket: element.s3Bucket,
         region: element.s3Region,
         url: element.s3Url,

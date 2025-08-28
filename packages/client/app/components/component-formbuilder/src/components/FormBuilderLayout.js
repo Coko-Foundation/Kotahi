@@ -80,22 +80,22 @@ const getFormsOrderedActiveFirstThenAlphabetical = forms => {
 }
 
 const FormBuilderLayout = ({
-  forms,
-  selectedFormId,
-  selectedFieldId,
   category,
-  deleteForm,
+  createForm,
   deleteField,
+  deleteForm,
   dragField,
+  forms,
   moveFieldDown,
   moveFieldUp,
-  updateForm,
-  createForm,
-  updateField,
+  selectedFieldId,
+  selectedFormId,
   setSelectedFieldId,
   setSelectedFormId,
   shouldAllowAiPrompt,
   shouldAllowHypothesisTagging,
+  updateField,
+  updateForm,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formId, setFormId] = useState()

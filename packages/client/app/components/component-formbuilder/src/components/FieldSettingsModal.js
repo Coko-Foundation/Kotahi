@@ -188,7 +188,12 @@ const FieldSettingsModal = ({
       initialValues={initialValues}
       onSubmit={(values, actions) => {
         onSubmit(
-          prepareForSubmit(values, componentOption.props, fieldOption.readonly),
+          prepareForSubmit(
+            values,
+            componentOption.props,
+            fieldOption.isReadOnly,
+            fieldOption.isS3Component,
+          ),
         )
         actions.resetForm()
         onClose()
@@ -403,7 +408,7 @@ FieldSettingsModal.defaultProps = {}
  * field/component, and removes any unsupported options. It also adds a uuid to
  * every item in an array property.
  */
-const prepareForSubmit = (values, fieldProps, readonly) => {
+const prepareForSubmit = (values, fieldProps, isReadOnly, isS3Component) => {
   const cleanedValues = Object.fromEntries(
     Object.entries(fieldProps)
       .map(([propName, prop]) => {
@@ -443,7 +448,8 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
   )
 
   cleanedValues.component = values.component
-  cleanedValues.readonly = readonly
+  cleanedValues.isReadOnly = isReadOnly
+  cleanedValues.isS3Component = isS3Component
   cleanedValues.validateValue = Object.keys(values.validateValue || {}).length
     ? values.validateValue
     : null
