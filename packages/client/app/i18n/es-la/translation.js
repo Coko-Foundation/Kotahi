@@ -512,7 +512,7 @@ const esLa = {
       hourManuscriptsImported:
         'Hora a la que los manuscritos se importan diariamente (UTC)',
       daysManuscriptRemain:
-        'Número de días que un manuscrito debe permanecer en la página de Manuscritos antes de ser archivado automáticamente',
+        'Número de días que un manuscrito debe permanecer en la página de Manuscritos antes de ser archivado automáticamente (déjelo vacío si no desea utilizar el archivado automático)',
       importFromSematic:
         'Importar manuscritos de Semantic Scholar no más antiguos que ‘x’ días',
       newSubmissionActionVisisble:

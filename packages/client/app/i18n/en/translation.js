@@ -509,7 +509,7 @@ const en = {
         'Number of manuscripts listed per page on the Manuscripts page',
       hourManuscriptsImported: 'Hour when manuscripts are imported daily (UTC)',
       daysManuscriptRemain:
-        'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+        'Number of days a manuscript should remain in the Manuscripts page before being automatically archived (leave empty if you do not wish to use auto-archiving)',
       importFromSematic:
         'Import manuscripts from Semantic Scholar no older than ‘x’ number of days',
       newSubmissionActionVisisble:
