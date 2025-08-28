@@ -1,11 +1,13 @@
 const axios = require('axios')
-const { logger } = require('@coko/server')
+const { File, fileStorage, logger } = require('@coko/server')
+const config = require('config')
 const htmlToJats = require('../../jatsexport/htmlToJats')
 
 const {
   getContributor,
   getLicenses,
   getFundingReferences,
+  getFormattedFiles,
 } = require('./fieldsTransformers')
 
 const getAdaURL = useSandbox => {
@@ -17,13 +19,20 @@ const getAdaURL = useSandbox => {
 const requestToAda = (method, path, payload) => {
   const url = getAdaURL(true)
 
-  const Authorization = `Api-Key ${process.env.ADA_KEY}`
+  if (!config.has('adaKey')) {
+    throw new Error(
+      'Cannot publish to Astromat ADA. ADA Key is missing in the environment variables',
+    )
+  }
+
+  const Authorization = `Api-Key ${config.get('adaKey')}`
 
   const options = {
     method,
     url: `${url}/${path}`,
     headers: {
       accept: 'application/json',
+      'Content-Type': 'application/json',
       Authorization,
     },
   }
@@ -35,9 +44,14 @@ const requestToAda = (method, path, payload) => {
   return axios.request(options)
 }
 
-const getPayload = async ({ submission }, doiStatus) => {
+const getPayload = async (
+  { id: manuscriptId, parentId, submission },
+  doiStatus,
+  currentProcessStatus = 'Processed',
+) => {
   const {
     adaProcessStatus,
+    adaState,
     contributors,
     $abstract,
     $authors,
@@ -46,61 +60,208 @@ const getPayload = async ({ submission }, doiStatus) => {
     $title: title,
   } = submission
 
-  let processStatus = doiStatus === 'findable' ? 'Processing' : adaProcessStatus
-
-  if (doiStatus === 'publish') {
-    processStatus = 'Published'
+  let payload = {
+    creators: $authors?.map(getContributor(false)) ?? [],
+    title,
+    submissionType: 'Regular',
   }
 
-  const payload = {
-    submissionType: 'Regular',
-    creators: $authors?.map(getContributor) ?? [],
-    contributors: contributors?.map(getContributor) ?? [],
-    title,
+  if (!doiStatus) {
+    return payload
+  }
+
+  if (doiStatus === 'process') {
+    return {}
+  }
+
+  if (doiStatus === 'findable') {
+    return currentProcessStatus === 'Processed'
+      ? {
+          processStatus: 'Calibration and Validation',
+        }
+      : { doiStatus }
+  }
+
+  const processStatus = adaProcessStatus
+
+  if (doiStatus === 'publish') {
+    return { processStatus: 'Published' }
+  }
+
+  let processPath = ''
+
+  const manuscriptFiles = await File.query().where({ objectId: manuscriptId })
+
+  if (manuscriptFiles.length) {
+    processPath = `${manuscriptFiles[0].meta.bucket || fileStorage.bucket}/${
+      parentId || manuscriptId
+    }`
+  }
+
+  payload = {
+    ...payload,
+    contributors: contributors?.map(getContributor(true)) ?? [],
     description: $abstract ? htmlToJats($abstract) : null,
+    files: getFormattedFiles(manuscriptFiles),
     funding: getFundingReferences(submission),
     licenses: getLicenses(submission),
     fundingDescription: submission.fundingDescription || null,
     generalType,
     specificType,
     publicationDate: new Date().toISOString(),
+    processPath,
   }
 
-  if (processStatus !== submission.adaProcessStatus) {
+  if (processStatus !== adaProcessStatus) {
     payload.processStatus = processStatus
   }
 
-  if (doiStatus !== submission.adaState) {
+  if (adaState && doiStatus !== adaState) {
     payload.doiStatus = doiStatus
   }
 
-  return { payload }
+  return payload
 }
 
-const publishToAda = async (manuscript, adaState = 'draft') => {
+const publishToAda = async (manuscript, newAdaState = 'draft') => {
   const {
-    submission: { $doi = null },
+    submission: {
+      $doi = null,
+      adaId = null,
+      adaJobDetails = null,
+      adaJobId = null,
+      adaJobStatus = null,
+      adaProcessStatus = null,
+      adaState: oldAdaState = null,
+    },
   } = manuscript
 
-  const method = $doi ? 'PATCH' : 'POST'
+  let method = 'POST'
+  let path = 'api/record/'
 
-  if (adaState === 'publish') {
-    const result = await requestToAda(method, `api/record/${$doi}`)
+  let payload = await getPayload(manuscript, null)
 
-    if (result.data.status !== 'Calibration and Validation') {
-      throw new Error(
-        `Cannot publish to Astromat ADA. The submission is not in Calibration and Validation status. Current status is ${result.data.status}`,
-      )
+  let response = {
+    adaState: newAdaState,
+    adaProcessStatus,
+    doi: $doi,
+    adaId,
+    adaJobId,
+    adaJobDetails,
+    adaJobStatus,
+  }
+
+  if (!oldAdaState && newAdaState === 'draft') {
+    const { data: draftData } = await requestToAda(method, path, payload)
+    const { doi, doiStatus, id, processStatus } = draftData
+
+    response = {
+      ...response,
+      adaId: id,
+      doi,
+      doiStatus,
+      adaProcessStatus: processStatus,
     }
   }
 
-  const { payload } = await getPayload(manuscript, adaState)
+  if (oldAdaState === 'draft' && newAdaState === 'process' && adaId) {
+    method = 'PATCH'
+    path = `api/record/${$doi}`
+    payload = await getPayload(manuscript, oldAdaState)
 
-  logger.info(JSON.stringify(payload))
+    await requestToAda(method, path, payload)
 
-  return requestToAda(method, `api/record/${$doi || ''}`, payload)
+    method = 'POST'
+    path = `api/process/${adaId}`
+    payload = await getPayload(manuscript, newAdaState)
+
+    const { data: processData } = await requestToAda(method, path, payload)
+
+    const { jobId } = processData
+
+    response = { ...response, adaJobId: jobId }
+  }
+
+  if (
+    oldAdaState === 'process' &&
+    newAdaState === 'findable' &&
+    adaProcessStatus === 'Processed'
+  ) {
+    method = 'PATCH'
+    path = `api/record/${$doi}`
+    payload = await getPayload(manuscript, newAdaState, adaProcessStatus)
+
+    const { data: calibPatchData } = await requestToAda(method, path, payload)
+
+    const { processStatus } = calibPatchData
+    payload = await getPayload(manuscript, newAdaState, processStatus)
+
+    const { data: findablePatchData } = await requestToAda(
+      method,
+      path,
+      payload,
+    )
+
+    const { doiStatus } = findablePatchData
+
+    response = {
+      ...response,
+      adaState: doiStatus,
+      adaProcessStatus: processStatus,
+    }
+  }
+
+  if (
+    oldAdaState === 'findable' &&
+    newAdaState === 'publish' &&
+    adaProcessStatus === 'Calibration and Validation'
+  ) {
+    method = 'PATCH'
+    path = `api/record/${$doi}`
+    payload = await getPayload(manuscript, newAdaState)
+
+    const { data: publishData } = await requestToAda(method, path, payload)
+
+    const { processStatus } = publishData
+
+    response = { ...response, adaProcessStatus: processStatus }
+  }
+
+  logger.info('ADA payload', JSON.stringify(payload))
+
+  return response
+}
+
+const getAdaJobStatus = async submission => {
+  const {
+    $doi = null,
+    adaJobId = null,
+    adaProcessStatus: oldAdaProcessStatus = null,
+  } = submission
+
+  let adaProcessStatus = oldAdaProcessStatus
+
+  const method = 'GET'
+  let path = `api/job/${adaJobId}`
+
+  const { data: jobData } = await requestToAda(method, path, {})
+
+  if (jobData.jobStatus === 'Succeeded') {
+    path = `api/record/${$doi}`
+
+    const { data: recordData } = await requestToAda(method, path, {})
+
+    adaProcessStatus = recordData.processStatus
+  }
+
+  return {
+    adaJobDetails: jobData.jobDetails,
+    adaJobStatus: jobData.jobStatus,
+    adaProcessStatus,
+  }
 }
 
 module.exports = {
   publishToAda,
+  getAdaJobStatus,
 }

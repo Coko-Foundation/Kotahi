@@ -105,6 +105,7 @@ extend type Mutation {
   unarchiveManuscripts(ids: [ID]!): [ID!]!
   assignAuthorForProofingManuscript(id: ID!): Manuscript!
   updateAda(id: ID!, adaState: String!): PublishingResult!
+  refreshAdaStatus(id: ID!): Manuscript!
 }
 
 type Manuscript {

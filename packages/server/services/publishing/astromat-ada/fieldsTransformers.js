@@ -1,4 +1,4 @@
-const getContributor = author => {
+const getContributor = isContributor => author => {
   if (!author.firstName || !author.lastName)
     throw new Error(`Incomplete author record ${JSON.stringify(author)}`)
 
@@ -8,6 +8,7 @@ const getContributor = author => {
     email: author.email || '',
     orcid: author.orcid || 'https://orcid.org/0009-0003-8157-0637',
     ror: author.ror || '',
+    ...(isContributor ? { contributorType: 'Researcher' } : {}),
   }
 
   return contributor
@@ -74,8 +75,24 @@ const getFundingReferences = submission => {
   return fundingReferences
 }
 
+const getFormattedFiles = files => {
+  return files.map(file => {
+    // not needed currently, but may be in the future
+    // const originalMetadata = file.storedObjects.find(o => o.type === 'original')
+    // const { bucket } = file.meta
+
+    return {
+      generalType: 'Image',
+      name: file.name,
+      // not needed currently, but may be in the future
+      //   processPath: `${bucket}/${originalMetadata.key}`,
+    }
+  })
+}
+
 module.exports = {
   getContributor,
+  getFormattedFiles,
   getFundingReferences,
   getLicenses,
 }

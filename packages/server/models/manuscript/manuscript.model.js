@@ -255,6 +255,17 @@ class Manuscript extends BaseModel {
     newVersion.parentId = this.parentId || this.id
 
     newVersion.authorFeedback = {}
+
+    // remove existing ADA data from submission
+    if (newVersion.submission.adaState) delete newVersion.submission.adaState
+    if (newVersion.submission.adaProcessStatus)
+      delete newVersion.submission.adaProcessStatus
+    if (newVersion.submission.adaId) delete newVersion.submission.adaId
+    if (newVersion.submission.adaJobId) delete newVersion.submission.adaJobId
+    if (newVersion.submission.adaJobDetails)
+      delete newVersion.submission.adaJobDetails
+    if (newVersion.submission.jobStatus) delete newVersion.submission.jobStatus
+
     evictFromCache(`subVersionsOfMs:${newVersion.parentId}`)
 
     const manuscript = await Manuscript.query().insertGraphAndFetch(

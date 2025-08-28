@@ -26,6 +26,7 @@ const DecisionVersions = ({
   form,
   handleChange,
   hideChat,
+  onRefreshAdaStatus,
   updateManuscript,
   manuscript,
   sendNotifyEmail,
@@ -145,6 +146,7 @@ const DecisionVersions = ({
                 makeDecision={makeDecision}
                 manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
+                onRefreshAdaStatus={onRefreshAdaStatus}
                 parent={firstVersion.manuscript}
                 publishManuscript={publishManuscript}
                 queryAI={queryAI}

@@ -55,13 +55,21 @@ const PublishWrapper = styled.div`
   }
 `
 
+const AdaStatusWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${grid(2)};
+  margin-bottom: ${grid(2)};
+`
+
 const Publish = ({
-  manuscript,
-  publishManuscript,
-  updateAda,
-  dois,
   areVerdictOptionsComplete,
+  dois,
+  manuscript,
+  onRefreshAdaStatus,
+  publishManuscript,
   unpublish,
+  updateAda,
 }) => {
   // Hooks from the old world
   const config = useContext(ConfigContext)
@@ -69,6 +77,9 @@ const Publish = ({
   const [publishResponse, setPublishResponse] = useState(null)
   const [publishAdaResponse, setPublishAdaResponse] = useState(null)
   const [publishingError, setPublishingError] = useState(null)
+
+  const [isRefreshingAdaStatus, setIsRefreshingAdaStatus] = useState(false)
+
   const { t } = useTranslation()
 
   const notAccepted = !['accepted', 'published', 'unpublished'].includes(
@@ -121,7 +132,22 @@ const Publish = ({
       })
   }
 
+  const handleRefreshAdaStatus = () => {
+    setIsRefreshingAdaStatus(true)
+
+    onRefreshAdaStatus({ variables: { id: manuscript.id } }).finally(() => {
+      setIsRefreshingAdaStatus(false)
+    })
+  }
+
   const adaState = manuscript.submission?.adaState
+  const adaProcessStatus = manuscript.submission?.adaProcessStatus
+  const adaJobId = manuscript.submission?.adaJobId
+  const adaJobStatus = manuscript.submission?.adaJobStatus
+  const adaJobDetails = manuscript.submission?.adaJobDetails
+
+  const adaJobFailed = adaJobStatus === 'Failed' && !!adaJobDetails
+  const adaDisplayStatus = adaJobFailed ? adaJobStatus : adaProcessStatus
 
   return (
     <PublishWrapper>
@@ -210,6 +236,24 @@ const Publish = ({
                   <Legend>
                     {t('decisionPage.decisionTab.PublishingAdaState')}
                   </Legend>
+                  {adaProcessStatus && adaJobId && (
+                    <AdaStatusWrapper>
+                      <span>
+                        {t('decisionPage.decisionTab.currentAdaStatus')}:
+                      </span>
+                      <span>{adaDisplayStatus}</span>
+                      {adaJobFailed && (
+                        <Alert type="error">{adaJobDetails}</Alert>
+                      )}
+                      <Button
+                        disabled={isRefreshingAdaStatus}
+                        onClick={handleRefreshAdaStatus}
+                        primary
+                      >
+                        {t('decisionPage.decisionTab.refreshAdaStatus')}
+                      </Button>
+                    </AdaStatusWrapper>
+                  )}
                   <ValidatedFieldFormik
                     component={RadioBox}
                     name="adaState"
@@ -220,18 +264,28 @@ const Publish = ({
                       {
                         value: 'draft',
                         label: t('decisionPage.decisionTab.Draft'),
-                        disabled:
-                          adaState === 'findable' || adaState === 'publish',
+                        disabled: !!adaState,
+                      },
+                      {
+                        value: 'process',
+                        label: t('decisionPage.decisionTab.Process'),
+                        disabled: adaState !== 'draft',
                       },
                       {
                         value: 'findable',
                         label: t('decisionPage.decisionTab.Findable'),
-                        disabled: adaState === null || adaState === 'publish',
+                        disabled: !(
+                          adaState === 'process' &&
+                          adaProcessStatus === 'Processed'
+                        ),
                       },
                       {
                         value: 'publish',
                         label: t('decisionPage.decisionTab.Publish'),
-                        disabled: adaState === null || adaState === 'draft',
+                        disabled: !(
+                          adaState === 'findable' &&
+                          adaProcessStatus === 'Calibration and Validation'
+                        ),
                       },
                     ]}
                     value={values.adaState}

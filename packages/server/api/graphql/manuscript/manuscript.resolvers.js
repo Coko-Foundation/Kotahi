@@ -16,6 +16,7 @@ const {
   submitManuscript,
   makeDecision,
   addReviewer,
+  refreshAdaStatus,
   removeReviewer,
   setShouldPublishField,
   publishManuscript,
@@ -173,6 +174,10 @@ const resolvers = {
 
     async updateAda(_, { id, adaState }, ctx) {
       return updateAda(id, adaState)
+    },
+
+    async refreshAdaStatus(_, { id }, ctx) {
+      return refreshAdaStatus(id)
     },
   },
   Subscription: {
