@@ -55,6 +55,7 @@ const DecisionVersion = ({
   parent,
   updateManuscript, // To handle manuscript editing
   onChange, // To handle form editing
+  onRefreshAdaStatus,
   makeDecision,
   lockUnlockReview,
   sendNotifyEmail,
@@ -552,6 +553,7 @@ const DecisionVersion = ({
                 areVerdictOptionsComplete={areVerdictOptionsComplete}
                 dois={dois}
                 manuscript={version}
+                onRefreshAdaStatus={onRefreshAdaStatus}
                 publishManuscript={publishManuscript}
                 unpublish={unpublish}
                 updateAda={updateAda}

@@ -35,7 +35,12 @@ const { cachedGet } = require('../../services/queryCache.service')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
 const { publishToDatacite } = require('../../services/publishing/datacite')
-const { publishToAda } = require('../../services/publishing/astromat-ada')
+
+const {
+  publishToAda,
+  getAdaJobStatus,
+} = require('../../services/publishing/astromat-ada')
+
 const { publishToDOAJ } = require('../../services/publishing/doaj')
 const publishToGoogleSpreadSheet = require('../../services/publishing/google-spreadsheet')
 const { tryPublishDocMaps } = require('../../services/publishing/docmaps')
@@ -1557,7 +1562,7 @@ const updateAda = async (id, adaState) => {
     const steps = []
 
     try {
-      const { data } = await publishToAda(manuscript, adaState)
+      const data = await publishToAda(manuscript, adaState)
 
       steps.push({
         stepLabel: 'Publishing to ADA',
@@ -1566,21 +1571,28 @@ const updateAda = async (id, adaState) => {
 
       update.submission = JSON.stringify({
         ...manuscript.submission,
-        adaState,
-        adaProcessStatus: data.processStatus,
+        adaState: data.adaState,
+        adaProcessStatus: data.adaProcessStatus,
         $doi: data.doi,
+        adaId: data.adaId,
+        adaJobId: data.adaJobId,
       })
 
       updatedManuscript = await Manuscript.query().patchAndFetchById(id, update)
     } catch (err) {
       console.error(err)
+
+      const errorData = err.response?.data || {}
+
+      const errorDetails = Array.isArray(errorData)
+        ? errorData
+        : Object.entries(errorData).map(([key, value]) => `${key}: ${value}`)
+
       steps.push({
         stepLabel: 'Publishing to ADA',
         succeeded: false,
-        errorMessage: err.message,
-        errorDetails: Object.entries(err.response.data).map(
-          ([key, value]) => `${key}: ${value}`,
-        ),
+        errorMessage: err.message || 'Unknown error',
+        errorDetails,
       })
     }
 
@@ -1588,6 +1600,33 @@ const updateAda = async (id, adaState) => {
   }
 
   return { manuscript: null, steps: [] }
+}
+
+const refreshAdaStatus = async id => {
+  let manuscript = await Manuscript.findById(id)
+
+  const { submission } = manuscript
+
+  if (!submission.adaJobId) return manuscript
+
+  const { adaJobDetails, adaJobStatus, adaProcessStatus } =
+    await getAdaJobStatus(submission)
+
+  if (
+    submission.adaState === 'process' &&
+    submission.adaProcessStatus === 'Pending'
+  ) {
+    manuscript = await Manuscript.patchAndFetchById(id, {
+      submission: {
+        ...submission,
+        adaJobDetails,
+        adaJobStatus,
+        adaProcessStatus,
+      },
+    })
+  }
+
+  return manuscript
 }
 
 const publishOnCMS = async (groupId, manuscriptId) => {
@@ -2205,6 +2244,7 @@ module.exports = {
   publishedManuscripts,
   publishedReviewUsers,
   publishManuscript,
+  refreshAdaStatus,
   removeAuthor,
   removeReviewer,
   reviewerResponse,

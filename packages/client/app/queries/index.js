@@ -64,6 +64,15 @@ export const ADD_EMAIL_TO_BLACKLIST = gql`
   }
 `
 
+export const REFRESH_ADA_STATUS = gql`
+  mutation ($id: ID!) {
+    refreshAdaStatus(id: $id) {
+      id
+      submission
+    }
+  }
+`
+
 export const GET_MESSAGE_BY_ID = gql`
   query messageById($messageId: ID) {
     message(messageId: $messageId) {
