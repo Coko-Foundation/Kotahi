@@ -1424,6 +1424,8 @@ const esLa = {
       decision: {
         title: 'Constructor de Formularios de Decisión',
       },
+      errorIncompleteOption:
+        'Complete tanto la etiqueta como el nombre interno',
     },
     fields: {
       uploadAttachmentSource: {
