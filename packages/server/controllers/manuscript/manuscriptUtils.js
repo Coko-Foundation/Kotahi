@@ -351,11 +351,15 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
     searchFilter && formatSearchQueryForPostgres(searchFilter.value)
 
   if (searchQuery) {
-    addSelect(`ts_rank_cd(search_tsvector, '${searchQuery}') AS rank`)
     addSelect(
-      `ts_headline('english', searchable_text, '${searchQuery}') AS snippet`,
+      `ts_rank_cd(to_tsvector('english', m.searchable_text), to_tsquery('english', '${searchQuery}')) AS rank`,
     )
-    addWhere(`m.search_tsvector @@ to_tsquery('${searchQuery}')`)
+    addSelect(
+      `ts_headline('english', m.searchable_text, to_tsquery('english', '${searchQuery}')) AS snippet`,
+    )
+    addWhere(
+      `to_tsvector('english', m.searchable_text) @@ to_tsquery('english', '${searchQuery}')`,
+    )
     setOrderOnRank = 'ORDER BY rank DESC'
   }
 
