@@ -153,6 +153,7 @@ const esLa = {
       Updated: 'Actualizado',
       lastReviewerStatusUpdate: 'Actualización del estado del último revisor',
       Status: 'Estado',
+      adaState: 'ADA Estado',
       'Your Status': 'Tu Estado',
       Title: 'Título',
       Version: 'Versión',
@@ -281,13 +282,13 @@ const esLa = {
         notCurrentVersion:
           'Esta no es la versión actual, sino una versión archivada de solo lectura del manuscrito.',
         'Completed Reviews': 'Revisiones Completadas',
-        'Collaborative Reviews': 'Revisiones Collaborativas',
+        'Collaborative Reviews': 'Revisiones Colaborativas',
         noReviews: 'Aún no se han completado revisiones.',
         reviewNum: 'Revisión {{num}}',
         'Anonmyous Reviewer': 'Revisor Anónimo',
-        'Hide review': 'Ocultar revisión',
-        'Hide reviewer name': 'Ocultar nombre del revisor',
-        lockReview: 'Revisión de bloqueo',
+        'Hide review': 'Ocultar Revisión',
+        'Hide reviewer name': 'Ocultar Nombre del Revisor',
+        lockReview: 'Bloquear Revisión',
         reviewModalShow: 'Mostrar',
         reviewModalHide: 'Ocultar',
         Submit: 'Enviar',
@@ -296,6 +297,14 @@ const esLa = {
           'Solo puedes publicar las presentaciones aceptadas.',
         publishingNewEntry:
           'La publicación agregará una nueva entrada en el sitio web público y no se puede deshacer.',
+        currentAdaStatus: 'Estado de ADA',
+        refreshAdaStatus: 'Actualizar Estado de ADA',
+        UpdateAda: 'Actualizar ADA',
+        PublishingAda: 'Publicar con ADA',
+        PublishingAdaState: 'Estado de ADA',
+        Draft: 'Redactar',
+        Findable: 'Hacer Localizable',
+        Process: 'Procesar',
         Publish: 'Publicar',
         Republish: 'Volver a Publicar',
         Unpublish: 'Despublicar',
@@ -512,7 +521,7 @@ const esLa = {
       hourManuscriptsImported:
         'Hora a la que los manuscritos se importan diariamente (UTC)',
       daysManuscriptRemain:
-        'Número de días que un manuscrito debe permanecer en la página de Manuscritos antes de ser archivado automáticamente',
+        'Número de días que un manuscrito debe permanecer en la página de Manuscritos antes de ser archivado automáticamente (déjelo vacío si no desea utilizar el archivado automático)',
       importFromSematic:
         'Importar manuscritos de Semantic Scholar no más antiguos que ‘x’ días',
       newSubmissionActionVisisble:
@@ -583,6 +592,10 @@ const esLa = {
       crossrefDoiPrefix: 'Prefijo DOI de Crossref',
       crossrefPublishedArticleLocationPrefix: 'Dominio publicado por Crossref',
       crossrefUseSandbox: 'Publicar en el entorno de prueba de Crossref',
+      ada: 'Configuración ADA',
+      enableAdaPublish: 'Habilitar publicación ADA',
+      adaLogin: 'Nombre de Usuario de ADA',
+      adaPassword: 'Contraseña de ADA',
       Datacite: 'Datacite',
       dataciteLogin: 'Nombre de Usuario de Datacite',
       datacitePassword: 'Contraseña de  Datacite',
@@ -1424,6 +1437,8 @@ const esLa = {
       decision: {
         title: 'Constructor de Formularios de Decisión',
       },
+      errorIncompleteOption:
+        'Complete tanto la etiqueta como el nombre interno',
     },
     fields: {
       uploadAttachmentSource: {
@@ -1452,6 +1467,10 @@ const esLa = {
         false: 'Nunca',
         true: 'Ad hoc (El Editor decide al compartir/publicar)',
         always: 'Siempre',
+      },
+      isReadOnly: {
+        true: 'Sí',
+        false: 'No',
       },
       validate: {
         required: 'Requerido',

@@ -82,8 +82,31 @@ const notFoundError = (property, value, className) =>
   new NotFoundError(`Object not found: ${className} with ${property} ${value}`)
 
 const updateForm = async form => {
+  const originalForm = await Form.findById(form.id)
+
+  const s3Components =
+    originalForm.structure?.children?.filter(
+      c => c.uploadAttachmentSource === 'external',
+    ) || []
+
+  const s3ComponentIds = s3Components.map(s => s.id)
+
+  // eslint-disable-next-line no-param-reassign
+  form.structure.children = form.structure.children.map(c => {
+    if (s3ComponentIds.includes(c.id) && !c.s3AccessId && !c.s3AccessToken) {
+      const originalCredentials = s3Components.find(s => s.id === c.id)
+
+      return {
+        ...c,
+        s3AccessId: originalCredentials.s3AccessId,
+        s3AccessToken: originalCredentials.s3AccessToken,
+      }
+    }
+
+    return c
+  })
+
   const result = await Form.query().patchAndFetchById(form.id, form)
-  if (!result) throw new Error('Attempt to update non-existent form')
 
   const purposeIndicatingActiveForm =
     result.category === 'submission' ? 'submit' : result.category

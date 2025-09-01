@@ -698,6 +698,7 @@ const permissions = {
       userIsAdmin,
     ),
     publishManuscript: userCanPublishManuscript,
+    refreshAdaStatus: or(userIsAdmin, userIsEditor, userIsGm, userIsGroupAdmin),
     removeAuthor: or(
       userIsEditorOfAnyManuscript,
       userIsGm,
@@ -735,6 +736,7 @@ const permissions = {
     ),
     submitAuthorProofingFeedback: userIsAuthorOfManuscript,
     unarchiveManuscripts: or(userIsGm, userIsGroupAdmin, userIsAdmin),
+    updateAda: or(userIsAdmin, userIsEditor, userIsGm, userIsGroupAdmin),
     updateCollection: or(userIsGm, userIsGroupAdmin, userIsAdmin),
     updateEmail: or(userIsCurrentUser, userIsGm, userIsGroupAdmin, userIsAdmin),
     updateConfig: or(userIsGroupAdmin, userIsAdmin),

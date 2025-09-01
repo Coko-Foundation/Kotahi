@@ -152,6 +152,7 @@ const en = {
       Updated: 'Updated',
       lastReviewerStatusUpdate: 'Last Reviewer Status Update',
       Status: 'Status',
+      adaState: 'ADA State',
       'Your Status': 'Your Status',
       Title: 'Title',
       Version: 'Version',
@@ -293,6 +294,14 @@ const en = {
         publishOnlyAccepted: 'You can only publish accepted submissions.',
         publishingNewEntry:
           'Publishing will add a new entry on the public website and can not be undone.',
+        currentAdaStatus: 'Current ADA Status',
+        refreshAdaStatus: 'Refresh ADA Process Status',
+        UpdateAda: 'Update ADA',
+        PublishingAda: 'Publishing ADA',
+        PublishingAdaState: 'ADA State',
+        Draft: 'Draft',
+        Findable: 'Findable',
+        Process: 'Process',
         Publish: 'Publish',
         Republish: 'Republish',
         Unpublish: 'Unpublish',
@@ -509,7 +518,7 @@ const en = {
         'Number of manuscripts listed per page on the Manuscripts page',
       hourManuscriptsImported: 'Hour when manuscripts are imported daily (UTC)',
       daysManuscriptRemain:
-        'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
+        'Number of days a manuscript should remain in the Manuscripts page before being automatically archived (leave empty if you do not wish to use auto-archiving)',
       importFromSematic:
         'Import manuscripts from Semantic Scholar no older than ‘x’ number of days',
       newSubmissionActionVisisble:
@@ -581,6 +590,10 @@ const en = {
       doajPublishedArticleLocationPrefix: 'DOAJ published article location',
       doajUseSandbox: 'Publish to DOAJ sandbox',
       licenseUrl: 'Publication license URL',
+      ada: 'ADA Settings',
+      enableAdaPublish: 'Enable ADA Publishing',
+      adaLogin: 'ADA username',
+      adaPassword: 'ADA password',
       Datacite: 'Datacite',
       dataciteLogin: 'Datacite username',
       datacitePassword: 'Datacite password',
@@ -1395,6 +1408,7 @@ const en = {
       decision: {
         title: 'Decision Form Builder',
       },
+      errorIncompleteOption: 'Fill both Label and Internal name',
     },
     fields: {
       uploadAttachmentSource: {
@@ -1442,6 +1456,10 @@ const en = {
       format: {
         false: 'None',
         join: 'Join with commas',
+      },
+      isReadOnly: {
+        true: 'Yes',
+        false: 'No',
       },
       doiValidation: {
         true: 'Yes',

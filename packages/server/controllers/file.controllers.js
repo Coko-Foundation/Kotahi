@@ -25,18 +25,32 @@ const createFileFn = async (file, meta) => {
 
     const element = formsElements.find(el => el.id === meta.formElementId)
 
-    if (element.uploadAttachmentSource === 'external') {
-      options.s3 = {
-        accessKeyId: decrypt(element.s3AccessId),
-        secretAccessKey: decrypt(element.s3AccessToken),
-        bucket: element.s3Bucket,
-        region: element.s3Region,
-        url: element.s3Url,
+    const manuscript = await Manuscript.query()
+      .findById(meta.manuscriptId)
+      .select('parentId', 'shortId')
+
+    if (element.isS3Component) {
+      if (element.uploadAttachmentSource === 'external') {
+        options.s3 = {
+          accessKeyId: element.s3AccessId
+            ? decrypt(element.s3AccessId)
+            : element.s3AccessId,
+          secretAccessKey: element.s3AccessToken
+            ? decrypt(element.s3AccessToken)
+            : element.s3AccessToken,
+          bucket: element.s3Bucket || manuscript.shortId,
+          region: element.s3Region,
+          url: element.s3Url,
+        }
+
+        options.meta = { formElementId: element.id, bucket: options.s3.bucket }
+
+        tags.push('externalAttachmentSource')
       }
 
-      options.meta = { formElementId: element.id }
-
-      tags.push('externalAttachmentSource')
+      options.forceObjectKeyValue = `${
+        manuscript.parentId || meta.manuscriptId
+      }/${filename}`
     }
   }
 
@@ -69,8 +83,12 @@ const deleteFile = async id => {
     const element = formsElements.find(el => el.id === file.meta.formElementId)
 
     options.s3 = {
-      accessKeyId: decrypt(element.s3AccessId),
-      secretAccessKey: decrypt(element.s3AccessToken),
+      accessKeyId: element.s3AccessId
+        ? decrypt(element.s3AccessId)
+        : element.s3AccessId,
+      secretAccessKey: element.s3AccessToken
+        ? decrypt(element.s3AccessToken)
+        : element.s3AccessToken,
       bucket: element.s3Bucket,
       region: element.s3Region,
       url: element.s3Url,

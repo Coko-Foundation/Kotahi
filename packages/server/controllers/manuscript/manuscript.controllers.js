@@ -35,6 +35,12 @@ const { cachedGet } = require('../../services/queryCache.service')
 const seekEvent = require('../../services/notification.service')
 const sanitizeWaxImages = require('../../utils/sanitizeWaxImages')
 const { publishToDatacite } = require('../../services/publishing/datacite')
+
+const {
+  publishToAda,
+  getAdaJobStatus,
+} = require('../../services/publishing/astromat-ada')
+
 const { publishToDOAJ } = require('../../services/publishing/doaj')
 const publishToGoogleSpreadSheet = require('../../services/publishing/google-spreadsheet')
 const { tryPublishDocMaps } = require('../../services/publishing/docmaps')
@@ -596,8 +602,12 @@ const getManuscriptFiles = async (manuscriptId, manuscriptFiles) => {
     if (f.meta.formElementId && f.tags.includes('externalAttachmentSource')) {
       const element = formsElements.find(el => el.id === f.meta.formElementId)
       s3 = {
-        accessKeyId: decrypt(element.s3AccessId),
-        secretAccessKey: decrypt(element.s3AccessToken),
+        accessKeyId: element.s3AccessId
+          ? decrypt(element.s3AccessId)
+          : element.s3AccessId,
+        secretAccessKey: element.s3AccessToken
+          ? decrypt(element.s3AccessToken)
+          : element.s3AccessToken,
         bucket: element.s3Bucket,
         region: element.s3Region,
         url: element.s3Url,
@@ -1545,6 +1555,83 @@ const publishManuscript = async (id, groupId) => {
   return { manuscript: updatedManuscript, steps }
 }
 
+const updateAda = async (id, adaState) => {
+  const manuscript = await Manuscript.query().findById(id)
+  const activeConfig = await Config.getCached(manuscript.groupId)
+  let updatedManuscript = manuscript
+
+  if (activeConfig.formData.publishing.ada?.enableAdaPublish) {
+    const update = {}
+    const steps = []
+
+    try {
+      const data = await publishToAda(manuscript, adaState)
+
+      steps.push({
+        stepLabel: 'Publishing to ADA',
+        succeeded: true,
+      })
+
+      update.submission = JSON.stringify({
+        ...manuscript.submission,
+        adaState: data.adaState,
+        adaProcessStatus: data.adaProcessStatus,
+        $doi: data.doi,
+        adaId: data.adaId,
+        adaJobId: data.adaJobId,
+      })
+
+      updatedManuscript = await Manuscript.query().patchAndFetchById(id, update)
+    } catch (err) {
+      console.error(err)
+
+      const errorData = err.response?.data || {}
+
+      const errorDetails = Array.isArray(errorData)
+        ? errorData
+        : Object.entries(errorData).map(([key, value]) => `${key}: ${value}`)
+
+      steps.push({
+        stepLabel: 'Publishing to ADA',
+        succeeded: false,
+        errorMessage: err.message || 'Unknown error',
+        errorDetails,
+      })
+    }
+
+    return { manuscript: updatedManuscript, steps }
+  }
+
+  return { manuscript: null, steps: [] }
+}
+
+const refreshAdaStatus = async id => {
+  let manuscript = await Manuscript.findById(id)
+
+  const { submission } = manuscript
+
+  if (!submission.adaJobId) return manuscript
+
+  const { adaJobDetails, adaJobStatus, adaProcessStatus } =
+    await getAdaJobStatus(submission)
+
+  if (
+    submission.adaState === 'process' &&
+    submission.adaProcessStatus === 'Pending'
+  ) {
+    manuscript = await Manuscript.patchAndFetchById(id, {
+      submission: {
+        ...submission,
+        adaJobDetails,
+        adaJobStatus,
+        adaProcessStatus,
+      },
+    })
+  }
+
+  return manuscript
+}
+
 const publishOnCMS = async (groupId, manuscriptId) => {
   await rebuildCMSSite(groupId, { manuscriptId })
   return true // rebuildCMSSite will throw an exception on any failure, so no need to check its response
@@ -2160,6 +2247,7 @@ module.exports = {
   publishedManuscripts,
   publishedReviewUsers,
   publishManuscript,
+  refreshAdaStatus,
   removeAuthor,
   removeReviewer,
   reviewerResponse,
@@ -2171,6 +2259,7 @@ module.exports = {
   supplementaryFiles,
   unarchiveManuscripts,
   unreviewedPreprints,
+  updateAda,
   updateManuscript,
   validateDOI,
   validateSuffix,

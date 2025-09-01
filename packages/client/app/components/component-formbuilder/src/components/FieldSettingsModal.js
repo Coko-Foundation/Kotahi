@@ -183,12 +183,38 @@ const FieldSettingsModal = ({
     componentOption?.props || {},
   ).filter(([key, value]) => value.component !== 'Hidden')
 
+  // New helper to avoid no-nested-ternary
+  const buildValidate = (key, value) => {
+    if (key === 'name') {
+      return val => {
+        if (reservedFieldNames.includes(val)) return t('formBuilder.nameInUse')
+        if (value.props?.validate) return value.props.validate(val)
+        return null
+      }
+    }
+
+    if (key === 'options') {
+      return opts => {
+        const list = Array.isArray(opts) ? opts : []
+        const hasHalf = list.some(o => !!o?.label !== !!o?.value)
+        return hasHalf ? t('formBuilder.errorIncompleteOption') : undefined
+      }
+    }
+
+    return value.props?.validate
+  }
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={(values, actions) => {
         onSubmit(
-          prepareForSubmit(values, componentOption.props, fieldOption.readonly),
+          prepareForSubmit(
+            values,
+            componentOption.props,
+            fieldOption.isReadOnly || values.isReadOnly,
+            fieldOption.isS3Component,
+          ),
         )
         actions.resetForm()
         onClose()
@@ -351,17 +377,7 @@ const FieldSettingsModal = ({
                             label: t(`fields.${key}.${o.value}`),
                           }))}
                           shouldAllowFieldSpecChanges
-                          validate={
-                            key === 'name'
-                              ? val => {
-                                  if (reservedFieldNames.includes(val))
-                                    return t('formBuilder.nameInUse')
-                                  if (value.props?.validate)
-                                    return value.props.validate(val)
-                                  return null
-                                }
-                              : value.props?.validate
-                          }
+                          validate={buildValidate(key, value)} // Use helper
                         />
                         {value.props?.description && (
                           <DetailText>{value.props.description}</DetailText>
@@ -403,7 +419,7 @@ FieldSettingsModal.defaultProps = {}
  * field/component, and removes any unsupported options. It also adds a uuid to
  * every item in an array property.
  */
-const prepareForSubmit = (values, fieldProps, readonly) => {
+const prepareForSubmit = (values, fieldProps, isReadOnly, isS3Component) => {
   const cleanedValues = Object.fromEntries(
     Object.entries(fieldProps)
       .map(([propName, prop]) => {
@@ -443,7 +459,8 @@ const prepareForSubmit = (values, fieldProps, readonly) => {
   )
 
   cleanedValues.component = values.component
-  cleanedValues.readonly = readonly
+  cleanedValues.isReadOnly = isReadOnly
+  cleanedValues.isS3Component = isS3Component
   cleanedValues.validateValue = Object.keys(values.validateValue || {}).length
     ? values.validateValue
     : null

@@ -64,6 +64,15 @@ export const ADD_EMAIL_TO_BLACKLIST = gql`
   }
 `
 
+export const REFRESH_ADA_STATUS = gql`
+  mutation ($id: ID!) {
+    refreshAdaStatus(id: $id) {
+      id
+      submission
+    }
+  }
+`
+
 export const GET_MESSAGE_BY_ID = gql`
   query messageById($messageId: ID) {
     message(messageId: $messageId) {
@@ -221,6 +230,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           name
           title
           shortDescription
+          isReadOnly
           validate {
             id
             label
@@ -242,7 +252,6 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             defaultValue
             value
           }
-          readonly
         }
       }
     }

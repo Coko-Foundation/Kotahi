@@ -26,6 +26,7 @@ const DecisionVersions = ({
   form,
   handleChange,
   hideChat,
+  onRefreshAdaStatus,
   updateManuscript,
   manuscript,
   sendNotifyEmail,
@@ -57,6 +58,7 @@ const DecisionVersions = ({
   lockUnlockReview,
   dois,
   refetch,
+  updateAda,
   updateTask,
   updateTasks,
   teams,
@@ -144,6 +146,7 @@ const DecisionVersions = ({
                 makeDecision={makeDecision}
                 manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
+                onRefreshAdaStatus={onRefreshAdaStatus}
                 parent={firstVersion.manuscript}
                 publishManuscript={publishManuscript}
                 queryAI={queryAI}
@@ -165,6 +168,7 @@ const DecisionVersions = ({
                 teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
                 unpublish={unpublish}
+                updateAda={updateAda}
                 updateCollaborativeTeamMember={updateCollaborativeTeamMember}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
