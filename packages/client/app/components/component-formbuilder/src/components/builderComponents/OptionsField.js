@@ -115,6 +115,11 @@ const FileReaderComponent = ({ push, setFieldValue }) => {
     const file = acceptedFiles[0]
 
     if (file) {
+      if (file.type !== 'application/json') {
+        setError('Please select a valid JSON file.')
+        return
+      }
+
       const reader = new FileReader()
 
       reader.onload = event => {

@@ -10,14 +10,15 @@ const textfield = {
 }
 
 const showHideTextfield = (toggleShow, componentProps, additionalProps) => {
+  const { isRequired, ...restAdditionalProps } = additionalProps
   return {
     component: 'TextFieldShowHide',
     props: {
-      validate: required,
+      validate: isRequired ? required : null,
       toggleShow,
       ...componentProps,
     },
-    ...additionalProps,
+    ...restAdditionalProps,
   }
 }
 
@@ -161,6 +162,25 @@ const radiofield = {
   defaultValue: 'false',
 }
 
+const isReadOnlyField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Is read only?',
+  },
+  defaultValue: 'false',
+}
+
 const hideFromReviewersField = {
   component: 'RadioBox',
   props: {
@@ -253,6 +273,7 @@ const s3InputFields = {
     {
       title: i18next.t('fields.uploadAttachmentSource.s3Url'),
       showFieldTitle: true,
+      isRequired: true,
     },
   ),
   s3Bucket: showHideTextfield(
@@ -263,6 +284,7 @@ const s3InputFields = {
     {
       title: i18next.t('fields.uploadAttachmentSource.s3Bucket'),
       showFieldTitle: true,
+      isRequired: true,
     },
   ),
   s3Region: showHideTextfield(
@@ -271,6 +293,7 @@ const s3InputFields = {
     {
       title: i18next.t('fields.uploadAttachmentSource.s3Region'),
       showFieldTitle: true,
+      isRequired: true,
     },
   ),
   s3AccessToken: showHideTextfield(
@@ -395,7 +418,7 @@ const allowFutureDatesOnlyField = {
         label: 'No',
       },
     ],
-    label: 'Select future date only?',
+    label: 'Allow to select future dates only?',
   },
   defaultValue: 'false',
 }
@@ -419,6 +442,7 @@ const prototypeComponent = category => ({
   description: editorfield,
   validate: validateOther,
   hideFromAuthors: hideFromAuthorsField,
+  isReadOnly: isReadOnlyField,
   hideFromReviewers: category === 'review' ? null : hideFromReviewersField,
   permitPublishing: permitPublishingField,
   publishingTag: publishingTagField,
@@ -451,6 +475,7 @@ const propertiesOrder = [
   's3Region',
   's3AccessId',
   's3AccessToken',
+  'isReadOnly',
   'doiValidation', // TODO incorporate into validation
   'doiUniqueSuffixValidation', // TODO incorporate into validation
   'allowFutureDatesOnly',
@@ -610,6 +635,7 @@ const genericFieldOptions = [
     isCustom: true,
     fieldType: 's3Uploader',
     component: 'GenericFiles',
+    isS3Component: true,
     ...s3InputFields,
   },
 ]
@@ -799,7 +825,7 @@ const submissionFieldOptions = [
     component: 'TextField',
     title: requiredTextFieldWithDefault('Last edit date'),
     name: presetTextField('submission.$editDate'),
-    readonly: true,
+    isReadOnly: 'true',
     placeholder: null,
     doiValidation: null,
     doiUniqueSuffixValidation: null,
@@ -959,6 +985,8 @@ const getFieldOptions = formCategory => {
       label: opt.label,
       isCustom: opt.isCustom,
       value: opt.fieldType, // To work with Select component
+      isReadOnly: opt.isReadOnly,
+      isS3Component: opt.isS3Component,
       readonly: opt.readonly,
       componentOptions,
     })

@@ -31,15 +31,16 @@ import {
 } from './queries'
 
 import {
+  ASSIGN_AUTHOR_FOR_PROOFING,
   CREATE_MESSAGE,
+  CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
+  DELETE_TASK_NOTIFICATION,
   GET_BLACKLIST_INFORMATION,
+  REFRESH_ADA_STATUS,
   UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION,
   UPDATE_TASK,
   UPDATE_TASKS,
   UPDATE_TASK_NOTIFICATION,
-  DELETE_TASK_NOTIFICATION,
-  CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
-  ASSIGN_AUTHOR_FOR_PROOFING,
 } from '../../../../queries'
 import {
   CREATE_TEAM_MUTATION,
@@ -66,6 +67,23 @@ export const updateManuscriptMutation = gql`
     updateManuscript(id: $id, input: $input) {
       id
       ${fragmentFields}
+    }
+  }
+`
+
+export const updateAdaMutation = gql`
+  mutation ($id: ID!, $adaState: String!) {
+    updateAda(id: $id, adaState: $adaState) {
+      manuscript {
+        id
+        published
+      }
+      steps {
+        stepLabel
+        succeeded
+        errorMessage
+        errorDetails
+      }
     }
   }
 `
@@ -234,6 +252,7 @@ const DecisionPage = ({ currentUser, match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+  const [updateAda] = useMutation(updateAdaMutation)
 
   const [lockUnlockReview] = useMutation(
     lockUnlockCollaborativeReviewMutation,
@@ -426,6 +445,8 @@ const DecisionPage = ({ currentUser, match }) => {
       cache.evict({ id })
     },
   })
+
+  const [refreshAdaStatus] = useMutation(REFRESH_ADA_STATUS)
 
   // Count In the Collaborative Reviews and choose the correct one.
   const currentUserReview = getCurrentUserReview(data?.manuscript, currentUser)
@@ -709,6 +730,7 @@ const DecisionPage = ({ currentUser, match }) => {
       lockUnlockReview={lockUnlockReview}
       makeDecision={makeDecision}
       manuscript={manuscript}
+      onRefreshAdaStatus={refreshAdaStatus}
       publishManuscript={handlePublishManuscript}
       queryAI={queryAI}
       refetch={() => {
@@ -731,6 +753,7 @@ const DecisionPage = ({ currentUser, match }) => {
       teams={data?.manuscript?.teams}
       threadedDiscussionProps={threadedDiscussionProps}
       unpublish={unpublish}
+      updateAda={updateAda}
       updateCollaborativeTeamMember={updateCollaborativeTeamMember}
       updateManuscript={updateManuscript}
       updateReview={updateReview}

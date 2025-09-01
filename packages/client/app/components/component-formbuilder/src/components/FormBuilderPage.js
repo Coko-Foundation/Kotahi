@@ -30,9 +30,11 @@ structure {
     doiUniqueSuffixValidation
     allowFutureDatesOnly
     uploadAttachmentSource
+	isS3Component
     s3Url
     s3Bucket
     s3Region
+    allowFutureDatesOnly
     placeholder
     inline
     sectioncss
@@ -55,12 +57,12 @@ structure {
       maxChars
       minSize
     }
+    isReadOnly
     hideFromReviewers
     hideFromAuthors
     permitPublishing
     publishingTag
     aiPrompt
-    readonly
   }
 }
 `
