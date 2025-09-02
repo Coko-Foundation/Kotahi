@@ -1357,6 +1357,7 @@ const ru = {
         'Исправьте неверные значения перед обновлением',
       'Field inline': 'Строчное поле',
       'Field sectioncss': 'Дополнительное стили CSS',
+      'Field isReadOnly': 'Поле только для чтения?',
       'Please give the form a name.': 'Пожалуйста, дайте форме имя.',
       'Give the form a title': 'Дайте форме заголовок',
       'Edit form settings': 'Редактировать настройки формы',

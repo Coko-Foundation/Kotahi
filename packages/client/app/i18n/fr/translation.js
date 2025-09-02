@@ -1381,6 +1381,7 @@ const fr = {
         'Corriger les valeurs invalides avant la mise à jour',
       'Field inline': 'Champ en ligne',
       'Field sectioncss': 'CSS de la section du champ',
+      'Field isReadOnly': 'Le champ est-il en lecture seule ?',
       'Please give the form a name.': 'Veuillez donner un nom au formulaire.',
       'Give the form a title': 'Donnez un titre au formulaire',
       'Edit form settings': 'Modifier les paramètres du formulaire',
