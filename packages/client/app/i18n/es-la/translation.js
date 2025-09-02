@@ -1366,6 +1366,7 @@ const esLa = {
         'Corregir valores inválidos antes de actualizar',
       'Field inline': 'Campo en línea',
       'Field sectioncss': 'Campo sectioncss',
+      'Field isReadOnly': '¿El campo es de solo lectura?',
       'Please give the form a name.':
         'Por favor, asigna un nombre al formulario.',
       'Give the form a title': 'Asigna un título al formulario',

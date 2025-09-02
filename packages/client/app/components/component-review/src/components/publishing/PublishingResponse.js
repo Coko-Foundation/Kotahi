@@ -31,7 +31,7 @@ const PublishingResponse = ({ response }) => {
         <Alert detail={errorMessage} key={stepLabel} type="error">
           {t('decisionPage.decisionTab.errorPosting', { stepLabel })}
         </Alert>
-        {errorDetails.map((key, detail) => (
+        {errorDetails?.map((key, detail) => (
           <Alert detail={detail} key={`detail-${key}`} type="error">
             {t('decisionPage.decisionTab.errorPosting', { stepLabel })}
           </Alert>

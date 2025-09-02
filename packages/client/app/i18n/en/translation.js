@@ -1337,6 +1337,7 @@ const en = {
         'Correct invalid values before updating',
       'Field inline': 'Field inline',
       'Field sectioncss': 'Field sectioncss',
+      'Field isReadOnly': 'Field is read only?',
       'Please give the form a name.': 'Please give the form a name.',
       'Give the form a title': 'Give the form a title',
       'Edit form settings': 'Edit form settings',
