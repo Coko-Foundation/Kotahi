@@ -310,8 +310,8 @@ const exportFields = `
     jsonData
   }
   teams {
-    created
-    updated
+    # created
+    # updated
     role
     displayName
     members {
