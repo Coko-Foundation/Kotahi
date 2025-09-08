@@ -75,7 +75,7 @@ module.exports = {
   port: 3000,
   pool: {
     min: 0,
-    max: 300,
+    max: 10,
     createTimeoutMillis: 3000,
     acquireTimeoutMillis: 30000,
     idleTimeoutMillis: 30000,
