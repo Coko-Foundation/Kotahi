@@ -120,6 +120,10 @@ const DecisionVersion = ({
     .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
     .some(t => t.members.some(m => m.user.id === currentUser?.id))
 
+  const isAuthor = version?.teams
+    .filter(t => ['author'].includes(t.role))
+    .some(t => t.members.some(m => m.user.id === currentUser?.id))
+
   const authorProofingEnabled = config.controlPanel?.authorProofingEnabled // let's set this based on the config
 
   const canPublish =
@@ -204,11 +208,15 @@ const DecisionVersion = ({
 
     const versionId = version.id
 
+    const userCanEditMetadata =
+      isCurrentVersion &&
+      ((isGroupManager && !isAuthor) || isGroupAdmin || isEditor)
+
     return {
       content: (
         // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
-          {!isCurrentVersion ? (
+          {!userCanEditMetadata ? (
             <ReadonlyFormTemplate
               displayShortIdAsIdentifier={displayShortIdAsIdentifier}
               form={form}
