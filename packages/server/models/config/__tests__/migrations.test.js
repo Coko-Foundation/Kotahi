@@ -1,6 +1,8 @@
 const { db, migrationManager } = require('@coko/server')
 const Group = require('../../group/group.model')
 const Config = require('../config.model')
+const eventsSource = require('../../../services/notification/eventsSource')
+const Notification = require('../../notification/notification.model')
 
 describe('Config Migrations', () => {
   beforeEach(async () => {
@@ -162,5 +164,100 @@ describe('Config Migrations', () => {
 
     expect(config1.formData.emailNotification.bcc).toBe(undefined)
     expect(config2.formData.emailNotification.bcc).toBe(undefined)
+  })
+
+  it('activates notification event if event has no notifications', async () => {
+    await migrationManager.migrate({ to: '1752222828=file-meta.js' })
+
+    const eventsConfig = Object.keys(eventsSource).reduce((acc, key) => {
+      acc[key] = { active: key !== 'author-accepted' }
+      return acc
+    }, {})
+
+    const group = await Group.insert({})
+
+    let config1 = await Config.insert({
+      active: true,
+      groupId: group.id,
+      formData: {
+        notification: {
+          eventsConfig,
+        },
+      },
+    })
+
+    let config2 = await Config.insert({
+      active: false,
+      groupId: group.id,
+      formData: {
+        notification: {
+          eventsConfig,
+        },
+      },
+    })
+
+    const allEvents = Object.keys(eventsSource)
+    const eventsExceptTarget = allEvents.filter(e => e !== 'author-accepted')
+    const eventsToPopulate = eventsExceptTarget.slice(0, 3)
+
+    const inactiveButHasNotifs = eventsToPopulate[0]
+
+    config1.formData.notification.eventsConfig[
+      inactiveButHasNotifs
+    ].active = false
+    config2.formData.notification.eventsConfig[
+      inactiveButHasNotifs
+    ].active = false
+
+    await config1.$query().patch({ formData: config1.formData })
+    await config2.$query().patch({ formData: config2.formData })
+
+    await Promise.all(
+      eventsToPopulate.map(ev =>
+        Notification.insert({
+          event: ev,
+          notificationType: 'email',
+          groupId: group.id,
+          active: true,
+          subject: `Test subject for ${ev}`,
+          emailTemplateId: null,
+          ccEmails: [],
+          isDefault: false,
+          displayName: `Notify ${ev}`,
+          recipient: 'registeredUser',
+          delay: 0,
+        }),
+      ),
+    )
+
+    await migrationManager.migrate({ step: 1 })
+
+    config1 = await Config.query().findById(config1.id)
+    config2 = await Config.query().findById(config2.id)
+
+    // 1) 'author-accepted' was inactive and had NO notifications -> should now be active
+    expect(
+      config1.formData.notification.eventsConfig['author-accepted'].active,
+    ).toBe(true)
+    expect(
+      config2.formData.notification.eventsConfig['author-accepted'].active,
+    ).toBe(true)
+
+    // 2) events we populated with notifications should remain active (or remain as set)
+    eventsToPopulate.forEach(ev => {
+      expect(config1.formData.notification.eventsConfig[ev].active).toBe(
+        ev !== inactiveButHasNotifs,
+      )
+      expect(config2.formData.notification.eventsConfig[ev].active).toBe(
+        ev !== inactiveButHasNotifs,
+      )
+    })
+
+    // 3) sanity: all originally-active events (except any explicitly toggled) remain active
+    Object.keys(eventsConfig)
+      .filter(e => e !== 'author-accepted' && e !== inactiveButHasNotifs)
+      .forEach(e => {
+        expect(config1.formData.notification.eventsConfig[e].active).toBe(true)
+      })
   })
 })
