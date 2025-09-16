@@ -23,6 +23,8 @@ jobs:
           yarn install
           cd ../server
           yarn install
+          cd ../devdocs
+          yarn install
           cd ../..
 
       - name: Lint
