@@ -55,7 +55,7 @@ jobs:
         run: docker compose -f docker-compose.production.yml build
 
       - name: Run containers
-        run: docker compose -f docker-compose.production.yml up -d
+        run: docker compose -f docker-compose.production.yml up server client -d
 
       # - name: Wait for containers to be up and running
       #   run: |
