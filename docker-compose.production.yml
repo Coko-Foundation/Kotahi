@@ -107,10 +107,12 @@ services:
       - ./packages/client/config/translation:/home/node/app/config/translation
     healthcheck:
       test:
-        ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
-      start_period: 30s
-      timeout: 5s
-      retries: 5
+        [
+          'CMD-SHELL',
+          'node -e "require(''http'').get(''http://localhost:3000/healthcheck'', res => { if (res.statusCode !== 200) process.exit(1) }).on(''error'', () => process.exit(1))"',
+        ]
+      interval: 1s
+      retries: 30
 
   pagedjs:
     depends_on:
