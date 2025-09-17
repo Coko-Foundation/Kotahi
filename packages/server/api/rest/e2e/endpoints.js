@@ -20,8 +20,7 @@ module.exports = app => {
       res.sendStatus(200)
     } catch (err) {
       logger.error(err)
-      // res.sendStatus(500)
-      throw err
+      res.status(500).json({ error: err })
     }
   })
 
