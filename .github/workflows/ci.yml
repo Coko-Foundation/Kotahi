@@ -1,12 +1,40 @@
-name: Deploy test
+name: Pipeline
 
 on:
   push:
-    branches: ['staging']
+    branches:
+      - main
+      - staging
+  pull_request:
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install
+          cd packages/client
+          yarn install
+          cd ../server
+          yarn install
+          cd ../devdocs
+          yarn install
+          cd ../..
+
+      - name: Lint
+        run: yarn coko-lint run
+
   deploy_server:
     name: Deploy test server
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    needs: lint
 
     runs-on: ubuntu-latest
     container:
@@ -24,6 +52,9 @@ jobs:
 
   deploy_client:
     name: Deploy test client
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    needs: lint
 
     runs-on: ubuntu-latest
     container:
