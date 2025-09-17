@@ -34,6 +34,12 @@ jobs:
   e2e-journal:
     name: End to end tests - journal
     runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,11 +61,7 @@ jobs:
         run: docker compose -f docker-compose.production.yml build
 
       - name: Run containers
-        run: docker compose -f docker-compose.production.yml up
-        env:
-          USE_SANDBOXED_ORCID: true
-          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
-          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+        run: docker compose -f docker-compose.production.yml up -d
 
       # - name: Wait for containers to be up and running
       #   run: |
