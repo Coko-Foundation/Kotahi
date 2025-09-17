@@ -56,13 +56,13 @@ jobs:
           yarn install --immutable
 
       - name: Pull containers
-        run: docker compose -f pull
+        run: docker compose pull
 
       - name: Build containers
-        run: docker compose -f build
+        run: docker compose build
 
       - name: Run containers
-        run: docker compose -f up -d
+        run: docker compose up -d
 
       - name: Wait for containers to be up and running
         run: |
