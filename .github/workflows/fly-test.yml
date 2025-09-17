@@ -17,7 +17,7 @@ jobs:
 
       - name: Deploy
         run: |
-          fly deploy -c .fly/kotahi-server-test.toml --dockerfile ./packages/server/Dockerfile
+          fly deploy -c .fly/kotahi-server-test.toml --dockerfile ./packages/server/Dockerfile-production
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_TEST_SERVER }}
 
@@ -33,6 +33,6 @@ jobs:
 
       - name: Deploy
         run: |
-          fly deploy -c .fly/kotahi-client-test.toml --dockerfile ./packages/client/Dockerfile
+          fly deploy -c .fly/kotahi-client-test.toml --dockerfile ./packages/client/Dockerfile-production
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_TEST_CLIENT }}
