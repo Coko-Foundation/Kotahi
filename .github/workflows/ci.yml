@@ -15,17 +15,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Cache client deps
+        uses: actions/cache@v4
+        with:
+          path: packages/client/node_modules
+          key: client-${{ hashFiles('packages/client/yarn.lock') }}
+
+      - name: Cache server deps
+        uses: actions/cache@v4
+        with:
+          path: packages/server/node_modules
+          key: server-${{ hashFiles('packages/server/yarn.lock') }}
+
+      - name: Cache devdocs deps
+        uses: actions/cache@v4
+        with:
+          path: packages/devdocs/node_modules
+          key: devdocs-${{ hashFiles('packages/devdocs/yarn.lock') }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Install dependencies
         run: |
           corepack enable
           yarn install
-          cd packages/client
-          yarn install
-          cd ../server
-          yarn install
-          cd ../devdocs
-          yarn install
-          cd ../..
+          cd packages/client && yarn install && cd ../..
+          cd packages/server && yarn install && cd ../..
+          cd packages/devdocs && yarn install && cd ../..
 
       - name: Lint
         run: yarn coko-lint run
