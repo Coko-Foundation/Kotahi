@@ -44,7 +44,8 @@ const addUsersToChatChannel = async (channelId, userIds) => {
   await ChannelMember.query()
     .insert(records)
     .onConflict(['channelId', 'userId'])
-    .ignore()
+    .merge({ lastViewed: new Date() })
+    .returning('*')
 }
 
 const getChannelMemberByChannel = async (channelId, userId) => {
