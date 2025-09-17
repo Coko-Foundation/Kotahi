@@ -55,7 +55,11 @@ jobs:
         run: docker compose -f docker-compose.production.yml build
 
       - name: Run containers
-        run: docker compose -f docker-compose.production.yml up
+        run: docker compose -f docker-compose.production.yml up -d
+        env:
+          USE_SANDBOXED_ORCID: true
+          ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+          ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
 
       # - name: Wait for containers to be up and running
       #   run: |
