@@ -17,10 +17,11 @@ module.exports = app => {
 
     try {
       await resetDbAndApplyDump(readFileSync(dumpFile(name), 'utf-8'), name)
-      res.status(200).send()
+      res.sendStatus(200)
     } catch (err) {
       logger.error(err)
-      res.status(500).send()
+      // res.sendStatus(500)
+      throw err
     }
   })
 
@@ -34,10 +35,10 @@ module.exports = app => {
         name,
       )
 
-      res.status(200).send()
+      res.sendStatus(200)
     } catch (err) {
       logger.error(err)
-      res.status(500).send()
+      res.sendStatus(500)
     }
   })
 
@@ -49,17 +50,17 @@ module.exports = app => {
       res.status(200).json({ token })
     } catch (err) {
       logger.error(err)
-      res.status(500).send()
+      res.sendStatus(500)
     }
   })
 
   app.post('/api/e2e/seedForms', async (req, res, next) => {
     try {
       await seedForms()
-      res.status(200).send()
+      res.sendStatus(200)
     } catch (err) {
       logger.error(err)
-      res.status(500).send()
+      res.sendStatus(500)
     }
   })
 }
