@@ -40,6 +40,7 @@ jobs:
       ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
       ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
       E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
 
     steps:
       - name: Checkout code
