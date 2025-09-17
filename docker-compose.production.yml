@@ -105,12 +105,12 @@ services:
       - WS_YJS_SERVER_PORT=${WS_YJS_SERVER_PORT:-5010}
     volumes:
       - ./packages/client/config/translation:/home/node/app/config/translation
-    # healthcheck:
-    #   test:
-    #     ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
-    #   start_period: 30s # Give the server seconds to start before healthchecks begin
-    #   timeout: 5s
-    #   retries: 5
+    healthcheck:
+      test:
+        ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
+      start_period: 30s
+      timeout: 5s
+      retries: 5
 
   pagedjs:
     depends_on:
