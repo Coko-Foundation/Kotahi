@@ -39,6 +39,7 @@ jobs:
       USE_SANDBOXED_ORCID: true
       ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
       ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
 
     steps:
       - name: Checkout code
@@ -55,18 +56,18 @@ jobs:
           yarn install --immutable
 
       - name: Pull containers
-        run: docker compose -f docker-compose.production.yml pull
+        run: docker compose -f pull
 
       - name: Build containers
-        run: docker compose -f docker-compose.production.yml build
+        run: docker compose -f build
 
       - name: Run containers
-        run: docker compose -f docker-compose.production.yml up -d
+        run: docker compose -f up -d
 
-      # - name: Wait for containers to be up and running
-      #   run: |
-      #     while ! nc -z localhost 4000; do sleep 1; done
-      #     while ! nc -z localhost 4000; do sleep 1; done
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 60s sh -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ]; do sleep 2; done'
+          timeout 60s sh -c 'until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do sleep 2; done'
 
       - name: Run tests
         run: yarn cypress run --spec cypress/e2e/a-journal
