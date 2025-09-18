@@ -78,6 +78,147 @@ jobs:
       - name: Run tests
         run: yarn cypress run --spec cypress/e2e/a-journal
 
+  e2e-colab:
+    name: End to end tests - colab
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/b-colab-prc
+
+  e2e-elife:
+    name: End to end tests - elife
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/c-elife-single_form
+
+  e2e-ncrc:
+    name: End to end tests - ncrc
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/ncrc
+
   deploy_server:
     name: Deploy test server
 
