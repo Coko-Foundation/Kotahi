@@ -2,15 +2,15 @@ FROM cokoapps/base:20
 
 WORKDIR /home/node/app
 
-RUN chown -R node:node .
-USER node
-
 COPY .yarnrc.yml .
 COPY package.json .
 COPY yarn.lock .
 
+RUN chown -R node:node .
+USER node
+
 RUN yarn workspaces focus --production && yarn cache clean && rm -rf ~/.npm
 
-COPY . .
+COPY --chown=node:node . .
 
 CMD ["yarn", "coko-server", "start"]

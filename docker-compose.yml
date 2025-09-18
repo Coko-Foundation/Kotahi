@@ -20,6 +20,10 @@ services:
       - ./packages/client/app:/home/node/app/app
       - ./packages/client/config:/home/node/app/config
       - ./packages/client/public:/home/node/app/public
+    healthcheck:
+      test: ['CMD-SHELL', 'curl --fail http://localhost:4000 || exit 1']
+      interval: 1s
+      retries: 30
     tty: true
 
   server:
@@ -130,9 +134,8 @@ services:
     healthcheck:
       test:
         ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
-      start_period: 30s # Give the server seconds to start before healthchecks begin
-      timeout: 5s
-      retries: 5
+      interval: 1s
+      retries: 30
     tty: true
 
   pagedjs:
