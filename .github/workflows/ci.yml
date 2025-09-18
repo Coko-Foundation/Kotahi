@@ -223,7 +223,7 @@ jobs:
     name: Deploy test server
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: lint
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
 
     runs-on: ubuntu-latest
     container:
@@ -243,7 +243,7 @@ jobs:
     name: Deploy test client
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: lint
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
 
     runs-on: ubuntu-latest
     container:
