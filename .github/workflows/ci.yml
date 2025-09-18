@@ -41,6 +41,7 @@ jobs:
       ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
       E2E_TESTING_API: 1
       SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
 
     steps:
       - name: Checkout code
