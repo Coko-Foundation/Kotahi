@@ -15,7 +15,7 @@ describe.skip('review page tests', () => {
     const seedUrl = Cypress.config('seedUrl')
 
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
-    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    // cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
     cy.request('POST', `${seedUrl}/senior_editor_assigned`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
