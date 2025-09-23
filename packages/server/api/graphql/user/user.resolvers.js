@@ -1,6 +1,5 @@
 const {
   channelUsersForMention,
-  defaultIdentity,
   deleteUser,
   expandChat,
   getCurrentUser,
@@ -112,8 +111,8 @@ module.exports = {
   },
 
   User: {
-    async defaultIdentity(parent) {
-      return defaultIdentity(parent)
+    async defaultIdentity(user, _, ctx) {
+      return ctx.loaders.User.defaultIdentitiesLoader.load(user.id)
     },
 
     async identities(parent) {

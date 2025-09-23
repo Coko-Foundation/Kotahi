@@ -187,11 +187,11 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                 name={`defaultValue-${index}`}
                 onChange={e => {
                   values.options.forEach((el, i) => {
-                    if (el.defaultValue === 1)
+                    if (el?.defaultValue === 1)
                       setFieldValue(`options.${i}.defaultValue`, 0)
                   })
 
-                  if (option.defaultValue === 0) {
+                  if (option?.defaultValue === 0) {
                     setFieldValue(`options.${index}.defaultValue`, 1)
                   } else {
                     setFieldValue(`options.${index}.defaultValue`, 0)
