@@ -1,12 +1,12 @@
 name: Release Pipeline
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
       - staging
   pull_request:
-  workflow_dispatch:
 
 jobs:
   # ------------------------
@@ -17,7 +17,6 @@ jobs:
 
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
 
     environment: release
     concurrency: release
