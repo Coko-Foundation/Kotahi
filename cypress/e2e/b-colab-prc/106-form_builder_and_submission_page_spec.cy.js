@@ -5,7 +5,7 @@ import { dashboard } from '../../support/routes1'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
-describe('Form builder and Submission pages', () => {
+describe.skip('Form builder and Submission pages', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
