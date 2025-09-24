@@ -1,0 +1,300 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+          cd packages/client && yarn install --immutable && cd ../..
+          cd packages/server && yarn install --immutable && cd ../..
+          cd packages/devdocs && yarn install --immutable && cd ../..
+
+      - name: Lint
+        run: yarn coko-lint run
+
+  e2e-journal:
+    name: End to end tests - journal
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/a-journal
+
+  e2e-colab:
+    name: End to end tests - colab
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/b-colab-prc
+
+  e2e-elife:
+    name: End to end tests - elife
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/c-elife-single_form
+
+  e2e-ncrc:
+    name: End to end tests - ncrc
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      E2E_TESTING_API: 1
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install root dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ] &&
+                  [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q client))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: yarn cypress run --spec cypress/e2e/ncrc
+
+  deploy_test_server:
+    name: Deploy test server
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+
+    runs-on: ubuntu-latest
+    container:
+      image: cokoapps/fly
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd packages/server
+          fly deploy -c ../../.fly/kotahi-server-test.toml --dockerfile ./Dockerfile-production
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_TEST_SERVER }}
+
+  deploy_test_client:
+    name: Deploy test client
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+
+    runs-on: ubuntu-latest
+    container:
+      image: cokoapps/fly
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd packages/client
+          fly deploy -c ../../.fly/kotahi-client-test.toml --dockerfile ./Dockerfile-production
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_TEST_CLIENT }}
+
+  deploy_main_server:
+    name: Deploy main server
+
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+
+    runs-on: ubuntu-latest
+    container:
+      image: cokoapps/fly
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd packages/server
+          fly deploy -c ../../.fly/kotahi-server-main.toml --dockerfile ./Dockerfile-production
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_MAIN_SERVER }}
+
+  deploy_main_client:
+    name: Deploy main client
+
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+
+    runs-on: ubuntu-latest
+    container:
+      image: cokoapps/fly
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy
+        run: |
+          cd packages/client
+          fly deploy -c ../../.fly/kotahi-client-main.toml --dockerfile ./Dockerfile-production
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_TOKEN_MAIN_CLIENT }}

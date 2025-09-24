@@ -1,0 +1,118 @@
+name: Release Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # ------------------------
+  # Release (manual, main only)
+  # ------------------------
+  release:
+    name: Release
+
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    environment: release
+    concurrency: release
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CI_RELEASE_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Set email
+        run: git config user.email "${{ secrets.CI_RELEASE_BOT_EMAIL }}"
+
+      - name: Set name
+        run: git config user.name "kotahi release bot"
+
+      - name: Run release
+        run: |
+          node scripts/updatePackageJson.js
+          VERSION=$(node -e "const pkg=require('./package.json');console.log(pkg.version)")
+          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+          git add -A
+          git commit -m "release version $VERSION [skip ci]" || echo "No changes to commit"
+          git tag $VERSION || (git tag -d $VERSION && git tag $VERSION)
+          git push origin HEAD:main --tags
+
+  # ------------------------
+  # Publish (DockerHub)
+  # ------------------------
+  publish_client:
+    name: Publish client
+
+    if: github.ref == 'refs/heads/main'
+    needs: [release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker login
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Docker push client
+        run: |
+          cd packages/client
+          docker build -t cokoapps/kotahi-client:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-client:${{ env.RELEASE_VERSION }}
+
+  publish_server:
+    name: Publish server
+
+    if: github.ref == 'refs/heads/main'
+    needs: [release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker login
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Docker push server
+        run: |
+          cd packages/server
+          docker build -t cokoapps/kotahi-server:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-server:${{ env.RELEASE_VERSION }}
+
+  publish_docs:
+    name: Publish docs
+
+    if: github.ref == 'refs/heads/main'
+    needs: [release]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Docker push docs
+        run: |
+          cd packages/devdocs
+          docker build -t ghcr.io/${{ github.repository }}/devdocs:${{ github.sha }} -f Dockerfile-production .
+          docker push ghcr.io/${{ github.repository }}/devdocs:${{ github.sha }}
+
+  deploy_docs:
+    name: Deploy docs
+
+    if: github.ref == 'refs/heads/main'
+    needs: [publish_docs]
+    runs-on: ubuntu-latest
+
+    container:
+      image: cokoapps/fly
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy docs to fly
+        run: fly deploy -c .fly/kotahi-dev-docs.toml --image ghcr.io/${{ github.repository }}/devdocs:${{ github.sha }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_DEV_DOCS_TOKEN }}
