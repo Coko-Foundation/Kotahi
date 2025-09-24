@@ -262,7 +262,7 @@ jobs:
   deploy_main_server:
     name: Deploy main server
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref_name == 'main'
     needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
 
     runs-on: ubuntu-latest
@@ -282,7 +282,7 @@ jobs:
   deploy_main_client:
     name: Deploy main client
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref_name == 'main'
     needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
 
     runs-on: ubuntu-latest
