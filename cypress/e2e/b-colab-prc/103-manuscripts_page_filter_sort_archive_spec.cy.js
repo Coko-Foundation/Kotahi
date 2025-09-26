@@ -7,7 +7,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 
-describe.skip('manuscripts page tests - Filter, sort, bulk select, archive', () => {
+describe('manuscripts page tests - Filter, sort, bulk select, archive', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)

@@ -28,7 +28,7 @@ const reviewDataList = [
   },
 ]
 
-describe.skip('Completing reviews', () => {
+describe('Completing reviews', () => {
   it('Reviewing -- accepting and rejecting', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')

@@ -11,7 +11,7 @@ import { ControlPage } from '../../page-object/control-page'
 import { ReviewPage } from '../../page-object/review-page'
 
 // eslint-disable-next-line jest/no-disabled-tests
-describe.skip('control page tests', () => {
+describe('control page tests', () => {
   // UPDATE 0.05.2025
   // SHARED checkbox can be clicked only on completed reviews
   // Also, I canot understand what Published publiclically mean

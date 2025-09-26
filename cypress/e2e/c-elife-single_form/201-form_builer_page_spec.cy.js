@@ -3,7 +3,7 @@ import { FormsPage } from '../../page-object/forms-page'
 // import { Menu } from '../../page-object/page-component/menu'
 import { submissionForm } from '../../support/routes2'
 
-describe.skip('Form builder', () => {
+describe('Form builder', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)

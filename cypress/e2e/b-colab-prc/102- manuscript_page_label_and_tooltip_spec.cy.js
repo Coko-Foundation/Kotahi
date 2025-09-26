@@ -6,7 +6,7 @@ import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
-describe.skip('Checking manuscripts page: label selection and tooltip', () => {
+describe('Checking manuscripts page: label selection and tooltip', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)

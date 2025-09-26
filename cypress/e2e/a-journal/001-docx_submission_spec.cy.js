@@ -5,7 +5,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 
-describe.skip('Create a new submission', () => {
+describe('Create a new submission', () => {
   // eslint-disable-next-line jest/no-disabled-tests
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
