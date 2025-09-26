@@ -14,9 +14,14 @@ describe.skip('review page tests', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
-    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`).then(res => {
+      cy.log('Bootstrap status:', res.status)
+    })
+
     // cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
-    cy.request('POST', `${seedUrl}/senior_editor_assigned`)
+    cy.request('POST', `${seedUrl}/senior_editor_assigned`).then(res => {
+      cy.log('SE assigned status:', res.status)
+    })
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {

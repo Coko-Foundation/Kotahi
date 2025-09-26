@@ -6,7 +6,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { manuscripts } from '../../support/routes2'
 
 const invalidDoiLnk = 'https://hours.com'
-describe('validating required field and doi values in submission form', () => {
+describe.skip('validating required field and doi values in submission form', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)

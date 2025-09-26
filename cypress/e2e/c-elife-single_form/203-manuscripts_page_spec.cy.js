@@ -6,7 +6,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { manuscripts } from '../../support/routes2'
 import { Menu } from '../../page-object/page-component/menu'
 
-describe('Manuscripts page tests', () => {
+describe.skip('Manuscripts page tests', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)

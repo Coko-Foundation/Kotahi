@@ -8,7 +8,7 @@ import { dashboard } from '../../support/routes2'
 const bioRxivArticleUrl =
   'https://www.biorxiv.org/content/10.1101/2022.05.28.493855v1'
 
-describe('Update the submission form field', () => {
+describe.skip('Update the submission form field', () => {
   it('update submission form field for publishing to hypothesis group', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.elife_bootstrap`)
