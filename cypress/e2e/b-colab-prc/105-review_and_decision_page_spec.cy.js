@@ -11,36 +11,6 @@ import { ControlPage } from '../../page-object/control-page'
 import { ReviewPage } from '../../page-object/review-page'
 
 describe('review page tests', () => {
-  // before(() => {
-  //   const restoreUrl = Cypress.config('restoreUrl')
-  //   const seedUrl = Cypress.config('seedUrl')
-
-  //   cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`).then(res => {
-  //     cy.log('Bootstrap status:', res.status)
-  //   })
-
-  //   // cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
-  //   cy.request('POST', `${seedUrl}/senior_editor_assigned`).then(res => {
-  //     cy.log('SE assigned status:', res.status)
-  //   })
-
-  //   // eslint-disable-next-line jest/valid-expect-in-promise
-  //   cy.fixture('role_names').then(name => {
-  //     // login as seniorEditor
-  //     // eslint-disable-next-line no-undef
-  //     cy.login(name.role.seniorEditor, dashboard)
-  //     DashboardPage.clickDashboardTab(2)
-  //     DashboardPage.clickControl() // Navigate to Control Page
-  //     cy.contains('Team').should('exist')
-
-  //     // Invite all the reviewers
-  //     name.role.reviewers.forEach((reviewer, index) => {
-  //       ControlPage.clickInviteReviewerDropdown()
-  //       ControlPage.inviteReviewer(reviewer)
-  //       ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
-  //     })
-  //   })
-  // })
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
