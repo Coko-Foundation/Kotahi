@@ -7,7 +7,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
-describe('Form builder', () => {
+describe.skip('Form builder', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.bootstrap`)

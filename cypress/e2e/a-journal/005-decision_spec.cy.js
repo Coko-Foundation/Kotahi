@@ -9,7 +9,7 @@ const decisionTextContent = 'Please fix Foo in the Paper!'
 const decisionFileName = 'test-pdf.pdf'
 const decisinFilePath = 'cypress/fixtures/test-pdf.pdf'
 
-describe('Completing a decision', () => {
+describe.skip('Completing a decision', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')

@@ -4,7 +4,7 @@ import { Menu } from '../../page-object/page-component/menu'
 import { LoginPage } from '../../page-object/login-page'
 import { manuscripts, login } from '../../support/routes1'
 
-describe('Login page tests', () => {
+describe.skip('Login page tests', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)

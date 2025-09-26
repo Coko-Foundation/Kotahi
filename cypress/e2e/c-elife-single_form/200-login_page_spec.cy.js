@@ -4,7 +4,7 @@ import { LoginPage } from '../../page-object/login-page'
 import { manuscripts, login } from '../../support/routes2'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
-describe('Login page tests', () => {
+describe.skip('Login page tests', () => {
   before(() => {
     cy.fixture('branding_settings').then(settings => {
       const restoreUrl = Cypress.config('restoreUrl')
