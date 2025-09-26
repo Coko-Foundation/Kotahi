@@ -6,7 +6,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
-describe.skip('Assigning editors and decision reject', () => {
+describe('Assigning editors and decision reject', () => {
   it('Assign editors and admin rejects a submission', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')

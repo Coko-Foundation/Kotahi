@@ -10,7 +10,7 @@ import { ProfilePage } from '../../page-object/profile-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 
-describe.skip('profile page tests', () => {
+describe('profile page tests', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)

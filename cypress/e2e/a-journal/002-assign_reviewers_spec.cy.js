@@ -6,7 +6,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
-describe.skip('Editor assigning reviewers', () => {
+describe('Editor assigning reviewers', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')

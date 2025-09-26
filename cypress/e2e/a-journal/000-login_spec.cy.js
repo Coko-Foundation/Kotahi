@@ -3,7 +3,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
-describe.skip('Login test', () => {
+describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
