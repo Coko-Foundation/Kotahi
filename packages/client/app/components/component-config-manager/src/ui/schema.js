@@ -466,6 +466,11 @@ export const generateSchemas = ({
                 },
               },
             },
+            preventGmFromEditing: {
+              type: 'boolean',
+              title: t('configPage.preventGmFromEditing'),
+              default: false,
+            },
           },
         },
         review: {
@@ -1669,6 +1674,11 @@ export const generateSchemas = ({
                   default: 'allowAuthorUploadWithForm',
                 },
               },
+            },
+            preventGmFromEditing: {
+              type: 'boolean',
+              title: t('configPage.preventGmFromEditing'),
+              default: false,
             },
           },
         },
@@ -2916,6 +2926,11 @@ export const generateSchemas = ({
                   default: 'allowAuthorUploadWithForm',
                 },
               },
+            },
+            preventGmFromEditing: {
+              type: 'boolean',
+              title: t('configPage.preventGmFromEditing'),
+              default: false,
             },
           },
         },
@@ -4169,6 +4184,11 @@ export const generateSchemas = ({
                 },
               },
             },
+            preventGmFromEditing: {
+              type: 'boolean',
+              title: t('configPage.preventGmFromEditing'),
+              default: false,
+            },
           },
         },
         review: {
@@ -5127,6 +5147,9 @@ export const generateSchemas = ({
           submitOptions: {
             'ui:widget': 'radio',
           },
+        },
+        preventGmFromEditing: {
+          classNames: 'col-md-12 col-md-offset-0',
         },
       },
       integrations: {
