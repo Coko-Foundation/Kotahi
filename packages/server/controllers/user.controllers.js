@@ -83,11 +83,12 @@ const channelUsersForMention = async (channelId, groupId) => {
     if (channelWithUsers.type !== 'all') {
       const groupManagers = await Team.relatedQuery('users')
         .for(
-          Team.query(trx).where({
-            role: 'groupManager',
-            objectId: groupId,
-            objectType: 'Group',
-          }),
+          Team.query(trx)
+            .where({
+              objectId: groupId,
+              objectType: 'Group',
+            })
+            .whereIn('role', ['groupManager', 'groupAdmin']),
         )
         .whereNotIn(
           'users.id',
