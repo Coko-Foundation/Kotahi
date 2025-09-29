@@ -557,6 +557,8 @@ const esLa = {
         allowAuthorSubmitForm: 'Permitir a un autor enviar un formulario',
         allowAuthorSubmitFormWithBlankEditor:
           'Permitir a un autor enviar un formulario y acceder a un editor en blanco',
+        preventGmFromEditing:
+          'Impedir que el Gestor de Grupo altere un manuscrito que haya redactado después de la entrega',
       },
       allowToSubmitNewVersion:
         'Permitir a un autor enviar una nueva versión de su manuscrito en cualquier momento',
