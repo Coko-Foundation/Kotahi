@@ -301,6 +301,7 @@ const getUsers = async groupId => {
       objectId: groupId,
     })
     .modify('orderByUsername')
+    .withGraphFetched('defaultIdentity')
 }
 
 const getUsersById = async userIds => User.query().findByIds(userIds)
