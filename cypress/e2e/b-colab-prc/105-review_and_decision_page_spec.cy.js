@@ -1,5 +1,6 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
+/* eslint-disable jest/valid-expect */
 
 // import { beforeEach } from 'mocha'
 import { dashboard, manuscripts } from '../../support/routes1'
@@ -14,25 +15,36 @@ describe.skip('review page tests', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
+    // Check that config variables exist
+    /* eslint-disable no-unused-expressions */
+    expect(restoreUrl, 'restoreUrl should be defined').to.exist
+    // eslint-disable-next-line jest/valid-expect
+    expect(seedUrl, 'seedUrl should be defined').to.exist
+
+    // Reset DB
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`).then(res => {
+      /* eslint-disable jest/valid-expect */
+      expect(res.status).to.eq(200)
       cy.log('Bootstrap status:', res.status)
     })
 
-    // cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    // Seed roles
     cy.request('POST', `${seedUrl}/senior_editor_assigned`).then(res => {
+      /* eslint-disable jest/valid-expect */
+      expect(res.status).to.eq(200)
       cy.log('SE assigned status:', res.status)
     })
+  })
 
-    // eslint-disable-next-line jest/valid-expect-in-promise
+  beforeEach(() => {
+    // Do per-test setup (like login + UI prep)
     cy.fixture('role_names').then(name => {
-      // login as seniorEditor
-      // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControl() // Navigate to Control Page
+      DashboardPage.clickControl()
       cy.contains('Team').should('exist')
 
-      // Invite all the reviewers
+      // Invite reviewers if not already invited
       name.role.reviewers.forEach((reviewer, index) => {
         ControlPage.clickInviteReviewerDropdown()
         ControlPage.inviteReviewer(reviewer)
