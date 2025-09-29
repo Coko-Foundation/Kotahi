@@ -15,39 +15,26 @@ describe('review page tests', () => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
-    // Check that config variables exist
-    /* eslint-disable no-unused-expressions */
-    expect(restoreUrl, 'restoreUrl should be defined').to.exist
-    // eslint-disable-next-line jest/valid-expect
-    expect(seedUrl, 'seedUrl should be defined').to.exist
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    cy.request('POST', `${seedUrl}/senior_editor_assigned`)
 
-    // Reset DB
-    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`).then(res => {
-      /* eslint-disable jest/valid-expect */
-      expect(res.status).to.eq(200)
-      cy.log('Bootstrap status:', res.status)
-    })
-
-    // Seed roles
-    cy.request('POST', `${seedUrl}/senior_editor_assigned`).then(res => {
-      /* eslint-disable jest/valid-expect */
-      expect(res.status).to.eq(200)
-      cy.log('SE assigned status:', res.status)
-    })
-  })
-
-  beforeEach(() => {
-    // Do per-test setup (like login + UI prep)
+    // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
+      // login as seniorEditor
+      // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControl()
+      DashboardPage.clickControl() // Navigate to Control Page
       cy.contains('Team').should('exist')
 
-      // Invite reviewers if not already invited
+      // Invite all the reviewers
       name.role.reviewers.forEach((reviewer, index) => {
         ControlPage.clickInviteReviewerDropdown()
         ControlPage.inviteReviewer(reviewer)
+        cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
+          'not.exist',
+        )
         ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
       })
     })
