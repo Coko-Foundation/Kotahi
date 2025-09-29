@@ -35,7 +35,9 @@ describe('review page tests', () => {
         cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
           'not.exist',
         )
-
+        cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
+          'be.visible',
+        )
         cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
           'have.length',
           index + 1,
