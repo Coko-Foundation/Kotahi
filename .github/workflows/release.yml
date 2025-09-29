@@ -18,17 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.CI_RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Set email
-        run: git config user.email "${{ secrets.CI_RELEASE_BOT_EMAIL }}"
-
-      - name: Set name
-        run: git config user.name "kotahi release bot"
 
       - name: Run release
         run: |
