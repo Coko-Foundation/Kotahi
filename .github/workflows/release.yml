@@ -69,6 +69,12 @@ jobs:
             --title "Release ${{ steps.bump_version.outputs.version }}" \
             --body "Automated release of version ${{ steps.bump_version.outputs.version }}"
 
+      - name: Wait for Lint check
+        run: |
+          PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
+          echo "Waiting for Lint to pass on PR #$PR_NUMBER"
+          gh pr checks $PR_NUMBER --watch
+
       - name: Merge PR
         if: success()
         env:

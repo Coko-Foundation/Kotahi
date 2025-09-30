@@ -1,12 +1,16 @@
 name: CI Pipeline
 
 on:
-  push:
+  # push:
+  #   branches:
+  #     - main
+  #     - staging
+  #     - release/**
+  pull_request:
     branches:
       - main
       - staging
       - release/**
-  pull_request:
 
 jobs:
   lint:
