@@ -1,0 +1,32 @@
+name: Lint Job
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release/**
+  workflow_call:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          yarn install --immutable
+          cd packages/client && yarn install --immutable && cd ../..
+          cd packages/server && yarn install --immutable && cd ../..
+          cd packages/devdocs && yarn install --immutable && cd ../..
+
+      - name: Lint
+        run: yarn coko-lint run

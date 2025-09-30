@@ -5,7 +5,8 @@ on:
 
 jobs:
   lint:
-    uses: ./.github/workflows/ci.yml
+    name: Lint
+    uses: ./.github/workflows/lint.yml
     secrets: inherit
 
   # ------------------------
@@ -50,8 +51,12 @@ jobs:
         run: |
           git checkout -b release/${{ steps.bump_version.outputs.version }}
           git add -A
-          git commit -m "release version ${{ steps.bump_version.outputs.version }} [skip ci]" || echo "No changes to commit"
+          git commit -m "release version ${{ steps.bump_version.outputs.version }}" || echo "No changes to commit"
           git push origin release/${{ steps.bump_version.outputs.version }}
+
+      # - name: Run Lint on release branch
+      #   uses: ./.github/workflows/lint.yml
+      #   secrets: inherit
 
       - name: Create PR
         if: success()
@@ -78,8 +83,8 @@ jobs:
           git fetch origin main
           git checkout main
           git pull origin main
-          git tag ${{ steps.bump_version.outputs.version }}
-          git push origin ${{ steps.bump_version.outputs.version }}
+          git tag -f ${{ steps.bump_version.outputs.version }}
+          git push -f origin ${{ steps.bump_version.outputs.version }}
 
   # ------------------------
   # Publish (DockerHub)
