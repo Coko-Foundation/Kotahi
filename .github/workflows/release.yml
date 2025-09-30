@@ -17,33 +17,64 @@ jobs:
     concurrency: release
 
     outputs:
-      release_version: ${{ steps.set_version.outputs.release_version }}
+      release_version: ${{ steps.bump_version.outputs.version }}
 
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Run release
-        id: set_version
+      - name: Bump version
+        id: bump_version
         run: |
           node scripts/updatePackageJson.js
           VERSION=$(node -e "const pkg=require('./package.json');console.log(pkg.version)")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
-          echo "release_version=$VERSION" >> $GITHUB_OUTPUT
-
+      - name: Configure git
+        run: |
           git config user.name "kotahi release bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Create release branch
+        run: |
+          git checkout -b release/${{ steps.bump_version.outputs.version }}
           git add -A
-          git commit -m "release version $VERSION [skip ci]" || echo "No changes to commit"
-          git tag $VERSION || (git tag -d $VERSION && git tag $VERSION)
-          git push origin HEAD:main --tags
+          git commit -m "release version ${{ steps.bump_version.outputs.version }} [skip ci]" || echo "No changes to commit"
+          git push origin release/${{ steps.bump_version.outputs.version }}
+
+      - name: Create PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          gh pr create \
+            --base main \
+            --head release/${{ steps.bump_version.outputs.version }} \
+            --title "Release ${{ steps.bump_version.outputs.version }}" \
+            --body "Automated release of version ${{ steps.bump_version.outputs.version }}"
+
+      - name: Merge PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
+          gh pr merge $PR_NUMBER --merge --admin
+
+      - name: Tag release
+        if: success()
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          git tag ${{ steps.bump_version.outputs.version }}
+          git push origin ${{ steps.bump_version.outputs.version }}
 
   # ------------------------
   # Publish (DockerHub)
