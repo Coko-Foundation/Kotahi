@@ -1,35 +1,20 @@
 name: CI Pipeline
 
 on:
+  pull_request:
+    branches:
+      - main
+      - staging
   push:
     branches:
       - main
       - staging
-  pull_request:
 
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: |
-          corepack enable
-          yarn install --immutable
-          cd packages/client && yarn install --immutable && cd ../..
-          cd packages/server && yarn install --immutable && cd ../..
-          cd packages/devdocs && yarn install --immutable && cd ../..
-
-      - name: Lint
-        run: yarn coko-lint run
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
 
   e2e-journal:
     name: End to end tests - journal

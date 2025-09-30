@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+
   # ------------------------
   # Release (manual, main only)
   # ------------------------
@@ -11,28 +16,105 @@ jobs:
     name: Release
 
     if: github.ref == 'refs/heads/main'
+    needs: [lint]
     runs-on: ubuntu-latest
 
     environment: release
     concurrency: release
+
+    outputs:
+      release_version: ${{ steps.bump_version.outputs.version }}
+
     steps:
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Run release
+      - name: Bump version
+        id: bump_version
         run: |
           node scripts/updatePackageJson.js
           VERSION=$(node -e "const pkg=require('./package.json');console.log(pkg.version)")
-          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Configure git
+        run: |
+          git config user.name "kotahi release bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Create release branch
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          git checkout -b release/${{ steps.bump_version.outputs.version }}
           git add -A
-          git commit -m "release version $VERSION [skip ci]" || echo "No changes to commit"
-          git tag $VERSION || (git tag -d $VERSION && git tag $VERSION)
-          git push origin HEAD:main --tags
+          git commit -m "release version ${{ steps.bump_version.outputs.version }}" || echo "No changes to commit"
+          git push origin release/${{ steps.bump_version.outputs.version }}
+
+      # - name: Run Lint on release branch
+      #   uses: ./.github/workflows/lint.yml
+      #   secrets: inherit
+
+      - name: Create PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          gh pr create \
+            --base main \
+            --head release/${{ steps.bump_version.outputs.version }} \
+            --title "Release ${{ steps.bump_version.outputs.version }}" \
+            --body "Automated release of version ${{ steps.bump_version.outputs.version }}"
+
+      - name: Wait for Lint check
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
+          echo "Waiting for Lint to complete on PR #$PR_NUMBER"
+
+          for i in {1..60}; do
+            state=$(gh pr checks $PR_NUMBER --json name,state -q '.[] | select(.name=="Lint") | .state' 2>/dev/null || echo "")
+            if [ -z "$state" ]; then
+              echo "Lint not started yet, retrying in 10s... ($i/60)"
+            elif [ "$state" == "SUCCESS" ]; then
+              echo "Lint passed ✅"
+              exit 0
+            elif [ "$state" == "FAILURE" ]; then
+              echo "Lint failed ❌"
+              exit 1
+            else
+              echo "Lint status: $state (still running), retrying in 10s... ($i/60)"
+            fi
+            sleep 10
+          done
+
+          echo "Timed out waiting for Lint check"
+          exit 1
+
+      - name: Merge PR
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
+          gh pr merge $PR_NUMBER --merge --admin
+
+      - name: Tag release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          git tag -f ${{ steps.bump_version.outputs.version }}
+          git push -f origin ${{ steps.bump_version.outputs.version }}
 
   # ------------------------
   # Publish (DockerHub)
@@ -53,8 +135,8 @@ jobs:
       - name: Docker push client
         run: |
           cd packages/client
-          docker build -t cokoapps/kotahi-client:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
-          docker push cokoapps/kotahi-client:${{ env.RELEASE_VERSION }}
+          docker build -t cokoapps/kotahi-client:${{ needs.release.outputs.release_version }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-client:${{ needs.release.outputs.release_version }}
 
   publish_server:
     name: Publish server
@@ -72,8 +154,8 @@ jobs:
       - name: Docker push server
         run: |
           cd packages/server
-          docker build -t cokoapps/kotahi-server:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
-          docker push cokoapps/kotahi-server:${{ env.RELEASE_VERSION }}
+          docker build -t cokoapps/kotahi-server:${{ needs.release.outputs.release_version }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-server:${{ needs.release.outputs.release_version }}
 
   publish_docs:
     name: Publish docs
