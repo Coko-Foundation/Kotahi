@@ -4,6 +4,10 @@ on:
   workflow_dispatch:
 
 jobs:
+  lint:
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+
   # ------------------------
   # Release (manual, main only)
   # ------------------------
@@ -11,6 +15,7 @@ jobs:
     name: Release
 
     if: github.ref == 'refs/heads/main'
+    needs: [lint]
     runs-on: ubuntu-latest
 
     environment: release
