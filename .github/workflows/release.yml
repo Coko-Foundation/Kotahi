@@ -65,7 +65,7 @@ jobs:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
-          gh pr merge $PR_NUMBER --merge --admin
+          gh pr merge $PR_NUMBER --merge --auto
 
       - name: Tag release
         if: success()
