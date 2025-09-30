@@ -76,26 +76,26 @@ jobs:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
-          echo "Waiting for Lint to start on PR #$PR_NUMBER"
+          echo "Waiting for Lint to complete on PR #$PR_NUMBER"
 
-          # Poll until "Lint" check is detected
-          for i in {1..30}; do
-            found=$(gh pr checks $PR_NUMBER --json name -q '.[] | select(.name=="Lint") | .name' 2>/dev/null || true)
-            if [ "$found" == "Lint" ]; then
-              echo "Lint check detected, proceeding to watch..."
-              break
+          for i in {1..60}; do
+            state=$(gh pr checks $PR_NUMBER --json name,state -q '.[] | select(.name=="Lint") | .state' 2>/dev/null || echo "")
+            if [ -z "$state" ]; then
+              echo "Lint not started yet, retrying in 10s... ($i/60)"
+            elif [ "$state" == "SUCCESS" ]; then
+              echo "Lint passed ✅"
+              exit 0
+            elif [ "$state" == "FAILURE" ]; then
+              echo "Lint failed ❌"
+              exit 1
+            else
+              echo "Lint status: $state (still running), retrying in 10s... ($i/60)"
             fi
-            echo "Lint not yet started, retrying in 10s... ($i/30)"
             sleep 10
           done
 
-          if [ "$found" != "Lint" ]; then
-            echo "Timed out waiting for Lint check to start"
-            exit 1
-          fi
-
-          # Now wait for Lint specifically to finish
-          gh pr checks $PR_NUMBER --watch --check Lint
+          echo "Timed out waiting for Lint check"
+          exit 1
 
       - name: Merge PR
         if: success()
