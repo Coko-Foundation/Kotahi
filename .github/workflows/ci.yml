@@ -7,9 +7,6 @@ on:
       - staging
   pull_request:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   lint:
