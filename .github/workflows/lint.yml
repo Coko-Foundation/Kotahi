@@ -1,6 +1,10 @@
 name: Lint Job
 
 on:
+  pull_request:
+    branches:
+      - main
+      - release/**
   workflow_call:
 
 jobs:
