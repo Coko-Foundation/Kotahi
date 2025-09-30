@@ -15,6 +15,10 @@ jobs:
 
     environment: release
     concurrency: release
+
+    outputs:
+      release_version: ${{ steps.set_version.outputs.release_version }}
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,10 +29,11 @@ jobs:
           node-version: 20
 
       - name: Run release
+        id: set_version
         run: |
           node scripts/updatePackageJson.js
           VERSION=$(node -e "const pkg=require('./package.json');console.log(pkg.version)")
-          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo "release_version=$VERSION" >> $GITHUB_OUTPUT
           git add -A
           git commit -m "release version $VERSION [skip ci]" || echo "No changes to commit"
           git tag $VERSION || (git tag -d $VERSION && git tag $VERSION)
@@ -53,8 +58,8 @@ jobs:
       - name: Docker push client
         run: |
           cd packages/client
-          docker build -t cokoapps/kotahi-client:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
-          docker push cokoapps/kotahi-client:${{ env.RELEASE_VERSION }}
+          docker build -t cokoapps/kotahi-client:${{ needs.release.outputs.release_version }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-client:${{ needs.release.outputs.release_version }}
 
   publish_server:
     name: Publish server
@@ -72,8 +77,8 @@ jobs:
       - name: Docker push server
         run: |
           cd packages/server
-          docker build -t cokoapps/kotahi-server:${{ env.RELEASE_VERSION }} -f Dockerfile-production .
-          docker push cokoapps/kotahi-server:${{ env.RELEASE_VERSION }}
+          docker build -t cokoapps/kotahi-server:${{ needs.release.outputs.release_version }} -f Dockerfile-production .
+          docker push cokoapps/kotahi-server:${{ needs.release.outputs.release_version }}
 
   publish_docs:
     name: Publish docs
