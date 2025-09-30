@@ -48,6 +48,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Create release branch
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           git checkout -b release/${{ steps.bump_version.outputs.version }}
           git add -A
@@ -70,6 +72,8 @@ jobs:
             --body "Automated release of version ${{ steps.bump_version.outputs.version }}"
 
       - name: Wait for Lint check
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
           echo "Waiting for Lint to pass on PR #$PR_NUMBER"
@@ -85,6 +89,8 @@ jobs:
 
       - name: Tag release
         if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           git fetch origin main
           git checkout main
