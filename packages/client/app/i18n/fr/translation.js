@@ -560,6 +560,8 @@ const fr = {
         allowAuthorSubmitForm: 'Autoriser un auteur à soumettre un formulaire',
         allowAuthorSubmitFormWithBlankEditor:
           'Autoriser un auteur à soumettre un formulaire et accéder à un éditeur vide',
+        preventGmFromEditing:
+          "Empêcher le Responsable de groupe de modifier un manuscrit qu'il a rédigé après la soumission",
       },
       coarNotify: 'COAR-Notifier',
       aiDesignStudio: 'Studio de conception IA et assistant IA ',

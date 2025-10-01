@@ -208,9 +208,13 @@ const DecisionVersion = ({
 
     const versionId = version.id
 
+    const { preventGmFromEditing } = config.submission || {}
+
     const userCanEditMetadata =
       isCurrentVersion &&
-      ((isGroupManager && !isAuthor) || isGroupAdmin || isEditor)
+      ((isGroupManager && !(isAuthor && preventGmFromEditing)) ||
+        isGroupAdmin ||
+        isEditor)
 
     return {
       content: (

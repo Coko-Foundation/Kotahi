@@ -549,6 +549,8 @@ const en = {
         allowAuthorSubmitForm: 'Allow an author to submit a form',
         allowAuthorSubmitFormWithBlankEditor:
           'Allow an author to submit a form and access a blank editor',
+        preventGmFromEditing:
+          'Prevent Group Manager from altering a manuscript that they have authored post-submission',
       },
       aiDesignStudio: 'AI Design Studio & AI Assistant ',
       localContextApiKey: 'Local Contexts Api Key',
