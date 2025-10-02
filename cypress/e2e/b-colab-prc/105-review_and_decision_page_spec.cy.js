@@ -78,17 +78,13 @@ describe('review page tests', () => {
         // Confirm reviewer label shows up in the DOM
         cy.contains(reviewer, { timeout: 60000 }).should('exist')
 
-        // Debug: take a screenshot and dump body HTML in CI artifacts
-        // cy.screenshot(`reviewer-${index}`)
-        // cy.get('body').then($body => {
-        //   cy.writeFile(`cypress/logs/body-${index}.html`, $body.html())
-        // })
-
-        // Debug: log how many cards exist
-        cy.get('[class*=KanbanCard__Card]', { timeout: 60000 })
-          .should('have.length.gte', index + 1)
+        // Confirm a card was added
+        cy.get('[data-testid=reviewer-card]', { timeout: 60000 })
+          .should('have.length', index + 1)
           .then($els => {
-            cy.log(`Cards found after inviting ${reviewer}:`, $els.length)
+            cy.log(
+              `Reviewer cards count after inviting ${reviewer}: ${$els.length}`,
+            )
           })
       })
     })
