@@ -112,6 +112,10 @@ module.exports = {
 
   User: {
     async defaultIdentity(user, _, ctx) {
+      if (user.defaultIdentity) {
+        return user.defaultIdentity
+      }
+
       return ctx.loaders.User.defaultIdentitiesLoader.load(user.id)
     },
 
