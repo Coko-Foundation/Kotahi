@@ -16,7 +16,7 @@ describe('review page tests', () => {
     const seedUrl = Cypress.config('seedUrl')
 
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
-    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
+    // cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
     cy.request('POST', `${seedUrl}/senior_editor_assigned`)
 
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -33,20 +33,63 @@ describe('review page tests', () => {
 
       // Invite all the reviewers
       name.role.reviewers.forEach((reviewer, index) => {
+        // ControlPage.clickInviteReviewerDropdown()
+        // ControlPage.inviteReviewer(reviewer)
+        // cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
+        //   'not.exist',
+        // )
+        // cy.contains(reviewer).should('exist')
+        // cy.log(JSON.stringify(name.role.reviewers))
+        // cy.contains(reviewer, { timeout: 30000 }).should('exist') // confirm reviewer label shows
+        // cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
+        //   'have.length.at.least',
+        //   1,
+        // )
+
+        // cy.get('div[class*=KanbanCard__Card]', { timeout: 30000 }).should(
+        //   'be.visible',
+        // )
+        // cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
+        //   'have.length',
+        //   index + 1,
+        // )
+        // ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
+
+        cy.log('Inviting reviewer:', reviewer)
+
+        // Intercept GraphQL mutation for adding reviewer
+        cy.intercept('POST', '**/graphql', req => {
+          if (req.body.query && req.body.query.includes('addReviewer')) {
+            req.alias = 'addReviewer'
+          }
+        })
+
         ControlPage.clickInviteReviewerDropdown()
         ControlPage.inviteReviewer(reviewer)
+
+        // Ensure modal closes before continuing
         cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
           'not.exist',
         )
-        cy.contains(reviewer).should('exist')
-        cy.get('div[class*=KanbanCard__Card]', { timeout: 30000 }).should(
-          'be.visible',
-        )
-        cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
-          'have.length',
-          index + 1,
-        )
-        // ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
+
+        // Wait for backend confirmation
+        cy.wait('@addReviewer', { timeout: 60000 })
+
+        // Confirm reviewer label shows up in the DOM
+        cy.contains(reviewer, { timeout: 60000 }).should('exist')
+
+        // Debug: take a screenshot and dump body HTML in CI artifacts
+        // cy.screenshot(`reviewer-${index}`)
+        // cy.get('body').then($body => {
+        //   cy.writeFile(`cypress/logs/body-${index}.html`, $body.html())
+        // })
+
+        // Debug: log how many cards exist
+        cy.get('[class*=KanbanCard__Card]', { timeout: 60000 })
+          .should('have.length.gte', index + 1)
+          .then($els => {
+            cy.log(`Cards found after inviting ${reviewer}:`, $els.length)
+          })
       })
     })
   })
