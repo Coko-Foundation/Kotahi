@@ -24,8 +24,11 @@ describe('review page tests', () => {
       // login as seniorEditor
       // eslint-disable-next-line no-undef
       cy.login(name.role.seniorEditor, dashboard)
+      cy.url().should('include', '/dashboard')
+
       DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControl() // Navigate to Control Page
+      cy.url().should('include', '/prc/versions')
       cy.contains('Team').should('exist')
 
       // Invite all the reviewers
@@ -35,7 +38,8 @@ describe('review page tests', () => {
         cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
           'not.exist',
         )
-        cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
+        cy.contains(reviewer).should('exist')
+        cy.get('div[class*=KanbanCard__Card]', { timeout: 30000 }).should(
           'be.visible',
         )
         cy.get('[class*=KanbanCard__Card]', { timeout: 30000 }).should(
