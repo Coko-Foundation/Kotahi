@@ -72,7 +72,9 @@ const deleteMessage = async messageId => {
 
 const getMessageById = async (messageId, withUser) => {
   if (withUser) {
-    return Message.query().findById(messageId).withGraphJoined('user')
+    return Message.query()
+      .findById(messageId)
+      .withGraphJoined('user.[defaultIdentity]')
   }
 
   return Message.findById(messageId)

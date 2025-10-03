@@ -181,6 +181,7 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
         ControlPage.inviteReviewer(name.role.reviewers[1])
+        cy.reload()
         cy.get('input[value = "isCollaborative"]').should('not.exist')
 
         ControlPage.getNumberOfInvitedReviewers().should('eq', 1)
