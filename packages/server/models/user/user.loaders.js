@@ -1,13 +1,10 @@
 const User = require('./user.model')
 
 const defaultIdentitiesLoader = async userIds => {
-  const users = await User.query()
-    .whereIn('id', userIds)
-    .withGraphFetched('defaultIdentity')
+  const identities = await User.relatedQuery('defaultIdentity').for(userIds)
 
-  const map = new Map(users.map(u => [u.id, u.defaultIdentity || null]))
-
-  return userIds.map(id => map.get(id) ?? null)
+  const byUserId = new Map(identities.map(i => [i.userId, i]))
+  return userIds.map(id => byUserId.get(id) ?? null)
 }
 
 module.exports = {
