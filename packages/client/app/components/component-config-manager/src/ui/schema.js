@@ -468,7 +468,7 @@ export const generateSchemas = ({
             },
             preventGmFromEditing: {
               type: 'boolean',
-              title: t('configPage.preventGmFromEditing'),
+              title: t('configPage.SubmissionPage.preventGmFromEditing'),
               default: false,
             },
           },
@@ -1677,7 +1677,7 @@ export const generateSchemas = ({
             },
             preventGmFromEditing: {
               type: 'boolean',
-              title: t('configPage.preventGmFromEditing'),
+              title: t('configPage.SubmissionPage.preventGmFromEditing'),
               default: false,
             },
           },
@@ -2929,7 +2929,7 @@ export const generateSchemas = ({
             },
             preventGmFromEditing: {
               type: 'boolean',
-              title: t('configPage.preventGmFromEditing'),
+              title: t('configPage.SubmissionPage.preventGmFromEditing'),
               default: false,
             },
           },
@@ -4186,7 +4186,7 @@ export const generateSchemas = ({
             },
             preventGmFromEditing: {
               type: 'boolean',
-              title: t('configPage.preventGmFromEditing'),
+              title: t('configPage.SubmissionPage.preventGmFromEditing'),
               default: false,
             },
           },
