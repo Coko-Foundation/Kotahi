@@ -112,9 +112,12 @@ module.exports = {
 
   User: {
     async defaultIdentity(user, _, ctx) {
-      if (user.defaultIdentity) {
-        return user.defaultIdentity
-      }
+      // TODO: Cypress test 002 fails with this optimisation. Needs further investigation
+      //   if (user.defaultIdentity && user.defaultIdentity.id && user.email) {
+      //     const { id, name, aff, type, identifier } = user.defaultIdentity
+      //     const { email } = user
+      //     return { id, name, aff, email, type, identifier }
+      //   }
 
       return ctx.loaders.User.defaultIdentitiesLoader.load(user.id)
     },
