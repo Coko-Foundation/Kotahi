@@ -32,6 +32,13 @@ describe('Checking manuscripts page: label selection and tooltip', () => {
     // Function to select a label and verify it
     const selectLabelAndVerify = label => {
       cy.get('[class*=LabelDropdown__DropdownElement]').click()
+      cy.screenshot('before-dropdown')
+      cy.get('body').then($body => {
+        if (!$body.find('[class*=LabelDropdown__DropdownMenu]').length) {
+          cy.log('Dropdown not found in body!')
+        }
+      })
+
       cy.get('[class*=LabelDropdown__DropdownMenu]').contains(label).click()
       ManuscriptsPage.getLabelDropdown().should('contain', label)
       Menu.clickManuscriptsAndAssertPageLoad()
