@@ -134,7 +134,7 @@ const KanbanCard = ({
         }
         updateTeamMember={updateTeamMember}
       />
-      <Card onClick={() => setOpen(true)}>
+      <Card data-testid="reviewer-card" onClick={() => setOpen(true)}>
         <LeftSide>
           <UserAvatar
             isClickable={!!reviewer.user}

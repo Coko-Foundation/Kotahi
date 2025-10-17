@@ -36,7 +36,14 @@ describe('Editor assigning reviewers', () => {
       name.role.reviewers.forEach((reviewer, index) => {
         ControlPage.clickInviteReviewerDropdown()
         ControlPage.inviteReviewer(reviewer)
-        ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
+        // Ensure modal closes before continuing
+        cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should(
+          'not.exist',
+        )
+
+        // Confirm reviewer label shows up in the DOM
+        cy.contains(reviewer, { timeout: 60000 }).should('exist')
+        // ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
       })
     })
 

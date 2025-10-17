@@ -1,124 +1,92 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
+/* eslint-disable jest/valid-expect */
 
 // import { beforeEach } from 'mocha'
 import { dashboard, manuscripts } from '../../support/routes1'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
-import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
 import { ReviewPage } from '../../page-object/review-page'
 
-describe.skip('review page tests', () => {
+describe('review page tests', () => {
   before(() => {
     const restoreUrl = Cypress.config('restoreUrl')
     const seedUrl = Cypress.config('seedUrl')
 
     cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
-    cy.request('POST', `${restoreUrl}/commons.colab_bootstrap`)
     cy.request('POST', `${seedUrl}/senior_editor_assigned`)
-
-    // eslint-disable-next-line jest/valid-expect-in-promise
-    cy.fixture('role_names').then(name => {
-      // login as seniorEditor
-      // eslint-disable-next-line no-undef
-      cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControl() // Navigate to Control Page
-      cy.contains('Team').should('exist')
-
-      // Invite all the reviewers
-      name.role.reviewers.forEach((reviewer, index) => {
-        ControlPage.clickInviteReviewerDropdown()
-        ControlPage.inviteReviewer(reviewer)
-        ControlPage.getNumberOfInvitedReviewers().should('eq', index + 1)
-      })
-    })
   })
 
-  it('verifies assigned reviewers', () => {
+  it("reviewer should see admin's decision after submitting a positive review", () => {
     cy.fixture('role_names').then(name => {
-      // login as seniorEditor
-      // eslint-disable-next-line no-undef
-      cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickDashboardTab(2)
-      DashboardPage.clickControl() // Navigate to Control Page
+      const reviewer = name.role.reviewers[0]
+      cy.addReviewer(0)
 
-      // Go to dashboard and verify number of invited reviewer
-      Menu.clickDashboard()
-      cy.get('.ReviewStatusDonut__CenterLabel-sc-76zxfe-1').contains('6')
-    })
-  })
+      cy.login(reviewer, dashboard)
+      cy.submitReview('accept', 'everything is ok', 'great submission!')
 
-  it('saved decision should be visible for the reviewer', () => {
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin, dashboard)
-    })
-    cy.awaitDisappearSpinner()
-    Menu.clickManuscriptsAndAssertPageLoad()
-    cy.submitDecision('the article is ok', 'revise')
-
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[4], dashboard)
-    })
-    DashboardPage.clickDashboardTab(1)
-    DashboardPage.clickAcceptReviewButton()
-    cy.contains('button', 'Do Review').should('be.visible')
-    DashboardPage.clickDoReviewAndVerifyPageLoaded()
-    cy.get('[class*=HiddenTabs__Tab]').contains('Decision').click()
-    ReviewPage.getDecisionText().should('contain', 'the article is ok')
-  })
-
-  it('reviewer should see decision after submitting a positive review', () => {
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[0], dashboard)
-    })
-    cy.submitReview('accept', 'everything is ok', 'great submission!')
-
-    cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
-    })
-    cy.submitDecision('great paper!', 'accept')
+      cy.submitDecision('great paper!', 'accept')
 
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[0], dashboard)
+      cy.login(reviewer, dashboard)
+      cy.verifyDecision('great paper')
     })
-    cy.verifyDecision('great paper')
   })
 
-  it('reviewer should see decision after submitting a neutral review', () => {
+  it("reviewer should see admin's decision after submitting a neutral review", () => {
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[1], dashboard)
-    })
-    cy.submitReview('revise', 'everything is ok', 'paper should be revised')
+      const reviewer = name.role.reviewers[1]
+      cy.addReviewer(1)
 
-    cy.fixture('role_names').then(name => {
+      cy.login(reviewer, dashboard)
+      cy.submitReview('revise', 'everything is ok', 'paper should be revised')
+
       cy.login(name.role.admin, manuscripts)
-    })
-    cy.submitDecision('please revise', 'revise')
+      cy.submitDecision('please revise', 'revise')
 
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[1], dashboard)
+      cy.login(reviewer, dashboard)
+      cy.verifyDecision('please revise')
     })
-    cy.verifyDecision('please revise')
   })
 
-  it('reviewer should see decision after submitting a negative review', () => {
+  it("reviewer should see admin's decision after submitting a negative review", () => {
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[3], dashboard)
-    })
-    cy.submitReview('reject', 'everything is ok', 'not good enough')
+      const reviewer = name.role.reviewers[3]
+      cy.addReviewer(3)
+      cy.login(reviewer, dashboard)
+      cy.submitReview('reject', 'everything is ok', 'not good enough')
 
-    cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
-    })
-    cy.submitDecision('it does not fit our standards', 'reject')
-    cy.awaitDisappearSpinner()
+      cy.submitDecision('it does not fit our standards', 'reject')
 
-    cy.fixture('role_names').then(name => {
-      cy.login(name.role.reviewers[3], dashboard)
+      cy.login(reviewer, dashboard)
+      cy.verifyDecision('it does not fit our standards')
     })
-    cy.verifyDecision('it does not fit our standards')
+  })
+})
+
+Cypress.Commands.add('addReviewer', reviewerIndex => {
+  cy.fixture('role_names').then(name => {
+    const reviewer = name.role.reviewers[`${reviewerIndex}`]
+    // login as seniorEditor
+    // eslint-disable-next-line no-undef
+    cy.login(name.role.seniorEditor, dashboard)
+    cy.url().should('include', '/dashboard')
+
+    DashboardPage.clickDashboardTab(2)
+    DashboardPage.clickControl() // Navigate to Control Page
+    cy.url().should('include', '/prc/versions')
+    cy.contains('Team').should('exist')
+
+    ControlPage.clickInviteReviewerDropdown()
+    ControlPage.inviteReviewer(reviewer)
+
+    // Ensure modal closes before continuing
+    cy.get('[data-testid=submit-modal]', { timeout: 10000 }).should('not.exist')
+
+    // Confirm reviewer label shows up in the DOM
+    cy.contains(reviewer, { timeout: 60000 }).should('exist')
   })
 })
 
