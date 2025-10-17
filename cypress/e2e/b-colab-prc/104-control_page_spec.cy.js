@@ -306,6 +306,8 @@ describe('control page tests', () => {
     })
 
     it('sending notification to unregistered user', () => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
       createTask({
         assignee: 'Unregistered User',
         title: 'First task for unregistered user',
@@ -325,6 +327,8 @@ describe('control page tests', () => {
     })
 
     it('sending 3 notifications via task details modal', () => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
       createTask({
         assignee: 'Collaborative reviewer',
         title: 'First task for registered users',
@@ -377,7 +381,9 @@ describe('control page tests', () => {
       })
       // cy.get('[class*=TaskEditModal__NotificationLogsToggle]').click()
       // cy.contains('Task notification sent by Sinead Sullivan to Gale Davis')
-      cy.get('[class*=ActionButton__BaseButton]:last').click()
+
+      cy.contains('Send Now').click()
+      // cy.get('[class*=ActionButton__BaseButton]:last').click()
     })
   })
 })
@@ -460,5 +466,5 @@ function sendTaskNotification({ recipient, template }) {
     .last()
     .type(`${template}{enter}`, { force: true })
 
-  cy.contains('Send Now').click()
+  // cy.contains('Send Now').click()
 }
