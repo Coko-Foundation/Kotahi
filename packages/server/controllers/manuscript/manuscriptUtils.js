@@ -352,14 +352,17 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
 
   if (searchQuery) {
     addSelect(
-      `ts_rank_cd(to_tsvector('english', m.searchable_text), to_tsquery('english', '${searchQuery}')) AS rank`,
+      `ts_rank_cd(m.search_tsvector, to_tsquery('english', ?)) AS rank`,
+      searchQuery,
     )
+
     addSelect(
-      `ts_headline('english', m.searchable_text, to_tsquery('english', '${searchQuery}')) AS snippet`,
+      `ts_headline('english', m.searchable_text, to_tsquery('english', ?)) AS snippet`,
+      searchQuery,
     )
-    addWhere(
-      `to_tsvector('english', m.searchable_text) @@ to_tsquery('english', '${searchQuery}')`,
-    )
+
+    addWhere(`m.search_tsvector @@ to_tsquery('english', ?)`, searchQuery)
+
     setOrderOnRank = 'ORDER BY rank DESC'
   }
 
