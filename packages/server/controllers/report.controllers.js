@@ -34,8 +34,6 @@ const trim = (array, startCondition) => {
 const day = 24 * 60 * 60 * 1000
 const week = day * 7
 
-const dateSorter = (d0, d1) => d0.getTime() - d1.getTime()
-
 /** Return the datetime of the most recent midnight in the given timezone */
 const getLastMidnightInTimeZone = timeZoneOffset => {
   const transposedDate = new Date(Date.now() + timeZoneOffset * 60000)
@@ -247,14 +245,24 @@ const getPublishedTodayCount = async (groupId, timeZoneOffset) => {
 }
 
 const getRevisingNowCount = async groupId => {
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched('[manuscriptVersions(orderByCreatedDesc)]')
+  return Manuscript.query()
     .where({ parentId: null, groupId })
     .whereNot({ isHidden: true })
-
-  return manuscripts.filter(m =>
-    ['revise', 'revising'].includes(getFinalStatus(m)),
-  ).length
+    .whereRaw(
+      `
+        COALESCE(
+          (
+            SELECT status 
+            FROM manuscripts AS versions
+            WHERE versions.parent_id = manuscripts.id
+            ORDER BY versions.created DESC, versions.id DESC
+            LIMIT 1
+          ),
+          manuscripts.status
+        ) IN ('revise', 'revising')
+	`,
+    )
+    .resultSize()
 }
 
 const getDurationsTraces = async (startDate, endDate, groupId) => {
@@ -313,28 +321,43 @@ const getDailyAverageStats = async (startDate, endDate, groupId) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
   const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[reviews, manuscriptVersions(orderByCreatedDesc).[reviews]]',
-    )
-    .where('created', '>=', new Date(dataStart))
-    .where('created', '<', new Date(endDate))
+    .select([
+      'manuscripts.id',
+      'manuscripts.submittedDate',
+      'manuscripts.published',
+      Manuscript.raw(`
+      COALESCE(
+        manuscripts.published,
+        (
+          SELECT r.created
+          FROM reviews r
+          WHERE r.manuscript_id = manuscripts.id
+            AND r.is_decision = true
+            AND r.json_data->>'$verdict' = 'reject'
+          ORDER BY r.created DESC
+          LIMIT 1
+        )
+      ) AS "completedDate"
+    `),
+    ])
+    .where('manuscripts.created', '>=', new Date(dataStart))
+    .where('manuscripts.created', '<', new Date(endDate))
     .where({ parentId: null, groupId })
     .whereNot({ isHidden: true })
-    .orderBy('created')
+    .orderBy('manuscripts.created')
 
   const orderedSubmissionDates = manuscripts
     .map(m => m.submittedDate)
-    .filter(d => d)
-    .sort(dateSorter)
+    .filter(Boolean)
+    .sort((a, b) => new Date(a) - new Date(b))
 
   const orderedCompletionDates = manuscripts
-    .map(m => getCompletedDate(m))
-    .filter(d => d)
-    .sort(dateSorter)
+    .map(m => m.completedDate)
+    .filter(Boolean)
+    .sort((a, b) => new Date(a) - new Date(b))
 
   const publishedTotal = manuscripts.filter(m => {
-    const pubDate = getLastPublishedDate(m)
-    return pubDate && pubDate >= startDate
+    return m.published && m.published >= startDate
   }).length
 
   let submI = 0
@@ -364,6 +387,7 @@ const getDailyAverageStats = async (startDate, endDate, groupId) => {
   }
 
   const durationDays = (endDate - startDate) / day
+
   return {
     avgPublishedDailyCount: publishedTotal / durationDays,
     avgInProgressDailyCount: dailyInProgressTotal / durationDays,
