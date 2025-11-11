@@ -13,19 +13,30 @@ const {
 module.exports = {
   Query: {
     async summaryActivity(_, { startDate, endDate, groupId, timeZoneOffset }) {
-      const [
-        dateRangeSummaryStats,
-        publishedTodayCount,
-        revisingNowCount,
-        durationsTraces,
-        dailyAverageStats,
-      ] = await Promise.all([
-        getDateRangeSummaryStats(startDate, endDate, groupId),
-        getPublishedTodayCount(groupId, timeZoneOffset),
-        getRevisingNowCount(groupId),
-        getDurationsTraces(startDate, endDate, groupId),
-        getDailyAverageStats(startDate, endDate, groupId),
-      ])
+      const revisingNowCount = await getRevisingNowCount(groupId)
+
+      const publishedTodayCount = await getPublishedTodayCount(
+        groupId,
+        timeZoneOffset,
+      )
+
+      const dateRangeSummaryStats = await getDateRangeSummaryStats(
+        startDate,
+        endDate,
+        groupId,
+      )
+
+      const durationsTraces = await getDurationsTraces(
+        startDate,
+        endDate,
+        groupId,
+      )
+
+      const dailyAverageStats = await getDailyAverageStats(
+        startDate,
+        endDate,
+        groupId,
+      )
 
       return {
         ...dateRangeSummaryStats,
