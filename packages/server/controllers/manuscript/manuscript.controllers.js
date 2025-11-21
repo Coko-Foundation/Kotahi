@@ -45,7 +45,12 @@ const { publishToDOAJ } = require('../../services/publishing/doaj')
 const publishToGoogleSpreadSheet = require('../../services/publishing/google-spreadsheet')
 const { tryPublishDocMaps } = require('../../services/publishing/docmaps')
 const { rebuildCMSSite } = require('../flax.controllers')
-const { sendAnnouncementNotification } = require('../coar/coar.controllers')
+
+const {
+  sendAnnouncementNotification,
+  sendRejectCoarNotification,
+} = require('../coar/coar.controllers')
+
 const { sendAnnouncementNotificationToSciety } = require('../coar/sciety')
 
 const {
@@ -787,7 +792,7 @@ const makeDecision = async (id, decisionKey, userId) => {
   })
 
   const activeConfig = await Config.getCached(manuscript.groupId)
-  const currentUser = await User.query().findById(userId)
+  const currentUser = await User.findOneWithIdentity(userId, 'orcid')
   const { instanceName } = activeConfig.formData
   const decisionHasChanged = manuscript.decision !== decisionKey
   const isPreprint = ['preprint1', 'preprint2'].includes(instanceName)
@@ -832,6 +837,10 @@ const makeDecision = async (id, decisionKey, userId) => {
         context: { recipient: recipientEmail, messageContent },
         groupId: manuscript.groupId,
       })
+  }
+
+  if (decisionHasChanged && ['rejected', 'revise'].includes(decision)) {
+    await sendRejectCoarNotification(manuscript, currentUser, decision)
   }
 
   return Manuscript.query().updateAndFetchById(id, manuscript)
@@ -1468,7 +1477,7 @@ const publishManuscript = async (id, groupId) => {
     })
   }
 
-  if (notification) {
+  if (notification && manuscript.reviews.length > 1) {
     try {
       if (await sendNotificationToCoar(notification, manuscript))
         steps.push({
@@ -1478,7 +1487,7 @@ const publishManuscript = async (id, groupId) => {
     } catch (err) {
       console.error(err)
       steps.push({
-        stepLabel: 'COAR Notify review complete announcement sent',
+        stepLabel: 'COAR Notify review complete announcement failed',
         succeeded: false,
         errorMessage: err.message,
       })
@@ -1494,7 +1503,7 @@ const publishManuscript = async (id, groupId) => {
   } catch (err) {
     console.error(err)
     steps.push({
-      stepLabel: 'COAR Notify review announcement sent to Sciety',
+      stepLabel: 'COAR Notify review announcement to Sciety failed',
       succeeded: false,
       errorMessage: err.message,
     })

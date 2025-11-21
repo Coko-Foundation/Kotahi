@@ -7,8 +7,7 @@ const {
   isFlaxSetup,
 } = require('./announcement')
 
-const Config = require('../../models/config/config.model')
-const Group = require('../../models/group/group.model')
+const { CoarNotification, Config, Group } = require('../../models')
 
 const getScietyInboxUrl = async groupId => {
   const activeConfig = await Config.query().findOne({
@@ -30,14 +29,22 @@ const getScietyInboxUrl = async groupId => {
 const getRequestData = async manuscript => {
   const group = await Group.query().findById(manuscript.groupId).first()
   const reviewer = await getReviewer(manuscript)
-  const flaxReviewUrl = await getFlaxUrl(group.name, manuscript.shortId)
+
+  const { payload } = await CoarNotification.findOne({
+    manuscriptId: manuscript.id,
+  })
+
+  const { flaxReviewUrl, flaxUrl } = await getFlaxUrl(
+    group.name,
+    manuscript.shortId,
+  )
 
   const defaultPayload = {
     '@context': [
       'https://www.w3.org/ns/activitystreams',
-      'https://purl.org/coar/notify',
+      'https://coar-notify.net',
     ],
-    id: uuid(),
+    id: `urn:uuid:${uuid()}`,
     type: ['Announce', 'coar-notify:ReviewAction'],
     origin: {
       id: serverUrl,
@@ -50,7 +57,7 @@ const getRequestData = async manuscript => {
       type: 'Service',
     },
     object: {
-      id: flaxReviewUrl,
+      id: reviewer ? flaxReviewUrl : flaxUrl,
       type: ['Document', 'sorg:Review'],
     },
     actor: {
@@ -61,13 +68,15 @@ const getRequestData = async manuscript => {
     context: {
       id: `https://doi.org/${manuscript.doi}`,
     },
-    inReplyTo: null,
+    inReplyTo: payload.id,
   }
 
   if (reviewer) {
     defaultPayload.actor = {
       type: 'Person',
-      id: reviewer.email,
+      id: reviewer.orcid
+        ? `https://orcid.org/${reviewer.orcid}`
+        : reviewer.email,
       name: reviewer.username,
     }
   }

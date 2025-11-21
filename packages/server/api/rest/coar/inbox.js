@@ -24,7 +24,7 @@ module.exports = async app => {
     }
 
     try {
-      const result = await processNotification(group, payload, req)
+      const result = await processNotification(group, payload)
       return res.status(result.status).send({ message: result.message })
     } catch (error) {
       logger.error(error)
