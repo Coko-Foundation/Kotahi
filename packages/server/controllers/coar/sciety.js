@@ -105,7 +105,7 @@ const sendAnnouncementNotificationToSciety = async manuscript => {
     return response ? response.data : false
   } catch (err) {
     logger.error(err)
-    return false
+    throw err
   }
 }
 

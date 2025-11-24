@@ -1363,6 +1363,7 @@ const en = {
         visualAbstract: 'Single image attachment',
         attachments: 'Attachments',
         s3Uploader: 'S3 Uploader',
+        coarEndorsement: 'Endorsement Statement',
         doi: 'DOI',
         dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',

@@ -896,6 +896,13 @@ const decisionFieldOptions = [
     parse: null,
     format: null,
   },
+  {
+    fieldType: 'coarEndorsement',
+    label: 'Endorsement Statement',
+    component: 'AbstractEditor',
+    title: requiredTextFieldWithDefault('Endorsement Statement'),
+    name: presetTextField('$coarEndorsement'),
+  },
 ]
 
 /** Field options for use in the review form, including specialised and

@@ -1479,7 +1479,7 @@ const publishManuscript = async (id, groupId) => {
 
   if (notification && manuscript.reviews.length > 1) {
     try {
-      if (await sendNotificationToCoar(notification, manuscript))
+      if (await sendReviewCoarNotification(notification, manuscript))
         steps.push({
           stepLabel: 'COAR Notify review complete announcement sent',
           succeeded: true,
@@ -1488,6 +1488,23 @@ const publishManuscript = async (id, groupId) => {
       console.error(err)
       steps.push({
         stepLabel: 'COAR Notify review complete announcement failed',
+        succeeded: false,
+        errorMessage: err.message,
+      })
+    }
+  }
+
+  if (notification) {
+    try {
+      if (await sendEndorsementCoarNotification(notification, manuscript))
+        steps.push({
+          stepLabel: 'COAR Notify endorsement announcement sent',
+          succeeded: true,
+        })
+    } catch (err) {
+      console.error(err)
+      steps.push({
+        stepLabel: 'COAR Notify endorsement announcement failed',
         succeeded: false,
         errorMessage: err.message,
       })
@@ -1790,9 +1807,12 @@ const reviewerResponse = async (action, teamId, userId) => {
   return team
 }
 
-const sendNotificationToCoar = async (notification, manuscript) => {
-  const response = await sendAnnouncementNotification(notification, manuscript)
-  return response
+const sendReviewCoarNotification = async (notification, manuscript) => {
+  return sendAnnouncementNotification(notification, manuscript, 'review')
+}
+
+const sendEndorsementCoarNotification = async (notification, manuscript) => {
+  return sendAnnouncementNotification(notification, manuscript, 'endorsement')
 }
 
 const sendNotificationToSciety = async manuscript => {

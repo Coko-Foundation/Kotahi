@@ -2,9 +2,7 @@ const config = require('config')
 
 const { serverUrl, request, uuid } = require('@coko/server')
 
-const Group = require('../../models/group/group.model')
-const Review = require('../../models/review/review.model')
-const { Identity } = require('../../models')
+const { Config, Group, Identity, Review } = require('../../models')
 
 const flaxConfig = config['flax-site']
 
@@ -39,7 +37,7 @@ const getFlaxUrl = async (groupName, shortId) => {
   return { flaxReviewUrl, flaxUrl }
 }
 
-const getRequestData = async (notification, manuscript) => {
+const getRequestData = async (notification, manuscript, announcementType) => {
   const { payload, groupId } = notification
   const group = await Group.query().findById(groupId).first()
   const reviewer = await getReviewer(manuscript)
@@ -49,14 +47,34 @@ const getRequestData = async (notification, manuscript) => {
     manuscript.shortId,
   )
 
+  const type = [
+    'Announce',
+    `coar-notify:${
+      announcementType === 'review' ? 'Review' : 'Endorsement'
+    }Action`,
+  ]
+
+  const object =
+    announcementType === 'review'
+      ? {
+          id: reviewer ? flaxReviewUrl : flaxUrl,
+          type: ['Document', 'sorg:Review'],
+          ...(reviewer ? { 'ietf:cite-as': flaxReviewUrl } : {}),
+        }
+      : {
+          id: flaxUrl ?? `urn:uuid:${uuid()}`,
+          type: ['Document', 'sorg:EndorseAction'],
+          'ietf:cite-as': flaxUrl ?? `urn:uuid:${uuid()}`,
+        }
+
   const defaultPayload = {
     '@context': [
       'https://www.w3.org/ns/activitystreams',
       'https://coar-notify.net',
     ],
     id: `urn:uuid:${uuid()}`,
-    updated: new Date(),
-    type: ['Announce', 'coar-notify:ReviewAction'],
+    updated: new Date().toISOString(),
+    type,
     origin: {
       id: serverUrl,
       inbox: `${serverUrl}/api/coar/inbox/${group.name}`,
@@ -65,11 +83,7 @@ const getRequestData = async (notification, manuscript) => {
     target: {
       ...payload.origin,
     },
-    object: {
-      id: reviewer ? flaxReviewUrl : flaxUrl,
-      type: ['Document', 'sorg:Review'],
-      ...(reviewer ? { 'ietf:cite-as': flaxReviewUrl } : {}),
-    },
+    object,
     actor: {
       type: 'Person',
       id: '',
@@ -83,13 +97,20 @@ const getRequestData = async (notification, manuscript) => {
     inReplyTo: payload.id,
   }
 
-  if (reviewer) {
+  if (reviewer && announcementType === 'review') {
     defaultPayload.actor = {
       type: 'Person',
       id: reviewer.orcid
         ? `https://orcid.org/${reviewer.orcid}`
         : reviewer.email,
       name: reviewer.username,
+    }
+  } else if (announcementType === 'endorsement') {
+    const { formData } = await Config.getCached(groupId)
+    defaultPayload.actor = {
+      type: 'Organization',
+      id: flaxUrl,
+      name: formData.groupIdentity.title,
     }
   }
 
@@ -118,12 +139,16 @@ const getReviewer = async manuscript => {
   return { ...reviewer, orcid: identity?.identifier }
 }
 
-const makeAnnouncementOnCOAR = async (notification, manuscript) => {
-  const requestData = await getRequestData(notification, manuscript)
+const makeAnnouncementOnCOAR = async (
+  notification,
+  manuscript,
+  type = 'review',
+) => {
+  const requestData = await getRequestData(notification, manuscript, type)
   const inboxUrl = JSON.parse(requestData).target.inbox
   const requestLength = requestData.length
 
-  if (!isReviewDoi() && !isFlaxSetup()) {
+  if (!isReviewDoi() && !isFlaxSetup() && type === 'review') {
     return false
   }
 
@@ -141,7 +166,7 @@ const makeAnnouncementOnCOAR = async (notification, manuscript) => {
     return response ? response.data : false
   } catch (err) {
     console.error(err)
-    return false
+    throw err
   }
 }
 
