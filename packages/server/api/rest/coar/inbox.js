@@ -4,6 +4,7 @@ const { Group } = require('../../../models')
 
 const {
   processNotification,
+  sendUnprocessableCoarNotification,
   validateIPs,
 } = require('../../../controllers/coar/coar.controllers')
 
@@ -13,22 +14,44 @@ module.exports = async app => {
     const groupName = req.params.group
     const requestIP = req.socket.localAddress.split(':').pop()
 
+    let message = ''
+    let hasError = false
+
     const group = await Group.query().findOne({ name: groupName })
 
     if (!group) {
-      return res.status(404).send({ message: 'Group not found' })
+      message = 'Group not found'
+      res.status(404).send({ message })
+      hasError = true
     }
 
-    if (!(await validateIPs(requestIP, group))) {
-      return res.status(403).send({ message: 'Unauthorized Request' })
+    if (!hasError && !(await validateIPs(requestIP, group))) {
+      message = 'Unauthorized Request'
+      res.status(403).send({ message })
+      hasError = true
+    }
+
+    if (hasError) {
+      await sendUnprocessableCoarNotification(message, payload)
+      return
     }
 
     try {
-      const result = await processNotification(group, payload)
-      return res.status(result.status).send({ message: result.message })
+      const { message: processMessage, status } = await processNotification(
+        group,
+        payload,
+      )
+
+      if (status !== 202) {
+        await sendUnprocessableCoarNotification(processMessage, payload)
+      }
+
+      res.status(status).send({ message: processMessage })
     } catch (error) {
+      message = 'Failed to create notification.'
       logger.error(error)
-      return res.status(500).send({ message: 'Failed to create notification.' })
+      res.status(500).send({ message })
+      await sendUnprocessableCoarNotification(message, payload)
     }
   })
 }

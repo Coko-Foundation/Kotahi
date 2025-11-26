@@ -219,9 +219,10 @@ const makeAnnouncementOnCOAR = async (
 }
 
 module.exports = {
-  makeAnnouncementOnCOAR,
+  isFlaxSetup,
+  isReviewDoi,
+  generateUrn,
   getFlaxUrl,
   getReviewer,
-  isReviewDoi,
-  isFlaxSetup,
+  makeAnnouncementOnCOAR,
 }

@@ -1,6 +1,6 @@
-const { logger, uuid, serverUrl, request } = require('@coko/server')
+const { logger, serverUrl, request } = require('@coko/server')
 const { getCrossrefDataViaDoi } = require('./crossRef')
-const { makeAnnouncementOnCOAR } = require('./announcement')
+const { makeAnnouncementOnCOAR, generateUrn } = require('./announcement')
 
 const {
   CoarNotification,
@@ -60,7 +60,7 @@ const sendTentativeAcceptCoarNotification = async (
       type: 'Person',
       name: handlingEditor.username,
     },
-    id: `urn:uuid:${uuid()}`,
+    id: generateUrn(),
     inReplyTo: offerPayload.id,
     object: tentativeAcceptObject,
     origin: {
@@ -137,7 +137,7 @@ const sendRejectCoarNotification = async (
       'https://coar-notify.net',
     ],
     actor,
-    id: `urn:uuid:${uuid()}`,
+    id: generateUrn(),
     inReplyTo: offerPayload.id,
     object: rejectObject,
     origin: {
@@ -157,6 +157,59 @@ const sendRejectCoarNotification = async (
     const response = await request({
       method: 'post',
       url: rejectPayload.target.inbox,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': `${stringifiedPayload.length}`,
+      },
+      data: stringifiedPayload,
+    })
+
+    return response ? response.data : false
+  } catch (e) {
+    logger.error(e)
+    return false
+  }
+}
+
+const sendUnprocessableCoarNotification = async (
+  reason,
+  originalPayload = {},
+) => {
+  const { id: notificationId, origin, target } = originalPayload
+
+  const payload = {
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      'https://coar-notify.net',
+    ],
+    actor: {
+      id: 'https://kotahi.community',
+      type: 'Organization',
+      name: 'Kotahi',
+    },
+    id: generateUrn(),
+    inReplyTo: notificationId,
+    object: {
+      id: notificationId,
+    },
+    origin: {
+      id: serverUrl,
+      type: 'Service',
+      ...(target?.inbox ? { inbox: target.inbox } : {}),
+    },
+    summary: reason,
+    target: {
+      ...origin,
+    },
+    type: ['Flag', 'coar-notify:UnprocessableNotification'],
+  }
+
+  const stringifiedPayload = JSON.stringify(payload)
+
+  try {
+    const response = await request({
+      method: 'post',
+      url: payload.target.inbox,
       headers: {
         'Content-Type': 'application/json',
         'Content-Length': `${stringifiedPayload.length}`,
@@ -279,10 +332,8 @@ const filterNotification = payload =>
 const processNotification = async (group, payload) => {
   const groupId = group.id
 
-  const existingNotification = await CoarNotification.query().findOne({
-    payload,
-    groupId,
-  })
+  const existingNotification =
+    await CoarNotification.getOfferNotificationForGroupById(payload.id, groupId)
 
   // If not Offer type notification, just return 200 and process no further.
   if (!filterNotification(payload)) {
@@ -320,6 +371,7 @@ module.exports = {
   sendAnnouncementNotification,
   sendTentativeAcceptCoarNotification,
   sendRejectCoarNotification,
+  sendUnprocessableCoarNotification,
   processNotification,
   validateIPs,
 }
