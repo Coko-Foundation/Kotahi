@@ -1407,6 +1407,7 @@ const fr = {
         attachments: 'Pièces jointes',
         s3Uploader: 'Téléchargeur S3',
         coarEndorsement: "Déclaration d'appui",
+        coarLinkedResource: 'Ressource liée',
         doi: 'DOI',
         dois: 'Plusieurs DOI',
         doiSuffix: 'Suffixe DOI"',

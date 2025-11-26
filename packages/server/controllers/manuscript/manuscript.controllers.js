@@ -1495,8 +1495,23 @@ const publishManuscript = async (id, groupId) => {
   }
 
   if (notification) {
+    const endorsementDecision = decisions.find(
+      d => d.jsonData?.$coarEndorsement,
+    )
+
+    const linkedResourceDecision = decisions.find(
+      d => d.jsonData?.$coarLinkedResource,
+    )
+
     try {
-      if (await sendEndorsementCoarNotification(notification, manuscript))
+      if (
+        endorsementDecision &&
+        (await sendEndorsementCoarNotification(
+          notification,
+          manuscript,
+          endorsementDecision.jsonData.$coarEndorsement,
+        ))
+      )
         steps.push({
           stepLabel: 'COAR Notify endorsement announcement sent',
           succeeded: true,
@@ -1505,6 +1520,29 @@ const publishManuscript = async (id, groupId) => {
       console.error(err)
       steps.push({
         stepLabel: 'COAR Notify endorsement announcement failed',
+        succeeded: false,
+        errorMessage: err.message,
+      })
+    }
+
+    try {
+      if (
+        linkedResourceDecision &&
+        (await sendRelationshipCoarNotification(
+          notification,
+          manuscript,
+          linkedResourceDecision.jsonData.$coarLinkedResource,
+        ))
+      ) {
+        steps.push({
+          stepLabel: 'COAR Notify relationship announcement sent',
+          succeeded: true,
+        })
+      }
+    } catch (err) {
+      console.error(err)
+      steps.push({
+        stepLabel: 'COAR Notify relationship announcement failed',
         succeeded: false,
         errorMessage: err.message,
       })
@@ -1811,8 +1849,27 @@ const sendReviewCoarNotification = async (notification, manuscript) => {
   return sendAnnouncementNotification(notification, manuscript, 'review')
 }
 
-const sendEndorsementCoarNotification = async (notification, manuscript) => {
-  return sendAnnouncementNotification(notification, manuscript, 'endorsement')
+const sendEndorsementCoarNotification = async (
+  notification,
+  manuscript,
+  endorsement,
+) => {
+  return sendAnnouncementNotification(notification, manuscript, 'endorsement', {
+    endorsement,
+  })
+}
+
+const sendRelationshipCoarNotification = async (
+  notification,
+  manuscript,
+  linkedResource,
+) => {
+  return sendAnnouncementNotification(
+    notification,
+    manuscript,
+    'relationship',
+    { linkedResource },
+  )
 }
 
 const sendNotificationToSciety = async manuscript => {

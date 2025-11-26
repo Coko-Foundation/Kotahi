@@ -1364,6 +1364,7 @@ const en = {
         attachments: 'Attachments',
         s3Uploader: 'S3 Uploader',
         coarEndorsement: 'Endorsement Statement',
+        coarLinkedResource: 'Linked Resource',
         doi: 'DOI',
         dois: 'Multiple DOIs',
         doiSuffix: 'DOI suffix',

@@ -1383,6 +1383,7 @@ const ru = {
         attachments: 'Вложения',
         s3Uploader: 'Загрузчик S3',
         coarEndorsement: 'Заявление о поддержке',
+        coarLinkedResource: 'Связанный ресурс',
         doi: 'DOI',
         dois: 'Несколько DOI',
         doiSuffix: 'Суффикс DOI',

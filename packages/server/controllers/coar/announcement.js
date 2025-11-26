@@ -1,6 +1,6 @@
 const config = require('config')
 
-const { serverUrl, request, uuid } = require('@coko/server')
+const { clientUrl, serverUrl, request, uuid } = require('@coko/server')
 
 const { Config, Group, Identity, Review } = require('../../models')
 
@@ -37,8 +37,24 @@ const getFlaxUrl = async (groupName, shortId) => {
   return { flaxReviewUrl, flaxUrl }
 }
 
-const getRequestData = async (notification, manuscript, announcementType) => {
+const getDoi = manuscript => {
+  if (manuscript.doi.includes('doi.org')) {
+    return manuscript.doi
+  }
+
+  return `https://doi.org/${manuscript.doi}`
+}
+
+const generateUrn = () => `urn:uuid:${uuid()}`
+
+const getRequestData = async (
+  notification,
+  manuscript,
+  announcementType,
+  options = {},
+) => {
   const { payload, groupId } = notification
+  const { endorsement, linkedResource } = options
   const group = await Group.query().findById(groupId).first()
   const reviewer = await getReviewer(manuscript)
 
@@ -47,32 +63,61 @@ const getRequestData = async (notification, manuscript, announcementType) => {
     manuscript.shortId,
   )
 
+  const announcementTypes = {
+    endorsement: 'Endorsement',
+    relationship: 'Relationship',
+    review: 'Review',
+  }
+
   const type = [
     'Announce',
-    `coar-notify:${
-      announcementType === 'review' ? 'Review' : 'Endorsement'
-    }Action`,
+    `coar-notify:${announcementTypes[announcementType]}Action`,
   ]
 
-  const object =
-    announcementType === 'review'
-      ? {
-          id: reviewer ? flaxReviewUrl : flaxUrl,
-          type: ['Document', 'sorg:Review'],
-          ...(reviewer ? { 'ietf:cite-as': flaxReviewUrl } : {}),
-        }
-      : {
-          id: flaxUrl ?? `urn:uuid:${uuid()}`,
-          type: ['Document', 'sorg:EndorseAction'],
-          'ietf:cite-as': flaxUrl ?? `urn:uuid:${uuid()}`,
-        }
+  // default to review
+  let object = {
+    id: reviewer ? flaxReviewUrl : flaxUrl,
+    type: ['Document', 'sorg:Review'],
+    ...(reviewer ? { 'ietf:cite-as': flaxReviewUrl } : {}),
+  }
+
+  let context = {
+    id: getDoi(manuscript),
+    type: ['Document', 'sorg:AboutPage'],
+    'ietf:cite-as': getDoi(manuscript),
+  }
+
+  if (announcementType === 'endorsement') {
+    const id = generateUrn()
+    object = {
+      id,
+      type: ['Note', 'sorg:WebPage'],
+      content: endorsement,
+      //   'ietf:cite-as': flaxUrl ?? id,
+    }
+  }
+
+  if (announcementType === 'relationship') {
+    context = {
+      ...context,
+      id: linkedResource,
+    }
+
+    object = {
+      id: generateUrn(),
+      type: ['Relationship'],
+      'as:subject': flaxUrl,
+      'as:relationship': 'https://schema.org/relatedTo',
+      'as:object': linkedResource,
+    }
+  }
 
   const defaultPayload = {
     '@context': [
       'https://www.w3.org/ns/activitystreams',
       'https://coar-notify.net',
     ],
-    id: `urn:uuid:${uuid()}`,
+    id: generateUrn(),
     updated: new Date().toISOString(),
     type,
     origin: {
@@ -89,11 +134,7 @@ const getRequestData = async (notification, manuscript, announcementType) => {
       id: '',
       name: 'Anonymous',
     },
-    context: {
-      id: `https://doi.org/${manuscript.doi}`,
-      type: ['Document', 'sorg:AboutPage'],
-      'ietf:cite-as': `https://doi.org/${manuscript.doi}`,
-    },
+    context,
     inReplyTo: payload.id,
   }
 
@@ -105,11 +146,11 @@ const getRequestData = async (notification, manuscript, announcementType) => {
         : reviewer.email,
       name: reviewer.username,
     }
-  } else if (announcementType === 'endorsement') {
+  } else if (['endorsement', 'relationship'].includes(announcementType)) {
     const { formData } = await Config.getCached(groupId)
     defaultPayload.actor = {
       type: 'Organization',
-      id: flaxUrl,
+      id: clientUrl,
       name: formData.groupIdentity.title,
     }
   }
@@ -142,9 +183,16 @@ const getReviewer = async manuscript => {
 const makeAnnouncementOnCOAR = async (
   notification,
   manuscript,
-  type = 'review',
+  type,
+  options,
 ) => {
-  const requestData = await getRequestData(notification, manuscript, type)
+  const requestData = await getRequestData(
+    notification,
+    manuscript,
+    type,
+    options,
+  )
+
   const inboxUrl = JSON.parse(requestData).target.inbox
   const requestLength = requestData.length
 

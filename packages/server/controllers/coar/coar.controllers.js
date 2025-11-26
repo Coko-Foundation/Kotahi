@@ -10,8 +10,13 @@ const {
   User,
 } = require('../../models')
 
-const sendAnnouncementNotification = (notification, manuscript, type) => {
-  return makeAnnouncementOnCOAR(notification, manuscript, type)
+const sendAnnouncementNotification = (
+  notification,
+  manuscript,
+  type,
+  options,
+) => {
+  return makeAnnouncementOnCOAR(notification, manuscript, type, options)
 }
 
 const sendTentativeAcceptCoarNotification = async (
