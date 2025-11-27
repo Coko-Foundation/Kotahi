@@ -239,7 +239,7 @@ const getManuscriptByDoi = async (doi, groupId) => {
 }
 
 const extractManuscriptFromNotification = async (notification, groupId) => {
-  const doi = extractDoi(notification)
+  const doi = extractDoi(notification.payload)
   const crossrefData = await getCrossrefDataViaDoi(doi)
   const existingManuscript = await getManuscriptByDoi(doi, groupId)
 
@@ -321,8 +321,8 @@ const linkManuscriptToNotification = async (notification, manuscript) => {
     .patch({ manuscriptId })
 }
 
-const extractDoi = notification => {
-  const doi = notification.payload.object['ietf:cite-as']
+const extractDoi = payload => {
+  const doi = payload.object['ietf:cite-as']
   return doi ? doi.replace('https://doi.org/', '') : null
 }
 
@@ -331,9 +331,14 @@ const filterNotification = payload =>
 
 const processNotification = async (group, payload) => {
   const groupId = group.id
+  const doi = extractDoi(payload)
 
   const existingNotification =
-    await CoarNotification.getOfferNotificationForGroupById(payload.id, groupId)
+    await CoarNotification.getOfferNotificationForGroupByIdOrDoi(
+      payload.id,
+      groupId,
+      doi,
+    )
 
   // If not Offer type notification, just return 200 and process no further.
   if (!filterNotification(payload)) {

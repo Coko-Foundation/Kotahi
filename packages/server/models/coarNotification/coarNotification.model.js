@@ -30,9 +30,10 @@ class CoarNotification extends BaseModel {
     return offerNotification
   }
 
-  static async getOfferNotificationForGroupById(
+  static async getOfferNotificationForGroupByIdOrDoi(
     notificationId,
     groupId,
+    doi,
     options = {},
   ) {
     const { trx } = options
@@ -41,6 +42,12 @@ class CoarNotification extends BaseModel {
       .where({ groupId })
       .andWhere(builder => {
         builder.whereRaw(`payload->>'id' = ?`, [notificationId])
+
+        if (doi) {
+          builder.orWhereRaw(`(payload->'object'->>'ietf:cite-as') ILIKE ?`, [
+            `%${doi}%`,
+          ])
+        }
       })
 
     return offerNotification
