@@ -31,11 +31,15 @@ class CoarNotification extends BaseModel {
   }
 
   static async getOfferNotificationForGroupByIdOrDoi(
-    notificationId,
     groupId,
+    notificationId,
     doi,
     options = {},
   ) {
+    if (!notificationId) {
+      return undefined
+    }
+
     const { trx } = options
 
     const [offerNotification] = await CoarNotification.query(trx)

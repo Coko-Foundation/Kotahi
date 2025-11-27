@@ -10,6 +10,14 @@ const {
   User,
 } = require('../../models')
 
+let archiveManuscript
+setImmediate(() => {
+  /* eslint-disable global-require */
+  archiveManuscript =
+    require('../manuscript/manuscript.controllers').archiveManuscript
+  /* eslint-enable global-require */
+})
+
 const sendAnnouncementNotification = (
   notification,
   manuscript,
@@ -234,7 +242,7 @@ const createNotification = async (payload, groupId) => {
 }
 
 const getManuscriptByDoi = async (doi, groupId) => {
-  const manuscript = await Manuscript.query().findOne({ doi, groupId })
+  const manuscript = await Manuscript.findOne({ doi, groupId, isHidden: false })
   return manuscript
 }
 
@@ -322,27 +330,69 @@ const linkManuscriptToNotification = async (notification, manuscript) => {
 }
 
 const extractDoi = payload => {
-  const doi = payload.object['ietf:cite-as']
+  const doi = payload.object && payload.object['ietf:cite-as']
   return doi ? doi.replace('https://doi.org/', '') : null
 }
 
-const filterNotification = payload =>
-  Array.isArray(payload?.type) && payload.type.includes('Offer')
+const extractNotificationType = payload => {
+  if (Array.isArray(payload?.type)) {
+    if (payload.type.includes('Offer')) {
+      return 'Offer'
+    }
+
+    if (payload.type.includes('Undo')) {
+      return 'Undo'
+    }
+  }
+
+  if (payload?.type === 'Undo') {
+    return 'Undo'
+  }
+
+  return null
+}
 
 const processNotification = async (group, payload) => {
   const groupId = group.id
   const doi = extractDoi(payload)
 
+  const type = extractNotificationType(payload)
+
+  if (!type) {
+    return { status: 400, message: 'Invalid notification type' }
+  }
+
+  if (type === 'Undo' && !payload.inReplyTo) {
+    return {
+      status: 400,
+      message: 'Property `inReplyTo` is missing from payload',
+    }
+  }
+
   const existingNotification =
     await CoarNotification.getOfferNotificationForGroupByIdOrDoi(
-      payload.id,
       groupId,
+      type === 'Undo' ? payload.inReplyTo : payload.id,
       doi,
     )
 
-  // If not Offer type notification, just return 200 and process no further.
-  if (!filterNotification(payload)) {
-    return { status: 202, message: 'Notification received' }
+  if (type === 'Undo') {
+    if (!existingNotification) {
+      return { status: 404, message: 'Notification not found' }
+    }
+
+    const existingManuscript = await Manuscript.findById(
+      existingNotification.manuscriptId,
+    )
+
+    if (!existingManuscript || existingManuscript.isHidden) {
+      return { status: 404, message: 'Manuscript not found' }
+    }
+
+    await createNotification(payload, groupId)
+    await archiveManuscript(existingManuscript.id)
+
+    return { status: 202, message: 'Manuscript archived successfully' }
   }
 
   if (existingNotification) {

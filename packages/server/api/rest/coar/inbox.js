@@ -42,7 +42,7 @@ module.exports = async app => {
         payload,
       )
 
-      if (status !== 202) {
+      if (status > 299) {
         await sendUnprocessableCoarNotification(processMessage, payload)
       }
 
