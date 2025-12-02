@@ -16,6 +16,10 @@ const { evictFromCacheByPrefix } = require('../services/queryCache.service')
 
 const seekEvent = require('../services/notification.service')
 
+const {
+  sendTentativeAcceptCoarNotification,
+} = require('./coar/coar.controllers')
+
 const EDITOR_ROLES = ['editor', 'handlingEditor', 'seniorEditor']
 
 const createTeam = async (input, groupId) => {
@@ -44,6 +48,12 @@ const createTeam = async (input, groupId) => {
 
   if (EDITOR_ROLES.includes(input.role)) {
     const manuscript = await Manuscript.query().findById(input.objectId)
+    const handlingEditorIds = input.members.map(m => m.user.id)
+
+    if (input.role === 'handlingEditor' && handlingEditorIds.length > 0) {
+      await sendTentativeAcceptCoarNotification(manuscript, handlingEditorIds)
+    }
+
     seekEvent('team-editor-assigned', {
       manuscript,
       membersAdded: input.members,
@@ -86,7 +96,14 @@ const updateTeam = async (id, input, groupId) => {
       role: existing.role,
     }
 
-    membersAdded.length && seekEvent('team-editor-assigned', eventData)
+    if (membersAdded.length) {
+      if (existing.role === 'handlingEditor') {
+        await sendTentativeAcceptCoarNotification(manuscript, membersAdded)
+      }
+
+      seekEvent('team-editor-assigned', eventData)
+    }
+
     membersRemoved.length && seekEvent('team-editor-unassigned', eventData)
 
     await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)

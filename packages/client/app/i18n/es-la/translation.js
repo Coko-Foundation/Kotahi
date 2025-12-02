@@ -1392,6 +1392,8 @@ const esLa = {
         visualAbstract: 'Adjunto de imagen única',
         attachments: 'Adjuntos',
         s3Uploader: 'Cargador S3',
+        coarEndorsement: 'Declaración de respaldo',
+        coarLinkedResource: 'Recurso vinculado',
         doi: 'DOI',
         dois: 'Múltiples dois',
         divider: 'Separador',

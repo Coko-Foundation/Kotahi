@@ -1,9 +1,8 @@
 const config = require('config')
 
-const { serverUrl, request } = require('@coko/server')
+const { clientUrl, serverUrl, request, uuid } = require('@coko/server')
 
-const Group = require('../../models/group/group.model')
-const Review = require('../../models/review/review.model')
+const { Config, Group, Identity, Review } = require('../../models')
 
 const flaxConfig = config['flax-site']
 
@@ -13,14 +12,17 @@ const isReviewDoi = () => {
 
 const isFlaxSetup = () => {
   return (
-    flaxConfig.port === '' ||
-    flaxConfig.host === '' ||
-    flaxConfig.protocol === ''
+    flaxConfig.port !== '' &&
+    flaxConfig.host !== '' &&
+    flaxConfig.protocol !== ''
   )
 }
 
 const getFlaxUrl = async (groupName, shortId) => {
-  if (!flaxConfig) return false
+  let flaxReviewUrl = ''
+  let flaxUrl = ''
+
+  if (!flaxConfig) return { flaxReviewUrl, flaxUrl }
   const flaxHost = flaxConfig.host
   const flaxPort = flaxConfig.port
   const flaxProtocol = flaxConfig.protocol
@@ -29,23 +31,95 @@ const getFlaxUrl = async (groupName, shortId) => {
     flaxPort ? `:${flaxPort}` : ''
   }`
 
-  return `${flaxServerUrl}/${groupName}/${shortId}/index.html#reviews`
+  flaxReviewUrl = `${flaxServerUrl}/${groupName}/articles/${shortId}/index.html#reviews`
+  flaxUrl = `${flaxServerUrl}/${groupName}/articles/${shortId}/index.html`
+
+  return { flaxReviewUrl, flaxUrl }
 }
 
-const getRequestData = async (notification, manuscript) => {
+const getDoi = manuscript => {
+  if (manuscript.doi.includes('doi.org')) {
+    return manuscript.doi
+  }
+
+  return `https://doi.org/${manuscript.doi}`
+}
+
+const generateUrn = () => `urn:uuid:${uuid()}`
+
+const getRequestData = async (
+  notification,
+  manuscript,
+  announcementType,
+  options = {},
+) => {
   const { payload, groupId } = notification
+  const { endorsement, linkedResource } = options
   const group = await Group.query().findById(groupId).first()
   const reviewer = await getReviewer(manuscript)
-  const flaxReviewUrl = await getFlaxUrl(group.name, manuscript.shortId)
+
+  const { flaxReviewUrl, flaxUrl } = await getFlaxUrl(
+    group.name,
+    manuscript.shortId,
+  )
+
+  const announcementTypes = {
+    endorsement: 'Endorsement',
+    relationship: 'Relationship',
+    review: 'Review',
+  }
+
+  const type = [
+    'Announce',
+    `coar-notify:${announcementTypes[announcementType]}Action`,
+  ]
+
+  // default to review
+  let object = {
+    id: reviewer ? flaxReviewUrl : flaxUrl,
+    type: ['Document', 'sorg:Review'],
+    ...(reviewer ? { 'ietf:cite-as': flaxReviewUrl } : {}),
+  }
+
+  let context = {
+    id: getDoi(manuscript),
+    type: ['Document', 'sorg:AboutPage'],
+    'ietf:cite-as': getDoi(manuscript),
+  }
+
+  if (announcementType === 'endorsement') {
+    const id = generateUrn()
+    object = {
+      id,
+      type: ['Note', 'sorg:WebPage'],
+      content: endorsement,
+      //   'ietf:cite-as': flaxUrl ?? id,
+    }
+  }
+
+  if (announcementType === 'relationship') {
+    context = {
+      ...context,
+      id: linkedResource,
+    }
+
+    object = {
+      id: generateUrn(),
+      type: ['Relationship'],
+      'as:subject': flaxUrl,
+      'as:relationship': 'https://schema.org/relatedTo',
+      'as:object': linkedResource,
+    }
+  }
 
   const defaultPayload = {
     '@context': [
       'https://www.w3.org/ns/activitystreams',
-      'https://purl.org/coar/notify',
+      'https://coar-notify.net',
     ],
-    id: payload.id,
-    updated: new Date(),
-    type: ['Announce', 'coar-notify:ReviewAction'],
+    id: generateUrn(),
+    updated: new Date().toISOString(),
+    type,
     origin: {
       id: serverUrl,
       inbox: `${serverUrl}/api/coar/inbox/${group.name}`,
@@ -54,26 +128,30 @@ const getRequestData = async (notification, manuscript) => {
     target: {
       ...payload.origin,
     },
-    object: {
-      id: isReviewDoi || flaxReviewUrl,
-      type: ['Document', 'sorg:Review'],
-    },
+    object,
     actor: {
       type: 'Person',
       id: '',
       name: 'Anonymous',
     },
-    context: {
-      id: `https://doi.org/${manuscript.doi}`,
-    },
-    inReplyTo: null,
+    context,
+    inReplyTo: payload.id,
   }
 
-  if (reviewer) {
+  if (reviewer && announcementType === 'review') {
     defaultPayload.actor = {
       type: 'Person',
-      id: reviewer.email,
+      id: reviewer.orcid
+        ? `https://orcid.org/${reviewer.orcid}`
+        : reviewer.email,
       name: reviewer.username,
+    }
+  } else if (['endorsement', 'relationship'].includes(announcementType)) {
+    const { formData } = await Config.getCached(groupId)
+    defaultPayload.actor = {
+      type: 'Organization',
+      id: clientUrl,
+      name: formData.groupIdentity.title,
     }
   }
 
@@ -94,15 +172,31 @@ const getReviewer = async manuscript => {
 
   const reviewer = await latestReview.$relatedQuery('user')
 
-  return reviewer
+  const identity = await Identity.findOne({
+    userId: reviewer.id,
+    type: 'orcid',
+  })
+
+  return { ...reviewer, orcid: identity?.identifier }
 }
 
-const makeAnnouncementOnCOAR = async (notification, manuscript) => {
-  const requestData = await getRequestData(notification, manuscript)
+const makeAnnouncementOnCOAR = async (
+  notification,
+  manuscript,
+  type,
+  options,
+) => {
+  const requestData = await getRequestData(
+    notification,
+    manuscript,
+    type,
+    options,
+  )
+
   const inboxUrl = JSON.parse(requestData).target.inbox
   const requestLength = requestData.length
 
-  if (!isReviewDoi() && !isFlaxSetup()) {
+  if (!isReviewDoi() && !isFlaxSetup() && type === 'review') {
     return false
   }
 
@@ -120,14 +214,15 @@ const makeAnnouncementOnCOAR = async (notification, manuscript) => {
     return response ? response.data : false
   } catch (err) {
     console.error(err)
-    return false
+    throw err
   }
 }
 
 module.exports = {
-  makeAnnouncementOnCOAR,
+  isFlaxSetup,
+  isReviewDoi,
+  generateUrn,
   getFlaxUrl,
   getReviewer,
-  isReviewDoi,
-  isFlaxSetup,
+  makeAnnouncementOnCOAR,
 }
