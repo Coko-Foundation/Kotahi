@@ -181,19 +181,10 @@ class User extends BaseModel {
   // }
 
   static async findOneWithIdentity(userId, identityType) {
-    // eslint-disable-next-line global-require
-    const Identity = require('../identity/identity.model')
-
-    const user = (
-      await this.query()
-        .alias('u')
-        .leftJoin(
-          Identity.query().where('type', identityType).as('i'),
-          'u.id',
-          'i.userId',
-        )
-        .where('u.id', userId)
-    )[0]
+    const user = await this.query()
+      .findById(userId)
+      .withGraphFetched('identities')
+      .modifyGraph('identities', builder => builder.where('type', identityType))
 
     return user
   }

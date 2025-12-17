@@ -1,16 +1,239 @@
+const { logger, serverUrl, request } = require('@coko/server')
 const { getCrossrefDataViaDoi } = require('./crossRef')
-const { makeAnnouncementOnCOAR } = require('./announcement')
+const { makeAnnouncementOnCOAR, generateUrn } = require('./announcement')
 
-const Manuscript = require('../../models/manuscript/manuscript.model')
-const Config = require('../../models/config/config.model')
-const CoarNotification = require('../../models/coarNotification/coarNotification.model')
+const {
+  CoarNotification,
+  Config,
+  Group,
+  Manuscript,
+  User,
+} = require('../../models')
 
-const sendAnnouncementNotification = (notification, manuscript) => {
-  return makeAnnouncementOnCOAR(notification, manuscript)
+let archiveManuscript
+setImmediate(() => {
+  /* eslint-disable global-require */
+  archiveManuscript =
+    require('../manuscript/manuscript.controllers').archiveManuscript
+  /* eslint-enable global-require */
+})
+
+const sendAnnouncementNotification = (
+  notification,
+  manuscript,
+  type,
+  options,
+) => {
+  return makeAnnouncementOnCOAR(notification, manuscript, type, options)
+}
+
+const sendTentativeAcceptCoarNotification = async (
+  manuscript,
+  handlingEditorIds,
+) => {
+  const offerNotification =
+    await CoarNotification.getOfferNotificationForManuscript(manuscript.id)
+
+  if (!offerNotification) {
+    logger.error(
+      'COAR: sendTentativeAcceptNotification: no notification found for manuscript',
+      manuscript.id,
+    )
+    return false
+  }
+
+  const handlingEditor = await User.findOneWithIdentity(
+    handlingEditorIds[0],
+    'orcid',
+  )
+
+  handlingEditor.orcid = handlingEditor.identities[0]?.identifier
+
+  const group = await Group.findById(manuscript.groupId)
+
+  const { payload: offerPayload } = offerNotification
+
+  const tentativeAcceptObject = { ...offerPayload }
+  delete tentativeAcceptObject['@context']
+
+  const tentativeAcceptPayload = {
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      'https://coar-notify.net',
+    ],
+    actor: {
+      id: handlingEditor.orcid
+        ? `https://orcid.org/${handlingEditor.orcid}`
+        : handlingEditor.email,
+      type: 'Person',
+      name: handlingEditor.username,
+    },
+    id: generateUrn(),
+    inReplyTo: offerPayload.id,
+    object: tentativeAcceptObject,
+    origin: {
+      id: serverUrl,
+      inbox: `${serverUrl}/api/coar/inbox/${group.name}`,
+      type: 'Service',
+    },
+    target: {
+      ...offerPayload.origin,
+    },
+    type: 'TentativeAccept',
+  }
+
+  const stringifiedPayload = JSON.stringify(tentativeAcceptPayload)
+
+  try {
+    const response = await request({
+      method: 'post',
+      url: tentativeAcceptPayload.target.inbox,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': `${stringifiedPayload.length}`,
+      },
+      data: stringifiedPayload,
+    })
+
+    return response ? response.data : false
+  } catch (e) {
+    logger.error(e)
+    return false
+  }
+}
+
+const sendRejectCoarNotification = async (
+  manuscript,
+  editor,
+  decision = 'rejected',
+) => {
+  const offerNotification =
+    await CoarNotification.getOfferNotificationForManuscript(manuscript.id)
+
+  if (!offerNotification) {
+    logger.error(
+      'COAR: sendTentativeAcceptNotification: no notification found for manuscript',
+      manuscript.id,
+    )
+    return false
+  }
+
+  const group = await Group.findById(manuscript.groupId)
+  const { payload: offerPayload } = offerNotification
+
+  const actor = {
+    id: '',
+    type: 'Person',
+    name: 'Anonymous',
+  }
+
+  if (editor) {
+    const actorId = editor.identities[0]?.identifier
+      ? `https://orcid.org/${editor.identities[0].identifier}`
+      : editor.email
+
+    actor.id = actorId
+    actor.name = editor.username
+  }
+
+  const rejectObject = { ...offerPayload }
+  delete rejectObject['@context']
+
+  const rejectPayload = {
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      'https://coar-notify.net',
+    ],
+    actor,
+    id: generateUrn(),
+    inReplyTo: offerPayload.id,
+    object: rejectObject,
+    origin: {
+      id: serverUrl,
+      inbox: `${serverUrl}/api/coar/inbox/${group.name}`,
+      type: 'Service',
+    },
+    target: {
+      ...offerPayload.origin,
+    },
+    type: decision === 'revise' ? 'TentativeReject' : 'Reject',
+  }
+
+  const stringifiedPayload = JSON.stringify(rejectPayload)
+
+  try {
+    const response = await request({
+      method: 'post',
+      url: rejectPayload.target.inbox,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': `${stringifiedPayload.length}`,
+      },
+      data: stringifiedPayload,
+    })
+
+    return response ? response.data : false
+  } catch (e) {
+    logger.error(e)
+    return false
+  }
+}
+
+const sendUnprocessableCoarNotification = async (
+  reason,
+  originalPayload = {},
+) => {
+  const { id: notificationId, origin, target } = originalPayload
+
+  const payload = {
+    '@context': [
+      'https://www.w3.org/ns/activitystreams',
+      'https://coar-notify.net',
+    ],
+    actor: {
+      id: 'https://kotahi.community',
+      type: 'Organization',
+      name: 'Kotahi',
+    },
+    id: generateUrn(),
+    inReplyTo: notificationId,
+    object: {
+      id: notificationId,
+    },
+    origin: {
+      id: serverUrl,
+      type: 'Service',
+      ...(target?.inbox ? { inbox: target.inbox } : {}),
+    },
+    summary: reason,
+    target: {
+      ...origin,
+    },
+    type: ['Flag', 'coar-notify:UnprocessableNotification'],
+  }
+
+  const stringifiedPayload = JSON.stringify(payload)
+
+  try {
+    const response = await request({
+      method: 'post',
+      url: payload.target.inbox,
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': `${stringifiedPayload.length}`,
+      },
+      data: stringifiedPayload,
+    })
+
+    return response ? response.data : false
+  } catch (e) {
+    logger.error(e)
+    return false
+  }
 }
 
 const createNotification = async (payload, groupId) => {
-  const notification = await CoarNotification.query().upsertGraphAndFetch({
+  const notification = await CoarNotification.query().insert({
     payload,
     groupId,
   })
@@ -18,15 +241,15 @@ const createNotification = async (payload, groupId) => {
   return notification
 }
 
-const getManuscriptByDoi = async doi => {
-  const manuscript = await Manuscript.query().findOne({ doi })
+const getManuscriptByDoi = async (doi, groupId) => {
+  const manuscript = await Manuscript.findOne({ doi, groupId, isHidden: false })
   return manuscript
 }
 
 const extractManuscriptFromNotification = async (notification, groupId) => {
-  const doi = extractDoi(notification)
+  const doi = extractDoi(notification.payload)
   const crossrefData = await getCrossrefDataViaDoi(doi)
-  const existingManuscript = await getManuscriptByDoi(doi)
+  const existingManuscript = await getManuscriptByDoi(doi, groupId)
 
   if (existingManuscript) return null
   if (!crossrefData) return null
@@ -37,12 +260,13 @@ const extractManuscriptFromNotification = async (notification, groupId) => {
   const newManuscript = {
     submission: {
       datePublished: publishedDate,
-      abstract: abstract || '',
+      $abstract: abstract || '',
       firstAuthor: author,
       journal,
       topics,
-      doi,
+      $doi: doi,
       url,
+      $title: title,
     },
     status: 'new',
     meta: {
@@ -51,9 +275,25 @@ const extractManuscriptFromNotification = async (notification, groupId) => {
     importSourceServer: 'COAR',
     groupId,
     doi,
+    // Create two channels: 1. free for all involved, 2. editorial
+    channels: [
+      {
+        topic: 'Manuscript discussion',
+        type: 'all',
+        groupId,
+      },
+      {
+        topic: 'Editorial discussion',
+        type: 'editorial',
+        groupId,
+      },
+    ],
   }
 
-  const manuscript = await Manuscript.query().upsertGraphAndFetch(newManuscript)
+  const manuscript = await Manuscript.query().upsertGraphAndFetch(
+    newManuscript,
+    { relate: true },
+  )
 
   return manuscript
 }
@@ -89,24 +329,70 @@ const linkManuscriptToNotification = async (notification, manuscript) => {
     .patch({ manuscriptId })
 }
 
-const extractDoi = notification => {
-  const doi = notification.payload.object['ietf:cite-as']
+const extractDoi = payload => {
+  const doi = payload.object && payload.object['ietf:cite-as']
   return doi ? doi.replace('https://doi.org/', '') : null
 }
 
-const filterNotification = payload => payload.type.includes('Offer')
+const extractNotificationType = payload => {
+  if (Array.isArray(payload?.type)) {
+    if (payload.type.includes('Offer')) {
+      return 'Offer'
+    }
+
+    if (payload.type.includes('Undo')) {
+      return 'Undo'
+    }
+  }
+
+  if (payload?.type === 'Undo') {
+    return 'Undo'
+  }
+
+  return null
+}
 
 const processNotification = async (group, payload) => {
   const groupId = group.id
+  const doi = extractDoi(payload)
 
-  const existingNotification = await CoarNotification.query().findOne({
-    payload,
-    groupId,
-  })
+  const type = extractNotificationType(payload)
 
-  // If not Offer type notification, just return 200 and process no further.
-  if (!filterNotification(payload)) {
-    return { status: 200, message: 'Notification received' }
+  if (!type) {
+    return { status: 400, message: 'Invalid notification type' }
+  }
+
+  if (type === 'Undo' && !payload.inReplyTo) {
+    return {
+      status: 400,
+      message: 'Property `inReplyTo` is missing from payload',
+    }
+  }
+
+  const existingNotification =
+    await CoarNotification.getOfferNotificationForGroupByIdOrDoi(
+      groupId,
+      type === 'Undo' ? payload.inReplyTo : payload.id,
+      doi,
+    )
+
+  if (type === 'Undo') {
+    if (!existingNotification) {
+      return { status: 404, message: 'Notification not found' }
+    }
+
+    const existingManuscript = await Manuscript.findById(
+      existingNotification.manuscriptId,
+    )
+
+    if (!existingManuscript || existingManuscript.isHidden) {
+      return { status: 404, message: 'Manuscript not found' }
+    }
+
+    await createNotification(payload, groupId)
+    await archiveManuscript(existingManuscript.id)
+
+    return { status: 202, message: 'Manuscript archived successfully' }
   }
 
   if (existingNotification) {
@@ -118,11 +404,13 @@ const processNotification = async (group, payload) => {
 
   const notification = await createNotification(payload, groupId)
 
+  // only returns a new manuscipt, else null for existing
   const manuscript = await extractManuscriptFromNotification(
     notification,
     groupId,
   )
 
+  // existing manuscript
   if (!manuscript) {
     await CoarNotification.query()
       .findById(notification.id)
@@ -131,11 +419,14 @@ const processNotification = async (group, payload) => {
     await linkManuscriptToNotification(notification, manuscript)
   }
 
-  return { status: 200, message: 'Notification created successfully.' }
+  return { status: 202, message: 'Notification created successfully.' }
 }
 
 module.exports = {
   sendAnnouncementNotification,
+  sendTentativeAcceptCoarNotification,
+  sendRejectCoarNotification,
+  sendUnprocessableCoarNotification,
   processNotification,
   validateIPs,
 }

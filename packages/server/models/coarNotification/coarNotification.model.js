@@ -15,6 +15,47 @@ class CoarNotification extends BaseModel {
       },
     }
   }
+
+  static async getOfferNotificationForManuscript(manuscriptId, options = {}) {
+    const { trx } = options
+
+    const [offerNotification] = await this.query(trx)
+      .where({ manuscriptId })
+      .andWhere(builder => {
+        builder
+          .whereRaw(`payload->>'type' = ?`, ['Offer']) // type is a string
+          .orWhereRaw(`payload->'type' @> ?::jsonb`, ['["Offer"]']) // type is an array
+      })
+
+    return offerNotification
+  }
+
+  static async getOfferNotificationForGroupByIdOrDoi(
+    groupId,
+    notificationId,
+    doi,
+    options = {},
+  ) {
+    if (!notificationId) {
+      return undefined
+    }
+
+    const { trx } = options
+
+    const [offerNotification] = await CoarNotification.query(trx)
+      .where({ groupId })
+      .andWhere(builder => {
+        builder.whereRaw(`payload->>'id' = ?`, [notificationId])
+
+        if (doi) {
+          builder.orWhereRaw(`(payload->'object'->>'ietf:cite-as') ILIKE ?`, [
+            `%${doi}%`,
+          ])
+        }
+      })
+
+    return offerNotification
+  }
 }
 
 module.exports = CoarNotification
