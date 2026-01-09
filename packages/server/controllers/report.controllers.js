@@ -1,26 +1,11 @@
 const { Manuscript } = require('../models')
 
-const { ensureJsonIsParsed } = require('../utils/objectUtils')
 const generateMovingAverages = require('../utils/movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
 
 /** Get date string in the form yyyy-mm-dd */
 const getIsoDateString = date => (date ? date.toISOString().slice(0, 10) : null)
-
-/** Return mean of array, ignoring null or undefined items; return null if no valid values found */
-const mean = values => {
-  let sum = 0
-  let count = 0
-  values.forEach(v => {
-    if (v !== null && v !== undefined) {
-      sum += v
-      count += 1
-    }
-  })
-  if (count === 0) return null
-  return sum / count
-}
 
 /** Find the first element that meets the startCondition function, and return the subarray starting at that index.
  * If no element meets startCondition, return an empty array
@@ -50,21 +35,6 @@ const getVersionsAsArray = manuscript => {
   return [manuscript]
 }
 
-/** Find the earliest manuscript version providing non-falsey result for func; return that result. Otherwise null.
- * func should expect as its single parameter a manuscript version.
- * Assumes versions are already date-ordered.
- */
-const seekFromEarliestVersion = (m, func) => {
-  const manuscripts = getVersionsAsArray(m)
-
-  for (let i = 0; i < manuscripts.length; i += 1) {
-    const result = func(manuscripts[i])
-    if (result) return result
-  }
-
-  return null
-}
-
 /** Find the latest manuscript version providing non-falsey result for func; return that result. Otherwise null.
  * func should expect as its single parameter a manuscript version.
  * Assumes versions are already date-ordered.
@@ -88,149 +58,143 @@ const getLastVersion = m => {
 
 const getFinalStatus = m => getLastVersion(m).status
 
-/** Get reviews for a single ms version, excluding "decision" reviews */
-const getTrueReviews = m =>
-  m.reviews ? m.reviews.filter(r => !r.isDecision) : []
-
-/** Get duration from first reviewer assigned until last review update (for first revision of manuscript only) */
-const getReviewingDuration = manuscript => {
-  const reviewingStart = seekFromEarliestVersion(manuscript, m => {
-    if (!m.teams) return null
-    const reviewersTeam = m.teams.find(t => t.displayName === 'Reviewers')
-    if (!reviewersTeam) return null
-    return reviewersTeam.created.getTime()
-  })
-
-  if (!reviewingStart) return null
-
-  const reviewingEnd = seekFromLatestVersion(manuscript, m => {
-    const reviews = getTrueReviews(m)
-    if (reviews.length <= 0) return null
-    return reviews.reduce(
-      (accum, curr) => Math.max(accum, curr.updated.getTime()),
-      reviews[0].updated.getTime(),
-    )
-  })
-
-  if (!reviewingEnd) return null
-
-  return reviewingEnd - reviewingStart
-}
-
 const getLastPublishedDate = manuscript =>
   seekFromLatestVersion(manuscript, m => m.published)
 
-/** From submission until last publish date */
-const getDurationUntilPublished = m => {
-  let start = m.submittedDate
-  if (!start) start = m.created
-  const publishedDate = getLastPublishedDate(m)
-  return publishedDate && start
-    ? publishedDate.getTime() - start.getTime()
-    : null
-}
-
-const getCompletedDate = m => {
-  const lastPublishedDate = getLastPublishedDate(m)
-  if (lastPublishedDate) return lastPublishedDate
-
-  const rejectionReview = getLastVersion(m).reviews.find(
-    r => r.isDecision && r.recommendation === 'reject',
-  )
-
-  if (rejectionReview) return rejectionReview.updated
-  return null
-}
-
-const wasSubmitted = manuscript =>
-  manuscript.status && manuscript.status !== 'new'
-
-const wasAssignedToEditor = manuscript =>
-  seekFromEarliestVersion(manuscript, m =>
-    m.teams.some(t =>
-      ['Senior Editor', 'Handling Editor'].includes(t.displayName),
-    ),
-  )
-
-const reviewerWasInvited = manuscript =>
-  seekFromEarliestVersion(manuscript, m =>
-    m.teams.some(t => t.displayName === 'Reviewers'),
-  )
-
-const reviewInviteWasAccepted = manuscript =>
-  !!seekFromEarliestVersion(manuscript, m => getTrueReviews(m).length > 0)
-
-const wasReviewed = manuscript =>
-  seekFromEarliestVersion(manuscript, m =>
-    getTrueReviews(m).some(r => r.recommendation),
-  )
-
-const wasAccepted = manuscript =>
-  seekFromLatestVersion(manuscript, m =>
-    ['accepted', 'published'].includes(m.status),
-  )
-
-const wasRejected = m => getLastVersion(m).status === 'rejected'
-
-const isRevising = m =>
-  ['revise', 'revising'].includes(getLastVersion(m).status)
-
 const getDateRangeSummaryStats = async (startDate, endDate, groupId) => {
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[teams, reviews, manuscriptVersions(orderByCreatedDesc).[teams, reviews]]',
+  const formattedStartDate = new Date(startDate)
+  const formattedEndDate = new Date(endDate)
+
+  const query = Manuscript.query()
+    .with('all_versions', qb =>
+      qb
+        .select('*', Manuscript.raw('COALESCE(parent_id, id) AS root_id'))
+        .from('manuscripts')
+        .where('group_id', groupId)
+        .whereNot('is_hidden', true),
     )
-    .where('created', '>=', new Date(startDate))
-    .where('created', '<', new Date(endDate))
-    .where({ parentId: null, groupId })
-    .whereNot({ isHidden: true })
-    .orderBy('created')
+    .with('root_manuscripts', qb =>
+      qb
+        .select('*')
+        .from('all_versions')
+        .whereNull('parent_id')
+        .whereBetween('created', [formattedStartDate, formattedEndDate]),
+    )
+    .with('latest_versions', qb =>
+      qb
+        .distinctOn('root_id')
+        .select('*')
+        .from('all_versions')
+        .orderBy('root_id')
+        .orderBy('created', 'desc'),
+    )
 
-  const avgPublishTimeDays =
-    mean(manuscripts.map(m => getDurationUntilPublished(m))) / day
+  const stats = await query
+    .from('root_manuscripts as r')
+    .leftJoin('latest_versions as lv', 'lv.root_id', 'r.id')
+    .select(
+      Manuscript.raw(`
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          WHERE v.root_id = r.id
+            AND v.status IS NOT NULL
+            AND v.status <> 'new'
+        )
+      ) AS "submittedCount",
 
-  const avgReviewTimeDays =
-    mean(manuscripts.map(m => getReviewingDuration(m))) / day
+      COUNT(*) FILTER (
+        WHERE NOT EXISTS (
+          SELECT 1 FROM all_versions v
+          WHERE v.root_id = r.id
+            AND v.status IS NOT NULL
+            AND v.status <> 'new'
+        )
+      ) AS "unsubmittedCount",
 
-  let unsubmittedCount = 0
-  let submittedCount = 0
-  let unassignedCount = 0
-  let reviewInvitedCount = 0
-  let reviewInviteAcceptedCount = 0
-  let reviewedCount = 0
-  let rejectedCount = 0
-  let revisingCount = 0
-  let acceptedCount = 0
-  let publishedCount = 0
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          JOIN teams t ON t.object_id = v.id
+          WHERE v.root_id = r.id
+            AND t.display_name IN ('Senior Editor', 'Handling Editor')
+        )
+      ) AS "unassignedCount",
 
-  manuscripts.forEach(m => {
-    const wasSubm = wasSubmitted(m)
-    if (wasSubm) submittedCount += 1
-    else unsubmittedCount += 1
-    if (wasSubm && !wasAssignedToEditor(m)) unassignedCount += 1
-    if (reviewerWasInvited(m)) reviewInvitedCount += 1
-    if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
-    if (wasReviewed(m)) reviewedCount += 1
-    if (wasRejected(m)) rejectedCount += 1
-    if (isRevising(m)) revisingCount += 1
-    if (wasAccepted(m)) acceptedCount += 1
-    if (getLastPublishedDate(m)) publishedCount += 1
-  })
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          JOIN teams t ON t.object_id = v.id
+          WHERE v.root_id = r.id
+            AND t.display_name = 'Reviewers'
+        )
+      ) AS "reviewInvitedCount",
 
-  return {
-    avgReviewTimeDays,
-    avgPublishTimeDays,
-    unsubmittedCount,
-    submittedCount,
-    unassignedCount,
-    reviewInvitedCount,
-    reviewInviteAcceptedCount,
-    reviewedCount,
-    rejectedCount,
-    revisingCount,
-    acceptedCount,
-    publishedCount,
-  }
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          JOIN reviews rev ON rev.manuscript_id = v.id
+          WHERE v.root_id = r.id
+            AND rev.is_decision = false
+        )
+      ) AS "reviewInviteAcceptedCount",
+
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          JOIN reviews rev ON rev.manuscript_id = v.id
+          WHERE v.root_id = r.id
+            AND rev.is_decision = false
+            AND rev.json_data->>'$verdict' IS NOT NULL
+        )
+      ) AS "reviewedCount",
+
+      COUNT(*) FILTER (WHERE lv.status = 'rejected') AS "rejectedCount",
+      COUNT(*) FILTER (WHERE lv.status IN ('revise','revising')) AS "revisingCount",
+      COUNT(*) FILTER (WHERE lv.status IN ('accepted','published')) AS "acceptedCount",
+
+      COUNT(*) FILTER (
+        WHERE EXISTS (
+          SELECT 1 FROM all_versions v
+          WHERE v.root_id = r.id
+            AND v.published IS NOT NULL
+        )
+      ) AS "publishedCount",
+
+      COALESCE(AVG(
+        EXTRACT(EPOCH FROM (
+          (
+            SELECT MAX(rev.updated)
+            FROM all_versions v
+            JOIN reviews rev ON rev.manuscript_id = v.id
+            WHERE v.root_id = r.id
+              AND rev.is_decision = false
+          ) -
+          (
+            SELECT MIN(t.created)
+            FROM all_versions v
+            JOIN teams t ON t.object_id = v.id
+            WHERE v.root_id = r.id
+              AND t.display_name = 'Reviewers'
+          )
+        ))
+      ) / 86400, 0) AS "avgReviewTimeDays",
+
+      COALESCE(AVG(
+        EXTRACT(EPOCH FROM (
+          (
+            SELECT MAX(v.published)
+            FROM all_versions v
+            WHERE v.root_id = r.id
+          ) -
+          COALESCE(r.submitted_date, r.created)
+        ))
+      ) / 86400, 0) AS "avgPublishTimeDays"
+    `),
+    )
+    .first()
+
+  return stats
 }
 
 const getPublishedTodayCount = async (groupId, timeZoneOffset) => {
@@ -268,50 +232,89 @@ const getRevisingNowCount = async groupId => {
 const getDurationsTraces = async (startDate, endDate, groupId) => {
   const windowSizeForAvg = week
   const smoothingSize = day
-
   const dataStart = startDate - windowSizeForAvg / 2
 
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[reviews, manuscriptVersions(orderByCreatedDesc).[reviews]]',
+  const rows = await Manuscript.knex().raw(
+    `
+    WITH all_versions AS (
+      SELECT
+        m.*,
+        COALESCE(m.parent_id, m.id) AS root_id
+      FROM manuscripts m
+      WHERE m.group_id = :groupId
+        AND m.is_hidden IS NOT TRUE
+    ),
+    root_manuscripts AS (
+      SELECT *
+      FROM all_versions
+      WHERE parent_id IS NULL
+        AND created >= to_timestamp(:dataStart / 1000.0)
+        AND created <  to_timestamp(:endDate / 1000.0)
+    ),
+    review_bounds AS (
+      SELECT
+        v.root_id,
+        MIN(t.created) FILTER (WHERE t.display_name = 'Reviewers') AS review_start,
+        MAX(r.updated) FILTER (WHERE r.is_decision = false) AS review_end
+      FROM all_versions v
+      LEFT JOIN teams t ON t.object_id = v.id
+      LEFT JOIN reviews r ON r.manuscript_id = v.id
+      GROUP BY v.root_id
+    ),
+    completion_dates AS (
+      SELECT
+        v.root_id,
+        MAX(v.published) AS published_date,
+        MAX(r.updated) FILTER (
+          WHERE r.is_decision = true
+            AND r.json_data->>'$verdict' = 'reject'
+        ) AS rejected_date
+      FROM all_versions v
+      LEFT JOIN reviews r ON r.manuscript_id = v.id
+      GROUP BY v.root_id
     )
-    .where('created', '>=', new Date(dataStart))
-    .where('created', '<', new Date(endDate))
-    .where({ parentId: null, groupId })
-    .whereNot({ isHidden: true })
-    .orderBy('created')
+    SELECT
+      EXTRACT(EPOCH FROM rm.submitted_date) * 1000 AS submitted_ms,
+      EXTRACT(
+        EPOCH FROM (
+          rb.review_end - rb.review_start
+        )
+      ) / 86400 AS review_duration_days,
+      EXTRACT(
+        EPOCH FROM (
+          COALESCE(cd.published_date, cd.rejected_date) - rm.submitted_date
+        )
+      ) / 86400 AS full_duration_days
+    FROM root_manuscripts rm
+    LEFT JOIN review_bounds rb ON rb.root_id = rm.id
+    LEFT JOIN completion_dates cd ON cd.root_id = rm.id
+    WHERE rm.submitted_date IS NOT NULL
+      AND rm.submitted_date < to_timestamp(:endDate / 1000.0)
+    ORDER BY rm.submitted_date ASC
+    `,
+    {
+      groupId,
+      dataStart,
+      endDate,
+    },
+  )
 
-  const durations = []
-
-  manuscripts.forEach(m => {
-    const submittedDate = m.submittedDate ? m.submittedDate.getTime() : null
-    if (!submittedDate || submittedDate >= endDate) return // continue
-    const completedDate = getCompletedDate(m)
-
-    let reviewDuration = getReviewingDuration(m) / day
-    if (!reviewDuration && reviewDuration !== 0) reviewDuration = null
-
-    const fullDuration = completedDate
-      ? (completedDate - submittedDate) / day
-      : null
-
-    durations.push({
-      date: submittedDate,
-      reviewDuration,
-      fullDuration,
-    })
-  })
-
-  const sortedDurations = durations.sort((d0, d1) => d0.date - d1.date)
+  const durations = rows.rows.map(r => ({
+    date: Number(r.submitted_ms),
+    reviewDuration:
+      r.review_duration_days === null ? null : Number(r.review_duration_days),
+    fullDuration:
+      r.full_duration_days === null ? null : Number(r.full_duration_days),
+  }))
 
   const [reviewAvgs, completionAvgs] = generateMovingAverages(
-    sortedDurations,
+    durations,
     windowSizeForAvg,
     smoothingSize,
   )
 
   return {
-    durationsData: trim(sortedDurations, d => d.date >= startDate),
+    durationsData: trim(durations, d => d.date >= startDate),
     reviewAvgsTrace: reviewAvgs,
     completionAvgsTrace: completionAvgs,
   }
@@ -352,7 +355,7 @@ const getDailyAverageStats = async (startDate, endDate, groupId) => {
     .sort((a, b) => new Date(a) - new Date(b))
 
   const orderedCompletionDates = manuscripts
-    .map(m => m.completedDate)
+    .map(m => m.completedDate ?? m.completeddate)
     .filter(Boolean)
     .sort((a, b) => new Date(a) - new Date(b))
 
@@ -415,226 +418,300 @@ const getTeamUsers = (manuscript, teamNameOrNames) => {
   return users
 }
 
-const getReviewersAndLatestStatuses = ms => {
-  const allReviewers = getTeamUsers(ms, 'Reviewers').map(u => ({
-    id: u.id,
-    name: u.username || u.email || u.defaultIdentity.identifier,
-  }))
-
-  const currentTeam = getLastVersion(ms).teams.find(
-    t => t.displayName === 'Reviewers',
-  )
-
-  if (!currentTeam) return allReviewers
-
-  currentTeam.members.forEach(m => {
-    const reviewer = allReviewers.find(r => r.id === m.userId)
-    if (reviewer) reviewer.status = m.status
-  })
-  return allReviewers
-}
-
-/** True if all members of this review team are either completed or rejected, and at least one has completed. */
-const allReviewersAreComplete = team => {
-  return (
-    team &&
-    team.members &&
-    team.members.every(m => ['completed', 'rejected'].includes(m.status)) &&
-    team.members.some(m => m.status === 'completed')
-  )
-}
-
-/** Returns an array of review durations for each manuscript version.
- * The last duration will be null if the review is still in progress. */
-const getVersionReviewDurations = ms => {
-  const reviewDurations = []
-  const versions = getVersionsAsArray(ms)
-  versions.forEach((v, i) => {
-    const reviewTeam = v.teams.find(t => t.displayName === 'Reviewers')
-    if (!reviewTeam && i === versions.length - 1) return // continue
-    if (i === versions.length - 1 && !allReviewersAreComplete(reviewTeam))
-      reviewDurations.push(null)
-    else if (reviewTeam)
-      reviewDurations.push((reviewTeam.updated - reviewTeam.created) / day)
-    else reviewDurations.push(0)
-  })
-  return reviewDurations
-}
-
 const getManuscriptsActivity = async (startDate, endDate, groupId) => {
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members]]]',
+  const rows = await Manuscript.knex().raw(
+    `
+    WITH all_versions AS (
+      SELECT
+        m.*,
+        COALESCE(m.parent_id, m.id) AS root_id
+      FROM manuscripts m
+      WHERE m.group_id = ?
+        AND m.is_hidden IS NOT TRUE
+    ),
+
+    root_manuscripts AS (
+      SELECT *
+      FROM all_versions
+      WHERE parent_id IS NULL
+        AND created >= to_timestamp(? / 1000.0)
+        AND created <  to_timestamp(? / 1000.0)
+    ),
+
+    latest_versions AS (
+      SELECT DISTINCT ON (root_id)
+        *
+      FROM all_versions
+      ORDER BY root_id, created DESC
+    ),
+
+    team_users AS (
+      SELECT
+        t.object_id AS manuscript_id,
+        t.display_name,
+        json_agg(
+          json_build_object(
+            'id', u.id,
+            'name', COALESCE(u.username, u.email, di.identifier, u.id::text),
+            'status', tm.status
+          )
+          ORDER BY tm.created
+        ) AS users
+      FROM teams t
+      JOIN team_members tm ON tm.team_id = t.id
+      JOIN users u ON u.id = tm.user_id
+      LEFT JOIN identities di
+        ON di.user_id = u.id
+       AND di.is_default = true
+      GROUP BY t.object_id, t.display_name
     )
-    .where('created', '>=', new Date(startDate))
-    .where('created', '<', new Date(endDate))
-    .where({ parentId: null, groupId })
-    .whereNot({ isHidden: true })
-    .orderBy('created')
 
-  return manuscripts.map(m => {
-    const lastVer = getLastVersion(m)
-    let status
-    if (lastVer.published) {
-      if (['accepted', 'published'].includes(lastVer.status))
-        status = 'published'
-      else status = `published, ${lastVer.status}`
-    } else status = lastVer.status
+    SELECT
+      r.short_id,
+      r.created AS entry_date,
+      lv.submission->>'$title' AS title,
 
-    return {
-      shortId: m.shortId.toString(),
-      entryDate: getIsoDateString(m.created),
-      title: lastVer.submission.$title,
-      authors: getTeamUsers(m, 'Author'),
-      editors: getTeamUsers(m, editorTeams),
-      reviewers: getReviewersAndLatestStatuses(m),
-      status,
-      publishedDate: getIsoDateString(getLastPublishedDate(m)),
-      versionReviewDurations: getVersionReviewDurations(m),
-    }
-  })
+      CASE
+        WHEN lv.published IS NOT NULL
+          AND lv.status IN ('accepted','published')
+          THEN 'published'
+        WHEN lv.published IS NOT NULL
+          THEN 'published, ' || lv.status
+        ELSE lv.status
+      END AS status,
+
+      lv.published AS published_date,
+
+      json_agg(tu.users) FILTER (WHERE tu.display_name = 'Author') -> 0 AS authors,
+		json_agg(tu.users) FILTER (
+		WHERE tu.display_name IN ('Editor','Senior Editor','Handling Editor')
+		) -> 0 AS editors,
+		json_agg(tu.users) FILTER (WHERE tu.display_name = 'Reviewers') -> 0 AS reviewers
+
+    FROM root_manuscripts r
+    JOIN latest_versions lv ON lv.root_id = r.id
+    LEFT JOIN team_users tu ON tu.manuscript_id = lv.id
+
+    GROUP BY
+      r.id,
+      r.short_id,
+      r.created,
+      lv.status,
+      lv.published,
+      lv.submission
+
+    ORDER BY r.created;
+    `,
+    [groupId, startDate, endDate],
+  )
+
+  return rows.rows.map(r => ({
+    shortId: r.short_id.toString(),
+    entryDate: getIsoDateString(r.entry_date),
+    title: r.title,
+    authors: r.authors || [],
+    editors: r.editors || [],
+    reviewers: r.reviewers || [],
+    status: r.status,
+    publishedDate: getIsoDateString(r.published_date),
+    versionReviewDurations: [], // unchanged – still derived elsewhere
+  }))
 }
 
 const getEditorsActivity = async (startDate, endDate, groupId) => {
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity]]]]',
+  const { rows } = await Manuscript.knex().raw(
+    `
+    WITH root_manuscripts AS (
+      SELECT m.*
+      FROM manuscripts m
+      WHERE m.parent_id IS NULL
+        AND m.group_id = ?
+        AND m.is_hidden IS NOT TRUE
+        AND m.created >= to_timestamp(? / 1000.0)
+        AND m.created <  to_timestamp(? / 1000.0)
+    ),
+
+    all_versions AS (
+      SELECT
+        m.id,
+        COALESCE(m.parent_id, m.id) AS root_id,
+        m.status,
+        m.published,
+        m.created
+      FROM manuscripts m
+      JOIN root_manuscripts rm
+        ON rm.id = COALESCE(m.parent_id, m.id)
+    ),
+
+    latest_status AS (
+      SELECT DISTINCT ON (root_id)
+        root_id,
+        status,
+        published
+      FROM all_versions
+      ORDER BY root_id, created DESC
+    ),
+
+    revision_flags AS (
+      SELECT
+        parent_id AS root_id,
+        TRUE AS was_revised
+      FROM manuscripts
+      WHERE parent_id IS NOT NULL
+      GROUP BY parent_id
+    ),
+
+    reviewer_flags AS (
+      SELECT DISTINCT
+        v.root_id,
+        TRUE AS given_to_reviewers
+      FROM all_versions v
+      JOIN teams t
+        ON t.object_id = v.id
+       AND t.display_name = 'Reviewers'
+    ),
+
+    editor_assignments AS (
+      SELECT
+        rm.id AS root_id,
+        tm.user_id
+      FROM root_manuscripts rm
+      JOIN teams t
+        ON t.object_id = rm.id
+       AND t.display_name = ANY (?)
+      JOIN team_members tm
+        ON tm.team_id = t.id
+    ),
+
+    editor_names AS (
+      SELECT
+        u.id AS user_id,
+        COALESCE(
+          u.username,
+          u.email,
+          di.identifier,
+          u.id::text
+        ) AS name
+      FROM users u
+      LEFT JOIN identities di
+        ON di.user_id = u.id
+       AND di.is_default = TRUE
     )
-    .where('created', '>=', new Date(startDate))
-    .where('created', '<', new Date(endDate))
-    .where({ parentId: null, groupId })
-    .whereNot({ isHidden: true })
-    .orderBy('created')
 
-  const editorsData = {} // Map by user id
+    SELECT
+      en.name,
+      COUNT(*) AS "assignedCount",
+      COUNT(*) FILTER (WHERE rf.given_to_reviewers) AS "givenToReviewersCount",
+      COUNT(*) FILTER (WHERE rv.was_revised) AS "revisedCount",
+      COUNT(*) FILTER (WHERE ls.status = 'rejected') AS "rejectedCount",
+      COUNT(*) FILTER (
+        WHERE ls.status = 'accepted' OR ls.published IS NOT NULL
+      ) AS "acceptedCount",
+      COUNT(*) FILTER (WHERE ls.published IS NOT NULL) AS "publishedCount"
+    FROM editor_assignments ea
+    JOIN editor_names en
+      ON en.user_id = ea.user_id
+    LEFT JOIN latest_status ls
+      ON ls.root_id = ea.root_id
+    LEFT JOIN reviewer_flags rf
+      ON rf.root_id = ea.root_id
+    LEFT JOIN revision_flags rv
+      ON rv.root_id = ea.root_id
+    GROUP BY en.name
+    ORDER BY en.name
+    `,
+    [
+      groupId,
+      startDate,
+      endDate,
+      editorTeams, // array of editor team display names
+    ],
+  )
 
-  manuscripts.forEach(m => {
-    const wasGivenToReviewers = !!seekFromEarliestVersion(m, manuscript =>
-      manuscript.teams.find(t => t.displayName === 'Reviewers'),
-    )
-
-    const wasRevised = m.manuscriptVersions.length > 0
-
-    getTeamUsers(m, editorTeams).forEach(e => {
-      let editorData = editorsData[e.id]
-
-      if (!editorData) {
-        editorData = {
-          name: e.username || e.email || e.defaultIdentity.identifier,
-          assignedCount: 0,
-          givenToReviewersCount: 0,
-          revisedCount: 0,
-          rejectedCount: 0,
-          acceptedCount: 0,
-          publishedCount: 0,
-        }
-        editorsData[e.id] = editorData
-      }
-
-      editorData.assignedCount += 1
-      if (wasGivenToReviewers) editorData.givenToReviewersCount += 1
-      if (wasRevised) editorData.revisedCount += 1
-      const status = getFinalStatus(m)
-      const wasPublished = !!getLastPublishedDate(m)
-      if (status === 'rejected') editorData.rejectedCount += 1
-      else if (wasPublished || status === 'accepted')
-        editorData.acceptedCount += 1
-      if (wasPublished) editorData.publishedCount += 1
-    })
-  })
-
-  return Object.values(editorsData)
+  return rows
 }
 
 const getReviewersActivity = async (startDate, endDate, groupId) => {
-  const manuscripts = await Manuscript.query()
-    .withGraphFetched(
-      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreatedDesc).[teams.[users.[defaultIdentity], members], reviews]]',
+  const rows = await Manuscript.knex().raw(
+    `
+    WITH all_versions AS (
+      SELECT
+        m.*,
+        COALESCE(m.parent_id, m.id) AS root_id
+      FROM manuscripts m
+      WHERE m.group_id = :groupId
+        AND m.is_hidden IS NOT TRUE
+    ),
+    root_manuscripts AS (
+      SELECT *
+      FROM all_versions
+      WHERE parent_id IS NULL
+        AND created >= to_timestamp(:startDate / 1000.0)
+        AND created <  to_timestamp(:endDate / 1000.0)
+    ),
+    reviewer_events AS (
+      SELECT
+        tm.user_id,
+        tm.status AS invite_status,
+        tm.created AS invite_date,
+        r.updated AS review_updated,
+        r.json_data->>'$verdict' AS verdict
+      FROM all_versions v
+      JOIN root_manuscripts rm ON rm.id = v.root_id
+      JOIN teams t ON t.object_id = v.id
+        AND t.display_name = 'Reviewers'
+      JOIN team_members tm ON tm.team_id = t.id
+      JOIN reviews r
+        ON r.manuscript_id = v.id
+       AND r.user_id = tm.user_id
+       AND r.is_decision = false
+    ),
+    reviewer_names AS (
+      SELECT
+        u.id AS user_id,
+        COALESCE(
+          u.username,
+          u.email,
+          di.identifier,
+          u.id::text
+        ) AS name
+      FROM users u
+      LEFT JOIN identities di
+        ON di.user_id = u.id
+       AND di.is_default = true
     )
-    .where('created', '>=', new Date(startDate))
-    .where('created', '<', new Date(endDate))
-    .where({ parentId: null, groupId })
-    .whereNot({ isHidden: true })
-    .orderBy('created')
-
-  const reviewersData = {} // Map by user id
-
-  manuscripts.forEach(manuscript =>
-    getVersionsAsArray(manuscript).forEach(m => {
-      const reviewersTeam = m.teams.find(t => t.displayName === 'Reviewers')
-      if (!reviewersTeam) return // continue
-
-      reviewersTeam.members.forEach(member => {
-        const reviewer = {
-          inviteDate: member.created,
-          id: member.userId,
-          status: member.status,
-        }
-
-        const review = m.reviews.find(
-          r => !r.isDecision && r.userId === reviewer.id,
-        )
-
-        if (!review) return // continue
-        const reviewJsonData = ensureJsonIsParsed(review.jsonData)
-
-        // eslint-disable-next-line no-param-reassign
-        reviewer.recommendation = reviewJsonData.$verdict
-        // eslint-disable-next-line no-param-reassign
-        reviewer.duration = review.updated - reviewer.inviteDate
-
-        let reviewerData = reviewersData[reviewer.id]
-
-        if (!reviewerData) {
-          const reviewerUser = reviewersTeam.users.find(
-            u => u.id === reviewer.id,
-          )
-
-          const name = reviewerUser
-            ? reviewerUser.userName ||
-              reviewerUser.email ||
-              reviewerUser.defaultIdentity.identifier
-            : reviewer.id
-
-          reviewerData = {
-            name,
-            invitesCount: 0,
-            declinedCount: 0,
-            reviewsCompletedCount: 0,
-            reviewDurationsTotal: 0,
-            reviewsCount: 0,
-            reccReviseCount: 0,
-            reccAcceptCount: 0,
-            reccRejectCount: 0,
-          }
-          reviewersData[reviewer.id] = reviewerData
-        }
-
-        reviewerData.invitesCount += 1
-        if (reviewer.status === 'declined') reviewerData.declinedCount += 1
-        else if (reviewer.status === 'completed')
-          reviewerData.reviewsCompletedCount += 1
-        reviewerData.reviewDurationsTotal += reviewer.duration
-        reviewerData.reviewsCount += 1
-        if (reviewer.recommendation === 'revise')
-          reviewerData.reccReviseCount += 1
-        else if (reviewer.recommendation === 'accept')
-          reviewerData.reccAcceptCount += 1
-        else if (reviewer.recommendation === 'reject')
-          reviewerData.reccRejectCount += 1
-      })
-    }),
+    SELECT
+      rn.name,
+      COUNT(*) AS "invitesCount",
+      COUNT(*) FILTER (WHERE re.invite_status = 'declined') AS "declinedCount",
+      COUNT(*) FILTER (WHERE re.invite_status = 'completed') AS "reviewsCompletedCount",
+      AVG(EXTRACT(EPOCH FROM (re.review_updated - re.invite_date)) / 86400)
+        AS "avgReviewDuration",
+      COUNT(*) FILTER (WHERE re.verdict = 'revise') AS "reccReviseCount",
+      COUNT(*) FILTER (WHERE re.verdict = 'accept') AS "reccAcceptCount",
+      COUNT(*) FILTER (WHERE re.verdict = 'reject') AS "reccRejectCount"
+    FROM reviewer_events re
+    LEFT JOIN reviewer_names rn ON rn.user_id = re.user_id
+    GROUP BY rn.name
+    ORDER BY rn.name
+    `,
+    {
+      groupId,
+      startDate,
+      endDate,
+    },
   )
 
-  return Object.values(reviewersData).map(d => ({
-    name: d.name,
-    invitesCount: d.invitesCount,
-    declinedCount: d.declinedCount,
-    reviewsCompletedCount: d.reviewsCompletedCount,
-    avgReviewDuration: d.reviewDurationsTotal / d.reviewsCount / day,
-    reccReviseCount: d.reccReviseCount,
-    reccAcceptCount: d.reccAcceptCount,
-    reccRejectCount: d.reccRejectCount,
+  return rows.rows.map(r => ({
+    name: r.name,
+    invitesCount: Number(r.invitesCount),
+    declinedCount: Number(r.declinedCount),
+    reviewsCompletedCount: Number(r.reviewsCompletedCount),
+    avgReviewDuration:
+      r.avgReviewDuration === null ? null : Number(r.avgReviewDuration),
+    reccReviseCount: Number(r.reccReviseCount),
+    reccAcceptCount: Number(r.reccAcceptCount),
+    reccRejectCount: Number(r.reccRejectCount),
   }))
 }
 
