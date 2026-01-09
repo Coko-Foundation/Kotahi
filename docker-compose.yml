@@ -134,7 +134,7 @@ services:
     healthcheck:
       test:
         ['CMD-SHELL', 'curl --fail http://localhost:3000/healthcheck || exit 1']
-      interval: 1s
+      # interval: 1s
       retries: 30
     tty: true
 
