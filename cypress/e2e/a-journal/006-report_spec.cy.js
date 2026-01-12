@@ -1,7 +1,7 @@
 /* eslint-disable jest/expect-expect */
 import { dashboard } from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
-import { ReportPage } from '../../page-object/reports-page'
+import { ReportPage, REVIEWER_COLUMNS } from '../../page-object/reports-page'
 
 describe('Report Page', () => {
   it('Admin views and interacts with the reports page', () => {
@@ -30,7 +30,7 @@ describe('Report Page', () => {
     ReportPage.getReportTypeDropDown().select('Author') // Open Author Report Page
     ReportPage.getReportTypeDropDown().select('Manuscript') // Manuscript Report Page
 
-    /* Manuasripts Table > Reviewers column */
+    /* Manusripts Table > Reviewers column */
     ReportPage.getReviewerRecords().should('have.length', 6) // Total Reviews: 6
     ReportPage.getCompletedSvg().should('have.length', 3) // Completed Reviews: 3
     ReportPage.getInvitedSvg().should('have.length', 1) // Invited Reviewers: 1
@@ -40,44 +40,44 @@ describe('Report Page', () => {
     /* Reviewer Report Page */
     ReportPage.getReportTypeDropDown().select('Reviewer')
 
+    // TO-DO: The features: recommendedToAccept, recommendedToRevise,
+    // and recommendedToReject are not included since htey do not work in the app
+
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('report_data').then(({ reviewersData }) => {
-      reviewersData.forEach((reviewer, length) => {
-        // WARNING: Some of the tests for features are disabled as they're not working in the current state of Kotahi
-        // TODO: Uncomment the features as soon as they're fixed
+      reviewersData.forEach(reviewer => {
         const {
-          // reviewerName,
+          reviewerName,
           reviewInvites,
           invitesDeclined,
           reviewsCompleted,
           averageReviewDuration,
-          // recommendedToAccept,
-          // recommendedToRevise,
-          // recommendedToReject,
         } = reviewer
 
-        const i = length + 1 // skip the heading row
+        ReportPage.getReviewerRowByName(reviewerName)
+          .find('[data-testid="cell"]')
+          .then(cells => {
+            // cells is now a jQuery collection
 
-        // ReportPage.getReviewerName(i).should('have.text', reviewerName)
-        ReportPage.getReviewInvites(i).should('have.text', reviewInvites)
-        ReportPage.getInvitesDeclined(i).should('have.text', invitesDeclined)
-        ReportPage.getReviewsCompleted(i).should('have.text', reviewsCompleted)
-        ReportPage.getAverageReviewDuration(i).should(
-          'have.text',
-          averageReviewDuration,
-        )
-        /* ReportPage.getRecommendedToAccept(i).should(
-          'have.text',
-          recommendedToAccept,
-        )
-        ReportPage.getRecommendedToRevise(i).should(
-          'have.text',
-          recommendedToRevise,
-        )
-        ReportPage.getRecommendedToReject(i).should(
-          'have.text',
-          recommendedToReject,
-        ) */
+            cy.wrap(cells)
+              .eq(REVIEWER_COLUMNS.INVITES)
+              .find('[data-testid="cell-value"]')
+              .should('have.text', reviewInvites)
+
+            cy.wrap(cells)
+              .eq(REVIEWER_COLUMNS.DECLINED)
+              .find('[data-testid="cell-value"]')
+              .should('have.text', invitesDeclined)
+
+            cy.wrap(cells)
+              .eq(REVIEWER_COLUMNS.COMPLETED)
+              .find('[data-testid="cell-value"]')
+              .should('have.text', reviewsCompleted)
+
+            cy.wrap(cells)
+              .eq(REVIEWER_COLUMNS.DURATION)
+              .should('contain.text', averageReviewDuration)
+          })
       })
     })
   })
