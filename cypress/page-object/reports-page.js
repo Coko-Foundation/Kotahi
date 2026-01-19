@@ -12,6 +12,14 @@ const REJECTED_SVG = 'rejected-svg'
 const REVIEWER_RECORD = 'reviewer-record'
 const ROW = 'row'
 
+export const REVIEWER_COLUMNS = {
+  NAME: 0,
+  INVITES: 1,
+  DECLINED: 2,
+  COMPLETED: 3,
+  DURATION: 4,
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export const ReportPage = {
   getReportActions() {
@@ -49,28 +57,43 @@ export const ReportPage = {
     return this.getRow(row).find('[data-testid="cell-value"]').eq(col)
   },
   /* Review Type */
-  getReviewerName(row) {
-    return this.getRow(row).children().eq(0)
+  // getReviewerName(row) {
+  //   return this.getRow(row).children().eq(0)
+  // },
+  // getReviewInvites(row) {
+  //   return this.getColumnData(row, 0)
+  // },
+  // getInvitesDeclined(row) {
+  //   return this.getColumnData(row, 1)
+  // },
+  // getReviewsCompleted(row) {
+  //   return this.getColumnData(row, 2)
+  // },
+  // getAverageReviewDuration(row) {
+  //   return this.getColumnData(row, 3)
+  // },
+  // getRecommendedToAccept(row) {
+  //   return this.getColumnData(row, 4)
+  // },
+  // getRecommendedToRevise(row) {
+  //   return this.getColumnData(row, 5)
+  // },
+  // getRecommendedToReject(row) {
+  //   return this.getColumnData(row, 6)
+  // },
+
+  getReviewerRowByName(name) {
+    return cy
+      .contains('[data-testid="cell"]', name)
+      .should('be.visible')
+      .closest('[data-testid="row"]')
   },
-  getReviewInvites(row) {
-    return this.getColumnData(row, 0)
+
+  getCells(row) {
+    return cy.wrap(row).find('[data-testid="cell"]')
   },
-  getInvitesDeclined(row) {
-    return this.getColumnData(row, 1)
-  },
-  getReviewsCompleted(row) {
-    return this.getColumnData(row, 2)
-  },
-  getAverageReviewDuration(row) {
-    return this.getColumnData(row, 3)
-  },
-  getRecommendedToAccept(row) {
-    return this.getColumnData(row, 4)
-  },
-  getRecommendedToRevise(row) {
-    return this.getColumnData(row, 5)
-  },
-  getRecommendedToReject(row) {
-    return this.getColumnData(row, 6)
+
+  getCellValue(cell) {
+    return cy.wrap(cell).find('[data-testid="cell-value"]')
   },
 }
