@@ -6,6 +6,7 @@ const { Config, Group, Identity, Review } = require('../../models')
 
 const flaxConfig = config['flax-site']
 
+// TODO: What is the purpose of this?
 const isReviewDoi = () => {
   return false
 }
