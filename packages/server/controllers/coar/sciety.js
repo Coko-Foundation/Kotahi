@@ -30,9 +30,12 @@ const getRequestData = async manuscript => {
   const group = await Group.query().findById(manuscript.groupId).first()
   const reviewer = await getReviewer(manuscript)
 
-  const { payload } = await CoarNotification.findOne({
-    manuscriptId: manuscript.id,
-  })
+  const { payload } =
+    (await CoarNotification.findOne({
+      manuscriptId: manuscript.id,
+    })) || {}
+
+  if (!payload) return false
 
   const { flaxReviewUrl, flaxUrl } = await getFlaxUrl(
     group.name,
@@ -88,7 +91,7 @@ const sendAnnouncementNotificationToSciety = async manuscript => {
   const requestData = await getRequestData(manuscript)
   const inboxUrl = await getScietyInboxUrl(manuscript.groupId)
 
-  if ((!isReviewDoi() && !isFlaxSetup()) || !inboxUrl) {
+  if ((!isReviewDoi() && !isFlaxSetup()) || !inboxUrl || !requestData) {
     return false
   }
 
