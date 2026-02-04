@@ -453,7 +453,9 @@ const getManuscriptsActivity = async (startDate, endDate, groupId) => {
           json_build_object(
             'id', u.id,
             'name', COALESCE(u.username, u.email, di.identifier, u.id::text),
-            'status', tm.status
+            'status', tm.status,
+			'username', u.username,
+			'email', u.email
           )
           ORDER BY tm.created
         ) AS users
