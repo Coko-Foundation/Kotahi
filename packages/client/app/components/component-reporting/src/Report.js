@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { forEach, map } from 'lodash'
@@ -383,8 +383,11 @@ const getReport = (
 }
 
 const Report = ({
+  reportType,
+  reportTypes,
   startDate,
   endDate,
+  setReportType,
   setStartDate,
   setEndDate,
   getSummaryData,
@@ -393,19 +396,6 @@ const Report = ({
   getReviewersData,
   getAuthorsData,
 }) => {
-  const reportTypes = [
-    { label: i18next.t('reportsPage.reportTypes.Summmary'), value: 'Summary' },
-    {
-      label: i18next.t('reportsPage.reportTypes.Manuscript'),
-      value: 'Manuscript',
-    },
-    { label: i18next.t('reportsPage.reportTypes.Editor'), value: 'Editor' },
-    { label: i18next.t('reportsPage.reportTypes.Reviewer'), value: 'Reviewer' },
-    { label: i18next.t('reportsPage.reportTypes.Author'), value: 'Author' },
-  ]
-
-  const [reportType, setReportType] = useState(reportTypes[0].value)
-
   const { t } = useTranslation()
   return (
     <Page>
@@ -456,10 +446,18 @@ const Report = ({
 }
 
 Report.propTypes = {
+  reportType: PropTypes.string.isRequired,
+  reportTypes: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
   /** Start of range for reporting, ms since epoch */
   startDate: PropTypes.number.isRequired,
   /** End of range for reporting, ms since epoch */
   endDate: PropTypes.number.isRequired,
+  setReportType: PropTypes.func.isRequired,
   setStartDate: PropTypes.func.isRequired,
   setEndDate: PropTypes.func.isRequired,
   getSummaryData: PropTypes.func.isRequired,
