@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
+import i18next from 'i18next'
 import Report from './Report'
 import { getStartOfDay, getEndOfDay } from '../../../shared/dateUtils'
 import { Spinner, CommsErrorBanner } from '../../shared'
@@ -138,6 +139,17 @@ const removeTypeName = rows => {
 
 const defaultReportDuration = 31 * 24 * 60 * 60 * 1000 // 31 days
 
+const reportTypes = [
+  { label: i18next.t('reportsPage.reportTypes.Summmary'), value: 'Summary' },
+  {
+    label: i18next.t('reportsPage.reportTypes.Manuscript'),
+    value: 'Manuscript',
+  },
+  { label: i18next.t('reportsPage.reportTypes.Editor'), value: 'Editor' },
+  { label: i18next.t('reportsPage.reportTypes.Reviewer'), value: 'Reviewer' },
+  { label: i18next.t('reportsPage.reportTypes.Author'), value: 'Author' },
+]
+
 const ReportPage = () => {
   const config = useContext(ConfigContext)
 
@@ -146,6 +158,8 @@ const ReportPage = () => {
   )
 
   const [endDate, setEndDate] = useState(getEndOfDay(Date.now()).getTime())
+
+  const [reportType, setReportType] = useState(reportTypes[0].value)
 
   const { data, loading, error } = useQuery(getReportData, {
     variables: {
@@ -168,7 +182,10 @@ const ReportPage = () => {
       getManuscriptsData={() => removeTypeName(data?.manuscriptsActivity)}
       getReviewersData={() => removeTypeName(data?.reviewersActivity)}
       getSummaryData={() => data?.summaryActivity}
+      reportType={reportType}
+      reportTypes={reportTypes}
       setEndDate={setEndDate}
+      setReportType={setReportType}
       setStartDate={setStartDate}
       startDate={startDate}
     />
