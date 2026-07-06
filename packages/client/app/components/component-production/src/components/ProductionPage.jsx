@@ -279,7 +279,7 @@ const ProductionPage = () => {
           isOpen={modalKey !== undefined}
         />
       )}
-      <div style={{ width: '100%' }}>
+      <div>
         {makingPdf ? (
           <DownloadPdfComponent
             manuscript={manuscript}

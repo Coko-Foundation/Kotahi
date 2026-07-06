@@ -42,9 +42,17 @@ const PublishButton = styled(FormActionButton)`
 const ScrollableTabContent = styled.section`
   background-color: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  height: calc(100vh - 200px);
+  height: calc(100vh - 180px);
 
   overflow: auto;
+
+  .cm-theme-light {
+    height: 100%;
+  }
+
+  .cm-editor {
+    height: 100%;
+  }
 `
 
 const Article = ({

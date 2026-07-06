@@ -449,7 +449,7 @@ const Menu = (props: MenuProps): ReactNode => {
           {links.map(item => {
             return (
               <Link key={item.key} to={item.url}>
-                <LinkItem $active={pathname === item.url}>
+                <LinkItem $active={pathname.match(item.url)}>
                   <div>{item.icon}</div>
                   {!menuCollapsed && <div>{item.label}</div>}
                 </LinkItem>

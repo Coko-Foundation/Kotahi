@@ -6,12 +6,7 @@ import styled from 'styled-components'
 import i18next from 'i18next'
 import diff from 'node-htmldiff'
 import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
-import {
-  ActionButton,
-  Section,
-  SectionContent,
-  Checkbox,
-} from '../../../shared'
+import { ActionButton, Section, Checkbox } from '../../../shared'
 import { getLanguages } from '../../../../i18n'
 import { convertTimestampToDateString } from '../../../../shared/dateUtils'
 // import { ConfigContext } from '../../../config/src'
@@ -51,9 +46,8 @@ const TopSection = styled(Section)`
 
 const TabContainer = styled.div`
   --left-width: 300px;
-  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);
   display: flex;
-  min-height: calc(100% - 58px);
+  flex: 1;
 `
 
 const LeftBlock = styled.div`
@@ -228,7 +222,7 @@ const Versioning = ({
   }
 
   return (
-    <SectionContent style={{ height: 'fit-content' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <TopSection>
         <h3>
           {shownVersion + 1 < versionList.length ? (
@@ -365,7 +359,7 @@ const Versioning = ({
           </Section>
         </RightBlock>
       </TabContainer>
-    </SectionContent>
+    </div>
   )
 }
 

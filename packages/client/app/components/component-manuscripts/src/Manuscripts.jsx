@@ -62,7 +62,9 @@ const FlexRow = styled.div`
 `
 
 const FlexRowWithSmallGapAbove = styled(FlexRow)`
+  align-items: end;
   justify-content: flex-start;
+  margin-bottom: ${grid(1)};
 `
 
 const RoundIconButtonWrapper = styled(RoundIconButton).attrs({
@@ -429,7 +431,7 @@ const Manuscripts = props => {
           <ManuscriptsPane>
             <FlexRow>{topRightControls}</FlexRow>
 
-            <FlexRowWithSmallGapAbove style={{ alignItems: 'center' }}>
+            <FlexRowWithSmallGapAbove>
               <SelectAllField>
                 <Checkbox
                   checked={manuscripts.every(manuscript =>

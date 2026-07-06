@@ -262,7 +262,7 @@ export const makeTheme = (
   gridUnit: '8px',
 
   /* Border */
-  borderRadius: '6px',
+  borderRadius: '3px',
   borderRadiusLarge: '15%',
   borderWidth: '1px', // julien: not 0
   borderStyle: 'solid',

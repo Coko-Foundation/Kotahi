@@ -228,17 +228,17 @@ const Router = (): ReactNode => {
 
                 <Route
                   element={<FormBuilderPage category="submission" />}
-                  path="submission-form-builder"
+                  path="forms/submission-form-builder"
                 />
 
                 <Route
                   element={<FormBuilderPage category="review" />}
-                  path="review-form-builder"
+                  path="forms/review-form-builder"
                 />
 
                 <Route
                   element={<FormBuilderPage category="decision" />}
-                  path="decision-form-builder"
+                  path="forms/decision-form-builder"
                 />
 
                 <Route element={<UsersPage />} path="users" />

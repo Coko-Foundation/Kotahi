@@ -15,13 +15,8 @@ import { Button, Checkbox } from '../../pubsweet'
 import Modal from '../../component-modal/src/ConfirmationModal'
 import { convertCamelCaseToTitleCase } from '../../../shared/textUtils'
 
-import {
-  Container,
-  SectionContent,
-  HeadingWithAction,
-  SectionRow,
-  Heading,
-} from '../../shared'
+import { SectionContent, SectionRow } from '../../shared'
+import Page from '../../../ui/shared/Page'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
 import ChangeEmail from './ChangeEmail'
@@ -31,14 +26,15 @@ import { getLanguages } from '../../../i18n'
 
 const VersionText = styled.div`
   color: #757575;
-  display: flex;
-  justify-content: flex-end;
+  position: fixed;
+  bottom: ${grid(2)};
+  right: ${grid(3)};
 `
 
-const ProfileContainer = styled(Container)`
+const RolesRow = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  align-items: end;
+  margin-bottom: ${grid(1)};
 `
 
 const StyledCheckbox = styled(Checkbox)`
@@ -194,104 +190,102 @@ const Profile = ({
     user.profilePicture || `${serverUrl}/profiles/default_avatar.svg`
 
   return (
-    <ProfileContainer>
+    <Page
+      title={
+        isCurrentUsersOwnProfile
+          ? t('profilePage.Your profile')
+          : t('profilePage.Profile: ') + user.username
+      }
+    >
       <Modal isOpen={isCurrentUsersOwnProfile && !user.email}>
         <EnterEmail updateUserEmail={updateUserEmail} user={user} />
       </Modal>
 
-      <div>
-        <HeadingWithAction>
-          <Heading>
-            {isCurrentUsersOwnProfile
-              ? t('profilePage.Your profile')
-              : t('profilePage.Profile: ') + user.username}
-          </Heading>
-
-          {isCurrentUsersOwnProfile && (
-            <Button $primary onClick={() => logoutUser()}>
-              {t('profilePage.Logout')}
-            </Button>
-          )}
-        </HeadingWithAction>
-
+      <RolesRow>
         <SpecialRoles
           isCurrentUsersOwnProfile={isCurrentUsersOwnProfile}
           t={t}
           user={user}
         />
+        {isCurrentUsersOwnProfile && (
+          <Button
+            $primary
+            onClick={() => logoutUser()}
+            style={{ marginLeft: 'auto' }}
+          >
+            {t('profilePage.Logout')}
+          </Button>
+        )}
+      </RolesRow>
 
-        <SectionContent>
-          <SectionRow key="profilepicture">
-            <div>
-              {isCurrentUsersOwnProfile ? (
-                <ProfileDropzone
-                  profilePicture={profilePicture}
-                  replaceAvatarImage={replaceAvatarImage}
-                  t={t}
-                />
-              ) : (
-                <BigProfileImage src={profilePicture} />
-              )}
-            </div>
-          </SectionRow>
+      <SectionContent>
+        <SectionRow key="profilepicture">
+          <div>
+            {isCurrentUsersOwnProfile ? (
+              <ProfileDropzone
+                profilePicture={profilePicture}
+                replaceAvatarImage={replaceAvatarImage}
+                t={t}
+              />
+            ) : (
+              <BigProfileImage src={profilePicture} />
+            )}
+          </div>
+        </SectionRow>
 
-          <SectionRow>
-            <label>{t('profilePage.ORCID')}</label>{' '}
-            <div>{user.defaultIdentity.identifier}</div>
-          </SectionRow>
+        <SectionRow>
+          <label>{t('profilePage.ORCID')}</label>{' '}
+          <div>{user.defaultIdentity.identifier}</div>
+        </SectionRow>
 
-          <SectionRow>
-            <label htmlFor="2">{t('profilePage.Username')}</label>
-            <div>
-              {canEditProfile ? (
-                <ChangeUsername updateUsername={updateUsername} user={user} />
-              ) : (
-                <div>{user.username}</div>
-              )}
-            </div>
-          </SectionRow>
+        <SectionRow>
+          <label htmlFor="2">{t('profilePage.Username')}</label>
+          <div>
+            {canEditProfile ? (
+              <ChangeUsername updateUsername={updateUsername} user={user} />
+            ) : (
+              <div>{user.username}</div>
+            )}
+          </div>
+        </SectionRow>
 
-          <SectionRow>
-            <label>{t('profilePage.Email')}</label>
-            <div>
-              {canEditProfile ? (
-                <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
-              ) : (
-                <div>{user.email}</div>
-              )}
-            </div>
-          </SectionRow>
+        <SectionRow>
+          <label>{t('profilePage.Email')}</label>
+          <div>
+            {canEditProfile ? (
+              <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
+            ) : (
+              <div>{user.email}</div>
+            )}
+          </div>
+        </SectionRow>
 
-          <SectionRow>
-            <label>{t('profilePage.Language')}</label>
-            <div>
-              {canEditProfile ? (
-                <ChangeLanguage updateLanguage={updateLanguage} user={user} />
-              ) : (
-                <div>
-                  {
-                    languages.find(elem => elem.value === i18next.language)
-                      .label
-                  }
-                </div>
-              )}
-            </div>
-          </SectionRow>
-        </SectionContent>
+        <SectionRow>
+          <label>{t('profilePage.Language')}</label>
+          <div>
+            {canEditProfile ? (
+              <ChangeLanguage updateLanguage={updateLanguage} user={user} />
+            ) : (
+              <div>
+                {languages.find(elem => elem.value === i18next.language).label}
+              </div>
+            )}
+          </div>
+        </SectionRow>
+      </SectionContent>
 
-        <SectionContent>
-          <StyledCheckbox
-            checked={hasGlobalChatNotificationOptIn === 'off'}
-            label={t('profilePage.Mute all discussion email notifications')}
-            onChange={toggleGlobalChatNotificationOptIn}
-          />
-        </SectionContent>
-      </div>
+      <SectionContent>
+        <StyledCheckbox
+          checked={hasGlobalChatNotificationOptIn === 'off'}
+          label={t('profilePage.Mute all discussion email notifications')}
+          onChange={toggleGlobalChatNotificationOptIn}
+        />
+      </SectionContent>
 
       <VersionText>
         <span>{kotahiVersion}</span>
       </VersionText>
-    </ProfileContainer>
+    </Page>
   )
 }
 
