@@ -27,6 +27,7 @@ export const Base = meta.story({
           isUserGroupAdmin={true}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -49,6 +50,7 @@ export const Admin = meta.story({
           isUserGroupAdmin={false}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -71,6 +73,7 @@ export const GroupAdmin = meta.story({
           isUserGroupAdmin={true}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -93,6 +96,7 @@ export const GroupManager = meta.story({
           isUserGroupAdmin={false}
           isUserGroupManager={true}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -115,6 +119,7 @@ export const NoRoles = meta.story({
           isUserGroupAdmin={false}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -137,6 +142,7 @@ export const ManyRoles = meta.story({
           isUserGroupAdmin={true}
           isUserGroupManager={true}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -159,6 +165,7 @@ export const StartCollapsed = meta.story({
           isUserGroupAdmin={true}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Green"
@@ -181,6 +188,7 @@ export const MediumNames = meta.story({
           isUserGroupAdmin={false}
           isUserGroupManager={false}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Margaret Wilkinson"
@@ -203,6 +211,7 @@ export const LongNames = meta.story({
           isUserGroupAdmin={true}
           isUserGroupManager={true}
           onMenuCollapseChange={() => {}}
+          showCoar={true}
           showDashboard={true}
           showReports={true}
           userDisplayName="Jane Margaret Samantha Green Wilkinson Henderson"

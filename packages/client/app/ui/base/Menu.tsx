@@ -2,19 +2,20 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import styled, { css, RuleSet } from 'styled-components'
 import { grid, th, Link } from '@coko/client'
-import {
-  HomeOutlined,
-  FileTextOutlined,
-  BarChartOutlined,
-  FormOutlined,
-  UnorderedListOutlined,
-  UserOutlined,
-  ControlOutlined,
-  ReadOutlined,
-  VerticalAlignTopOutlined,
-} from '@ant-design/icons'
 
 import Avatar from '../shared/Avatar'
+import {
+  Home,
+  File,
+  Report,
+  Form,
+  Tasks,
+  User,
+  Settings,
+  ExpandMenu,
+  Book,
+  Coar,
+} from './Icons'
 
 // #region styled
 const fullWidth = '272px'
@@ -133,6 +134,7 @@ const LinkItem = styled.div<{ $active: boolean }>`
   margin-bottom: ${grid(0.5)};
   padding: ${grid(1)} ${grid(2)};
   display: flex;
+  white-space: nowrap;
 
   transition:
     background-color ${hoverFade},
@@ -297,6 +299,7 @@ type MenuProps = {
   /** Store latest menu collapse state (eg. store value in localstorage) */
   onMenuCollapseChange: (isCollapsed: boolean) => void
 
+  showCoar: boolean
   showDashboard: boolean
   showReports: boolean
 }
@@ -318,6 +321,7 @@ const Menu = (props: MenuProps): ReactNode => {
     userProfileImage,
     initialMenuCollapsed,
     onMenuCollapseChange,
+    showCoar,
     showDashboard,
     showReports,
   } = props
@@ -367,62 +371,71 @@ const Menu = (props: MenuProps): ReactNode => {
       {
         label: 'Dashboard',
         url: `/${groupName}/dashboard`,
-        icon: <HomeOutlined />,
+        icon: <Home />,
         key: 'dashboard',
         show: showDashboard,
       },
       {
         label: 'Manuscripts',
         url: `/${groupName}/admin/manuscripts`,
-        icon: <FileTextOutlined />,
+        icon: <File />,
         key: 'manuscripts',
         show: isUserGroupAdmin || isUserGroupManager || isUserAdmin,
       },
       {
         label: 'Reports',
         url: `/${groupName}/admin/reports`,
-        icon: <BarChartOutlined />,
+        icon: <Report />,
         key: 'reports',
         show: showReports && (isUserGroupAdmin || isUserAdmin),
       },
       {
+        label: 'COAR Notify Inbox',
+        url: `/${groupName}/admin/coar-inbox`,
+        icon: <Coar />,
+        key: 'coar',
+        show:
+          showCoar && (isUserGroupAdmin || isUserGroupManager || isUserAdmin),
+      },
+      {
         label: 'Forms',
         url: `/${groupName}/admin/forms`,
-        icon: <FormOutlined />,
+        icon: <Form />,
         key: 'forms',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: 'Tasks',
         url: `/${groupName}/admin/tasks`,
-        icon: <UnorderedListOutlined />,
+        icon: <Tasks />,
         key: 'tasks',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: 'Users',
         url: `/${groupName}/admin/users`,
-        icon: <UserOutlined />,
+        icon: <User />,
         key: 'users',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: 'Configuration',
         url: `/${groupName}/admin/configuration`,
-        icon: <ControlOutlined />,
+        icon: <Settings />,
         key: 'configuration',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: 'CMS',
         url: `/${groupName}/admin/cms`,
-        icon: <ReadOutlined />,
+        icon: <Book />,
         key: 'cms',
         show: isUserGroupAdmin || isUserAdmin,
       },
     ].filter(item => item.show)
   }, [
     groupName,
+    showCoar,
     showDashboard,
     showReports,
     isUserAdmin,
@@ -449,7 +462,7 @@ const Menu = (props: MenuProps): ReactNode => {
           {links.map(item => {
             return (
               <Link key={item.key} to={item.url}>
-                <LinkItem $active={pathname.match(item.url)}>
+                <LinkItem $active={!!pathname.match(item.url)}>
                   <div>{item.icon}</div>
                   {!menuCollapsed && <div>{item.label}</div>}
                 </LinkItem>
@@ -459,7 +472,7 @@ const Menu = (props: MenuProps): ReactNode => {
         </LinkItems>
 
         <LinksCollapseIconWrapper $menuCollapsed={menuCollapsed}>
-          <VerticalAlignTopOutlined onClick={toggleMenuCollapsed} />
+          <ExpandMenu onClick={toggleMenuCollapsed} />
         </LinksCollapseIconWrapper>
       </LinkSection>
 
@@ -473,7 +486,7 @@ const Menu = (props: MenuProps): ReactNode => {
           </Link>
 
           <UserCollapseIconWrapper $menuCollapsed={menuCollapsed}>
-            <VerticalAlignTopOutlined onClick={toggleMenuCollapsed} />
+            <ExpandMenu onClick={toggleMenuCollapsed} />
           </UserCollapseIconWrapper>
         </UserTop>
         <UserBottom $menuCollapsed={menuCollapsed}>

@@ -1,8 +1,9 @@
 import { type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { ArrowRightOutlined } from '@ant-design/icons'
 import { grid, th, H3 } from '@coko/client'
+
+import { ArrowRight } from '../base/Icons'
 
 // #region styled
 const Title = styled(H3)`
@@ -82,7 +83,7 @@ const CardGrid = ({ items }: CardGridProps): ReactNode => {
               <Description>{item.description}</Description>
 
               <IconWrapper>
-                <ArrowRightOutlined />
+                <ArrowRight />
               </IconWrapper>
             </Card>
           </Link>

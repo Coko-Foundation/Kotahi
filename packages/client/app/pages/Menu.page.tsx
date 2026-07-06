@@ -23,9 +23,10 @@ const MenuPage = (): ReactNode => {
   const isUserAdmin = globalRoles.includes('admin')
 
   // @ts-ignore
-  const { instanceName, groupIdentity, report } = config
+  const { instanceName, groupIdentity, report, controlPanel } = config
 
   const showDashboard = ['journal', 'prc', 'preprint2'].includes(instanceName)
+  const showCoar = controlPanel?.showTabs.includes('COAR Notify Metadata')
 
   return (
     <Menu
@@ -36,6 +37,7 @@ const MenuPage = (): ReactNode => {
       isUserGroupAdmin={isUserGroupAdmin}
       isUserGroupManager={isUserGroupManager}
       onMenuCollapseChange={updateMenuCollapsed}
+      showCoar={showCoar}
       showDashboard={showDashboard}
       showReports={report.showInMenu}
       userDisplayName={username}
