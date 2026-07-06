@@ -75,6 +75,7 @@ const MenuPage = (): ReactNode => {
   const profileLink = `${urlFrag}/profile`
   const reportsLink = `${urlFrag}/admin/reports`
   const homeLink = `${urlFrag}/dashboard`
+  const coarNotifyLink = `${urlFrag}/admin/coar-inbox`
 
   const showLinks = location.pathname.match(/^\/(submit|manuscript)/g)
 
@@ -118,12 +119,21 @@ const MenuPage = (): ReactNode => {
       name: t('leftMenu.Manuscripts'),
       icon: 'file-text',
     })
+
     if (config?.report?.showInMenu && isGroupAdmin)
       links.push({
         link: reportsLink,
         name: t('leftMenu.Reports'),
         icon: 'activity',
       })
+
+    if (config?.controlPanel?.showTabs.includes('COAR Notify Metadata')) {
+      links.push({
+        link: coarNotifyLink,
+        name: t('leftMenu.CoarNotifyInbox'),
+        icon: '_coar-notify',
+      })
+    }
   }
 
   if (isGroupAdmin || isAdmin) {

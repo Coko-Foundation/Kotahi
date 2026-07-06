@@ -61,7 +61,7 @@ const Tab = styled.div`
   cursor: pointer;
   margin: 0 4px 4px;
 
-  ${props => props.active && activeTab}
+  ${props => props.$active && activeTab}
   ${props => props.disabled && disabledTab}
 
   padding: 8px;
@@ -97,7 +97,7 @@ export const VerticalTabs = ({ tabList }) => {
       <Tabs>
         {tabList.map(tab => (
           <Tab
-            active={tabDisplay === tab.id}
+            $active={tabDisplay === tab.id}
             disabled={tab.disabled}
             key={tab.id}
             onClick={() => {

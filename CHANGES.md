@@ -10,6 +10,26 @@
 
 #### Deployment changes
 
+### Version 2026.07.03-0
+
+# New Release: COAR Notify Support in Kotahi
+
+## What's new:
+Kotahi now supports the COAR Notify protocol, letting your Kotahi instance exchange standardised messages with other repositories, preprint servers, overlay journals, and peer review services.
+
+## Why it matters:
+This unlocks the "Publish, Review, Curate" model directly in Kotahi — authors can request a peer review or overlay-journal publication straight from a deposited preprint, and datasets can be linked to articles across repositories, using an open, interoperable standard already adopted by bioRxiv, HAL, PREreview, Peer Community In, and Episcience.
+
+## How to use it:
+All the steps you need to enable COAR Notify in your Kotahi group are here: <ADD PDF>
+
+## Want to learn more about the protocol itself?
+COAR Notify is developed and maintained by COAR (Confederation of Open Access Repositories) — learn more directly from them: https://coar-repositories.org/tools-and-resources/notify/
+
+
+#### Bug fixes
+Resolved an issue preventing the Production Page from loading.
+
 ### Version 2026.06.29-0
 
 #### Bug fixes
