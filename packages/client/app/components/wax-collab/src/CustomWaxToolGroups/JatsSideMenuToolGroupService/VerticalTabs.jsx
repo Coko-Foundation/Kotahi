@@ -62,7 +62,7 @@ const Tab = styled.div`
   cursor: pointer;
   margin: 0 4px 4px;
 
-  ${props => props.active && activeTab}
+  ${props => props.$active && activeTab}
   ${props => props.disabled && disabledTab}
 
   padding: 8px;
@@ -98,7 +98,7 @@ export const VerticalTabs = ({ tabList }) => {
       <Tabs>
         {tabList.map(tab => (
           <Tab
-            active={tabDisplay === tab.id}
+            $active={tabDisplay === tab.id}
             disabled={tab.disabled}
             key={tab.id}
             onClick={() => {
@@ -167,8 +167,10 @@ const BlockElementWrapper = styled.div`
 
     &::before {
       --circle-width: 5px;
-      background-color: ${props => th(props.color) || 'transparent'};
-      border: 1px solid ${props => th(props.color) || 'transparent'};
+      background-color: ${props =>
+        props.color ? th(props.color) : 'transparent'};
+      border: 1px solid
+        ${props => (props.color ? th(props.color) : 'transparent')};
       border-radius: 100%;
       content: '';
       display: ${props => (props.color ? 'inline-block' : 'none')};
