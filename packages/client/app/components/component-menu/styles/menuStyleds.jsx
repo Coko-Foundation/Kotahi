@@ -154,7 +154,7 @@ export const StyledLink = styled(Link)`
   }
 
   svg#coar {
-    color: ${p => (p.$active ? color.text : color.textReverse)};
+    color: ${p => (p.$active ? p.theme.color.text : p.theme.color.textReverse)};
     transition: color var(--transition-time);
   }
 
@@ -168,7 +168,7 @@ export const StyledLink = styled(Link)`
     }
 
     svg#coar {
-      color: ${color.text};
+      color: ${th('color.text')};
     }
   }
 `
