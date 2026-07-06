@@ -10,6 +10,7 @@ import CMSLayoutPage from './components/component-cms-manager/src/CMSLayoutPage'
 import CMSMetadataPage from './components/component-cms-manager/src/CMSMetadataPage'
 import CMSPagesPage from './components/component-cms-manager/src/CMSPagesPage'
 import CMSPublishingCollectionPage from './components/component-cms-manager/src/CMSPublishingCollectionPage'
+import CoarNotifyInboxPage from './components/component-coar/CoarNotifyInboxPage'
 import ConfigManagerPage from './components/component-config-manager/src/ConfigManagerPage'
 import DashboardEditsPage from './components/component-dashboard/src/components/DashboardEditsPage'
 import DashboardLayout from './components/component-dashboard/src/components/DashboardLayout'
@@ -268,7 +269,8 @@ const Router = (): ReactNode => {
                   />
                 }
               >
-                <Route element={<ManuscriptsPage />} path="manuscripts" />,
+                <Route element={<ManuscriptsPage />} path="manuscripts" />
+                <Route element={<CoarNotifyInboxPage />} path="coar-inbox" />
               </Route>
             </Route>
 

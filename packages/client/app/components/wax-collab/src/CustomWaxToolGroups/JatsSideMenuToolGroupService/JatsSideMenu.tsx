@@ -97,7 +97,7 @@ class JatsSideMenu extends ToolGroup {
     //   disabled: false,
     //   component: (
     //     <BlockLevelTools
-    //       groups={this.toolGroups[2].groups.map(group => ({
+    //       groups={this._toolGroups[2].groups.map(group => ({
     //         groupName: group.title.props.title,
     //         items: group._tools,
     //       }))}

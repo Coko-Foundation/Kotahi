@@ -153,6 +153,11 @@ export const StyledLink = styled(Link)`
     width: 1em;
   }
 
+  svg#coar {
+    color: ${p => (p.$active ? p.theme.color.text : p.theme.color.textReverse)};
+    transition: color var(--transition-time);
+  }
+
   &:hover {
     background-color: ${th('color.brand1.tint70')};
     color: ${th('color.text')} !important;
@@ -160,6 +165,10 @@ export const StyledLink = styled(Link)`
 
     svg {
       stroke: ${th('color.text')};
+    }
+
+    svg#coar {
+      color: ${th('color.text')};
     }
   }
 `
