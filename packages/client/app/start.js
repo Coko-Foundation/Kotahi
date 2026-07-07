@@ -4,7 +4,7 @@ import { setContext } from '@apollo/client/link/context'
 import { startClient } from '@coko/client'
 
 import theme from './theme'
-import routes from './Pages'
+import routes from './DefaultPage'
 
 import './i18n'
 
