@@ -371,28 +371,28 @@ const Menu = (props: MenuProps): ReactNode => {
   const links: LinkArray = useMemo(() => {
     return [
       {
-        label: 'Dashboard',
+        label: t('leftMenu.Dashboard'),
         url: `/${groupName}/dashboard`,
         icon: <Home />,
         key: 'dashboard',
         show: showDashboard,
       },
       {
-        label: 'Manuscripts',
+        label: t('leftMenu.Manuscripts'),
         url: `/${groupName}/admin/manuscripts`,
         icon: <File />,
         key: 'manuscripts',
         show: isUserGroupAdmin || isUserGroupManager || isUserAdmin,
       },
       {
-        label: 'Reports',
+        label: t('leftMenu.Reports'),
         url: `/${groupName}/admin/reports`,
         icon: <Report />,
         key: 'reports',
         show: showReports && (isUserGroupAdmin || isUserAdmin),
       },
       {
-        label: 'COAR Notify Inbox',
+        label: t('leftMenu.CoarNotifyInbox'),
         url: `/${groupName}/admin/coar-inbox`,
         icon: <Coar />,
         key: 'coar',
@@ -400,35 +400,35 @@ const Menu = (props: MenuProps): ReactNode => {
           showCoar && (isUserGroupAdmin || isUserGroupManager || isUserAdmin),
       },
       {
-        label: 'Forms',
+        label: t('leftMenu.Forms'),
         url: `/${groupName}/admin/forms`,
         icon: <Form />,
         key: 'forms',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: 'Tasks',
+        label: t('leftMenu.Tasks'),
         url: `/${groupName}/admin/tasks`,
         icon: <Tasks />,
         key: 'tasks',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: 'Users',
+        label: t('leftMenu.Users'),
         url: `/${groupName}/admin/users`,
         icon: <User />,
         key: 'users',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: 'Configuration',
+        label: t('leftMenu.Configuration'),
         url: `/${groupName}/admin/configuration`,
         icon: <Settings />,
         key: 'configuration',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: 'CMS',
+        label: t('leftMenu.CMS'),
         url: `/${groupName}/admin/cms`,
         icon: <Book />,
         key: 'cms',
@@ -436,6 +436,7 @@ const Menu = (props: MenuProps): ReactNode => {
       },
     ].filter(item => item.show)
   }, [
+    t,
     groupName,
     showCoar,
     showDashboard,
