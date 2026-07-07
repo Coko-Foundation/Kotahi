@@ -146,7 +146,7 @@ services:
     healthcheck:
       test: ['CMD', '/bin/sh', '/home/node/app/scripts/server_healthy.sh']
       interval: 1s
-      retries: 30
+      retries: 60
     tty: true
     init: true
 
