@@ -14,7 +14,7 @@ const modals = {
   assetManagerEditor: AssetManager,
 }
 
-const Pages = () => {
+const DefaultPage = () => {
   Modal.setAppElement('#root')
 
   return (
@@ -29,4 +29,4 @@ const Pages = () => {
   )
 }
 
-export default <Pages />
+export default <DefaultPage />
