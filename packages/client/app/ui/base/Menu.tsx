@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import styled, { css, RuleSet } from 'styled-components'
 import { grid, th, Link } from '@coko/client'
 
@@ -325,6 +326,7 @@ const Menu = (props: MenuProps): ReactNode => {
     showDashboard,
     showReports,
   } = props
+  const { t } = useTranslation()
   const { pathname } = useLocation()
   const { groupName } = useParams()
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -491,9 +493,13 @@ const Menu = (props: MenuProps): ReactNode => {
         </UserTop>
         <UserBottom $menuCollapsed={menuCollapsed}>
           <UserRoles $labelsWrap={labelsWrap}>
-            {isUserAdmin && <UserLabel>Admin</UserLabel>}
-            {isUserGroupAdmin && <UserLabel>Group Admin</UserLabel>}
-            {isUserGroupManager && <UserLabel>Group Manager</UserLabel>}
+            {isUserAdmin && <UserLabel>{t('common.roles.Admin')}</UserLabel>}
+            {isUserGroupAdmin && (
+              <UserLabel>{t('common.roles.Group Admin')}</UserLabel>
+            )}
+            {isUserGroupManager && (
+              <UserLabel>{t('common.roles.Group Manager')}</UserLabel>
+            )}
           </UserRoles>
         </UserBottom>
       </UserSection>
