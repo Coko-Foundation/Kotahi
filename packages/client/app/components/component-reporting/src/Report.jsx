@@ -29,7 +29,7 @@ const MinorNote = styled.span`
 export const Content = styled.div`
   background-color: ${th('color.backgroundC')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
 `
 
 const SelectionLine = styled.div`

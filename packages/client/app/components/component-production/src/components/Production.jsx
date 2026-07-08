@@ -62,7 +62,7 @@ const FormTemplateStyled = styled.div`
 const ScrollableTabContent = styled.section`
   background-color: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
+  box-shadow: ${({ theme }) => theme.boxShadow200};
   height: calc(100vh - 180px);
   overflow: auto;
 

@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/immutability */
 
-import { type ReactNode, useContext, useEffect } from 'react'
+import { type ReactNode, useContext, useEffect, useRef } from 'react'
 import { Outlet, Navigate, useParams, useLocation } from 'react-router-dom'
+import { LinkError } from '@apollo/client/errors'
 import { useMutation, useQuery } from '@apollo/client/react'
+import { App } from 'antd'
 import i18next from 'i18next'
 
 import { CURRENT_USER, UPDATE_LANGUAGE } from '../queries'
@@ -17,8 +19,10 @@ const AuthenticatedPage = (): ReactNode => {
   const { groupName } = useParams()
   const config = useContext(ConfigContext)
   const journal = useContext(JournalContext)
+  const { notification } = App.useApp()
+  const wasDisconnected = useRef(false)
 
-  const { loading, data } = useQuery(CURRENT_USER, {
+  const { loading, error, data } = useQuery(CURRENT_USER, {
     fetchPolicy: 'network-only',
     pollInterval: 60000,
     notifyOnNetworkStatusChange: false, // stops screen flickering
@@ -50,6 +54,16 @@ const AuthenticatedPage = (): ReactNode => {
       }
     }
   }, [currentUser, updateLanguage])
+
+  useEffect(() => {
+    if (LinkError.is(error)) {
+      wasDisconnected.current = true
+      notification.warning({ message: 'Connection to the server lost' })
+    } else if (wasDisconnected.current && currentUser) {
+      wasDisconnected.current = false
+      notification.success({ message: 'Connection to the server restored' })
+    }
+  }, [error, currentUser, notification])
 
   if (loading) {
     return <Spinner />

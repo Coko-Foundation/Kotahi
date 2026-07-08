@@ -305,7 +305,7 @@ export const SimpleInfoContainer = styled.div`
 export const ProductionEditorDiv = styled.div`
   background-color: ${th('color.backgroundA')};
   border-bottom-left-radius: 6px;
-  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
+  box-shadow: ${({ theme }) => theme.boxShadow200};
   display: flex;
   flex-grow: 1;
 

@@ -1,7 +1,9 @@
-import { createGlobalStyle } from 'styled-components'
-import { th } from '@coko/client'
+import { css, createGlobalStyle } from 'styled-components'
+import { th, grid } from '@coko/client'
 
-export default createGlobalStyle`
+const globalStyles = css`
+  /* stylelint-disable declaration-no-important */
+
   html {
     box-sizing: border-box;
     display: flex;
@@ -35,7 +37,6 @@ export default createGlobalStyle`
 
   * {
     border: 0;
-    /* -webkit-font-smoothing: auto; */
     font-weight: inherit;
     margin: 0;
     outline: 0;
@@ -46,7 +47,6 @@ export default createGlobalStyle`
 
   a {
     color: ${th('color.brand1.base')};
-    /* stylelint-disable-next-line declaration-no-important */
     text-decoration: none !important;
   }
 
@@ -54,4 +54,45 @@ export default createGlobalStyle`
   b {
     font-weight: bold;
   }
+
+  /* Ant notifications */
+
+  .ant-notification-notice {
+    padding: ${grid(3)} !important;
+
+    > button {
+      top: calc(${grid(3)} + 3px) !important;
+      right: ${grid(3)} !important;
+    }
+  }
+
+  .ant-notification-notice-progress::-webkit-progress-value {
+    background: ${th('colorBorder')} !important;
+  }
+
+  .ant-notification-notice-progress::-moz-progress-bar {
+    background: ${th('colorBorder')} !important;
+  }
+
+  .ant-notification-notice-with-icon > div.ant-notification-notice-title {
+    margin-bottom: 0 !important;
+  }
+
+  .ant-notification-notice-success {
+    border-left: 5px solid ${th('colorSuccess')};
+  }
+
+  .ant-notification-notice-error {
+    border-left: 5px solid ${th('colorError')};
+  }
+
+  .ant-notification-notice-warning {
+    border-left: 5px solid ${th('colorWarning')};
+  }
+
+  .ant-notification-notice-info {
+    border-left: 5px solid ${th('colorInfo')};
+  }
 `
+
+export default createGlobalStyle`${globalStyles}`

@@ -28,7 +28,7 @@ export const PaginationContainerShadowed = styled(PaginationContainer).attrs(
 )`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
 `
 
 const Styles = styled.div`
@@ -36,7 +36,7 @@ const Styles = styled.div`
     align-items: center;
     background-color: ${th('colorBackground')};
     border-radius: ${th('borderRadius')};
-    box-shadow: ${th('boxShadow')};
+    box-shadow: ${th('boxShadow200')};
     display: flex;
     flex-wrap: wrap;
     justify-content: start;

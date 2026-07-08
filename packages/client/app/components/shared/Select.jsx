@@ -32,7 +32,7 @@ const styles = theme => ({
         : 'inset 0px 0px 4px rgb(0 0 0 / 7%)'
       : state.isFocused
         ? `0 0 0 1px ${theme.color.brand1.base}`
-        : theme.boxShadow,
+        : theme.boxShadow200,
 
     borderRadius: theme.borderRadius,
     '&:hover': {

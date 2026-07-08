@@ -189,43 +189,28 @@ export const makeTheme = (
     },
   },
 
-  /* Colors */
-  // TODO Deprecate these in favour of definitions in color.js
-  /** @deprecated in favor of color.backgroundA */
   colorBackground: '#FFFFFF',
-  /** @deprecated in favor of color.backgroundB */
-  colorSecondaryBackground: '#f9fafb',
-  /** @deprecated in favor of color.brand1.base */
-  colorPrimary: colorBrand1,
-  /** @deprecated in favor of color.brand2.base */
-  colorSecondary: colorBrand2,
-  /** @deprecated in favor of color.gray90 */
-  colorFurniture: '#E8E8E8',
-  /** @deprecated in favor of color.gray60 */
-  colorBorder: '#A5A5A5',
-  /** @deprecated in favor of color.backgroundC */
   colorBackgroundHue: '#f4f5f7',
-  colorSuccess: '#008800',
-  colorError: '#FF2D1A',
-  /** @deprecated in favor of color.text */
-  colorText: '#111111',
-  /** @deprecated in favor of color.textReverse */
-  colorTextReverse: '#FFFFFF',
-  /** @deprecated in favor of color.textPlaceholder */
-  colorTextPlaceholder: '#666666',
-  colorWarning: '#ffc107',
-  colorWarningLight: '#fff9ed',
-  colorWarningDark: '#503303',
-  colorSuccessLight: '#d2ffcc',
-  colorSuccessDark: '#17510F',
-  /** @deprecated in favor of color.gray40 */
-  colorIconPrimary: '#666666',
-  /** @deprecated in favor of color.gray80 */
+  colorBorder: '#A5A5A5',
   colorContainerBorder: '#DEDEDE',
-
   colorDisabled: '#bfbfbf',
-
-  /* Text variables */
+  colorError: '#B53930',
+  colorFurniture: '#E8E8E8',
+  colorIconPrimary: '#666666',
+  colorInfo: '#666666',
+  colorPrimary: colorBrand1,
+  colorSecondary: colorBrand2,
+  colorSecondaryBackground: '#f9fafb',
+  colorSuccess: '#008800',
+  colorSuccessDark: '#17510F',
+  colorSuccessLight: '#d2ffcc',
+  colorText: '#111111',
+  colorTextHeading: '#111111',
+  colorTextPlaceholder: '#666666',
+  colorTextReverse: '#FFFFFF',
+  colorWarning: '#C18D33',
+  colorWarningDark: '#503303',
+  colorWarningLight: '#fff9ed',
 
   // fonts
   fontInterface:
@@ -270,15 +255,7 @@ export const makeTheme = (
   // Does not exist
   // $borderColor: var($colorFurniture);
 
-  /* Shadow (for tooltip) */
-  boxShadow: {
-    inset: 'inset 0px 0px 4px rgb(0 0 0 / 7%)',
-    shades: {
-      100: '0 2px 6px 0 rgb(0 0 0 / 5%)',
-      200: '0 2px 6px 0 rgb(0 0 0 / 10%)',
-      300: '0 2px 6px 0 rgb(0 0 0 / 20%)',
-    },
-  },
+  boxShadow200: '0 2px 6px 0 rgb(0 0 0 / 10%)',
 
   /* Transition */
   // transitionDuration: '0.2s', // TODO -- julien: not 0.05s

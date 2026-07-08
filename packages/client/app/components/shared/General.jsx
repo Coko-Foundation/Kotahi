@@ -11,7 +11,7 @@ export const Section = styled.section.attrs({
 export const Content = styled.div`
   background-color: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
   clear: both;
 `
 
@@ -25,7 +25,7 @@ export const ScrollableContent = styled(Content)`
 export const SectionContent = styled(Section)`
   background-color: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
+  box-shadow: ${({ theme }) => theme.boxShadow200};
   padding: 0;
 
   /* stylelint-disable-next-line */

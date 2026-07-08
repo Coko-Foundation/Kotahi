@@ -43,7 +43,7 @@ export default {
             return props.theme.color.brand1.base
         }
       }};
-      box-shadow: ${th('boxShadow')};
+      box-shadow: ${th('boxShadow200')};
       color: inherit;
     }
 
