@@ -13,6 +13,7 @@ import { JournalContext } from '../components/xpub-journal'
 import { ConfigContext } from '../components/config/src'
 import { getLanguages } from '../i18n'
 import { CurrentUserContext } from './hooks/useCurrentUser'
+import { useLogout } from './hooks/useLogout'
 
 const AuthenticatedPage = (): ReactNode => {
   const { pathname } = useLocation()
@@ -21,6 +22,7 @@ const AuthenticatedPage = (): ReactNode => {
   const journal = useContext(JournalContext)
   const { notification } = App.useApp()
   const wasDisconnected = useRef(false)
+  const logout = useLogout()
 
   const { loading, error, data } = useQuery(CURRENT_USER, {
     fetchPolicy: 'network-only',
@@ -65,13 +67,17 @@ const AuthenticatedPage = (): ReactNode => {
     }
   }, [error, currentUser, notification])
 
+  useEffect(() => {
+    if (!loading && !currentUser) {
+      logout()
+    }
+  }, [loading, currentUser, logout])
+
   if (loading) {
     return <Spinner />
   }
 
   if (!currentUser) {
-    // TO DO - reuse a logout function here that clearn cache etc.
-    localStorage.removeItem('token')
     return <Navigate replace to={`/${groupName}/login`} />
   }
 
