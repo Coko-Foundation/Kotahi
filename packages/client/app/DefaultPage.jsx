@@ -19,7 +19,14 @@ const DefaultPage = () => {
   Modal.setAppElement('#root')
 
   return (
-    <App notification={{ maxCount: 3, duration: 4 }}>
+    <App
+      notification={{
+        stack: false,
+        showProgress: true,
+        pauseOnHover: true,
+        duration: 4,
+      }}
+    >
       <XpubProvider>
         <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
           <ModalProvider modals={modals}>
