@@ -92,6 +92,7 @@
     "yjs": "13.5.38"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/react-vite": "^10.4.6",
     "@types/react": "^19.2.14",

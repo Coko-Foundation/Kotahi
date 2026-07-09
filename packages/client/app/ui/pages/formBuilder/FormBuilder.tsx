@@ -3,12 +3,20 @@ import { useParams } from 'react-router-dom'
 
 import CardGrid from '../../shared/CardGrid'
 import Page from '../../shared/Page'
+import PageDescription from '../../shared/PageDescription'
 
 const FormBuilder = (): ReactNode => {
   const { groupName } = useParams()
 
   return (
     <Page title="Forms">
+      <PageDescription>
+        These are the forms authors, reviewers, and editors fill in at each
+        stage of the manuscript workflow. Editing a form here changes what
+        information gets collected from that point on, including which fields
+        end up available as metadata elsewhere in Kotahi &mdash; it does not
+        change data already submitted on existing manuscripts.
+      </PageDescription>
       <CardGrid
         items={[
           {

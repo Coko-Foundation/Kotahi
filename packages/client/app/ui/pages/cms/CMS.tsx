@@ -3,12 +3,19 @@ import { useParams } from 'react-router-dom'
 
 import CardGrid from '../../shared/CardGrid'
 import Page from '../../shared/Page'
+import PageDescription from '../../shared/PageDescription'
 
 const CMS = (): ReactNode => {
   const { groupName } = useParams()
 
   return (
     <Page title="CMS">
+      <PageDescription>
+        This is where you control your published website, separate from the
+        internal editorial workflow. Manage static pages, site-wide layout and
+        branding, the article template, publication metadata, and the files
+        backing your site. Changes here go live on your published site.
+      </PageDescription>
       <CardGrid
         items={[
           {

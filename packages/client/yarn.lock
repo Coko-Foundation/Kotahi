@@ -1055,6 +1055,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.5.0":
+  version: 10.5.0
+  resolution: "@faker-js/faker@npm:10.5.0"
+  checksum: 10c0/2de3c7b8f41592d52cefc3ab4c99536656249bca78d5ad184a3b7ac43ecc9d946056cef2c4d37060373ef06ad992d82530de08479fabe16fdbe77b911d842446
+  languageName: node
+  linkType: hard
+
 "@fontsource/roboto@npm:^4.5.8":
   version: 4.5.8
   resolution: "@fontsource/roboto@npm:4.5.8"
@@ -5378,6 +5385,7 @@ __metadata:
     "@dnd-kit/core": "npm:^6.3.1"
     "@dnd-kit/sortable": "npm:^10.0.0"
     "@dnd-kit/utilities": "npm:^3.2.2"
+    "@faker-js/faker": "npm:^10.5.0"
     "@fontsource/roboto": "npm:^4.5.8"
     "@fontsource/spectral-sc": "npm:^5.2.8"
     "@rjsf/core": "npm:4.2.3"
