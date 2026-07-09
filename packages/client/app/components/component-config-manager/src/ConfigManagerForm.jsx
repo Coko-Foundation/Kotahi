@@ -31,6 +31,8 @@ const StyledContainer = styled.div`
   --tabs-border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 
   /* stylelint-disable-next-line declaration-no-important */

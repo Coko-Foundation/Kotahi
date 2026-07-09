@@ -5,6 +5,10 @@ import { grid, th } from '@coko/client'
 
 const Wrapper = styled.div`
   background: ${th('color.backgroundC')};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
   overflow: auto;
   padding: ${grid(3)};
   font-family: ${th('fontInterface')};
@@ -22,6 +26,7 @@ const Header = styled.div`
 `
 
 const Content = styled.div`
+  flex: 1;
   min-height: 0;
   font-size: ${th('fontSizeBase')};
   padding-bottom: ${grid(3)};

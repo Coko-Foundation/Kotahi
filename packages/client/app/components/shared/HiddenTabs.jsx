@@ -47,7 +47,7 @@ export const Tab = styled.div.attrs(props => ({
   padding: calc(${th('gridUnit')} - 1px) 1em;
   padding-bottom: 0;
   position: relative;
-  z-index: 1;
+  z-index: 6;
 
   & > div {
     border-bottom: 3px solid
@@ -154,6 +154,7 @@ const HiddenTabs = ({
             flex: shouldFillFlex ? '1' : undefined,
             flexDirection: 'column',
             minHeight: shouldFillFlex ? '0' : undefined,
+            overflowY: shouldFillFlex ? 'auto' : undefined,
             ...(section?.tabStyles ?? {}),
             ...hideMethod(section, activeKey),
           }}

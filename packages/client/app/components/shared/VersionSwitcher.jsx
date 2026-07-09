@@ -3,15 +3,29 @@
 
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
+
+import { grid } from '@coko/client'
+
 import { Select } from './Select'
 import PlainOrRichText from './PlainOrRichText'
 import { VersionIndicator, VersionLabelWrapper, VersionTitle } from './General'
 
-const Container = styled.div`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  min-height: 0;
+  overflow: hidden;
+`
+
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   margin-top: ${grid(2)};
+  min-height: 0;
+  overflow: hidden;
 `
 
 const StyledSelect = styled(Select)`
@@ -20,7 +34,7 @@ const StyledSelect = styled(Select)`
   }
 
   border: 1px solid ${({ theme }) => theme.color.gray95};
-  box-shadow: ${props => props.theme.boxShadow.shades[100]};
+  box-shadow: ${props => props.theme.boxShadow200};
   width: ${props => (props.fullWidth ? 100 : 94)}%;
 `
 
@@ -77,7 +91,7 @@ export const VersionSwitcher = ({
   )
 
   return (
-    <>
+    <Wrapper>
       <StyledSelect
         fullWidth={fullWidth}
         onChange={option => selectVersionKey(option.value)}
@@ -101,6 +115,6 @@ export const VersionSwitcher = ({
       <Container tabIndex="-1">
         {mode === 'props' ? selectedVersion.content : selectedVersion}
       </Container>
-    </>
+    </Wrapper>
   )
 }

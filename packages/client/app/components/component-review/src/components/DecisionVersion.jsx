@@ -717,6 +717,7 @@ const DecisionVersion = ({
         navigate(`?tab=${key}`, { replace: true })
       }}
       sections={sections}
+      shouldFillFlex
     />
   )
 }
