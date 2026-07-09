@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react'
+import { type AriaAttributes, type ReactNode } from 'react'
 
 export {
   ArrowRightOutlined as ArrowRight,
@@ -15,11 +15,15 @@ export {
 
 type IconProps = {
   className?: string
+  'aria-hidden'?: AriaAttributes['aria-hidden']
 }
 
-export const Coar = ({ className }: IconProps): ReactNode => {
+export const Coar = ({
+  className,
+  'aria-hidden': ariaHidden,
+}: IconProps): ReactNode => {
   return (
-    <span aria-label="coar notify" role="img">
+    <span aria-hidden={ariaHidden} aria-label="coar notify" role="img">
       <svg className={className} height="1em" viewBox="0 0 21 21" width="1em">
         <path
           clipRule="evenodd"
@@ -40,9 +44,12 @@ export const Coar = ({ className }: IconProps): ReactNode => {
   )
 }
 
-export const SemanticScholar = ({ className }: IconProps): ReactNode => {
+export const SemanticScholar = ({
+  className,
+  'aria-hidden': ariaHidden,
+}: IconProps): ReactNode => {
   return (
-    <span aria-label="semantic scholar" role="img">
+    <span aria-hidden={ariaHidden} aria-label="semantic scholar" role="img">
       <svg
         className={className}
         height="0.75em"

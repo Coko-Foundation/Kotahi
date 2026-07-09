@@ -127,10 +127,13 @@ const esLa = {
       Metadata: 'Metadatos del Diario',
       Collections: 'Colecciones',
       CoarNotifyInbox: 'Bandeja de entrada de COAR Notify',
+      MainNavigation: 'Navegación principal',
     },
     menuSettings: {
       KeepMenuVisible: 'Mantener menú visible',
       MinimalSidebar: 'Menu lateral minimo',
+      ExpandMenu: 'Expandir menú',
+      CollapseMenu: 'Contraer menú',
     },
     formsPage: {
       description:

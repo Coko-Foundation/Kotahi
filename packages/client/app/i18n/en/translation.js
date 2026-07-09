@@ -127,10 +127,13 @@ const en = {
       Metadata: 'Publication Metadata',
       Collections: 'Collections',
       CoarNotifyInbox: 'COAR Notify Inbox',
+      MainNavigation: 'Main navigation',
     },
     menuSettings: {
       KeepMenuVisible: 'Keep menu visible',
       MinimalSidebar: 'Minimal sidebar',
+      ExpandMenu: 'Expand menu',
+      CollapseMenu: 'Collapse menu',
     },
     formsPage: {
       description:

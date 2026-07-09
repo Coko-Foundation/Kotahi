@@ -129,10 +129,13 @@ const ru = {
       Metadata: 'Metadannye publikatsii',
       Collections: 'Коллекции',
       CoarNotifyInbox: 'Входящие COAR Notify',
+      MainNavigation: 'Основная навигация',
     },
     menuSettings: {
       KeepMenuVisible: 'оставить меню видимым',
       MinimalSidebar: 'Минимальная боковая панель',
+      ExpandMenu: 'Развернуть меню',
+      CollapseMenu: 'Свернуть меню',
     },
     formsPage: {
       description:

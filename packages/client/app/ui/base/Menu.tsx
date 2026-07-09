@@ -2,7 +2,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import styled, { css, RuleSet } from 'styled-components'
-import { grid, th, Link } from '@coko/client'
+import { grid, th, Link as UILink } from '@coko/client'
 
 import Avatar from '../shared/Avatar'
 import {
@@ -31,7 +31,7 @@ const collapseTransition = `${collapseTime} ease`
  * removed.
  */
 
-const Wrapper = styled.div<{ $menuCollapsed: boolean }>`
+const Wrapper = styled.nav<{ $menuCollapsed: boolean }>`
   background-color: ${th('colorPrimary')};
   color: ${th('colorTextReverse')};
 
@@ -40,12 +40,17 @@ const Wrapper = styled.div<{ $menuCollapsed: boolean }>`
     props.$menuCollapsed ? collapsedWidth : fullWidth};
   flex-shrink: 0;
   transition: width ${collapseTransition};
+  will-change: width;
 
   padding: ${grid(1)} 0;
 
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  && a:focus {
+    outline: 1px solid ${th('colorTextReverse')};
+  }
 `
 
 const GroupSection = styled.div`
@@ -117,8 +122,10 @@ const LinkSection = styled.div`
   line-height: ${th('lineHeightBase')};
 `
 
-const LinkItems = styled.div`
+const LinkItems = styled.ul`
   flex-grow: 1;
+  list-style: none;
+  padding: 0;
 `
 
 const hoverFade = '0.3s ease'
@@ -151,6 +158,10 @@ const LinkItem = styled.div<{ $active: boolean }>`
   }
 
   ${(props): RuleSet | false => props.$active && active};
+`
+
+const Link = styled(UILink)`
+  display: block;
 `
 
 const UserSection = styled.div`
@@ -225,7 +236,11 @@ const UserLabel = styled.span`
 
 const CollapseIconWrapper = css`
   align-self: center;
+  background: none;
+  border: none;
   color: ${th('colorTextReverse')};
+  cursor: pointer;
+  padding: 0;
 
   opacity: 1;
   visibility: visible;
@@ -233,18 +248,21 @@ const CollapseIconWrapper = css`
     opacity ${collapseTransition},
     visibility ${collapseTransition};
 
+  &:focus-visible {
+    outline: 1px solid ${th('colorTextReverse')};
+  }
+
   > span[role='img'] {
     font-size: 1.4rem;
-    cursor: pointer;
     transition: font-size ${collapseTransition};
+  }
 
-    &:hover {
-      font-size: 1.7rem;
-    }
+  &:hover > span[role='img'] {
+    font-size: 1.7rem;
   }
 `
 
-const UserCollapseIconWrapper = styled.div<{ $menuCollapsed: boolean }>`
+const UserCollapseIconWrapper = styled.button<{ $menuCollapsed: boolean }>`
   ${CollapseIconWrapper};
 
   ${(props): RuleSet =>
@@ -259,7 +277,7 @@ const UserCollapseIconWrapper = styled.div<{ $menuCollapsed: boolean }>`
   }
 `
 
-const LinksCollapseIconWrapper = styled.div<{ $menuCollapsed: boolean }>`
+const LinksCollapseIconWrapper = styled.button<{ $menuCollapsed: boolean }>`
   ${CollapseIconWrapper};
 
   ${(props): RuleSet =>
@@ -329,7 +347,7 @@ const Menu = (props: MenuProps): ReactNode => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { groupName } = useParams()
-  const wrapperRef = useRef<HTMLDivElement>(null)
+  const wrapperRef = useRef<HTMLElement>(null)
   const [menuCollapsed, setMenuCollapsed] = useState(initialMenuCollapsed)
   const [labelsWrap, setLabelsWrap] = useState(!initialMenuCollapsed)
 
@@ -373,28 +391,28 @@ const Menu = (props: MenuProps): ReactNode => {
       {
         label: t('leftMenu.Dashboard'),
         url: `/${groupName}/dashboard`,
-        icon: <Home />,
+        icon: <Home aria-hidden />,
         key: 'dashboard',
         show: showDashboard,
       },
       {
         label: t('leftMenu.Manuscripts'),
         url: `/${groupName}/admin/manuscripts`,
-        icon: <File />,
+        icon: <File aria-hidden />,
         key: 'manuscripts',
         show: isUserGroupAdmin || isUserGroupManager || isUserAdmin,
       },
       {
         label: t('leftMenu.Reports'),
         url: `/${groupName}/admin/reports`,
-        icon: <Report />,
+        icon: <Report aria-hidden />,
         key: 'reports',
         show: showReports && (isUserGroupAdmin || isUserAdmin),
       },
       {
         label: t('leftMenu.CoarNotifyInbox'),
         url: `/${groupName}/admin/coar-inbox`,
-        icon: <Coar />,
+        icon: <Coar aria-hidden />,
         key: 'coar',
         show:
           showCoar && (isUserGroupAdmin || isUserGroupManager || isUserAdmin),
@@ -402,35 +420,35 @@ const Menu = (props: MenuProps): ReactNode => {
       {
         label: t('leftMenu.Forms'),
         url: `/${groupName}/admin/forms`,
-        icon: <Form />,
+        icon: <Form aria-hidden />,
         key: 'forms',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: t('leftMenu.Tasks'),
         url: `/${groupName}/admin/tasks`,
-        icon: <Tasks />,
+        icon: <Tasks aria-hidden />,
         key: 'tasks',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: t('leftMenu.Users'),
         url: `/${groupName}/admin/users`,
-        icon: <User />,
+        icon: <User aria-hidden />,
         key: 'users',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: t('leftMenu.Configuration'),
         url: `/${groupName}/admin/configuration`,
-        icon: <Settings />,
+        icon: <Settings aria-hidden />,
         key: 'configuration',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
         label: t('leftMenu.CMS'),
         url: `/${groupName}/admin/cms`,
-        icon: <Book />,
+        icon: <Book aria-hidden />,
         key: 'cms',
         show: isUserGroupAdmin || isUserAdmin,
       },
@@ -447,7 +465,11 @@ const Menu = (props: MenuProps): ReactNode => {
   ])
 
   return (
-    <Wrapper $menuCollapsed={menuCollapsed} ref={wrapperRef}>
+    <Wrapper
+      $menuCollapsed={menuCollapsed}
+      aria-label={t('leftMenu.MainNavigation')}
+      ref={wrapperRef}
+    >
       <GroupSection>
         <GroupLetter $menuCollapsed={menuCollapsed}>
           {groupDisplayName.slice(0, 1)}
@@ -463,19 +485,35 @@ const Menu = (props: MenuProps): ReactNode => {
       <LinkSection>
         <LinkItems>
           {links.map(item => {
+            const isActive = !!pathname.match(item.url)
+
             return (
-              <Link key={item.key} to={item.url}>
-                <LinkItem $active={!!pathname.match(item.url)}>
-                  <div>{item.icon}</div>
-                  {!menuCollapsed && <div>{item.label}</div>}
-                </LinkItem>
-              </Link>
+              <li key={item.key}>
+                <Link
+                  aria-current={isActive ? 'page' : undefined}
+                  to={item.url}
+                >
+                  <LinkItem $active={isActive}>
+                    <div>{item.icon}</div>
+                    {!menuCollapsed && <div>{item.label}</div>}
+                  </LinkItem>
+                </Link>
+              </li>
             )
           })}
         </LinkItems>
 
-        <LinksCollapseIconWrapper $menuCollapsed={menuCollapsed}>
-          <ExpandMenu onClick={toggleMenuCollapsed} />
+        <LinksCollapseIconWrapper
+          $menuCollapsed={menuCollapsed}
+          aria-expanded={!menuCollapsed}
+          aria-label={
+            menuCollapsed
+              ? t('menuSettings.ExpandMenu')
+              : t('menuSettings.CollapseMenu')
+          }
+          onClick={toggleMenuCollapsed}
+        >
+          <ExpandMenu aria-hidden />
         </LinksCollapseIconWrapper>
       </LinkSection>
 
@@ -488,8 +526,17 @@ const Menu = (props: MenuProps): ReactNode => {
             <UserName $labelsWrap={labelsWrap}>{userDisplayName}</UserName>
           </Link>
 
-          <UserCollapseIconWrapper $menuCollapsed={menuCollapsed}>
-            <ExpandMenu onClick={toggleMenuCollapsed} />
+          <UserCollapseIconWrapper
+            $menuCollapsed={menuCollapsed}
+            aria-expanded={!menuCollapsed}
+            aria-label={
+              menuCollapsed
+                ? t('menuSettings.ExpandMenu')
+                : t('menuSettings.CollapseMenu')
+            }
+            onClick={toggleMenuCollapsed}
+          >
+            <ExpandMenu aria-hidden />
           </UserCollapseIconWrapper>
         </UserTop>
         <UserBottom $menuCollapsed={menuCollapsed}>
