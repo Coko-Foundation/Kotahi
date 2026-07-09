@@ -132,6 +132,40 @@ const en = {
       KeepMenuVisible: 'Keep menu visible',
       MinimalSidebar: 'Minimal sidebar',
     },
+    formsPage: {
+      description:
+        'These are the forms authors, reviewers, and editors fill in at each stage of the manuscript workflow. Editing a form here changes what information gets collected from that point on, including which fields end up available as metadata elsewhere in Kotahi — it does not change data already submitted on existing manuscripts.',
+      submissionFormTitle: 'Submission Form',
+      submissionFormDescription:
+        'Edit the form that authors will see when submitting a manuscript. Also affects the metadata fields available to editors and the data captured that will later be available for publishing.',
+      reviewFormTitle: 'Review Form',
+      reviewFormDescription:
+        'Edit the form that reviewers will see when submitting a review on a manuscript.',
+      decisionFormTitle: 'Decision Form',
+      decisionFormDescription:
+        'Edit the form that editors will see when making a decision on a manuscript.',
+    },
+    cmsIndexPage: {
+      description:
+        'This is where you control your published website, separate from the internal editorial workflow. Manage static pages, site-wide layout and branding, the article template, publication metadata, and the files backing your site. Changes here go live on your published site.',
+      pagesTitle: 'Pages',
+      pagesDescription:
+        'Manage what pages are available on your published website.',
+      layoutTitle: 'Layout',
+      layoutDescription:
+        "Control your website's colors, footer, logo and more.",
+      articleTitle: 'Article Template',
+      articleDescription:
+        'Control the structure, styles and assets of the published article page.',
+      metadataTitle: 'Publication Metadata',
+      metadataDescription:
+        'Manage your journal name, ISSNs and contact information.',
+      fileBrowserTitle: 'File Browser',
+      fileBrowserDescription:
+        'View and edit all the files that will be included in your published website.',
+      collectionsTitle: 'Collections',
+      collectionsDescription: 'Manage collections of articles.',
+    },
     profilePage: {
       'Your profile': 'Your profile',
       'Profile: ': 'Profile: ',

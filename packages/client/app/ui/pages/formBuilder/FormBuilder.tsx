@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import CardGrid from '../../shared/CardGrid'
 import Page from '../../shared/Page'
@@ -7,36 +8,28 @@ import PageDescription from '../../shared/PageDescription'
 
 const FormBuilder = (): ReactNode => {
   const { groupName } = useParams()
+  const { t } = useTranslation()
 
   return (
-    <Page title="Forms">
-      <PageDescription>
-        These are the forms authors, reviewers, and editors fill in at each
-        stage of the manuscript workflow. Editing a form here changes what
-        information gets collected from that point on, including which fields
-        end up available as metadata elsewhere in Kotahi &mdash; it does not
-        change data already submitted on existing manuscripts.
-      </PageDescription>
+    <Page title={t('leftMenu.Forms')}>
+      <PageDescription>{t('formsPage.description')}</PageDescription>
       <CardGrid
         items={[
           {
-            title: 'Submission Form',
-            description:
-              'Edit the form that authors will see when submitting a manuscript. Also affects the metadata fields available to editors and the data captured that will later be available for publishing.',
+            title: t('formsPage.submissionFormTitle'),
+            description: t('formsPage.submissionFormDescription'),
             url: `/${groupName}/admin/forms/submission-form-builder`,
             key: 'submission',
           },
           {
-            title: 'Review Form',
-            description:
-              'Edit the form that reviewers will see when submitting a review on a manuscript.',
+            title: t('formsPage.reviewFormTitle'),
+            description: t('formsPage.reviewFormDescription'),
             url: `/${groupName}/admin/forms/review-form-builder`,
             key: 'review',
           },
           {
-            title: 'Decision Form',
-            description:
-              'Edit the form that editors will see when making a decision on a manuscript.',
+            title: t('formsPage.decisionFormTitle'),
+            description: t('formsPage.decisionFormDescription'),
             url: `/${groupName}/admin/forms/decision-form-builder`,
             key: 'decision',
           },
