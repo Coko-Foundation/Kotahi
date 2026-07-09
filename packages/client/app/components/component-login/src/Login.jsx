@@ -29,6 +29,12 @@ const RegisterLinkButton = styled.button`
   font-weight: 500;
   margin: 1em;
   padding: 0.25em 1em;
+
+  color: ${th('colorPrimary')};
+
+  &:hover {
+    color: ${th('colorPrimary')};
+  }
 `
 
 const RegisterInfoString = styled.p`
