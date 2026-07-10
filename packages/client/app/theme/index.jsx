@@ -55,6 +55,7 @@ export const makeTheme = (
   colorBrand1 = defaultBrandColor1,
   colorBrand2 = defaultBrandColor2,
 ) => ({
+  // DEPRECATED
   color: {
     black: '#000000',
     gray0: '#000000',
@@ -153,6 +154,7 @@ export const makeTheme = (
       mustard: '#CCD66E',
     },
   },
+  // DEPRECATED
   spacing: {
     /** 1px */
     a: '1px',
@@ -197,6 +199,7 @@ export const makeTheme = (
   colorTextHeading: '#111111',
   colorTextPlaceholder: '#666666',
   colorTextReverse: '#FFFFFF',
+  colorWallpaper: '#f2f2f2',
   colorWarning: '#C18D33',
   colorWarningDark: '#503303',
   colorWarningLight: '#fff9ed',

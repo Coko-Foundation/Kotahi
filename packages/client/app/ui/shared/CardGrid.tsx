@@ -11,6 +11,7 @@ const Link = styled(UILink)`
 
 const Title = styled(H2)`
   border-bottom: 2px solid ${th('colorPrimary')};
+  border-color: ${th('colorPrimary')};
 `
 
 const Description = styled.div`
@@ -33,8 +34,8 @@ const IconWrapper = styled.div`
 
 const Card = styled.div`
   min-height: ${grid(38)};
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px ${th('color.gray80')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow200')};
   padding: ${grid(6)} ${grid(4)} 0;
   cursor: pointer;
   background-color: ${th('colorBackground')};
@@ -42,10 +43,6 @@ const Card = styled.div`
 
   display: flex;
   flex-direction: column;
-
-  ${Title} {
-    border-color: ${th('colorPrimary')};
-  }
 
   &:hover,
   ${Link}:focus & {

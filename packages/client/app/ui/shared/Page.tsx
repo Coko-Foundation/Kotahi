@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { grid, th, H1 } from '@coko/client'
 
 const Wrapper = styled.div`
-  background: ${th('color.backgroundC')};
+  background: ${th('colorWallpaper')};
   display: flex;
   flex-direction: column;
   height: 100%;

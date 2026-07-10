@@ -131,7 +131,7 @@ const LinkItems = styled.ul`
 const hoverFade = '0.3s ease'
 
 const active = css`
-  background-color: white;
+  background-color: ${th('colorTextReverse')};
   color: ${th('colorText')};
 `
 
@@ -230,7 +230,7 @@ const UserLabel = styled.span`
   color: ${th('colorPrimary')};
   font-size: ${th('fontSizeBaseSmaller')};
   padding: 0 ${grid(1)};
-  border-radius: 3px;
+  border-radius: ${th('borderRadius')};
   white-space: nowrap;
 `
 
