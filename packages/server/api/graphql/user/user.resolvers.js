@@ -14,7 +14,6 @@ const {
   setGroupRole,
   updateEmail,
   updateLanguage,
-  updateMenuUI,
   updateRecentTab,
   updateUser,
   updateUsername,
@@ -91,10 +90,6 @@ module.exports = {
 
     async updateLanguage(_, { id, preferredLanguage }) {
       return updateLanguage(id, preferredLanguage)
-    },
-
-    async updateMenuUI(_, { expanded }, ctx) {
-      return updateMenuUI(ctx.userId, expanded)
     },
 
     async updateRecentTab(_, { tab }, ctx) {

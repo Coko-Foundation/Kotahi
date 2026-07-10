@@ -29,7 +29,6 @@ extend type Mutation {
   sendEmail(input: String!): SendEmailPayload!
   updateEmail(id: ID!, email: String!): UpdateEmailResponse
   updateRecentTab(tab: String): User
-  updateMenuUI(expanded: Boolean!): User!
   setGlobalRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
   setGroupRole(userId: ID!, role: String!, shouldEnable: Boolean!): User!
   expandChat(state: Boolean!): User!
@@ -70,7 +69,6 @@ type User {
   isOnline: Boolean
   recentTab: String
   chatExpanded: Boolean!
-  menuPinned: Boolean!
 }
 
 type CurrentRole {

@@ -21,7 +21,6 @@ export const CURRENT_USER = gql`
       groupRoles
       email
       recentTab
-      menuPinned
       preferredLanguage
       chatExpanded
       defaultIdentity {
