@@ -1,12 +1,15 @@
 import { type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { grid, th, H3 } from '@coko/client'
+import { grid, th, H2, Link as UILink } from '@coko/client'
 
 import { ArrowRight } from '../base/Icons'
 
 // #region styled
-const Title = styled(H3)`
+const Link = styled(UILink)`
+  display: block;
+`
+
+const Title = styled(H2)`
   border-bottom: 2px solid ${th('colorPrimary')};
 `
 
@@ -44,20 +47,23 @@ const Card = styled.div`
     border-color: ${th('colorPrimary')};
   }
 
-  &:hover {
+  &:hover,
+  ${Link}:focus & {
     box-shadow: 0 0 0 3px ${th('colorPrimary')};
   }
 
-  &:hover ${IconWrapper} {
+  &:hover ${IconWrapper}, ${Link}:focus & ${IconWrapper} {
     opacity: 1;
   }
 `
 
-const Wrapper = styled.div`
+const Wrapper = styled.ul`
   display: grid;
   grid-template-columns: repeat(auto-fill, ${grid(55)});
   gap: ${grid(4)};
+  list-style: none;
   margin: 0 auto;
+  padding: 0;
 `
 // #endregion styled
 
@@ -77,16 +83,18 @@ const CardGrid = ({ items }: CardGridProps): ReactNode => {
     <Wrapper>
       {items.map(item => {
         return (
-          <Link key={item.key} to={item.url}>
-            <Card>
-              <Title>{item.title}</Title>
-              <Description>{item.description}</Description>
+          <li key={item.key}>
+            <Link to={item.url}>
+              <Card>
+                <Title>{item.title}</Title>
+                <Description>{item.description}</Description>
 
-              <IconWrapper>
-                <ArrowRight />
-              </IconWrapper>
-            </Card>
-          </Link>
+                <IconWrapper>
+                  <ArrowRight aria-hidden />
+                </IconWrapper>
+              </Card>
+            </Link>
+          </li>
         )
       })}
     </Wrapper>

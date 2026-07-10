@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react'
 import styled from 'styled-components'
 
-import { grid, th } from '@coko/client'
+import { grid, th, H1 } from '@coko/client'
 
 const Wrapper = styled.div`
   background: ${th('color.backgroundC')};
@@ -15,14 +15,18 @@ const Wrapper = styled.div`
   line-height: ${th('lineHeightBase')};
 `
 
-const Header = styled.div`
-  color: ${th('colorPrimary')};
-  font-size: 2rem;
+const Header = styled(H1)`
+  /* stylelint-disable declaration-no-important */
+  margin-top: 0;
   margin-bottom: ${grid(3)};
-  padding-bottom: ${grid(1.5)};
+  padding-bottom: ${grid(1)};
   border-bottom: 2px solid ${th('colorPrimary')};
+
+  color: ${th('colorPrimary')} !important;
   text-transform: capitalize;
+
   font-family: ${th('fontHeading')};
+  font-weight: normal !important;
 `
 
 const Content = styled.div`

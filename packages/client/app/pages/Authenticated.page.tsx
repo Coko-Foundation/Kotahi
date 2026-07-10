@@ -4,7 +4,7 @@ import { type ReactNode, useContext, useEffect, useRef } from 'react'
 import { Outlet, Navigate, useParams, useLocation } from 'react-router-dom'
 import { LinkError } from '@apollo/client/errors'
 import { useMutation, useQuery } from '@apollo/client/react'
-import { App } from 'antd'
+import { useNotification } from '@coko/client'
 import i18next from 'i18next'
 
 import { CURRENT_USER, UPDATE_LANGUAGE } from '../queries'
@@ -20,9 +20,12 @@ const AuthenticatedPage = (): ReactNode => {
   const { groupName } = useParams()
   const config = useContext(ConfigContext)
   const journal = useContext(JournalContext)
-  const { notification } = App.useApp()
+  const notification = useNotification()
   const wasDisconnected = useRef(false)
   const logout = useLogout()
+
+  // @ts-ignore
+  const { instanceName } = config
 
   const { loading, error, data } = useQuery(CURRENT_USER, {
     fetchPolicy: 'network-only',
@@ -87,7 +90,7 @@ const AuthenticatedPage = (): ReactNode => {
   journal.textStyles = data?.builtCss?.css
 
   if (
-    ['journal', 'prc'].includes(config.instanceName) &&
+    ['journal', 'prc'].includes(instanceName) &&
     currentUser &&
     !currentUser.email &&
     pathname !== `/${groupName}/profile` // TODO configure this url via config manager

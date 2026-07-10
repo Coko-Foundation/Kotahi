@@ -177,17 +177,6 @@ export const makeTheme = (
     /** 135px */
     k: '135px',
   },
-  typography: {
-    fonts: {
-      size: {
-        small: '12px',
-        small2: '14px',
-        regular: '16px',
-        large: '20px',
-        large2: '30px',
-      },
-    },
-  },
 
   colorBackground: '#FFFFFF',
   colorBackgroundHue: '#f4f5f7',
@@ -221,27 +210,26 @@ export const makeTheme = (
   fontWriting:
     "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
 
-  // font sizes
-  fontSizeBase: '16px',
-  fontSizeBaseSmall: '14px',
-  fontSizeBaseSmaller: '12px',
-  fontSizeHeading1: '40px',
-  fontSizeHeading2: '36px',
-  fontSizeHeading3: '28px',
-  fontSizeHeading4: '24px',
-  fontSizeHeading5: '20px',
-  fontSizeHeading6: '16px',
+  // https://typescale.com (major second)
+  fontSizeBase: '1rem',
+  fontSizeBaseSmall: '0.889rem',
+  fontSizeBaseSmaller: '0.79rem',
+  fontSizeHeading1: '2.027rem',
+  fontSizeHeading2: '1.802rem',
+  fontSizeHeading3: '1.602rem',
+  fontSizeHeading4: '1.424rem',
+  fontSizeHeading5: '1.266rem',
+  fontSizeHeading6: '1.125rem',
 
-  // line heights
-  lineHeightBase: '24px',
-  lineHeightBaseSmall: '16px',
-  lineHeightBaseSmaller: '14px',
-  lineHeightHeading1: '48px',
-  lineHeightHeading2: '40px',
-  lineHeightHeading3: '32px',
-  lineHeightHeading4: '32px',
-  lineHeightHeading5: '24px',
-  lineHeightHeading6: '24px',
+  lineHeightBase: '1.5',
+  lineHeightBaseSmall: '1.5',
+  lineHeightBaseSmaller: '1.4',
+  lineHeightHeading6: '1.35',
+  lineHeightHeading5: '1.3',
+  lineHeightHeading4: '1.25',
+  lineHeightHeading3: '1.2',
+  lineHeightHeading2: '1.15',
+  lineHeightHeading1: '1.1',
 
   /* Spacing */
   gridUnit: '8px',

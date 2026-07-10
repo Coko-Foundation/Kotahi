@@ -1,5 +1,4 @@
 import Modal from 'react-modal'
-import { App } from 'antd'
 
 import GlobalStyle from './theme/elements/GlobalStyle'
 
@@ -19,23 +18,14 @@ const DefaultPage = () => {
   Modal.setAppElement('#root')
 
   return (
-    <App
-      notification={{
-        stack: false,
-        showProgress: true,
-        pauseOnHover: true,
-        duration: 4,
-      }}
-    >
-      <XpubProvider>
-        <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
-          <ModalProvider modals={modals}>
-            <GlobalStyle />
-            <Router />
-          </ModalProvider>
-        </JournalProvider>
-      </XpubProvider>
-    </App>
+    <XpubProvider>
+      <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
+        <ModalProvider modals={modals}>
+          <GlobalStyle />
+          <Router />
+        </ModalProvider>
+      </JournalProvider>
+    </XpubProvider>
   )
 }
 
