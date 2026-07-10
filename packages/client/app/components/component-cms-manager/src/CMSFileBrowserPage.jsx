@@ -289,7 +289,7 @@ const CMSFileBrowserPage = () => {
   }
 
   return (
-    <Page title={t('leftMenu.FileBrowser')}>
+    <Page title={t('cmsIndexPage.fileBrowserTitle')}>
       <FullHeightContainer>
         <SectionContent
           style={{ display: 'flex', flex: 1, overflow: 'hidden' }}

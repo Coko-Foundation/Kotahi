@@ -11,7 +11,7 @@ const FormBuilder = (): ReactNode => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t('leftMenu.Forms')}>
+    <Page title={t('formsPage.title')}>
       <PageDescription>{t('formsPage.description')}</PageDescription>
       <CardGrid
         items={[

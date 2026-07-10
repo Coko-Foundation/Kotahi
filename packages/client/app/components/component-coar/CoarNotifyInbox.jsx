@@ -43,7 +43,7 @@ const CoarNotifyInbox = ({
   const { t } = useTranslation()
 
   return (
-    <Page title={t('leftMenu.CoarNotifyInbox')}>
+    <Page title={t('coarNotifyInboxPage.title')}>
       <div>
         <SearchRow>
           <SearchControl

@@ -11,7 +11,7 @@ const CMS = (): ReactNode => {
   const { t } = useTranslation()
 
   return (
-    <Page title={t('leftMenu.CMS')}>
+    <Page title={t('cmsIndexPage.title')}>
       <PageDescription>{t('cmsIndexPage.description')}</PageDescription>
       <CardGrid
         items={[

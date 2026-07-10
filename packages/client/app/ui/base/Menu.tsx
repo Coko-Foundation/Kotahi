@@ -389,28 +389,28 @@ const Menu = (props: MenuProps): ReactNode => {
   const links: LinkArray = useMemo(() => {
     return [
       {
-        label: t('leftMenu.Dashboard'),
+        label: t('menu.Dashboard'),
         url: `/${groupName}/dashboard`,
         icon: <Home aria-hidden />,
         key: 'dashboard',
         show: showDashboard,
       },
       {
-        label: t('leftMenu.Manuscripts'),
+        label: t('menu.Manuscripts'),
         url: `/${groupName}/admin/manuscripts`,
         icon: <File aria-hidden />,
         key: 'manuscripts',
         show: isUserGroupAdmin || isUserGroupManager || isUserAdmin,
       },
       {
-        label: t('leftMenu.Reports'),
+        label: t('menu.Reports'),
         url: `/${groupName}/admin/reports`,
         icon: <Report aria-hidden />,
         key: 'reports',
         show: showReports && (isUserGroupAdmin || isUserAdmin),
       },
       {
-        label: t('leftMenu.CoarNotifyInbox'),
+        label: t('menu.CoarNotifyInbox'),
         url: `/${groupName}/admin/coar-inbox`,
         icon: <Coar aria-hidden />,
         key: 'coar',
@@ -418,35 +418,35 @@ const Menu = (props: MenuProps): ReactNode => {
           showCoar && (isUserGroupAdmin || isUserGroupManager || isUserAdmin),
       },
       {
-        label: t('leftMenu.Forms'),
+        label: t('menu.Forms'),
         url: `/${groupName}/admin/forms`,
         icon: <Form aria-hidden />,
         key: 'forms',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: t('leftMenu.Tasks'),
+        label: t('menu.Tasks'),
         url: `/${groupName}/admin/tasks`,
         icon: <Tasks aria-hidden />,
         key: 'tasks',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: t('leftMenu.Users'),
+        label: t('menu.Users'),
         url: `/${groupName}/admin/users`,
         icon: <User aria-hidden />,
         key: 'users',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: t('leftMenu.Configuration'),
+        label: t('menu.Configuration'),
         url: `/${groupName}/admin/configuration`,
         icon: <Settings aria-hidden />,
         key: 'configuration',
         show: isUserGroupAdmin || isUserAdmin,
       },
       {
-        label: t('leftMenu.CMS'),
+        label: t('menu.CMS'),
         url: `/${groupName}/admin/cms`,
         icon: <Book aria-hidden />,
         key: 'cms',
@@ -467,7 +467,7 @@ const Menu = (props: MenuProps): ReactNode => {
   return (
     <Wrapper
       $menuCollapsed={menuCollapsed}
-      aria-label={t('leftMenu.MainNavigation')}
+      aria-label={t('menu.MainNavigation')}
       ref={wrapperRef}
     >
       <GroupSection>
@@ -507,9 +507,7 @@ const Menu = (props: MenuProps): ReactNode => {
           $menuCollapsed={menuCollapsed}
           aria-expanded={!menuCollapsed}
           aria-label={
-            menuCollapsed
-              ? t('menuSettings.ExpandMenu')
-              : t('menuSettings.CollapseMenu')
+            menuCollapsed ? t('menu.ExpandMenu') : t('menu.CollapseMenu')
           }
           onClick={toggleMenuCollapsed}
         >
@@ -530,9 +528,7 @@ const Menu = (props: MenuProps): ReactNode => {
             $menuCollapsed={menuCollapsed}
             aria-expanded={!menuCollapsed}
             aria-label={
-              menuCollapsed
-                ? t('menuSettings.ExpandMenu')
-                : t('menuSettings.CollapseMenu')
+              menuCollapsed ? t('menu.ExpandMenu') : t('menu.CollapseMenu')
             }
             onClick={toggleMenuCollapsed}
           >

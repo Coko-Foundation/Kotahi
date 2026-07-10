@@ -221,7 +221,7 @@ const CollectionList = ({
       />
       {/* Reset Bootstrap 3's html { font-size: 10px } which bleeds into the rest of the app */}
       <style>{`html { font-size: 16px; }`}</style>
-      <Page title={t('leftMenu.Collections')}>
+      <Page title={t('cmsIndexPage.collectionsTitle')}>
         <StyledContent>
           <SectionContent>
             <PaddedContent>
