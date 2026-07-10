@@ -2,7 +2,7 @@
 
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { th, uuid } from '@coko/client'
+import { grid, th, uuid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 
 import { DeleteControl, TextInput } from '../../../shared'
@@ -14,8 +14,8 @@ const Doi = styled.div`
   display: grid;
   gap: 36px;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: ${th('spacing.f')};
-  margin-top: ${th('spacing.e')};
+  margin-bottom: ${grid(1.875)};
+  margin-top: ${grid(0.9375)};
   position: relative;
   width: 600px;
 

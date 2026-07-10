@@ -55,12 +55,12 @@ export const makeTheme = (
   colorBrand1 = defaultBrandColor1,
   colorBrand2 = defaultBrandColor2,
 ) => ({
-  // DEPRECATED
+  // DEPRECATED - unused values are commented out
   color: {
     black: '#000000',
-    gray0: '#000000',
+    // gray0: '#000000',
     gray5: '#111111', // 7%: colorText
-    gray10: '#191919', // 10%
+    // gray10: '#191919', // 10%
     gray20: '#323232', // 20%
     gray30: '#4F4F4F', // 30%
     // gray35: '#595959', // 35%: colorTextPlaceholder
@@ -73,7 +73,7 @@ export const makeTheme = (
     gray95: '#EEEEEE', // 93%
     gray97: '#F8F8F9', // 97%
     gray99: '#FCFCFD', // 99%
-    gray100: '#FFFFFF',
+    // gray100: '#FFFFFF',
     white: '#FFFFFF',
 
     text: '#111111',
@@ -88,8 +88,8 @@ export const makeTheme = (
     brand1: {
       shade50: Color(colorBrand1).darken(0.52),
       shade25: Color(colorBrand1).darken(0.27),
-      shade15: Color(colorBrand1).darken(0.17),
-      shade10: Color(colorBrand1).darken(0.11),
+      // shade15: Color(colorBrand1).darken(0.17),
+      // shade10: Color(colorBrand1).darken(0.11),
       base: colorBrand1,
       tint10: lightenBy(colorBrand1, 0.1),
       tint25: lightenBy(colorBrand1, 0.26),
@@ -98,86 +98,61 @@ export const makeTheme = (
       tint90: lightenBy(colorBrand1, 0.93),
     },
     brand2: {
-      shade50: Color(colorBrand2).darken(0.52),
-      shade25: Color(colorBrand2).darken(0.27),
-      shade15: Color(colorBrand2).darken(0.17),
-      shade10: Color(colorBrand2).darken(0.11),
+      // shade50: Color(colorBrand2).darken(0.52),
+      // shade25: Color(colorBrand2).darken(0.27),
+      // shade15: Color(colorBrand2).darken(0.17),
+      // shade10: Color(colorBrand2).darken(0.11),
       base: colorBrand2,
-      tint10: lightenBy(colorBrand2, 0.1),
-      tint25: lightenBy(colorBrand2, 0.26),
-      tint50: lightenBy(colorBrand2, 0.53),
+      // tint10: lightenBy(colorBrand2, 0.1),
+      // tint25: lightenBy(colorBrand2, 0.26),
+      // tint50: lightenBy(colorBrand2, 0.53),
       tint70: lightenBy(colorBrand2, 0.73),
-      tint90: lightenBy(colorBrand2, 0.93),
+      // tint90: lightenBy(colorBrand2, 0.93),
     },
 
     success: {
-      shade50: '#133a0e',
-      shade25: '#1b5414',
-      shade15: '#25721c',
-      shade10: '#2c8a21',
+      // shade50: '#133a0e',
+      // shade25: '#1b5414',
+      // shade15: '#25721c',
+      // shade10: '#2c8a21',
       base: '#329a25',
-      tint10: '#3bb32b',
-      tint25: '#4fcb3e',
-      tint50: '#8ddf83',
-      tint70: '#bcedb6',
-      tint90: '#e3f8e0',
+      // tint10: '#3bb32b',
+      // tint25: '#4fcb3e',
+      // tint50: '#8ddf83',
+      // tint70: '#bcedb6',
+      // tint90: '#e3f8e0',
     },
     warning: {
       shade50: '#6f3f00',
-      shade25: '#8e5000',
-      shade15: '#ae6200',
+      // shade25: '#8e5000',
+      // shade15: '#ae6200',
       shade10: '#c56f00',
       base: '#e48100',
-      tint10: '#f69414',
-      tint25: '#f8ae4c',
+      // tint10: '#f69414',
+      // tint25: '#f8ae4c',
       tint50: '#f6c88d',
       tint70: '#fadfbe',
       tint90: '#fdf1df',
     },
     error: {
-      shade50: '#6f1919',
-      shade25: '#8a1e1e',
-      shade15: '#a52424',
-      shade10: '#bf2828',
+      // shade50: '#6f1919',
+      // shade25: '#8a1e1e',
+      // shade15: '#a52424',
+      // shade10: '#bf2828',
       base: '#d22b2b',
-      tint10: '#d94747',
-      tint25: '#e06969',
-      tint50: '#e88e8e',
-      tint70: '#f0b4b4',
-      tint90: '#f8dcdc',
+      // tint10: '#d94747',
+      // tint25: '#e06969',
+      // tint50: '#e88e8e',
+      // tint70: '#f0b4b4',
+      // tint90: '#f8dcdc',
     },
     additional: {
-      blue: '#71AED2',
-      purple: '#615CCF',
-      aqua: '#7ED3A6',
+      // blue: '#71AED2',
+      // purple: '#615CCF',
+      // aqua: '#7ED3A6',
       green: '#89D46C',
-      mustard: '#CCD66E',
+      // mustard: '#CCD66E',
     },
-  },
-  // DEPRECATED
-  spacing: {
-    /** 1px */
-    a: '1px',
-    /** 2px */
-    b: '2px',
-    /** 3px */
-    c: '3px',
-    /** 5px */
-    d: '5px',
-    /** 7.5px */
-    e: '7.5px',
-    /** 15px */
-    f: '15px',
-    /** 30px */
-    g: '30px',
-    /** 45px */
-    h: '45px',
-    /** 60px */
-    i: '60px',
-    /** 90px */
-    j: '90px',
-    /** 135px */
-    k: '135px',
   },
 
   colorBackground: '#FFFFFF',

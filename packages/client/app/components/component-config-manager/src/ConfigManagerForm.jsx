@@ -46,7 +46,7 @@ const StyledContainer = styled.div`
 const StyledSectionContent = styled(SectionContent)`
   margin: 0;
   overflow-y: auto;
-  padding: ${th('spacing.g')} ${th('spacing.g')} 0 ${th('spacing.g')};
+  padding: ${grid(3.75)} ${grid(3.75)} 0 ${grid(3.75)};
   width: 100%;
 `
 

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { sanitize } from 'isomorphic-dompurify'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { Spinner, CommsErrorBanner, PlainOrRichText } from '../../shared'
 import { PUBLISHED_MANUSCRIPT_AND_FORMS } from '../../../queries'
 
@@ -18,16 +18,15 @@ const Container = styled.div`
   background: ${th('color.gray97')};
   border: 1px solid ${th('color.brand1.shade25')};
   border-radius: ${th('borderRadius')};
-  margin: ${th('spacing.g')} auto;
+  margin: ${grid(3.75)} auto;
   max-width: 1000px;
-  padding: ${th('spacing.h')} ${th('spacing.i')} ${th('spacing.i')}
-    ${th('spacing.i')};
+  padding: ${grid(5.625)} ${grid(7.5)} ${grid(7.5)} ${grid(7.5)};
   width: 90%;
 
   & > h1 {
     color: ${th('color.brand1.shade25')};
     font-size: 180%;
-    margin: ${th('spacing.e')} 0 ${th('spacing.f')} 0;
+    margin: ${grid(0.9375)} 0 ${grid(1.875)} 0;
   }
 `
 
