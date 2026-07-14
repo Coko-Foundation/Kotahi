@@ -1,5 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 import { faker } from '@faker-js/faker'
 
 import preview from '../../.storybook/preview'
