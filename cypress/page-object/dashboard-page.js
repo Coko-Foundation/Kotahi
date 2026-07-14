@@ -59,7 +59,7 @@ export const DashboardPage = {
     this.getSubmitButton().click()
   },
   getHeader() {
-    return cy.getByDataTestId('general-heading')
+    return cy.get('h1')
   },
   clickSubmit() {
     this.getSubmitButton().click()

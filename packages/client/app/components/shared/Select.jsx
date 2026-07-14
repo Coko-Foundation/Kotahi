@@ -9,6 +9,11 @@ import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
 const styles = theme => ({
+  menuPortal: provided => ({
+    ...provided,
+    zIndex: 9999,
+  }),
+
   menu: provided => ({
     ...provided,
     borderRadius: theme.borderRadius,

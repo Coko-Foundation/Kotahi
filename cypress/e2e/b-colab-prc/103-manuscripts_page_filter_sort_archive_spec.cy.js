@@ -52,7 +52,7 @@ describe('manuscripts page tests - Filter, sort, bulk select, archive', () => {
       cy.login(name.role.admin, dashboard)
     })
     cy.awaitDisappearSpinner()
-    cy.getByDataTestId('menu-Manuscripts').should('be.visible')
+    cy.getByDataTestId('menu-link-manuscripts').should('be.visible')
     cy.wait(1000)
     Menu.clickManuscriptsAndAssertPageLoad()
   })

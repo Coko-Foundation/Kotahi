@@ -468,6 +468,7 @@ const Menu = (props: MenuProps): ReactNode => {
     <Wrapper
       $menuCollapsed={menuCollapsed}
       aria-label={t('menu.MainNavigation')}
+      data-testid="menu-nav"
       ref={wrapperRef}
     >
       <GroupSection>

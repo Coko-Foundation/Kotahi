@@ -37,7 +37,8 @@ export const Menu = {
   clickFormsAndVerifyPageLoaded() {
     this.getSettingsButton().click()
     this.clickForms()
-    cy.getByDataTestId('menu-Submission').click()
+    cy.getByDataTestId('menu-link-forms').click()
+    cy.getByDataTestId('card-link-submission').click()
     cy.awaitDisappearSpinner()
     cy.contains('Submission Form Builder').should('be.visible')
   },
@@ -92,7 +93,7 @@ export const Menu = {
     this.getLoggedUserButton().click()
   },
   getBackground() {
-    return cy.getByDataTestId('main-nav-wrapper')
+    return cy.getByDataTestId('menu-nav')
   },
   getMessageNotAuthorisedUser() {
     return cy.getByContainsClass(MESSAGE_NOT_AUTHORISED)
