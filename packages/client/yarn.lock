@@ -599,7 +599,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@coko/client@npm:2.2.1":
+"@coko/client@npm:^2.2.1":
   version: 2.2.1
   resolution: "@coko/client@npm:2.2.1"
   dependencies:
@@ -5381,7 +5381,7 @@ __metadata:
     "@codemirror/lang-css": "npm:^6.2.1"
     "@codemirror/lang-html": "npm:^6.4.6"
     "@codemirror/lang-json": "npm:^6.0.1"
-    "@coko/client": "npm:2.2.1"
+    "@coko/client": "npm:^2.2.1"
     "@dnd-kit/core": "npm:^6.3.1"
     "@dnd-kit/sortable": "npm:^10.0.0"
     "@dnd-kit/utilities": "npm:^3.2.2"
