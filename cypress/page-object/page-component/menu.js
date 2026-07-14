@@ -81,7 +81,7 @@ export const Menu = {
     this.getReportsButton().click()
   },
   getMyProfileButton() {
-    return this.getMenuContainer().get('[title="Go to your profile"]')
+    return cy.getByDataTestId('menu-user')
   },
   clickMyProfile() {
     this.getMyProfileButton().click()

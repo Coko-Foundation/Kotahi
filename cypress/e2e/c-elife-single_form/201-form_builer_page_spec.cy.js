@@ -2,7 +2,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 
 import { FormsPage } from '../../page-object/forms-page'
-// import { Menu } from '../../page-object/page-component/menu'
+import { Menu } from '../../page-object/page-component/menu'
 import { submissionForm } from '../../support/routes2'
 
 describe('Form builder', () => {
@@ -112,7 +112,8 @@ describe('Form builder', () => {
       cy.contains('Save').click()
 
       // For Review Form
-      cy.contains('Review').click()
+      Menu.clickForms()
+      cy.getByDataTestId('card-link-review').click()
       FormsPage.getFormTitleTab(0).should('contain', 'Review')
       FormsPage.clickFormOption(1)
       FormsPage.getNameField().should('have.value', 'files').clear()
@@ -129,7 +130,8 @@ describe('Form builder', () => {
       cy.contains('Save').click()
 
       // For Decision Form
-      cy.contains('Decision').click()
+      Menu.clickForms()
+      cy.getByDataTestId('card-link-decision').click()
       FormsPage.getFormTitleTab(0).should('contain', 'Decision')
       FormsPage.clickFormOption(1)
       FormsPage.getNameField().should('have.value', 'files').clear()

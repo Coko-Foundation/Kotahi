@@ -83,7 +83,7 @@ export const ManuscriptsPage = {
     this.getLiveChatButton().click()
   },
   getManuscriptsPageTitle() {
-    return cy.getByDataTestId('general-heading')
+    return cy.get('h1')
   },
   getEvaluationButton() {
     return cy.contains('button', 'Evaluation')
