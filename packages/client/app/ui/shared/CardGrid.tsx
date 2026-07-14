@@ -81,7 +81,7 @@ const CardGrid = ({ items }: CardGridProps): ReactNode => {
       {items.map(item => {
         return (
           <li key={item.key}>
-            <Link to={item.url}>
+            <Link data-testid={`card-link-${item.key}`} to={item.url}>
               <Card>
                 <Title>{item.title}</Title>
                 <Description>{item.description}</Description>

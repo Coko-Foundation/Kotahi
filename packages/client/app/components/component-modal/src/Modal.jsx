@@ -181,6 +181,7 @@ const Modal = ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 10000,
     },
     content: {
       alignItems: 'stretch',

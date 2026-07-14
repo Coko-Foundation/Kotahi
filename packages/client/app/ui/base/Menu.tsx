@@ -491,6 +491,7 @@ const Menu = (props: MenuProps): ReactNode => {
               <li key={item.key}>
                 <Link
                   aria-current={isActive ? 'page' : undefined}
+                  data-testid={`menu-link-${item.key}`}
                   to={item.url}
                 >
                   <LinkItem $active={isActive}>
@@ -517,9 +518,9 @@ const Menu = (props: MenuProps): ReactNode => {
 
       <Separator />
 
-      <UserSection>
+      <UserSection data-testid="menu-user-section">
         <UserTop $menuCollapsed={menuCollapsed}>
-          <Link to={`/${groupName}/profile`}>
+          <Link data-testid="menu-user" to={`/${groupName}/profile`}>
             <Avatar src={userProfileImage} />
             <UserName $labelsWrap={labelsWrap}>{userDisplayName}</UserName>
           </Link>

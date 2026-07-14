@@ -1,5 +1,4 @@
 /* eslint-disable promise/always-return */
-/* eslint-disable cypress/unsafe-to-chain-command */
 
 import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
@@ -22,7 +21,7 @@ describe('Form builder', () => {
     // enter the form page and assert the fields
     Menu.clickSettings()
     Menu.clickForms()
-    cy.contains('Submission').click()
+    cy.getByDataTestId('card-link-submission').click()
 
     // For Submission field
     FormsPage.getFormTitleTab(0).should(
@@ -31,17 +30,19 @@ describe('Form builder', () => {
     )
     FormsPage.clickFormOption(1)
     FormsPage.getFieldValidate().scrollIntoView().click()
-    cy.get('[class*="react-select__option"]').eq(0).click()
+    cy.get('[class*="react-select__option"]').eq(0).click({ force: true })
     cy.contains('Save').click()
 
     // adding a field in submission form
     cy.get('[title="Add a field..."]').click()
     cy.getByDataTestId('fieldType').click()
-    cy.contains('Single image attachment').scrollIntoView().click()
+    cy.contains('Single image attachment').scrollIntoView()
+    cy.contains('Single image attachment').click({ force: true })
     cy.contains('Save').click()
 
     // for review field
-    cy.contains('Review').click()
+    Menu.clickForms()
+    cy.getByDataTestId('card-link-review').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Review')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
@@ -54,12 +55,15 @@ describe('Form builder', () => {
     cy.get('[class*="react-select__option"]')
       .contains('Rich text')
       .scrollIntoView()
+    cy.get('[class*="react-select__option"]')
+      .contains('Rich text')
       .click({ force: true })
     FormsPage.getNameField().click().type('newField')
     cy.contains('Save').click()
 
     // for decision field
-    cy.contains('Decision').click()
+    Menu.clickForms()
+    cy.getByDataTestId('card-link-decision').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
@@ -73,7 +77,9 @@ describe('Form builder', () => {
     cy.get('[class*="react-select__option"]')
       .contains('Rich text')
       .scrollIntoView()
-      .click()
+    cy.get('[class*="react-select__option"]')
+      .contains('Rich text')
+      .click({ force: true })
     FormsPage.getNameField().click().type('newField')
     cy.contains('Save').click()
   })

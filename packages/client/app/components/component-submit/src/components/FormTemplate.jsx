@@ -103,7 +103,7 @@ const MessageWrapper = styled.div.attrs({
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   margin-left: 12px;
-  margin-top: -${({ theme }) => theme.spacing[1]}px;
+  margin-top: -1px;
 `
 
 const SafeRadioGroup = styled(RadioGroup).attrs({

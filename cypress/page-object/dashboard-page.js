@@ -18,7 +18,8 @@ const SUBMITTED_MANUSCRIPTS = '[data-testid=clickable-manuscripts-row]'
 const CREATE_NEW_VERSION_BUTTON = 'create-new-manuscript-version-button'
 
 /* Submitted Info */
-const DECISION_FIELDS = ':nth-child(1) > [data-testid=section] > div'
+const DECISION_FIELDS =
+  ':nth-child(1) > [data-testid=section] > [data-testid=section] > div'
 
 // 'To Review section'
 const DO_REVIEW_BUTTON = '[data-testid="reviewerLinks"] button'
