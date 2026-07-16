@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { rotate360, th } from '@coko/client'
+import { grid, rotate360, th } from '@coko/client'
 
 // Courtesy of loading.io/css
 const SpinnerAnimation = styled.div`
@@ -28,7 +28,7 @@ const LoadingPage = styled.div.attrs({
   display: flex;
   height: 100%;
   justify-content: center;
-  padding-bottom: calc(${th('gridUnit')} * 2);
+  padding-bottom: ${grid(4)};
   width: 100%;
 `
 

@@ -3,7 +3,7 @@ import { grid } from '@coko/client'
 
 export const LooseRowAlignTop = styled.div`
   display: flex;
-  gap: ${grid(3)};
+  gap: ${grid(6)};
   width: 100%;
 `
 
@@ -28,7 +28,7 @@ export const LooseRowSpacedAlignTop = styled(LooseRowAlignTop)`
 `
 
 export const MediumRow = styled(LooseRow)`
-  gap: ${grid(1)};
+  gap: ${grid(2)};
 `
 
 export const MediumRowSpaced = styled(MediumRow)`
@@ -36,7 +36,7 @@ export const MediumRowSpaced = styled(MediumRow)`
 `
 
 export const TightRow = styled(LooseRow)`
-  gap: ${grid(0.5)};
+  gap: ${grid(1)};
 `
 
 export const SolidColumn = styled.div`
@@ -45,15 +45,15 @@ export const SolidColumn = styled.div`
 `
 
 export const TightColumn = styled(SolidColumn)`
-  gap: ${grid(0.5)};
-`
-
-export const MediumColumn = styled(SolidColumn)`
   gap: ${grid(1)};
 `
 
-export const LooseColumn = styled(SolidColumn)`
+export const MediumColumn = styled(SolidColumn)`
   gap: ${grid(2)};
+`
+
+export const LooseColumn = styled(SolidColumn)`
+  gap: ${grid(4)};
 `
 
 export const WidthLimiter = styled.div`

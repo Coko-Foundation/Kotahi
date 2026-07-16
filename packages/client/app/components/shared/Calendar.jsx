@@ -14,7 +14,7 @@ const Calendar = styled(UnstyledCalendar)`
     background-color: ${th('color.backgroundC')};
     display: flex;
     font-size: ${th('fontSizeBaseSmall')};
-    height: ${grid(4)};
+    height: ${grid(8)};
     justify-content: center;
     line-height: ${th('lineHeightBaseSmall')};
     margin-bottom: 0;
@@ -31,7 +31,7 @@ const Calendar = styled(UnstyledCalendar)`
   }
 
   & .react-calendar__tile {
-    border-radius: ${grid(2)};
+    border-radius: ${grid(4)};
     box-sizing: border-box;
   }
 
@@ -102,16 +102,16 @@ const Calendar = styled(UnstyledCalendar)`
       .react-calendar__tile--hover:not(.react-calendar__tile--hoverStart)
     ),
   & .react-calendar__tile--hoverStart {
-    border-bottom-left-radius: ${grid(2)};
-    border-top-left-radius: ${grid(2)};
+    border-bottom-left-radius: ${grid(4)};
+    border-top-left-radius: ${grid(4)};
   }
 
   &.react-calendar__tile--rangeEnd:not(
       .react-calendar__tile--hover:not(.react-calendar__tile--hoverEnd)
     ),
   & .react-calendar__tile--hoverEnd {
-    border-bottom-right-radius: ${grid(2)};
-    border-top-right-radius: ${grid(2)};
+    border-bottom-right-radius: ${grid(4)};
+    border-top-right-radius: ${grid(4)};
   }
 `
 

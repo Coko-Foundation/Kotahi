@@ -34,9 +34,9 @@ const Input = styled.input`
 const StyledButton = styled(Button)`
   cursor: pointer;
   display: flex;
-  gap: ${grid(1)};
-  margin-bottom: ${grid(2)};
-  padding-left: ${grid(1)};
+  gap: ${grid(2)};
+  margin-bottom: ${grid(4)};
+  padding-left: ${grid(2)};
 
   &[disabled] {
     cursor: not-allowed;
@@ -46,7 +46,7 @@ const StyledButton = styled(Button)`
 const TitleLabel = styled.div`
   color: ${th('color.brand1.base')};
   font-size: 24px;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const NoProjectFound = styled.span`
@@ -58,14 +58,14 @@ const LocalContextResultContainer = styled.div`
   border: 1px solid ${th('color.brand1.base')};
   display: flex;
   flex-direction: column;
-  margin-bottom: ${grid(2)};
-  padding: ${grid(2)};
+  margin-bottom: ${grid(4)};
+  padding: ${grid(4)};
 `
 
 const ItemContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const ItemTag = styled.span`

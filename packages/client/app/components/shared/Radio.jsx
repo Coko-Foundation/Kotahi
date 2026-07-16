@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled, { css } from 'styled-components'
-import { th, override } from '@coko/client'
+import { grid, override } from '@coko/client'
 
 const Label = styled.span`
   ${props =>
@@ -15,7 +15,7 @@ const Label = styled.span`
 `
 
 const Input = styled.input`
-  margin-right: ${th('gridUnit')};
+  margin-right: ${grid(2)};
   ${override('ui.Radio.Input')};
 `
 
@@ -24,7 +24,7 @@ const Root = styled.label`
   color: ${props => (props.color ? props.color : props.theme.colorText)};
   cursor: pointer;
   display: ${props => (props.inline ? 'inline-flex' : 'flex')};
-  min-height: calc(${th('gridUnit')} * 3);
+  min-height: ${grid(6)};
 
   ${override('ui.Radio')};
 `

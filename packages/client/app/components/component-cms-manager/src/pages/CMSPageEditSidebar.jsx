@@ -8,8 +8,8 @@ import { Heading2, SidebarPageRow, RightArrow } from '../style'
 import { RoundIconButton } from '../../../shared'
 
 const AddNewPage = styled(RoundIconButton)`
-  margin-left: ${grid(1)};
-  margin-top: ${grid(2)};
+  margin-left: ${grid(2)};
+  margin-top: ${grid(4)};
   min-width: 0;
 `
 

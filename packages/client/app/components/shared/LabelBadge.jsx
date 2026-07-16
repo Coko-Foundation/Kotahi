@@ -26,7 +26,7 @@ export const ColorBadge = styled(BadgeDiv)`
         : ''};
     `}
   overflow-wrap: normal;
-  padding: ${grid(0.5)} ${grid(1)};
+  padding: ${grid(1)} ${grid(2)};
 `
 
 /** Displays the label as a badge colored according to props.color, with small all-caps font */

@@ -49,7 +49,7 @@ const LoginButton = styled(Button).attrs({
   'data-testid': 'login-button',
 })`
   display: block;
-  margin-top: ${grid(3)};
+  margin-top: ${grid(6)};
   width: 100%;
 `
 
@@ -73,11 +73,11 @@ const Content = styled.div`
   box-shadow: ${th('boxShadow200')};
   margin-bottom: 1rem;
   max-width: 40em;
-  padding: ${grid(4)};
+  padding: ${grid(8)};
   text-align: center;
 
   h1 {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 
   img {

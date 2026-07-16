@@ -210,7 +210,7 @@ export const makeTheme = (
   lineHeightHeading1: '1.1',
 
   /* Spacing */
-  gridUnit: '8px',
+  gridUnit: '4px',
 
   /* Border */
   borderRadius: '3px',

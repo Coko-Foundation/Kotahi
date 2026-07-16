@@ -13,7 +13,7 @@ const AccordionHead = styled(MinimalButton)`
 `
 
 const AccordionBody = styled.div`
-  padding: 0 ${grid(1)} ${grid(2)} ${grid(4)};
+  padding: 0 ${grid(2)} ${grid(4)} ${grid(8)};
   width: 100%;
 `
 

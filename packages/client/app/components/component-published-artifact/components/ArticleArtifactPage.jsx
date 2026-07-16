@@ -18,15 +18,15 @@ const Container = styled.div`
   background: ${th('color.gray97')};
   border: 1px solid ${th('color.brand1.shade25')};
   border-radius: ${th('borderRadius')};
-  margin: ${grid(3.75)} auto;
+  margin: ${grid(7.5)} auto;
   max-width: 1000px;
-  padding: ${grid(5.625)} ${grid(7.5)} ${grid(7.5)} ${grid(7.5)};
+  padding: ${grid(11.25)} ${grid(15)} ${grid(15)} ${grid(15)};
   width: 90%;
 
   & > h1 {
     color: ${th('color.brand1.shade25')};
     font-size: 180%;
-    margin: ${grid(0.9375)} 0 ${grid(1.875)} 0;
+    margin: ${grid(1.875)} 0 ${grid(3.75)} 0;
   }
 `
 

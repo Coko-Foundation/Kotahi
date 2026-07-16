@@ -5,7 +5,7 @@ import { grid, th } from '@coko/client'
 
 const StyledPageDescription = styled.p`
   color: ${th('colorText')};
-  margin-bottom: ${grid(3)};
+  margin-bottom: ${grid(6)};
   max-width: 60em;
 `
 

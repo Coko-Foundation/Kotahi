@@ -3,13 +3,13 @@
 import styled from 'styled-components'
 // import { map } from 'lodash'
 // import Moment from 'react-moment'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { Avatar } from '../../../../pubsweet'
 
 const Root = styled.div`
   font-family: ${th('fontReviewer')};
-  margin-right: ${th('gridUnit')};
-  padding: ${th('gridUnit')};
+  margin-right: ${grid(2)};
+  padding: ${grid(2)};
 `
 
 const ordinalLetter = ordinal =>

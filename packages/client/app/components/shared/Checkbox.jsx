@@ -29,7 +29,7 @@ const CheckboxContainer = styled.div`
   }
 
   label {
-    margin-left: ${grid(0.9375)};
+    margin-left: ${grid(1.875)};
   }
 `
 

@@ -11,8 +11,8 @@ const Info = styled.div`
   border-radius: ${th('borderRadius')};
   color: ${th('color.gray5')};
   font-size: ${th('fontSizeBase')};
-  margin: ${grid(3)};
-  padding: ${grid(2)} ${grid(2)};
+  margin: ${grid(6)};
+  padding: ${grid(4)} ${grid(4)};
 `
 
 const PreviousFeedbackSubmissions = ({ version }) => {

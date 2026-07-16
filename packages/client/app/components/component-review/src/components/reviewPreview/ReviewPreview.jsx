@@ -19,7 +19,7 @@ const Page = styled.div`
   background: ${th('color.backgroundC')};
   height: 100vh;
   overflow-y: scroll;
-  padding: ${grid(2)};
+  padding: ${grid(4)};
   width: 100%;
 `
 
@@ -29,7 +29,7 @@ const IconLink = styled.div`
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  margin: ${grid(2)};
+  margin: ${grid(4)};
   width: fit-content;
 `
 

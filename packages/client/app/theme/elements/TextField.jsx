@@ -54,6 +54,6 @@ export default {
   `,
 
   Label: css`
-    margin-bottom: ${grid(1)};
+    margin-bottom: ${grid(2)};
   `,
 }

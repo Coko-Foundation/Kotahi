@@ -10,7 +10,7 @@ const StyledDatePicker = styled(UnstyledDatePicker)`
   & > div.react-date-picker__wrapper {
     border-color: ${th('colorBorder')};
     border-radius: ${th('borderRadius')};
-    height: ${grid(5)};
+    height: ${grid(10)};
   }
 `
 

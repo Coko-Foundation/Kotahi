@@ -15,10 +15,10 @@ const Root = styled.div`
   border: 1px dashed ${th('color.gray60')};
   border-radius: ${th('borderRadius')};
   display: flex;
-  height: ${grid(8)};
+  height: ${grid(16)};
   justify-content: center;
-  /* line-height: ${grid(8)}; */
-  padding: 0 ${grid(1)};
+  /* line-height: ${grid(16)}; */
+  padding: 0 ${grid(2)};
   text-align: center;
   white-space: nowrap;
   width: fit-content;
@@ -26,8 +26,8 @@ const Root = styled.div`
 
 const Files = styled.div`
   display: flex;
-  gap: ${grid(2)};
-  margin-top: ${grid(2)};
+  gap: ${grid(4)};
+  margin-top: ${grid(4)};
 `
 
 const Message = styled.div`
@@ -39,7 +39,7 @@ const Message = styled.div`
   width: 100%;
 
   svg {
-    margin-left: ${grid(1)};
+    margin-left: ${grid(2)};
   }
 `
 

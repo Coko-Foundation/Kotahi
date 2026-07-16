@@ -18,7 +18,7 @@ export const PaginationContainer = styled.div.attrs(props => ({
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const PaginationContainerShadowed = styled(PaginationContainer).attrs(
@@ -51,7 +51,7 @@ const Styles = styled.div`
 
     a {
       display: block;
-      padding: ${grid(1)} ${grid(2)};
+      padding: ${grid(2)} ${grid(4)};
     }
   }
 

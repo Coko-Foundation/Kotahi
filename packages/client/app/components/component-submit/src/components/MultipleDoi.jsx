@@ -14,8 +14,8 @@ const Doi = styled.div`
   display: grid;
   gap: 36px;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: ${grid(1.875)};
-  margin-top: ${grid(0.9375)};
+  margin-bottom: ${grid(3.75)};
+  margin-top: ${grid(1.875)};
   position: relative;
   width: 600px;
 

@@ -4,7 +4,7 @@ import { Button } from '../../../pubsweet'
 import { RoundIconButton } from '../../../shared'
 
 export const AdminSection = styled.div`
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
 `
 
 export const Roles = styled.div`
@@ -45,7 +45,7 @@ export const EditorWrapper = styled.div`
 
 export const FormStatus = styled.div`
   color: ${th('color.brand2.base')};
-  line-height: ${grid(5)};
+  line-height: ${grid(10)};
   text-align: center;
 `
 
@@ -53,7 +53,7 @@ export const ErrorWrap = styled.div`
   /* stylelint-disable selector-class-pattern */
 
   .ProseMirror {
-    margin-bottom: ${grid(4)};
+    margin-bottom: ${grid(8)};
   }
 
   ${({ error }) =>
@@ -63,8 +63,8 @@ export const ErrorWrap = styled.div`
         border-color: red;
       }
       ${ErrorText} {
-        margin-top: ${grid(-4)};
-        margin-bottom: ${grid(1)};
+        margin-top: ${grid(-8)};
+        margin-bottom: ${grid(2)};
       }
     `}
 
@@ -77,7 +77,7 @@ export const ErrorText = styled.div`
 `
 
 export const RecommendationInputContainer = styled.div`
-  line-height: ${grid(5)};
+  line-height: ${grid(10)};
 `
 
 export const StyledNotifyButton = styled(Button)`

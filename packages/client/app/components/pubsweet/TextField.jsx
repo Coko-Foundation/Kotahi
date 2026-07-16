@@ -1,14 +1,13 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th, override, validationColor } from '@coko/client'
+import { grid, th, override, validationColor } from '@coko/client'
 import { useUID } from 'react-uid'
 
 const Root = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: ${props =>
-    props.$inline ? '0' : `calc(${props.theme.gridUnit} * 3)`};
+  margin-bottom: ${props => (props.$inline ? '0' : grid(6)(props))};
   ${override('ui.TextField')};
 `
 
@@ -25,8 +24,8 @@ const Input = styled.input`
   border-radius: ${th('borderRadius')};
   font-family: inherit;
   font-size: inherit;
-  height: calc(${th('gridUnit')} * 6);
-  padding: 0 ${th('gridUnit')};
+  height: ${grid(12)};
+  padding: 0 ${grid(2)};
 
   &::placeholder {
     color: ${th('colorTextPlaceholder')};

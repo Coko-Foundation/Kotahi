@@ -18,7 +18,7 @@ const Header = styled.header`
   border-bottom: 1px solid #ddd;
   display: flex;
   justify-content: space-between;
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 
   > :first-child {
     gap: 4px;

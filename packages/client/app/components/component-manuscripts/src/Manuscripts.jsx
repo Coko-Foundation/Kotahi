@@ -57,14 +57,14 @@ const ManuscriptsPane = styled.div`
 
 const FlexRow = styled.div`
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: flex-end;
 `
 
 const FlexRowWithSmallGapAbove = styled(FlexRow)`
   align-items: end;
   justify-content: flex-start;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const RoundIconButtonWrapper = styled(RoundIconButton).attrs({

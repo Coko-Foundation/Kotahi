@@ -50,15 +50,15 @@ const PublishButton = styled(Button)`
 
 const PublishWrapper = styled.div`
   div {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 `
 
 const AdaStatusWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${grid(2)};
-  margin-bottom: ${grid(2)};
+  gap: ${grid(4)};
+  margin-bottom: ${grid(4)};
 `
 
 const Publish = ({

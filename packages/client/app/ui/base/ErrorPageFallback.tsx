@@ -16,11 +16,11 @@ const Container = styled.div`
 const Content = styled.div`
   margin-bottom: 1rem;
   max-width: 40em;
-  padding: ${grid(4)};
+  padding: ${grid(8)};
   text-align: center;
 
   h1 {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 `
 

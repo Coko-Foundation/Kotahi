@@ -26,7 +26,7 @@ const TabLink = styled(Link)`
 
 const Tabs = styled.div`
   display: flex;
-  margin-top: ${grid(1)};
+  margin-top: ${grid(2)};
 `
 
 const TabRow = styled(FlexRow)`
@@ -35,7 +35,7 @@ const TabRow = styled(FlexRow)`
 
 const RightControls = styled(ControlsContainer)`
   margin-left: auto;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const DashboardLayout = ({ children }) => {

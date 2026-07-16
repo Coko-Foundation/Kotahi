@@ -14,9 +14,9 @@ const BareButton = styled.button`
   font-weight: inherit;
   justify-content: center;
   line-height: inherit;
-  min-height: ${grid(3)};
-  min-width: ${grid(3)};
-  padding: 0 ${grid(0.5)};
+  min-height: ${grid(6)};
+  min-width: ${grid(6)};
+  padding: 0 ${grid(1)};
 
   &:hover {
     color: ${th('color.brand1.base')};

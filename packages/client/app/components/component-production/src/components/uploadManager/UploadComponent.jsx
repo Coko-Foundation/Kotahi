@@ -16,7 +16,7 @@ const Message = styled.div`
   width: 100%;
 
   svg {
-    margin-left: ${grid(1)};
+    margin-left: ${grid(2)};
   }
 `
 

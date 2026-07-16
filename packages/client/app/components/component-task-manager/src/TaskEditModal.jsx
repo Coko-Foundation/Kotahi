@@ -43,7 +43,7 @@ const TaskRecipientsContainer = styled.div`
 `
 
 const TaskSectionContainer = styled.div`
-  margin-bottom: ${grid(4)};
+  margin-bottom: ${grid(8)};
 
   &:first-child {
     padding-top: 0;
@@ -84,7 +84,7 @@ const AssigneeFieldContainer = styled(BaseFieldContainer)`
 `
 
 const DescriptionFieldContainer = styled(BaseFieldContainer)`
-  margin-top: ${grid(5)};
+  margin-top: ${grid(10)};
 
   & .wax-surface-scroll {
     height: 100px;

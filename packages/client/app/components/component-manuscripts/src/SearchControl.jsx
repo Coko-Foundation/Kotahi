@@ -14,7 +14,7 @@ const SearchContainer = styled.div`
   align-items: center;
   display: flex;
   flex: 0 1 ${props => (props.$isOpen ? '40em' : '')};
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: flex-end;
 `
 
@@ -30,7 +30,7 @@ const InlineTextField = styled.input`
   border-radius: ${th('borderRadius')};
   display: inline;
   flex: 0 1 40em;
-  height: ${grid(4)};
+  height: ${grid(8)};
   padding: 0 8px;
   transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
 

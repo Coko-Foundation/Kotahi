@@ -5,8 +5,8 @@ export const Card = styled.div`
   background-color: ${th('colorBackground')};
   border: 1px solid ${th('colorFurniture')};
   flex: 1 0 auto;
-  margin: ${grid(1)};
-  padding: ${grid(1)};
+  margin: ${grid(2)};
+  padding: ${grid(2)};
 `
 
 const CardCollection = styled.div`

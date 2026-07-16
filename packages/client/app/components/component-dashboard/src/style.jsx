@@ -13,7 +13,7 @@ export { Actions, ActionContainer }
 const Item = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  margin-bottom: ${grid(4)};
+  margin-bottom: ${grid(8)};
 `
 
 const Header = styled.div`
@@ -26,7 +26,7 @@ const Header = styled.div`
 const Body = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: calc(${th('gridUnit')} * 4);
+  margin-bottom: ${grid(8)};
   padding-left: 1.5em;
 
   & > div:last-child {
@@ -56,7 +56,7 @@ const LinkContainer = styled.div`
 export { Links, LinkContainer }
 
 const Page = styled.div`
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const Heading = styled.div`
@@ -95,12 +95,12 @@ export const InvitationContent = styled.div`
   max-height: calc(100vh - 32px);
   max-width: 50em;
   overflow-y: auto;
-  padding: ${grid(4)};
+  padding: ${grid(8)};
   text-align: center;
   width: 800px;
 
   h1 {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 
   img {

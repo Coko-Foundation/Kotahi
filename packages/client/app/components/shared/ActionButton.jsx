@@ -15,8 +15,8 @@ const BaseButton = styled.button`
   font-size: ${th('fontSizeBase')};
   font-weight: 500;
   line-height: ${th('lineHeightBase')};
-  min-height: ${grid(3)};
-  min-width: ${grid(5)};
+  min-height: ${grid(6)};
+  min-width: ${grid(10)};
   ${props =>
     props.$isCompact
       ? ''
@@ -60,12 +60,12 @@ const Button = styled(BaseButton)`
 `
 
 const LabelOnlySpan = styled.span`
-  padding: 0 ${grid(1.5)};
+  padding: 0 ${grid(3)};
 `
 
 const Spinner = styled.div`
   display: inline-block;
-  padding-left: ${grid(1)};
+  padding-left: ${grid(2)};
   vertical-align: -2px;
 
   &::after {
@@ -78,17 +78,17 @@ const Spinner = styled.div`
     /* stylelint-disable-next-line string-quotes */
     content: '';
     display: block;
-    height: ${grid(2)};
-    width: ${grid(2)};
+    height: ${grid(4)};
+    width: ${grid(4)};
   }
 `
 
 const IconContainer = styled.div`
   display: inline-block;
-  height: ${grid(2)};
-  margin-left: ${grid(1)};
+  height: ${grid(4)};
+  margin-left: ${grid(2)};
   vertical-align: -2px;
-  width: ${grid(2)};
+  width: ${grid(4)};
 `
 
 /** A styled button with optional status icon/spinner and optional color. Supported statuses are 'pending', 'success', 'failure'. */

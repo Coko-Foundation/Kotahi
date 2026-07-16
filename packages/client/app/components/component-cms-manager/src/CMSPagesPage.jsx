@@ -39,7 +39,7 @@ const EditPageRight = styled(BaseEditPageRight)`
 
   /* stylelint-disable-next-line selector-class-pattern */
   .ProseMirror {
-    padding: ${grid(2)};
+    padding: ${grid(4)};
   }
 `
 

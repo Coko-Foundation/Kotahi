@@ -15,7 +15,7 @@ const ActionLink = styled.button`
   display: inline-flex;
   flex-direction: row;
   font-size: inherit;
-  gap: ${grid(0.625)};
+  gap: ${grid(1.25)};
   line-height: inherit;
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   width: fit-content;
@@ -46,14 +46,14 @@ const Spinner = styled.div`
     /* stylelint-disable-next-line string-quotes */
     content: '';
     display: block;
-    height: ${grid(2)};
-    width: ${grid(2)};
+    height: ${grid(4)};
+    width: ${grid(4)};
   }
 `
 
 const IconContainer = styled.div`
-  height: ${grid(2)};
-  width: ${grid(2)};
+  height: ${grid(4)};
+  width: ${grid(4)};
 `
 
 /** Equivalent of <a href="...">, styled the same as other Actions */

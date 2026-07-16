@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
-import { th } from '@coko/client'
+import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../../../../pubsweet'
 import { SectionRow } from '../style'
@@ -61,7 +61,7 @@ export const Ordinal = styled.span`
 `
 
 const Root = styled.div`
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
 `
 
 const ResponseComment = styled.div`

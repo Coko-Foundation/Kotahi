@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { Button } from '../../../../pubsweet'
 import { JournalContext } from '../../../../xpub-journal'
 
@@ -53,7 +53,7 @@ const AccordionHeading = ({
   const Root = styled.div`
     align-items: baseline;
     display: flex;
-    margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-bottom: ${grid(6)};
   `
 
   const Ordinal = styled(Title)``

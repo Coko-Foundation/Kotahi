@@ -44,7 +44,7 @@ export const FilesHeading = styled.div`
   align-items: center;
   background-color: ${th('color.backgroundA')};
   border-top: 1px solid ${th('color.gray90')};
-  column-gap: ${grid(2)};
+  column-gap: ${grid(4)};
   display: flex;
   flex-direction: row;
   line-height: 1.4em;
@@ -53,11 +53,11 @@ export const FilesHeading = styled.div`
 
   &:first-child {
     border-top: none;
-    padding: ${grid(0.5)} ${grid(2)};
+    padding: ${grid(1)} ${grid(4)};
   }
 
   &:not(:first-child) {
-    padding: ${grid(1.5)} ${grid(2)};
+    padding: ${grid(3)} ${grid(4)};
   }
 `
 

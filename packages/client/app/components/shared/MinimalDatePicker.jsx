@@ -15,8 +15,8 @@ const MainContainer = styled.div`
   border: 2px solid ${th('colorBorder')};
   box-shadow: ${th('boxShadow200')};
   display: flex;
-  gap: ${grid(1)};
-  padding: ${grid(2)};
+  gap: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const DatePickerCalendar = ({

@@ -4,7 +4,7 @@
 
 import { useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { Mail } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Primary, Secondary } from '../../../shared'
@@ -40,12 +40,12 @@ const EmailDisplay = styled(Secondary)`
   align-items: center;
   color: ${th('color.brand2.base')};
   display: flex;
-  margin-left: calc(${th('gridUnit')} * 2);
+  margin-left: ${grid(4)};
 `
 
 const MailIcon = styled(Mail)`
   height: ${th('fontSizeBase')};
-  margin-right: calc(${th('gridUnit')} / 2);
+  margin-right: ${grid(1)};
   width: auto;
 `
 

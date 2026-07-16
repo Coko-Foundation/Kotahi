@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import ReactSelect, { components } from 'react-select'
 import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { grid } from '@coko/client'
 
 const styles = theme => ({
   menuPortal: provided => ({
@@ -44,7 +45,7 @@ const styles = theme => ({
       boxShadow: `1px solid ${theme.color.gray70}`,
     },
     fontSize: theme.fontSizeBaseSmall,
-    minHeight: `calc(${theme.gridUnit} * 5)`,
+    minHeight: grid(10)({ theme }),
     div: {
       color: theme.color.gray20,
     },

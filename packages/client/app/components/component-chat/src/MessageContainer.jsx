@@ -6,7 +6,7 @@
 
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th, grid } from '@coko/client'
+import { grid } from '@coko/client'
 import { useLocation } from 'react-router-dom'
 import { HiddenTabs } from '../../shared'
 import Chat from './Chat'
@@ -21,10 +21,10 @@ const MessageContainer = styled.section`
   ${props =>
     props.$channels
       ? css`
-          grid-template-rows: ${grid(5)} 1fr calc(${th('gridUnit')} * 8);
+          grid-template-rows: ${grid(10)} 1fr ${grid(16)};
         `
       : css`
-          grid-template-rows: 1fr calc(${th('gridUnit')} * 8);
+          grid-template-rows: 1fr ${grid(16)};
         `}
 
   ${props =>

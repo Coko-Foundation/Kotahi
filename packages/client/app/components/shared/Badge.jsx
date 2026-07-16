@@ -28,9 +28,9 @@ export const Status = styled.span.attrs({
   font-size: 10px;
   font-weight: 700;
   line-height: 0.5;
-  padding-block: ${grid(1.2)};
-  padding-left: ${p => p.$pLeft || grid(1.2)};
-  padding-right: ${p => p.$pRight || grid(1.2)};
+  padding-block: ${grid(2.4)};
+  padding-left: ${p => p.$pLeft || grid(2.4)};
+  padding-right: ${p => p.$pRight || grid(2.4)};
   text-rendering: optimizelegibility;
   text-shadow: ${p => (p.$textShadow ? '0 0 2px #0005' : '')};
   text-transform: uppercase;
@@ -110,7 +110,7 @@ export const StatusBadge = ({
         <Status
           $bg={publishedBg}
           $bRadius={`${bRadius} 0 0 ${bRadius}`}
-          $pRight={!forceToPublished && grid(1)}
+          $pRight={!forceToPublished && grid(2)}
           $text={publishedText}
           $textShadow={publishedText === themeValues.color.textReverse}
         >
@@ -123,7 +123,7 @@ export const StatusBadge = ({
           $bRadius={
             showPublishedStatus ? `0 ${bRadius} ${bRadius} 0` : `${bRadius}`
           }
-          $pLeft={showPublishedStatus && grid(1)}
+          $pLeft={showPublishedStatus && grid(2)}
           $text={text}
           $textShadow={text === themeValues.color.textReverse}
         >

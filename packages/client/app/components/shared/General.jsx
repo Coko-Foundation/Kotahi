@@ -5,7 +5,7 @@ import { TabsContainer } from './Tabs'
 export const Section = styled.section.attrs({
   'data-testid': 'section',
 })`
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const Content = styled.div`
@@ -17,7 +17,7 @@ export const Content = styled.div`
 
 export const ScrollableContent = styled(Content)`
   @media (width <= 1400px) {
-    margin-top: ${grid(2)};
+    margin-top: ${grid(4)};
     overflow-x: scroll;
   }
 `
@@ -31,14 +31,14 @@ export const SectionContent = styled(Section)`
   /* stylelint-disable-next-line */
   ${TabsContainer} + & {
     border-top-left-radius: 0;
-    margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-bottom: ${grid(6)};
     margin-top: 0;
   }
 
   /* stylelint-disable-next-line */
   ${TabsContainer} ~ div > & {
     border-top-left-radius: 0;
-    margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-bottom: ${grid(6)};
     margin-top: 0;
   }
 
@@ -50,15 +50,15 @@ export const SectionContent = styled(Section)`
 `
 
 export const PaddedContent = styled(Content)`
-  margin-bottom: ${grid(3)};
-  margin-top: ${grid(3)};
-  padding: ${grid(2)} ${grid(3)};
+  margin-bottom: ${grid(6)};
+  margin-top: ${grid(6)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const Container = styled.div`
   background: ${th('color.backgroundC')};
   overflow-y: auto;
-  padding: ${grid(2)};
+  padding: ${grid(4)};
   width: 100%;
 `
 
@@ -71,12 +71,12 @@ export const Title = styled.h2.attrs({
 
 export const SectionHeader = styled.div`
   border-bottom: 1px solid ${th('color.gray90')};
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const SectionRow = styled.div`
   border-bottom: 1px solid ${th('color.gray90')};
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const ClickableSectionRow = styled(SectionRow)`
@@ -97,7 +97,7 @@ export const ClickableSectionRow = styled(SectionRow)`
 `
 export const SectionRowGrid = styled(SectionRow)`
   display: grid;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   grid-template-columns: ${props =>
     props.$expandedWidthDetails ? '1fr 3fr' : 'repeat(4, minmax(0, 1fr))'};
 `
@@ -109,11 +109,11 @@ export const SectionAction = styled.div`
 
 export const SectionActionInfo = styled.div`
   grid-column: 1 / span 2;
-  line-height: ${grid(5)};
+  line-height: ${grid(10)};
 `
 
 const Page = styled.div`
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const Heading = styled.div.attrs({
@@ -130,7 +130,7 @@ const Heading = styled.div.attrs({
 
 const FlexRow = styled.div`
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: space-between;
 `
 
@@ -139,7 +139,7 @@ export { FlexRow, Page, Heading }
 export const HeadingWithAction = styled.div`
   align-items: center;
   display: grid;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   grid-template-columns: 1fr auto;
 `
 
@@ -165,7 +165,7 @@ export const Manuscript = styled.div`
   grid-area: manuscript;
   height: 100vh;
   overflow: auto;
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 export const Chat = styled.div`

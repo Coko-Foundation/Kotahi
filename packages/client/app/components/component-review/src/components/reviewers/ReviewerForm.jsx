@@ -20,7 +20,7 @@ const OptionRenderer = option => (
 
 const RowGridStyled = styled.div`
   display: grid;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   grid-template-columns: repeat(4, minmax(0, 1fr));
 `
 
@@ -79,7 +79,7 @@ const ReviewerForm = ({
           defaultChecked={false}
           label={t('decisionPage.New User')}
           onChange={() => setIsNewUser(!isNewUser)}
-          width={grid(0.75)}
+          width={grid(1.5)}
         />
         {isNewUser ? (
           <>

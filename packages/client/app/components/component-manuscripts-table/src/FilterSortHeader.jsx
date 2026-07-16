@@ -16,10 +16,10 @@ import {
 const CalendarIcon = styled(({ isActive, ...props }) => (
   <FeatherCalendar {...props} />
 ))`
-  height: ${grid(2)};
+  height: ${grid(4)};
   stroke: ${props =>
     props.isActive ? props.theme.color.brand1.base : props.theme.color.gray60};
-  width: ${grid(2)};
+  width: ${grid(4)};
 
   &:hover {
     stroke: ${th('color.brand1.base')};

@@ -10,9 +10,9 @@ import SubmittedStatus from './SubmittedStatus'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 
 const Content = styled(PaddedContent)`
-  margin-bottom: ${grid(1)};
-  margin-top: ${grid(1)};
-  padding: ${grid(1)} ${grid(3)};
+  margin-bottom: ${grid(2)};
+  margin-top: ${grid(2)};
+  padding: ${grid(2)} ${grid(6)};
 `
 
 const ReadOnlyAuthorFeedback = ({ authorFeedback, allFiles }) => {

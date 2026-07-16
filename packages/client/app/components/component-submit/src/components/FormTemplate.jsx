@@ -115,7 +115,7 @@ const SafeRadioGroup = styled(RadioGroup).attrs({
 const NoteRight = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
-  padding: ${grid(0.9375)} ${grid(1.875)};
+  padding: ${grid(1.875)} ${grid(3.75)};
   text-align: right;
 `
 

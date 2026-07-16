@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { sanitize } from 'isomorphic-dompurify'
 import { unescape } from 'lodash'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { PlainButton } from '../../../pubsweet'
 import { Heading1 } from '../style'
@@ -17,17 +17,17 @@ const Wrapper = styled.div`
   max-height: 100%;
   max-width: 60em;
   overflow-y: auto;
-  padding: calc(${th('gridUnit')} * 6);
+  padding: ${grid(12)};
 `
 
 const Paragraph = styled.p`
   font-size: ${th('fontSizeBase')};
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
   width: 100%;
 `
 
 const Divider = styled.span`
-  margin: 0 ${th('gridUnit')};
+  margin: 0 ${grid(2)};
 `
 
 const createMarkup = encodedHtml => ({

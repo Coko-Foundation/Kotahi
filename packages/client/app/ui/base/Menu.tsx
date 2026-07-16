@@ -42,7 +42,7 @@ const Wrapper = styled.nav<{ $menuCollapsed: boolean }>`
   transition: width ${collapseTransition};
   will-change: width;
 
-  padding: ${grid(1)} 0;
+  padding: ${grid(2)} 0;
 
   display: flex;
   flex-direction: column;
@@ -54,7 +54,7 @@ const Wrapper = styled.nav<{ $menuCollapsed: boolean }>`
 `
 
 const GroupSection = styled.div`
-  margin: ${grid(1)} ${grid(1)} 0 ${grid(1)};
+  margin: ${grid(2)} ${grid(2)} 0 ${grid(2)};
   display: flex;
   align-items: center;
   font-family: ${th('fontInterface')};
@@ -62,8 +62,8 @@ const GroupSection = styled.div`
 `
 
 const GroupLetter = styled.div<{ $menuCollapsed: boolean }>`
-  height: ${grid(6)};
-  width: ${grid(6)};
+  height: ${grid(12)};
+  width: ${grid(12)};
   border-radius: ${th('borderRadiusLarge')};
 
   background-color: ${th('colorBackground')};
@@ -76,16 +76,16 @@ const GroupLetter = styled.div<{ $menuCollapsed: boolean }>`
   flex-shrink: 0;
 
   margin-left: ${(props): string =>
-    props.$menuCollapsed ? '0' : grid(1)(props)};
+    props.$menuCollapsed ? '0' : grid(2)(props)};
   margin-right: ${(props): string =>
-    props.$menuCollapsed ? '0' : grid(1.5)(props)};
+    props.$menuCollapsed ? '0' : grid(3)(props)};
   transition: margin ${collapseTransition};
 `
 
 const GroupRight = styled.div<{ $menuCollapsed: boolean }>`
   display: flex;
   flex-direction: column;
-  padding-top: ${grid(0.75)};
+  padding-top: ${grid(1.5)};
 
   visibility: ${(props): string =>
     props.$menuCollapsed ? 'hidden' : 'visible'};
@@ -108,12 +108,12 @@ const GroupType = styled.div`
 const Separator = styled.div`
   height: 1px;
   /* background-color: ${th('colorBackground')}; */
-  margin: ${grid(2)} ${grid(0.5)};
+  margin: ${grid(4)} ${grid(1)};
   border-top: 1.5px solid ${th('colorBackground')};
 `
 
 const LinkSection = styled.div`
-  padding: 0 ${grid(1)};
+  padding: 0 ${grid(2)};
   user-select: none;
   display: flex;
   flex-direction: column;
@@ -139,8 +139,8 @@ const LinkItem = styled.div<{ $active: boolean }>`
   color: ${th('colorTextReverse')};
   cursor: pointer;
   font-size: ${th('fontSizeBase')};
-  margin-bottom: ${grid(0.5)};
-  padding: ${grid(1)} ${grid(2)};
+  margin-bottom: ${grid(1)};
+  padding: ${grid(2)} ${grid(4)};
   display: flex;
   white-space: nowrap;
 
@@ -150,7 +150,7 @@ const LinkItem = styled.div<{ $active: boolean }>`
 
   > div:first-child {
     flex-shrink: 0;
-    margin-right: ${grid(1)};
+    margin-right: ${grid(2)};
   }
 
   &:hover {
@@ -167,7 +167,7 @@ const Link = styled(UILink)`
 const UserSection = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 ${grid(1)} ${grid(1)} ${grid(1)};
+  padding: 0 ${grid(2)} ${grid(2)} ${grid(2)};
   font-family: ${th('fontInterface')};
   line-height: ${th('lineHeightBase')};
 `
@@ -177,10 +177,10 @@ const UserTop = styled.div<{ $menuCollapsed: boolean }>`
   align-items: center;
 
   margin-left: ${(props): string =>
-    props.$menuCollapsed ? '0' : grid(1)(props)};
+    props.$menuCollapsed ? '0' : grid(2)(props)};
   margin-right: ${(props): string =>
-    props.$menuCollapsed ? '0' : grid(1.5)(props)};
-  margin-bottom: ${grid(1)};
+    props.$menuCollapsed ? '0' : grid(3)(props)};
+  margin-bottom: ${grid(2)};
   transition: margin ${collapseTransition};
 
   > a {
@@ -190,7 +190,7 @@ const UserTop = styled.div<{ $menuCollapsed: boolean }>`
 
     > div:first-child {
       flex-shrink: 0;
-      margin-right: ${grid(1)};
+      margin-right: ${grid(2)};
     }
 
     > div:last-child {
@@ -202,7 +202,7 @@ const UserTop = styled.div<{ $menuCollapsed: boolean }>`
 `
 
 const UserBottom = styled.div<{ $menuCollapsed: boolean }>`
-  margin-left: ${grid(1)};
+  margin-left: ${grid(2)};
 
   visibility: ${(props): string =>
     props.$menuCollapsed ? 'hidden' : 'visible'};
@@ -220,7 +220,7 @@ const UserName = styled.div<{ $labelsWrap: boolean }>`
 
 const UserRoles = styled.div<{ $labelsWrap: boolean }>`
   display: flex;
-  gap: ${grid(0.5)};
+  gap: ${grid(1)};
   flex-wrap: ${(props): string => (props.$labelsWrap ? 'wrap' : 'nowrap')};
   overflow: hidden;
 `
@@ -229,7 +229,7 @@ const UserLabel = styled.span`
   background-color: ${th('colorTextReverse')};
   color: ${th('colorPrimary')};
   font-size: ${th('fontSizeBaseSmaller')};
-  padding: 0 ${grid(1)};
+  padding: 0 ${grid(2)};
   border-radius: ${th('borderRadius')};
   white-space: nowrap;
 `

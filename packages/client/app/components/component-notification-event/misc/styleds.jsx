@@ -13,7 +13,7 @@ export const EventEditForm = styled.form`
   gap: 0;
   height: 100%;
   overflow: hidden;
-  padding: ${grid(2)} ${grid(6)} ${grid(3)};
+  padding: ${grid(4)} ${grid(12)} ${grid(6)};
   width: 100%;
 
   h3,
@@ -27,7 +27,7 @@ export const EventEditForm = styled.form`
 `
 
 export const Row = styled(FlexRow)`
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   width: 100%;
 `
 
@@ -53,7 +53,7 @@ export const EditSection = styled(Col)`
   max-height: ${p => (p.$collapsed ? '0' : '100%')};
   min-height: 0;
   overflow: auto;
-  padding: 0 ${grid(4)};
+  padding: 0 ${grid(8)};
   transition: all 0.3s;
 
   small {
@@ -75,19 +75,19 @@ export const EditSection = styled(Col)`
 
   small,
   strong {
-    padding: 0 ${grid(0.5)};
+    padding: 0 ${grid(1)};
   }
 
   h4 {
     margin: 0;
-    padding: ${grid(3)} ${grid(0.5)} ${grid(2)};
+    padding: ${grid(6)} ${grid(1)} ${grid(4)};
   }
 `
 
 export const TextInput = styled(StyledInput)`
   /* stylelint-disable-next-line declaration-no-important */
   border-color: ${p => p.$color} !important;
-  padding: ${grid(1.25)};
+  padding: ${grid(2.5)};
 `
 
 export const Header = styled(Row)`
@@ -95,7 +95,7 @@ export const Header = styled(Row)`
   border-bottom: 1px solid #ddd;
   color: ${th('color.brand1.base')};
   height: var(--header-height, 0);
-  padding: 0 ${grid(4)};
+  padding: 0 ${grid(8)};
 
   h3 {
     margin: 0;
@@ -112,7 +112,7 @@ export const ActionIcon = styled(CleanButton)`
   border: 1px solid ${p => p.$color || p.theme.color.brand1.base};
   border-radius: ${th('borderRadius')};
   filter: ${p => (p.$disabled ? 'grayscale(1)' : 'none')};
-  padding: ${grid(1)};
+  padding: ${grid(2)};
 
   svg {
     aspect-ratio: 1 / 1;
@@ -175,7 +175,7 @@ export const InputWrapper = styled.div`
 
   small {
     border-right: 1px solid #aaa;
-    padding: 3px ${grid(1)};
+    padding: 3px ${grid(2)};
     width: fit-content;
   }
 `

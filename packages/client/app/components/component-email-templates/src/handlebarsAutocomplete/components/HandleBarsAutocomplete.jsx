@@ -33,7 +33,7 @@ const OptionsDropdown = styled(FlexRow)`
 const Heading = styled(FlexRow)`
   background-color: ${th('color.brand1.shade25')};
   color: #fff;
-  padding: ${grid(0.5)} ${grid(1.2)};
+  padding: ${grid(1)} ${grid(2.4)};
   width: 100%;
 `
 

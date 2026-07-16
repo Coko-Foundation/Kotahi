@@ -12,9 +12,9 @@ const StyledButton = styled.button.attrs(props => ({
   cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
   font-family: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
-  line-height: ${grid(3)};
-  min-width: ${grid(12)};
-  padding: ${grid(1)};
+  line-height: ${grid(6)};
+  min-width: ${grid(24)};
+  padding: ${grid(2)};
 
   &:focus,
   &:hover {
