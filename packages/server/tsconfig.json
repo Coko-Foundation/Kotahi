@@ -1,0 +1,4 @@
+{
+  "extends": "@coko/server/dist/cli/tsConfig.json",
+  "include": ["**/*"]
+}
