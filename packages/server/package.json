@@ -17,7 +17,8 @@
     }
   },
   "scripts": {
-    "test": "NODE_ENV=test yarn jest"
+    "test": "NODE_ENV=test SUPPRESS_LOGGER_IN_TEST_ENV=true yarn vitest run --reporter=tree",
+    "typecheck": "node_modules/.bin/tsc --noEmit"
   },
   "dependencies": {
     "@coko/server": "^5.1.1",
@@ -66,7 +67,11 @@
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
-    "jest": "^29.7.0"
+    "@vitest/coverage-v8": "^4.1.10",
+    "vitest": "^4.1.10"
+  },
+  "resolutions": {
+    "typescript": "6"
   },
   "packageManager": "yarn@4.9.2"
 }

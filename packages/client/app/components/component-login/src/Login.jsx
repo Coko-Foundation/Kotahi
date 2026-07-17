@@ -29,6 +29,12 @@ const RegisterLinkButton = styled.button`
   font-weight: 500;
   margin: 1em;
   padding: 0.25em 1em;
+
+  color: ${th('colorPrimary')};
+
+  &:hover {
+    color: ${th('colorPrimary')};
+  }
 `
 
 const RegisterInfoString = styled.p`
@@ -64,7 +70,7 @@ const Container = styled.div.attrs({
 const Content = styled.div`
   background: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow.shades.200')};
+  box-shadow: ${th('boxShadow200')};
   margin-bottom: 1rem;
   max-width: 40em;
   padding: ${grid(4)};

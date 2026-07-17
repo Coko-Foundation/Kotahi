@@ -181,6 +181,7 @@ const Modal = ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 1000,
     },
     content: {
       alignItems: 'stretch',
@@ -195,7 +196,7 @@ const Modal = ({
       maxWidth: '60%',
       overflow: 'hidden',
       padding: '0px',
-      zIndex: 10000,
+      zIndex: 1000,
     },
   }
 

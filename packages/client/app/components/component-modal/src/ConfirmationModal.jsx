@@ -11,6 +11,7 @@ const styles = {
   overlay: {
     backgroundColor: 'rgb(0 0 0 / 80%)',
     overflow: 'scroll',
+    zIndex: 1000,
   },
 
   content: {

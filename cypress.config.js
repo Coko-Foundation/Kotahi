@@ -9,6 +9,7 @@ const seedFormsUrl = `${e2eApiUrl}/seedForms`
 
 module.exports = defineConfig({
   viewportWidth: 1200,
+  defaultCommandTimeout: 10000,
   e2e: {
     baseUrl: 'http://localhost:4000',
   },

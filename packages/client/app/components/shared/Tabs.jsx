@@ -3,7 +3,7 @@
 
 import { useContext, useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { th, override, uuid } from '@coko/client'
+import { grid, th, override, uuid } from '@coko/client'
 import { ConfigContext } from '../config/src'
 
 const Tab = styled.div`
@@ -27,7 +27,7 @@ const Tab = styled.div`
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
-  margin-right: ${props => props.theme.spacing.e};
+  margin-right: ${grid(0.9375)};
   padding: calc(${th('gridUnit')} - 1px) 1em;
   padding-bottom: 2px;
 

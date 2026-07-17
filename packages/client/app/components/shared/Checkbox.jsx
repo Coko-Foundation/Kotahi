@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 const CheckboxContainer = styled.div`
   align-content: center;
@@ -29,7 +29,7 @@ const CheckboxContainer = styled.div`
   }
 
   label {
-    margin-left: ${th('spacing.e')};
+    margin-left: ${grid(0.9375)};
   }
 `
 

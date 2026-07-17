@@ -9,6 +9,11 @@ import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 
 const styles = theme => ({
+  menuPortal: provided => ({
+    ...provided,
+    zIndex: 9999,
+  }),
+
   menu: provided => ({
     ...provided,
     borderRadius: theme.borderRadius,
@@ -32,7 +37,7 @@ const styles = theme => ({
         : 'inset 0px 0px 4px rgb(0 0 0 / 7%)'
       : state.isFocused
         ? `0 0 0 1px ${theme.color.brand1.base}`
-        : theme.boxShadow,
+        : theme.boxShadow200,
 
     borderRadius: theme.borderRadius,
     '&:hover': {

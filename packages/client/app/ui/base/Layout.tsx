@@ -20,6 +20,7 @@ const StyledLayout = styled.div<{ $converting: boolean }>`
 
   > *:last-child {
     flex-grow: 1;
+    min-width: 0;
   }
 `
 

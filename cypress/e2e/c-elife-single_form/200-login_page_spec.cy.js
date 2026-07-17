@@ -54,12 +54,14 @@ describe('Login page tests', () => {
       })
 
       it('branding settings should be visible after login', () => {
-        // // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('branding_settings').then(settings => {
           cy.awaitDisappearSpinner()
+          const [primarySolidColor] =
+            settings.preprint1.primaryColor.match(/rgb\([^)]+\)/)
+
           Menu.getBackground()
-            .should('have.css', 'background')
-            .and('contains', settings.preprint1.primaryColor)
+            .should('have.css', 'background-color')
+            .and('contains', primarySolidColor)
           ManuscriptsPage.getSubmitButton()
             .should('have.css', 'background-color')
             .should('contain', settings.preprint1.tertiaryColor)

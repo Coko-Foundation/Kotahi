@@ -7,7 +7,7 @@ export const users = '/single_form/admin/users'
 export const profile = '/single_form/profile'
 export const submit = '/submit'
 export const evaluate = '/evaluation'
-export const submissionForm = '/single_form/admin/submission-form-builder'
+export const submissionForm = '/single_form/admin/forms/submission-form-builder'
 export const manuscriptStatus = `${manuscripts}?status=`
 export const unsubmitted = 'new'
 export const submitted = 'submitted'

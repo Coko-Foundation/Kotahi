@@ -1,4 +1,4 @@
-const fs = require('fs-extra')
+const fs = require('fs')
 const fsPromised = require('fs').promises
 const axios = require('axios')
 const FormData = require('form-data')

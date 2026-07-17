@@ -103,34 +103,55 @@ const esLa = {
         error: 'Error',
       },
     },
-    leftMenu: {
-      'Summary Info': 'Información Resumen',
-      Manuscript: 'Manuscrito',
+    menu: {
+      CMS: 'Gestor de Contenidos',
+      CoarNotifyInbox: 'Bandeja de entrada de COAR Notify',
+      CollapseMenu: 'Contraer menú',
+      Configuration: 'Configuración',
       Dashboard: 'Tablero',
+      ExpandMenu: 'Expandir menú',
+      Forms: 'Formularios',
+      MainNavigation: 'Navegación principal',
       Manuscripts: 'Manuscritos',
       Reports: 'Informes',
-      Settings: 'Configuración',
-      Forms: 'Formularios',
-      Submission: 'Envío',
-      Review: 'Revisión',
-      Decision: 'Decisión',
       Tasks: 'Tareas',
       Users: 'Usuarios',
-      Configuration: 'Configuración',
-      Emails: 'Correos Electrónicos',
-      CMS: 'Gestor de Contenidos',
-      Pages: 'Páginas',
-      Layout: 'Diseño',
-      'Go to your profile': 'Ir a tu perfil',
-      FileBrowser: 'Explorador de archivos',
-      Article: 'Plantilla de Publicación',
-      Metadata: 'Metadatos del Diario',
-      Collections: 'Colecciones',
-      CoarNotifyInbox: 'Bandeja de entrada de COAR Notify',
     },
-    menuSettings: {
-      KeepMenuVisible: 'Mantener menú visible',
-      MinimalSidebar: 'Menu lateral minimo',
+    formsPage: {
+      title: 'Formularios',
+      description:
+        'Estos son los formularios que completan los autores, revisores y editores en cada etapa del flujo de trabajo del manuscrito. Editar un formulario aquí cambia la información que se recopila a partir de ese momento, incluyendo qué campos quedan disponibles como metadatos en otras partes de Kotahi; no cambia los datos ya enviados en manuscritos existentes.',
+      submissionFormTitle: 'Formulario de envío',
+      submissionFormDescription:
+        'Edita el formulario que verán los autores al enviar un manuscrito. También afecta los campos de metadatos disponibles para los editores y los datos capturados que estarán disponibles para la publicación.',
+      reviewFormTitle: 'Formulario de revisión',
+      reviewFormDescription:
+        'Edita el formulario que verán los revisores al enviar una revisión de un manuscrito.',
+      decisionFormTitle: 'Formulario de decisión',
+      decisionFormDescription:
+        'Edita el formulario que verán los editores al tomar una decisión sobre un manuscrito.',
+    },
+    cmsIndexPage: {
+      title: 'Gestor de Contenidos',
+      description:
+        'Aquí es donde controlas tu sitio web publicado, independientemente del flujo de trabajo editorial interno. Administra páginas estáticas, el diseño y la marca de todo el sitio, la plantilla de artículo, los metadatos de la publicación y los archivos que respaldan tu sitio. Los cambios aquí se publican de inmediato en tu sitio.',
+      pagesTitle: 'Páginas',
+      pagesDescription:
+        'Administra qué páginas están disponibles en tu sitio web publicado.',
+      layoutTitle: 'Diseño',
+      layoutDescription:
+        'Controla los colores, el pie de página, el logo y más de tu sitio web.',
+      articleTitle: 'Plantilla de artículo',
+      articleDescription:
+        'Controla la estructura, los estilos y los recursos de la página de artículo publicada.',
+      metadataTitle: 'Metadatos de publicación',
+      metadataDescription:
+        'Administra el nombre de tu revista, ISSNs e información de contacto.',
+      fileBrowserTitle: 'Explorador de archivos',
+      fileBrowserDescription:
+        'Visualiza y edita todos los archivos que se incluirán en tu sitio web publicado.',
+      collectionsTitle: 'Colecciones',
+      collectionsDescription: 'Administra colecciones de artículos.',
     },
     profilePage: {
       'Your profile': 'Tu perfil',

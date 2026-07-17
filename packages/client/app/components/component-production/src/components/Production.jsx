@@ -10,17 +10,17 @@ import CodeMirror from '@uiw/react-codemirror'
 import { html } from '@codemirror/lang-html'
 import { css } from '@codemirror/lang-css'
 
+import Page from '../../../../ui/shared/Page'
+import { FlexRow } from '../../../../globals'
 import { ConfigContext } from '../../../config/src'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
 import { DownloadDropdown } from './DownloadDropdown'
 import {
-  Heading,
-  HeadingWithAction,
-  Tabs,
-  Manuscript,
   ErrorBoundary,
-  SectionContent,
+  HiddenTabsContainer,
   Spinner,
+  Tab,
+  TabContainer,
   VersionSwitcher,
 } from '../../../shared'
 import { Info } from './styles'
@@ -41,31 +41,38 @@ const PreviousFeedBackSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
 `
 
-const FlexRow = styled.div`
+const TabsRow = styled.div`
   display: flex;
-  gap: ${grid(1)};
-  justify-content: space-between;
+  margin-top: ${grid(1)};
+`
+
+const TabRow = styled(FlexRow)`
+  width: 100%;
+`
+
+const RightControls = styled(ControlsContainer)`
+  margin-left: auto;
+  margin-bottom: ${grid(1)};
 `
 
 const FormTemplateStyled = styled.div`
   max-height: calc(100vh - 150px);
 `
 
-const StyledManuscript = styled(Manuscript)`
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow-y: auto;
-  width: 100%;
-`
-
 const ScrollableTabContent = styled.section`
   background-color: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
-  height: calc(100vh - 108px);
+  box-shadow: ${({ theme }) => theme.boxShadow200};
+  height: calc(100vh - 180px);
   overflow: auto;
-  width: calc(100vw - 232px);
+
+  .cm-theme-light {
+    height: 100%;
+  }
+
+  .cm-editor {
+    height: 100%;
+  }
 `
 
 const LabeledTab = styled.div`
@@ -109,6 +116,8 @@ const Production = ({
   authorList,
   addNewVersion,
 }) => {
+  const [activeKey, setActiveKey] = useState('editor')
+
   const versions = gatherManuscriptVersions(unparsedManuscript)
 
   const showFeedbackTab = versions.some(
@@ -209,9 +218,9 @@ const Production = ({
 
   const editorSection = {
     content: (
-      <>
+      <ScrollableTabContent>
         {showContent ? (
-          <SectionContent>
+          <>
             {manuscript ? (
               <ProductionWaxEditor
                 aiConfig={aiConfig}
@@ -233,13 +242,11 @@ const Production = ({
             ) : (
               <Spinner />
             )}
-          </SectionContent>
+          </>
         ) : (
-          <SectionContent>
-            <Info>{t('productionPage.No supported view of the file')}</Info>
-          </SectionContent>
+          <Info>{t('productionPage.No supported view of the file')}</Info>
         )}
-      </>
+      </ScrollableTabContent>
     ),
     key: 'editor',
     label: `${t('productionPage.Editor')} ${
@@ -249,16 +256,14 @@ const Production = ({
 
   const feedbackSection = {
     content: (
-      <>
+      <ScrollableTabContent>
         {isAuthorProofingVersion &&
           ['assigned', 'inProgress'].includes(manuscript.status) && (
-            <SectionContent>
-              <AuthorFeedbackForm
-                currentUser={currentUser}
-                manuscript={manuscript}
-                submitAuthorProofingFeedback={submitAuthorProofingFeedback}
-              />
-            </SectionContent>
+            <AuthorFeedbackForm
+              currentUser={currentUser}
+              manuscript={manuscript}
+              submitAuthorProofingFeedback={submitAuthorProofingFeedback}
+            />
           )}
         <PreviousFeedBackSection>
           <VersionSwitcher fullWidth>
@@ -270,7 +275,7 @@ const Production = ({
             ))}
           </VersionSwitcher>
         </PreviousFeedBackSection>
-      </>
+      </ScrollableTabContent>
     ),
     key: 'feedback',
     label: t('productionPage.Feedback'),
@@ -340,13 +345,15 @@ const Production = ({
 
   const cssAiAssistant = {
     content: (
-      <CssAssistantProvider>
-        <AiPDFDesigner
-          currentUser={currentUser}
-          manuscript={manuscript}
-          setComments={() => JSON.parse(manuscript.meta.comments) || []}
-        />
-      </CssAssistantProvider>
+      <ScrollableTabContent>
+        <CssAssistantProvider>
+          <AiPDFDesigner
+            currentUser={currentUser}
+            manuscript={manuscript}
+            setComments={() => JSON.parse(manuscript.meta.comments) || []}
+          />
+        </CssAssistantProvider>
+      </ScrollableTabContent>
     ),
     hideOnly: true,
     key: 'css-ai-assistant',
@@ -359,15 +366,17 @@ const Production = ({
     key: 'versioning',
     label: 'History',
     content: (
-      <Versioning
-        addNewVersion={addNewVersion} // this is basically the same
-        authorList={authorList}
-        currentUser={currentUser}
-        key={manuscript.meta.previousVersions?.length}
-        manuscript={manuscript}
-        saveCurrentVersion={saveCurrentVersion}
-        setComments={() => JSON.parse(manuscript.meta.comments) || []}
-      />
+      <ScrollableTabContent>
+        <Versioning
+          addNewVersion={addNewVersion}
+          authorList={authorList}
+          currentUser={currentUser}
+          key={manuscript.meta.previousVersions?.length}
+          manuscript={manuscript}
+          saveCurrentVersion={saveCurrentVersion}
+          setComments={() => JSON.parse(manuscript.meta.comments) || []}
+        />
+      </ScrollableTabContent>
     ),
   }
 
@@ -395,15 +404,25 @@ const Production = ({
   }
 
   return (
-    <StyledManuscript>
-      <HeadingWithAction>
-        <FlexRow>
-          <Heading>
-            {isAuthorProofingVersion
-              ? t('productionPage.AuthorProofing')
-              : t('productionPage.Production')}
-          </Heading>
-          <ControlsContainer>
+    <Page
+      title={
+        isAuthorProofingVersion
+          ? t('productionPage.AuthorProofing')
+          : t('productionPage.Production')
+      }
+    >
+      <HiddenTabsContainer $sticky={false}>
+        <TabRow>
+          <TabsRow>
+            {tabSections.map(({ key, label }) => (
+              <TabContainer key={key} onClick={() => setActiveKey(key)}>
+                <Tab $active={activeKey === key}>
+                  <div>{label}</div>
+                </Tab>
+              </TabContainer>
+            ))}
+          </TabsRow>
+          <RightControls>
             <DownloadDropdown
               isAuthorProofingVersion={isAuthorProofingVersion}
               makeJats={makeJats}
@@ -412,13 +431,17 @@ const Production = ({
               manuscriptSource={manuscript.meta.source}
             />
             <VerifyPayloadModal manuscriptId={manuscript.id} />
-          </ControlsContainer>
-        </FlexRow>
-      </HeadingWithAction>
+          </RightControls>
+        </TabRow>
+      </HiddenTabsContainer>
       <ErrorBoundary>
-        <Tabs defaultActiveKey="editor" sections={tabSections} />
+        {tabSections.map(section =>
+          section.key === activeKey ? (
+            <div key={section.key}>{section.content}</div>
+          ) : null,
+        )}
       </ErrorBoundary>
-    </StyledManuscript>
+    </Page>
   )
 }
 

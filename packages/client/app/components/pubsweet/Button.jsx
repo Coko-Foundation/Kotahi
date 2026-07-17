@@ -19,6 +19,7 @@ const StyledButton = styled.button.attrs(props => ({
   &:focus,
   &:hover {
     background-color: ${darken('colorSecondary', 0.3)};
+    color: ${th('colorText')};
     transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
   }
 
@@ -46,6 +47,7 @@ const StyledButton = styled.button.attrs(props => ({
       &:focus,
       &:hover {
         background-color: ${darken('colorPrimary', 0.3)};
+        color: ${th('colorTextReverse')};
       }
 
       &:active {

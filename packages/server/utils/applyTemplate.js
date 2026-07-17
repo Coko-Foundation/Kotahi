@@ -1,5 +1,5 @@
 const path = require('path')
-const fs = require('fs-extra').promises
+const fs = require('fs').promises
 const nunjucks = require('nunjucks')
 const { logger } = require('@coko/server')
 // const cheerio = require('cheerio')

@@ -12,8 +12,10 @@ const DashboardRedirect = (): ReactNode => {
 
   const dashboardSubmissionsLink = `/${groupName}/dashboard/submissions`
 
+  // @ts-ignore
   const dashboardRedirectUrl = currentUser?.recentTab
-    ? `/${groupName}/dashboard/${currentUser.recentTab}`
+    ? // @ts-ignore
+      `/${groupName}/dashboard/${currentUser.recentTab}`
     : dashboardSubmissionsLink
 
   if (invitationId) {

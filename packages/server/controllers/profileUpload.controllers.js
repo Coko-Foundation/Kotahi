@@ -1,6 +1,6 @@
 const path = require('path')
 const crypto = require('crypto')
-const fs = require('fs-extra')
+const fs = require('fs')
 
 const { createFile, deleteFiles, useTransaction } = require('@coko/server')
 

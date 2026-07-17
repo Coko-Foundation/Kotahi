@@ -90,7 +90,7 @@ export const Centered = styled.div`
 export const InvitationContent = styled.div`
   background: ${th('color.backgroundA')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
   margin-bottom: 1rem;
   max-height: calc(100vh - 32px);
   max-width: 50em;

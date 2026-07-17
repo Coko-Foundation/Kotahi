@@ -4,12 +4,25 @@
 
 import { useContext } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
+import { th } from '@coko/client'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { ConfigContext } from '../../../../config/src'
 import { Info } from '../style'
 import { useGetSpecificFiles } from '../../../../asset-manager/src/queries'
 import ModalContext from '../../../../asset-manager/src/ui/Modal/ModalContext'
+
+const Wrapper = styled.div`
+  background: ${th('color.backgroundA')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow200')};
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+`
 
 const EditorSection = ({
   manuscript,
@@ -130,7 +143,7 @@ const EditorSection = ({
           isOpen={modalKey !== undefined}
         />
       )}
-      <div>
+      <Wrapper>
         <FullWaxEditor
           aiConfig={aiConfig}
           authorComments={isAuthorMode}
@@ -151,7 +164,7 @@ const EditorSection = ({
           user={currentUser}
           value={manuscript.meta.source}
         />
-      </div>
+      </Wrapper>
     </>
   )
 }

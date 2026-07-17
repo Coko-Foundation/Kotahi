@@ -16,6 +16,85 @@ jobs:
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
+  typecheck-client:
+    name: Typecheck client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          cd packages/client && yarn install --immutable && cd ../..
+
+      - name: Typecheck
+        run: cd packages/client && yarn typecheck
+
+  typecheck-server:
+    name: Typecheck server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          cd packages/server && yarn install --immutable && cd ../..
+
+      - name: Typecheck
+        run: cd packages/server && yarn typecheck
+
+  server-tests:
+    name: Server tests
+    runs-on: ubuntu-latest
+
+    env:
+      USE_SANDBOXED_ORCID: true
+      ORCID_CLIENT_ID: ${{ secrets.ORCID_CLIENT_ID }}
+      ORCID_CLIENT_SECRET: ${{ secrets.ORCID_CLIENT_SECRET }}
+      SERVER_URL: http://localhost:3000
+      INSTANCE_GROUPS: journal:journal,prc:prc,single_form:preprint1,preprint2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Pull containers
+        run: docker compose pull
+
+      - name: Build containers
+        run: docker compose build server
+
+      - name: Run containers
+        run: docker compose up server -d
+
+      - name: Wait for containers to be up and running
+        run: |
+          timeout 120s bash -c '
+            until [ "$(docker inspect --format="{{.State.Health.Status}}" $(docker compose ps -q server))" = "healthy" ]; do
+              sleep 2
+            done
+          '
+
+      - name: Run tests
+        run: docker compose run server yarn test
+
   e2e-journal:
     name: End to end tests - journal
     runs-on: ubuntu-latest
@@ -212,7 +291,17 @@ jobs:
     name: Deploy test server
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        server-tests,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -232,7 +321,17 @@ jobs:
     name: Deploy test client
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        server-tests,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -252,7 +351,17 @@ jobs:
     name: Deploy main server
 
     if: github.event_name == 'push' && github.ref_name == 'main'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        server-tests,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -272,7 +381,17 @@ jobs:
     name: Deploy main client
 
     if: github.event_name == 'push' && github.ref_name == 'main'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        server-tests,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:

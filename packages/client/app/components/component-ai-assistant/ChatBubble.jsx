@@ -176,8 +176,8 @@ const ChatBubble = ({ forceHide, icons, hasApiKey }) => {
           width: '35px',
           height: '35px',
           borderRadius: '50%',
-          backgroundColor: theme.color.brand1.base(),
-          border: theme.color.brand1.shade50(),
+          backgroundColor: theme.color.brand1.base,
+          border: theme.color.brand1.shade50,
           textAlign: 'center',
           color: '#fff',
         }}

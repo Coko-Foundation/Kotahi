@@ -15,7 +15,7 @@ const ActionLink = styled.button`
   display: inline-flex;
   flex-direction: row;
   font-size: inherit;
-  gap: ${th('spacing.d')};
+  gap: ${grid(0.625)};
   line-height: inherit;
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   width: fit-content;

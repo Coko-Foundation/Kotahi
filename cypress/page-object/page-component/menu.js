@@ -18,7 +18,7 @@ export const Menu = {
     return cy.getByDataTestId(MENU_CONTAINER)
   },
   getDashboardButton() {
-    return cy.getByDataTestId('menu-Dashboard')
+    return cy.getByDataTestId('menu-link-dashboard')
   },
   clickDashboard() {
     this.getDashboardButton().click()
@@ -29,7 +29,7 @@ export const Menu = {
     DashboardPage.getHeader().should('contain', 'Dashboard')
   },
   getFormsButton() {
-    return cy.getByDataTestId('menu-Forms')
+    return cy.getByDataTestId('menu-link-forms')
   },
   clickForms() {
     this.getFormsButton().click()
@@ -37,12 +37,13 @@ export const Menu = {
   clickFormsAndVerifyPageLoaded() {
     this.getSettingsButton().click()
     this.clickForms()
-    cy.getByDataTestId('menu-Submission').click()
+    cy.getByDataTestId('menu-link-forms').click()
+    cy.getByDataTestId('card-link-submission').click()
     cy.awaitDisappearSpinner()
     cy.contains('Submission Form Builder').should('be.visible')
   },
   getUsersButton() {
-    return cy.getByDataTestId('menu-Users')
+    return cy.getByDataTestId('menu-link-users')
   },
   clickUsers() {
     this.getUsersButton().click()
@@ -53,16 +54,16 @@ export const Menu = {
     UsersPage.getTitle().should('be.visible')
   },
   getSettingsButton() {
-    return cy.getByDataTestId('menu-Settings')
+    return cy.getByDataTestId('menu-link-configuration')
   },
   clickSettings() {
     this.getSettingsButton().click({ force: true })
   },
   getManuscriptsButton() {
-    return cy.getByDataTestId('menu-Manuscripts').should('be.visible')
+    return cy.getByDataTestId('menu-link-manuscripts').should('be.visible')
   },
   assertManuscriptsButtonDoesNotExist() {
-    return cy.getByDataTestId('menu-Manuscripts').should('not.exist')
+    return cy.getByDataTestId('menu-link-manuscripts').should('not.exist')
   },
   clickManuscripts() {
     this.getManuscriptsButton().click()
@@ -74,25 +75,25 @@ export const Menu = {
     cy.url().should('contain', 'manuscripts')
   },
   getReportsButton() {
-    return cy.get('[data-testid=menu-Reports]', { timeout: 10000 })
+    return cy.get('[data-testid=menu-link-reports]', { timeout: 10000 })
   },
   clickReports() {
     this.getReportsButton().click()
   },
   getMyProfileButton() {
-    return this.getMenuContainer().get('[title="Go to your profile"]')
+    return cy.getByDataTestId('menu-user')
   },
   clickMyProfile() {
     this.getMyProfileButton().click()
   },
   getLoggedUserButton() {
-    return cy.getByDataTestId('user-item')
+    return cy.getByDataTestId('menu-user-section')
   },
   clickLoggedUser() {
     this.getLoggedUserButton().click()
   },
   getBackground() {
-    return cy.getByDataTestId('main-nav-wrapper')
+    return cy.getByDataTestId('menu-nav')
   },
   getMessageNotAuthorisedUser() {
     return cy.getByContainsClass(MESSAGE_NOT_AUTHORISED)

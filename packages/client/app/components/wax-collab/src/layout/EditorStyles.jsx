@@ -33,6 +33,7 @@ export const Menu = styled.div`
   height: fit-content;
   max-width: 100%;
   min-height: 40px;
+  padding-top: ${grid(2)};
   position: sticky;
   top: -20px;
   user-select: none;
@@ -164,9 +165,9 @@ export const ReadOnlyEditorDiv = styled.div`
 `
 
 export const InfoContainer = styled.div`
-  bottom: -27px;
+  bottom: 0;
   position: absolute;
-  right: 1px;
+  right: ${grid(2)};
   z-index: 999;
 `
 
@@ -305,7 +306,6 @@ export const SimpleInfoContainer = styled.div`
 export const ProductionEditorDiv = styled.div`
   background-color: ${th('color.backgroundA')};
   border-bottom-left-radius: 6px;
-  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
   display: flex;
   flex-grow: 1;
 

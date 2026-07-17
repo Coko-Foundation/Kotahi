@@ -1,8 +1,10 @@
 /* eslint-disable react-hooks/immutability */
 
-import { type ReactNode, useContext, useEffect } from 'react'
+import { type ReactNode, useContext, useEffect, useRef } from 'react'
 import { Outlet, Navigate, useParams, useLocation } from 'react-router-dom'
+import { LinkError } from '@apollo/client/errors'
 import { useMutation, useQuery } from '@apollo/client/react'
+import { useNotification } from '@coko/client'
 import i18next from 'i18next'
 
 import { CURRENT_USER, UPDATE_LANGUAGE } from '../queries'
@@ -11,14 +13,21 @@ import { JournalContext } from '../components/xpub-journal'
 import { ConfigContext } from '../components/config/src'
 import { getLanguages } from '../i18n'
 import { CurrentUserContext } from './hooks/useCurrentUser'
+import { useLogout } from './hooks/useLogout'
 
 const AuthenticatedPage = (): ReactNode => {
   const { pathname } = useLocation()
   const { groupName } = useParams()
   const config = useContext(ConfigContext)
   const journal = useContext(JournalContext)
+  const notification = useNotification()
+  const wasDisconnected = useRef(false)
+  const logout = useLogout()
 
-  const { loading, data } = useQuery(CURRENT_USER, {
+  // @ts-ignore
+  const { instanceName } = config
+
+  const { loading, error, data } = useQuery(CURRENT_USER, {
     fetchPolicy: 'network-only',
     pollInterval: 60000,
     notifyOnNetworkStatusChange: false, // stops screen flickering
@@ -51,13 +60,27 @@ const AuthenticatedPage = (): ReactNode => {
     }
   }, [currentUser, updateLanguage])
 
+  useEffect(() => {
+    if (LinkError.is(error)) {
+      wasDisconnected.current = true
+      notification.warning({ message: 'Connection to the server lost' })
+    } else if (wasDisconnected.current && currentUser) {
+      wasDisconnected.current = false
+      notification.success({ message: 'Connection to the server restored' })
+    }
+  }, [error, currentUser, notification])
+
+  useEffect(() => {
+    if (!loading && !currentUser) {
+      logout()
+    }
+  }, [loading, currentUser, logout])
+
   if (loading) {
     return <Spinner />
   }
 
   if (!currentUser) {
-    // TO DO - reuse a logout function here that clearn cache etc.
-    localStorage.removeItem('token')
     return <Navigate replace to={`/${groupName}/login`} />
   }
 
@@ -67,7 +90,7 @@ const AuthenticatedPage = (): ReactNode => {
   journal.textStyles = data?.builtCss?.css
 
   if (
-    ['journal', 'prc'].includes(config.instanceName) &&
+    ['journal', 'prc'].includes(instanceName) &&
     currentUser &&
     !currentUser.email &&
     pathname !== `/${groupName}/profile` // TODO configure this url via config manager

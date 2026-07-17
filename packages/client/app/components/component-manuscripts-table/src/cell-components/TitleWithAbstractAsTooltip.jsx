@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Tooltip from 'rc-tooltip'
 import { InfoIcon } from '../style'
 import { stripHtml } from '../../../component-review/src/components/review/util'
-import { SemanticScholarIcon, CoarIcon } from '../../../shared/Icons'
+import { Coar, SemanticScholar } from '../../../../ui/base/Icons'
 import { PlainOrRichText } from '../../../shared'
 import { isValidDOI } from '../../../../shared/doiFieldDefinition'
 
@@ -12,16 +12,16 @@ const FloatingIcon = styled.div`
   float: right;
 `
 
-const IsImportedFromCoar = styled(CoarIcon)`
+const IsImportedFromCoar = styled(Coar)`
+  font-size: 20px;
   margin-bottom: -5px;
   margin-right: 10px;
 `
 
-const IsImportSemanticScholar = styled(SemanticScholarIcon)`
-  height: 15px;
+const IsImportSemanticScholar = styled(SemanticScholar)`
+  font-size: 20px;
   margin-bottom: -5px;
   margin-right: 10px;
-  width: 20px;
 `
 
 const getAbstractAsPlainText = manuscript =>
@@ -81,12 +81,8 @@ const TitleWithAbstractAsTooltip = ({ manuscript }) => {
           </Tooltip>
         </FloatingIcon>
       )}
-      {isManuscriptFromSemanticScholar && (
-        <IsImportSemanticScholar height="60" width="80" />
-      )}
-      {isManuscriptFromCoarNotify && (
-        <IsImportedFromCoar height="20" width="20" />
-      )}
+      {isManuscriptFromSemanticScholar && <IsImportSemanticScholar />}
+      {isManuscriptFromCoarNotify && <IsImportedFromCoar />}
       <span style={{ wordBreak: 'break-word' }}>
         {url ? (
           <a href={url} rel="noreferrer" target="_blank" title={url}>
