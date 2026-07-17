@@ -16,6 +16,50 @@ jobs:
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
+  typecheck-client:
+    name: Typecheck client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          cd packages/client && yarn install --immutable && cd ../..
+
+      - name: Typecheck
+        run: cd packages/client && yarn typecheck
+
+  typecheck-server:
+    name: Typecheck server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          cd packages/server && yarn install --immutable && cd ../..
+
+      - name: Typecheck
+        run: cd packages/server && yarn typecheck
+
   e2e-journal:
     name: End to end tests - journal
     runs-on: ubuntu-latest
@@ -212,7 +256,16 @@ jobs:
     name: Deploy test server
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -232,7 +285,16 @@ jobs:
     name: Deploy test client
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -252,7 +314,16 @@ jobs:
     name: Deploy main server
 
     if: github.event_name == 'push' && github.ref_name == 'main'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
@@ -272,7 +343,16 @@ jobs:
     name: Deploy main client
 
     if: github.event_name == 'push' && github.ref_name == 'main'
-    needs: [lint, e2e-journal, e2e-colab, e2e-elife, e2e-ncrc]
+    needs:
+      [
+        lint,
+        typecheck-client,
+        typecheck-server,
+        e2e-journal,
+        e2e-colab,
+        e2e-elife,
+        e2e-ncrc,
+      ]
 
     runs-on: ubuntu-latest
     container:
