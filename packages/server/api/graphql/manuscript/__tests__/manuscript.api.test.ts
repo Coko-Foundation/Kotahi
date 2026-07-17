@@ -1,11 +1,13 @@
-/* eslint-disable */
+import { describe, afterEach, beforeAll, it, expect } from 'vitest'
+import gql from 'graphql-tag'
+import {
+  createGraphqlTestServer,
+  migrationManager,
+  db,
+  config,
+} from '@coko/server'
 
-const gql = require('graphql-tag')
-const { createGraphqlTestServer, migrationManager } = require('@coko/server')
-
-const { Group, User, Manuscript, Team, Config } = require('../../../../models')
-
-const gqlServer = createGraphqlTestServer()
+import { Group, User, Manuscript, Team, Config } from '../../../../models'
 
 const comments = [
   {
@@ -50,6 +52,8 @@ const comments = [
 
 describe('Manuscript API', () => {
   beforeAll(async () => {
+    await config.init()
+    db.init()
     await migrationManager.migrate()
   })
 
@@ -91,6 +95,8 @@ describe('Manuscript API', () => {
       }
     `
 
+    const gqlServer = await createGraphqlTestServer()
+
     const result = await gqlServer.executeOperation(
       {
         query: QUERY,
@@ -108,11 +114,15 @@ describe('Manuscript API', () => {
       },
     )
 
-    const response = result.body.singleResult.data.manuscript
-    const commentsResponse = response.meta.comments
+    if (result.body.kind !== 'single') {
+      throw new Error('Expected single result, got incremental')
+    }
+
+    const response = result.body.singleResult?.data?.manuscript as Manuscript
+    const commentsResponse = response?.meta.comments
     expect(typeof commentsResponse).toBe('string')
 
-    const parsedComments = JSON.parse(commentsResponse)
+    const parsedComments = JSON.parse(commentsResponse as unknown as string)
     expect(parsedComments).toHaveLength(2)
     expect(parsedComments[0].id).toEqual(comments[0].id)
     expect(parsedComments[1].id).toEqual(comments[1].id)
@@ -156,6 +166,8 @@ describe('Manuscript API', () => {
       }
     `
 
+    const gqlServer = await createGraphqlTestServer()
+
     await gqlServer.executeOperation(
       {
         query: QUERY,
@@ -184,7 +196,7 @@ describe('Manuscript API', () => {
     const updatedManuscript = await Manuscript.findById(manuscript.id)
     const { comments: writtenComments } = updatedManuscript.meta
     expect(writtenComments).toHaveLength(2)
-    expect(writtenComments[0].id).toBe(comments[0].id)
-    expect(writtenComments[1].id).toBe(comments[1].id)
+    expect(writtenComments && writtenComments[0].id).toBe(comments[0].id)
+    expect(writtenComments && writtenComments[1].id).toBe(comments[1].id)
   })
 })

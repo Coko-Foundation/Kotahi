@@ -1,30 +1,37 @@
-/* eslint-disable */
+import { describe, it, expect } from 'vitest'
 
-const { formatSearchQueryForPostgres, segmentQuery } = require('../searchUtils')
+import { formatSearchQueryForPostgres, segmentQuery } from '../searchUtils'
 
 describe('segmentQuery', () => {
-  test('blank', () => {
+  it('blank', () => {
     expect(segmentQuery('')).toEqual([])
   })
-  test('whitespace', () => {
+
+  it('whitespace', () => {
     expect(segmentQuery('    ')).toEqual([])
   })
-  test('single', () => {
+
+  it('single', () => {
     expect(segmentQuery('hello')).toEqual(['hello'])
   })
-  test('hyphenated', () => {
+
+  it('hyphenated', () => {
     expect(segmentQuery('hi-ho')).toEqual(['hi-ho'])
   })
-  test('and', () => {
+
+  it('and', () => {
     expect(segmentQuery('this that other')).toEqual(['this', 'that', 'other'])
   })
-  test('phrase', () => {
+
+  it('phrase', () => {
     expect(segmentQuery('"a phrase"')).toEqual(['"', 'a', 'phrase', '"'])
   })
-  test('phrase2', () => {
+
+  it('phrase2', () => {
     expect(segmentQuery('" a phrase "')).toEqual(['"', 'a', 'phrase', '"'])
   })
-  test('phrase3', () => {
+
+  it('phrase3', () => {
     expect(segmentQuery('a word and "a phrase"')).toEqual([
       'a',
       'word',
@@ -35,19 +42,24 @@ describe('segmentQuery', () => {
       '"',
     ])
   })
-  test('not', () => {
+
+  it('not', () => {
     expect(segmentQuery('-this')).toEqual(['-', 'this'])
   })
-  test('not2', () => {
+
+  it('not2', () => {
     expect(segmentQuery('- this')).toEqual(['-', 'this'])
   })
-  test('not3', () => {
+
+  it('not3', () => {
     expect(segmentQuery('that -this')).toEqual(['that', '-', 'this'])
   })
-  test('or', () => {
+
+  it('or', () => {
     expect(segmentQuery('this OR that')).toEqual(['this', 'OR', 'that'])
   })
-  test('parentheses', () => {
+
+  it('parentheses', () => {
     expect(segmentQuery('bank -("river bank")')).toEqual([
       'bank',
       '-',
@@ -59,7 +71,8 @@ describe('segmentQuery', () => {
       ')',
     ])
   })
-  test('parentheses2', () => {
+
+  it('parentheses2', () => {
     expect(segmentQuery('bank -((river OR road) bank)')).toEqual([
       'bank',
       '-',
@@ -73,7 +86,8 @@ describe('segmentQuery', () => {
       ')',
     ])
   })
-  test('extra space', () => {
+
+  it('extra space', () => {
     expect(segmentQuery('   this  that  (  other  )  ')).toEqual([
       'this',
       'that',
@@ -85,53 +99,65 @@ describe('segmentQuery', () => {
 })
 
 describe('formatSearchQueryForPostgres', () => {
-  test('blank', () => {
+  it('blank', () => {
     expect(formatSearchQueryForPostgres('')).toEqual('')
   })
-  test('single', () => {
+
+  it('single', () => {
     expect(formatSearchQueryForPostgres('hello')).toEqual('hello')
   })
-  test('hyphenated', () => {
+
+  it('hyphenated', () => {
     expect(formatSearchQueryForPostgres('hi-ho')).toEqual('hi-ho')
   })
-  test('and', () => {
+
+  it('and', () => {
     expect(formatSearchQueryForPostgres('this that other')).toEqual(
       'this & that & other',
     )
   })
-  test('phrase', () => {
+
+  it('phrase', () => {
     expect(formatSearchQueryForPostgres('"a phrase"')).toEqual('a <-> phrase')
   })
-  test('phrase2', () => {
+
+  it('phrase2', () => {
     expect(formatSearchQueryForPostgres('a word and "a phrase"')).toEqual(
       'a & word & and & a <-> phrase',
     )
   })
-  test('phrase3', () => {
+
+  it('phrase3', () => {
     expect(formatSearchQueryForPostgres('a word but -"a phrase"')).toEqual(
       'a & word & but & !( a <-> phrase )',
     )
   })
-  test('not', () => {
+
+  it('not', () => {
     expect(formatSearchQueryForPostgres('-this')).toEqual('!this')
   })
-  test('not2', () => {
+
+  it('not2', () => {
     expect(formatSearchQueryForPostgres('that -this')).toEqual('that & !this')
   })
-  test('or', () => {
+
+  it('or', () => {
     expect(formatSearchQueryForPostgres('this OR that')).toEqual('this | that')
   })
-  test('parentheses', () => {
+
+  it('parentheses', () => {
     expect(formatSearchQueryForPostgres('bank -("river bank")')).toEqual(
       'bank & !( river <-> bank )',
     )
   })
-  test('parentheses2', () => {
+
+  it('parentheses2', () => {
     expect(
       formatSearchQueryForPostgres('bank -((river OR road) bank)'),
     ).toEqual('bank & !( ( river | road ) & bank )')
   })
-  test('malformed1', () => {
+
+  it('malformed1', () => {
     expect(formatSearchQueryForPostgres('a b)')).toEqual('a & b')
     expect(formatSearchQueryForPostgres(')a b')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('a b(')).toEqual('a & b')
@@ -139,35 +165,41 @@ describe('formatSearchQueryForPostgres', () => {
     expect(formatSearchQueryForPostgres('a (b')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('a) b')).toEqual('a & b')
   })
-  test('malformed2', () => {
+
+  it('malformed2', () => {
     expect(formatSearchQueryForPostgres('a b -')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('a (-) b')).toEqual('a & b')
   })
-  test('malformed3', () => {
+
+  it('malformed3', () => {
     expect(formatSearchQueryForPostgres('a "" b')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('a b "')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('a " b')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('"a b')).toEqual('a <-> b')
   })
-  test('malformed4', () => {
+
+  it('malformed4', () => {
     expect(formatSearchQueryForPostgres('a OR OR b')).toEqual('a | b')
     expect(formatSearchQueryForPostgres('a b OR')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('OR a b')).toEqual('a & b')
     expect(formatSearchQueryForPostgres('"a OR b"')).toEqual('a <-> OR <-> b')
   })
-  test('escaping', () => {
+
+  it('escaping', () => {
     expect(
       formatSearchQueryForPostgres('https://doi.org/10.1101/2022.08.11.503644'),
     ).toEqual('https\\://doi.org/10.1101/2022.08.11.503644')
   })
-  test('doi', () => {
+
+  it('doi', () => {
     expect(
       formatSearchQueryForPostgres('doi.org/10.1101/2022.08.11.503644'),
     ).toEqual(
       'doi.org/10.1101/2022.08.11.503644 | /doi.org/10.1101/2022.08.11.503644',
     )
   })
-  test('doi2', () => {
+
+  it('doi2', () => {
     expect(
       formatSearchQueryForPostgres(
         '"this doi.org/10.1101/2022.08.11.503644 in phrase"',
@@ -176,12 +208,14 @@ describe('formatSearchQueryForPostgres', () => {
       'this <-> ( doi.org/10.1101/2022.08.11.503644 | /doi.org/10.1101/2022.08.11.503644 ) <-> in <-> phrase',
     )
   })
-  test('apostrophe', () => {
+
+  it('apostrophe', () => {
     expect(formatSearchQueryForPostgres(`apples aren't oranges`)).toEqual(
       'apples & aren <-> t & oranges',
     )
   })
-  test('apostrophe2', () => {
+
+  it('apostrophe2', () => {
     expect(formatSearchQueryForPostgres(`apples -aren't oranges`)).toEqual(
       'apples & !( aren <-> t ) & oranges',
     )
@@ -189,10 +223,12 @@ describe('formatSearchQueryForPostgres', () => {
       'apples <-> aren <-> t <-> oranges',
     )
   })
-  test('apostrophe3', () => {
+
+  it('apostrophe3', () => {
     expect(formatSearchQueryForPostgres(`boys' toys`)).toEqual('boys & toys')
   })
-  test('illegal chars', () => {
+
+  it('illegal chars', () => {
     expect(formatSearchQueryForPostgres('AT&T')).toEqual('AT <-> T')
     expect(formatSearchQueryForPostgres('"the AT&T company"')).toEqual(
       'the <-> AT <-> T <-> company',
@@ -201,7 +237,8 @@ describe('formatSearchQueryForPostgres', () => {
       'x <-> y & AT <-> T & back <-> slash',
     )
   })
-  test('wildcard', () => {
+
+  it('wildcard', () => {
     expect(formatSearchQueryForPostgres(`"univers* paper"`)).toEqual(
       'univers:* <-> paper',
     )

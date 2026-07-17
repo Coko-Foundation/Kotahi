@@ -1,17 +1,23 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { migrationManager, db, config } from '@coko/server'
 
-const { migrationManager, db } = require('@coko/server')
-const Group = require('../../group/group.model')
-const Config = require('../../config/config.model')
-const Notification = require('../notification.model')
+import Group from '../../group/group.model'
+import Config from '../../config/config.model'
+import Notification from '../notification.model'
 
 describe('Notification Migrations', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+  })
+
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')
       .where('schemaname', 'public')
 
     for (const t of tables) {
+      /* eslint-disable-next-line no-await-in-loop */
       await db.raw(`DROP TABLE IF EXISTS public.${t.tablename} CASCADE`)
     }
   })

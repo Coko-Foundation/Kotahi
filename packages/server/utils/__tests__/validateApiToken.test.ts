@@ -1,27 +1,33 @@
-/* eslint-disable */
+import { describe, it, expect } from 'vitest'
 
-const validateApiToken = require('../validateApiToken')
+import validateApiToken from '../validateApiToken'
 
 describe('validateApiToken', () => {
-  test('nonePermitted', () => {
+  it('nonePermitted', () => {
     expect(() => validateApiToken('aaa', '')).toThrow()
   })
-  test('noToken', () => {
+
+  it('noToken', () => {
     expect(() => validateApiToken(null, 'aaa,bbb,ccc')).toThrow()
   })
-  test('singleToken', () => {
+
+  it('singleToken', () => {
     expect(() => validateApiToken('aaa', 'aaa')).not.toThrow()
   })
-  test('severalTokens', () => {
+
+  it('severalTokens', () => {
     expect(() => validateApiToken('aaa', 'aaa,bbb,ccc')).not.toThrow()
   })
-  test('severalTokens2', () => {
+
+  it('severalTokens2', () => {
     expect(() => validateApiToken('bbb', 'aaa,bbb,ccc')).not.toThrow()
   })
-  test('whitespace', () => {
+
+  it('whitespace', () => {
     expect(() => validateApiToken('bbb', ' aaa ,  bbb  ,  ccc  ')).not.toThrow()
   })
-  test('multiWordToken', () => {
+
+  it('multiWordToken', () => {
     expect(() =>
       validateApiToken(
         'Ben: bbb',

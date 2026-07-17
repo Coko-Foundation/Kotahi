@@ -11,8 +11,11 @@ exports.up = async () => {
         configs.map(async config => {
           const newConfig = config
 
-          newConfig.formData.controlPanel.editorsCanPublish = true
-          newConfig.formData.controlPanel.groupManagersCanPublish = true
+          newConfig.formData.controlPanel = {
+            ...newConfig.formData.controlPanel,
+            editorsCanPublish: true,
+            groupManagersCanPublish: true,
+          }
 
           await Config.query(trx).updateAndFetchById(config.id, newConfig)
         }),
@@ -30,12 +33,14 @@ exports.down = async () => {
         configs.map(async config => {
           const newConfig = config
 
-          if (newConfig.formData.controlPanel.editorsCanPublish !== undefined) {
+          if (
+            newConfig.formData.controlPanel?.editorsCanPublish !== undefined
+          ) {
             delete newConfig.formData.controlPanel.editorsCanPublish
           }
 
           if (
-            newConfig.formData.controlPanel.groupManagersCanPublish !==
+            newConfig.formData.controlPanel?.groupManagersCanPublish !==
             undefined
           ) {
             delete newConfig.formData.controlPanel.groupManagersCanPublish

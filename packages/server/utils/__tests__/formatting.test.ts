@@ -1,7 +1,8 @@
-/* eslint-disable */
+import { describe, beforeAll, it, expect, afterAll } from 'vitest'
+import { db, config, migrationManager } from '@coko/server'
 
-const { formatCitation } = require('../reference')
-const { Config } = require('../../models')
+import { formatCitation } from '../reference'
+import { Config, Group } from '../../models'
 
 const doiResult = {
   doi: '10.1159/000345136',
@@ -29,22 +30,32 @@ const doiResult = {
 }
 
 const formattedResult =
-  '<p class="ref">Luchsinger, J. A., Biggs, M. L., Kizer, J. R., Barzilay, J., Fitzpatrick, A., Newman, A., … Kuller, L. (n.d.). <i>Adiposity and Cognitive Decline in the Cardiovascular Health Study</i>.</p>'
-
-const getTestValues = async () => {
-  const activeConfig = await Config.query().first()
-  const { groupId } = activeConfig
-
-  // This is being done to get an async result in the test, which might not be async?
-  const response1 = await formatCitation(doiResult, groupId)
-  return { response1 }
-}
+  '<p class="ref">Luchsinger, J. A., Biggs, M. L., Kizer, J. R., Barzilay, J., Fitzpatrick, A., Newman, A., … Kuller, L. (n.d.). <em>Adiposity and Cognitive Decline in the Cardiovascular Health Study</em>. https://doi.org/10.1159/000345136</p>'
 
 describe('checkFormatting', () => {
-  const { response1 } = getTestValues()
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+    await migrationManager.migrate()
+  })
+
+  afterAll(async () => {
+    await db.destroy()
+  })
+
   // Note that this test is dependent on the styleguide & locale passed to formatCitation being what was
   // used to create formattedResult. If the styleguide or locale changes, this test will fail.
-  test('formatted correctly', () => {
+  it('formatted correctly', async () => {
+    const group = await Group.insert({})
+
+    await Config.insert({
+      groupId: group.id,
+      active: true,
+      formData: {},
+    })
+
+    // This is being done to get an async result in the test, which might not be async?
+    const response1 = await formatCitation(doiResult, group.id)
     expect(response1?.result).toEqual(formattedResult)
   })
 })

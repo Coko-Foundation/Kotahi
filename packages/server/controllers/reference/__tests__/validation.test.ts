@@ -1,9 +1,10 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { db, config, migrationManager, DbTestUtils } from '@coko/server'
 
-const {
+import {
   getMatchingReferencesFromCrossRef,
   getReferenceWithDoi,
-} = require('../reference.controllers')
+} from '../reference.controllers'
 
 const crossrefRetrievalEmail = 'test@gmail.com'
 
@@ -41,7 +42,7 @@ const doiResult = {
   journalTitle: 'Neuroepidemiology',
 }
 
-const getRefWrapper = async ref => {
+const getRefWrapper = async (ref: string): Promise<any> => {
   let response = null
 
   try {
@@ -51,40 +52,61 @@ const getRefWrapper = async ref => {
       crossrefRetrievalEmail,
     )
   } catch (error) {
-    console.error('Response Error:', error.message)
+    throw new Error(`Response Error: ${error}`)
   }
 
   return response
 }
 
-const getDOIWrapper = async doi => {
+const getDOIWrapper = async (
+  doi: string,
+): Promise<{
+  doi: any
+  author: any
+  page: any
+  issue: any
+  volume: any
+  title: any
+  journalTitle: any
+}> => {
   let response = null
 
   try {
     response = await getReferenceWithDoi(doi, crossrefRetrievalEmail)
   } catch (error) {
-    console.error('Response Error:', error.message)
+    throw new Error(`Response Error: ${error}`)
   }
 
   return response
 }
 
-const getTestValues = async () => {
-  const response1 = await getRefWrapper(referenceMatches)
-  const response2 = await getRefWrapper(referenceNoMatches)
-  const response3 = await getDOIWrapper(sampleDOI)
-  return { response1, response2, response3 }
-}
-
 describe('checkCrossRefValidation', () => {
-  const { response1, response2, response3 } = getTestValues()
-  test('valid references', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+    await migrationManager.migrate()
+  })
+
+  beforeEach(async () => {
+    await DbTestUtils.clearDb()
+  })
+
+  afterAll(async () => {
+    await db.destroy()
+  })
+
+  it('valid references', async () => {
+    const response1 = await getRefWrapper(referenceMatches)
     expect(response1?.length).toEqual(3)
   })
-  test('invalid references', () => {
+
+  it('invalid references', async () => {
+    const response2 = await getRefWrapper(referenceNoMatches)
     expect(response2?.length).toEqual(0)
   })
-  test('get reference from DOI', () => {
+
+  it('get reference from DOI', async () => {
+    const response3 = await getDOIWrapper(sampleDOI)
     expect(JSON.stringify(response3)).toEqual(JSON.stringify(doiResult))
   })
 })

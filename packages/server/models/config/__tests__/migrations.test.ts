@@ -1,18 +1,24 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { db, config, migrationManager } from '@coko/server'
 
-const { db, migrationManager } = require('@coko/server')
-const Group = require('../../group/group.model')
-const Config = require('../config.model')
-const eventsSource = require('../../../services/notification/eventsSource')
-const Notification = require('../../notification/notification.model')
+import Group from '../../group/group.model'
+import Config from '../config.model'
+import eventsSource from '../../../services/notification/eventsSource'
+import Notification from '../../notification/notification.model'
 
 describe('Config Migrations', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+  })
+
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')
       .where('schemaname', 'public')
 
     for (const t of tables) {
+      /* eslint-disable-next-line no-await-in-loop */
       await db.raw(`DROP TABLE IF EXISTS public.${t.tablename} CASCADE`)
     }
   })
@@ -169,7 +175,9 @@ describe('Config Migrations', () => {
   it('activates notification event if event has no notifications', async () => {
     await migrationManager.migrate({ to: '1752222828=file-meta.js' })
 
-    const eventsConfig = Object.keys(eventsSource).reduce((acc, key) => {
+    const eventsConfig = Object.keys(eventsSource).reduce<
+      Record<string, { active: boolean }>
+    >((acc, key) => {
       acc[key] = { active: key !== 'author-accepted' }
       return acc
     }, {})
@@ -230,8 +238,8 @@ describe('Config Migrations', () => {
 
     await migrationManager.migrate({ step: 1 })
 
-    config1 = await Config.query().findById(config1.id)
-    config2 = await Config.query().findById(config2.id)
+    config1 = (await Config.query().findById(config1.id)) as Config
+    config2 = (await Config.query().findById(config2.id)) as Config
 
     // 1) 'author-accepted' was inactive and had NO notifications -> should now be active
     expect(

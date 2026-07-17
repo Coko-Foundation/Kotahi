@@ -1,18 +1,23 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { config, db, migrationManager } from '@coko/server'
 
-const { db, migrationManager } = require('@coko/server')
-
-const Manuscript = require('../../manuscript/manuscript.model')
-const Review = require('../review.model')
-const User = require('../../user/user.model')
+import Manuscript from '../../manuscript/manuscript.model'
+import Review from '../review.model'
+import User from '../../user/user.model'
 
 describe('Review Migrations', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+  })
+
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')
       .where('schemaname', 'public')
 
     for (const t of tables) {
+      /* eslint-disable-next-line no-await-in-loop */
       await db.raw(`DROP TABLE IF EXISTS public.${t.tablename} CASCADE`)
     }
   })

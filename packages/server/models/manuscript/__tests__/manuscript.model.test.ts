@@ -1,17 +1,26 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { db, config, DbTestUtils, migrationManager } from '@coko/server'
 
-const Manuscript = require('../manuscript.model')
-const Review = require('../../review/review.model')
-const Team = require('../../team/team.model')
-const User = require('../../user/user.model')
-
-const { clearDb } = require('../../../scripts/resetDb')
-const TeamMember = require('../../teamMember/teamMember.model')
-const Invitation = require('../../invitation/invitation.model')
+import Manuscript from '../manuscript.model'
+import Review from '../../review/review.model'
+import Team from '../../team/team.model'
+import User from '../../user/user.model'
+import TeamMember from '../../teamMember/teamMember.model'
+import Invitation from '../../invitation/invitation.model'
 
 describe('Manuscript model', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+    await migrationManager.migrate()
+  })
+
   beforeEach(async () => {
-    await clearDb()
+    await DbTestUtils.clearDb()
+  })
+
+  afterAll(async () => {
+    await db.destroy()
   })
 
   it('gets reviews', async () => {
@@ -58,12 +67,12 @@ describe('Manuscript model', () => {
     expect(reviews[1].id).toBe(reviewTwo.id)
     expect(reviews[2].id).toBe(reviewThree.id)
 
-    const invitedReviews = await manuscript.getReviews('invited')
+    const invitedReviews = await manuscript.getReviews(['invited'])
 
     expect(invitedReviews).toHaveLength(1)
     expect(invitedReviews[0].id).toBe(reviewOne.id)
 
-    const acceptedReviews = await manuscript.getReviews('accepted')
+    const acceptedReviews = await manuscript.getReviews(['accepted'])
 
     expect(acceptedReviews).toHaveLength(2)
     expect(acceptedReviews[0].id).toBe(reviewTwo.id)
@@ -118,7 +127,7 @@ describe('Manuscript model', () => {
 
     const inviteThree = await Invitation.insert({
       manuscriptId: manuscriptThree.id,
-      toEmail: reviewerThree.email,
+      toEmail: reviewerThree.email!,
       status: 'UNANSWERED',
       invitedPersonType: 'REVIEWER',
       invitedPersonName: reviewerThree.username,

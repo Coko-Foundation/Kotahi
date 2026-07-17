@@ -1,9 +1,8 @@
-/* eslint-disable */
-
-const { getCrossrefCitationsFromList } = require('../crossrefUtils')
+import { describe, it, expect } from 'vitest'
+import { getCrossrefCitationsFromList } from '../crossrefUtils'
 
 describe('getCrossrefCitationsFromList', () => {
-  test('example1', () => {
+  it('example1', () => {
     expect(
       getCrossrefCitationsFromList(`
 <p class="asdf">Doe, John (2010) "Role of CO<sub>2</sub> in global&nbsp;warming" in <i>Climate</i> 123:4.</p>

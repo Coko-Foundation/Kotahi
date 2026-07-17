@@ -1,6 +1,8 @@
+/* eslint-disable import/extensions */
+
 import { env } from '@coko/server'
 
-import modelComponents from './models/modelComponents'
+import modelComponents from './models/modelComponents.js'
 
 const isProduction = env('NODE_ENV') === 'production'
 
@@ -189,6 +191,7 @@ export default {
       mountPoint: '/profiles',
     },
   ],
+  suppressLoggerInTestEnv: true,
   teams: {
     global: [
       {

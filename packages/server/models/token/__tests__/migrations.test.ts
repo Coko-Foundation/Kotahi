@@ -1,16 +1,22 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { config, db, migrationManager, uuid } from '@coko/server'
 
-const { db, migrationManager, uuid } = require('@coko/server')
-const Group = require('../../group/group.model')
-const Token = require('../token.model')
+import Group from '../../group/group.model'
+import Token from '../token.model'
 
 describe('Token Migrations', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+  })
+
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')
       .where('schemaname', 'public')
 
     for (const t of tables) {
+      /* eslint-disable-next-line no-await-in-loop */
       await db.raw(`DROP TABLE IF EXISTS public.${t.tablename} CASCADE`)
     }
   })
@@ -21,7 +27,7 @@ describe('Token Migrations', () => {
 
   it('creates and drops tokens table', async () => {
     await migrationManager.migrate({
-      to: '1757670017-activate-empty-notifications.js',
+      to: '1768312501-meta-pg-boss',
     })
 
     let tableExists = await db.schema.hasTable('tokens')
@@ -54,9 +60,9 @@ describe('Token Migrations', () => {
 
     await migrationManager.migrate({ step: 1 })
 
-    await expect(async () => {
-      await Token.insert({ name: 'specialToken', value: uuid(), groupId })
-    }).rejects.toThrow()
+    await expect(
+      Token.insert({ name: 'specialToken', value: uuid(), groupId }),
+    ).rejects.toThrow()
 
     await migrationManager.rollback({ step: 1 })
 

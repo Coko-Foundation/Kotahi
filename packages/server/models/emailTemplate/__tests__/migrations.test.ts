@@ -1,18 +1,26 @@
-/* eslint-disable */
+import { describe, beforeAll, beforeEach, afterAll, it, expect } from 'vitest'
+import { db, config, migrationManager } from '@coko/server'
 
-const { db, migrationManager } = require('@coko/server')
-const Group = require('../../group/group.model')
-const Config = require('../../config/config.model')
-const EmailTemplate = require('../emailTemplate.model')
-const defaultEmailTemplates = require('../../../config/defaultEmailTemplates')
+import Group from '../../group/group.model'
+import Config from '../../config/config.model'
+import EmailTemplate from '../emailTemplate.model'
+import defaultEmailTemplates, {
+  DefaultEmailTemplate,
+} from '../../../config/defaultEmailTemplates'
 
 describe('Email Template Migrations', () => {
+  beforeAll(async () => {
+    await config.init()
+    db.init()
+  })
+
   beforeEach(async () => {
     const tables = await db('pg_tables')
       .select('tablename')
       .where('schemaname', 'public')
 
     for (const t of tables) {
+      /* eslint-disable-next-line no-await-in-loop */
       await db.raw(`DROP TABLE IF EXISTS public.${t.tablename} CASCADE`)
     }
   })
@@ -56,15 +64,15 @@ describe('Email Template Migrations', () => {
 
     await migrationManager.migrate({ step: 1 })
 
-    emailTemplate1Exists = await EmailTemplate.query().findOne({
+    emailTemplate1Exists = (await EmailTemplate.query().findOne({
       emailTemplateType: 'collaborativeReviewerInvitation',
       groupId: group1.id,
-    })
+    })) as EmailTemplate
 
-    emailTemplate2Exists = await EmailTemplate.query().findOne({
+    emailTemplate2Exists = (await EmailTemplate.query().findOne({
       emailTemplateType: 'collaborativeReviewerInvitation',
       groupId: group2.id,
-    })
+    })) as EmailTemplate
 
     expect(emailTemplate1Exists).toBeTruthy()
     expect(emailTemplate2Exists).toBeTruthy()
@@ -75,7 +83,7 @@ describe('Email Template Migrations', () => {
     const collaborativeReviewerInvitation = defaultEmailTemplates.find(
       t =>
         t.emailTemplateKey === 'collabroativeReviewerInvitationEmailTemplate',
-    )
+    ) as DefaultEmailTemplate
 
     expect(emailTemplate1Exists.emailContent.subject).toBe(
       collaborativeReviewerInvitation.subject,
