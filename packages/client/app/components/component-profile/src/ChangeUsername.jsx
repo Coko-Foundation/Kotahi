@@ -2,14 +2,14 @@
 
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { TextField, Button } from '../../pubsweet'
 
 const InlineTextField = styled(TextField)`
   display: inline;
-  width: calc(${th('gridUnit')} * 24);
+  width: ${grid(48)};
 `
 
 const Container = styled.div`

@@ -58,11 +58,11 @@ const globalStyles = css`
   /* Ant notifications */
 
   .ant-notification-notice {
-    padding: ${grid(3)} !important;
+    padding: ${grid(6)} !important;
 
     > button {
-      top: calc(${grid(3)} + 3px) !important;
-      right: ${grid(3)} !important;
+      top: calc(${grid(6)} + 3px) !important;
+      right: ${grid(6)} !important;
     }
   }
 

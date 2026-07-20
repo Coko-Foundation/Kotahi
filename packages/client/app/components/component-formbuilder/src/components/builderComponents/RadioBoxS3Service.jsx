@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import Flexbox from '../../../../pubsweet/Flexbox'
 import Radio from '../../../../pubsweet/Radio'
 import { TextField } from '../../../../pubsweet'
@@ -11,7 +11,7 @@ import { ActionButton } from '../../../../shared'
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
   font-weight: 600;
-  margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
+  margin-bottom: ${props => props.space && grid(2)(props)};
 `
 
 const CredentialsFlexbox = styled(Flexbox)`

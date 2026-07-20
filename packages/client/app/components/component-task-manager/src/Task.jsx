@@ -34,7 +34,7 @@ import CounterField from '../../shared/CounterField'
 const TaskRow = styled.div`
   align-items: flex-start;
   display: flex;
-  gap: ${grid('1')};
+  gap: ${grid('2')};
 
   &:hover > div:first-child > div:first-child > svg,
   &:hover > div:first-child > button:last-child > svg {
@@ -61,7 +61,7 @@ const TitleCell = styled.div`
 const StatusActionCell = styled.div`
   /* stylelint-disable-next-line declaration-no-important */
   background: none !important;
-  border-right: ${grid(1)} solid transparent;
+  border-right: ${grid(2)} solid transparent;
   flex: 0 1 12em;
   justify-content: flex-start;
 
@@ -72,7 +72,7 @@ const StatusActionCell = styled.div`
         `
       : ''}
 
-  padding-right: ${grid(1)};
+  padding-right: ${grid(2)};
 `
 
 const DurationDaysCell = styled.div`
@@ -87,10 +87,10 @@ const DurationDaysCell = styled.div`
 const Handle = styled.div`
   align-items: center;
   display: flex;
-  flex: 0 0 ${grid(3)};
-  height: ${grid(5)};
+  flex: 0 0 ${grid(6)};
+  height: ${grid(10)};
   justify-content: center;
-  width: ${grid(3)};
+  width: ${grid(6)};
 `
 
 const DragIcon = styled(DragVerticalIcon)`
@@ -116,7 +116,7 @@ const Ellipsis = styled(MoreVertical)`
 
 const ModalContainer = styled(LooseColumn)`
   background-color: ${th('color.backgroundA')};
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(5)} ${grid(6)};
   z-index: 10000;
 `
 
@@ -190,7 +190,7 @@ const DueDateFieldContainer = styled(BaseFieldContainer)`
   }
 
   > div + div {
-    margin-left: ${grid(1)};
+    margin-left: ${grid(2)};
   }
 `
 

@@ -63,12 +63,12 @@ const InlineColorPicker = styled(Inline)`
   & > div {
     font-size: ${th('fontSizeBaseSmall')};
     line-height: ${th('lineHeightBaseSmall')};
-    margin-bottom: ${grid(1)};
+    margin-bottom: ${grid(2)};
   }
 
   & input {
-    height: ${grid(6)};
-    width: ${grid(9)};
+    height: ${grid(12)};
+    width: ${grid(18)};
   }
 `
 

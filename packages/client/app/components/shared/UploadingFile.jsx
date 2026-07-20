@@ -10,16 +10,16 @@ import { ConfirmationModal } from '../component-modal/src/ConfirmationModal'
 
 const Icon = styled.div`
   background: ${th('color.gray90')};
-  height: ${grid(10)};
-  margin-bottom: ${th('gridUnit')};
+  height: ${grid(20)};
+  margin-bottom: ${grid(2)};
   opacity: 0.5;
   overflow: hidden;
-  padding: ${grid(1)};
+  padding: ${grid(2)};
   position: relative;
-  width: ${grid(10)};
+  width: ${grid(20)};
 
   img {
-    width: ${grid(8)};
+    width: ${grid(16)};
   }
 `
 
@@ -27,13 +27,13 @@ const Extension = styled.div`
   background: ${th('color.gray5')};
   color: ${th('color.textReverse')};
   font-size: ${th('fontSizeBaseSmall')};
-  left: ${grid(2)};
+  left: ${grid(4)};
   line-height: ${th('lineHeightBaseSmall')};
   position: absolute;
   right: 0;
   text-align: center;
   text-transform: uppercase;
-  top: ${grid(2)};
+  top: ${grid(4)};
 `
 
 const Filename = styled.div`
@@ -41,7 +41,7 @@ const Filename = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   font-style: italic;
   line-height: ${th('lineHeightBaseSmall')};
-  max-width: ${grid(12)};
+  max-width: ${grid(24)};
   overflow: hidden;
   text-overflow: ellipsis;
 `
@@ -50,8 +50,8 @@ const Uploading = styled.div`
   align-items: center;
   display: block;
   flex-direction: column;
-  margin-bottom: ${grid(3)};
-  margin-right: ${grid(3)};
+  margin-bottom: ${grid(6)};
+  margin-right: ${grid(6)};
   position: relative;
 `
 
@@ -81,7 +81,7 @@ const ErrorWrapper = styled.div`
   letter-spacing: 0.01em;
   line-height: ${th('lineHeightBaseSmall')};
   opacity: 1;
-  padding: ${th('gridUnit')} ${th('gridUnit')};
+  padding: ${grid(2)} ${grid(2)};
   position: absolute;
   top: 25%;
   z-index: 4;

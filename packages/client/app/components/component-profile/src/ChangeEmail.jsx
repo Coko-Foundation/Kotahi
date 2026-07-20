@@ -4,7 +4,7 @@
 
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { th } from '@coko/client'
+import { grid } from '@coko/client'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { TextField, Button } from '../../pubsweet'
@@ -12,7 +12,7 @@ import { TextField, Button } from '../../pubsweet'
 const InlineTextField = styled(TextField)`
   border-color: ${props => (props.$error ? '#ff2d1a' : '#AAA')};
   display: inline;
-  width: calc(${th('gridUnit')} * 24);
+  width: ${grid(48)};
 `
 
 const UpdateEmailError = styled.p`

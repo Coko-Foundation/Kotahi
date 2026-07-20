@@ -18,7 +18,7 @@ export const Base = meta.story({
 export const DifferentSize = meta.story({
   args: {
     src: avatarImg,
-    size: 20,
+    size: 40,
     showOnlineIndicator: true,
     isUserOnline: true,
   },
@@ -27,7 +27,7 @@ export const DifferentSize = meta.story({
 export const DifferentImage = meta.story({
   args: {
     src: avatarImg2,
-    size: 20,
+    size: 40,
     showOnlineIndicator: true,
     isUserOnline: true,
   },

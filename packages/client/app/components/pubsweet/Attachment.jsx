@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 import Icon from './Icon'
 
@@ -18,7 +18,7 @@ const Filename = styled.span`
 `
 
 const IconContainer = styled.span`
-  margin: 0 ${th('gridUnit')};
+  margin: 0 ${grid(2)};
 
   svg {
     height: ${th('fontSizeBase')};

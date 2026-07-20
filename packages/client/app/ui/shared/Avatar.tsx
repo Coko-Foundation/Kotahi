@@ -21,8 +21,8 @@ const Img = styled.img`
 const OnlineIndicator = styled.div<{ $online: boolean }>`
   border: 3px solid ${th('colorBackground')};
   border-radius: 50%;
-  height: ${grid(2)};
-  width: ${grid(2)};
+  height: ${grid(4)};
+  width: ${grid(4)};
   background-color: ${(props): string =>
     props.$online ? props.theme.colorPrimary : props.theme.colorDisabled};
 
@@ -42,7 +42,7 @@ type AvatarProps = {
 
 const Avatar = ({
   src,
-  size = 6,
+  size = 12,
   isUserOnline,
   showOnlineIndicator = false,
 }: AvatarProps): ReactNode => {

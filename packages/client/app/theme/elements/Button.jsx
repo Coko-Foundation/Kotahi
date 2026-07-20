@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 const secondary = css`
   background: none;
@@ -34,8 +34,8 @@ const secondary = css`
 export default css`
   border: none;
   font-weight: 500;
-  line-height: calc(${th('gridUnit')} * 3);
-  min-width: calc(${th('gridUnit')} * 16);
+  line-height: ${grid(6)};
+  min-width: ${grid(32)};
   ${props => !props.$primary && secondary};
 
   &:focus,

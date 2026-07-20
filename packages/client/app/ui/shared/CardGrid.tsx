@@ -17,12 +17,12 @@ const Title = styled(H2)`
 const Description = styled.div`
   flex-grow: 1;
   color: ${th('colorText')};
-  padding-top: ${grid(2)};
+  padding-top: ${grid(4)};
 `
 
 const IconWrapper = styled.div`
   align-self: end;
-  padding-bottom: ${grid(3)};
+  padding-bottom: ${grid(6)};
   opacity: 0;
   transition: opacity 0.3s ease;
 
@@ -33,10 +33,10 @@ const IconWrapper = styled.div`
 `
 
 const Card = styled.div`
-  min-height: ${grid(38)};
+  min-height: ${grid(76)};
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow200')};
-  padding: ${grid(6)} ${grid(4)} 0;
+  padding: ${grid(12)} ${grid(8)} 0;
   cursor: pointer;
   background-color: ${th('colorBackground')};
   transition: box-shadow 0.2s ease;
@@ -56,8 +56,8 @@ const Card = styled.div`
 
 const Wrapper = styled.ul`
   display: grid;
-  grid-template-columns: repeat(auto-fill, ${grid(55)});
-  gap: ${grid(4)};
+  grid-template-columns: repeat(auto-fill, ${grid(110)});
+  gap: ${grid(8)};
   list-style: none;
   margin: 0 auto;
   padding: 0;

@@ -15,10 +15,10 @@ const UpDownButton = styled.button`
   background: none;
   border: none;
   color: ${th('color.gray60')};
-  height: ${grid(2)};
+  height: ${grid(4)};
   justify-content: center;
-  padding: 0 ${grid(0.5)};
-  width: ${grid(3)};
+  padding: 0 ${grid(1)};
+  width: ${grid(6)};
 
   &:hover {
     color: ${th('color.brand1.base')};

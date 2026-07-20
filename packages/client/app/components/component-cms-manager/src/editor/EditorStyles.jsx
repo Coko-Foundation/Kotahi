@@ -59,7 +59,7 @@ export const EditorDiv = styled.div`
   height: 100%;
   ${props => !props.$hideComments && 'min-width: 800px'};
   overflow: auto;
-  padding: ${grid(2)};
+  padding: ${grid(4)};
   position: relative;
 
   .error & {

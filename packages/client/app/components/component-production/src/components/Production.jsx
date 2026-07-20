@@ -38,12 +38,12 @@ import VerifyPayloadModal from './VerifyPayloadModal/VerifyPayloadModal'
 const useVersioning = true
 
 const PreviousFeedBackSection = styled.div`
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
 `
 
 const TabsRow = styled.div`
   display: flex;
-  margin-top: ${grid(1)};
+  margin-top: ${grid(2)};
 `
 
 const TabRow = styled(FlexRow)`
@@ -52,7 +52,7 @@ const TabRow = styled(FlexRow)`
 
 const RightControls = styled(ControlsContainer)`
   margin-left: auto;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const FormTemplateStyled = styled.div`

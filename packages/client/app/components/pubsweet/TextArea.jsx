@@ -2,7 +2,7 @@
 
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { th, override, validationColor } from '@coko/client'
+import { grid, th, override, validationColor } from '@coko/client'
 import { useUID } from 'react-uid'
 
 const Root = styled.div`
@@ -29,7 +29,7 @@ const Area = styled.textarea`
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   max-width: 100%;
-  padding: calc(${th('gridUnit')} * 1.5) ${th('gridUnit')};
+  padding: ${grid(3)} ${grid(2)};
 
   &::placeholder {
     color: ${th('colorTextPlaceholder')};

@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   width: 100%;
 
   button:not(:last-child) {
-    margin-right: ${grid(1)};
+    margin-right: ${grid(2)};
   }
 `
 

@@ -23,7 +23,7 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  margin-top: ${grid(2)};
+  margin-top: ${grid(4)};
   min-height: 0;
   overflow: hidden;
 `

@@ -3,7 +3,7 @@
 import { FastField } from 'formik'
 import { get } from 'lodash'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 // TODO: pass ...props.input to children automatically?
 
@@ -14,7 +14,7 @@ const MessageWrapper = styled.div`
 
 const Message = styled.div`
   &:not(:last-child) {
-    margin-bottom: ${th('gridUnit')};
+    margin-bottom: ${grid(2)};
   }
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};

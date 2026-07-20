@@ -2,6 +2,7 @@
 
 import Select from 'react-select'
 import { withTheme } from 'styled-components'
+import { grid } from '@coko/client'
 
 const StyledSelect = props => {
   const { theme, ...rest } = props
@@ -18,7 +19,6 @@ const StyledSelect = props => {
     colorTextReverse,
     fontInterface,
     fontSizeBase,
-    gridUnit,
     lineHeightBase,
   } = theme
 
@@ -39,7 +39,7 @@ const StyledSelect = props => {
         fontFamily: fontInterface,
         fontSize: fontSizeBase,
         lineHeight: lineHeightBase,
-        padding: gridUnit,
+        padding: grid(2)({ theme }),
       }
 
       if (state.isFocused) {
@@ -65,7 +65,6 @@ const StyledSelect = props => {
       borderRadius: 0,
       boxShadow: 'none',
       flex: '0 1 100%',
-      marginTop: gridUnit / 4,
     }),
     menuList: base => ({
       ...base,

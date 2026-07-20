@@ -34,7 +34,7 @@ const RootButton = styled.button.attrs(({ title, type }) => ({
   font-size: ${th('fontSizeBase')};
   justify-content: center;
   outline: none;
-  padding: ${grid(0.5)};
+  padding: ${grid(1)};
   transition: all 0.1s ease-in;
 
   > i svg {

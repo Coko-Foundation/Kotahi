@@ -9,6 +9,7 @@ import Creatable from 'react-select/creatable'
 import { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { Minus, Plus } from 'react-feather'
+import { grid } from '@coko/client'
 
 import { useNumber } from '../../../hooks/dataTypeHooks'
 import { Col, CounterInputWrapper, InputWrapper, Row } from '../misc/styleds'
@@ -46,7 +47,7 @@ const styles = theme => ({
       boxShadow: `1px solid ${theme.color.gray70}`,
     },
     fontSize: theme.fontSizeBaseSmall,
-    minHeight: `calc(${theme.gridUnit} * 5)`,
+    minHeight: grid(10)({ theme }),
     div: {
       color: theme.color.gray20,
     },

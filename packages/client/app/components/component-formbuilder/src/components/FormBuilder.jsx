@@ -22,7 +22,7 @@ const FeildWrapper = styled.div`
   align-items: center;
   border-radius: ${th('borderRadius')};
   display: flex;
-  padding: ${grid(0.5)};
+  padding: ${grid(1)};
 
   &.active {
     background-color: ${th('color.brand1.tint70')};
@@ -54,12 +54,12 @@ const MainAction = styled(Action)`
 
 const IconAction = styled(Action)`
   flex-grow: 0;
-  margin: 0 ${grid(1)};
+  margin: 0 ${grid(2)};
 `
 
 const DragIcon = styled(DragVerticalIcon)`
   height: 20px;
-  margin-right: ${grid(1)};
+  margin-right: ${grid(2)};
   stroke: transparent;
   width: 20px;
 `

@@ -26,7 +26,7 @@ const OptionButton = styled.button`
   border: none;
   border-right: 1px solid ${th('color.brand1.tint70')};
   cursor: pointer;
-  padding: ${grid(1.5)} ${grid(2)};
+  padding: ${grid(3)} ${grid(4)};
   scroll-snap-align: start;
   text-align: left;
   width: 100%;
@@ -43,7 +43,7 @@ const OptionButton = styled.button`
 const OptionContent = styled(FlexRow)`
   align-items: center;
   display: flex;
-  gap: ${grid(5)};
+  gap: ${grid(10)};
   justify-content: space-between;
   pointer-events: none;
   width: 100%;
@@ -69,7 +69,7 @@ const FormBadge = styled.span`
   font-size: ${th('fontSizeBaseSmaller')};
   line-height: 1;
   min-width: 80px;
-  padding: ${grid(0.6)} ${grid(0.8)};
+  padding: ${grid(1.2)} ${grid(1.6)};
   text-align: center;
   text-rendering: optimizelegibility;
 `

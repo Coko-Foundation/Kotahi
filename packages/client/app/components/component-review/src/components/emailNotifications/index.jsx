@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import { useState, useContext } from 'react'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import styled, { css } from 'styled-components'
 import { useTranslation } from 'react-i18next'
 import { SectionHeader, SectionRowGrid, Title } from '../style'
@@ -50,7 +50,7 @@ export const EmailErrorMessageWrapper = styled.div`
   padding: calc(8px * 2) calc(8px * 3);
 
   &:not(:last-child) {
-    margin-bottom: ${th('gridUnit')};
+    margin-bottom: ${grid(2)};
   }
 `
 

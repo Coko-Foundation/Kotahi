@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th, override } from '@coko/client'
+import { grid, th, override } from '@coko/client'
 
 const Label = styled.span`
   ${override('ui.Checkbox.Label')};
 `
 
 const Input = styled.input`
-  margin-right: ${th('gridUnit')};
+  margin-right: ${grid(2)};
   ${override('ui.Checkbox.Input')};
 `
 
@@ -19,7 +19,7 @@ const Root = styled.label`
   font-family: ${th('fontAuthor')};
 
   &:not(:last-child) {
-    margin-right: ${props => (props.inline ? props.theme.gridUnit : '0')};
+    margin-right: ${props => (props.inline ? grid(2)(props) : '0')};
   }
 
   ${override('ui.Checkbox')};

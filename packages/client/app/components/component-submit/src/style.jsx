@@ -6,7 +6,7 @@ export { Container, Content, Heading } from '../../shared'
 export const Heading1 = styled.h1`
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
-  margin: 0 0 calc(${th('gridUnit')} * 3);
+  margin: 0 0 ${grid(6)};
 `
 
 export const Section = styled.section.attrs(props => ({
@@ -20,13 +20,13 @@ export const Section = styled.section.attrs(props => ({
   /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
   flex-wrap: ${({ $cssOverrides }) => $cssOverrides?.wrap ?? 'nowrap'};
   justify-content: space-between;
-  margin: ${grid(3)} 0;
+  margin: ${grid(6)} 0;
 `
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
   font-weight: 500;
-  margin-bottom: ${grid(0.9375)};
+  margin-bottom: ${grid(1.875)};
 `
 
 export const SubNote = styled.span`
@@ -125,6 +125,6 @@ export const SubNote = styled.span`
 `
 
 export const UploadContainer = styled.div`
-  padding: ${grid(3)};
+  padding: ${grid(6)};
   text-align: center;
 `

@@ -229,7 +229,7 @@ export const Ellipsis = styled(MoreVertical)`
   border-radius: 50%;
   cursor: pointer;
   height: 20.25px;
-  margin: ${grid(0.25)} ${grid(1)} ${grid(1)} ${grid(2)};
+  margin: ${grid(0.5)} ${grid(2)} ${grid(2)} ${grid(4)};
   padding: 3px;
   position: absolute;
   right: 0;

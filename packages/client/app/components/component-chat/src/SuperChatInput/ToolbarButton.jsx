@@ -15,7 +15,7 @@ const Button = styled.a`
   border: 1px solid ${th('color.gray50')};
   border-radius: 10px;
   height: fit-content;
-  margin: ${grid(1)} ${grid(1)} 0 0;
+  margin: ${grid(2)} ${grid(2)} 0 0;
   padding: 4px 0;
 
   &:hover {

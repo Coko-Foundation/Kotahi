@@ -15,9 +15,9 @@ import PartnerListItem from './PartnerListItem'
 
 const Files = styled.div`
   display: flex;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  margin-top: ${grid(2)};
+  margin-top: ${grid(4)};
   overflow: auto;
 `
 

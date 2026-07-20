@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 const Button = styled.button`
   /* stylelint-disable declaration-no-important */
@@ -12,7 +12,7 @@ const Button = styled.button`
   display: flex;
   font-family: 'Fira Sans Condensed', sans-serif !important;
   padding: 0;
-  /* padding: calc(${th('gridUnit')} / 2); */
+
   svg {
     svg {
       path {
@@ -68,22 +68,20 @@ const Button = styled.button`
 /* stylelint-enable declaration-no-important */
 
 const Icon = styled.span`
-  height: calc(3.5 * ${th('gridUnit')});
-  /* margin: 0 ${th('gridUnit')} 0 0; */
+  height: ${grid(7)};
   padding: 0;
-  width: calc(3.5 * ${th('gridUnit')});
+  width: ${grid(7)};
 `
 
 const OnlyIcon = styled.span`
-  height: calc(3.5 * ${th('gridUnit')});
+  height: ${grid(7)};
   padding: 0;
-  width: calc(3.5 * ${th('gridUnit')});
+  width: ${grid(7)};
 `
 
 const Label = styled.div`
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
-  /* padding-right: 4px; */
 `
 
 const ButtonWithIcon = ({

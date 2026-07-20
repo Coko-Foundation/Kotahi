@@ -26,13 +26,13 @@ import PublishedArtifactWithLink from './PublishedArtifactWithLink'
 const ManuscriptBox = styled.div`
   border: 1px solid ${th('colorBorder')};
   border-radius: ${th('borderRadius')};
-  margin-bottom: ${grid(0.5)};
+  margin-bottom: ${grid(1)};
 `
 
 const Subheading = styled.h3`
   font-size: ${th('fontSizeHeading6')};
   font-weight: bold;
-  margin-top: ${grid(2.0)};
+  margin-top: ${grid(4)};
 `
 
 const LoginLink = styled.a`

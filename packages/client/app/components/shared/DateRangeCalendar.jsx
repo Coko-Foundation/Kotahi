@@ -15,8 +15,8 @@ const MainContainer = styled.div`
   border: 2px solid ${th('colorBorder')};
   box-shadow: ${th('boxShadow200')};
   display: flex;
-  gap: ${grid(1)};
-  padding: ${grid(2)};
+  gap: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const LeftControls = styled.div`
@@ -29,12 +29,12 @@ const PresetsContainer = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
-  gap: ${grid(0.5)};
+  gap: ${grid(1)};
 `
 
 const VerticalDivider = styled.div`
   border-left: 2px solid ${th('colorFurniture')};
-  margin: ${grid(1)};
+  margin: ${grid(2)};
   width: 0;
 `
 

@@ -11,7 +11,7 @@ const Status = styled.span`
   ${props =>
     !props.minimal &&
     css`
-      padding: ${grid(0.5)} ${grid(1)};
+      padding: ${grid(1)} ${grid(2)};
     `}
 
   ${props =>

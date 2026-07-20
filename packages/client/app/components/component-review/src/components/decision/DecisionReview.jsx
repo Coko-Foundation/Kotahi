@@ -4,14 +4,14 @@ import { useContext, useState } from 'react'
 import { isObject, find } from 'lodash'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid } from '@coko/client'
 import { JournalContext } from '../../../../xpub-journal'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 import ReviewHeading from './ReviewHeading'
 import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
 
 const Root = styled.div`
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
 `
 
 const DecisionReview = ({

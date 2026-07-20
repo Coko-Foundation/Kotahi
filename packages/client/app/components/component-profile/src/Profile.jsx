@@ -27,18 +27,18 @@ import { getLanguages } from '../../../i18n'
 const VersionText = styled.div`
   color: #757575;
   position: fixed;
-  bottom: ${grid(2)};
-  right: ${grid(3)};
+  bottom: ${grid(4)};
+  right: ${grid(6)};
 `
 
 const RolesRow = styled.div`
   display: flex;
   align-items: end;
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
 `
 
 const StyledCheckbox = styled(Checkbox)`
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 const SpecialRolesLabel = styled.div`

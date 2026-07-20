@@ -3,7 +3,7 @@ import { th, grid } from '@coko/client'
 import { Button } from '../../../pubsweet'
 
 export const Section = styled.div`
-  margin: ${grid(4)} 0;
+  margin: ${grid(8)} 0;
 
   &:first-child {
     margin-top: 0;
@@ -11,7 +11,7 @@ export const Section = styled.div`
 `
 
 export const Subsection = styled.div`
-  margin: 0 50% ${grid(4)} ${grid(4)};
+  margin: 0 50% ${grid(8)} ${grid(8)};
 `
 
 export const Legend = styled.div`
@@ -34,7 +34,7 @@ const Heading = styled.div`
   color: ${th('color.brand1.base')};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
-  margin: ${th('gridUnit')} 0;
+  margin: ${grid(2)} 0;
   text-transform: uppercase;
 `
 
@@ -63,7 +63,7 @@ const CommentMetaWrapper = styled.div`
 const UserMetaWrapper = styled.div`
   align-items: center;
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
 `
 
 const UserName = styled.span`
@@ -166,7 +166,7 @@ const Collapse = styled.div`
 const ActionWrapper = styled.div`
   align-items: center;
   display: flex;
-  gap: ${grid(4)};
+  gap: ${grid(8)};
   justify-content: flex-end;
 
   svg {

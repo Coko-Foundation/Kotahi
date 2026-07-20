@@ -22,7 +22,7 @@ const Content = styled.div`
   margin-bottom: 1rem;
   max-width: 40em;
   min-width: 20em;
-  padding: ${grid(4)};
+  padding: ${grid(8)};
   text-align: left;
 `
 
@@ -32,7 +32,7 @@ const Centered = styled.div`
 
 const LoginSelect = styled(Select)`
   display: block;
-  margin-top: ${grid(1)};
+  margin-top: ${grid(2)};
   width: 100%;
 `
 

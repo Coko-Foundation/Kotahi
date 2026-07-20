@@ -4,7 +4,7 @@ import { th, grid } from '@coko/client'
 export const UserCombo = styled.div`
   align-items: center;
   display: flex;
-  line-height: ${grid(2.5)};
+  line-height: ${grid(5)};
 `
 
 export const Primary = styled.b.attrs({
@@ -18,5 +18,5 @@ export const Secondary = styled.div`
 `
 
 export const UserInfo = styled.div`
-  margin-left: ${grid(1)};
+  margin-left: ${grid(2)};
 `

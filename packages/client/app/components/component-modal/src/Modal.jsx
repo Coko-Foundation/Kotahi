@@ -16,7 +16,7 @@ import {
 const MainHeader = styled(LooseRowSpacedAlignTop)`
   border-bottom: 1.5px solid ${th('color.gray80')};
   line-height: 22px;
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
   z-index: 10000;
 `
 
@@ -76,13 +76,13 @@ const ButtonPanel = styled.div`
   flex-direction: row;
   font-size: 15px;
   justify-content: space-between;
-  padding: ${grid(1.5)} ${grid(3)};
+  padding: ${grid(3)} ${grid(6)};
   width: 100%;
 `
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
 `
 
 const PrimaryActionButton = styled(ActionButton)`
@@ -111,7 +111,7 @@ const CheckBoxContainer = styled.div`
 const ModalContainer = styled.div`
   flex: 1 1 100%;
   overflow-y: auto;
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(5)} ${grid(6)};
   position: relative;
   width: 100%;
 `

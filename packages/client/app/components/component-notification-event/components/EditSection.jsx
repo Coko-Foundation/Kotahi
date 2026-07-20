@@ -54,17 +54,17 @@ const TwoColumnRow = styled(Row)`
   display: grid;
   gap: 8px 16px;
   grid-template-columns: repeat(2, 1fr);
-  padding-inline: ${grid(3)};
+  padding-inline: ${grid(6)};
 `
 
 const EventSettings = styled(TwoColumnRow)`
   border-bottom: 1px solid #ddd;
-  gap: ${grid(2)} ${grid(2)};
-  padding: 0 ${grid(3)} ${grid(5)};
+  gap: ${grid(4)} ${grid(4)};
+  padding: 0 ${grid(6)} ${grid(10)};
 `
 
 const EmailSettings = styled(Col)`
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: flex-start;
   max-height: 330px;
   min-height: 300px;

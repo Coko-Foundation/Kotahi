@@ -8,8 +8,8 @@ const ErrorBox = styled.div`
   border-radius: ${th('borderRadius')};
   color: #e33;
   font-size: ${th('fontSizeHeading5')};
-  margin: ${grid(3)};
-  padding: ${grid(2)} ${grid(3)};
+  margin: ${grid(6)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 const PageError = ({ errorCode }) => {

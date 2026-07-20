@@ -30,7 +30,7 @@ const ModalContainer = styled.div.attrs({
 })`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(5)} ${grid(6)};
   z-index: 10000;
 `
 
@@ -40,7 +40,7 @@ const MessageString = styled.div.attrs({
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-bottom: ${grid(2.5)};
+  margin-bottom: ${grid(5)};
   width: 100%;
 `
 

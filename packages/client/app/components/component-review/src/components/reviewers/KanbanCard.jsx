@@ -24,7 +24,7 @@ const Card = styled.div.attrs({
   flex-direction: row;
   font-size: ${th('fontSizeBaseSmall')};
   justify-content: space-between;
-  padding: ${grid(1)};
+  padding: ${grid(2)};
   position: relative;
   width: 100%;
 
@@ -40,7 +40,7 @@ const InfoGrid = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: ${grid(1)};
+  margin-left: ${grid(2)};
 `
 
 const NameDisplay = styled.div`
@@ -66,12 +66,12 @@ const EmailDisplay = styled(DateDisplay)`
       ? props.theme.colorError
       : props.theme.color.brand1.base};
   display: flex;
-  margin-top: calc(${th('gridUnit')} / 2);
+  margin-top: ${grid(1)};
 `
 
 const MailIcon = styled(Mail)`
   height: 12px;
-  margin-right: calc(${th('gridUnit')} / 2);
+  margin-right: ${grid(1)};
   width: auto;
 `
 

@@ -21,7 +21,7 @@ export const SelectedManuscriptsNumber = styled.p.attrs({
 export const ControlsContainer = styled.div`
   display: flex;
   flex: 1 1;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: flex-end;
 `
 

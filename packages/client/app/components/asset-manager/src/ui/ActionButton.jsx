@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th, darken } from '@coko/client'
+import { grid, th, darken } from '@coko/client'
 
 const Button = styled.button`
   align-items: center;
@@ -21,8 +21,8 @@ const Button = styled.button`
   display: flex;
   flex-basis: fit-content;
   justify-content: center;
-  margin-right: calc(2 * ${th('gridUnit')});
-  padding: calc(${th('gridUnit')} / 2) ${th('gridUnit')};
+  margin-right: ${grid(4)};
+  padding: ${grid(1)} ${grid(2)};
 
   &:focus {
     outline: 0;

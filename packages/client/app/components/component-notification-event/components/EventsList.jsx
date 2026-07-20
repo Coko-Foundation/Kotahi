@@ -40,7 +40,7 @@ const StyledListHeader = styled(ListHeader)`
   color: var(--color-1);
   opacity: ${p => (p.$active ? 1 : 0.8)};
   overflow: hidden;
-  padding-block: ${grid(1)};
+  padding-block: ${grid(2)};
 
   p {
     font-size: 14px;
@@ -61,7 +61,7 @@ const EventSource = styled.div`
   color: var(--color-1);
   display: flex;
   justify-content: space-between;
-  padding: 0 ${grid(0.5)};
+  padding: 0 ${grid(1)};
   width: 100%;
 `
 
@@ -101,7 +101,7 @@ const Actions = styled(ActionsContainer)`
   align-items: center;
   gap: 0;
   justify-content: center;
-  padding-inline: ${grid(1.5)};
+  padding-inline: ${grid(3)};
 
   svg {
     aspect-ratio: 1 / 1;
@@ -115,7 +115,7 @@ const StyledListItem = styled(OptionListItem)`
   background: ${p => (!p.$selected ? '#fbfbfb' : '#fff')};
   border-color: #ddd;
   /* border-left-color: ${p => (!p.$selected ? '#ccc' : 'transparent')}; */
-  padding: ${grid(1.5)} ${grid(2.5)};
+  padding: ${grid(3)} ${grid(5)};
 `
 
 const ActionButton = styled(ActionIcon)`

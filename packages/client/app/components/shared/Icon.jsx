@@ -5,7 +5,7 @@ import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 import * as icons from 'react-feather'
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid } from '@coko/client'
 
 const IconWrapper = styled.div`
   align-items: center;
@@ -18,9 +18,9 @@ const IconWrapper = styled.div`
   top: ${props => props.top || 0};
 
   svg {
-    height: calc(${props => props.size} * ${th('gridUnit')});
+    height: ${props => grid(props.size * 2)(props)};
     stroke: ${props => props.$iconColor || props.theme.colorText};
-    width: calc(${props => props.size} * ${th('gridUnit')});
+    width: ${props => grid(props.size * 2)(props)};
   }
 `
 

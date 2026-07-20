@@ -23,11 +23,11 @@ const InvalidWarning = styled.div`
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
   font-weight: 600;
-  margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
+  margin-bottom: ${props => props.space && grid(2)(props)};
 `
 
 export const Section = styled.div`
-  margin: ${grid(4)} 0;
+  margin: ${grid(8)} 0;
 
   &:first-child {
     margin-top: 0;

@@ -46,7 +46,7 @@ const StyledContainer = styled.div`
 const StyledSectionContent = styled(SectionContent)`
   margin: 0;
   overflow-y: auto;
-  padding: ${grid(3.75)} ${grid(3.75)} 0 ${grid(3.75)};
+  padding: ${grid(7.5)} ${grid(7.5)} 0 ${grid(7.5)};
   width: 100%;
 `
 
@@ -102,7 +102,7 @@ const EmailsTabWrapper = styled(StyledSectionContent)`
 
   /* stylelint-disable-next-line selector-class-pattern */
   .ProseMirror {
-    padding: ${grid(1)} ${grid(2)};
+    padding: ${grid(2)} ${grid(4)};
 
     span.handlebars {
       background-color: ${getFormBadgeBg('common')};
@@ -147,7 +147,7 @@ const StyledWrapper = styled.div`
     p.$showGap &&
     css`
       display: grid;
-      gap: ${grid(2)};
+      gap: ${grid(4)};
     `}
 
   /* stylelint-disable-next-line selector-id-pattern */

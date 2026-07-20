@@ -6,7 +6,7 @@ export const Container = styled.div`
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: scroll;
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 export const Placeholder = styled.div`
@@ -19,8 +19,8 @@ export const Placeholder = styled.div`
 
 export const VisualAbstract = styled.img`
   display: block;
-  max-height: ${grid(40)};
-  max-width: ${grid(40)};
+  max-height: ${grid(80)};
+  max-width: ${grid(80)};
 `
 
 export const Abstract = styled.div``

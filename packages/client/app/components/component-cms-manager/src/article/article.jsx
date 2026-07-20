@@ -26,7 +26,7 @@ import ManuscriptMetadata from './ManuscriptMetadata'
 
 const Tabs = styled.div`
   display: flex;
-  margin-top: ${grid(1)};
+  margin-top: ${grid(2)};
 `
 
 const TabRow = styled(FlexRow)`
@@ -34,7 +34,7 @@ const TabRow = styled(FlexRow)`
 `
 
 const PublishButton = styled(FormActionButton)`
-  margin-bottom: ${grid(1)};
+  margin-bottom: ${grid(2)};
   margin-left: auto;
   margin-right: 0;
 `

@@ -2,7 +2,7 @@
 /* stylelint-disable declaration-no-important, string-quotes */
 
 import styled, { css } from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { MEDIA_BREAK } from '../../../layout'
 import { zIndex } from '../../../../globals'
 
@@ -129,7 +129,7 @@ export const ChatInputWrapper = styled.div`
   background-color: ${th('colorBackground')};
   display: flex;
   flex-direction: row;
-  margin-bottom: ${th('gridUnit')};
+  margin-bottom: ${grid(2)};
   padding: 8px 4px 0;
   width: 100%;
 
@@ -154,7 +154,7 @@ export const Form = styled.form`
 
   & > button {
     /* Make height of button consistent with the Input Box */
-    padding: 10px ${th('gridUnit')};
+    padding: 10px ${grid(2)};
   }
 `
 

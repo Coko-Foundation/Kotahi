@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import styled, { useTheme } from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { indexOf } from 'lodash'
 
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
@@ -54,7 +54,7 @@ const TableBodyEmpty = styled.div`
   font-size: ${th('fontSizeBase')};
   justify-content: center;
   line-height: ${th('lineHeightBase')};
-  margin-top: calc(2 * ${th('gridUnit')});
+  margin-top: ${grid(4)};
   width: 100%;
 `
 

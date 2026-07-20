@@ -17,7 +17,7 @@ const flatEdges = css`
       0 100%
     );
 
-    padding-left: ${grid(3)};
+    padding-left: ${grid(6)};
 
     border-top-left-radius: ${th('borderRadius')};
     border-bottom-left-radius: ${th('borderRadius')};
@@ -26,7 +26,7 @@ const flatEdges = css`
   .ant-breadcrumb-item:last-child .ant-breadcrumb-link {
     clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, var(--depth) 50%);
 
-    padding-right: ${grid(3)};
+    padding-right: ${grid(6)};
 
     border-top-right-radius: ${th('borderRadius')};
     border-bottom-right-radius: ${th('borderRadius')};
@@ -41,13 +41,13 @@ const StyledBreadcrumb = styled(AntBreadcrumb)`
   .ant-breadcrumb-link {
     background-color: ${th('colorPrimary')};
     color: ${th('colorTextReverse')};
-    padding: ${grid(1.5)} ${grid(4)};
+    padding: ${grid(3)} ${grid(8)};
     font-weight: 500;
     cursor: pointer;
 
-    margin-left: ${grid(-2)};
+    margin-left: ${grid(-4)};
 
-    --depth: ${grid(2.5)};
+    --depth: ${grid(5)};
 
     clip-path: polygon(
       0 0,

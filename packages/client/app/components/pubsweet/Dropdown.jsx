@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { override, th } from '@coko/client'
+import { grid, override, th } from '@coko/client'
 
 import UIButton from './Button'
 import UIIcon from './Icon'
@@ -56,7 +56,7 @@ const DropdownMenu = styled.ul`
   font-family: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
   list-style-type: none;
-  margin: calc(${th('gridUnit')} / 4) 0 0 0;
+  margin: ${grid(0.5)} 0 0 0;
   padding: 0;
   position: absolute;
   top: ${props => (props.direction === 'down' ? '100%' : '-')};
@@ -70,7 +70,7 @@ const Item = styled.li`
   cursor: pointer;
   font-family: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
-  padding: ${th('gridUnit')};
+  padding: ${grid(2)};
   white-space: normal;
   overflow-wrap: break-word;
 
