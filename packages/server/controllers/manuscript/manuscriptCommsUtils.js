@@ -60,7 +60,13 @@ const archiveOldManuscripts = async groupId => {
   const activeConfig = await Config.getCached(groupId)
 
   const { archivePeriodDays } = activeConfig.formData.manuscript
-  if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
+  if (
+    typeof archivePeriodDays !== 'number' ||
+    Number.isNaN(archivePeriodDays) ||
+    archivePeriodDays < 1
+  ) {
+    return
+  }
 
   const cutoffDate = new Date(
     new Date().valueOf() - archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
