@@ -4,8 +4,6 @@
 
 import { useState, useContext, useRef, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from 'react-i18next'
 import {
   useQuery,
@@ -16,6 +14,8 @@ import {
 } from '@apollo/client/react'
 import fnv from 'fnv-plus'
 import { saveAs } from 'file-saver'
+import { useNotification } from '@coko/client'
+
 import { ConfigContext } from '../../config/src'
 import {
   GET_MANUSCRIPTS_AND_FORM,
@@ -46,6 +46,7 @@ const ManuscriptsPage = () => {
   const location = useLocation()
   const { t } = useTranslation()
   const currentUser = useCurrentUser()
+  const notify = useNotification()
 
   const config = useContext(ConfigContext)
   const { urlFrag } = config
@@ -94,20 +95,14 @@ const ManuscriptsPage = () => {
   )
 
   useSubscription(IMPORTED_MANUSCRIPTS, {
-    onSubscriptionData: data => {
-      const {
-        subscriptionData: {
-          data: { manuscriptsImportStatus },
-        },
-      } = data
-
+    onData: ({ data }) => {
       setIsImporting(false)
       applyQueryParams({ [URI_PAGENUM_PARAM]: 1 })
+      queryObject.refetch()
 
-      toast.success(
-        manuscriptsImportStatus && 'Manuscripts successfully imported',
-        { hideProgressBar: true },
-      )
+      if (data.data.manuscriptsImportStatus) {
+        notify.success({ title: 'Manuscripts successfully imported' })
+      }
     },
   })
 

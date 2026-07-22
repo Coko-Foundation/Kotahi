@@ -17,6 +17,7 @@ const semanticScholarServers = require('./semanitc-scholar-servers.json')
 const { getUrlByDoi } = require('../../utils/crossrefCommsUtils')
 
 const SAVE_CHUNK_SIZE = 50
+const TIMEOUT_MS = 30000
 
 const getData = async (groupId, ctx) => {
   const activeConfig = await Config.getCached(groupId)
@@ -78,6 +79,7 @@ const getData = async (groupId, ctx) => {
         headers: {
           'Content-Type': 'application/json',
         },
+        timeout: TIMEOUT_MS,
       },
     )
 
