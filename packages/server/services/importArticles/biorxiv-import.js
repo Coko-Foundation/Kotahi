@@ -21,7 +21,6 @@ const {
 const { getSubmissionForm } = require('../../controllers/review.controllers')
 
 const TIMEOUT_MS = 30000
-const CURSOR_LIMIT = 200 // Backstop in case the API never signals the end of results
 
 const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
@@ -61,8 +60,6 @@ const getData = async (groupId, ctx) => {
 
   /* eslint-disable-next-line default-param-last */
   const requests = async (cursor = 0, minDate, results = []) => {
-    if (cursor >= CURSOR_LIMIT) return results
-
     const { data } = await axios.get(
       `https://api.biorxiv.org/covid19/${cursor}`,
       { timeout: TIMEOUT_MS },
