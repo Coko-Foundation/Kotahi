@@ -210,12 +210,12 @@ export const makeTheme = (
     lineHeightBase: '1.5',
     lineHeightBaseSmall: '1.5',
     lineHeightBaseSmaller: '1.4',
-    lineHeightHeading6: '1.35',
-    lineHeightHeading5: '1.3',
-    lineHeightHeading4: '1.25',
-    lineHeightHeading3: '1.2',
-    lineHeightHeading2: '1.15',
     lineHeightHeading1: '1.1',
+    lineHeightHeading2: '1.15',
+    lineHeightHeading3: '1.2',
+    lineHeightHeading4: '1.25',
+    lineHeightHeading5: '1.3',
+    lineHeightHeading6: '1.35',
 
     /* Spacing */
     gridUnit: '4px',
