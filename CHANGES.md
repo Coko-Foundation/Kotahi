@@ -21,7 +21,8 @@ Kotahi now supports the COAR Notify protocol, letting your Kotahi instance excha
 This unlocks the "Publish, Review, Curate" model directly in Kotahi — authors can request a peer review or overlay-journal publication straight from a deposited preprint, and datasets can be linked to articles across repositories, using an open, interoperable standard already adopted by bioRxiv, HAL, PREreview, Peer Community In, and Episcience.
 
 ## How to use it:
-All the steps you need to enable COAR Notify in your Kotahi group are here: <ADD PDF>
+All the steps you need to enable COAR Notify in your Kotahi group are here: 
+[COAR Notify Onboarding Guide.pdf](https://github.com/user-attachments/files/29693997/COAR.Notify.Onboarding.Guide.pdf)
 
 ## Want to learn more about the protocol itself?
 COAR Notify is developed and maintained by COAR (Confederation of Open Access Repositories) — learn more directly from them: https://coar-repositories.org/tools-and-resources/notify/

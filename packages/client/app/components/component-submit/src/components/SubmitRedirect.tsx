@@ -9,6 +9,7 @@ const SubmitRedirect = (): ReactNode => {
   const { groupName, version } = useParams()
   const config = useContext(ConfigContext)
 
+  // @ts-ignore
   const isPreprint = ['preprint1', 'preprint2'].includes(config.instanceName)
   const onEvaluation = location.pathname.endsWith('/evaluation')
 

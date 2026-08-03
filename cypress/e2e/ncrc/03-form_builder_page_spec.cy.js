@@ -1,4 +1,3 @@
-// /* eslint-disable jest/expect-expect,no-plusplus,jest/valid-expect-in-promise */
 // // import { manuscripts, submissionForm } from '../../support/routes3'
 // import { FormsPage } from '../../page-object/forms-page'
 // // import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -7,7 +6,6 @@
 // import { DashboardPage } from '../../page-object/dashboard-page'
 // import { dashboard } from '../../support/routes'
 
-// // eslint-disable-next-line jest/no-disabled-tests
 // describe('form builder tests', () => {
 //   before(() => {
 //     const restoreUrl = Cypress.config('restoreUrl')
@@ -58,7 +56,7 @@
 //     })
 
 //     it('check form field type & assert field is mandatory', () => {
-//       // eslint-disable-next-line jest/valid-expect-in-promise
+
 //       cy.fixture('form_option').then(data => {
 //         // FormsPage.clickFormOptionWithText(data.preprint2.articleDoi)
 //         FormsPage.clickFormOptionWithText(data.preprint2.articleUri)
@@ -225,7 +223,6 @@
 //     })
 
 //     it('check study design dropdown options', () => {
-//       // eslint-disable-next-line jest/valid-expect-in-promise
 //       cy.fixture('form_option').then(data => {
 //         const dataArray = [
 //           data.preprint2.studyDesignTypes.caseSeries,
@@ -319,7 +316,6 @@
 
 //     it('check compendium feature dropdown options', () => {
 //       SubmissionFormPage.clickElementFromFormOptionList(18)
-//       // eslint-disable-next-line jest/valid-expect-in-promise
 //       cy.fixture('form_option').then(data => {
 //         SubmissionFormPage.getDropdownOption(0).should(
 //           'contain',
@@ -333,7 +329,6 @@
 //     })
 
 //     it('check label dropdown options', () => {
-//       // eslint-disable-next-line jest/valid-expect-in-promise
 //       cy.fixture('form_option').then(data => {
 //         const dataArray = [
 //           data.common.labelTypes.readyToEvaluate,
@@ -354,7 +349,6 @@
 //     })
 
 //     it('check topic checkbox options', () => {
-//       // eslint-disable-next-line jest/valid-expect-in-promise
 //       cy.fixture('form_option').then(data => {
 //         const valueArray = [
 //           data.preprint2.topicTypes.ecologyAndSpillover,

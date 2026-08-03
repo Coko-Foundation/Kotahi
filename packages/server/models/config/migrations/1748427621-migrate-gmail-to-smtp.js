@@ -10,7 +10,7 @@ exports.up = async () => {
         const form = config.formData
 
         const { gmailSenderName, gmailAuthEmail, gmailAuthPassword } =
-          form.notification
+          form.notification || {}
 
         const hasData = gmailSenderName || gmailAuthEmail || gmailAuthPassword
 
@@ -22,9 +22,11 @@ exports.up = async () => {
           pass: gmailAuthPassword,
         }
 
-        delete form.notification.gmailSenderName
-        delete form.notification.gmailAuthEmail
-        delete form.notification.gmailAuthPassword
+        if (form.notification) {
+          delete form.notification.gmailSenderName
+          delete form.notification.gmailAuthEmail
+          delete form.notification.gmailAuthPassword
+        }
 
         await Config.patchAndFetchById(config.id, { formData: form }, { trx })
       }),
@@ -39,7 +41,7 @@ exports.down = async () => {
     await Promise.all(
       configs.map(async config => {
         const form = config.formData
-        const { from, user, pass } = form.emailNotification
+        const { from, user, pass } = form.emailNotification || {}
 
         form.notification = {
           ...form.notification,

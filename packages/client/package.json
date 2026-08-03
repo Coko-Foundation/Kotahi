@@ -11,6 +11,9 @@
   "engines": {
     "node": ">=24.0.0"
   },
+  "scripts": {
+    "typecheck": "node_modules/.bin/tsc --noEmit -p tsconfig.json"
+  },
   "resolutions": {
     "prosemirror-inputrules": "1.2.0",
     "prosemirror-model": "1.19.0",

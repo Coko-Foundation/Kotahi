@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 const { useTransaction } = require('@coko/server')
-const fs = require('fs-extra').promises
+const fs = require('fs').promises
 
 const ArticleTemplate = require('../models/articleTemplate/articleTemplate.model')
 

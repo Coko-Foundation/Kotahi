@@ -1,9 +1,22 @@
 const path = require('path')
-const fs = require('fs-extra').promises
+const fs = require('fs').promises
 const { logger } = require('@coko/server')
+
+let fsInputProvidersRegistered = false
 
 async function validateSchema(xml, xsdSchema) {
   const { XmlDocument, XsdValidator } = await import('libxml2-wasm')
+
+  // libxml2-wasm runs in a WASM sandbox with no filesystem access by default,
+  // so <xsd:import>/<xsd:include> schemaLocation references can't be resolved
+  // against the real disk unless this is registered.
+  if (!fsInputProvidersRegistered) {
+    const { xmlRegisterFsInputProviders } =
+      await import('libxml2-wasm/lib/nodejs.mjs')
+
+    xmlRegisterFsInputProviders()
+    fsInputProvidersRegistered = true
+  }
 
   const xmlDoc = XmlDocument.fromString(xml.toString())
   const xsdDoc = XmlDocument.fromString(xsdSchema.toString())
