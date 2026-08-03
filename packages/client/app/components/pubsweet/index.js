@@ -1,4 +1,3 @@
-import Accordion from './Accordion'
 import Action from './Action'
 import Attachment from './Attachment'
 import Avatar from './Avatar'
@@ -17,7 +16,6 @@ import TextField from './TextField'
 import ValidatedFieldFormik from './ValidatedFieldFormik'
 
 export {
-  Accordion,
   Action,
   Attachment,
   Avatar,

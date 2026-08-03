@@ -118,12 +118,14 @@ const LinkSection = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  min-height: 0;
   font-family: ${th('fontInterface')};
   line-height: ${th('lineHeightBase')};
 `
 
 const LinkItems = styled.ul`
   flex-grow: 1;
+  overflow: hidden auto;
   list-style: none;
   padding: 0;
 `

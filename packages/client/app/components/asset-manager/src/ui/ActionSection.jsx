@@ -22,7 +22,6 @@ const Wrapper = styled.div`
 const WarningAlert = styled.div`
   background: ${darken('colorError', 30)};
   color: ${th('colorTextReverse')};
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   width: 100%;

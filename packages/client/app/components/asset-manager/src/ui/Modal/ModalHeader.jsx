@@ -5,7 +5,6 @@ import styled from 'styled-components'
 import { th } from '@coko/client'
 
 const Header = styled.div`
-  font-family: ${th('fontHeading')};
   text-align: center;
   width: 100%;
 `

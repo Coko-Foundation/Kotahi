@@ -14,7 +14,6 @@ import {
   convertTimestampToDateWithTimeString,
 } from '../../../../shared/dateUtils'
 import { CommsErrorBanner } from '../../../shared'
-import VideoChat from '../VideoChat'
 import EllipsisDropdown from '../EllipsisDropdown'
 
 import ChatPostDropdown from './ChatPostDropdown'
@@ -42,7 +41,6 @@ import {
 } from './style'
 
 const Messages = ({
-  chatRoomId,
   channelId,
   fetchMoreData,
   queryData,
@@ -51,7 +49,6 @@ const Messages = ({
   updateChannelViewed,
   channelNotificationOption,
   toggleChannelMuteStatus,
-  manuscriptId = null,
   currentUser,
 }) => {
   const { loading, error, data } = queryData
@@ -188,8 +185,6 @@ const Messages = ({
       style={{ paddingBottom: unreadMessagesCount !== 0 ? '20px' : '8px' }}
       tabIndex={-1}
     >
-      {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
-      {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
       <Ellipsis className="toggle-ellipsis-menu" onClick={toggleDropdown} />
       {openDropdown && (
         <EllipsisDropdown

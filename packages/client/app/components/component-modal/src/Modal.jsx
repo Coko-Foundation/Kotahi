@@ -20,19 +20,11 @@ const MainHeader = styled(LooseRowSpacedAlignTop)`
   z-index: 10000;
 `
 
-const RowHeaderContainer = styled.div`
-  align-items: center;
-  display: flex;
-  font-family: ${th('fontHeading')};
-  gap: 16px;
-`
-
 const StackedHeaderContainer = styled.div`
   align-items: flex-start;
   column-gap: 180px;
   display: flex;
   flex-direction: column;
-  font-family: ${th('fontHeading')};
   font-weight: 600;
 `
 
@@ -145,18 +137,6 @@ export const StackedHeader = ({
       <Title style={textStyles}>{title}</Title>
       {subtitle && <Subtitle style={textStyles}>{subtitle}</Subtitle>}
     </StackedHeaderContainer>
-  )
-}
-
-export const RowHeader = ({
-  title,
-  subtitle, // optional
-}) => {
-  return (
-    <RowHeaderContainer>
-      <Title>{title}</Title>
-      {subtitle && <Subtitle>{subtitle}</Subtitle>}
-    </RowHeaderContainer>
   )
 }
 

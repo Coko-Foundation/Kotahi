@@ -129,7 +129,6 @@ const Manuscripts = props => {
     sortName,
     page,
     urlFrag,
-    chatRoomId,
     configuredColumnNames,
     shouldAllowBulkImport,
     archived,
@@ -491,13 +490,12 @@ const Manuscripts = props => {
             </div>
           </ManuscriptsPane>
 
-          {/* Group Manager Discussion, Video Chat, Hide Chat, Chat component */}
+          {/* Group Manager Discussion, Hide Chat, Chat component */}
           {isAdminChatOpen && !hideManuscriptsChat && (
             <MessageContainer
               channelId={groupManagerDiscussionChannel?.id}
               channels={channels}
               chatProps={chatProps}
-              chatRoomId={chatRoomId}
               currentUser={currentUser}
               hideChat={hideChat}
             />

@@ -50,7 +50,6 @@ export const FloatingUnreadLabelClose = styled.span`
 
 const Chat = ({
   channelId,
-  chatRoomId,
   currentUser,
   searchUsers,
   sendChannelMessages,
@@ -59,7 +58,6 @@ const Chat = ({
   unreadMessagesCount,
   firstUnreadMessageId,
   updateChannelViewed,
-  manuscriptId = null,
   reportUserIsActiveMutation,
   notificationOptionData,
   updateNotificationOptionData,
@@ -123,11 +121,9 @@ const Chat = ({
       <Messages
         channelId={channelId}
         channelNotificationOption={channelNotificationOption}
-        chatRoomId={chatRoomId}
         currentUser={currentUser}
         fetchMoreData={fetchMoreData}
         firstUnreadMessageId={firstUnreadMessageId}
-        manuscriptId={manuscriptId}
         queryData={queryData}
         toggleChannelMuteStatus={toggleChannelMuteStatus}
         unreadMessagesCount={unreadMessagesCount}

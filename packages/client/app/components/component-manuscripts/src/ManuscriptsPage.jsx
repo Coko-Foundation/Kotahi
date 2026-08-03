@@ -14,7 +14,6 @@ import {
   useApolloClient,
   useLazyQuery,
 } from '@apollo/client/react'
-import fnv from 'fnv-plus'
 import { saveAs } from 'file-saver'
 import { ConfigContext } from '../../config/src'
 import {
@@ -49,7 +48,6 @@ const ManuscriptsPage = () => {
 
   const config = useContext(ConfigContext)
   const { urlFrag } = config
-  const chatRoomId = fnv.hash(config.clientUrl).hex()
 
   const [doUpdateManuscript] = useMutation(UPDATE_MANUSCRIPT)
 
@@ -296,7 +294,6 @@ const ManuscriptsPage = () => {
       channels={channels}
       chatExpand={chatExpand}
       chatProps={chatProps}
-      chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
