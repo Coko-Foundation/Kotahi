@@ -113,7 +113,10 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           id
           profilePicture
         }
-        searchSnippet
+        searchSnippets {
+          field
+          html
+        }
       }
     }
 
@@ -1114,7 +1117,10 @@ export const DASHBOARD = gql`
             parentId
           }
           ${manuscriptFragment}
-          searchSnippet
+          searchSnippets {
+            field
+            html
+          }
         }
       }
     ${formForPurposeAndCategoryFragment}

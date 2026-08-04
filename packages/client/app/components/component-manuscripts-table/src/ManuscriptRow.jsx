@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 
 import PropTypes from 'prop-types'
-import { sanitize } from 'isomorphic-dompurify'
 import 'rc-tooltip/assets/bootstrap_white.css'
 
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +11,16 @@ import {
   ManuscriptsRow,
   SnippetRow,
 } from './style'
+
+// ts_headline only ever wraps matches in <b>...</b>; every snippet source has any other HTML
+// stripped before ts_headline runs (see stripHtmlTags in manuscriptUtils.js), so this is safe to
+// parse and render as real elements instead of dangerouslySetInnerHTML.
+const renderSnippetHtml = html =>
+  html
+    .split(/<\/?b>/)
+    .map((part, index) =>
+      index % 2 === 1 ? <mark key={index}>{part}</mark> : part,
+    )
 
 const ManuscriptRow = ({
   manuscript,
@@ -45,12 +54,14 @@ const ManuscriptRow = ({
     )
   })
 
-  const searchSnippet = (
-    <SnippetRow
-      dangerouslySetInnerHTML={{
-        __html: `... ${manuscript.searchSnippet} ...`,
-      }}
-    />
+  const searchSnippets = manuscript.searchSnippets?.length > 0 && (
+    <>
+      {manuscript.searchSnippets.map(({ field, html }) => (
+        <SnippetRow key={field}>
+          <strong>{field}:</strong> <span>{renderSnippetHtml(html)}</span>
+        </SnippetRow>
+      ))}
+    </>
   )
 
   // Whole Row is clickable
@@ -68,7 +79,7 @@ const ManuscriptRow = ({
         >
           {rowCells}
         </ClickableManuscriptsRow>
-        {manuscript.searchSnippet && searchSnippet}
+        {searchSnippets}
       </>
     )
   }
@@ -76,13 +87,7 @@ const ManuscriptRow = ({
   return (
     <>
       <ManuscriptsRow $archived={archived}>{rowCells}</ManuscriptsRow>
-      {manuscript.searchSnippet && (
-        <SnippetRow
-          dangerouslySetInnerHTML={{
-            __html: `... ${sanitize(manuscript.searchSnippet)} ...`,
-          }}
-        />
-      )}
+      {searchSnippets}
     </>
   )
 }
