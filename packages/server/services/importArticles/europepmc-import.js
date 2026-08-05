@@ -7,6 +7,8 @@ const Manuscript = require('../../models/manuscript/manuscript.model')
 
 const { getSubmissionForm } = require('../../controllers/review.controllers')
 
+const TIMEOUT_MS = 30000
+
 // Not sure if this code is used anymore could not find any relevant import triggers for europepmc?
 const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
@@ -48,7 +50,9 @@ const getData = async (groupId, ctx) => {
 
   /* eslint-disable-next-line default-param-last */
   const requests = async (cursor = '', minDate, results = []) => {
-    const { data } = await axios.get(`${requestUrl}&cursorMark=${cursor}`)
+    const { data } = await axios.get(`${requestUrl}&cursorMark=${cursor}`, {
+      timeout: TIMEOUT_MS,
+    })
 
     const briefInfoAboutArticles = data.resultList.result
 
@@ -112,6 +116,7 @@ const getData = async (groupId, ctx) => {
       return axios
         .get(
           `https://api.biorxiv.org/details/${server.toLowerCase()}/${doi}/na/json`,
+          { timeout: TIMEOUT_MS },
         )
         .then(response => response.data.collection[0])
     },

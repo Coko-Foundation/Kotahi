@@ -5,8 +5,6 @@ import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Trans, useTranslation } from 'react-i18next'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 import { grid } from '@coko/client'
 import Page from '../../../ui/shared/Page'
@@ -59,6 +57,7 @@ const FlexRow = styled.div`
   display: flex;
   gap: ${grid(2)};
   justify-content: flex-end;
+  margin-bottom: ${grid(2)};
 `
 
 const FlexRowWithSmallGapAbove = styled(FlexRow)`
@@ -415,17 +414,6 @@ const Manuscripts = props => {
       )}
     >
       <OuterContainer>
-        <ToastContainer
-          autoClose={5000}
-          closeOnClick
-          draggable
-          hideProgressBar={false}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          position="top-center"
-          rtl={false}
-        />
         <ManuscriptsColumns>
           <ManuscriptsPane>
             <FlexRow>{topRightControls}</FlexRow>

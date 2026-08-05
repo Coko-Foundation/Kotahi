@@ -20,6 +20,8 @@ const {
 
 const { getSubmissionForm } = require('../../controllers/review.controllers')
 
+const TIMEOUT_MS = 30000
+
 const getData = async (groupId, ctx) => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
@@ -60,7 +62,10 @@ const getData = async (groupId, ctx) => {
   const requests = async (cursor = 0, minDate, results = []) => {
     const { data } = await axios.get(
       `https://api.biorxiv.org/covid19/${cursor}`,
+      { timeout: TIMEOUT_MS },
     )
+
+    if (!data.collection || !data.collection.length) return results
 
     const isDatesOutdated = data.collection.some(
       ({ rel_date }) => +new Date(rel_date) < minDate,

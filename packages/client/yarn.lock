@@ -3622,13 +3622,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1":
-  version: 1.2.1
-  resolution: "clsx@npm:1.2.1"
-  checksum: 10c0/34dead8bee24f5e96f6e7937d711978380647e936a22e76380290e35486afd8634966ce300fc4b74a32f3762c7d4c0303f442c3e259f4ce02374eb0c82834f27
-  languageName: node
-  linkType: hard
-
 "clsx@npm:^2.1.1":
   version: 2.1.1
   resolution: "clsx@npm:2.1.1"
@@ -5434,7 +5427,6 @@ __metadata:
     react-router: "npm:^7.14.2"
     react-router-dom: "npm:^7.14.2"
     react-select: "npm:^4.2.1"
-    react-toastify: "npm:^7.0.4"
     react-uid: "npm:^2.3.3"
     reactjs-popup: "npm:^2.0.5"
     recharts: "npm:^3.8.1"
@@ -7230,18 +7222,6 @@ __metadata:
     react: ^16.8.0 || ^17.0.0
     react-dom: ^16.8.0 || ^17.0.0
   checksum: 10c0/f7744995ef8fa12613590f2bd4dbe98e69f4b4cb6e03f0ec9552f919303204870bbbe1ce55a338d5cacb114f73fe8694bdbee3a55e98bc3be7d04889d3461cf7
-  languageName: node
-  linkType: hard
-
-"react-toastify@npm:^7.0.4":
-  version: 7.0.4
-  resolution: "react-toastify@npm:7.0.4"
-  dependencies:
-    clsx: "npm:^1.1.1"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10c0/2aa396f2aefe4c30498eca3e4bbb560c1b6503065808c98003711cc6273bc1328160cb2a2e844e05ff29ee8d52ad9094d0ebd6ea233d32e38f8516c859c009d6
   languageName: node
   linkType: hard
 

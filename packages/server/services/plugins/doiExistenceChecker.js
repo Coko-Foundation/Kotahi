@@ -41,6 +41,7 @@ class DoiExistenceChecker {
         )
         logger.error(err)
         this.doiSet = null
+        return false
       }
     }
 
