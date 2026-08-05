@@ -126,7 +126,7 @@ const getBroker = (groupId, workerName) => {
       return (
         (await doiChecker.doiExists(doi, options)) ||
         (includeArchivedManuscripts &&
-          archivedDoiChecker.doiExists(doi, options))
+          (await archivedDoiChecker.doiExists(doi, options)))
       )
     },
     groupId,
