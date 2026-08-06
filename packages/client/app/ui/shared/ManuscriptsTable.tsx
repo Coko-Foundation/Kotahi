@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 
 import Table from './Table'
 import Badge from './Badge'
+import Avatar from './Avatar'
 import { Close } from '../base/Icons'
 import ManuscriptStatus from './ManuscriptStatus'
 import ReviewerStatus from './ReviewerStatus'
@@ -30,8 +31,6 @@ export type ManuscriptsTableColumn = {
    *
    * Candidate future dataTypes (not yet implemented), identified by comparing against the
    * legacy component-manuscripts-table cell renderers:
-   * - 'person': avatar + name + secondary line (e.g. email/ORCID), for user-object columns
-   *   like submitter/editor. See Submitter.jsx.
    * - 'flag': boolean -> icon + tooltip, renders nothing when false. See OverdueTooltip.jsx.
    * - 'valueList': an array of independently-colored/rich-text values in one cell (richer
    *   version of 'options' -- handles a list, not a single lookup). See DefaultField.jsx.
@@ -39,7 +38,13 @@ export type ManuscriptsTableColumn = {
    *   hyperlinked. See TitleWithAbstractAsTooltip.jsx.
    * - 'chart'/'donut': a small chart summarizing categorical counts. See ReviewStatusDonut.jsx.
    */
-  dataType?: 'date' | 'status' | 'reviewerStatus' | 'badge' | 'options'
+  dataType?:
+    | 'date'
+    | 'status'
+    | 'reviewerStatus'
+    | 'badge'
+    | 'options'
+    | 'person'
   options?: ManuscriptsTableColumnOption[]
   /** Applies to 'options', 'status', 'reviewerStatus' and 'date' datatypes */
   filterable?: boolean
@@ -130,6 +135,38 @@ const renderOptions = (
   }
 
   return option?.label ?? value
+}
+
+const PersonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+`
+
+const PersonInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const PersonIdentifier = styled.span`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${th('fontSizeBaseSmaller')};
+`
+
+const renderPerson = (value: any): ReactNode => {
+  if (!value) return null
+
+  return (
+    <PersonWrapper>
+      <Avatar size={10} src={value.profilePicture} />
+      <PersonInfo>
+        <span>{value.displayName}</span>
+        {value.orcid && (
+          <PersonIdentifier>{`ORCID: ${value.orcid}`}</PersonIdentifier>
+        )}
+      </PersonInfo>
+    </PersonWrapper>
+  )
 }
 
 const { RangePicker } = DatePicker
@@ -248,6 +285,9 @@ const resolveColumn = (
         break
       case 'badge':
         resolved = { ...column, render: renderBadge }
+        break
+      case 'person':
+        resolved = { ...column, render: renderPerson }
         break
       case 'options':
         resolved = {

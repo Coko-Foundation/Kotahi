@@ -12,6 +12,7 @@ import {
   reviewerStatusTranslationKeys,
 } from '../../app/ui/shared/_constants'
 import Link from '../../app/ui/shared/Link'
+import avatarImg from '../assets/avatar_sample.png'
 
 const manuscriptStatusOptions = MANUSCRIPT_STATUSES.map(status => ({
   value: status,
@@ -432,6 +433,43 @@ export const BuiltInBadgeRendering = meta.story({
     page: 1,
     pageSize: 10,
     totalCount: 1,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+})
+
+export const BuiltInPersonRendering = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Submitter',
+        dataIndex: 'submitter',
+        key: 'submitter',
+        dataType: 'person',
+      },
+    ],
+    dataSource: [
+      {
+        ...baseRow,
+        submitter: {
+          displayName: 'Jane Doe',
+          profilePicture: avatarImg,
+          orcid: '0000-0001-2345-6789',
+        },
+      },
+      {
+        key: '2',
+        manuscriptNumber: 102,
+        title: 'A dataset of pollinator visitation rates',
+        submitter: {
+          displayName: 'John Smith',
+        },
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    totalCount: 2,
     onPageChange: () => {},
     onSearch: () => {},
   },
