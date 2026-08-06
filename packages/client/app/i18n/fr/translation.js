@@ -192,6 +192,7 @@ const fr = {
       Production: 'Production',
       'No results found': 'Aucun résultat trouvé',
       pagination: `Affichage de <strong>{{firstResult}}</strong> à <strong>{{lastResult}}</strong> sur <strong>{{totalCount}}</strong> résultats`,
+      removeFilter: 'Supprimer le filtre',
       reviewAccept: 'Accepter',
       reviewReject: 'Rejeter',
       reviewDo: 'Faire la révision',

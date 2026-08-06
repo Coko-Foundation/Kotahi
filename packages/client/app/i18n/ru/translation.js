@@ -192,6 +192,7 @@ const ru = {
       Production: 'Производство',
       'No results found': 'Результаты не найдены',
       pagination: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результата`,
+      removeFilter: 'Удалить фильтр',
       pagination_few: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       pagination_many: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       reviewAccept: 'Принять',

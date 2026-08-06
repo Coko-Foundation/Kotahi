@@ -2,13 +2,10 @@
 
 import { useMemo, useContext } from 'react'
 import { useParams } from 'react-router-dom'
-import { useTranslation, Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import styled from 'styled-components'
 import get from 'lodash/get'
-import {
-  grid,
-  // DateParser
-} from '@coko/client'
+import { grid } from '@coko/client'
 
 import { authorColumns } from '../../../../../../config/journal/manuscripts'
 import {
@@ -16,7 +13,7 @@ import {
   URI_PAGENUM_PARAM,
   URI_SEARCH_PARAM,
 } from '../../../../../shared/urlParamUtils'
-import ManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
+import LegacyManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import { ConfigContext } from '../../../../config/src'
 import {
@@ -26,11 +23,8 @@ import {
   SectionHeader,
   Title,
 } from '../../../../shared'
-import Table from '../../../../../ui/shared/Table'
+import ManuscriptsTable from '../../../../../ui/shared/ManuscriptsTable'
 import Link from '../../../../../ui/shared/Link'
-import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
-import ManuscriptStatus from '../../../../../ui/shared/ManuscriptStatus'
-import Badge from '../../../../../ui/shared/Badge'
 
 const centeredColumns = [
   'shortId',
@@ -216,54 +210,22 @@ const SubmissionsTable = props => {
         ['created', 'updated'].includes(column.key) ||
         fieldDefinitions[column.key]?.component === 'DatePicker'
       ) {
-        return {
-          ...column,
-          render: value => {
-            // return <DateParser humanizeThreshold={7} timestamp={value} />
-            if (!value) return null
-            return convertTimestampToRelativeDateString(value)
-          },
-        }
+        return { ...column, dataType: 'date' }
       }
 
       if (column.key === 'status') {
-        return {
-          ...column,
-          render: value => {
-            return <ManuscriptStatus small status={value} />
-          },
-        }
+        return { ...column, dataType: 'status' }
       }
 
       if (column.key === 'submission.adaStatus') {
-        return {
-          ...column,
-          render: value => {
-            return <Badge small>{value}</Badge>
-          },
-        }
+        return { ...column, dataType: 'badge' }
       }
 
       if (fieldDefinitions[column.key]?.options) {
         return {
           ...column,
-          render: value => {
-            if (!value) return null
-
-            const option = fieldDefinitions[column.key].options.find(
-              o => o.value === value,
-            )
-
-            if (option?.labelColor) {
-              return (
-                <Badge small style={{ backgroundColor: option.labelColor }}>
-                  {option.label ?? value}
-                </Badge>
-              )
-            }
-
-            return option?.label ?? value
-          },
+          dataType: 'options',
+          options: fieldDefinitions[column.key].options,
         }
       }
 
@@ -310,7 +272,7 @@ const SubmissionsTable = props => {
         <Title>{t('dashboardPage.My Submissions')}</Title>
       </SectionHeader>
 
-      <ManuscriptsTable
+      <LegacyManuscriptsTable
         applyQueryParams={applyQueryParams}
         columnsProps={columnsProps}
         getMainActionLink={manuscript =>
@@ -330,31 +292,16 @@ const SubmissionsTable = props => {
       />
 
       <TableWrapper>
-        <Table
-          bordered={false}
+        <ManuscriptsTable
           columns={tableColumns}
           dataSource={dataSource}
+          onPageChange={newPage =>
+            applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
+          }
           onSearch={value => applyQueryParams({ [URI_SEARCH_PARAM]: value })}
-          pagination={{
-            current: Number(page),
-            pageSize: limit,
-            total: totalCount,
-            showTotal: (total, range) => (
-              <Trans
-                count={total}
-                i18nKey="manuscriptsTable.pagination"
-                values={{
-                  firstResult: range[0],
-                  lastResult: range[1],
-                  totalCount: total,
-                }}
-              />
-            ),
-            onChange: newPage =>
-              applyQueryParams({ [URI_PAGENUM_PARAM]: newPage }),
-          }}
-          searchPlaceholder={t('common.Enter search terms...')}
-          showSearch
+          page={Number(page)}
+          pageSize={limit}
+          totalCount={totalCount}
         />
       </TableWrapper>
     </SectionContent>

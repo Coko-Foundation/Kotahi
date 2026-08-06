@@ -192,6 +192,7 @@ const esLa = {
       Production: 'Producción',
       'No results found': 'No se encontraron resultados',
       pagination: `Mostrando <strong>{{firstResult}}</strong> a <strong>{{lastResult}}</strong> de <strong>{{totalCount}}</strong> resultados`,
+      removeFilter: 'Eliminar filtro',
       reviewAccept: 'Aceptar',
       reviewReject: 'Rechazar',
       reviewDo: 'Hacer Revisión',

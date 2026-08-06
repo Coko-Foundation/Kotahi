@@ -3,6 +3,7 @@ import { type AriaAttributes, type ReactNode } from 'react'
 export {
   ArrowRightOutlined as ArrowRight,
   BarChartOutlined as Report,
+  CloseOutlined as Close,
   ControlOutlined as Settings,
   FileTextOutlined as File,
   FormOutlined as Form,

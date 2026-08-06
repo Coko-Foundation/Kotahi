@@ -19,23 +19,25 @@ const variantMapper = {
   unpublished: 'error',
 }
 
-type ManuscriptStatusProps = {
-  status:
-    | 'accepted'
-    | 'assigned'
-    | 'completed'
-    | 'embargoReleased'
-    | 'evaluated'
-    | 'inProgress'
-    | 'new'
-    | 'published'
-    | 'rejected'
-    | 'revise'
-    | 'revising'
-    | 'submitted'
-    | 'underEmbargo'
-    | 'unpublished'
+export const MANUSCRIPT_STATUSES = [
+  'accepted',
+  'assigned',
+  'completed',
+  'embargoReleased',
+  'evaluated',
+  'inProgress',
+  'new',
+  'published',
+  'rejected',
+  'revise',
+  'revising',
+  'submitted',
+  'underEmbargo',
+  'unpublished',
+] as const
 
+type ManuscriptStatusProps = {
+  status: (typeof MANUSCRIPT_STATUSES)[number]
   small?: boolean
 }
 

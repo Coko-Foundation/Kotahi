@@ -41,6 +41,18 @@ const Table = styled(OriginalTable)`
     border: 0;
   }
 
+  .ant-table-expanded-row > td {
+    padding: 0 !important;
+  }
+
+  .ant-table-filter-trigger:hover {
+    background-color: ${th('colorTextReverse')} !important;
+  }
+
+  .ant-table-filter-trigger.active {
+    background-color: ${th('colorTextReverse')} !important;
+  }
+
   tbody tr:last-of-type {
     > td:first-of-type {
       border-bottom-left-radius: ${th('borderRadius')};
