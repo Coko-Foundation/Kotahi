@@ -207,6 +207,70 @@ export const AlignRightColumn = meta.story({
   },
 })
 
+/**
+ * Combines a title with an optional import-source icon, an "Overdue tasks"
+ * badge, and (with `showAbstract`) a click-triggered info tooltip showing the
+ * abstract.
+ */
+export const BuiltInTitleRendering = meta.story({
+  args: {
+    columns: [
+      baseColumns[0],
+      {
+        title: 'Title',
+        dataIndex: 'titleInfo',
+        key: 'titleInfo',
+        dataType: 'title',
+        showAbstract: true,
+      },
+    ],
+    dataSource: [
+      {
+        key: '1',
+        manuscriptNumber: 101,
+        titleInfo: {
+          title: 'Honey bee colonies benefit from grassland',
+          hasOverdueTasks: true,
+          abstract:
+            'Grassland habitats bordering agricultural land are increasingly recognized as a critical resource for pollinator health, yet the mechanisms behind this benefit remain poorly understood. In this study, we tracked twenty honey bee colonies over two foraging seasons across sites with varying proportions of adjacent grassland cover. Colonies near extensive grassland showed significantly higher overwintering survival, greater brood production, and lower incidence of common parasites compared to colonies in predominantly monoculture landscapes. Pollen analysis revealed a more diverse foraging diet in grassland-adjacent colonies, suggesting that floral diversity rather than raw forage volume drives the observed health benefits. These findings support targeted grassland conservation and restoration as a practical intervention for improving pollinator resilience in agricultural regions.',
+        },
+      },
+      {
+        key: '2',
+        manuscriptNumber: 102,
+        titleInfo: {
+          title: 'A dataset of pollinator visitation rates',
+          importSource: 'coar',
+          abstract:
+            'We present a multi-year dataset of pollinator visitation rates collected across forty field sites spanning three biogeographic regions. Observations were recorded using a standardized timed-count protocol, capturing visitation frequency, pollinator identity to genus level, and flowering plant species for each interaction. The dataset includes over two hundred thousand individual visitation records alongside site-level metadata on land use, climate, and floral community composition. We anticipate this resource will support comparative analyses of pollinator community structure, phenological mismatch under climate change, and the design of pollinator-friendly agricultural policy. Data are provided in a normalized, analysis-ready format with accompanying documentation and quality-control flags for each observation.',
+        },
+      },
+      {
+        key: '3',
+        manuscriptNumber: 103,
+        titleInfo: {
+          title: 'BeeTrack: software for tracking pollinators',
+          importSource: 'semanticScholar',
+          abstract:
+            'BeeTrack is an open-source computer vision toolkit for automated tracking of individual pollinators in field video recordings. Built on a lightweight object-detection backbone, BeeTrack identifies and tracks multiple insects simultaneously under variable outdoor lighting conditions, exporting per-individual trajectories, flower-visit durations, and inter-flower flight paths. The software includes a graphical annotation interface for rapid model fine-tuning on new sites or species, and a batch-processing pipeline suitable for large-scale monitoring campaigns. In benchmark comparisons against manual observation, BeeTrack matched expert-annotated visitation counts within a five percent margin while reducing analysis time by over ninety percent, making continuous, fine-grained pollinator monitoring practical at landscape scale.',
+        },
+      },
+      {
+        key: '4',
+        manuscriptNumber: 104,
+        titleInfo: {
+          title: 'Neuropsychological effects of urban noise',
+        },
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    totalCount: 4,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+})
+
 export const BuiltInDateRendering = meta.story({
   args: {
     columns: [
@@ -421,6 +485,7 @@ export const BuiltInReviewerStatusRenderingWithFilter = meta.story({
 /**
  * One square per reviewer, colored by status. Hover the grid for a tooltip grouping reviewers
  * by status, with each reviewer's name listed underneath their group's total.
+ * Be careful with usage of this datatype as it can expose the reviewer names.
  */
 export const BuiltInReviewerStatusSummaryRendering = meta.story({
   args: {

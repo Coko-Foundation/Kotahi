@@ -16,7 +16,14 @@ import dayjs from 'dayjs'
 import Table from './Table'
 import Badge from './Badge'
 import Avatar from './Avatar'
-import { Close, Table as TableIcon, Tasks } from '../base/Icons'
+import {
+  Close,
+  Coar,
+  Info,
+  SemanticScholar,
+  Table as TableIcon,
+  Tasks,
+} from '../base/Icons'
 import ManuscriptStatus from './ManuscriptStatus'
 import ReviewerStatus from './ReviewerStatus'
 import {
@@ -45,11 +52,8 @@ export type ManuscriptsTableColumn = {
    *
    * Candidate future dataTypes (not yet implemented), identified by comparing against the
    * legacy component-manuscripts-table cell renderers:
-   * - 'flag': boolean -> icon + tooltip, renders nothing when false. See OverdueTooltip.jsx.
    * - 'valueList': an array of independently-colored/rich-text values in one cell (richer
    *   version of 'options' -- handles a list, not a single lookup). See DefaultField.jsx.
-   * - 'tooltip'/'linkWithTooltip': text with a hover tooltip revealing more detail, optionally
-   *   hyperlinked. See TitleWithAbstractAsTooltip.jsx.
    */
   dataType?:
     | 'date'
@@ -59,9 +63,15 @@ export type ManuscriptsTableColumn = {
     | 'badge'
     | 'options'
     | 'person'
+    | 'title'
   options?: ManuscriptsTableColumnOption[]
   /** Applies to 'options', 'status', 'reviewerStatus' and 'date' datatypes */
   filterable?: boolean
+  /**
+   * Applies to the 'title' datatype -- shows an info icon that opens a tooltip
+   * with the manuscript's abstract on click.
+   */
+  showAbstract?: boolean
   /**
    * Escape hatch for anything else (e.g. an actions column with
    * business-specific links) -- takes precedence over dataType.
@@ -355,6 +365,115 @@ const renderPerson = (value: any): ReactNode => {
   )
 }
 
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${grid(1)};
+`
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(3)};
+`
+
+const CoarIcon = styled(Coar)`
+  margin-top: -2px;
+`
+
+const TitleAbstractButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+`
+
+const TitleAbstractTooltipContent = styled.div`
+  padding: ${grid(4)};
+`
+
+const TitleAbstractTooltipHeader = styled.div`
+  border-bottom: 1px solid ${th('colorTextReverse')};
+  margin-bottom: ${grid(1)};
+`
+
+const ABSTRACT_WORD_LIMIT = 60
+
+const truncateAbstract = (abstract: string): string => {
+  const words = abstract.trim().split(/\s+/)
+  if (words.length <= ABSTRACT_WORD_LIMIT) return abstract
+  return `${words.slice(0, ABSTRACT_WORD_LIMIT).join(' ')}...`
+}
+
+type TitleCellValue = {
+  title: string
+  hasOverdueTasks?: boolean
+  importSource?: 'coar' | 'semanticScholar'
+  abstract?: string
+}
+
+const TitleCell = ({
+  value,
+  showAbstract,
+}: {
+  value: TitleCellValue
+  showAbstract?: boolean
+}): ReactNode => {
+  const { t } = useTranslation()
+
+  if (!value) return null
+
+  return (
+    <TitleWrapper>
+      <TitleRow>
+        {value.importSource === 'coar' && <CoarIcon aria-hidden />}
+        {value.importSource === 'semanticScholar' && (
+          <SemanticScholar aria-hidden />
+        )}
+
+        <span>{value.title}</span>
+
+        {showAbstract && (
+          <ConfigProvider
+            theme={{ components: { Tooltip: { maxWidth: 600 } } }}
+          >
+            <Tooltip
+              title={
+                <TitleAbstractTooltipContent>
+                  <TitleAbstractTooltipHeader>
+                    {t('manuscriptsTable.abstractHeader')}
+                  </TitleAbstractTooltipHeader>
+                  {value.abstract
+                    ? truncateAbstract(value.abstract)
+                    : t('manuscriptsTable.noAbstract')}
+                </TitleAbstractTooltipContent>
+              }
+              trigger={['click']}
+            >
+              <TitleAbstractButton
+                aria-label={t('manuscriptsTable.showAbstract')}
+                type="button"
+              >
+                <Info />
+              </TitleAbstractButton>
+            </Tooltip>
+          </ConfigProvider>
+        )}
+      </TitleRow>
+
+      {value.hasOverdueTasks && (
+        <Badge small variant="error">
+          {t('manuscriptsTable.overdueTasks')}
+        </Badge>
+      )}
+    </TitleWrapper>
+  )
+}
+
 const { RangePicker } = DatePicker
 
 const DateRangeFilterWrapper = styled.div`
@@ -570,6 +689,14 @@ const resolveColumn = (
         break
       case 'person':
         resolved = { ...column, render: renderPerson }
+        break
+      case 'title':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => (
+            <TitleCell showAbstract={column.showAbstract} value={value} />
+          ),
+        }
         break
       case 'options':
         resolved = {
