@@ -193,6 +193,8 @@ const esLa = {
       'No results found': 'No se encontraron resultados',
       pagination: `Mostrando <strong>{{firstResult}}</strong> a <strong>{{lastResult}}</strong> de <strong>{{totalCount}}</strong> resultados`,
       removeFilter: 'Eliminar filtro',
+      compactView: 'Vista compacta',
+      detailedView: 'Vista detallada',
       reviewAccept: 'Aceptar',
       reviewReject: 'Rechazar',
       reviewDo: 'Hacer Revisión',

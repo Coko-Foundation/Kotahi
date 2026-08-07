@@ -2,16 +2,30 @@ import { type ReactNode, type MouseEvent, Fragment } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import styled from 'styled-components'
 import { th, grid } from '@coko/client'
-import { DatePicker, type TableColumnType } from 'antd'
+import {
+  ConfigProvider,
+  DatePicker,
+  Radio,
+  Tooltip,
+  type TableColumnType,
+} from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
+import type { RadioChangeEvent } from 'antd/es/radio'
 import dayjs from 'dayjs'
 
 import Table from './Table'
 import Badge from './Badge'
 import Avatar from './Avatar'
-import { Close } from '../base/Icons'
+import { Close, Table as TableIcon, Tasks } from '../base/Icons'
 import ManuscriptStatus from './ManuscriptStatus'
 import ReviewerStatus from './ReviewerStatus'
+import {
+  type ReviewerStatusValue,
+  reviewerStatusTranslationKeys,
+  reviewerStatusVariants,
+  badgeVariantColorTokens,
+  badgeDefaultColorToken,
+} from './_constants'
 import { convertTimestampToRelativeDateString } from '../../shared/dateUtils'
 
 type ManuscriptsTableColumnOption = {
@@ -36,12 +50,12 @@ export type ManuscriptsTableColumn = {
    *   version of 'options' -- handles a list, not a single lookup). See DefaultField.jsx.
    * - 'tooltip'/'linkWithTooltip': text with a hover tooltip revealing more detail, optionally
    *   hyperlinked. See TitleWithAbstractAsTooltip.jsx.
-   * - 'chart'/'donut': a small chart summarizing categorical counts. See ReviewStatusDonut.jsx.
    */
   dataType?:
     | 'date'
     | 'status'
     | 'reviewerStatus'
+    | 'reviewerStatusSummary'
     | 'badge'
     | 'options'
     | 'person'
@@ -97,10 +111,22 @@ type ManuscriptsTableProps = {
   onSearch: (value: string) => void
   bordered?: boolean
   loading?: boolean
-  /** Currently selected filter values, keyed by column key (controlled), e.g.
-   * { status: ['accepted', 'rejected'] }. Only relevant for columns with `filterable: true`. */
+  /**
+   * Currently selected filter values, keyed by column key (controlled), e.g.
+   * { status: ['accepted', 'rejected'] }. Only relevant for columns with
+   * `filterable: true`.
+   */
   columnFilters?: Record<string, string[]>
   onFiltersChange?: (filters: Record<string, string[]>) => void
+  /**
+   * Compact/detailed view mode for 'reviewerStatusSummary' columns.
+   * Defaults to 'detailed'.
+   */
+  reviewerStatusViewMode?: Record<string, 'compact' | 'detailed'>
+  onReviewerStatusViewModeChange?: (
+    columnKey: string,
+    viewMode: 'compact' | 'detailed',
+  ) => void
 }
 
 const renderDate = (value: any): ReactNode => {
@@ -115,6 +141,166 @@ const renderStatus = (value: any): ReactNode => (
 const renderReviewerStatus = (value: any): ReactNode => (
   <ReviewerStatus small status={value} />
 )
+
+const ReviewerStatusGridWrapper = styled.div`
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: ${grid(1)};
+  max-width: calc(${grid(4)} * 5 + ${grid(1)} * 4);
+`
+
+const ReviewerStatusSquare = styled.span<{ $colorToken: string }>`
+  display: inline-block;
+  width: ${grid(4)};
+  height: ${grid(4)};
+  border-radius: ${th('borderRadius')};
+  background-color: ${(props: { theme: any; $colorToken: string }): string =>
+    props.theme[props.$colorToken]};
+`
+
+const ReviewerStatusTooltipList = styled.div<{ $columns: number }>`
+  display: grid;
+  grid-template-columns: ${(props: { $columns: number }): string =>
+    `repeat(${props.$columns}, minmax(0, 1fr))`};
+  gap: ${grid(4)};
+  padding: ${grid(2)};
+`
+
+const ReviewerStatusTooltipRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+  padding-bottom: ${grid(1)};
+  margin-bottom: ${grid(1)};
+  border-bottom: 1px solid ${th('colorBorder')};
+  font-size: ${th('fontSizeBaseSmall')};
+`
+
+const ReviewerStatusTooltipSwatch = styled.span<{ $colorToken: string }>`
+  flex-shrink: 0;
+  width: ${grid(3)};
+  height: ${grid(3)};
+  border-radius: ${th('borderRadius')};
+  background-color: ${(props: { theme: any; $colorToken: string }): string =>
+    props.theme[props.$colorToken]};
+`
+
+const ReviewerStatusTooltipGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${grid(1)};
+`
+
+const ReviewerStatusTooltipMembers = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-size: ${th('fontSizeBaseSmaller')};
+`
+
+const ReviewerStatusTooltipCompactList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${grid(1)};
+  padding: ${grid(2)};
+  font-size: ${th('fontSizeBaseSmall')};
+`
+
+const ReviewerStatusTooltipCompactRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+`
+
+const resolveReviewerStatusColorToken = (
+  status: ReviewerStatusValue,
+): string => {
+  const variant = reviewerStatusVariants[status]
+  return variant ? badgeVariantColorTokens[variant] : badgeDefaultColorToken
+}
+
+type ReviewerStatusEntry = {
+  status: ReviewerStatusValue
+  name: string
+}
+
+const ReviewerStatusSummary = ({
+  value,
+  isCompact,
+}: {
+  value: any
+  isCompact: boolean
+}): ReactNode => {
+  const { t } = useTranslation()
+
+  if (!Array.isArray(value) || value.length === 0) return null
+
+  const reviewers = value as ReviewerStatusEntry[]
+
+  const groups: Partial<Record<ReviewerStatusValue, ReviewerStatusEntry[]>> = {}
+
+  reviewers.forEach(reviewer => {
+    groups[reviewer.status] = [...(groups[reviewer.status] ?? []), reviewer]
+  })
+
+  const groupEntries = Object.entries(groups) as [
+    ReviewerStatusValue,
+    ReviewerStatusEntry[],
+  ][]
+
+  const content = isCompact ? (
+    <ReviewerStatusTooltipCompactList>
+      {groupEntries.map(([status, members]) => (
+        <ReviewerStatusTooltipCompactRow key={status}>
+          <ReviewerStatusTooltipSwatch
+            $colorToken={resolveReviewerStatusColorToken(status)}
+          />
+          <span>
+            <strong>{members.length}</strong>{' '}
+            {t(reviewerStatusTranslationKeys[status])}
+          </span>
+        </ReviewerStatusTooltipCompactRow>
+      ))}
+    </ReviewerStatusTooltipCompactList>
+  ) : (
+    <ReviewerStatusTooltipList $columns={Math.min(groupEntries.length, 3)}>
+      {groupEntries.map(([status, members]) => (
+        <ReviewerStatusTooltipGroup key={status}>
+          <ReviewerStatusTooltipRow>
+            <ReviewerStatusTooltipSwatch
+              $colorToken={resolveReviewerStatusColorToken(status)}
+            />
+            <span>
+              <strong>{members.length}</strong>{' '}
+              {t(reviewerStatusTranslationKeys[status])}
+            </span>
+          </ReviewerStatusTooltipRow>
+          <ReviewerStatusTooltipMembers>
+            {members.map(member => (
+              <span key={member.name}>{member.name}</span>
+            ))}
+          </ReviewerStatusTooltipMembers>
+        </ReviewerStatusTooltipGroup>
+      ))}
+    </ReviewerStatusTooltipList>
+  )
+
+  return (
+    <ConfigProvider theme={{ components: { Tooltip: { maxWidth: 600 } } }}>
+      <Tooltip title={content}>
+        <ReviewerStatusGridWrapper>
+          {reviewers.map(({ status, name }) => (
+            <ReviewerStatusSquare
+              $colorToken={resolveReviewerStatusColorToken(status)}
+              aria-label={`${name}: ${t(reviewerStatusTranslationKeys[status])}`}
+              key={name}
+              role="img"
+            />
+          ))}
+        </ReviewerStatusGridWrapper>
+      </Tooltip>
+    </ConfigProvider>
+  )
+}
 
 const renderBadge = (value: any): ReactNode => <Badge small>{value}</Badge>
 
@@ -266,9 +452,91 @@ const SearchSnippets = ({
 const hasSearchSnippets = (row: Record<string, any>): boolean =>
   Array.isArray(row.searchSnippets) && row.searchSnippets.length > 0
 
+const ReviewerStatusColumnHeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${grid(2)};
+`
+
+const RadioGroup = styled(Radio.Group)`
+  /* stylelint-disable declaration-no-important */
+  .ant-radio-button-wrapper {
+    background-color: ${th('colorPrimary')} !important;
+    color: ${th('colorTextReverse')} !important;
+    border: 1px solid transparent;
+    transition: border 0.2s ease;
+
+    span[role='img'] {
+      margin-top: 3px;
+    }
+
+    &:hover {
+      border: 1px solid ${th('colorTextReverse')};
+    }
+  }
+
+  .ant-radio-button-wrapper-checked {
+    background-color: ${th('colorTextReverse')} !important;
+    color: ${th('colorPrimary')} !important;
+    border-color: ${th('colorTextReverse')} !important;
+  }
+`
+
+const ReviewerStatusColumnHeader = ({
+  title,
+  isCompact,
+  onChange,
+}: {
+  title: string
+  isCompact: boolean
+  onChange: (isCompact: boolean) => void
+}): ReactNode => {
+  const { t } = useTranslation()
+
+  return (
+    <ReviewerStatusColumnHeaderWrapper>
+      <span>{title}</span>
+      <RadioGroup
+        buttonStyle="solid"
+        onChange={(event: RadioChangeEvent): void =>
+          onChange(event.target.value === 'compact')
+        }
+        optionType="button"
+        size="small"
+        value={isCompact ? 'compact' : 'detailed'}
+      >
+        <Tooltip title="Detailed hover view">
+          <Radio.Button
+            aria-label={t('manuscriptsTable.detailedView')}
+            value="detailed"
+          >
+            <TableIcon />
+          </Radio.Button>
+        </Tooltip>
+        <Tooltip title="Compact hover view">
+          <Radio.Button
+            aria-label={t('manuscriptsTable.compactView')}
+            value="compact"
+          >
+            <Tasks />
+          </Radio.Button>
+        </Tooltip>
+      </RadioGroup>
+    </ReviewerStatusColumnHeaderWrapper>
+  )
+}
+
 const resolveColumn = (
   column: ManuscriptsTableColumn,
-  context: { columnFilters?: Record<string, string[]> },
+  context: {
+    columnFilters?: Record<string, string[]>
+    reviewerStatusViewMode?: Record<string, 'compact' | 'detailed'>
+    onReviewerStatusViewModeChange?: (
+      columnKey: string,
+      viewMode: 'compact' | 'detailed',
+    ) => void
+  },
 ): TableColumnType<Record<string, any>> => {
   let resolved: ManuscriptsTableColumn = column
 
@@ -282,6 +550,20 @@ const resolveColumn = (
         break
       case 'reviewerStatus':
         resolved = { ...column, render: renderReviewerStatus }
+        break
+      case 'reviewerStatusSummary':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => (
+            <ReviewerStatusSummary
+              isCompact={
+                (context.reviewerStatusViewMode?.[column.key] ?? 'detailed') ===
+                'compact'
+              }
+              value={value}
+            />
+          ),
+        }
         break
       case 'badge':
         resolved = { ...column, render: renderBadge }
@@ -319,6 +601,27 @@ const resolveColumn = (
         <DateRangeFilterDropdown {...props} />
       ),
       filteredValue: context.columnFilters?.[column.key] ?? null,
+    }
+  }
+
+  if (column.dataType === 'reviewerStatusSummary') {
+    return {
+      ...resolved,
+      title: (
+        <ReviewerStatusColumnHeader
+          isCompact={
+            (context.reviewerStatusViewMode?.[column.key] ?? 'detailed') ===
+            'compact'
+          }
+          onChange={isCompact =>
+            context.onReviewerStatusViewModeChange?.(
+              column.key,
+              isCompact ? 'compact' : 'detailed',
+            )
+          }
+          title={column.title}
+        />
+      ),
     }
   }
 
@@ -419,6 +722,8 @@ const ManuscriptsTable = ({
   loading = false,
   columnFilters,
   onFiltersChange,
+  reviewerStatusViewMode,
+  onReviewerStatusViewModeChange,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
 
@@ -457,7 +762,11 @@ const ManuscriptsTable = ({
   }
 
   const resolvedColumns = columns.map(column =>
-    resolveColumn(column, { columnFilters }),
+    resolveColumn(column, {
+      columnFilters,
+      reviewerStatusViewMode,
+      onReviewerStatusViewModeChange,
+    }),
   )
 
   const filterChips =

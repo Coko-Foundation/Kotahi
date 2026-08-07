@@ -9,6 +9,7 @@ export {
   FormOutlined as Form,
   HomeOutlined as Home,
   ReadOutlined as Book,
+  TableOutlined as Table,
   UnorderedListOutlined as Tasks,
   UserOutlined as User,
   VerticalAlignTopOutlined as ExpandMenu,

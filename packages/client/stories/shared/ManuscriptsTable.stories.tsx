@@ -418,6 +418,89 @@ export const BuiltInReviewerStatusRenderingWithFilter = meta.story({
   },
 })
 
+/**
+ * One square per reviewer, colored by status. Hover the grid for a tooltip grouping reviewers
+ * by status, with each reviewer's name listed underneath their group's total.
+ */
+export const BuiltInReviewerStatusSummaryRendering = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Reviewers',
+        dataIndex: 'reviewerStatuses',
+        key: 'reviewerStatuses',
+        dataType: 'reviewerStatusSummary',
+      },
+    ],
+    dataSource: [
+      {
+        ...baseRow,
+        reviewerStatuses: [
+          { status: 'completed', name: 'Maria Alvarez' },
+          { status: 'completed', name: 'Tom Ellison' },
+          { status: 'invited', name: 'Priya Nair' },
+          { status: 'rejected', name: 'Sam Okafor' },
+        ],
+      },
+      {
+        key: '2',
+        manuscriptNumber: 102,
+        title: 'A dataset of pollinator visitation rates',
+        reviewerStatuses: [
+          { status: 'accepted', name: 'Lucas Bergmann' },
+          { status: 'accepted', name: 'Naledi Dube' },
+        ],
+      },
+      {
+        key: '3',
+        manuscriptNumber: 103,
+        title: 'BeeTrack: software for tracking pollinators',
+        reviewerStatuses: [],
+      },
+      {
+        key: '4',
+        manuscriptNumber: 104,
+        title: 'Neuropsychological effects of urban noise',
+        reviewerStatuses: [
+          { status: 'completed', name: 'Maria Alvarez' },
+          { status: 'completed', name: 'Tom Ellison' },
+          { status: 'completed', name: 'Priya Nair' },
+          { status: 'accepted', name: 'Sam Okafor' },
+          { status: 'accepted', name: 'Lucas Bergmann' },
+          { status: 'inProgress', name: 'Naledi Dube' },
+          { status: 'invited', name: 'Haruto Sato' },
+          { status: 'invited', name: 'Elena Petrova' },
+          { status: 'rejected', name: 'David Kim' },
+        ],
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    totalCount: 4,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+  render: args => {
+    const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
+      Record<string, 'compact' | 'detailed'>
+    >({})
+
+    return (
+      <ManuscriptsTable
+        {...args}
+        onReviewerStatusViewModeChange={(columnKey, viewMode) =>
+          setReviewerStatusViewMode(previous => ({
+            ...previous,
+            [columnKey]: viewMode,
+          }))
+        }
+        reviewerStatusViewMode={reviewerStatusViewMode}
+      />
+    )
+  },
+})
+
 export const BuiltInBadgeRendering = meta.story({
   args: {
     columns: [

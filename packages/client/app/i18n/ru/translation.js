@@ -193,6 +193,8 @@ const ru = {
       'No results found': 'Результаты не найдены',
       pagination: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результата`,
       removeFilter: 'Удалить фильтр',
+      compactView: 'Компактный вид',
+      detailedView: 'Подробный вид',
       pagination_few: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       pagination_many: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       reviewAccept: 'Принять',

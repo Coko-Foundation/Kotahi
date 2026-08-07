@@ -193,6 +193,8 @@ const en = {
       'No results found': 'No results found',
       pagination: `Showing <strong>{{firstResult}}</strong> to <strong>{{lastResult}}</strong> of <strong>{{totalCount}}</strong> results`,
       removeFilter: 'Remove filter',
+      compactView: 'Compact view',
+      detailedView: 'Detailed view',
       reviewAccept: 'Accept',
       reviewReject: 'Decline',
       reviewDo: 'Do Review',
