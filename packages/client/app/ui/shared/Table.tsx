@@ -31,8 +31,12 @@ const Table = styled(OriginalTable)`
     text-transform: uppercase;
   }
 
+  th.ant-table-cell {
+    padding: ${grid(3)} ${grid(4)} !important;
+  }
+
   .ant-table-thead th::before {
-    height: 3em !important;
+    height: 2.7em !important;
   }
 
   /* necessary because of wax-table-service injecting global css */

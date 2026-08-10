@@ -627,6 +627,7 @@ const typeOptions = [
   { value: 'dataset', label: 'Dataset', labelColor: '#3f21d4' },
   { value: 'software', label: 'Software', labelColor: '#e901ca' },
   { value: 'article', label: 'Research article' },
+  { value: 'preprint', label: 'Preprint' },
 ]
 
 const typeData = [
@@ -700,6 +701,74 @@ export const BuiltInOptionsRenderingWithFilter = meta.story({
       selectedTypes.length > 0
         ? typeData.filter(row => selectedTypes.includes(row.type))
         : typeData
+
+    return (
+      <ManuscriptsTable
+        {...args}
+        columnFilters={columnFilters}
+        dataSource={filtered}
+        onFiltersChange={setColumnFilters}
+        totalCount={filtered.length}
+      />
+    )
+  },
+})
+
+const multiValueTypeData = [
+  { ...baseRow, types: ['dataset', 'software'] },
+  {
+    key: '2',
+    manuscriptNumber: 102,
+    title: 'BeeTrack: software for tracking pollinators',
+    types: ['software'],
+  },
+  {
+    key: '3',
+    manuscriptNumber: 103,
+    title: 'Neuropsychological effects of urban noise',
+    types: [],
+  },
+  {
+    key: '4',
+    manuscriptNumber: 104,
+    title: 'Climate variability dataset for the Alps',
+    types: ['article', 'preprint'],
+  },
+]
+
+export const BuiltInOptionsRenderingWithMultipleValues = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Types',
+        dataIndex: 'types',
+        key: 'types',
+        dataType: 'options',
+        filterable: true,
+        options: typeOptions,
+      },
+    ],
+    dataSource: multiValueTypeData,
+    page: 1,
+    pageSize: 10,
+    totalCount: multiValueTypeData.length,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+  render: args => {
+    const [columnFilters, setColumnFilters] = useState<
+      Record<string, string[]>
+    >({})
+
+    const selectedTypes = columnFilters.types ?? []
+
+    const filtered =
+      selectedTypes.length > 0
+        ? multiValueTypeData.filter(row =>
+            row.types.some(type => selectedTypes.includes(type)),
+          )
+        : multiValueTypeData
 
     return (
       <ManuscriptsTable

@@ -49,11 +49,6 @@ export type ManuscriptsTableColumn = {
   /**
    * Opts into one of this component's built-in renderers for a common kind of
    * value. Ignored if `render` is also supplied.
-   *
-   * Candidate future dataTypes (not yet implemented), identified by comparing against the
-   * legacy component-manuscripts-table cell renderers:
-   * - 'valueList': an array of independently-colored/rich-text values in one cell (richer
-   *   version of 'options' -- handles a list, not a single lookup). See DefaultField.jsx.
    */
   dataType?:
     | 'date'
@@ -314,23 +309,49 @@ const ReviewerStatusSummary = ({
 
 const renderBadge = (value: any): ReactNode => <Badge small>{value}</Badge>
 
+const renderSingleOption = (
+  value: string,
+  options: ManuscriptsTableColumnOption[],
+): ReactNode => {
+  const option = options.find(o => o.value === value)
+
+  return (
+    <Badge
+      small
+      style={
+        option?.labelColor ? { backgroundColor: option.labelColor } : undefined
+      }
+    >
+      {option?.label ?? value}
+    </Badge>
+  )
+}
+
+const OptionsListWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${grid(1)};
+`
+
 const renderOptions = (
   value: any,
   options: ManuscriptsTableColumnOption[] = [],
 ): ReactNode => {
   if (!value) return null
 
-  const option = options.find(o => o.value === value)
+  if (Array.isArray(value)) {
+    if (value.length === 0) return null
 
-  if (option?.labelColor) {
     return (
-      <Badge small style={{ backgroundColor: option.labelColor }}>
-        {option.label ?? value}
-      </Badge>
+      <OptionsListWrapper>
+        {value.map(v => (
+          <Fragment key={v}>{renderSingleOption(v, options)}</Fragment>
+        ))}
+      </OptionsListWrapper>
     )
   }
 
-  return option?.label ?? value
+  return renderSingleOption(value, options)
 }
 
 const PersonWrapper = styled.div`
