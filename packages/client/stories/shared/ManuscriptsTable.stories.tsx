@@ -262,10 +262,50 @@ export const BuiltInTitleRendering = meta.story({
           title: 'Neuropsychological effects of urban noise',
         },
       },
+      {
+        key: '5',
+        manuscriptNumber: 105,
+        titleInfo: {
+          title:
+            '<p class="paragraph">Climate variability dataset for the <em>Alps</em></p>',
+        },
+      },
     ],
     page: 1,
     pageSize: 10,
-    totalCount: 4,
+    totalCount: 5,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+})
+
+export const BuiltInRichTextRendering = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Notes',
+        dataIndex: 'notes',
+        key: 'notes',
+        dataType: 'richText',
+      },
+    ],
+    dataSource: [
+      {
+        ...baseRow,
+        notes:
+          '<p class="paragraph">Reviewers should pay <strong>close attention</strong> to the methodology section.</p>',
+      },
+      {
+        key: '2',
+        manuscriptNumber: 102,
+        title: 'A dataset of pollinator visitation rates',
+        notes: 'Plain text notes with no formatting.',
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    totalCount: 2,
     onPageChange: () => {},
     onSearch: () => {},
   },

@@ -12,6 +12,7 @@ import {
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import type { RadioChangeEvent } from 'antd/es/radio'
 import dayjs from 'dayjs'
+import DOMPurify from 'isomorphic-dompurify'
 
 import Table from './Table'
 import Badge from './Badge'
@@ -59,6 +60,7 @@ export type ManuscriptsTableColumn = {
     | 'options'
     | 'person'
     | 'title'
+    | 'richText'
   options?: ManuscriptsTableColumnOption[]
   /** Applies to 'options', 'status', 'reviewerStatus' and 'date' datatypes */
   filterable?: boolean
@@ -309,6 +311,20 @@ const ReviewerStatusSummary = ({
 
 const renderBadge = (value: any): ReactNode => <Badge small>{value}</Badge>
 
+const RICH_TEXT_PREFIX_REGEX = /^\s*<p(?: class="paragraph")?>/
+
+const renderPlainOrRichText = (value: any): ReactNode => {
+  if (!value || !RICH_TEXT_PREFIX_REGEX.test(value)) return value || null
+  return (
+    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }} />
+  )
+}
+
+const stripHtml = (html: string): string =>
+  DOMPurify.sanitize(html, { ALLOWED_TAGS: [] })
+
+const renderRichText = (value: any): ReactNode => renderPlainOrRichText(value)
+
 const renderSingleOption = (
   value: string,
   options: ManuscriptsTableColumnOption[],
@@ -456,7 +472,7 @@ const TitleCell = ({
           <SemanticScholar aria-hidden />
         )}
 
-        <span>{value.title}</span>
+        <span>{renderPlainOrRichText(value.title)}</span>
 
         {showAbstract && (
           <ConfigProvider
@@ -469,7 +485,7 @@ const TitleCell = ({
                     {t('manuscriptsTable.abstractHeader')}
                   </TitleAbstractTooltipHeader>
                   {value.abstract
-                    ? truncateAbstract(value.abstract)
+                    ? truncateAbstract(stripHtml(value.abstract))
                     : t('manuscriptsTable.noAbstract')}
                 </TitleAbstractTooltipContent>
               }
@@ -707,6 +723,9 @@ const resolveColumn = (
         break
       case 'badge':
         resolved = { ...column, render: renderBadge }
+        break
+      case 'richText':
+        resolved = { ...column, render: renderRichText }
         break
       case 'person':
         resolved = { ...column, render: renderPerson }

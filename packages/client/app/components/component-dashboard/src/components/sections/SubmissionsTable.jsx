@@ -36,6 +36,14 @@ const centeredColumns = [
   'statusCounts',
 ]
 
+const importSourceFor = manuscript => {
+  if (manuscript.importSourceServer === 'COAR') return 'coar'
+  if (manuscript.importSourceServer === 'semantic-scholar')
+    return 'semanticScholar'
+
+  return undefined
+}
+
 const LinkList = styled.div`
   align-items: flex-start;
   display: flex;
@@ -213,6 +221,10 @@ const SubmissionsTable = props => {
         return { ...column, dataType: 'date' }
       }
 
+      if (column.key === 'submission.$title') {
+        return { ...column, dataType: 'title', showAbstract: true }
+      }
+
       if (column.key === 'status') {
         return { ...column, dataType: 'status' }
       }
@@ -239,6 +251,18 @@ const SubmissionsTable = props => {
 
       const row = tableColumns.reduce((accumulator, current) => {
         const property = current.dataIndex
+
+        if (property === 'submission.$title') {
+          accumulator[property] = {
+            title: get(manuscript, property),
+            hasOverdueTasks: manuscript.hasOverdueTasksForUser,
+            importSource: importSourceFor(manuscript),
+            abstract: manuscript.submission?.$abstract,
+          }
+
+          return accumulator
+        }
+
         accumulator[property] = get(manuscript, property)
         return accumulator
       }, {})
