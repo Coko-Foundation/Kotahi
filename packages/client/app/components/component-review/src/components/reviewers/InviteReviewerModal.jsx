@@ -23,7 +23,7 @@ import { selectReviewerInvitationEmail } from './util'
 
 const ModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(5)} ${grid(6)};
   z-index: 10000;
 `
 

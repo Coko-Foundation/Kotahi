@@ -1,7 +1,7 @@
 const generateSchema = t => {
   const schema = {
     type: 'object',
-    title: t('leftMenu.Metadata'),
+    title: t('cmsIndexPage.metadataTitle'),
     properties: {
       title: {
         type: 'string',

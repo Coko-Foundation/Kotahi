@@ -1,11 +1,10 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@coko/client'
 import { Button } from '../../../pubsweet'
-import theme, { color } from '../../../../theme'
 import { RoundIconButton } from '../../../shared'
 
 export const AdminSection = styled.div`
-  margin-bottom: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(6)};
 `
 
 export const Roles = styled.div`
@@ -45,8 +44,8 @@ export const EditorWrapper = styled.div`
 `
 
 export const FormStatus = styled.div`
-  color: ${color.brand2.base};
-  line-height: ${grid(5)};
+  color: ${th('color.brand2.base')};
+  line-height: ${grid(10)};
   text-align: center;
 `
 
@@ -54,7 +53,7 @@ export const ErrorWrap = styled.div`
   /* stylelint-disable selector-class-pattern */
 
   .ProseMirror {
-    margin-bottom: ${grid(4)};
+    margin-bottom: ${grid(8)};
   }
 
   ${({ error }) =>
@@ -64,8 +63,8 @@ export const ErrorWrap = styled.div`
         border-color: red;
       }
       ${ErrorText} {
-        margin-top: ${grid(-4)};
-        margin-bottom: ${grid(1)};
+        margin-top: ${grid(-8)};
+        margin-bottom: ${grid(2)};
       }
     `}
 
@@ -78,7 +77,7 @@ export const ErrorText = styled.div`
 `
 
 export const RecommendationInputContainer = styled.div`
-  line-height: ${grid(5)};
+  line-height: ${grid(10)};
 `
 
 export const StyledNotifyButton = styled(Button)`
@@ -99,12 +98,12 @@ export const Cell = styled.span`
 `
 
 export const Affiliation = styled.span`
-  color: ${color.gray40};
+  color: ${th('color.gray40')};
   margin-left: 0.5em;
 `
 
 export const Email = styled.span`
-  color: ${color.brand1.base};
+  color: ${th('color.brand1.base')};
   margin-left: 1em;
 `
 
@@ -138,22 +137,22 @@ export const AssignedAuthorForProofingLogsContainer = styled.div`
 export const AssignedAuthorForProofingLogsToggle = styled.button`
   background-color: transparent;
   border: none;
-  color: ${color.brand1.base};
-  font-size: ${theme.fontSizeBaseSmall};
+  color: ${th('color.brand1.base')};
+  font-size: ${th('fontSizeBaseSmall')};
   padding: 10px;
   text-decoration: underline;
 `
 
 export const AssignedAuthorForProofingLogs = styled.div`
-  color: ${color.text};
-  font-size: ${theme.fontSizeBaseSmall};
+  color: ${th('color.text')};
+  font-size: ${th('fontSizeBaseSmall')};
   margin: 10px;
   text-align: right;
 `
 
 export const AssignedAuthorForProofingInfo = styled.div`
-  color: ${color.text};
-  font-size: ${theme.fontSizeBaseSmall};
+  color: ${th('color.text')};
+  font-size: ${th('fontSizeBaseSmall')};
   margin: 8px 0;
 `
 

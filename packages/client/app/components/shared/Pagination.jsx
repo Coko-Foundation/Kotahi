@@ -18,7 +18,7 @@ export const PaginationContainer = styled.div.attrs(props => ({
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
 `
 
 export const PaginationContainerShadowed = styled(PaginationContainer).attrs(
@@ -28,7 +28,7 @@ export const PaginationContainerShadowed = styled(PaginationContainer).attrs(
 )`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
 `
 
 const Styles = styled.div`
@@ -36,7 +36,7 @@ const Styles = styled.div`
     align-items: center;
     background-color: ${th('colorBackground')};
     border-radius: ${th('borderRadius')};
-    box-shadow: ${th('boxShadow')};
+    box-shadow: ${th('boxShadow200')};
     display: flex;
     flex-wrap: wrap;
     justify-content: start;
@@ -51,7 +51,7 @@ const Styles = styled.div`
 
     a {
       display: block;
-      padding: ${grid(1)} ${grid(2)};
+      padding: ${grid(2)} ${grid(4)};
     }
   }
 

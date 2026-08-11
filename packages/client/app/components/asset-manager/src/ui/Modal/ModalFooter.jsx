@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   justify-content: flex-end;
 
   > button {
-    margin-right: ${grid(1)};
+    margin-right: ${grid(2)};
   }
 `
 

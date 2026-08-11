@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 const StyledCollapse = styled(AntCollapse)`
-  padding: 0 ${grid(2)};
+  padding: 0 ${grid(4)};
   width: 100%;
 `
 

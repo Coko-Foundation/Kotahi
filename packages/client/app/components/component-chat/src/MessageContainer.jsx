@@ -6,7 +6,7 @@
 
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th, grid } from '@coko/client'
+import { grid } from '@coko/client'
 import { useLocation } from 'react-router-dom'
 import { HiddenTabs } from '../../shared'
 import Chat from './Chat'
@@ -21,10 +21,10 @@ const MessageContainer = styled.section`
   ${props =>
     props.$channels
       ? css`
-          grid-template-rows: ${grid(5)} 1fr calc(${th('gridUnit')} * 8);
+          grid-template-rows: ${grid(10)} 1fr ${grid(16)};
         `
       : css`
-          grid-template-rows: 1fr calc(${th('gridUnit')} * 8);
+          grid-template-rows: 1fr ${grid(16)};
         `}
 
   ${props =>
@@ -45,14 +45,7 @@ const MessageContainer = styled.section`
   width: 100%;
 `
 
-const chatComponent = (
-  channelId,
-  channelName,
-  manuscriptId,
-  chatRoomId,
-  currentUser,
-  chatProps,
-) => {
+const chatComponent = (channelId, currentUser, chatProps) => {
   const {
     updateChannelViewed,
     reportUserIsActiveMutation,
@@ -69,13 +62,9 @@ const chatComponent = (
   return (
     <Chat
       channelId={channelId}
-      chatRoomId={chatRoomId}
       currentUser={currentUser}
       fetchMoreData={channelData?.fetchMoreData}
       firstUnreadMessageId={channelData?.firstUnreadMessageId}
-      manuscriptId={
-        channelName !== 'Discussion with author' ? manuscriptId : null
-      }
       notificationOptionData={channelData?.notificationOptionData}
       queryData={channelData?.queryResult}
       reportUserIsActiveMutation={reportUserIsActiveMutation}
@@ -92,9 +81,7 @@ const chatComponent = (
 const Container = ({
   channelId: optionalChannelId,
   channels,
-  chatRoomId,
   hideChat,
-  manuscriptId = null,
   currentUser,
   chatProps,
 }) => {
@@ -121,18 +108,7 @@ const Container = ({
       label: channel.name,
       key: channel.type,
       active: channel.active,
-      content: (
-        <>
-          {chatComponent(
-            channel.id,
-            channel.name,
-            manuscriptId,
-            chatRoomId,
-            currentUser,
-            chatProps,
-          )}
-        </>
-      ),
+      content: chatComponent(channel.id, currentUser, chatProps),
     }))
 
   const location = useLocation()
@@ -157,11 +133,9 @@ const Container = ({
       ) : (
         <Chat
           channelId={channelId}
-          chatRoomId={chatRoomId}
           currentUser={currentUser}
           fetchMoreData={fetchMoreData}
           firstUnreadMessageId={channelData?.firstUnreadMessageId}
-          manuscriptId={manuscriptId}
           notificationOptionData={channelData?.notificationOptionData}
           queryData={channelData?.queryResult}
           reportUserIsActiveMutation={reportUserIsActiveMutation}

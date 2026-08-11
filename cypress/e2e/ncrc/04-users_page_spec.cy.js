@@ -94,7 +94,6 @@ describe.skip('users page tests', () => {
         cy.visit(manuscripts)
         cy.awaitDisappearSpinner()
         ManuscriptsPage.getTableHeader().should('not.exist')
-        ManuscriptsPage.getLiveChatButton().should('not.exist')
       })
     })
   })

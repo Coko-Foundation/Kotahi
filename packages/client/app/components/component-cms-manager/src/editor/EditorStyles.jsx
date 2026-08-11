@@ -1,10 +1,9 @@
 /* stylelint-disable string-quotes, declaration-block-no-redundant-longhand-properties */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { th, grid } from '@coko/client'
 import waxDefaultStyles from '../../../wax-collab/src/layout/waxDefaultStyles'
 import EditorElements from '../../../wax-collab/src/layout/EditorElements'
-import { color } from '../../../../theme'
 
 // this grid goes around the menu and the editor area beneath it.
 export const Grid = styled.div`
@@ -21,7 +20,7 @@ export const Grid = styled.div`
 export const Menu = styled.div`
   align-items: center;
   background: #fff;
-  border: 1px solid ${color.gray80};
+  border: 1px solid ${th('color.gray80')};
   display: flex;
   flex-wrap: wrap;
   font-size: 12.8px;
@@ -53,14 +52,14 @@ export const FullWaxEditorGrid = styled.div`
 
 export const EditorDiv = styled.div`
   background-color: ${th('colorBackground')};
-  border: 1px solid ${color.gray80};
+  border: 1px solid ${th('color.gray80')};
   border-width: 0 1px 1px;
   grid-column-start: editorCol;
   grid-row-start: editorRow;
   height: 100%;
   ${props => !props.$hideComments && 'min-width: 800px'};
   overflow: auto;
-  padding: 5px;
+  padding: ${grid(4)};
   position: relative;
 
   .error & {

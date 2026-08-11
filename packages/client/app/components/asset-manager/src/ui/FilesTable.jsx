@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 
-import styled from 'styled-components'
-import { th } from '@coko/client'
+import styled, { useTheme } from 'styled-components'
+import { grid, th } from '@coko/client'
 import { indexOf } from 'lodash'
 
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
 import IconButton from './IconButton'
 import { Loading } from './Modal'
-import { color } from '../../../../theme'
 
 const TableWrapper = styled.div`
   align-items: center;
@@ -28,14 +27,13 @@ const TableHead = styled.div`
 
 const TableHeadCell = styled.div`
   align-items: center;
-  background: ${color.gray90};
+  background: ${th('color.gray90')};
   display: flex;
   flex-basis: ${({ width }) => (width ? `${width}%` : '33.33%')};
   padding: 8px;
 `
 
 const HeaderLabel = styled.div`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   padding-left: 5px;
@@ -51,29 +49,30 @@ const TableBodyEmpty = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   justify-content: center;
   line-height: ${th('lineHeightBase')};
-  margin-top: calc(2 * ${th('gridUnit')});
+  margin-top: ${grid(4)};
   width: 100%;
 `
 
 const TableRow = styled.div`
   align-items: center;
-  background: ${({ selected }) => (selected ? color.brand1.base : 'inherit')};
-  color: ${({ selected }) => (selected ? color.textReverse : 'inherit')};
+  background: ${({ selected, theme }) =>
+    selected ? theme.color.brand1.base : 'inherit'};
+  color: ${({ selected, theme }) =>
+    selected ? theme.color.textReverse : 'inherit'};
   display: flex;
   user-select: none;
   width: 100%;
 
   &:nth-child(even) {
-    background: ${({ selected }) =>
-      selected ? color.brand1.base : color.backgroundC};
+    background: ${({ selected, theme }) =>
+      selected ? theme.color.brand1.base : theme.color.backgroundC};
   }
 
   &:hover {
-    background: ${color.brand1.base};
+    background: ${th('color.brand1.base')};
     color: white;
   }
 `
@@ -87,24 +86,29 @@ const RowRest = styled.div`
 
 const TableCell = styled.div`
   flex-basis: ${({ width }) => (width ? `${width}%` : '33.33%')};
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   padding: 8px;
   text-align: left;
 `
 
-const ascIcon = (
-  <svg fill={color.text} viewBox="0 0 24 24">
-    <path d="M19 17H22L18 21L14 17H17V3H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
-  </svg>
-)
+const AscIcon = () => {
+  const theme = useTheme()
+  return (
+    <svg fill={theme.color.text} viewBox="0 0 24 24">
+      <path d="M19 17H22L18 21L14 17H17V3H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
+    </svg>
+  )
+}
 
-const descIcon = (
-  <svg fill={color.text} viewBox="0 0 24 24">
-    <path d="M19 7H22L18 3L14 7H17V21H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
-  </svg>
-)
+const DescIcon = () => {
+  const theme = useTheme()
+  return (
+    <svg fill={theme.color.text} viewBox="0 0 24 24">
+      <path d="M19 7H22L18 3L14 7H17V21H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
+    </svg>
+  )
+}
 
 const FilesTable = ({
   checkboxColumn,
@@ -224,7 +228,7 @@ const FilesTable = ({
               <TableHeadCell key={label} width={width}>
                 {sortable && (
                   <IconButton
-                    icon={sortingState[label] ? ascIcon : descIcon}
+                    icon={sortingState[label] ? <AscIcon /> : <DescIcon />}
                     onClick={() => {
                       sortingHandler(label)
                     }}

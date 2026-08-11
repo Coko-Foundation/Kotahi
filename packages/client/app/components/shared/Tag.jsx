@@ -14,7 +14,7 @@ const Tag = ({ children, color, fontSize = 'baseSmall', variant }) => {
       color={theme[colorLabel]}
       style={{
         fontSize: theme[fontSizeLabel],
-        padding: `${grid(2)} ${grid(4)}`,
+        padding: `${grid(4)} ${grid(8)}`,
       }}
       variant={variant}
     >

@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import { rotate360, th } from '@coko/client'
-import { color } from '../../theme'
+import { grid, rotate360, th } from '@coko/client'
 
 // Courtesy of loading.io/css
 const SpinnerAnimation = styled.div`
@@ -10,9 +9,9 @@ const SpinnerAnimation = styled.div`
 
   &::after {
     animation: ${rotate360} 1s linear infinite;
-    border: 5px solid ${color.brand1.base};
-    border-color: ${color.brand1.base} transparent ${color.brand1.base}
-      transparent;
+    border: 5px solid ${th('color.brand1.base')};
+    border-color: ${th('color.brand1.base')} transparent
+      ${th('color.brand1.base')} transparent;
     border-radius: 50%;
     content: ' ';
     display: block;
@@ -29,7 +28,7 @@ const LoadingPage = styled.div.attrs({
   display: flex;
   height: 100%;
   justify-content: center;
-  padding-bottom: calc(${th('gridUnit')} * 2);
+  padding-bottom: ${grid(4)};
   width: 100%;
 `
 

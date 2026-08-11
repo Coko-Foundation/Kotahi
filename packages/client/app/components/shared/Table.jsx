@@ -7,7 +7,7 @@ export const Table = styled.table`
   border-collapse: collapse;
   border-radius: ${th('borderRadius')};
   font-size: ${th('fontSizeBaseSmall')};
-  margin-top: ${grid(2)};
+  margin-top: ${grid(4)};
   table-layout: fixed;
   width: 100%;
 
@@ -24,13 +24,13 @@ export const Header = styled.thead`
   text-align: left;
 
   th {
-    padding: ${grid(1)} ${grid(3)};
+    padding: ${grid(2)} ${grid(6)};
   }
 `
 
 export const Row = styled.tr`
   border-bottom: 1px solid ${th('colorFurniture')};
-  max-height: ${grid(8)};
+  max-height: ${grid(16)};
 
   &:hover {
     background-color: ${th('colorBackgroundHue')};
@@ -39,7 +39,7 @@ export const Row = styled.tr`
 
 export const Cell = styled.td`
   ${({ minWidth }) => minWidth && `min-width: ${minWidth}`};
-  padding: calc(${grid(2)} - 1px) ${grid(3)} ${grid(2)} ${grid(3)};
+  padding: calc(${grid(4)} - 1px) ${grid(6)} ${grid(4)} ${grid(6)};
 
   button {
     font-size: ${th('fontSizeBaseSmall')};

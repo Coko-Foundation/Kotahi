@@ -15,14 +15,13 @@ const Wrapper = styled.div`
   width: 100%;
 
   button:not(:last-child) {
-    margin-right: ${grid(1)};
+    margin-right: ${grid(2)};
   }
 `
 
 const WarningAlert = styled.div`
   background: ${darken('colorError', 30)};
   color: ${th('colorTextReverse')};
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   width: 100%;

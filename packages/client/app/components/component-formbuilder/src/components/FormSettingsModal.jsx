@@ -23,11 +23,11 @@ const InvalidWarning = styled.div`
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
   font-weight: 600;
-  margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
+  margin-bottom: ${props => props.space && grid(2)(props)};
 `
 
 export const Section = styled.div`
-  margin: ${grid(4)} 0;
+  margin: ${grid(8)} 0;
 
   &:first-child {
     margin-top: 0;
@@ -87,39 +87,39 @@ const FormSettingsModal = ({
       }}
     >
       {({ handleSubmit, setFieldValue, values, errors }) => (
-        <form onSubmit={handleSubmit}>
-          <Modal
-            contentStyles={{ minWidth: '800px' }}
-            isOpen={isOpen}
-            leftActions={
-              !!Object.keys(errors).length && (
-                <InvalidWarning>
-                  {t('formBuilder.Give the form a title')}
-                </InvalidWarning>
-              )
-            }
-            onClose={onClose}
-            rightActions={
-              <>
-                <ActionButton onClick={handleSubmit} primary type="submit">
-                  {t(
-                    form.id
-                      ? 'formBuilder.Update Form'
-                      : 'formBuilder.Create Form',
-                  )}
-                </ActionButton>
-                <ActionButton onClick={onClose}>
-                  {t('common.Cancel')}
-                </ActionButton>
-              </>
-            }
-            shouldCloseOnOverlayClick={false}
-            title={
-              form.id
-                ? `${t('formBuilder.Update Form')}: ${form.structure.name}`
-                : t('formBuilder.Create Form')
-            }
-          >
+        <Modal
+          contentStyles={{ minWidth: '800px' }}
+          isOpen={isOpen}
+          leftActions={
+            !!Object.keys(errors).length && (
+              <InvalidWarning>
+                {t('formBuilder.Give the form a title')}
+              </InvalidWarning>
+            )
+          }
+          onClose={onClose}
+          rightActions={
+            <>
+              <ActionButton onClick={handleSubmit} primary type="submit">
+                {t(
+                  form.id
+                    ? 'formBuilder.Update Form'
+                    : 'formBuilder.Create Form',
+                )}
+              </ActionButton>
+              <ActionButton onClick={onClose}>
+                {t('common.Cancel')}
+              </ActionButton>
+            </>
+          }
+          shouldCloseOnOverlayClick={false}
+          title={
+            form.id
+              ? `${t('formBuilder.Update Form')}: ${form.structure.name}`
+              : t('formBuilder.Create Form')
+          }
+        >
+          <form onSubmit={handleSubmit}>
             {!isActive && form.id && (
               <MakeActiveButton
                 isCompact
@@ -194,8 +194,8 @@ const FormSettingsModal = ({
                 name: form.category,
               })}
             />
-          </Modal>
-        </form>
+          </form>
+        </Modal>
       )}
     </Formik>
   )

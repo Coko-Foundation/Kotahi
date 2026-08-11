@@ -4,7 +4,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@coko/client'
 import { MoreVertical } from 'react-feather'
-import { color } from '../../../../theme'
 
 export { Spinner } from '../../../shared'
 
@@ -40,7 +39,7 @@ export const MessagesGroup = styled.div`
   span.mention-tag {
     background-color: ${th('colorPrimary')};
     border-radius: 4px;
-    color: ${color.white};
+    color: ${th('color.white')};
     padding: 2px 4px;
   }
 `
@@ -230,7 +229,7 @@ export const Ellipsis = styled(MoreVertical)`
   border-radius: 50%;
   cursor: pointer;
   height: 20.25px;
-  margin: ${grid(0.25)} ${grid(1)} ${grid(1)} ${grid(2)};
+  margin: ${grid(0.5)} ${grid(2)} ${grid(2)} ${grid(4)};
   padding: 3px;
   position: absolute;
   right: 0;
@@ -238,7 +237,7 @@ export const Ellipsis = styled(MoreVertical)`
   z-index: 999;
 
   &:hover {
-    background-color: ${color.gray90};
+    background-color: ${th('color.gray90')};
     border-radius: 50%;
   }
 

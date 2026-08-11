@@ -10,23 +10,15 @@ import Form from '@rjsf/core'
 import { useTranslation } from 'react-i18next'
 import styled, { css } from 'styled-components'
 import { isEqual } from 'lodash'
-import { grid } from '@coko/client'
+import { th, grid } from '@coko/client'
 import {
   generateSchemas,
   tabKeyBasedSchema,
   configTabLabels,
 } from './ui/schema' // Import the function that generates the schema and uiSchema
 
-import {
-  ActionButton,
-  Container,
-  HeadingWithAction,
-  Heading,
-  SectionContent,
-  HiddenTabs,
-  Alert,
-} from '../../shared'
-import { color, space } from '../../../theme'
+import { ActionButton, SectionContent, HiddenTabs, Alert } from '../../shared'
+import Page from '../../../ui/shared/Page'
 import EmailTemplatesPage from '../../component-email-templates/src/EmailTemplatesPage'
 import emailTemplatesToSchema from './helpers'
 import { EmailTemplatesProvider } from '../../component-email-templates/hooks/EmailTemplatesContext'
@@ -35,22 +27,27 @@ import { T } from '../../component-notification-event/misc/constants'
 import { getFormBadgeBg } from '../../component-email-templates/src/handlebarsAutocomplete/helpers'
 import DescriptionField from './ui/DescriptionField'
 
-const StyledContainer = styled(Container)`
+const StyledContainer = styled.div`
   --tabs-border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
+
+  /* stylelint-disable-next-line declaration-no-important */
+  font-family: ${th('fontInterface')} !important;
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: ${th('fontSizeBase')} !important;
+  /* stylelint-disable-next-line declaration-no-important */
+  line-height: ${th('lineHeightBase')} !important;
 `
 
 const StyledSectionContent = styled(SectionContent)`
   margin: 0;
   overflow-y: auto;
-  padding: ${space.g} ${space.g} 0 ${space.g};
+  padding: ${grid(7.5)} ${grid(7.5)} 0 ${grid(7.5)};
   width: 100%;
-`
-
-const StyledHeading = styled(Heading)`
-  padding: 0.5rem 0 1.5rem;
 `
 
 const InstanceTypeLegend = styled.legend`
@@ -86,7 +83,7 @@ const Footer = styled.div`
   padding-top: 0.6rem;
 
   > div {
-    color: ${color.brand1.tint10};
+    color: ${th('color.brand1.tint10')};
     opacity: ${p => (p.$pending ? 1 : 0)};
     padding: 0 0.6rem;
     transition: opacity 0.2s;
@@ -105,7 +102,7 @@ const EmailsTabWrapper = styled(StyledSectionContent)`
 
   /* stylelint-disable-next-line selector-class-pattern */
   .ProseMirror {
-    padding: ${grid(1)} ${grid(2)};
+    padding: ${grid(2)} ${grid(4)};
 
     span.handlebars {
       background-color: ${getFormBadgeBg('common')};
@@ -139,7 +136,7 @@ const EmailsTabWrapper = styled(StyledSectionContent)`
     height: 100%;
 
     &:focus-within {
-      border-color: ${color.gray80};
+      border-color: ${th('color.gray80')};
     }
   }
 `
@@ -150,7 +147,7 @@ const StyledWrapper = styled.div`
     p.$showGap &&
     css`
       display: grid;
-      gap: ${grid(2)};
+      gap: ${grid(4)};
     `}
 
   /* stylelint-disable-next-line selector-id-pattern */
@@ -397,31 +394,32 @@ const ConfigManagerForm = ({
         integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
         rel="stylesheet"
       />
-      <StyledContainer>
-        <HeadingWithAction>
-          <StyledHeading>{t('configPage.Configuration')}</StyledHeading>
-        </HeadingWithAction>
-        <HiddenTabs
-          defaultActiveKey="general"
-          onChange={setActiveTab}
-          sections={[...tabSections, emailTab, eventTab]}
-          shouldFillFlex
-        />
-        {!['emails', 'events'].includes(activeTab) && (
-          <Footer $pending={!noPendingChanges}>
-            <div>You have unsaved changes.</div>
-            <StyledActionButton
-              disabled={disabled}
-              onClick={handlers.form.onSubmit}
-              primary
-              status={updateConfigStatus}
-              type="submit"
-            >
-              {t('common.Save')}
-            </StyledActionButton>
-          </Footer>
-        )}
-      </StyledContainer>
+      {/* Reset Bootstrap 3's html { font-size: 10px } which bleeds into the rest of the app */}
+      <style>{`html { font-size: 16px; }`}</style>
+      <Page title={t('configPage.Configuration')}>
+        <StyledContainer>
+          <HiddenTabs
+            defaultActiveKey="general"
+            onChange={setActiveTab}
+            sections={[...tabSections, emailTab, eventTab]}
+            shouldFillFlex
+          />
+          {!['emails', 'events'].includes(activeTab) && (
+            <Footer $pending={!noPendingChanges}>
+              <div>You have unsaved changes.</div>
+              <StyledActionButton
+                disabled={disabled}
+                onClick={handlers.form.onSubmit}
+                primary
+                status={updateConfigStatus}
+                type="submit"
+              >
+                {t('common.Save')}
+              </StyledActionButton>
+            </Footer>
+          )}
+        </StyledContainer>
+      </Page>
     </>
   )
 }

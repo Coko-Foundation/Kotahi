@@ -1,4 +1,8 @@
+/* eslint-disable new-cap */
+
 import { css } from 'styled-components'
+import Color from 'color'
+
 import {
   Action,
   ActionGroup,
@@ -12,9 +16,6 @@ import {
   Logo,
 } from './elements'
 import lightenBy from '../shared/lightenBy'
-import color, { setBrandColors as internalSetBrandColors } from './color'
-import spacing from './spacing'
-import typography from './typography'
 
 // Fonts
 import '@fontsource/roboto/400.css'
@@ -23,99 +24,204 @@ import '@fontsource/roboto/700.css'
 import '@fontsource/roboto/900.css'
 import '@fontsource/roboto/400-italic.css'
 
-const cokoTheme = {
-  color,
-  spacing,
-  typography,
+import '@fontsource/spectral-sc'
 
-  /* Colors */
-  // TODO Deprecate these in favour of definitions in color.js
-  /** @deprecated in favor of color.backgroundA */
-  colorBackground: color.backgroundA,
-  /** @deprecated in favor of color.backgroundB */
-  colorSecondaryBackground: color.backgroundB,
-  /** @deprecated in favor of color.brand1.base */
-  colorPrimary: color.brand1.base(),
-  /** @deprecated in favor of color.brand2.base */
-  colorSecondary: color.brand2.base(),
-  /** @deprecated in favor of color.gray90 */
-  colorFurniture: color.gray90,
-  /** @deprecated in favor of color.gray60 */
-  colorBorder: color.gray60,
-  /** @deprecated in favor of color.backgroundC */
-  colorBackgroundHue: color.backgroundC,
+export const validateColor = colorCode => {
+  try {
+    Color(colorCode)
+    return colorCode
+  } catch {
+    console.error(`${colorCode} is not a valid color code`)
+    return null
+  }
+}
+
+// Look into a warmer papery theme
+// background
+// 1. #F9F8F6 • Cotton Rag Paper (The Safe Bet)
+// 2. #F7F5F0 • Heavy Cardstock (More Alabaster)
+// 3. #FAF9F6 • Clean Washi Paper (Whisper Light)
+
+// font
+// warm, dark gray like #2C2A29
+// or #333230
+
+// const defaultBrandColor1 = '#3aae2a'
+// const defaultBrandColor2 = '#9e9e9e'
+const defaultBrandColor1 = '#4a7c59'
+const defaultBrandColor2 = '#6b7280'
+
+export const makeTheme = (
+  colorBrand1 = defaultBrandColor1,
+  colorBrand2 = defaultBrandColor2,
+) => ({
+  // DEPRECATED - unused values are commented out
+  color: {
+    black: '#000000',
+    // gray0: '#000000',
+    gray5: '#111111', // 7%: colorText
+    // gray10: '#191919', // 10%
+    gray20: '#323232', // 20%
+    gray30: '#4F4F4F', // 30%
+    // gray35: '#595959', // 35%: colorTextPlaceholder
+    gray40: '#666666', // 40%: colorIconPrimary
+    gray50: '#888888', // 53%
+    gray60: '#A5A5A5', // 65%: near colorBorder:#AAAAAA
+    gray70: '#BFBFBF', // 75%
+    gray80: '#DEDEDE', // 87%: colorContainerBorder
+    gray90: '#E8E8E8', // 91%: colorFurniture
+    gray95: '#EEEEEE', // 93%
+    gray97: '#F8F8F9', // 97%
+    gray99: '#FCFCFD', // 99%
+    // gray100: '#FFFFFF',
+    white: '#FFFFFF',
+
+    text: '#111111',
+    textReverse: '#FFFFFF',
+    textPlaceholder: '#666666',
+
+    backgroundA: '#FFFFFF',
+    backgroundB: '#f9fafb',
+    // backgroundC: '#f4f5f7',
+    backgroundC: '#f2f2f2',
+
+    brand1: {
+      shade50: Color(colorBrand1).darken(0.52),
+      shade25: Color(colorBrand1).darken(0.27),
+      // shade15: Color(colorBrand1).darken(0.17),
+      // shade10: Color(colorBrand1).darken(0.11),
+      base: colorBrand1,
+      tint10: lightenBy(colorBrand1, 0.1),
+      tint25: lightenBy(colorBrand1, 0.26),
+      tint50: lightenBy(colorBrand1, 0.53),
+      tint70: lightenBy(colorBrand1, 0.73),
+      tint90: lightenBy(colorBrand1, 0.93),
+    },
+    brand2: {
+      // shade50: Color(colorBrand2).darken(0.52),
+      // shade25: Color(colorBrand2).darken(0.27),
+      // shade15: Color(colorBrand2).darken(0.17),
+      // shade10: Color(colorBrand2).darken(0.11),
+      base: colorBrand2,
+      // tint10: lightenBy(colorBrand2, 0.1),
+      // tint25: lightenBy(colorBrand2, 0.26),
+      // tint50: lightenBy(colorBrand2, 0.53),
+      tint70: lightenBy(colorBrand2, 0.73),
+      // tint90: lightenBy(colorBrand2, 0.93),
+    },
+
+    success: {
+      // shade50: '#133a0e',
+      // shade25: '#1b5414',
+      // shade15: '#25721c',
+      // shade10: '#2c8a21',
+      base: '#329a25',
+      // tint10: '#3bb32b',
+      // tint25: '#4fcb3e',
+      // tint50: '#8ddf83',
+      // tint70: '#bcedb6',
+      // tint90: '#e3f8e0',
+    },
+    warning: {
+      shade50: '#6f3f00',
+      // shade25: '#8e5000',
+      // shade15: '#ae6200',
+      shade10: '#c56f00',
+      base: '#e48100',
+      // tint10: '#f69414',
+      // tint25: '#f8ae4c',
+      tint50: '#f6c88d',
+      tint70: '#fadfbe',
+      tint90: '#fdf1df',
+    },
+    error: {
+      // shade50: '#6f1919',
+      // shade25: '#8a1e1e',
+      // shade15: '#a52424',
+      // shade10: '#bf2828',
+      base: '#d22b2b',
+      // tint10: '#d94747',
+      // tint25: '#e06969',
+      // tint50: '#e88e8e',
+      // tint70: '#f0b4b4',
+      // tint90: '#f8dcdc',
+    },
+    additional: {
+      // blue: '#71AED2',
+      // purple: '#615CCF',
+      // aqua: '#7ED3A6',
+      green: '#89D46C',
+      // mustard: '#CCD66E',
+    },
+  },
+
+  colorBackground: '#FFFFFF',
+  colorBackgroundHue: '#f4f5f7',
+  colorBorder: '#A5A5A5',
+  colorContainerBorder: '#DEDEDE',
+  colorDisabled: '#bfbfbf',
+  colorError: '#B53930',
+  colorFurniture: '#E8E8E8',
+  colorIconPrimary: '#666666',
+  colorInfo: '#666666',
+  colorPrimary: colorBrand1,
+  colorSecondary: colorBrand2,
+  colorSecondaryBackground: '#f9fafb',
   colorSuccess: '#008800',
-  colorError: '#FF2D1A',
-  /** @deprecated in favor of color.text */
-  colorText: color.text,
-  /** @deprecated in favor of color.textReverse */
-  colorTextReverse: color.textReverse,
-  /** @deprecated in favor of color.textPlaceholder */
-  colorTextPlaceholder: color.textPlaceholder,
-  colorWarning: '#ffc107',
-  colorWarningLight: '#fff9ed',
-  colorWarningDark: '#503303',
-  colorSuccessLight: '#d2ffcc',
   colorSuccessDark: '#17510F',
-  /** @deprecated in favor of color.gray40 */
-  colorIconPrimary: color.gray40,
-  /** @deprecated in favor of color.gray80 */
-  colorContainerBorder: color.gray80,
-
-  /* Text variables */
+  colorSuccessLight: '#d2ffcc',
+  colorText: '#111111',
+  colorTextHeading: '#111111',
+  colorTextPlaceholder: '#666666',
+  colorTextReverse: '#FFFFFF',
+  colorWallpaper: '#f2f2f2',
+  colorWarning: '#C18D33',
+  colorWarningDark: '#503303',
+  colorWarningLight: '#fff9ed',
 
   // fonts
   fontInterface:
     "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
-  fontHeading:
-    "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+  fontHeading: "'Spectral SC', Georgia, 'Times New Roman', serif",
   fontReading:
     "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   fontWriting:
     "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
 
-  // font sizes
-  fontSizeBase: '16px',
-  fontSizeBaseSmall: '14px',
-  fontSizeBaseSmaller: '12px',
-  fontSizeHeading1: '40px',
-  fontSizeHeading2: '36px',
-  fontSizeHeading3: '28px',
-  fontSizeHeading4: '24px',
-  fontSizeHeading5: '20px',
-  fontSizeHeading6: '16px',
+  // https://typescale.com (major second)
+  fontSizeBase: '1rem',
+  fontSizeBaseSmall: '0.889rem',
+  fontSizeBaseSmaller: '0.79rem',
+  fontSizeHeading1: '2.027rem',
+  fontSizeHeading2: '1.802rem',
+  fontSizeHeading3: '1.602rem',
+  fontSizeHeading4: '1.424rem',
+  fontSizeHeading5: '1.266rem',
+  fontSizeHeading6: '1.125rem',
 
-  // line heights
-  lineHeightBase: '24px',
-  lineHeightBaseSmall: '16px',
-  lineHeightBaseSmaller: '14px',
-  lineHeightHeading1: '48px',
-  lineHeightHeading2: '40px',
-  lineHeightHeading3: '32px',
-  lineHeightHeading4: '32px',
-  lineHeightHeading5: '24px',
-  lineHeightHeading6: '24px',
+  lineHeightBase: '1.5',
+  lineHeightBaseSmall: '1.5',
+  lineHeightBaseSmaller: '1.4',
+  lineHeightHeading6: '1.35',
+  lineHeightHeading5: '1.3',
+  lineHeightHeading4: '1.25',
+  lineHeightHeading3: '1.2',
+  lineHeightHeading2: '1.15',
+  lineHeightHeading1: '1.1',
 
   /* Spacing */
-  gridUnit: '8px',
+  gridUnit: '4px',
 
   /* Border */
-  borderRadius: '6px',
+  borderRadius: '3px',
+  borderRadiusLarge: '15%',
   borderWidth: '1px', // julien: not 0
   borderStyle: 'solid',
 
   // Does not exist
   // $borderColor: var($colorFurniture);
 
-  /* Shadow (for tooltip) */
-  boxShadow: {
-    inset: 'inset 0px 0px 4px rgb(0 0 0 / 7%)',
-    shades: {
-      100: '0 2px 6px 0 rgb(0 0 0 / 5%)',
-      200: '0 2px 6px 0 rgb(0 0 0 / 10%)',
-      300: '0 2px 6px 0 rgb(0 0 0 / 20%)',
-    },
-  },
+  boxShadow200: '0 2px 6px 0 rgb(0 0 0 / 10%)',
 
   /* Transition */
   // transitionDuration: '0.2s', // TODO -- julien: not 0.05s
@@ -197,15 +303,4 @@ const cokoTheme = {
       `,
     },
   },
-}
-
-export const setBrandColors = (color1 = '#3AAE2A', color2 = '#9e9e9e') => {
-  cokoTheme.colorPrimary = color1
-  cokoTheme.colorSecondary = color2
-  internalSetBrandColors(color1, color2)
-}
-
-export { color }
-export { spacing as space }
-
-export default cokoTheme
+})

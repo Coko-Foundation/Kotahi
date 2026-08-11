@@ -1,6 +1,6 @@
 /* eslint-disable promise/always-return */
 
-const fs = require('fs-extra')
+const fs = require('fs')
 const fsPromised = require('fs').promises
 const crypto = require('crypto')
 const { promisify } = require('util')

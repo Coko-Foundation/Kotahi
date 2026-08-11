@@ -8,13 +8,11 @@ import styled from 'styled-components'
 import { th } from '@coko/client'
 
 import { Button, Icons } from './Modal'
-import { color } from '../../../../theme'
 
 const { saveIcon, editIcon, exitIcon } = Icons
 
 const Input = styled.input`
   border: 0;
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   outline: 0;
@@ -22,7 +20,7 @@ const Input = styled.input`
   width: 78.2%;
 
   &:focus {
-    border-bottom: 1px dashed ${color.brand1.base};
+    border-bottom: 1px dashed ${th('color.brand1.base')};
     outline: 0;
   }
 
@@ -33,7 +31,6 @@ const Input = styled.input`
 `
 
 const PlainItem = styled.div`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   text-align: left;

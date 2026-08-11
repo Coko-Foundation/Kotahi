@@ -117,7 +117,7 @@ const doReview = (name, reviewData) => {
       // Verify the review got completed
       cy.get('nav').contains('Dashboard').click()
       DashboardPage.getDoReviewButton().should('contain', 'View')
-      cy.get('[type="user"]:nth(1)').click()
+      cy.getByDataTestId('menu-user').click()
       cy.contains('Logout').click()
     }
   }
@@ -126,7 +126,7 @@ const doReview = (name, reviewData) => {
   if (reviewData.verdict === 'reject') {
     DashboardPage.clickRejectReviewButton()
     DashboardPage.getDoReviewButton().should('not.exist')
-    cy.get('[type="user"]:nth(1)').click()
+    cy.getByDataTestId('menu-user').click()
     cy.contains('Logout').click()
   }
 }

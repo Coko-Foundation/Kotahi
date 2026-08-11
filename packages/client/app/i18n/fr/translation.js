@@ -103,34 +103,55 @@ const fr = {
         error: 'Erreur',
       },
     },
-    leftMenu: {
-      'Summary Info': 'Résumé des infos',
-      Manuscript: 'Manuscrit',
+    menu: {
+      CMS: 'CMS',
+      CoarNotifyInbox: 'Boîte de réception COAR Notify',
+      CollapseMenu: 'Réduire le menu',
+      Configuration: 'Configuration',
       Dashboard: 'Tableau de bord',
+      ExpandMenu: 'Développer le menu',
+      Forms: 'Formulaires',
+      MainNavigation: 'Navigation principale',
       Manuscripts: 'Manuscrits',
       Reports: 'Rapports',
-      Settings: 'Paramètres',
-      Forms: 'Formulaires',
-      Submission: 'Soumission',
-      Review: 'Révision',
-      Decision: 'Décision',
       Tasks: 'Tâches',
       Users: 'Utilisateurs',
-      Configuration: 'Configuration',
-      Emails: 'E-mails',
-      CMS: 'CMS',
-      Pages: 'Pages',
-      Layout: 'Mise en page',
-      Article: "Modèle d' article",
-      'Go to your profile': 'Accéder à votre profil',
-      FileBrowser: 'Explorateur de fichiers',
-      Metadata: 'Métadonnées de Publication',
-      Collections: 'Colecciones',
-      CoarNotifyInbox: 'Boîte de réception COAR Notify',
     },
-    menuSettings: {
-      KeepMenuVisible: 'Garder le menu visible',
-      MinimalSidebar: 'Barre latérale minimale',
+    formsPage: {
+      title: 'Formulaires',
+      description:
+        'Voici les formulaires que les auteurs, les évaluateurs et les rédacteurs remplissent à chaque étape du traitement du manuscrit. Modifier un formulaire ici change les informations collectées à partir de ce moment, y compris les champs disponibles en tant que métadonnées ailleurs dans Kotahi ; cela ne modifie pas les données déjà soumises sur les manuscrits existants.',
+      submissionFormTitle: 'Formulaire de soumission',
+      submissionFormDescription:
+        'Modifiez le formulaire que les auteurs verront lors de la soumission d’un manuscrit. Cela affecte également les champs de métadonnées disponibles pour les rédacteurs et les données capturées qui seront disponibles pour la publication.',
+      reviewFormTitle: 'Formulaire d’évaluation',
+      reviewFormDescription:
+        'Modifiez le formulaire que les évaluateurs verront lors de la soumission d’une évaluation d’un manuscrit.',
+      decisionFormTitle: 'Formulaire de décision',
+      decisionFormDescription:
+        'Modifiez le formulaire que les rédacteurs verront lors de la prise d’une décision sur un manuscrit.',
+    },
+    cmsIndexPage: {
+      title: 'CMS',
+      description:
+        "C'est ici que vous gérez votre site web publié, indépendamment du flux de travail éditorial interne. Gérez les pages statiques, la mise en page et l'image de marque de l'ensemble du site, le modèle d'article, les métadonnées de publication et les fichiers qui composent votre site. Les modifications apportées ici sont publiées immédiatement sur votre site.",
+      pagesTitle: 'Pages',
+      pagesDescription:
+        'Gérez les pages disponibles sur votre site web publié.',
+      layoutTitle: 'Mise en page',
+      layoutDescription:
+        'Contrôlez les couleurs, le pied de page, le logo et plus encore de votre site web.',
+      articleTitle: "Modèle d'article",
+      articleDescription:
+        "Contrôlez la structure, les styles et les ressources de la page d'article publiée.",
+      metadataTitle: 'Métadonnées de publication',
+      metadataDescription:
+        'Gérez le nom de votre revue, les ISSN et les informations de contact.',
+      fileBrowserTitle: 'Explorateur de fichiers',
+      fileBrowserDescription:
+        'Consultez et modifiez tous les fichiers inclus dans votre site web publié.',
+      collectionsTitle: 'Collections',
+      collectionsDescription: "Gérez les collections d'articles.",
     },
     profilePage: {
       'Your profile': 'Votre profil',
@@ -1181,7 +1202,6 @@ const fr = {
       edit: 'Modifier',
       delete: 'Supprimer',
       Edited: 'Modifié',
-      'Open video chat': 'Ouvrir le chat vidéo',
       Formatting: 'Mise en forme',
       'Hide formatting': 'Masquer la mise en forme',
     },

@@ -9,13 +9,13 @@ import { TextField } from '../../../pubsweet'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   width: 100%;
 `
 
 const CoarAuthFieldWrapper = styled.div`
   display: flex;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   width: 100%;
 `
 
@@ -24,7 +24,7 @@ const StyledTextField = styled(TextField)`
 `
 
 const StyledActionButton = styled(ActionButton)`
-  padding: 0 ${grid(2)};
+  padding: 0 ${grid(4)};
 `
 
 const CoarAuthToken = ({ onRefreshCoarAuthToken }) => {

@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 
 import { Clock, Plus, Power, Trash } from 'react-feather'
-import styled from 'styled-components'
-import { grid } from '@coko/client'
+import styled, { useTheme } from 'styled-components'
+import { th, grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { useBool, useString } from '../../../hooks/dataTypeHooks'
 import {
@@ -25,7 +25,6 @@ import {
 import { arrIf } from '../../../shared/generalUtils'
 import EventListControls from './EventListControls'
 import { filterEventAndNotifications } from '../misc/helpers'
-import { color } from '../../../theme'
 
 const Root = styled(Col)`
   gap: 0;
@@ -41,7 +40,7 @@ const StyledListHeader = styled(ListHeader)`
   color: var(--color-1);
   opacity: ${p => (p.$active ? 1 : 0.8)};
   overflow: hidden;
-  padding-block: ${grid(1)};
+  padding-block: ${grid(2)};
 
   p {
     font-size: 14px;
@@ -62,7 +61,7 @@ const EventSource = styled.div`
   color: var(--color-1);
   display: flex;
   justify-content: space-between;
-  padding: 0 ${grid(0.5)};
+  padding: 0 ${grid(1)};
   width: 100%;
 `
 
@@ -102,7 +101,7 @@ const Actions = styled(ActionsContainer)`
   align-items: center;
   gap: 0;
   justify-content: center;
-  padding-inline: ${grid(1.5)};
+  padding-inline: ${grid(3)};
 
   svg {
     aspect-ratio: 1 / 1;
@@ -116,7 +115,7 @@ const StyledListItem = styled(OptionListItem)`
   background: ${p => (!p.$selected ? '#fbfbfb' : '#fff')};
   border-color: #ddd;
   /* border-left-color: ${p => (!p.$selected ? '#ccc' : 'transparent')}; */
-  padding: ${grid(1.5)} ${grid(2.5)};
+  padding: ${grid(3)} ${grid(5)};
 `
 
 const ActionButton = styled(ActionIcon)`
@@ -138,7 +137,7 @@ const ListItemActionsContainer = styled(Row)`
 
 const OptionButton = styled(OptionListItemButton)`
   p {
-    text-decoration-color: ${color.error.base};
+    text-decoration-color: ${th('color.error.base')};
     text-decoration-style: double;
   }
 `
@@ -151,6 +150,7 @@ const NotificationItem = ({
   selected,
   notification,
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation()
   const { delay, displayName, event, id, isDefault } = notification
   const name = displayName || t(T[event])
@@ -187,7 +187,9 @@ const NotificationItem = ({
             </ActionButton>
           )}
           <ActionButton
-            $color={isInactive ? color.error.base : color.success.base}
+            $color={
+              isInactive ? theme.color.error.base : theme.color.success.base
+            }
             $disabled={!notification.emailTemplateId || !notification.recipient}
             onClick={e => {
               e.stopPropagation()
@@ -211,6 +213,7 @@ const EventsList = ({
   handleActivate,
   selected,
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation()
   const search = useString()
 
@@ -310,8 +313,8 @@ const EventsList = ({
                         style={{
                           strokeWidth: '2px',
                           stroke: sourceIsActive
-                            ? color.success.base
-                            : color.error.base,
+                            ? theme.color.success.base
+                            : theme.color.error.base,
                         }}
                       />
                     </CleanButton>

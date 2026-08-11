@@ -358,6 +358,7 @@ const ReviewLayout = ({
           <HiddenTabs
             defaultActiveKey={reviewSectionsData[0]?.key}
             sections={reviewSectionsData}
+            shouldFillFlex
           />
         ),
       }

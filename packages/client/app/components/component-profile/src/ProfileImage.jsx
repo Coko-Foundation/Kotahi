@@ -1,16 +1,16 @@
-import { th } from '@coko/client'
+import { grid } from '@coko/client'
 import styled from 'styled-components'
 
 export const BigProfileImage = styled.img`
   border-radius: 50%;
-  height: calc(${th('gridUnit')} * 6);
+  height: ${grid(12)};
   object-fit: cover;
-  width: calc(${th('gridUnit')} * 6);
+  width: ${grid(12)};
 `
 
 export const SmallProfileImage = styled.img`
   border-radius: 50%;
-  height: calc(${th('gridUnit')} * 4);
+  height: ${grid(8)};
   object-fit: cover;
-  width: calc(${th('gridUnit')} * 4);
+  width: ${grid(8)};
 `

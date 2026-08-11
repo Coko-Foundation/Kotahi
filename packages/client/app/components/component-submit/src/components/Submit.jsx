@@ -3,8 +3,10 @@
 
 import React, { useCallback, useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { set, debounce } from 'lodash'
 import { useTranslation } from 'react-i18next'
+import { th } from '@coko/client'
 import { ConfigContext } from '../../../config/src'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
@@ -18,6 +20,7 @@ import {
   Chat,
   Manuscript,
   ErrorBoundary,
+  SectionContent,
 } from '../../../shared'
 
 // TODO: Improve the import, perhaps a shared component?
@@ -29,6 +32,16 @@ import {
   ChatButton,
   CollapseButton,
 } from '../../../component-review/src/components/style'
+
+const TabPanel = styled.div`
+  background: ${th('color.backgroundA')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow200')};
+
+  ${SectionContent} {
+    box-shadow: none;
+  }
+`
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -160,14 +173,18 @@ const Submit = ({
       }
 
       decisionSection = {
-        content: <SubmissionForm {...submissionProps} />,
+        content: (
+          <TabPanel>
+            <SubmissionForm {...submissionProps} />
+          </TabPanel>
+        ),
         key: version.id,
         label: t('manuscriptSubmit.Edit submission info'),
       }
     } else {
       decisionSection = {
         content: (
-          <>
+          <TabPanel>
             <DecisionAndReviews
               allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
               createFile={createFile}
@@ -186,7 +203,7 @@ const Submit = ({
               threadedDiscussionProps={threadedDiscussionExtendedProps}
               title={t('manuscriptSubmit.Metadata')}
             />
-          </>
+          </TabPanel>
         ),
         key: version.id,
         label: t('manuscriptSubmit.Submitted info'),
@@ -215,7 +232,11 @@ const Submit = ({
                 manuscript={version}
               />
             )}
-          <HiddenTabs defaultActiveKey={version.id} sections={tabSections} />
+          <HiddenTabs
+            defaultActiveKey={version.id}
+            sections={tabSections}
+            shouldFillFlex
+          />
         </>
       ),
       key: version.id,

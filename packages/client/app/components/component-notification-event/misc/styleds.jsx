@@ -1,9 +1,9 @@
 /* stylelint-disable declaration-no-important */
 import { grid, th, theme } from '@coko/client'
 import styled from 'styled-components'
+
 import { FlexRow } from '../../component-cms-manager/src/style'
 import { StyledInput } from '../../shared'
-import { color } from '../../../theme'
 import { CleanButton } from '../../component-email-templates/misc/styleds'
 
 export const EventEditForm = styled.form`
@@ -13,7 +13,7 @@ export const EventEditForm = styled.form`
   gap: 0;
   height: 100%;
   overflow: hidden;
-  padding: ${grid(2)} ${grid(6)} ${grid(3)};
+  padding: ${grid(4)} ${grid(12)} ${grid(6)};
   width: 100%;
 
   h3,
@@ -27,7 +27,7 @@ export const EventEditForm = styled.form`
 `
 
 export const Row = styled(FlexRow)`
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   width: 100%;
 `
 
@@ -53,7 +53,7 @@ export const EditSection = styled(Col)`
   max-height: ${p => (p.$collapsed ? '0' : '100%')};
   min-height: 0;
   overflow: auto;
-  padding: 0 ${grid(4)};
+  padding: 0 ${grid(8)};
   transition: all 0.3s;
 
   small {
@@ -65,37 +65,37 @@ export const EditSection = styled(Col)`
 
     /* stylelint-disable-next-line string-quotes */
     &[data-modified='true'] {
-      color: ${color.warning.base};
+      color: ${th('color.warning.base')};
     }
     /* stylelint-disable-next-line string-quotes */
     &[data-error='true'] {
-      color: ${color.error.base};
+      color: ${th('color.error.base')};
     }
   }
 
   small,
   strong {
-    padding: 0 ${grid(0.5)};
+    padding: 0 ${grid(1)};
   }
 
   h4 {
     margin: 0;
-    padding: ${grid(3)} ${grid(0.5)} ${grid(2)};
+    padding: ${grid(6)} ${grid(1)} ${grid(4)};
   }
 `
 
 export const TextInput = styled(StyledInput)`
   /* stylelint-disable-next-line declaration-no-important */
   border-color: ${p => p.$color} !important;
-  padding: ${grid(1.25)};
+  padding: ${grid(2.5)};
 `
 
 export const Header = styled(Row)`
   align-items: center;
   border-bottom: 1px solid #ddd;
-  color: ${color.brand1.base};
+  color: ${th('color.brand1.base')};
   height: var(--header-height, 0);
-  padding: 0 ${grid(4)};
+  padding: 0 ${grid(8)};
 
   h3 {
     margin: 0;
@@ -109,21 +109,21 @@ export const Content = styled(FlexRow)`
 `
 
 export const ActionIcon = styled(CleanButton)`
-  border: 1px solid ${p => p.$color || color.brand1.base};
+  border: 1px solid ${p => p.$color || p.theme.color.brand1.base};
   border-radius: ${th('borderRadius')};
   filter: ${p => (p.$disabled ? 'grayscale(1)' : 'none')};
-  padding: ${grid(1)};
+  padding: ${grid(2)};
 
   svg {
     aspect-ratio: 1 / 1;
     height: 22px;
     pointer-events: none;
-    stroke: ${p => p.$color || color.brand1.base};
+    stroke: ${p => p.$color || p.theme.color.brand1.base};
   }
 `
 export const CounterInputWrapper = styled(Row)`
   align-items: center;
-  border: 1px solid ${p => (p.$changed ? color.warning.base : '#ddd')};
+  border: 1px solid ${p => (p.$changed ? p.theme.color.warning.base : '#ddd')};
   border-radius: 4px;
   padding: 7px 10px;
 
@@ -142,8 +142,8 @@ export const CounterInputWrapper = styled(Row)`
 
 export const InputWrapper = styled.div`
   align-items: center;
-  background: ${color.gray99};
-  border: 1px solid ${color.gray80};
+  background: ${th('color.gray99')};
+  border: 1px solid ${th('color.gray80')};
   border-color: ${p => p.$color || '#ddd'};
   border-radius: 4px;
   box-shadow: inset 0 0 4px #0001;
@@ -153,14 +153,14 @@ export const InputWrapper = styled.div`
   width: 100%;
 
   &:hover {
-    border: 1px solid ${color.gray70};
+    border: 1px solid ${th('color.gray70')};
     outline: none;
     transition: ${theme.transitionDuration};
   }
 
   &:active,
   &:focus-visible {
-    border: 1px solid ${color.brand1.base};
+    border: 1px solid ${th('color.brand1.base')};
     outline: none;
     transition: ${theme.transitionDuration};
   }
@@ -175,7 +175,7 @@ export const InputWrapper = styled.div`
 
   small {
     border-right: 1px solid #aaa;
-    padding: 3px ${grid(1)};
+    padding: 3px ${grid(2)};
     width: fit-content;
   }
 `

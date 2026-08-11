@@ -168,13 +168,13 @@ export const SimpleWaxEditorContainer = styled.div`
 export const ControlsContainer = styled.div`
   display: flex;
   flex: 1 1;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: flex-end;
 `
 
 export const FlexRow = styled.div`
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: space-between;
 `
 
@@ -201,8 +201,8 @@ export const ErrorMessage = styled.div`
 export const InfoBlock = styled.div`
   background-color: ${th('colorSecondaryBackground')};
   border: 1px solid ${th('colorBorder')};
-  border-radius: ${grid(1)};
-  padding: ${grid(2)};
+  border-radius: ${grid(2)};
+  padding: ${grid(4)};
   width: 100%;
 `
 
@@ -218,30 +218,30 @@ export const LayoutHeaderListContainer = styled.div`
 export const LayoutHeaderListItem = styled.div`
   align-items: center;
   border: 1px solid #dedede;
-  border-radius: ${grid(1)};
+  border-radius: ${grid(2)};
   display: flex;
   justify-content: space-between;
-  margin-bottom: ${grid(2)};
-  padding: ${grid(1 / 2)};
+  margin-bottom: ${grid(4)};
+  padding: ${grid(1)};
   user-select: none;
 `
 
 export const LayoutMainHeading = styled(Heading)`
   color: ${th('colorTextPlaceholder')};
-  font-size: ${grid(3)};
-  margin-bottom: ${grid(2)};
+  font-size: ${grid(6)};
+  margin-bottom: ${grid(4)};
 `
 
 export const LayoutSecondaryHeading = styled(Heading)`
   color: ${th('colorTextPlaceholder')};
-  font-size: ${grid(1.5)};
-  margin-bottom: ${grid(1)};
+  font-size: ${grid(3)};
+  margin-bottom: ${grid(2)};
 `
 export const RightArrow = styled(ChevronRight)`
-  height: ${grid(2)};
+  height: ${grid(4)};
   margin-bottom: 12px;
   margin-top: 12px;
   stroke: ${th('colorPrimary')};
   stroke-width: 4px;
-  width: ${grid(2)};
+  width: ${grid(4)};
 `

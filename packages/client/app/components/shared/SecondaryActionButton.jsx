@@ -5,17 +5,16 @@ import PropTypes from 'prop-types'
 import styled, { ThemeContext } from 'styled-components'
 import { Check, AlertCircle } from 'react-feather'
 import { th, grid, rotate360 } from '@coko/client'
-import { color } from '../../theme'
 
 const BaseButton = styled.button`
-  border: 2px solid ${color.brand1.base};
+  border: 2px solid ${th('color.brand1.base')};
   border-radius: ${th('borderRadius')};
   font-family: ${th('fontInterface')};
   font-size: ${th('fontSizeBase')};
   font-weight: 500;
   line-height: ${th('lineHeightBase')};
-  min-height: ${grid(3)};
-  min-width: ${grid(5)};
+  min-height: ${grid(6)};
+  min-width: ${grid(10)};
   ${props =>
     props.isCompact
       ? ''
@@ -26,15 +25,15 @@ const BaseButton = styled.button`
 `
 
 const DisabledButton = styled(BaseButton)`
-  background-color: ${color.gray90};
-  border: 2px solid ${color.gray90};
-  color: ${color.gray60};
+  background-color: ${th('color.gray90')};
+  border: 2px solid ${th('color.gray90')};
+  color: ${th('color.gray60')};
 `
 
 const Button = styled(BaseButton)`
   background-color: white;
   box-shadow: 0 3px 5px 1px rgb(0 0 0 / 20%);
-  color: ${color.brand1.base};
+  color: ${th('color.brand1.base')};
 
   &:hover,
   &:active,
@@ -47,12 +46,12 @@ const Button = styled(BaseButton)`
 const LabelOnlySpan = styled.span.attrs({
   'data-testid': 'secondary-action-button-label-only-span',
 })`
-  padding: 0 ${grid(1)};
+  padding: 0 ${grid(2)};
 `
 
 const Spinner = styled.div`
   display: inline-block;
-  padding-left: ${grid(1)};
+  padding-left: ${grid(2)};
   vertical-align: -2px;
 
   &::after {
@@ -64,17 +63,17 @@ const Spinner = styled.div`
     box-sizing: border-box;
     content: '';
     display: block;
-    height: ${grid(2)};
-    width: ${grid(2)};
+    height: ${grid(4)};
+    width: ${grid(4)};
   }
 `
 
 const IconContainer = styled.div`
   display: inline-block;
-  height: ${grid(2)};
-  margin-left: ${grid(1)};
+  height: ${grid(4)};
+  margin-left: ${grid(2)};
   vertical-align: -2px;
-  width: ${grid(2)};
+  width: ${grid(4)};
 `
 
 const SecondaryActionButton = ({
@@ -91,7 +90,7 @@ const SecondaryActionButton = ({
 
   const fgColor =
     status === 'pending' || status === 'success'
-      ? color.brand1.base()
+      ? themeContext.color.brand1.base
       : themeContext.colorError
 
   let statusIndicator = null
@@ -147,7 +146,7 @@ const SecondaryActionButton = ({
 }
 
 SecondaryActionButton.propTypes = {
-  /** Primary buttons are styled with color.brand1.base, unless another color is specified */
+  /** Primary buttons are styled with th('color.brand1.base'), unless another color is specified */
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
   /** 'pending' will show a spinner; 'success' will show a tick; 'failure' will show a warning icon and change the color to colorWarning */

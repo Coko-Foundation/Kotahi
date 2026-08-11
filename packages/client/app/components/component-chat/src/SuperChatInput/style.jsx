@@ -2,7 +2,7 @@
 /* stylelint-disable declaration-no-important, string-quotes */
 
 import styled, { css } from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { MEDIA_BREAK } from '../../../layout'
 import { zIndex } from '../../../../globals'
 
@@ -129,7 +129,7 @@ export const ChatInputWrapper = styled.div`
   background-color: ${th('colorBackground')};
   display: flex;
   flex-direction: row;
-  margin-bottom: ${th('gridUnit')};
+  margin-bottom: ${grid(2)};
   padding: 8px 4px 0;
   width: 100%;
 
@@ -154,7 +154,7 @@ export const Form = styled.form`
 
   & > button {
     /* Make height of button consistent with the Input Box */
-    padding: 10px ${th('gridUnit')};
+    padding: 10px ${grid(2)};
   }
 `
 
@@ -163,10 +163,12 @@ export const InputWrapper = styled.div`
   background: ${props =>
     props.$networkDisabled
       ? hexa(props.theme.special.default, 0.1)
-      : th('colorBackground')};
+      : props.theme.colorBackground};
   border-radius: 10px;
   color: ${props =>
-    props.$networkDisabled ? th('colorText') : th('colorSecondary')};
+    props.$networkDisabled
+      ? props.theme.colorText
+      : props.theme.colorSecondary};
   display: flex;
   flex: auto;
   flex-direction: column;
@@ -177,7 +179,9 @@ export const InputWrapper = styled.div`
   &:hover,
   &:focus {
     border-color: ${props =>
-      props.$networkDisabled ? th('borderColor') : th('colorWarning')};
+      props.$networkDisabled
+        ? props.theme.borderColor
+        : props.theme.colorWarning};
     transition: border-color 0.2s ease-in;
   }
 

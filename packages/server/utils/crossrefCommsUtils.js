@@ -11,6 +11,7 @@ const http = rateLimit(axios.create(), {
 
 const apiUrl = 'https://api.crossref.org/v1/works/'
 const defaultMailTo = 'unknown@unknown.com'
+const TIMEOUT_MS = 30000
 
 /** Pass the response of every CrossRef API call to this function to ensure rate limits are updated */
 const updateRateLimit = response => {
@@ -35,7 +36,9 @@ const updateRateLimit = response => {
 // imposes a hard limit of around 10 queries/sec from a single IP address.
 const getUrlByDoiFromDataCite = async doi => {
   try {
-    const response = await axios.get(`https://doi.org/api/handles/${doi}`)
+    const response = await axios.get(`https://doi.org/api/handles/${doi}`, {
+      timeout: TIMEOUT_MS,
+    })
 
     if (response.status === 200) {
       const url = response.data?.values?.[0]?.data?.value
@@ -178,7 +181,7 @@ const getFormattedReferencesFromCrossRef = async (
   try {
     const response = await http.get('https://api.crossref.org/v1/works', {
       params,
-      timeout: 15000,
+      timeout: TIMEOUT_MS,
       headers: {
         'User-Agent': `Kotahi (Axios 0.21${
           crossrefRetrievalEmail ? `; mailto:${crossrefRetrievalEmail}` : ''
@@ -236,7 +239,7 @@ const getFormattedReferencesFromCrossRefDOI = async (
   try {
     const response = await http.get('https://api.crossref.org/v1/works', {
       params,
-      timeout: 15000,
+      timeout: TIMEOUT_MS,
       headers: {
         'User-Agent': `Kotahi (Axios 0.21${
           crossrefRetrievalEmail ? `; mailto:${crossrefRetrievalEmail}` : ''

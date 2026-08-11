@@ -1,12 +1,9 @@
 /* eslint-disable react-hooks/immutability */
-/* eslint-disable react/prop-types */
 
 /* eslint-disable no-shadow */
 
 import { useState, useContext, useRef, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from 'react-i18next'
 import {
   useQuery,
@@ -15,8 +12,9 @@ import {
   useApolloClient,
   useLazyQuery,
 } from '@apollo/client/react'
-import fnv from 'fnv-plus'
 import { saveAs } from 'file-saver'
+import { useNotification } from '@coko/client'
+
 import { ConfigContext } from '../../config/src'
 import {
   GET_MANUSCRIPTS_AND_FORM,
@@ -41,14 +39,18 @@ import {
 } from '../../../shared/urlParamUtils'
 import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
 import useChat from '../../../hooks/useChat'
+import { useCurrentUser } from '../../../pages/hooks/useCurrentUser'
 
-const ManuscriptsPage = ({ currentUser }) => {
+const ManuscriptsPage = () => {
   const location = useLocation()
   const { t } = useTranslation()
-  const [doUpdateManuscript] = useMutation(UPDATE_MANUSCRIPT)
+  const currentUser = useCurrentUser()
+  const notify = useNotification()
+
   const config = useContext(ConfigContext)
   const { urlFrag } = config
-  const chatRoomId = fnv.hash(config.clientUrl).hex()
+
+  const [doUpdateManuscript] = useMutation(UPDATE_MANUSCRIPT)
 
   /** Returns an array of column names, e.g.
    *  ['shortId', 'created', 'titleAndAbstract', 'submission.topic', 'status'] */
@@ -91,20 +93,14 @@ const ManuscriptsPage = ({ currentUser }) => {
   )
 
   useSubscription(IMPORTED_MANUSCRIPTS, {
-    onSubscriptionData: data => {
-      const {
-        subscriptionData: {
-          data: { manuscriptsImportStatus },
-        },
-      } = data
-
+    onData: ({ data }) => {
       setIsImporting(false)
       applyQueryParams({ [URI_PAGENUM_PARAM]: 1 })
+      queryObject.refetch()
 
-      toast.success(
-        manuscriptsImportStatus && 'Manuscripts successfully imported',
-        { hideProgressBar: true },
-      )
+      if (data.data.manuscriptsImportStatus) {
+        notify.success({ title: 'Manuscripts successfully imported' })
+      }
     },
   })
 
@@ -293,7 +289,6 @@ const ManuscriptsPage = ({ currentUser }) => {
       channels={channels}
       chatExpand={chatExpand}
       chatProps={chatProps}
-      chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
       currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}

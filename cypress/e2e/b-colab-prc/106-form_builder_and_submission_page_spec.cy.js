@@ -33,17 +33,20 @@ describe('Form builder and Submission pages', () => {
     FormsPage.clickFormOption(1)
     FormsPage.getFieldValidate().scrollIntoView().click()
     cy.log('Admin makes DOI a required field.')
-    cy.get('[class*="react-select__option"]').eq(0).click()
+    cy.get('[class*="react-select__option"]').eq(0).click({ force: true })
     cy.contains('Save').click()
 
     //  Add field: Single image attachment
     cy.get('[title="Add a field..."]').click()
     cy.getByDataTestId('fieldType').click()
-    cy.contains('Single image attachment').scrollIntoView().click()
+    cy.contains('Single image attachment')
+      .scrollIntoView()
+      .click({ force: true })
     cy.contains('Save').click()
 
     // === Review Form ===
-    cy.contains('Review').click()
+    Menu.clickForms()
+    cy.getByDataTestId('card-link-review').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Review')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
@@ -56,13 +59,14 @@ describe('Form builder and Submission pages', () => {
     cy.get('[class*="react-select__option"]')
       .contains('Attachments')
       .scrollIntoView()
-      .click()
+      .click({ force: true })
     cy.getByDataTestId('title').click().type('More attachments')
     cy.get('[name=name]').click().type('moreAttachments')
     cy.contains('Save').click()
 
     // === Decision Form ===
-    cy.contains('Decision').click()
+    Menu.clickForms()
+    cy.getByDataTestId('card-link-decision').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()

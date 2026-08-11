@@ -3,7 +3,7 @@
 /* eslint-disable no-return-assign */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 const Button = styled.button.attrs(() => ({
   type: 'button',
@@ -11,9 +11,9 @@ const Button = styled.button.attrs(() => ({
   background: transparent;
   border: ${th('borderWidth')} dashed ${th('colorBorder')};
   cursor: pointer;
-  height: calc(${th('gridUnit')} * 3);
-  margin-bottom: calc(${th('gridUnit')} * 3);
-  padding: ${th('gridUnit')};
+  height: ${grid(6)};
+  margin-bottom: ${grid(6)};
+  padding: ${grid(2)};
 `
 
 const UploadButton = ({ name, buttonText, onChange }) => {

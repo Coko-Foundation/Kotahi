@@ -9,7 +9,6 @@ import { evaluate } from '../support/routes'
  */
 
 const BUTTON = 'button'
-const LIVE_CHAT_BUTTON = '[data-testid=float-right-button]'
 const EXPAND_CHAT_BUTTON = '[data-testid=round-icon-button-wrapper]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 // const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
@@ -76,14 +75,8 @@ export const ManuscriptsPage = {
   clickExpandChatButton() {
     this.getExpandChatButton().click()
   },
-  getLiveChatButton() {
-    return cy.get(LIVE_CHAT_BUTTON)
-  },
-  clickLiveChatButton() {
-    this.getLiveChatButton().click()
-  },
   getManuscriptsPageTitle() {
-    return cy.getByDataTestId('general-heading')
+    return cy.get('h1')
   },
   getEvaluationButton() {
     return cy.contains('button', 'Evaluation')

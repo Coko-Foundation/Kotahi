@@ -810,14 +810,6 @@ const updateLanguage = async (id, preferredLanguage) => {
   return User.query().patchAndFetchById(id, { preferredLanguage })
 }
 
-const updateMenuUI = async (userId, expanded) => {
-  const user = await User.query().patchAndFetchById(userId, {
-    menuPinned: expanded,
-  })
-
-  return user
-}
-
 const updateRecentTab = async (userId, tab) => {
   const user = await User.query().patchAndFetchById(userId, {
     recentTab: tab,
@@ -873,7 +865,6 @@ module.exports = {
   setGroupRole,
   updateEmail,
   updateLanguage,
-  updateMenuUI,
   updateRecentTab,
   updateUser,
   updateUsername,

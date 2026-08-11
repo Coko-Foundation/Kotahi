@@ -1,32 +1,32 @@
 import { useQuery } from '@apollo/client/react'
+import { useParams } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { sanitize } from 'isomorphic-dompurify'
 import styled from 'styled-components'
-import { th } from '@coko/client'
-import { color, space } from '../../../theme'
+import { grid, th } from '@coko/client'
 import { Spinner, CommsErrorBanner, PlainOrRichText } from '../../shared'
 import { PUBLISHED_MANUSCRIPT_AND_FORMS } from '../../../queries'
 
 const Page = styled.div`
-  background: ${color.gray60};
+  background: ${th('color.gray60')};
   height: 100vh;
   overflow: hidden scroll;
   width: 100%;
 `
 
 const Container = styled.div`
-  background: ${color.gray97};
-  border: 1px solid ${color.brand1.shade25};
+  background: ${th('color.gray97')};
+  border: 1px solid ${th('color.brand1.shade25')};
   border-radius: ${th('borderRadius')};
-  margin: ${space.g} auto;
+  margin: ${grid(7.5)} auto;
   max-width: 1000px;
-  padding: ${space.h} ${space.i} ${space.i} ${space.i};
+  padding: ${grid(11.25)} ${grid(15)} ${grid(15)} ${grid(15)};
   width: 90%;
 
   & > h1 {
-    color: ${color.brand1.shade25};
+    color: ${th('color.brand1.shade25')};
     font-size: 180%;
-    margin: ${space.e} 0 ${space.f} 0;
+    margin: ${grid(1.875)} 0 ${grid(3.75)} 0;
   }
 `
 
@@ -39,9 +39,11 @@ const DetailText = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
 `
 
-const ArticleArtifactPage = ({ match }) => {
+const ArticleArtifactPage = () => {
+  const { version, artifactId } = useParams()
+
   const { loading, data, error } = useQuery(PUBLISHED_MANUSCRIPT_AND_FORMS, {
-    variables: { id: match.params.version },
+    variables: { id: version },
     fetchPolicy: 'network-only',
   })
 
@@ -52,10 +54,10 @@ const ArticleArtifactPage = ({ match }) => {
   manuscript.submission = JSON.parse(manuscript.submission)
 
   const artifact = manuscript.publishedArtifacts.find(
-    a => a.id === match.params.artifactId,
+    a => a.id === artifactId,
   ) || {
     title: 'Not found!',
-    content: `<p style="color: red">No published artifact was found with ID ${match.params.artifactId}. Please check the page address.</p>`,
+    content: `<p style="color: red">No published artifact was found with ID ${artifactId}. Please check the page address.</p>`,
   }
 
   const relatedDocumentTitle =

@@ -10,7 +10,6 @@ import i18next from 'i18next'
 import { useDropzone } from 'react-dropzone'
 import { TextField, ValidatedFieldFormik, Button } from '../../../../pubsweet'
 import { DeleteControl } from '../../../../shared'
-import { color } from '../../../../../theme'
 
 const Inline = styled.div`
   display: inline-block;
@@ -53,7 +52,7 @@ const LiControlOptions = styled.li`
 `
 
 const ErrorMessageWrapper = styled.span`
-  color: ${color.error.base};
+  color: ${th('color.error.base')};
   display: block;
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
@@ -64,12 +63,12 @@ const InlineColorPicker = styled(Inline)`
   & > div {
     font-size: ${th('fontSizeBaseSmall')};
     line-height: ${th('lineHeightBaseSmall')};
-    margin-bottom: ${grid(1)};
+    margin-bottom: ${grid(2)};
   }
 
   & input {
-    height: ${grid(6)};
-    width: ${grid(9)};
+    height: ${grid(12)};
+    width: ${grid(18)};
   }
 `
 

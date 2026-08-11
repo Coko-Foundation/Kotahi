@@ -1,4 +1,4 @@
-const fs = require('fs-extra')
+const fs = require('fs')
 const fsPromised = require('fs').promises
 const crypto = require('crypto')
 const htmlparser2 = require('htmlparser2')

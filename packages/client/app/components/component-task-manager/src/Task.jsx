@@ -6,7 +6,7 @@
 import { useState, useEffect, useContext, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Circle, CheckCircle, MoreVertical } from 'react-feather'
@@ -30,12 +30,11 @@ import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 import TaskEditModal from './TaskEditModal'
 import CounterField from '../../shared/CounterField'
-import { color } from '../../../theme'
 
 const TaskRow = styled.div`
   align-items: flex-start;
   display: flex;
-  gap: ${grid('1')};
+  gap: ${grid('2')};
 
   &:hover > div:first-child > div:first-child > svg,
   &:hover > div:first-child > button:last-child > svg {
@@ -62,7 +61,7 @@ const TitleCell = styled.div`
 const StatusActionCell = styled.div`
   /* stylelint-disable-next-line declaration-no-important */
   background: none !important;
-  border-right: ${grid(1)} solid transparent;
+  border-right: ${grid(2)} solid transparent;
   flex: 0 1 12em;
   justify-content: flex-start;
 
@@ -73,7 +72,7 @@ const StatusActionCell = styled.div`
         `
       : ''}
 
-  padding-right: ${grid(1)};
+  padding-right: ${grid(2)};
 `
 
 const DurationDaysCell = styled.div`
@@ -88,20 +87,20 @@ const DurationDaysCell = styled.div`
 const Handle = styled.div`
   align-items: center;
   display: flex;
-  flex: 0 0 ${grid(3)};
-  height: ${grid(5)};
+  flex: 0 0 ${grid(6)};
+  height: ${grid(10)};
   justify-content: center;
-  width: ${grid(3)};
+  width: ${grid(6)};
 `
 
 const DragIcon = styled(DragVerticalIcon)`
   height: 20px;
-  stroke: ${color.gray40};
+  stroke: ${th('color.gray40')};
   stroke-width: 1.8;
   width: 20px;
 
   &:hover {
-    stroke: ${color.brand1.base};
+    stroke: ${th('color.brand1.base')};
   }
 `
 
@@ -111,18 +110,18 @@ const Ellipsis = styled(MoreVertical)`
   width: 20px;
 
   &:hover path {
-    fill: ${color.brand1.base};
+    fill: ${th('color.brand1.base')};
   }
 `
 
 const ModalContainer = styled(LooseColumn)`
-  background-color: ${color.backgroundA};
-  padding: ${grid(2.5)} ${grid(3)};
+  background-color: ${th('color.backgroundA')};
+  padding: ${grid(5)} ${grid(6)};
   z-index: 10000;
 `
 
 const ActionDialog = styled.div`
-  background: ${color.backgroundA};
+  background: ${th('color.backgroundA')};
   border-radius: 6px;
   box-shadow: 0 0 8px rgb(0 0 0 / 25%);
   left: -80px;
@@ -147,7 +146,7 @@ const BaseLabel = styled.div`
 
   &:hover,
   &:focus {
-    background-color: ${color.gray95};
+    background-color: ${th('color.gray95')};
   }
 `
 
@@ -191,7 +190,7 @@ const DueDateFieldContainer = styled(BaseFieldContainer)`
   }
 
   > div + div {
-    margin-left: ${grid(1)};
+    margin-left: ${grid(2)};
   }
 `
 
@@ -247,6 +246,7 @@ const Task = ({
 
   const dragStyle = { transform: CSS.Transform.toString(transform), transition }
 
+  const theme = useTheme()
   const config = useContext(ConfigContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
   const [isEditTaskMetaModal, setIsEditTaskMetaModal] = useState(false)
@@ -437,9 +437,9 @@ const Task = ({
                   }
                 >
                   {isDone ? (
-                    <CheckCircle color={color.brand1.base()} />
+                    <CheckCircle color={theme.color.brand1.base} />
                   ) : (
-                    <Circle color={color.gray60} />
+                    <Circle color={theme.color.gray60} />
                   )}
                 </Handle>
               )}

@@ -96,8 +96,8 @@ const seedConfig = async (group, instanceName, index, options) => {
 
   const groupIdentity = {
     brandName: group.name || 'Kotahi',
-    primaryColor: '#3aae2a',
-    secondaryColor: '#9e9e9e',
+    primaryColor: '#4a7c59',
+    secondaryColor: '#6b7280',
     logoPath: '/logo-kotahi.png',
     title: '',
     description: '',

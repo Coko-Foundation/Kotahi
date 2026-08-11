@@ -5,13 +5,11 @@ import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { Trans, useTranslation } from 'react-i18next'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 import { grid } from '@coko/client'
+import Page from '../../../ui/shared/Page'
 
 import { Checkbox, Dropdown } from '../../pubsweet'
-import { color } from '../../../theme'
 
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 import {
@@ -27,7 +25,6 @@ import {
   Columns,
   CommsErrorBanner,
   Container,
-  Heading,
   Pagination,
   PaginationContainerShadowed,
   RoundIconButton,
@@ -48,19 +45,25 @@ const OuterContainer = styled(Container)`
   padding: 0;
 `
 
+const ManuscriptsColumns = styled(Columns)`
+  height: 100%;
+`
+
 const ManuscriptsPane = styled.div`
-  overflow-y: scroll;
-  padding: 16px 16px 0;
+  overflow-y: auto;
 `
 
 const FlexRow = styled.div`
   display: flex;
-  gap: ${grid(1)};
-  justify-content: space-between;
+  gap: ${grid(2)};
+  justify-content: flex-end;
+  margin-bottom: ${grid(2)};
 `
 
 const FlexRowWithSmallGapAbove = styled(FlexRow)`
-  margin-top: 10px;
+  align-items: end;
+  justify-content: flex-start;
+  margin-bottom: ${grid(2)};
 `
 
 const RoundIconButtonWrapper = styled(RoundIconButton).attrs({
@@ -75,8 +78,12 @@ const DropdownContainer = styled.div.attrs({
   width: 100px;
 
   button {
-    background: ${props => (props.disabled ? color.gray90 : color.brand1.base)};
-    color: ${props => (props.disabled ? color.gray60 : color.white)};
+    background: ${props =>
+      props.disabled
+        ? props.theme.color.gray90
+        : props.theme.color.brand1.base};
+    color: ${props =>
+      props.disabled ? props.theme.color.gray60 : props.theme.color.white};
     line-height: calc(8px * 2);
     min-width: calc(8px * 10);
     padding: 5px 4px;
@@ -98,7 +105,8 @@ const DropdownContainer = styled.div.attrs({
   svg {
     height: calc(3 * 6px);
     margin-top: -5px;
-    stroke: ${props => (props.disabled ? color.gray60 : color.white)};
+    stroke: ${props =>
+      props.disabled ? props.theme.color.gray60 : props.theme.color.white};
     width: calc(3 * 6px);
   }
 `
@@ -120,7 +128,6 @@ const Manuscripts = props => {
     sortName,
     page,
     urlFrag,
-    chatRoomId,
     configuredColumnNames,
     shouldAllowBulkImport,
     archived,
@@ -345,7 +352,11 @@ const Manuscripts = props => {
             : t('manuscriptsPage.Refresh')}
         </ActionButton>
       )}
+    </ControlsContainer>
+  )
 
+  const searchAndChatControls = (
+    <ControlsContainer style={{ marginLeft: 'auto' }}>
       <SearchControl
         applySearchQuery={newQuery =>
           applyQueryParams({
@@ -395,115 +406,103 @@ const Manuscripts = props => {
   ]
 
   return (
-    <OuterContainer>
-      <ToastContainer
-        autoClose={5000}
-        closeOnClick
-        draggable
-        hideProgressBar={false}
-        newestOnTop={false}
-        pauseOnFocusLoss
-        pauseOnHover
-        position="top-center"
-        rtl={false}
-      />
-      <Columns>
-        <ManuscriptsPane>
-          <FlexRow>
-            <Heading $warning={archived}>
-              {t(
-                archived
-                  ? 'manuscriptsPage.archivedManuscripts'
-                  : 'manuscriptsPage.Manuscripts',
-              )}
-            </Heading>
-            {topRightControls}
-          </FlexRow>
+    <Page
+      title={t(
+        archived
+          ? 'manuscriptsPage.archivedManuscripts'
+          : 'manuscriptsPage.Manuscripts',
+      )}
+    >
+      <OuterContainer>
+        <ManuscriptsColumns>
+          <ManuscriptsPane>
+            <FlexRow>{topRightControls}</FlexRow>
 
-          <FlexRowWithSmallGapAbove>
-            <SelectAllField>
-              <Checkbox
-                checked={manuscripts.every(manuscript =>
-                  selectedNewManuscripts.includes(manuscript.id),
-                )}
-                label={t('manuscriptsPage.Select All')}
-                onChange={toggleAllNewManuscriptsCheck}
-              />
-              <SelectedManuscriptsNumber
-                disabled={!selectedNewManuscripts.length}
-              >
-                <Trans
-                  count={selectedNewManuscripts.length}
-                  i18nKey="manuscriptsPage.selectedArticles"
-                  values={{ count: selectedNewManuscripts.length }}
+            <FlexRowWithSmallGapAbove>
+              <SelectAllField>
+                <Checkbox
+                  checked={manuscripts.every(manuscript =>
+                    selectedNewManuscripts.includes(manuscript.id),
+                  )}
+                  label={t('manuscriptsPage.Select All')}
+                  onChange={toggleAllNewManuscriptsCheck}
                 />
-              </SelectedManuscriptsNumber>
-              <DropdownContainer
-                disabled={!selectedNewManuscripts.length}
-                key={!!selectedNewManuscripts.length}
-              >
-                <Dropdown itemsList={actionDropDownOptions} primary>
-                  {t('manuscriptsPage.takeAction')}
-                </Dropdown>
-              </DropdownContainer>
-            </SelectAllField>
-            <ViewArchivedAction onClick={toggleArchived}>
-              {t(
-                archived
-                  ? 'manuscriptsPage.viewUnarchived'
-                  : 'manuscriptsPage.viewArchived',
-              )}
-            </ViewArchivedAction>
-          </FlexRowWithSmallGapAbove>
+                <SelectedManuscriptsNumber
+                  disabled={!selectedNewManuscripts.length}
+                >
+                  <Trans
+                    count={selectedNewManuscripts.length}
+                    i18nKey="manuscriptsPage.selectedArticles"
+                    values={{ count: selectedNewManuscripts.length }}
+                  />
+                </SelectedManuscriptsNumber>
+                <DropdownContainer
+                  disabled={!selectedNewManuscripts.length}
+                  key={!!selectedNewManuscripts.length}
+                >
+                  <Dropdown itemsList={actionDropDownOptions} primary>
+                    {t('manuscriptsPage.takeAction')}
+                  </Dropdown>
+                </DropdownContainer>
+              </SelectAllField>
+              <ViewArchivedAction onClick={toggleArchived}>
+                {t(
+                  archived
+                    ? 'manuscriptsPage.viewUnarchived'
+                    : 'manuscriptsPage.viewArchived',
+                )}
+              </ViewArchivedAction>
+              {searchAndChatControls}
+            </FlexRowWithSmallGapAbove>
 
-          <div>
-            <ScrollableContent>
-              <ManuscriptsTable
-                applyQueryParams={applyQueryParams}
-                archived={archived}
-                columnsProps={columnsProps}
-                manuscripts={manuscripts}
-                sortDirection={sortDirection}
-                sortName={sortName}
+            <div>
+              <ScrollableContent>
+                <ManuscriptsTable
+                  applyQueryParams={applyQueryParams}
+                  archived={archived}
+                  columnsProps={columnsProps}
+                  manuscripts={manuscripts}
+                  sortDirection={sortDirection}
+                  sortName={sortName}
+                />
+              </ScrollableContent>
+              <Pagination
+                limit={limit}
+                page={page}
+                PaginationContainer={PaginationContainerShadowed}
+                setPage={newPage =>
+                  applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
+                }
+                totalCount={totalCount}
               />
-            </ScrollableContent>
-            <Pagination
-              limit={limit}
-              page={page}
-              PaginationContainer={PaginationContainerShadowed}
-              setPage={newPage =>
-                applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
-              }
-              totalCount={totalCount}
-            />
-          </div>
-        </ManuscriptsPane>
+            </div>
+          </ManuscriptsPane>
 
-        {/* Group Manager Discussion, Video Chat, Hide Chat, Chat component */}
-        {isAdminChatOpen && !hideManuscriptsChat && (
-          <MessageContainer
-            channelId={groupManagerDiscussionChannel?.id}
-            channels={channels}
-            chatProps={chatProps}
-            chatRoomId={chatRoomId}
-            currentUser={currentUser}
-            hideChat={hideChat}
-          />
-        )}
-      </Columns>
-      <ConfirmationModal
-        closeModal={() => setIsOpenBulkArchiveModal(false)}
-        confirmationAction={doBulkArchive}
-        isOpen={isOpenBulkArchiveModal}
-        message={t('manuscriptsPage.confirmArchive')}
-      />
-      <ConfirmationModal
-        closeModal={() => setIsOpenBulkUnarchiveModal(false)}
-        confirmationAction={doBulkUnarchive}
-        isOpen={isOpenBulkUnarchiveModal}
-        message={t('manuscriptsPage.confirmUnarchive')}
-      />
-    </OuterContainer>
+          {/* Group Manager Discussion, Hide Chat, Chat component */}
+          {isAdminChatOpen && !hideManuscriptsChat && (
+            <MessageContainer
+              channelId={groupManagerDiscussionChannel?.id}
+              channels={channels}
+              chatProps={chatProps}
+              currentUser={currentUser}
+              hideChat={hideChat}
+            />
+          )}
+        </ManuscriptsColumns>
+        <ConfirmationModal
+          closeModal={() => setIsOpenBulkArchiveModal(false)}
+          confirmationAction={doBulkArchive}
+          isOpen={isOpenBulkArchiveModal}
+          message={t('manuscriptsPage.confirmArchive')}
+        />
+        <ConfirmationModal
+          closeModal={() => setIsOpenBulkUnarchiveModal(false)}
+          confirmationAction={doBulkUnarchive}
+          isOpen={isOpenBulkUnarchiveModal}
+          message={t('manuscriptsPage.confirmUnarchive')}
+        />
+      </OuterContainer>
+    </Page>
   )
 }
 

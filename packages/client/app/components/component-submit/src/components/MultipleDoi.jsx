@@ -2,22 +2,20 @@
 
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { th, uuid } from '@coko/client'
+import { grid, th, uuid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 
 import { DeleteControl, TextInput } from '../../../shared'
 import { Button } from '../../../pubsweet'
 import { fields, validateDoiField } from '../../../../shared/doiFieldDefinition'
 
-import theme from '../../../../theme'
-
 const Doi = styled.div`
   align-items: flex-start;
   display: grid;
   gap: 36px;
   grid-template-columns: 1fr 1fr;
-  margin-bottom: ${theme.spacing.f};
-  margin-top: ${theme.spacing.e};
+  margin-bottom: ${grid(3.75)};
+  margin-top: ${grid(1.875)};
   position: relative;
   width: 600px;
 

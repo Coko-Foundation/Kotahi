@@ -20,27 +20,27 @@ const Container = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: ${grid(2)};
-  padding: ${grid(4)} 0;
+  gap: ${grid(4)};
+  padding: ${grid(8)} 0;
 `
 
 const MessageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
 `
 
 const CodeWrapper = styled.div`
   background-color: #ddd;
   border: 1px solid black;
   border-radius: ${th('borderRadius')};
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const FlexRowItem = styled.div`
   display: flex;
   align-items: center;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
 `
 
 const patterns = [

@@ -1,19 +1,19 @@
 import styled from 'styled-components'
-import { grid } from '@coko/client'
+import { th, grid } from '@coko/client'
 import { Button } from '../../pubsweet'
 import { Action } from '../../shared'
-import theme, { color } from '../../../theme'
 
 export const SelectAllField = styled.div`
   align-items: center;
   display: flex;
-  font-size: ${theme.fontSizeBaseSmall};
-  line-height: ${theme.lineHeightBaseSmall};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
 `
 export const SelectedManuscriptsNumber = styled.p.attrs({
   'data-testid': 'selected-manuscripts-number',
 })`
-  color: ${props => (props.disabled ? color.gray60 : color.text)};
+  color: ${props =>
+    props.disabled ? props.theme.color.gray60 : props.theme.color.text};
   font-weight: bold;
   margin-left: 10px;
   margin-right: 15px;
@@ -21,7 +21,7 @@ export const SelectedManuscriptsNumber = styled.p.attrs({
 export const ControlsContainer = styled.div`
   display: flex;
   flex: 1 1;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: flex-end;
 `
 
@@ -40,5 +40,5 @@ export const BulkActionModalButton = styled(Button)`
 `
 
 export const ViewArchivedAction = styled(Action)`
-  font-size: ${theme.fontSizeBaseSmall};
+  font-size: ${th('fontSizeBaseSmall')};
 `

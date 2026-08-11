@@ -8,29 +8,27 @@ import styled from 'styled-components'
 
 import { grid, th, serverUrl } from '@coko/client'
 
-import { color } from '../../../../../theme'
 import { convertTimestampToRelativeDateString } from '../../../../../shared/dateUtils'
 import { Placeholder } from '../../../../component-dashboard/src/style'
 import { ConfirmationModal } from '../../../../component-modal/src/ConfirmationModal'
 import FileRow from '../FileRow'
-import {
-  Container,
-  SectionContent,
-  SectionRow,
-  ActionButton,
-} from '../../../../shared'
+import { SectionContent, SectionRow, ActionButton } from '../../../../shared'
 import { HeadingCell } from '../styles'
 import UploadComponent from './UploadComponent'
 import { TagDropdown } from './TagDropDown'
 import { UPDATE_FILE_TAGS } from '../../../../../queries'
 
-const UploadAssetContainer = styled(Container)`
+const NoShadowSectionContent = styled(SectionContent)`
+  box-shadow: none;
+`
+
+const UploadAssetContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
   overflow: auto;
-  padding: calc(8px * 2) calc(8px * 3);
+  width: 100%;
 `
 
 export const FileTableStyled = styled.div`
@@ -44,9 +42,9 @@ export const StyledSectionRow = styled(SectionRow)`
 
 export const FilesHeading = styled.div`
   align-items: center;
-  background-color: ${color.backgroundA};
-  border-top: 1px solid ${color.gray90};
-  column-gap: ${grid(2)};
+  background-color: ${th('color.backgroundA')};
+  border-top: 1px solid ${th('color.gray90')};
+  column-gap: ${grid(4)};
   display: flex;
   flex-direction: row;
   line-height: 1.4em;
@@ -55,11 +53,11 @@ export const FilesHeading = styled.div`
 
   &:first-child {
     border-top: none;
-    padding: ${grid(0.5)} ${grid(2)};
+    padding: ${grid(1)} ${grid(4)};
   }
 
   &:not(:first-child) {
-    padding: ${grid(1.5)} ${grid(2)};
+    padding: ${grid(3)} ${grid(4)};
   }
 `
 
@@ -295,7 +293,7 @@ const UploadAsset = ({
 
   return (
     <UploadAssetContainer>
-      <SectionContent>
+      <NoShadowSectionContent>
         <StyledSectionRow key="upload-asset">
           <WrapperUpload>
             <span>Css Upload:</span>
@@ -341,7 +339,7 @@ const UploadAsset = ({
             )}
           </FileTableStyled>
         </SectionRow>
-      </SectionContent>
+      </NoShadowSectionContent>
       <ConfirmationModal
         closeModal={() => setFileBeingDeletedId(null)}
         confirmationAction={onDelete(fileBeingDeletedId)}

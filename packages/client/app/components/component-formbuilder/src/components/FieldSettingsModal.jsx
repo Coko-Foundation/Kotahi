@@ -254,31 +254,31 @@ const FieldSettingsModal = ({
         const formIsValid = !Object.keys(errors).length
 
         return (
-          <form onSubmit={handleSubmit}>
-            <Modal
-              contentStyles={{ minWidth: '800px' }}
-              isOpen={isOpen}
-              leftActions={
-                !formIsValid && (
-                  <ErrorMessageWrapper>
-                    {t('formBuilder.correctBeforeSaving')}
-                  </ErrorMessageWrapper>
-                )
-              }
-              onClose={onClose}
-              rightActions={
-                <>
-                  <ActionButton onClick={handleSubmit} primary type="submit">
-                    {t('common.Save')}
-                  </ActionButton>
-                  <ActionButton onClick={onClose}>
-                    {t('common.Cancel')}
-                  </ActionButton>
-                </>
-              }
-              shouldCloseOnOverlayClick={false}
-              title={t('formBuilder.Field Properties')}
-            >
+          <Modal
+            contentStyles={{ minWidth: '800px' }}
+            isOpen={isOpen}
+            leftActions={
+              !formIsValid && (
+                <ErrorMessageWrapper>
+                  {t('formBuilder.correctBeforeSaving')}
+                </ErrorMessageWrapper>
+              )
+            }
+            onClose={onClose}
+            rightActions={
+              <>
+                <ActionButton onClick={handleSubmit} primary type="submit">
+                  {t('common.Save')}
+                </ActionButton>
+                <ActionButton onClick={onClose}>
+                  {t('common.Cancel')}
+                </ActionButton>
+              </>
+            }
+            shouldCloseOnOverlayClick={false}
+            title={t('formBuilder.Field Properties')}
+          >
+            <form onSubmit={handleSubmit}>
               <Section>
                 <Legend>{t('formBuilder.Field type')}</Legend>
                 <ValidatedField
@@ -404,8 +404,8 @@ const FieldSettingsModal = ({
                     <Legend>{t('formBuilder.Field name')}</Legend> {values.name}
                   </Section>
                 )}
-            </Modal>
-          </form>
+            </form>
+          </Modal>
         )
       }}
     </Formik>

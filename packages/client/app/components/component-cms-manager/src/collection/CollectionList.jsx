@@ -6,22 +6,24 @@ import styled from 'styled-components'
 import { grid, th, uuid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 import { cloneDeep, pick, isArray } from 'lodash'
-import { color } from '../../../../theme'
 
 import CollectionTable from './CollectionTable'
 import { HeadingCell } from '../../../component-production/src/components/styles'
 import {
   Action,
   ActionButton,
-  Container,
-  HeadingWithAction,
-  Heading,
   PaddedContent,
   SectionContent,
-  WidthLimiter,
   LabelBadge,
 } from '../../../shared'
+import Page from '../../../../ui/shared/Page'
 import CollectionModalForm from './CollectionModalForm'
+
+const StyledContent = styled.div`
+  font-family: ${th('fontInterface')};
+  font-size: ${th('fontSizeBase')};
+  line-height: ${th('lineHeightBase')};
+`
 
 const CmsHeadStyled = styled.div`
   button {
@@ -35,9 +37,9 @@ const CmsHeadStyled = styled.div`
 
 export const CollectionsHeading = styled.div`
   align-items: center;
-  background-color: ${color.backgroundA};
-  border-top: 1px solid ${color.gray90};
-  column-gap: ${grid(2)};
+  background-color: ${th('color.backgroundA')};
+  border-top: 1px solid ${th('color.gray90')};
+  column-gap: ${grid(4)};
   display: flex;
   flex-direction: row;
   line-height: 1.4em;
@@ -46,11 +48,11 @@ export const CollectionsHeading = styled.div`
 
   &:first-child {
     border-top: none;
-    padding: ${grid(0.5)} ${grid(2)};
+    padding: ${grid(1)} ${grid(4)};
   }
 
   &:not(:first-child) {
-    padding: ${grid(1.5)} ${grid(2)};
+    padding: ${grid(3)} ${grid(4)};
   }
 `
 
@@ -217,11 +219,10 @@ const CollectionList = ({
         integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu"
         rel="stylesheet"
       />
-      <Container>
-        <HeadingWithAction>
-          <Heading>{t('leftMenu.Collections')}</Heading>
-        </HeadingWithAction>
-        <WidthLimiter>
+      {/* Reset Bootstrap 3's html { font-size: 10px } which bleeds into the rest of the app */}
+      <style>{`html { font-size: 16px; }`}</style>
+      <Page title={t('cmsIndexPage.collectionsTitle')}>
+        <StyledContent>
           <SectionContent>
             <PaddedContent>
               <CmsHeadStyled>
@@ -264,8 +265,8 @@ const CollectionList = ({
               )}
             </PaddedContent>
           </SectionContent>
-        </WidthLimiter>
-      </Container>
+        </StyledContent>
+      </Page>
     </>
   )
 }

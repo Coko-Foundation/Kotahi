@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { grid } from '@coko/client'
 
 const StyledAntAlert = styled(AntAlert)`
-  margin-bottom: ${({ $marginBottom }) => grid($marginBottom) ?? 0};
+  margin-bottom: ${({ $marginBottom }) => grid($marginBottom * 2) ?? 0};
 `
 
 const Alert = ({

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { grid } from '@coko/client'
+import { th, grid } from '@coko/client'
 import {
   EditorForm,
   EditPageContainer,
@@ -9,7 +9,6 @@ import {
   RightArrow,
 } from '../../component-cms-manager/src/style'
 import { ActionButton, Page } from '../../shared'
-import { color } from '../../../theme'
 
 export const CleanButton = styled.button.attrs({ type: 'button' })`
   align-items: center;
@@ -17,7 +16,7 @@ export const CleanButton = styled.button.attrs({ type: 'button' })`
   border: none;
   cursor: ${p => (p.$disabled ? 'not-allowed' : 'pointer')};
   display: ${p => (p.$hide ? 'none' : 'flex')};
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: flex-start;
   opacity: ${p => (p.$disabled ? 0.5 : 1)};
   outline: none;
@@ -43,7 +42,7 @@ export const Content = styled(EditPageContainer)`
 export const EditSection = styled(EditPageRight)`
   background-color: #fff;
   overflow: visible;
-  padding: ${grid(3)} ${grid(6)};
+  padding: ${grid(6)} ${grid(12)};
 `
 // #endregion EmailTemplatesContent --------------------------------------------------------------------
 
@@ -55,12 +54,12 @@ export const StyledPage = styled(Page)`
 
 export const StyledEditorForm = styled(EditorForm)`
   height: inherit;
-  padding: 0 ${grid(3)};
+  padding: 0 ${grid(6)};
 `
 
 export const Footer = styled(FlexRow)`
   justify-content: flex-start;
-  padding: ${grid(3)};
+  padding: ${grid(6)};
 `
 
 // #endregion EmailTemplatesEditForm --------------------------------------------------------------------
@@ -68,9 +67,10 @@ export const Footer = styled(FlexRow)`
 // #region EmailTemplatesHeader -----------------------------------------------------------------------
 export const Action = styled(CleanButton)`
   align-items: center;
-  color: ${p => (p.disabled ? color.gray80 : color.brand1.base)};
+  color: ${p =>
+    p.disabled ? p.theme.color.gray80 : p.theme.color.brand1.base};
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   min-width: 0;
   width: fit-content;
 
@@ -87,40 +87,40 @@ export const HeaderRoot = styled.header`
   background: #fff;
   border-bottom: 1px solid #ddd;
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: space-between;
   margin: 0;
-  padding: ${grid(0.5)} ${grid(1.5)};
+  padding: ${grid(1)} ${grid(3)};
 `
 export const CreateButton = styled(ActionButton)`
   align-items: center;
   display: flex;
   height: fit-content;
   justify-content: center;
-  margin-right: ${grid(1)};
+  margin-right: ${grid(2)};
   text-align: center;
 `
 
 export const Heading = styled.h3`
-  color: ${color.gray20};
+  color: ${th('color.gray20')};
   line-height: 1;
   margin: 0;
 `
 
 export const ActionContainer = styled(FlexRow)`
-  gap: ${grid(1.5)};
+  gap: ${grid(3)};
 `
 
 export const DescriptionContainer = styled(FlexRow)`
   flex-direction: column;
   gap: 2px;
-  padding: ${grid(1.5)} ${grid(3)};
+  padding: ${grid(3)} ${grid(6)};
 `
 
 export const EditedOnLabel = styled.small`
-  color: ${color.gray20};
+  color: ${th('color.gray20')};
   line-height: 1.2;
-  padding: ${grid(0.25)} 0 0;
+  padding: ${grid(0.5)} 0 0;
 `
 // #endregion EmailTemplatesHeader --------------------------------------------------------------------
 
@@ -142,9 +142,9 @@ export const ListHeader = styled(CleanButton)`
   border-left: 1px solid #ddd;
   color: #555;
   font-weight: bold;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
   justify-content: space-between;
-  padding: ${grid(1)} ${grid(2)};
+  padding: ${grid(2)} ${grid(4)};
   text-transform: uppercase;
   z-index: 9;
 
@@ -185,11 +185,11 @@ export const OptionListItem = styled.li`
   font-weight: ${p => (p.$selected ? 'bold' : 'normal')};
   justify-content: space-between;
   margin: 0;
-  padding: ${grid(1)} ${grid(2.05)};
+  padding: ${grid(2)} ${grid(4.1)};
   width: 100%;
 
   svg {
-    fill: ${p => (p.$selected ? color.brand1.base : 'transparent')};
+    fill: ${p => (p.$selected ? p.theme.color.brand1.base : 'transparent')};
     opacity: 0;
     transition: opacity 0.3s;
   }
@@ -202,8 +202,8 @@ export const OptionListItem = styled.li`
 `
 
 export const OptionListItemButton = styled(CleanButton)`
-  color: ${p => (p.$warning ? color.warning.base : '#555')};
-  gap: ${grid(1.5)};
+  color: ${p => (p.$warning ? p.theme.color.warning.base : '#555')};
+  gap: ${grid(3)};
   width: 100%;
 
   p {
@@ -212,7 +212,7 @@ export const OptionListItemButton = styled(CleanButton)`
     margin: 0;
     max-width: 240px;
     overflow: hidden;
-    padding-left: ${grid(2)};
+    padding-left: ${grid(4)};
     text-decoration: ${p => (p.$warning ? 'line-through' : 'none')};
     text-overflow: ellipsis;
     white-space: nowrap;

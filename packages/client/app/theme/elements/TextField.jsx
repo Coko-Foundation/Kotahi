@@ -1,6 +1,5 @@
 import { css } from 'styled-components'
 import { th, grid } from '@coko/client'
-import color from '../color'
 
 export default {
   Input: css`
@@ -41,10 +40,10 @@ export default {
           case 'error':
             return props.theme.colorError
           default:
-            return color.brand1.base
+            return props.theme.color.brand1.base
         }
       }};
-      box-shadow: ${th('boxShadow')};
+      box-shadow: ${th('boxShadow200')};
       color: inherit;
     }
 
@@ -55,6 +54,6 @@ export default {
   `,
 
   Label: css`
-    margin-bottom: ${grid(1)};
+    margin-bottom: ${grid(2)};
   `,
 }

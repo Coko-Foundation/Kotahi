@@ -5,11 +5,11 @@
 
 import { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { th, override } from '@coko/client'
+import { grid, th, override } from '@coko/client'
 import { useTranslation } from 'react-i18next'
+
 import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'
-import { color } from '../../theme'
 import RoundIconButton from './RoundIconButton'
 import { safeCall } from '../../shared/generalUtils'
 
@@ -24,7 +24,7 @@ export const Tab = styled.div.attrs(props => ({
   'data-testid': props['data-testid'] || 'hidden-tabs-tab',
 }))`
   /* stylelint-disable custom-property-no-missing-var-function */
-  --bg-active: ${color.backgroundA};
+  --bg-active: ${th('color.backgroundA')};
   --bg-inactive: linear-gradient(
     180deg,
     #ececec 0%,
@@ -39,19 +39,19 @@ export const Tab = styled.div.attrs(props => ({
     props.$active
       ? '-4px 0 7px -4px rgb(0 0 0 / 10%), 4px 0 7px -4px rgb(0 0 0 / 10%), 0 -4px 7px -4px rgb(0 0 0 / 10%)'
       : 'none'};
-  color: ${color.text};
+  color: ${th('color.text')};
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
-  margin-right: ${props => props.theme.spacing.e};
-  padding: calc(${th('gridUnit')} - 1px) 1em;
+  margin-right: ${grid(1.875)};
+  padding: calc(${grid(2)} - 1px) 1em;
   padding-bottom: 0;
   position: relative;
-  z-index: 1;
+  z-index: 6;
 
   & > div {
     border-bottom: 3px solid
-      ${props => (props.$active ? color.brand1.base : 'none')};
+      ${props => (props.$active ? props.theme.color.brand1.base : 'none')};
     margin-bottom: -2px;
     padding-bottom: 4px;
   }
@@ -61,7 +61,8 @@ export const Tab = styled.div.attrs(props => ({
 `
 
 export const HiddenTabsContainer = styled(TabsContainer)`
-  ${props => props.$sticky && `background-color: ${color.backgroundC};`}
+  ${props =>
+    props.$sticky && `background-color: ${props.theme.color.backgroundC};`}
   ${props => props.$sticky && 'position: sticky;'}
   ${props => props.$sticky && 'top: -16px;'}
   ${props => props.$sticky && 'z-index: 999;'}
@@ -153,6 +154,7 @@ const HiddenTabs = ({
             flex: shouldFillFlex ? '1' : undefined,
             flexDirection: 'column',
             minHeight: shouldFillFlex ? '0' : undefined,
+            overflowY: shouldFillFlex ? 'auto' : undefined,
             ...(section?.tabStyles ?? {}),
             ...hideMethod(section, activeKey),
           }}

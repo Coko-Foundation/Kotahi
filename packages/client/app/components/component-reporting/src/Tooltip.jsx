@@ -38,7 +38,7 @@ const Tip = styled.div`
 const TipInner = styled.div`
   background-color: ${th('colorFurniture')};
   border: 1px solid ${th('colorBorder')};
-  padding: ${grid(0.25)} ${grid(1)};
+  padding: ${grid(0.5)} ${grid(2)};
 `
 
 const Tooltip = ({ content, className }) => {

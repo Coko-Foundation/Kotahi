@@ -2,7 +2,6 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@coko/client'
 import { AlertCircle } from 'react-feather'
 import { Button, Action } from '../../pubsweet'
-import { color } from '../../../theme'
 
 export const StyledButton = styled(Button).attrs({
   'data-testid': 'manuscripts-table-styled-button',
@@ -59,9 +58,11 @@ export const ManuscriptsRow = styled.div.attrs({
 })`
   align-items: center;
   background-color: ${props =>
-    props.$archived ? color.warning.tint90 : color.backgroundA};
-  border-top: 1px solid ${color.gray90};
-  column-gap: ${grid(2)};
+    props.$archived
+      ? props.theme.color.warning.tint90
+      : props.theme.color.backgroundA};
+  border-top: 1px solid ${th('color.gray90')};
+  column-gap: ${grid(4)};
   display: flex;
   flex-direction: row;
   line-height: 1.4em;
@@ -70,32 +71,32 @@ export const ManuscriptsRow = styled.div.attrs({
 
   &:first-child {
     border-top: none;
-    padding: ${grid(0.5)} ${grid(2)};
+    padding: ${grid(1)} ${grid(4)};
   }
 
   &:not(:first-child) {
-    padding: ${grid(1.5)} ${grid(2)};
+    padding: ${grid(3)} ${grid(4)};
   }
 `
 
 export const ClickableManuscriptsRow = styled(ManuscriptsRow).attrs({
   'data-testid': 'clickable-manuscripts-row',
 })`
-  color: ${color.text};
+  color: ${th('color.text')};
 
   &:hover {
-    background-color: ${color.backgroundC};
+    background-color: ${th('color.backgroundC')};
     cursor: pointer;
 
     svg {
-      stroke: ${color.brand1.base};
+      stroke: ${th('color.brand1.base')};
     }
   }
 `
 export const SnippetRow = styled.div`
   background-color: ${th('colorSecondaryBackground')};
   color: ${th('colorIconPrimary')};
-  padding: ${grid(0.5)} ${grid(4)};
+  padding: ${grid(1)} ${grid(8)};
   text-align: left;
   width: 100%;
 `
@@ -105,7 +106,9 @@ export const ManuscriptsHeaderRow = styled(ManuscriptsRow).attrs({
 })`
   align-items: baseline;
   background-color: ${props =>
-    props.$archived ? color.warning.tint70 : color.backgroundB};
+    props.$archived
+      ? props.theme.color.warning.tint70
+      : props.theme.color.backgroundB};
   font-variant: all-small-caps;
   line-height: 1.25em;
 `
@@ -133,7 +136,7 @@ export const HeadingCell = styled(Cell)`
 `
 
 export const SortArrow = styled.span`
-  color: ${color.brand1.base};
+  color: ${th('color.brand1.base')};
   font-size: 70%;
   margin-left: 0.5em;
 

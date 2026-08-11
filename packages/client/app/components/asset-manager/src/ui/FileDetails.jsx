@@ -54,7 +54,6 @@ const InfoHeaderWrapper = styled.div`
 `
 
 const InfoHeader = styled.h2`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeHeading4')};
   line-height: ${th('lineHeightHeading4')};
   margin: 0;
@@ -70,7 +69,6 @@ const ItemWrapper = styled.div`
 `
 
 const ItemHeader = styled.h5`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeHeading6')};
   line-height: ${th('lineHeightHeading6')};
   margin: 0;

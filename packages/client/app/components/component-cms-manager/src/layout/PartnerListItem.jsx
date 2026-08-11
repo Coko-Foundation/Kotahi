@@ -12,16 +12,16 @@ import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModa
 
 const Icon = styled.div`
   background: ${th('colorFurniture')};
-  height: ${grid(10)};
-  margin-bottom: ${th('gridUnit')};
+  height: ${grid(20)};
+  margin-bottom: ${grid(2)};
   opacity: 0.5;
   overflow: hidden;
-  padding: ${grid(1)};
+  padding: ${grid(2)};
   position: relative;
-  width: ${grid(10)};
+  width: ${grid(20)};
 
   img {
-    width: ${grid(8)};
+    width: ${grid(16)};
   }
 `
 
@@ -29,20 +29,20 @@ const Extension = styled.div`
   background: ${th('colorText')};
   color: ${th('colorTextReverse')};
   font-size: ${th('fontSizeBaseSmall')};
-  left: ${grid(2)};
+  left: ${grid(4)};
   line-height: ${th('lineHeightBaseSmall')};
   position: absolute;
   right: 0;
   text-align: center;
   text-transform: uppercase;
-  top: ${grid(2)};
+  top: ${grid(4)};
 `
 
 const Filename = styled.div`
   color: ${th('colorText')};
   font-size: ${th('fontSizeBaseSmall')};
   font-style: italic;
-  height: ${grid(2)};
+  height: ${grid(4)};
   line-height: ${th('lineHeightBaseSmall')};
   overflow: auto;
   text-overflow: ellipsis;
@@ -55,8 +55,8 @@ const Uploading = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-right: ${grid(4)};
-  min-width: ${grid(28)};
+  margin-right: ${grid(8)};
+  min-width: ${grid(56)};
   padding: 16px;
   position: relative;
 `
@@ -86,7 +86,7 @@ const URLInput = styled(TextInput)`
       border: 2px solid red !important;
     `}
 
-  padding: ${grid(1)};
+  padding: ${grid(2)};
 `
 
 const getFileExtension = ({ name }) => name.replace(/^.+\./, '')

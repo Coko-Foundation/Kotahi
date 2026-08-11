@@ -1,10 +1,9 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@coko/client'
 import { Button } from '../../../pubsweet'
-import { color } from '../../../../theme'
 
 export const Section = styled.div`
-  margin: ${grid(4)} 0;
+  margin: ${grid(8)} 0;
 
   &:first-child {
     margin-top: 0;
@@ -12,7 +11,7 @@ export const Section = styled.div`
 `
 
 export const Subsection = styled.div`
-  margin: 0 50% ${grid(4)} ${grid(4)};
+  margin: 0 50% ${grid(8)} ${grid(8)};
 `
 
 export const Legend = styled.div`
@@ -21,7 +20,7 @@ export const Legend = styled.div`
 `
 
 const ErrorMessageWrapper = styled.div`
-  color: ${color.error.base};
+  color: ${th('color.error.base')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
 `
@@ -32,10 +31,10 @@ const Page = styled.div`
 `
 
 const Heading = styled.div`
-  color: ${color.brand1.base};
+  color: ${th('color.brand1.base')};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
-  margin: ${th('gridUnit')} 0;
+  margin: ${grid(2)} 0;
   text-transform: uppercase;
 `
 
@@ -45,7 +44,7 @@ const UploadContainer = styled.div`
 `
 
 const DetailText = styled.div`
-  color: ${color.gray40};
+  color: ${th('color.gray40')};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
@@ -64,7 +63,7 @@ const CommentMetaWrapper = styled.div`
 const UserMetaWrapper = styled.div`
   align-items: center;
   display: flex;
-  gap: ${grid(1)};
+  gap: ${grid(2)};
 `
 
 const UserName = styled.span`
@@ -79,7 +78,7 @@ const ButtonWrapper = styled.div`
 `
 
 const ModalContainer = styled.div`
-  background: ${color.backgroundA};
+  background: ${th('color.backgroundA')};
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   padding: 20px 24px;
@@ -145,7 +144,7 @@ const CommentWrapper = styled.div`
   ${props =>
     props.commentBelongsToDifferentManuscriptVersion
       ? css`
-          color: ${color.gray60};
+          color: ${th('color.gray60')};
         `
       : ``}
 
@@ -154,7 +153,7 @@ const CommentWrapper = styled.div`
       props.commentBelongsToDifferentManuscriptVersion
         ? css`
             /* stylelint-disable-next-line declaration-no-important */
-            stroke: ${color.gray60} !important;
+            stroke: ${th('color.gray60')} !important;
           `
         : ``}
   }
@@ -167,34 +166,34 @@ const Collapse = styled.div`
 const ActionWrapper = styled.div`
   align-items: center;
   display: flex;
-  gap: ${grid(4)};
+  gap: ${grid(8)};
   justify-content: flex-end;
 
   svg {
-    stroke: ${color.gray40};
+    stroke: ${th('color.gray40')};
   }
 `
 
 const CancelButton = styled(Button)`
-  background-color: ${color.gray90};
+  background-color: ${th('color.gray90')};
   padding: 8px;
   text-decoration: none;
 
   &:hover {
-    background-color: ${color.gray80};
+    background-color: ${th('color.gray80')};
   }
 `
 
 const CommentContainer = styled.div`
-  border-bottom: 1px ${th('borderStyle')} ${color.gray80};
+  border-bottom: 1px ${th('borderStyle')} ${th('color.gray80')};
   padding-bottom: 25px;
 
   p {
     ${props =>
       props.commentBelongsToDifferentManuscriptVersion
         ? css`
-            color: ${color.gray60};
-            background-color: ${color.backgroundA};
+            color: ${th('color.gray60')};
+            background-color: ${th('color.backgroundA')};
           `
         : ``}
   }

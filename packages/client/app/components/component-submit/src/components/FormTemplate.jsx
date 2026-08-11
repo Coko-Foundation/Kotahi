@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'isomorphic-dompurify'
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -103,7 +103,7 @@ const MessageWrapper = styled.div.attrs({
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   margin-left: 12px;
-  margin-top: -${({ theme }) => theme.spacing[1]}px;
+  margin-top: -1px;
 `
 
 const SafeRadioGroup = styled(RadioGroup).attrs({
@@ -115,7 +115,7 @@ const SafeRadioGroup = styled(RadioGroup).attrs({
 const NoteRight = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
-  padding: ${({ theme }) => `${theme.spacing.e} ${theme.spacing.f}`};
+  padding: ${grid(1.875)} ${grid(3.75)};
   text-align: right;
 `
 

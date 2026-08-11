@@ -1,23 +1,22 @@
 /* eslint-disable react/prop-types */
 
 import styled from 'styled-components'
-import { th } from '@coko/client'
-import { color } from '../../../../theme'
+import { grid, th } from '@coko/client'
 
 const Button = styled.button`
   /* stylelint-disable declaration-no-important */
   align-items: center;
   background: none;
   border: none;
-  color: ${color.gray50};
+  color: ${th('color.gray50')};
   display: flex;
   font-family: 'Fira Sans Condensed', sans-serif !important;
   padding: 0;
-  /* padding: calc(${th('gridUnit')} / 2); */
+
   svg {
     svg {
       path {
-        fill: ${color.gray50};
+        fill: ${th('color.gray50')};
       }
     }
     height: 28px;
@@ -25,11 +24,11 @@ const Button = styled.button`
   }
 
   &:disabled {
-    color: ${color.gray90};
+    color: ${th('color.gray90')};
 
     svg {
       path {
-        fill: ${color.gray90};
+        fill: ${th('color.gray90')};
       }
     }
 
@@ -45,25 +44,23 @@ const Button = styled.button`
   }
 
   &:not(:disabled):hover {
-    /* background-color: ${color.backgroundC}; */
-    color: ${color.brand1.base};
+    color: ${th('color.brand1.base')};
 
     svg {
       path {
-        fill: ${color.brand1.base};
+        fill: ${th('color.brand1.base')};
       }
     }
   }
 
   &:not(:disabled):active {
-    /* background-color: ${color.gray90}; */
     border: none;
-    color: ${color.brand1.base};
+    color: ${th('color.brand1.base')};
     outline: none;
 
     svg {
       path {
-        fill: ${color.brand1.base};
+        fill: ${th('color.brand1.base')};
       }
     }
   }
@@ -71,22 +68,20 @@ const Button = styled.button`
 /* stylelint-enable declaration-no-important */
 
 const Icon = styled.span`
-  height: calc(3.5 * ${th('gridUnit')});
-  /* margin: 0 ${th('gridUnit')} 0 0; */
+  height: ${grid(7)};
   padding: 0;
-  width: calc(3.5 * ${th('gridUnit')});
+  width: ${grid(7)};
 `
 
 const OnlyIcon = styled.span`
-  height: calc(3.5 * ${th('gridUnit')});
+  height: ${grid(7)};
   padding: 0;
-  width: calc(3.5 * ${th('gridUnit')});
+  width: ${grid(7)};
 `
 
 const Label = styled.div`
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
-  /* padding-right: 4px; */
 `
 
 const ButtonWithIcon = ({

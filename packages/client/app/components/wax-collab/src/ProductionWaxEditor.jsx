@@ -7,7 +7,7 @@
 import { useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider, useTheme } from 'styled-components'
 import waxTheme from './layout/waxTheme'
 import { JournalContext } from '../../xpub-journal'
 
@@ -27,6 +27,11 @@ import {
   GET_CITE_PROC,
   GET_CALLOUT_TEXT,
 } from '../../../queries'
+
+const Wrapper = styled.div`
+  height: 100%;
+  overflow: hidden;
+`
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -65,6 +70,7 @@ const ProductionWaxEditor = ({
   ydoc,
   name,
 }) => {
+  const theme = useTheme()
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
 
@@ -284,8 +290,10 @@ const ProductionWaxEditor = ({
   config = yjsConfig(config, { wsProvider, ydoc, yjsType: name })
 
   return (
-    <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
-      <div className={validationStatus}>
+    <ThemeProvider
+      theme={{ textStyles: journal.textStyles, ...theme, ...waxTheme }}
+    >
+      <Wrapper className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
           config={config}
@@ -303,7 +311,7 @@ const ProductionWaxEditor = ({
           user={waxUser}
           value={value}
         />
-      </div>
+      </Wrapper>
     </ThemeProvider>
   )
 }

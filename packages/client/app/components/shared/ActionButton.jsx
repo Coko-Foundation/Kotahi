@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import Color from 'color'
 import { Check, AlertCircle } from 'react-feather'
 import { th, grid, rotate360 } from '@coko/client'
-import { color } from '../../theme'
 
 const BaseButton = styled.button`
   border: none;
@@ -16,8 +15,8 @@ const BaseButton = styled.button`
   font-size: ${th('fontSizeBase')};
   font-weight: 500;
   line-height: ${th('lineHeightBase')};
-  min-height: ${grid(3)};
-  min-width: ${grid(5)};
+  min-height: ${grid(6)};
+  min-width: ${grid(10)};
   ${props =>
     props.$isCompact
       ? ''
@@ -28,17 +27,21 @@ const BaseButton = styled.button`
 `
 
 const DisabledButton = styled(BaseButton)`
-  background-color: ${color.gray90};
-  color: ${color.gray60};
+  background-color: ${th('color.gray90')};
+  color: ${th('color.gray60')};
 `
 
 const Button = styled(BaseButton)`
   background-color: ${props =>
-    props.$bgColor || (props.$primary ? color.brand1.base : color.gray90)};
+    props.$bgColor ||
+    (props.$primary
+      ? props.theme.color.brand1.base
+      : props.theme.color.gray90)};
   /* stylelint-disable-next-line color-function-notation, alpha-value-notation */
   box-shadow: 0 1px 2px rgb(0 0 0 / 30%);
   color: ${props =>
-    props.$fgColor || (props.$primary ? color.text : color.textReverse)};
+    props.$fgColor ||
+    (props.$primary ? props.theme.color.text : props.theme.color.textReverse)};
 
   ${props =>
     props.onClick
@@ -57,12 +60,12 @@ const Button = styled(BaseButton)`
 `
 
 const LabelOnlySpan = styled.span`
-  padding: 0 ${grid(1.5)};
+  padding: 0 ${grid(3)};
 `
 
 const Spinner = styled.div`
   display: inline-block;
-  padding-left: ${grid(1)};
+  padding-left: ${grid(2)};
   vertical-align: -2px;
 
   &::after {
@@ -75,17 +78,17 @@ const Spinner = styled.div`
     /* stylelint-disable-next-line string-quotes */
     content: '';
     display: block;
-    height: ${grid(2)};
-    width: ${grid(2)};
+    height: ${grid(4)};
+    width: ${grid(4)};
   }
 `
 
 const IconContainer = styled.div`
   display: inline-block;
-  height: ${grid(2)};
-  margin-left: ${grid(1)};
+  height: ${grid(4)};
+  margin-left: ${grid(2)};
   vertical-align: -2px;
-  width: ${grid(2)};
+  width: ${grid(4)};
 `
 
 /** A styled button with optional status icon/spinner and optional color. Supported statuses are 'pending', 'success', 'failure'. */
@@ -110,7 +113,9 @@ const ActionButton = ({
     )
 
   const themeContext = useContext(ThemeContext)
-  let bgColor = primary ? color.brand1.base() : color.gray90
+  let bgColor = primary
+    ? themeContext.color.brand1.base
+    : themeContext.color.gray90
   if (status === 'failure') bgColor = themeContext.colorWarning
   else if (col) bgColor = col
 
@@ -119,10 +124,12 @@ const ActionButton = ({
   try {
     isLight = Color(bgColor).isLight()
   } catch {
-    bgColor = color.gray90
+    bgColor = themeContext.color.gray90
   }
 
-  const fgColor = isLight ? color.text : color.textReverse
+  const fgColor = isLight
+    ? themeContext.color.text
+    : themeContext.color.textReverse
 
   let statusIndicator = null
   if (status === 'pending') statusIndicator = <Spinner $fgColor={fgColor} />
@@ -172,7 +179,7 @@ const ActionButton = ({
 }
 
 ActionButton.propTypes = {
-  /** Primary buttons are styled with color.brand1.base, unless another color is specified */
+  /** Primary buttons are styled with th('color.brand1.base'), unless another color is specified */
   primary: PropTypes.bool,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,

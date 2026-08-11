@@ -10,7 +10,6 @@ import { th, grid, serverUrl } from '@coko/client'
 import { Button } from '../../pubsweet'
 import { ConfigContext } from '../../config/src'
 import { getQueryStringByName } from '../../../shared/urlUtils'
-import { color } from '../../../theme'
 
 const getNextUrl = config => {
   const url = new URL(window.location.href)
@@ -30,6 +29,12 @@ const RegisterLinkButton = styled.button`
   font-weight: 500;
   margin: 1em;
   padding: 0.25em 1em;
+
+  color: ${th('colorPrimary')};
+
+  &:hover {
+    color: ${th('colorPrimary')};
+  }
 `
 
 const RegisterInfoString = styled.p`
@@ -44,7 +49,7 @@ const LoginButton = styled(Button).attrs({
   'data-testid': 'login-button',
 })`
   display: block;
-  margin-top: ${grid(3)};
+  margin-top: ${grid(6)};
   width: 100%;
 `
 
@@ -54,8 +59,8 @@ const Container = styled.div.attrs({
 })`
   background: linear-gradient(
     134deg,
-    ${color.brand1.base},
-    ${color.brand1.tint25}
+    ${th('color.brand1.base')},
+    ${th('color.brand1.tint25')}
   );
   display: grid;
   height: 100vh;
@@ -65,14 +70,14 @@ const Container = styled.div.attrs({
 const Content = styled.div`
   background: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${th('boxShadow200')};
   margin-bottom: 1rem;
   max-width: 40em;
-  padding: ${grid(4)};
+  padding: ${grid(8)};
   text-align: center;
 
   h1 {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 
   img {
@@ -127,6 +132,10 @@ const Login = () => {
       ? getQueryStringByName('redirectUrl')
       : redirectLink
 
+  if (localStorage.getItem('token')) {
+    return <Navigate replace to={getNextUrl(config)} />
+  }
+
   if (token) {
     window.localStorage.setItem('token', token)
     const intendedPage = localStorage.getItem('intendedPage')
@@ -140,9 +149,12 @@ const Login = () => {
   }
 
   const nextpage = `${serverUrl}/auth/orcid?group_id=${config?.groupId}`
-  return redirectLink ? (
-    <Navigate replace to={redirectLink} />
-  ) : (
+
+  if (redirectLink) {
+    return <Navigate replace to={redirectLink} />
+  }
+
+  return (
     <Container>
       <Centered>
         <Content>

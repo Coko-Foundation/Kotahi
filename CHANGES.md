@@ -6,6 +6,22 @@
 
 #### Bug fixes
 
+### Version 2026.08.11-0
+
+#### Features
+
+* A new Menu and Pages UI has been introduced, as we work towards improving the user experience in Kotahi
+* Storybook support has been reimplemented. 
+
+#### Bug fixes
+
+* We fixed a bug where a user could see another user's profile without the necessary permissions. Only admins can do that now.
+* There was an issue where chat messages sent after logging in would not automatically display, and required a page refresh to display. This has been resolved.
+* When editing the submission form, selecting "Last edit date — read-only" throws an error of an undefined component. This has been fixed.
+* Fixed an error when a reviewer was unable to scroll down to content outside of the view for both "Metadata" and "Review" tabs.
+* We addressed an issue with failing imports if `archivePeriodDays` was missing from the config.
+* Imports have also been staggered to avoid memory overloading.
+
 #### Deployment changes
 
 ### Version 2026.07.03-0
@@ -19,7 +35,8 @@ Kotahi now supports the COAR Notify protocol, letting your Kotahi instance excha
 This unlocks the "Publish, Review, Curate" model directly in Kotahi — authors can request a peer review or overlay-journal publication straight from a deposited preprint, and datasets can be linked to articles across repositories, using an open, interoperable standard already adopted by bioRxiv, HAL, PREreview, Peer Community In, and Episcience.
 
 ## How to use it:
-All the steps you need to enable COAR Notify in your Kotahi group are here: <ADD PDF>
+All the steps you need to enable COAR Notify in your Kotahi group are here: 
+[COAR Notify Onboarding Guide.pdf](https://github.com/user-attachments/files/29693997/COAR.Notify.Onboarding.Guide.pdf)
 
 ## Want to learn more about the protocol itself?
 COAR Notify is developed and maintained by COAR (Confederation of Open Access Repositories) — learn more directly from them: https://coar-repositories.org/tools-and-resources/notify/

@@ -5,7 +5,6 @@ import ReactModal from 'react-modal'
 import styled, { ThemeContext } from 'styled-components'
 import { th, grid } from '@coko/client'
 import { Button } from '../../pubsweet'
-import { color } from '../../../theme'
 
 import {
   Icon,
@@ -15,17 +14,10 @@ import {
 } from '../../shared'
 
 const MainHeader = styled(LooseRowSpacedAlignTop)`
-  border-bottom: 1.5px solid ${color.gray80};
+  border-bottom: 1.5px solid ${th('color.gray80')};
   line-height: 22px;
-  padding: ${grid(2)} ${grid(3)};
+  padding: ${grid(4)} ${grid(6)};
   z-index: 10000;
-`
-
-const RowHeaderContainer = styled.div`
-  align-items: center;
-  display: flex;
-  font-family: ${th('fontHeading')};
-  gap: 16px;
 `
 
 const StackedHeaderContainer = styled.div`
@@ -33,7 +25,6 @@ const StackedHeaderContainer = styled.div`
   column-gap: 180px;
   display: flex;
   flex-direction: column;
-  font-family: ${th('fontHeading')};
   font-weight: 600;
 `
 
@@ -43,14 +34,14 @@ export const Title = styled.div`
 `
 
 export const Subtitle = styled.div`
-  color: ${color.gray50};
+  color: ${th('color.gray50')};
   font-size: ${th('fontSizeHeading6')};
   font-weight: normal;
 `
 
 const CloseButton = styled(Button)`
   align-items: center;
-  background-color: ${color.backgroundA};
+  background-color: ${th('color.backgroundA')};
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -61,7 +52,7 @@ const CloseButton = styled(Button)`
   width: 30px;
 
   &:hover {
-    background-color: ${color.brand1.tint25};
+    background-color: ${th('color.brand1.tint25')};
 
     svg {
       stroke: white;
@@ -71,34 +62,34 @@ const CloseButton = styled(Button)`
 
 const ButtonPanel = styled.div`
   align-items: center;
-  background-color: ${color.backgroundB};
-  border-top: 1px solid ${color.gray80};
+  background-color: ${th('color.backgroundB')};
+  border-top: 1px solid ${th('color.gray80')};
   display: flex;
   flex-direction: row;
   font-size: 15px;
   justify-content: space-between;
-  padding: ${grid(1.5)} ${grid(3)};
+  padding: ${grid(3)} ${grid(6)};
   width: 100%;
 `
 
 const ButtonContainer = styled.div`
   display: flex;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
 `
 
 const PrimaryActionButton = styled(ActionButton)`
-  background-color: ${color.brand1.base};
+  background-color: ${th('color.brand1.base')};
   border-radius: 6px;
-  color: ${color.textReverse};
+  color: ${th('color.textReverse')};
   cursor: pointer;
   margin: 0 5px;
 `
 
 const SecondaryActionButton = styled(ActionButton)`
-  background-color: ${color.backgroundA};
-  border: 1px solid ${color.black};
+  background-color: ${th('color.backgroundA')};
+  border: 1px solid ${th('color.black')};
   border-radius: 6px;
-  color: ${color.gray50};
+  color: ${th('color.gray50')};
   cursor: pointer;
 `
 
@@ -112,7 +103,7 @@ const CheckBoxContainer = styled.div`
 const ModalContainer = styled.div`
   flex: 1 1 100%;
   overflow-y: auto;
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(5)} ${grid(6)};
   position: relative;
   width: 100%;
 `
@@ -149,18 +140,6 @@ export const StackedHeader = ({
   )
 }
 
-export const RowHeader = ({
-  title,
-  subtitle, // optional
-}) => {
-  return (
-    <RowHeaderContainer>
-      <Title>{title}</Title>
-      {subtitle && <Subtitle>{subtitle}</Subtitle>}
-    </RowHeaderContainer>
-  )
-}
-
 const Modal = ({
   isOpen, // bool used to open and close modal
   onClose, // function to close your modal / set isOpen=false
@@ -182,6 +161,7 @@ const Modal = ({
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 1000,
     },
     content: {
       alignItems: 'stretch',
@@ -196,7 +176,7 @@ const Modal = ({
       maxWidth: '60%',
       overflow: 'hidden',
       padding: '0px',
-      zIndex: 10000,
+      zIndex: 1000,
     },
   }
 

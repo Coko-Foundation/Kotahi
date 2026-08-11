@@ -11,7 +11,7 @@ const REMOVE_GROUP_MANAGER_ROLE_BUTTON = 'button:nth-child(3)'
 
 export const UsersPage = {
   getTitle() {
-    return cy.getByDataTestId('general-heading')
+    return cy.get('h1')
   },
   getUserTableRowList() {
     return cy.getByContainsClass(USER_TABLE_ROW_LIST)

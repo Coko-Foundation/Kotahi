@@ -12,10 +12,10 @@ import ReactCodeMirror from '@uiw/react-codemirror'
 import { json } from '@codemirror/lang-json'
 import { grid, th } from '@coko/client'
 import { isFunction } from 'lodash'
+
 import { Spinner } from '../../../../shared'
 import { CloseButton, PopUpH2 } from '../styles'
 import { FlexRow } from '../../../../../globals'
-import { color } from '../../../../../theme'
 import dataciteLogo from '../../../../../../public/datacite-logo-vector.svg'
 import { Button } from '../../../../pubsweet'
 import { CHECK_API_PAYLOAD } from '../../../../../queries'
@@ -106,9 +106,9 @@ const Root = styled(FlexRow)`
 
 const Header = styled(FlexRow)`
   align-items: center;
-  background: ${color.brand1.base};
+  background: ${th('color.brand1.base')};
   justify-content: space-between;
-  padding: ${grid(0.6)} ${grid(1)};
+  padding: ${grid(1.2)} ${grid(2)};
   text-transform: uppercase;
   width: 100%;
 
@@ -116,7 +116,7 @@ const Header = styled(FlexRow)`
     color: ${th('colorBackground')};
     font-weight: bold;
     line-height: 1;
-    padding-left: ${grid(0.6)};
+    padding-left: ${grid(1.2)};
   }
 `
 
@@ -158,15 +158,15 @@ const ContentWrapper = styled.div`
 
 const FlexColCentered = styled(FlexCol)`
   align-items: center;
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: center;
 `
 
 const CheckApiButton = styled(CleanButton)`
   border: 1px solid #ddd;
-  border-radius: ${grid(1.2)};
+  border-radius: ${grid(2.4)};
   height: 200px;
-  padding: ${grid(1.2)};
+  padding: ${grid(2.4)};
   width: 200px;
 
   * {
@@ -181,16 +181,17 @@ const ResultHeader = styled(FlexRow)`
   font-weight: 700;
   justify-content: space-between;
   opacity: ${p => (p.$show ? 1 : 0)};
-  padding: ${grid(0.6)} 12px;
+  padding: ${grid(1.2)} 12px;
   width: 100%;
 
   p {
-    color: ${p => (!p.$failure ? color.success.base : color.error.base)};
+    color: ${p =>
+      !p.$failure ? p.theme.color.success.base : p.theme.color.error.base};
   }
 `
 
 const ResultHeaderActions = styled(FlexRow)`
-  gap: ${grid(1.2)};
+  gap: ${grid(2.4)};
   justify-content: space-between;
 
   a {
@@ -219,16 +220,16 @@ const LoadingWindow = styled(FlexColCentered)`
 const ErrorsList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: ${grid(0.6)};
+  gap: ${grid(1.2)};
   height: 100%;
   list-style-type: none;
-  padding: ${grid(0.6)};
+  padding: ${grid(1.2)};
 
   > li {
     background: ${th('colorBackground')};
     border: 1px solid #ddd;
-    border-left: ${color.error.base} 5px solid;
-    padding: ${grid(0.6)} ${grid(1.2)};
+    border-left: ${th('color.error.base')} 5px solid;
+    padding: ${grid(1.2)} ${grid(2.4)};
   }
 `
 // #endregion styled-components ----------------------------------------------------------------------------

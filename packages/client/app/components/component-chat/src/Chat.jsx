@@ -7,7 +7,6 @@ import { th } from '@coko/client'
 import ChatInput from './SuperChatInput/SuperChatInput'
 import Messages from './Messages/Messages'
 import UserActivityTracker from '../../shared/UserActivityTracker'
-import color from '../../../theme/color'
 
 const ChatInputContainer = styled.div`
   position: relative;
@@ -15,7 +14,7 @@ const ChatInputContainer = styled.div`
   span.mention-tag {
     background-color: ${th('colorPrimary')};
     border-radius: 4px;
-    color: ${color.white};
+    color: ${th('color.white')};
     padding: 2px 4px;
   }
 `
@@ -51,7 +50,6 @@ export const FloatingUnreadLabelClose = styled.span`
 
 const Chat = ({
   channelId,
-  chatRoomId,
   currentUser,
   searchUsers,
   sendChannelMessages,
@@ -60,7 +58,6 @@ const Chat = ({
   unreadMessagesCount,
   firstUnreadMessageId,
   updateChannelViewed,
-  manuscriptId = null,
   reportUserIsActiveMutation,
   notificationOptionData,
   updateNotificationOptionData,
@@ -124,11 +121,9 @@ const Chat = ({
       <Messages
         channelId={channelId}
         channelNotificationOption={channelNotificationOption}
-        chatRoomId={chatRoomId}
         currentUser={currentUser}
         fetchMoreData={fetchMoreData}
         firstUnreadMessageId={firstUnreadMessageId}
-        manuscriptId={manuscriptId}
         queryData={queryData}
         toggleChannelMuteStatus={toggleChannelMuteStatus}
         unreadMessagesCount={unreadMessagesCount}

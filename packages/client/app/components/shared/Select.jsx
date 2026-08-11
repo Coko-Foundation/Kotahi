@@ -7,42 +7,47 @@ import PropTypes from 'prop-types'
 import ReactSelect, { components } from 'react-select'
 import styled, { ThemeContext } from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { color } from '../../theme'
+import { grid } from '@coko/client'
 
-const styles = th => ({
+const styles = theme => ({
+  menuPortal: provided => ({
+    ...provided,
+    zIndex: 9999,
+  }),
+
   menu: provided => ({
     ...provided,
-    borderRadius: th.borderRadius,
+    borderRadius: theme.borderRadius,
     zIndex: 9999,
     width: '100%',
-    fontSize: th.fontSizeBaseSmall,
+    fontSize: theme.fontSizeBaseSmall,
     marginTop: '4px',
   }),
 
   control: (provided, state) => ({
     ...provided,
-    background: color.gray97,
+    background: theme.color.gray97,
     border: !state.selectProps.standalone
       ? state.isFocused
-        ? `1px solid ${color.gray70}`
-        : `1px solid ${color.gray80}`
+        ? `1px solid ${theme.color.gray70}`
+        : `1px solid ${theme.color.gray80}`
       : 'none',
     boxShadow: !state.selectProps.standalone
       ? state.isFocused
-        ? `0 0 0 1px ${color.brand1.base}`
+        ? `0 0 0 1px ${theme.color.brand1.base}`
         : 'inset 0px 0px 4px rgb(0 0 0 / 7%)'
       : state.isFocused
-        ? `0 0 0 1px ${color.brand1.base}`
-        : th.boxShadow,
+        ? `0 0 0 1px ${theme.color.brand1.base}`
+        : theme.boxShadow200,
 
-    borderRadius: th.borderRadius,
+    borderRadius: theme.borderRadius,
     '&:hover': {
-      boxShadow: `1px solid ${color.gray70}`,
+      boxShadow: `1px solid ${theme.color.gray70}`,
     },
-    fontSize: th.fontSizeBaseSmall,
-    minHeight: `calc(${th.gridUnit} * 5)`,
+    fontSize: theme.fontSizeBaseSmall,
+    minHeight: grid(10)({ theme }),
     div: {
-      color: color.gray20,
+      color: theme.color.gray20,
     },
   }),
 
@@ -56,8 +61,8 @@ const styles = th => ({
   option: (provided, state) => ({
     ...provided,
     backgroundColor:
-      state.isFocused || state.isSelected ? color.gray90 : 'white',
-    color: color.text,
+      state.isFocused || state.isSelected ? theme.color.gray90 : 'white',
+    color: theme.color.text,
   }),
 })
 
@@ -99,7 +104,7 @@ export const Select = props => {
     ...otherProps
   } = props
 
-  const th = useContext(ThemeContext)
+  const theme = useContext(ThemeContext)
   const { t } = useTranslation()
 
   const [selectedOption, setSelectedOption] = useState(value)
@@ -127,7 +132,7 @@ export const Select = props => {
     }
   }, [value, hasGroupedOptions, options])
 
-  const myStyles = { ...styles(th), ...(customStyles || {}) }
+  const myStyles = { ...styles(theme), ...(customStyles || {}) }
 
   return (
     <ReactSelect

@@ -35,12 +35,3 @@ export const UPDATE_TAB = gql`
     }
   }
 `
-
-export const UPDATE_MENU = gql`
-  mutation UpdateMenu($expanded: Boolean!) {
-    updateMenuUI(expanded: $expanded) {
-      id
-      menuPinned
-    }
-  }
-`

@@ -2,7 +2,7 @@
 
 const { difference, map } = require('lodash')
 const path = require('path')
-const fs = require('fs-extra').promises
+const fs = require('fs').promises
 const { useTransaction, logger } = require('@coko/server')
 
 const Channel = require('../models/channel/channel.model')

@@ -16,8 +16,6 @@ import {
   validateAuthor,
   validateAuthors,
 } from '../../../../shared/authorsFieldDefinitions'
-
-import theme, { color } from '../../../../theme'
 import { FlexRow } from '../../../../globals'
 import useAuthorsFieldQueries from './hooks/useAuthorsInputQueries'
 
@@ -25,8 +23,8 @@ import useAuthorsFieldQueries from './hooks/useAuthorsInputQueries'
 const StyledButton = styled(Button)`
   cursor: pointer;
   display: flex;
-  gap: ${grid(1)};
-  margin-bottom: ${grid(2)};
+  gap: ${grid(2)};
+  margin-bottom: ${grid(4)};
 
   &[disabled] {
     cursor: not-allowed;
@@ -35,23 +33,23 @@ const StyledButton = styled(Button)`
 
 const Wrapper = styled.div`
   > div:not(:last-child) {
-    margin-bottom: ${grid(2)};
+    margin-bottom: ${grid(4)};
   }
 `
 
 const AuthorContainer = styled.div`
-  border: 1px solid ${color.gray80};
-  border-radius: ${theme.borderRadius};
+  border: 1px solid ${th('color.gray80')};
+  border-radius: ${th('borderRadius')};
   display: flex;
   ${({ fullWidth }) => (fullWidth ? 'width: 100%' : 'max-width: 1000px')};
-  padding: ${grid(2)};
+  padding: ${grid(4)};
 `
 
 const Author = styled.div`
   display: grid;
-  gap: ${grid(2)} ${grid(4)};
+  gap: ${grid(4)} ${grid(8)};
   grid-template-columns: repeat(2, 1fr);
-  padding: ${grid(1)};
+  padding: ${grid(2)};
   width: 100%;
 `
 
@@ -76,10 +74,10 @@ const StyledSelect = styled(Creatable)`
 
 const StyledDeleteControl = styled(DeleteControl)`
   background-color: ${th('colorBackground')};
-  height: ${grid(3)};
+  height: ${grid(6)};
   margin: 0;
-  padding-left: ${grid(1)};
-  width: ${grid(3)};
+  padding-left: ${grid(2)};
+  width: ${grid(6)};
 
   &:hover {
     background-color: ${th('colorBackground')};
@@ -92,7 +90,7 @@ const FieldLabel = styled(FlexRow)`
   display: flex;
   font-size: ${th('fontSizeBaseSmall')};
   justify-content: space-between;
-  padding-inline: ${grid(0.25)};
+  padding-inline: ${grid(0.5)};
 `
 // #endregion styled
 

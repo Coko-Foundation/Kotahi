@@ -2,7 +2,7 @@
 
 import styled from 'styled-components'
 
-import { th } from '@coko/client'
+import { grid, th } from '@coko/client'
 
 const statusColor = props =>
   ({
@@ -14,8 +14,8 @@ const Container = styled.svg.attrs(() => ({
   viewBox: '0 0 105 70',
   xmlns: 'http://www.w3.org/2000/svg',
 }))`
-  height: calc(${th('gridUnit')} * 6);
-  width: calc(${th('gridUnit')} * 9);
+  height: ${grid(12)};
+  width: ${grid(18)};
 `
 
 const Persona = styled.path.attrs(() => ({

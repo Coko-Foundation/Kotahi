@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { grid } from '@coko/client'
 import { useTranslation } from 'react-i18next'
+
 import { createDefaultOptions, createOptions } from '../misc/helpers'
 import {
   Col,
@@ -11,7 +12,6 @@ import {
   Row,
   TextInput,
 } from '../misc/styleds'
-import { color } from '../../../theme'
 import SimpleWaxEditor from '../../wax-collab/src/SimpleWaxEditor'
 import { objIf } from '../../../shared/generalUtils'
 import { T } from '../misc/constants'
@@ -54,17 +54,17 @@ const TwoColumnRow = styled(Row)`
   display: grid;
   gap: 8px 16px;
   grid-template-columns: repeat(2, 1fr);
-  padding-inline: ${grid(3)};
+  padding-inline: ${grid(6)};
 `
 
 const EventSettings = styled(TwoColumnRow)`
   border-bottom: 1px solid #ddd;
-  gap: ${grid(2)} ${grid(2)};
-  padding: 0 ${grid(3)} ${grid(5)};
+  gap: ${grid(4)} ${grid(4)};
+  padding: 0 ${grid(6)} ${grid(10)};
 `
 
 const EmailSettings = styled(Col)`
-  gap: ${grid(2)};
+  gap: ${grid(4)};
   justify-content: flex-start;
   max-height: 330px;
   min-height: 300px;
@@ -78,6 +78,7 @@ const EditSection = ({
   fieldsStatus,
   emailTemplates,
 }) => {
+  const theme = useTheme()
   const { t } = useTranslation()
   const { hasChanged, isValid } = fieldsStatus.state
   const options = createOptions(recipients, emailTemplates, selected?.ccEmails)
@@ -109,8 +110,8 @@ const EditSection = ({
   )
 
   const getFieldStatusColor = field => {
-    if (!isValid[field]) return color.error.base
-    if (hasChanged[field]) return color.warning.base
+    if (!isValid[field]) return theme.color.error.base
+    if (hasChanged[field]) return theme.color.warning.base
     return ''
   }
 
