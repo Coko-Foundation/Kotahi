@@ -102,7 +102,6 @@ const GroupName = styled.div<{ $labelsWrap: boolean }>`
 
 const GroupType = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
-  text-transform: capitalize;
 `
 
 const Separator = styled.div`
@@ -346,6 +345,7 @@ const Menu = (props: MenuProps): ReactNode => {
     showDashboard,
     showReports,
   } = props
+
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { groupName } = useParams()
