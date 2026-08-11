@@ -822,6 +822,86 @@ export const BuiltInOptionsRenderingWithMultipleValues = meta.story({
   },
 })
 
+const customStatusOptions = [
+  {
+    value: 'readyToEvaluate',
+    label: 'Ready to evaluate',
+    labelColor: '#e0a800',
+  },
+  { value: 'evaluated', label: 'Evaluated', labelColor: '#3f21d4' },
+  { value: 'readyToPublish', label: 'Ready to publish', labelColor: '#1a8917' },
+]
+
+export const BuiltInOptionsRenderingEditable = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Custom status',
+        dataIndex: 'customStatus',
+        key: 'customStatus',
+        dataType: 'options',
+        editable: true,
+        filterable: true,
+        options: customStatusOptions,
+      },
+    ],
+    dataSource: [
+      { ...baseRow, id: 'ms-1', customStatus: 'readyToEvaluate' },
+      {
+        key: '2',
+        id: 'ms-2',
+        manuscriptNumber: 102,
+        title: 'A dataset of pollinator visitation rates',
+        customStatus: null,
+      },
+      {
+        key: '3',
+        id: 'ms-3',
+        manuscriptNumber: 103,
+        title: 'BeeTrack: software for tracking pollinators',
+        customStatus: 'evaluated',
+      },
+    ],
+    page: 1,
+    pageSize: 10,
+    totalCount: 3,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+  render: args => {
+    const [dataSource, setDataSource] = useState(args.dataSource)
+
+    const [columnFilters, setColumnFilters] = useState<
+      Record<string, string[]>
+    >({})
+
+    const selectedStatuses = columnFilters.customStatus ?? []
+
+    const filtered =
+      selectedStatuses.length > 0
+        ? dataSource.filter(row => selectedStatuses.includes(row.customStatus))
+        : dataSource
+
+    return (
+      <ManuscriptsTable
+        {...args}
+        columnFilters={columnFilters}
+        dataSource={filtered}
+        onFiltersChange={setColumnFilters}
+        onOptionChange={(columnKey, id, value) =>
+          setDataSource(previous =>
+            previous.map(row =>
+              row.id === id ? { ...row, [columnKey]: value } : row,
+            ),
+          )
+        }
+        totalCount={filtered.length}
+      />
+    )
+  },
+})
+
 /**
  * Action uses a custom render function
  */

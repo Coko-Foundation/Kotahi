@@ -1,7 +1,7 @@
 import { type ReactNode, type MouseEvent, Fragment } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import styled from 'styled-components'
-import { th, grid } from '@coko/client'
+import { th, grid, Select } from '@coko/client'
 import {
   ConfigProvider,
   DatePicker,
@@ -70,6 +70,11 @@ export type ManuscriptsTableColumn = {
    */
   showAbstract?: boolean
   /**
+   * Applies to the 'options' datatype, single-value case only.
+   * Renders a select dropdown instead of a static badge.
+   */
+  editable?: boolean
+  /**
    * Escape hatch for anything else (e.g. an actions column with
    * business-specific links) -- takes precedence over dataType.
    */
@@ -96,7 +101,7 @@ export type ManuscriptSearchSnippet = {
  */
 
 /**
- * Two more legacy behaviors that are NOT gaps in this component -- the existing `render` escape
+ * One more legacy behavior that is NOT a gap in this component -- the existing `render` escape
  * hatch already covers the mechanism (see the Actions column in ManuscriptsTable.stories.tsx and
  * in SubmissionsTable.jsx for a working example) -- but the actual business-specific logic still
  * needs to be written wherever EditorTable/ReviewerTable/the admin Manuscripts page eventually
@@ -104,8 +109,6 @@ export type ManuscriptSearchSnippet = {
  * - Action links: Actions.jsx, EditorItemLinks.jsx, AuthorProofingLink.jsx,
  *   ReviewerItemLinks.jsx, SubmitChevron.jsx -- each needs the full manuscript, current user,
  *   config, routing, and mutation functions to decide which links/labels to show.
- * - Editable label dropdown: LabelsOrSelectButton.jsx/LabelDropdown.jsx -- an interactive,
- *   mutating widget (inline edit + workflow trigger), not a passive display of a value.
  */
 
 type ManuscriptsTableProps = {
@@ -134,6 +137,11 @@ type ManuscriptsTableProps = {
     columnKey: string,
     viewMode: 'compact' | 'detailed',
   ) => void
+  /**
+   * Fired when a value is picked or cleared in an `editable` 'options' column. `id` is the
+   * changed manuscript's `record.id`; `value` is `null` when cleared.
+   */
+  onOptionChange?: (columnKey: string, id: string, value: string | null) => void
 }
 
 const renderDate = (value: any): ReactNode => {
@@ -368,6 +376,49 @@ const renderOptions = (
   }
 
   return renderSingleOption(value, options)
+}
+
+const EditableOptionSelect = styled(Select)`
+  .ant-select {
+    padding-block: ${grid(1)};
+  }
+`
+
+/**
+ * Single-value only - not meant for the array/multi-select case.
+ */
+const renderEditableOption = (
+  value: any,
+  record: Record<string, any>,
+  column: ManuscriptsTableColumn,
+  onOptionChange:
+    | ((columnKey: string, id: string, value: string | null) => void)
+    | undefined,
+): ReactNode => {
+  const options = column.options ?? []
+  const id = record.id
+
+  return (
+    <EditableOptionSelect
+      allowClear
+      labelRender={({ value: selectedValue }): ReactNode =>
+        renderSingleOption(selectedValue as string, options)
+      }
+      onChange={(newValue: string | undefined): void =>
+        onOptionChange?.(column.key, id, newValue ?? null)
+      }
+      onClick={(event: MouseEvent): void => event.stopPropagation()}
+      optionRender={option =>
+        renderSingleOption(option.value as string, options)
+      }
+      options={options.map(option => ({
+        value: option.value,
+        label: option.label ?? option.value,
+      }))}
+      size="small"
+      value={value || undefined}
+    />
+  )
 }
 
 const PersonWrapper = styled.div`
@@ -692,6 +743,11 @@ const resolveColumn = (
       columnKey: string,
       viewMode: 'compact' | 'detailed',
     ) => void
+    onOptionChange?: (
+      columnKey: string,
+      id: string,
+      value: string | null,
+    ) => void
   },
 ): TableColumnType<Record<string, any>> => {
   let resolved: ManuscriptsTableColumn = column
@@ -741,8 +797,15 @@ const resolveColumn = (
       case 'options':
         resolved = {
           ...column,
-          render: (value: any): ReactNode =>
-            renderOptions(value, column.options),
+          render: (value: any, record: Record<string, any>): ReactNode =>
+            column.editable
+              ? renderEditableOption(
+                  value,
+                  record,
+                  column,
+                  context.onOptionChange,
+                )
+              : renderOptions(value, column.options),
         }
         break
       default:
@@ -891,6 +954,7 @@ const ManuscriptsTable = ({
   onFiltersChange,
   reviewerStatusViewMode,
   onReviewerStatusViewModeChange,
+  onOptionChange,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
 
@@ -933,6 +997,7 @@ const ManuscriptsTable = ({
       columnFilters,
       reviewerStatusViewMode,
       onReviewerStatusViewModeChange,
+      onOptionChange,
     }),
   )
 
