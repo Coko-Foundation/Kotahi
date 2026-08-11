@@ -25,13 +25,20 @@ const MenuPage = (): ReactNode => {
   // @ts-ignore
   const { instanceName, groupIdentity, report, controlPanel } = config
 
+  const instances = {
+    journal: 'Journal',
+    prc: 'PRC',
+    preprint1: 'Preprint 1',
+    preprint2: 'Preprint 2',
+  }
+
   const showDashboard = ['journal', 'prc', 'preprint2'].includes(instanceName)
   const showCoar = controlPanel?.showTabs.includes('COAR Notify Metadata')
 
   return (
     <Menu
       groupDisplayName={groupIdentity.brandName}
-      groupType={instanceName}
+      groupType={instances[instanceName] ?? instanceName}
       initialMenuCollapsed={menuCollapsed}
       isUserAdmin={isUserAdmin}
       isUserGroupAdmin={isUserGroupAdmin}
