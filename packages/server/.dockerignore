@@ -39,6 +39,12 @@ dist/
 uploads/*
 CONTRIBUTING.md
 
+# tests — kept out of the production image 
+**/__tests__
+**/___tests___
+**/*.test.ts
+vitest.config.ts
+
 # development config files
 .eslintrc.js
 .commitlintrc.js
