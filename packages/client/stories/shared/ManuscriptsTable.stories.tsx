@@ -1034,9 +1034,11 @@ export const WithSelectableRows = meta.story({
     selectable: true,
     showArchiveActions: true,
     showDownloadAction: true,
+    showViewArchivedToggle: true,
   },
   render: args => {
     const [dataSource, setDataSource] = useState(initialSelectableData)
+    const [viewingArchived, setViewingArchived] = useState(false)
 
     const [columnFilters, setColumnFilters] = useState<
       Record<string, string[]>
@@ -1069,7 +1071,9 @@ export const WithSelectableRows = meta.story({
         }
         onFiltersChange={setColumnFilters}
         onUnarchiveSelected={ids => setArchived(ids, false)}
+        onViewingArchivedChange={setViewingArchived}
         totalCount={filtered.length}
+        viewingArchived={viewingArchived}
       />
     )
   },

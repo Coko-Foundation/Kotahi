@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Modal,
   Radio as RadioGroupInput,
+  Switch,
 } from '@coko/client'
 import {
   ConfigProvider,
@@ -149,6 +150,9 @@ type ManuscriptsTableProps = {
   onArchiveSelected?: (ids: string[]) => void
   onUnarchiveSelected?: (ids: string[]) => void
   onDownloadSelected?: (ids: string[]) => void
+  showViewArchivedToggle?: boolean
+  viewingArchived?: boolean
+  onViewingArchivedChange?: (viewingArchived: boolean) => void
 }
 
 const renderDate = (value: any): ReactNode => {
@@ -953,6 +957,10 @@ const SelectionActionsWrapper = styled.div`
   margin-bottom: ${grid(2)};
 `
 
+const ViewArchivedToggleWrapper = styled.div`
+  margin-left: auto;
+`
+
 const SelectionCount = styled.span`
   font-size: ${th('fontSizeBaseSmall')};
   color: ${th('colorTextPlaceholder')};
@@ -978,6 +986,9 @@ const ManuscriptsTable = ({
   onArchiveSelected,
   onUnarchiveSelected,
   onDownloadSelected,
+  showViewArchivedToggle = false,
+  viewingArchived = false,
+  onViewingArchivedChange,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
   const [modal, modalContextHolder] = Modal.useModal()
@@ -1026,15 +1037,29 @@ const ManuscriptsTable = ({
     }),
   )
 
-  const filterChips =
-    columnFilters && onFiltersChange
+  const filterChips = [
+    ...(columnFilters && onFiltersChange
       ? buildFilterChips(columns, columnFilters, onFiltersChange)
-      : []
+      : []),
+    ...(viewingArchived
+      ? [
+          {
+            key: 'viewingArchived',
+            label: t('manuscriptsPage.archivedManuscripts'),
+            onRemove: (event: MouseEvent<HTMLElement>): void => {
+              event.preventDefault()
+              onViewingArchivedChange?.(false)
+            },
+          },
+        ]
+      : []),
+  ]
 
   const selectedRows = dataSource.filter(row => selectedRowIds.includes(row.id))
 
   const showSelectionActions =
-    selectable && (showArchiveActions || showDownloadAction)
+    (selectable && (showArchiveActions || showDownloadAction)) ||
+    showViewArchivedToggle
 
   const hasSelection = selectedRows.length > 0
   const allSelectedAreArchived =
@@ -1087,40 +1112,53 @@ const ManuscriptsTable = ({
       {modalContextHolder}
       {showSelectionActions && (
         <SelectionActionsWrapper>
-          <SelectionCount>
-            {t('manuscriptsTable.selectedCount', {
-              count: selectedRows.length,
-            })}
-          </SelectionCount>
-          <ButtonGroup>
-            {showArchiveActions && (
-              <Button
-                disabled={!hasSelection || allSelectedAreArchived}
-                onClick={handleArchiveClick}
-                size="small"
-              >
-                {t('manuscriptsPage.Archive')}
-              </Button>
-            )}
-            {showArchiveActions && (
-              <Button
-                disabled={!hasSelection || noneSelectedAreArchived}
-                onClick={handleUnarchiveClick}
-                size="small"
-              >
-                {t('manuscriptsPage.Unarchive')}
-              </Button>
-            )}
-            {showDownloadAction && (
-              <Button
-                disabled={!hasSelection}
-                onClick={handleDownloadClick}
-                size="small"
-              >
-                {t('manuscriptsPage.exportAsJson')}
-              </Button>
-            )}
-          </ButtonGroup>
+          {selectable && (showArchiveActions || showDownloadAction) && (
+            <>
+              <SelectionCount>
+                {t('manuscriptsTable.selectedCount', {
+                  count: selectedRows.length,
+                })}
+              </SelectionCount>
+              <ButtonGroup>
+                {showArchiveActions && (
+                  <Button
+                    disabled={!hasSelection || allSelectedAreArchived}
+                    onClick={handleArchiveClick}
+                    size="small"
+                  >
+                    {t('manuscriptsPage.Archive')}
+                  </Button>
+                )}
+                {showArchiveActions && (
+                  <Button
+                    disabled={!hasSelection || noneSelectedAreArchived}
+                    onClick={handleUnarchiveClick}
+                    size="small"
+                  >
+                    {t('manuscriptsPage.Unarchive')}
+                  </Button>
+                )}
+                {showDownloadAction && (
+                  <Button
+                    disabled={!hasSelection}
+                    onClick={handleDownloadClick}
+                    size="small"
+                  >
+                    {t('manuscriptsPage.exportAsJson')}
+                  </Button>
+                )}
+              </ButtonGroup>
+            </>
+          )}
+          {showViewArchivedToggle && (
+            <ViewArchivedToggleWrapper>
+              <Switch
+                checked={viewingArchived}
+                label={t('manuscriptsPage.viewArchived')}
+                onChange={onViewingArchivedChange}
+              />
+            </ViewArchivedToggleWrapper>
+          )}
         </SelectionActionsWrapper>
       )}
       {filterChips.length > 0 && (
