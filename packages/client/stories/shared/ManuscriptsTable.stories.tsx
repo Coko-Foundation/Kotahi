@@ -985,6 +985,96 @@ export const WithFiltersApplied = meta.story({
   },
 })
 
+const initialSelectableData = [
+  {
+    key: '1',
+    id: 'ms-1',
+    manuscriptNumber: 101,
+    title: 'Honey bee colonies benefit from grassland',
+    status: 'submitted',
+    archived: false,
+  },
+  {
+    key: '2',
+    id: 'ms-2',
+    manuscriptNumber: 102,
+    title: 'A dataset of pollinator visitation rates',
+    status: 'accepted',
+    archived: false,
+  },
+  {
+    key: '3',
+    id: 'ms-3',
+    manuscriptNumber: 103,
+    title: 'BeeTrack: software for tracking pollinators',
+    status: 'rejected',
+    archived: true,
+  },
+]
+
+export const WithSelectableRows = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+        dataType: 'status',
+        filterable: true,
+        options: manuscriptStatusOptions,
+      },
+    ],
+    dataSource: initialSelectableData,
+    page: 1,
+    pageSize: 10,
+    totalCount: initialSelectableData.length,
+    onPageChange: () => {},
+    onSearch: () => {},
+    selectable: true,
+    showArchiveActions: true,
+    showDownloadAction: true,
+  },
+  render: args => {
+    const [dataSource, setDataSource] = useState(initialSelectableData)
+
+    const [columnFilters, setColumnFilters] = useState<
+      Record<string, string[]>
+    >({})
+
+    const setArchived = (ids: string[], archived: boolean): void => {
+      setDataSource(previous =>
+        previous.map(row =>
+          ids.includes(row.id) ? { ...row, archived } : row,
+        ),
+      )
+    }
+
+    const selectedStatuses = columnFilters.status ?? []
+
+    const filtered =
+      selectedStatuses.length > 0
+        ? dataSource.filter(row => selectedStatuses.includes(row.status))
+        : dataSource
+
+    return (
+      <ManuscriptsTable
+        {...args}
+        columnFilters={columnFilters}
+        dataSource={filtered}
+        onArchiveSelected={ids => setArchived(ids, true)}
+        onDownloadSelected={ids =>
+          // eslint-disable-next-line no-console
+          console.log('Download JSON for:', ids)
+        }
+        onFiltersChange={setColumnFilters}
+        onUnarchiveSelected={ids => setArchived(ids, false)}
+        totalCount={filtered.length}
+      />
+    )
+  },
+})
+
 /**
  * Show why a row matched
  */

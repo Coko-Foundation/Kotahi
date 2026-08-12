@@ -22,10 +22,6 @@ const Table = styled(OriginalTable)`
     margin-right: auto;
   }
 
-  .ant-table-selection-column {
-    padding-inline-start: ${grid(4)} !important;
-  }
-
   .ant-table-thead {
     font-size: ${th('fontSizeBaseSmaller')};
     text-transform: uppercase;

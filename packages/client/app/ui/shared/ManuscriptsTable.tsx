@@ -1,7 +1,15 @@
-import { type ReactNode, type MouseEvent, Fragment } from 'react'
+import { type ReactNode, type MouseEvent, Fragment, useState } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import styled from 'styled-components'
-import { th, grid, Select } from '@coko/client'
+import {
+  th,
+  grid,
+  Select,
+  Button,
+  ButtonGroup,
+  Modal,
+  Radio as RadioGroupInput,
+} from '@coko/client'
 import {
   ConfigProvider,
   DatePicker,
@@ -10,7 +18,6 @@ import {
   type TableColumnType,
 } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
-import type { RadioChangeEvent } from 'antd/es/radio'
 import dayjs from 'dayjs'
 import DOMPurify from 'isomorphic-dompurify'
 
@@ -100,17 +107,6 @@ export type ManuscriptSearchSnippet = {
  *   hardcodes which roles to exclude rather than taking a parameter.
  */
 
-/**
- * One more legacy behavior that is NOT a gap in this component -- the existing `render` escape
- * hatch already covers the mechanism (see the Actions column in ManuscriptsTable.stories.tsx and
- * in SubmissionsTable.jsx for a working example) -- but the actual business-specific logic still
- * needs to be written wherever EditorTable/ReviewerTable/the admin Manuscripts page eventually
- * migrate off the legacy table:
- * - Action links: Actions.jsx, EditorItemLinks.jsx, AuthorProofingLink.jsx,
- *   ReviewerItemLinks.jsx, SubmitChevron.jsx -- each needs the full manuscript, current user,
- *   config, routing, and mutation functions to decide which links/labels to show.
- */
-
 type ManuscriptsTableProps = {
   columns: ManuscriptsTableColumn[]
   dataSource: Record<string, any>[]
@@ -142,6 +138,17 @@ type ManuscriptsTableProps = {
    * changed manuscript's `record.id`; `value` is `null` when cleared.
    */
   onOptionChange?: (columnKey: string, id: string, value: string | null) => void
+  /**
+   * Enables row selection checkboxes.
+   */
+  selectable?: boolean
+  /** Only visible is selectable is true. */
+  showArchiveActions?: boolean
+  /** Only visible is selectable is true. */
+  showDownloadAction?: boolean
+  onArchiveSelected?: (ids: string[]) => void
+  onUnarchiveSelected?: (ids: string[]) => void
+  onDownloadSelected?: (ids: string[]) => void
 }
 
 const renderDate = (value: any): ReactNode => {
@@ -666,7 +673,7 @@ const ReviewerStatusColumnHeaderWrapper = styled.div`
   gap: ${grid(2)};
 `
 
-const RadioGroup = styled(Radio.Group)`
+const RadioGroup = styled(RadioGroupInput)`
   /* stylelint-disable declaration-no-important */
   .ant-radio-button-wrapper {
     background-color: ${th('colorPrimary')} !important;
@@ -706,9 +713,7 @@ const ReviewerStatusColumnHeader = ({
       <span>{title}</span>
       <RadioGroup
         buttonStyle="solid"
-        onChange={(event: RadioChangeEvent): void =>
-          onChange(event.target.value === 'compact')
-        }
+        onChange={(value: string): void => onChange(value === 'compact')}
         optionType="button"
         size="small"
         value={isCompact ? 'compact' : 'detailed'}
@@ -941,6 +946,18 @@ const buildFilterChips = (
   return chips
 }
 
+const SelectionActionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+  margin-bottom: ${grid(2)};
+`
+
+const SelectionCount = styled.span`
+  font-size: ${th('fontSizeBaseSmall')};
+  color: ${th('colorTextPlaceholder')};
+`
+
 const ManuscriptsTable = ({
   columns,
   dataSource,
@@ -955,8 +972,16 @@ const ManuscriptsTable = ({
   reviewerStatusViewMode,
   onReviewerStatusViewModeChange,
   onOptionChange,
+  selectable = false,
+  showArchiveActions = false,
+  showDownloadAction = false,
+  onArchiveSelected,
+  onUnarchiveSelected,
+  onDownloadSelected,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
+  const [modal, modalContextHolder] = Modal.useModal()
+  const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
 
   const rowsWithSnippets = dataSource.filter(hasSearchSnippets)
 
@@ -1006,8 +1031,98 @@ const ManuscriptsTable = ({
       ? buildFilterChips(columns, columnFilters, onFiltersChange)
       : []
 
+  const selectedRows = dataSource.filter(row => selectedRowIds.includes(row.id))
+
+  const showSelectionActions =
+    selectable && (showArchiveActions || showDownloadAction)
+
+  const hasSelection = selectedRows.length > 0
+  const allSelectedAreArchived =
+    hasSelection && selectedRows.every(row => row.archived)
+  const noneSelectedAreArchived =
+    hasSelection && selectedRows.every(row => !row.archived)
+
+  const rowSelection = selectable
+    ? {
+        selectedRowKeys: selectedRows.map(row => row.key),
+        onChange: (_keys: unknown[], rows: Record<string, any>[]): void =>
+          setSelectedRowIds(rows.map(row => row.id)),
+      }
+    : undefined
+
+  const handleArchiveClick = (): void => {
+    modal.confirm({
+      content: t('manuscriptsTable.confirmArchive', {
+        count: selectedRows.length,
+      }),
+      okText: t('common.OK'),
+      cancelText: t('common.Cancel'),
+      onOk: () => {
+        onArchiveSelected?.(selectedRows.map(row => row.id))
+        setSelectedRowIds([])
+      },
+    })
+  }
+
+  const handleUnarchiveClick = (): void => {
+    modal.confirm({
+      content: t('manuscriptsTable.confirmUnarchive', {
+        count: selectedRows.length,
+      }),
+      okText: t('common.OK'),
+      cancelText: t('common.Cancel'),
+      onOk: () => {
+        onUnarchiveSelected?.(selectedRows.map(row => row.id))
+        setSelectedRowIds([])
+      },
+    })
+  }
+
+  const handleDownloadClick = (): void => {
+    onDownloadSelected?.(selectedRows.map(row => row.id))
+  }
+
   return (
     <>
+      {modalContextHolder}
+      {showSelectionActions && (
+        <SelectionActionsWrapper>
+          <SelectionCount>
+            {t('manuscriptsTable.selectedCount', {
+              count: selectedRows.length,
+            })}
+          </SelectionCount>
+          <ButtonGroup>
+            {showArchiveActions && (
+              <Button
+                disabled={!hasSelection || allSelectedAreArchived}
+                onClick={handleArchiveClick}
+                size="small"
+              >
+                {t('manuscriptsPage.Archive')}
+              </Button>
+            )}
+            {showArchiveActions && (
+              <Button
+                disabled={!hasSelection || noneSelectedAreArchived}
+                onClick={handleUnarchiveClick}
+                size="small"
+              >
+                {t('manuscriptsPage.Unarchive')}
+              </Button>
+            )}
+            {showDownloadAction && (
+              <Button
+                disabled={!hasSelection}
+                onClick={handleDownloadClick}
+                size="small"
+              >
+                {t('manuscriptsPage.exportAsJson')}
+              </Button>
+            )}
+          </ButtonGroup>
+        </SelectionActionsWrapper>
+      )}
       {filterChips.length > 0 && (
         <FilterChipsWrapper>
           {filterChips.map(chip => (
@@ -1049,6 +1164,7 @@ const ManuscriptsTable = ({
           ),
           onChange: onPageChange,
         }}
+        rowSelection={rowSelection}
         searchPlaceholder={t('common.Enter search terms...')}
         showSearch
       />
