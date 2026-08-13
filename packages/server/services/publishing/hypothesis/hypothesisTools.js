@@ -188,7 +188,10 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
  * Here we fix that.
  */
 const normalizeUri = uri =>
-  uri.replace('https://biorxiv.org/', 'https://www.biorxiv.org/')
+  uri.replace(
+    /(https?:\/\/)?(www\.)?biorxiv\.org\//,
+    'https://www.biorxiv.org/',
+  )
 
 module.exports = {
   hasText,
