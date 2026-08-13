@@ -14,6 +14,11 @@ import User from '../user.model'
 
 const defaultProfilePic = '/profiles/default_avatar.svg'
 
+// Presigned S3 URLs embed a timestamp and a signature derived from it, so
+// two calls for the same object key never produce identical strings. Compare
+// everything but the query string when a URL has been freshly regenerated.
+const withoutQuery = (url: string): string => url.split('?')[0]
+
 describe('User migrations', () => {
   beforeAll(async () => {
     await config.init()
@@ -95,7 +100,9 @@ describe('User migrations', () => {
     userWithPic = (await User.query().findById(userWithPic.id)) as User
 
     expect(userWithoutPic.profilePicture).toBe(null)
-    expect(userWithPic.profilePicture).toBe(url)
+    expect(withoutQuery(userWithPic.profilePicture as string)).toBe(
+      withoutQuery(url),
+    )
   })
 
   it('drops unique index on username column', async () => {
