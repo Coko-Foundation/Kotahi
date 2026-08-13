@@ -28,10 +28,7 @@ import {
   GET_CALLOUT_TEXT,
 } from '../../../queries'
 
-const Wrapper = styled.div`
-  height: 100%;
-  overflow: hidden;
-`
+const Wrapper = styled.div``
 
 // TODO Save this image via the server
 const renderImage = file => {

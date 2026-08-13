@@ -318,7 +318,6 @@ export const ProductionEditorDiv = styled.div`
 
 export const EditorArea = styled.div`
   flex-grow: 1;
-  height: calc(100vh - 182px);
 `
 
 export const SideMenu = styled.div`
