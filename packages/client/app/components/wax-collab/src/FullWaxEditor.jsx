@@ -116,7 +116,7 @@ const FullWaxEditor = ({
     <ThemeProvider
       theme={{ textStyles: journal.textStyles, ...theme, ...waxTheme }}
     >
-      <div className={validationStatus} style={{ width: '100%' }}>
+      <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
           config={config}
