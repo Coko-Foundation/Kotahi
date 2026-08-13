@@ -6,6 +6,15 @@
 
 #### Bug fixes
 
+### Next
+
+#### Features
+
+#### Bug fixes
+
+* Addressed an issue where the Wax toolbar was not clearly visible while editing long content.
+* Expanded HTTPS protocol checks while publishing to Hypothes.is.
+
 ### Version 2026.08.11-0
 
 #### Features
