@@ -101,7 +101,7 @@ describe('User migrations', () => {
 
     expect(userWithoutPic.profilePicture).toBe(null)
     expect(withoutQuery(userWithPic.profilePicture as string)).toBe(
-      withoutQuery(url),
+      withoutQuery(url as string),
     )
   })
 
