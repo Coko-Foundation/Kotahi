@@ -18,7 +18,7 @@ import {
   Tooltip,
   type TableColumnType,
 } from 'antd'
-import type { FilterDropdownProps } from 'antd/es/table/interface'
+import type { FilterDropdownProps, SorterResult } from 'antd/es/table/interface'
 import dayjs from 'dayjs'
 import DOMPurify from 'isomorphic-dompurify'
 
@@ -87,6 +87,12 @@ export type ManuscriptsTableColumn = {
    * business-specific links) -- takes precedence over dataType.
    */
   render?: (value: any, record: any) => ReactNode
+  sortable?: boolean
+}
+
+export type ManuscriptsTableSortState = {
+  columnKey: string
+  order: 'ascend' | 'descend'
 }
 
 export type ManuscriptSearchSnippet = {
@@ -124,6 +130,12 @@ type ManuscriptsTableProps = {
    */
   columnFilters?: Record<string, string[]>
   onFiltersChange?: (filters: Record<string, string[]>) => void
+  /**
+   * Currently applied sort (controlled), for a single `sortable` column.
+   * `null`/`undefined` means unsorted.
+   */
+  sortState?: ManuscriptsTableSortState | null
+  onSortChange?: (sortState: ManuscriptsTableSortState | null) => void
   /**
    * Compact/detailed view mode for 'reviewerStatusSummary' columns.
    * Defaults to 'detailed'.
@@ -756,6 +768,7 @@ const resolveColumn = (
   column: ManuscriptsTableColumn,
   context: {
     columnFilters?: Record<string, string[]>
+    sortState?: ManuscriptsTableSortState | null
     reviewerStatusViewMode?: Record<string, 'compact' | 'detailed'>
     onReviewerStatusViewModeChange?: (
       columnKey: string,
@@ -768,7 +781,7 @@ const resolveColumn = (
     ) => void
   },
 ): TableColumnType<Record<string, any>> => {
-  let resolved: ManuscriptsTableColumn = column
+  let resolved: TableColumnType<Record<string, any>> = column
 
   if (!column.render) {
     switch (column.dataType) {
@@ -832,7 +845,7 @@ const resolveColumn = (
   }
 
   if (column.filterable && column.options) {
-    return {
+    resolved = {
       ...resolved,
       filters: column.options.map(({ value, label }) => ({
         text: label ?? value,
@@ -843,9 +856,9 @@ const resolveColumn = (
   }
 
   if (column.filterable && column.dataType === 'date') {
-    return {
+    resolved = {
       ...resolved,
-      filterDropdown: (props: FilterDropdownProps) => (
+      filterDropdown: (props: FilterDropdownProps): ReactNode => (
         <DateRangeFilterDropdown {...props} />
       ),
       filteredValue: context.columnFilters?.[column.key] ?? null,
@@ -853,7 +866,7 @@ const resolveColumn = (
   }
 
   if (column.dataType === 'reviewerStatusSummary') {
-    return {
+    resolved = {
       ...resolved,
       title: (
         <ReviewerStatusColumnHeader
@@ -870,6 +883,19 @@ const resolveColumn = (
           title={column.title}
         />
       ),
+    }
+  }
+
+  // Ignored (forced off) for 'render' escape-hatch columns -- they have no
+  // real dataIndex value semantics for the server to sort on.
+  if (column.sortable && !column.render) {
+    resolved = {
+      ...resolved,
+      sorter: true,
+      sortOrder:
+        context.sortState?.columnKey === column.key
+          ? context.sortState.order
+          : null,
     }
   }
 
@@ -986,6 +1012,8 @@ const ManuscriptsTable = ({
   loading = false,
   columnFilters,
   onFiltersChange,
+  sortState,
+  onSortChange,
   reviewerStatusViewMode,
   onReviewerStatusViewModeChange,
   onOptionChange,
@@ -1020,26 +1048,45 @@ const ManuscriptsTable = ({
     ),
   )
 
-  // Only reports which values are selected, for every filterable column.
+  // Reports which values are selected, for every filterable column, and
+  // (separately) the current sort, for whichever sortable column the user
+  // last clicked. Never sorts `dataSource` itself -- the caller re-fetches.
   const handleTableChange = (
     _pagination: unknown,
     filters: Record<string, (string | number | boolean)[] | null>,
+    sorter:
+      | SorterResult<Record<string, any>>
+      | SorterResult<Record<string, any>>[],
   ): void => {
-    if (filterableColumns.length === 0 || !onFiltersChange) return
+    if (filterableColumns.length > 0 && onFiltersChange) {
+      onFiltersChange(
+        Object.fromEntries(
+          filterableColumns.map(column => [
+            column.key,
+            (filters[column.key] ?? []) as string[],
+          ]),
+        ),
+      )
+    }
 
-    onFiltersChange(
-      Object.fromEntries(
-        filterableColumns.map(column => [
-          column.key,
-          (filters[column.key] ?? []) as string[],
-        ]),
-      ),
-    )
+    if (onSortChange) {
+      const activeSorter = Array.isArray(sorter) ? sorter[0] : sorter
+
+      onSortChange(
+        activeSorter?.order && activeSorter.columnKey
+          ? {
+              columnKey: String(activeSorter.columnKey),
+              order: activeSorter.order,
+            }
+          : null,
+      )
+    }
   }
 
   const resolvedColumns = columns.map(column =>
     resolveColumn(column, {
       columnFilters,
+      sortState,
       reviewerStatusViewMode,
       onReviewerStatusViewModeChange,
       onOptionChange,
