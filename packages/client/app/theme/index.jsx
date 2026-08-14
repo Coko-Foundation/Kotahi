@@ -240,14 +240,14 @@ export const makeTheme = (
 
     antComponents: {
       Table: {
-        headerBg: defaultBrandColor1,
+        headerBg: colorBrand1,
         headerColor: colorTextReverse,
         headerBorderRadius: borderRadius,
 
         cellPaddingBlock: '16px',
 
-        headerSortHoverBg: Color(defaultBrandColor1).darken(0.1).hex(),
-        headerSortActiveBg: Color(defaultBrandColor1).darken(0.1).hex(),
+        headerSortHoverBg: Color(colorBrand1).darken(0.1).hex(),
+        headerSortActiveBg: Color(colorBrand1).darken(0.1).hex(),
         headerIconColor: colorTextReverse,
         headerIconHoverColor: colorTextReverse,
         rowSelectedBg: colorPrimaryVeryLight,
