@@ -1,9 +1,11 @@
 import { type ReactNode } from 'react'
 
 import { useTranslation } from 'react-i18next'
+import styled from 'styled-components'
 import Badge from './Badge'
+import { type BadgeVariant } from './_constants'
 
-const variantMapper = {
+const variantMapper: Record<string, BadgeVariant> = {
   inProgress: 'warning',
   revise: 'warning',
   revising: 'warning',
@@ -36,21 +38,57 @@ export const MANUSCRIPT_STATUSES = [
   'unpublished',
 ] as const
 
+const STATUSES_FORCED_TO_PUBLISHED = ['evaluated']
+
 type ManuscriptStatusProps = {
   status: (typeof MANUSCRIPT_STATUSES)[number]
+  /**  Timestamp the manuscript was published, if any. */
+  published?: string | null
   small?: boolean
 }
 
+const TwoToneWrapper = styled.span`
+  display: inline-flex;
+
+  > span:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  > span:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+`
+
 const ManuscriptStatus = ({
   status,
+  published,
   small,
 }: ManuscriptStatusProps): ReactNode => {
   const { t } = useTranslation()
 
+  const forceToPublished = STATUSES_FORCED_TO_PUBLISHED.includes(status)
+  const showPublishedHalf =
+    (!!published && status !== 'published') || forceToPublished
+
+  if (!showPublishedHalf) {
+    return (
+      <Badge small={small} variant={variantMapper[status]}>
+        {t(`msStatus.${status}`)}
+      </Badge>
+    )
+  }
+
   return (
-    <Badge small={small} variant={variantMapper[status]}>
-      {t(`msStatus.${status}`)}
-    </Badge>
+    <TwoToneWrapper>
+      <Badge small={small} variant={variantMapper.published}>
+        {t('msStatus.published')}
+      </Badge>
+      <Badge small={small} variant={variantMapper[status]}>
+        {t(`msStatus.${status}`)}
+      </Badge>
+    </TwoToneWrapper>
   )
 }
 

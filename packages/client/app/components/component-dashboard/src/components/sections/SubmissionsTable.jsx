@@ -286,6 +286,7 @@ const SubmissionsTable = props => {
 
       row.key = manuscript.shortId
       row.id = manuscript.id
+      row.published = manuscript.published
       return row
     },
   )

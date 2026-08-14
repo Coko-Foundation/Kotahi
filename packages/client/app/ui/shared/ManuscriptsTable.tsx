@@ -97,12 +97,11 @@ export type ManuscriptSearchSnippet = {
 /**
  * Other gaps identified against the legacy component-manuscripts-table cell renderers that are
  * NOT candidates for a new dataType (see above), since they aren't a "render this value" concern:
- * - Value derivation: some legacy columns (reviewer's own status, last-reviewer-updated date,
- *   a status overridden by a second "published" field) already render fine via existing
- *   dataTypes, but need their value computed/aggregated from nested data (e.g. searching teams
- *   for the current user, or taking a max timestamp) before being handed to a column -- a data
- *   problem for the caller to solve, not a rendering gap here. See FilterableStatusBadge.jsx,
- *   ReviewerStatusBadge.jsx, LastReviewerUpdated.jsx.
+ * - Value derivation: some legacy columns (reviewer's own status, last-reviewer-updated date)
+ *   already render fine via existing dataTypes, but need their value computed/aggregated from
+ *   nested data (e.g. searching teams for the current user, or taking a max timestamp) before
+ *   being handed to a column -- a data problem for the caller to solve, not a rendering gap
+ *   here. See ReviewerStatusBadge.jsx, LastReviewerUpdated.jsx.
  * - Role-filtered member list: Editors.jsx lists team members whose role isn't author/reviewer;
  *   generalizable in principle ("names of members matching a role filter") but currently
  *   hardcodes which roles to exclude rather than taking a parameter.
@@ -160,8 +159,8 @@ const renderDate = (value: any): ReactNode => {
   return convertTimestampToRelativeDateString(value)
 }
 
-const renderStatus = (value: any): ReactNode => (
-  <ManuscriptStatus small status={value} />
+const renderStatus = (value: any, record: Record<string, any>): ReactNode => (
+  <ManuscriptStatus published={record.published} small status={value} />
 )
 
 const renderReviewerStatus = (value: any): ReactNode => (

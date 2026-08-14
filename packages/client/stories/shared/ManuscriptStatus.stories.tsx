@@ -35,6 +35,10 @@ export const EmbargoReleased = meta.story({
   },
 })
 
+/**
+ * Always forces a single 'published'-colored badge, regardless of whether
+ * `published` is set
+ */
 export const Evaluated = meta.story({
   args: {
     status: 'evaluated',
@@ -92,5 +96,23 @@ export const UnderEmbargo = meta.story({
 export const Unpublished = meta.story({
   args: {
     status: 'unpublished',
+  },
+})
+
+/**
+ * Two-tone badges: shown when a manuscript has a `published` timestamp but its
+ * current status is something else.
+ */
+export const PublishedThenUnpublished = meta.story({
+  args: {
+    status: 'unpublished',
+    published: '2023-01-01T00:00:00.000Z',
+  },
+})
+
+export const PublishedThenRevising = meta.story({
+  args: {
+    status: 'revising',
+    published: '2023-01-01T00:00:00.000Z',
   },
 })
