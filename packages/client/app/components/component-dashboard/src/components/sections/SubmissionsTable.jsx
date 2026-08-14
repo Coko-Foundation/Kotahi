@@ -13,6 +13,7 @@ import {
   URI_PAGENUM_PARAM,
   URI_SEARCH_PARAM,
 } from '../../../../../shared/urlParamUtils'
+import { isValidDOI } from '../../../../../shared/doiFieldDefinition'
 import LegacyManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import { ConfigContext } from '../../../../config/src'
@@ -40,6 +41,16 @@ const importSourceFor = manuscript => {
   if (manuscript.importSourceServer === 'COAR') return 'coar'
   if (manuscript.importSourceServer === 'semantic-scholar')
     return 'semanticScholar'
+
+  return undefined
+}
+
+const titleLinkFor = manuscript => {
+  const { $doi, $sourceUri } = manuscript.submission || {}
+
+  if ($sourceUri) return $sourceUri
+  if ($doi && isValidDOI($doi))
+    return `${$doi.includes('doi.org') ? '' : 'https://doi.org/'}${$doi}`
 
   return undefined
 }
@@ -258,6 +269,7 @@ const SubmissionsTable = props => {
             hasOverdueTasks: manuscript.hasOverdueTasksForUser,
             importSource: importSourceFor(manuscript),
             abstract: manuscript.submission?.$abstract,
+            link: titleLinkFor(manuscript),
           }
 
           return accumulator

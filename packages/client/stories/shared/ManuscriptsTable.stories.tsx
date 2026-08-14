@@ -209,8 +209,9 @@ export const AlignRightColumn = meta.story({
 
 /**
  * Combines a title with an optional import-source icon, an "Overdue tasks"
- * badge, and (with `showAbstract`) a click-triggered info tooltip showing the
- * abstract.
+ * badge, (with `showAbstract`) a click-triggered info tooltip showing the
+ * abstract, and (with `link`) a hyperlinked title opening the source in a new
+ * tab.
  */
 export const BuiltInTitleRendering = meta.story({
   args: {
@@ -241,6 +242,7 @@ export const BuiltInTitleRendering = meta.story({
         titleInfo: {
           title: 'A dataset of pollinator visitation rates',
           importSource: 'coar',
+          link: 'https://doi.org/10.5281/zenodo.1234567',
           abstract:
             'We present a multi-year dataset of pollinator visitation rates collected across forty field sites spanning three biogeographic regions. Observations were recorded using a standardized timed-count protocol, capturing visitation frequency, pollinator identity to genus level, and flowering plant species for each interaction. The dataset includes over two hundred thousand individual visitation records alongside site-level metadata on land use, climate, and floral community composition. We anticipate this resource will support comparative analyses of pollinator community structure, phenological mismatch under climate change, and the design of pollinator-friendly agricultural policy. Data are provided in a normalized, analysis-ready format with accompanying documentation and quality-control flags for each observation.',
         },

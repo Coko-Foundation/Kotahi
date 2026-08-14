@@ -512,6 +512,8 @@ type TitleCellValue = {
   hasOverdueTasks?: boolean
   importSource?: 'coar' | 'semanticScholar'
   abstract?: string
+  /** When set, the title text links out to this URL */
+  link?: string
 }
 
 const TitleCell = ({
@@ -533,7 +535,15 @@ const TitleCell = ({
           <SemanticScholar aria-hidden />
         )}
 
-        <span>{renderPlainOrRichText(value.title)}</span>
+        <span>
+          {value.link ? (
+            <a href={value.link} rel="noreferrer" target="_blank">
+              {renderPlainOrRichText(value.title)}
+            </a>
+          ) : (
+            renderPlainOrRichText(value.title)
+          )}
+        </span>
 
         {showAbstract && (
           <ConfigProvider
