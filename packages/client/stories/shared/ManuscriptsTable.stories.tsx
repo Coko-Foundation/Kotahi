@@ -380,6 +380,64 @@ export const BuiltInDateRenderingWithFilter = meta.story({
   },
 })
 
+export const BuiltInDateRenderingWithSortAndFilter = meta.story({
+  args: {
+    columns: [
+      ...baseColumns,
+      {
+        title: 'Created',
+        dataIndex: 'created',
+        key: 'created',
+        dataType: 'date',
+        filterable: true,
+        sortable: true,
+      },
+    ],
+    dataSource: allData,
+    page: 1,
+    pageSize: 10,
+    totalCount: allData.length,
+    onPageChange: () => {},
+    onSearch: () => {},
+  },
+  render: args => {
+    const [columnFilters, setColumnFilters] = useState<
+      Record<string, string[]>
+    >({})
+
+    const [sortState, setSortState] = useState<{
+      columnKey: string
+      order: 'ascend' | 'descend'
+    } | null>(null)
+
+    const [start, end] = columnFilters.created ?? []
+
+    const filtered =
+      start && end
+        ? allData.filter(row => row.created >= start && row.created <= end)
+        : allData
+
+    const sorted = sortState
+      ? [...filtered].sort((a, b) => {
+          const direction = sortState.order === 'ascend' ? 1 : -1
+          return a.created < b.created ? -direction : direction
+        })
+      : filtered
+
+    return (
+      <ManuscriptsTable
+        {...args}
+        columnFilters={columnFilters}
+        dataSource={sorted}
+        onFiltersChange={setColumnFilters}
+        onSortChange={setSortState}
+        sortState={sortState}
+        totalCount={sorted.length}
+      />
+    )
+  },
+})
+
 export const BuiltInStatusRendering = meta.story({
   args: {
     columns: [

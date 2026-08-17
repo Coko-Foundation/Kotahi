@@ -37,7 +37,7 @@ export const useQueryParams = () => {
   const location = useLocation()
 
   const applyQueryParams = queryParams => {
-    const params = new URLSearchParams(location.search)
+    const params = new URLSearchParams(window.location.search)
     Object.entries(queryParams).forEach(([fieldName, fieldValue]) => {
       if (fieldValue) params.set(fieldName, fieldValue)
       else params.delete(fieldName)

@@ -46,6 +46,19 @@ const importSourceFor = manuscript => {
   return undefined
 }
 
+// The server's date-range filter value format is 'yyyyMMdd-yyyyMMdd' (see manuscriptUtils.js);
+// ManuscriptsTable's date filter works with plain 'yyyy-MM-dd' boundaries instead, so convert
+// between the two with simple string reformatting -- no timezone handling needed, since both
+// sides already represent the same local calendar date.
+const isoDateToCompact = isoDate => isoDate.replaceAll('-', '')
+
+const compactDateToIso = compactDate =>
+  `${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6, 8)}`
+
+const isDateColumnKey = (key, fieldDefinitions) =>
+  ['created', 'updated'].includes(key) ||
+  fieldDefinitions[key]?.component === 'DatePicker'
+
 const titleLinkFor = manuscript => {
   const { $doi, $sourceUri } = manuscript.submission || {}
 
@@ -119,6 +132,34 @@ const SubmissionsTable = props => {
       [URI_SORT_PARAM]: newSortState
         ? `${newSortState.columnKey}_${newSortState.order === 'ascend' ? 'ASC' : 'DESC'}`
         : null,
+      [URI_PAGENUM_PARAM]: 1,
+    })
+
+  // Only date columns are filterable so far, keyed by the same URL param name as their column
+  // key (shared with the legacy table's filter convention).
+  const columnFilters = {}
+
+  uriQueryParams.forEach((value, key) => {
+    if (!isDateColumnKey(key, fieldDefinitions)) return
+    const [start, end] = value.split('-')
+    if (start && end)
+      columnFilters[key] = [compactDateToIso(start), compactDateToIso(end)]
+  })
+
+  const handleFiltersChange = newColumnFilters =>
+    applyQueryParams({
+      ...Object.fromEntries(
+        Object.entries(newColumnFilters).map(([key, values]) => {
+          const [start, end] = values ?? []
+
+          return [
+            key,
+            start && end
+              ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
+              : null,
+          ]
+        }),
+      ),
       [URI_PAGENUM_PARAM]: 1,
     })
 
@@ -256,11 +297,13 @@ const SubmissionsTable = props => {
         return { ...column, sortable: true }
       }
 
-      if (
-        ['created', 'updated'].includes(column.key) ||
-        fieldDefinitions[column.key]?.component === 'DatePicker'
-      ) {
-        return { ...column, dataType: 'date', sortable: true }
+      if (isDateColumnKey(column.key, fieldDefinitions)) {
+        // Server sorts submission.* fields as LOWER(text) (manuscriptUtils.js), which works
+        // correctly for DatePicker values -- they're persisted as ISO 8601 strings (see
+        // app/components/shared/DatePicker.jsx), and ISO 8601 sorts correctly lexicographically.
+        // Server also range-filters both created/updated and DatePicker submission fields the
+        // same way (see applyFilters).
+        return { ...column, dataType: 'date', sortable: true, filterable: true }
       }
 
       if (column.key === 'submission.$title') {
@@ -361,8 +404,10 @@ const SubmissionsTable = props => {
 
       <TableWrapper>
         <ManuscriptsTable
+          columnFilters={columnFilters}
           columns={tableColumns}
           dataSource={dataSource}
+          onFiltersChange={handleFiltersChange}
           onPageChange={newPage =>
             applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
           }

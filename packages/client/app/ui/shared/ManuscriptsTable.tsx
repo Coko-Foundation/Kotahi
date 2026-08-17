@@ -927,13 +927,19 @@ type FilterChip = {
   onRemove: (event: MouseEvent<HTMLElement>) => void
 }
 
+/**
+ * Sets the column's filter to an empty array rather than deleting the key
+ * outright: a consumer's onFiltersChange (e.g. SubmissionsTable.jsx) needs to
+ * see the key present-but-empty to know it should clear that column's URL
+ * param -- a missing key looks like "untouched".
+ */
 const withoutColumnFilter = (
   filters: Record<string, string[]>,
   columnKey: string,
-): Record<string, string[]> =>
-  Object.fromEntries(
-    Object.entries(filters).filter(([key]) => key !== columnKey),
-  )
+): Record<string, string[]> => ({
+  ...filters,
+  [columnKey]: [],
+})
 
 const buildFilterChips = (
   columns: ManuscriptsTableColumn[],

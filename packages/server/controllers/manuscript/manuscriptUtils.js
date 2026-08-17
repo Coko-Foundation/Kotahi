@@ -12,6 +12,7 @@ const {
   getStartOfDay,
   getEndOfDay,
   compactStringToDate,
+  dateToIso8601,
 } = require('../../utils/dateUtils')
 
 const URI_SEARCH_PARAM = 'search'
@@ -213,6 +214,20 @@ const getSafelyNamedJsonbFieldInfo = (fieldName, submissionForm) => {
   }
 }
 
+/** Like getSafelyNamedJsonbFieldInfo, but only returns a result for DatePicker fields --
+ * these are stored as plain 'yyyy-MM-dd' strings (see client's DatePicker.jsx), so they can
+ * be range-filtered the same way as the 'created'/'updated' columns. */
+const getSafelyNamedJsonbDateFieldInfo = (fieldName, submissionForm) => {
+  const jsonbField = getSafelyNamedJsonbFieldInfo(fieldName, submissionForm)
+  if (!jsonbField) return null
+
+  const field = submissionForm.structure.children.find(
+    f => f.name === fieldName,
+  )
+
+  return field.component === 'DatePicker' ? jsonbField : null
+}
+
 /** Check that the field exists and is not dangerously named (to avoid sql injection) */
 const isValidNonJsonbField = (fieldName, submissionForm) => {
   if (!/^[a-zA-Z]\w*$/.test(fieldName)) {
@@ -305,6 +320,38 @@ const applyFilters = (
 
           addWhere(`${filterField} >= ?`, dateFrom.toISOString())
           addWhere(`${filterField} <= ?`, dateTo.toISOString())
+          /* eslint-disable-next-line */
+        } catch (error) {
+          logger.warn(
+            `Could not filter ${filter.field} by value '${filter.value}': could not parse as a date range.`,
+          )
+        }
+
+        return
+      }
+
+      const jsonbDateField = getSafelyNamedJsonbDateFieldInfo(
+        filter.field,
+        submissionForm,
+      )
+
+      if (jsonbDateField) {
+        try {
+          const parts = filter.value.split('-')
+
+          // Unlike created/updated (real timestamptz columns), the stored value has no time
+          // component, so compare plain 'yyyy-MM-dd' boundaries rather than start/end-of-day
+          // timestamps.
+          const dateFrom = dateToIso8601(
+            compactStringToDate(parts[0], timezoneOffsetMinutes),
+          )
+
+          const dateTo = dateToIso8601(
+            compactStringToDate(parts[1], timezoneOffsetMinutes),
+          )
+
+          addWhere(`m.submission->>? >= ?`, jsonbDateField.name, dateFrom)
+          addWhere(`m.submission->>? <= ?`, jsonbDateField.name, dateTo)
           /* eslint-disable-next-line */
         } catch (error) {
           logger.warn(
