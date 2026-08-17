@@ -892,6 +892,7 @@ const resolveColumn = (
     resolved = {
       ...resolved,
       sorter: true,
+      sortDirections: ['descend', 'ascend'],
       sortOrder:
         context.sortState?.columnKey === column.key
           ? context.sortState.order

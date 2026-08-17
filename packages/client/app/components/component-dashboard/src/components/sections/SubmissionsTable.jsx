@@ -98,12 +98,21 @@ const SubmissionsTable = props => {
 
   // Shared with the legacy table's sort state (same 'sort' URI param), just
   // translated to/from antd's { columnKey, order: 'ascend' | 'descend' }.
-  const sortState = sortName
-    ? {
-        columnKey: sortName,
-        order: sortDirection === 'ASC' ? 'ascend' : 'descend',
-      }
-    : null
+  // With no explicit sort and no active search, the server's default order
+  // is COALESCE(p.created, m.created) DESC (see manuscriptUtils.js) -- show
+  // that on the 'created' header rather than looking unsorted. Once a
+  // search is active, results are actually ordered by search rank instead,
+  // so no column should claim to be sorted.
+  let sortState = null
+
+  if (sortName) {
+    sortState = {
+      columnKey: sortName,
+      order: sortDirection === 'ASC' ? 'ascend' : 'descend',
+    }
+  } else if (!currentSearchQuery) {
+    sortState = { columnKey: 'created', order: 'descend' }
+  }
 
   const handleSortChange = newSortState =>
     applyQueryParams({
@@ -251,7 +260,7 @@ const SubmissionsTable = props => {
         ['created', 'updated'].includes(column.key) ||
         fieldDefinitions[column.key]?.component === 'DatePicker'
       ) {
-        return { ...column, dataType: 'date' }
+        return { ...column, dataType: 'date', sortable: true }
       }
 
       if (column.key === 'submission.$title') {
