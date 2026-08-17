@@ -12,6 +12,7 @@ import {
   extractSortData,
   URI_PAGENUM_PARAM,
   URI_SEARCH_PARAM,
+  URI_SORT_PARAM,
 } from '../../../../../shared/urlParamUtils'
 import { isValidDOI } from '../../../../../shared/doiFieldDefinition'
 import LegacyManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
@@ -94,6 +95,23 @@ const SubmissionsTable = props => {
   const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
   const sortName = extractSortData(uriQueryParams).name
   const sortDirection = extractSortData(uriQueryParams).direction
+
+  // Shared with the legacy table's sort state (same 'sort' URI param), just
+  // translated to/from antd's { columnKey, order: 'ascend' | 'descend' }.
+  const sortState = sortName
+    ? {
+        columnKey: sortName,
+        order: sortDirection === 'ASC' ? 'ascend' : 'descend',
+      }
+    : null
+
+  const handleSortChange = newSortState =>
+    applyQueryParams({
+      [URI_SORT_PARAM]: newSortState
+        ? `${newSortState.columnKey}_${newSortState.order === 'ascend' ? 'ASC' : 'DESC'}`
+        : null,
+      [URI_PAGENUM_PARAM]: 1,
+    })
 
   const page = uriQueryParams.get(URI_PAGENUM_PARAM) || 1
   const limit = config?.manuscript?.paginationCount || 10
@@ -225,6 +243,10 @@ const SubmissionsTable = props => {
         }
       }
 
+      if (column.key === 'shortId') {
+        return { ...column, sortable: true }
+      }
+
       if (
         ['created', 'updated'].includes(column.key) ||
         fieldDefinitions[column.key]?.component === 'DatePicker'
@@ -336,8 +358,10 @@ const SubmissionsTable = props => {
             applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
           }
           onSearch={value => applyQueryParams({ [URI_SEARCH_PARAM]: value })}
+          onSortChange={handleSortChange}
           page={Number(page)}
           pageSize={limit}
+          sortState={sortState}
           totalCount={totalCount}
         />
       </TableWrapper>
