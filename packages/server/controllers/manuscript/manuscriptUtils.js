@@ -531,10 +531,12 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
 
     addWhere(`m.search_tsvector @@ to_tsquery('english', ?)`, searchQuery)
 
-    setOrderOnRank = 'ORDER BY rank DESC'
+    if (!sort) {
+      setOrderOnRank = 'ORDER BY rank DESC'
+    }
   }
 
-  if (!searchQuery && sort) {
+  if (sort) {
     applySortOrder(sort, submissionForm, addOrder)
   } else {
     // Give it some order to prevent it changing on refetch.

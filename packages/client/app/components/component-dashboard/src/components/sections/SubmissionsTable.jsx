@@ -112,11 +112,6 @@ const SubmissionsTable = props => {
 
   // Shared with the legacy table's sort state (same 'sort' URI param), just
   // translated to/from antd's { columnKey, order: 'ascend' | 'descend' }.
-  // With no explicit sort and no active search, the server's default order
-  // is COALESCE(p.created, m.created) DESC (see manuscriptUtils.js) -- show
-  // that on the 'created' header rather than looking unsorted. Once a
-  // search is active, results are actually ordered by search rank instead,
-  // so no column should claim to be sorted.
   let sortState = null
 
   if (sortName) {
