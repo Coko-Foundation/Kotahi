@@ -280,7 +280,12 @@ const SubmissionsTable = props => {
       }
 
       if (column.key === 'submission.$title') {
-        return { ...column, dataType: 'title', showAbstract: true }
+        return {
+          ...column,
+          dataType: 'title',
+          showAbstract: true,
+          sortable: true,
+        }
       }
 
       if (column.key === 'status') {

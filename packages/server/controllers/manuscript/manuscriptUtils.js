@@ -266,7 +266,10 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
 
   if (jsonbField) {
     const { name: jsonName } = jsonbField
-    addOrder(`LOWER(m.submission->>?)${sortDirection}`, jsonName)
+    addOrder(
+      `LOWER(${stripHtmlTags('m.submission->>?')})${sortDirection}`,
+      jsonName,
+    )
   } else if (isValidNonJsonbField(field, submissionForm)) {
     let sortingField = ''
     if (field === 'created') sortingField = 'COALESCE(p.created, m.created)'
