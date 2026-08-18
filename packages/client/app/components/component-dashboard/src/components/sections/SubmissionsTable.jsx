@@ -334,6 +334,10 @@ const SubmissionsTable = props => {
         return { ...column, sortable: true }
       }
 
+      if (column.key === 'manuscriptVersions') {
+        return { ...column, sortable: false }
+      }
+
       return column
     })
 
