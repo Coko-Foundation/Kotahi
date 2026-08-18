@@ -326,6 +326,14 @@ const SubmissionsTable = props => {
         }
       }
 
+      if (
+        ['TextField', 'AbstractEditor'].includes(
+          fieldDefinitions[column.key]?.component,
+        )
+      ) {
+        return { ...column, sortable: true }
+      }
+
       return column
     })
 
