@@ -374,16 +374,25 @@ const applyFilters = (
         submissionForm,
       )
 
+      const values = filter.value.split(',')
+
       if (jsonbField) {
         const { name: jsonName, valuesAreKeyedObjects: isKeyed } = jsonbField
 
         if (isKeyed) {
-          addWhere(`(m.submission->?)::jsonb \\? ?`, jsonName, filter.value)
+          addWhere(
+            `(${values.map(() => `(m.submission->?)::jsonb \\? ?`).join(' OR ')})`,
+            ...values.flatMap(value => [jsonName, value]),
+          )
         } else {
-          addWhere(`m.submission->>? = ?`, jsonName, filter.value)
+          addWhere(
+            `m.submission->>? IN (${values.map(() => '?').join(', ')})`,
+            jsonName,
+            ...values,
+          )
         }
       } else if (filter.field === 'status') {
-        addWhere('m.status = ?', filter.value)
+        addWhere(`m.status IN (${values.map(() => '?').join(', ')})`, ...values)
       } else if (filter.field === 'archived') {
         // ignore: this is handled elsewhere
       } else {

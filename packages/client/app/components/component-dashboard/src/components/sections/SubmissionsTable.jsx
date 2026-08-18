@@ -15,6 +15,7 @@ import {
   URI_SORT_PARAM,
 } from '../../../../../shared/urlParamUtils'
 import { isValidDOI } from '../../../../../shared/doiFieldDefinition'
+import { MANUSCRIPT_STATUSES } from '../../../../../ui/shared/ManuscriptStatus'
 import LegacyManuscriptsTable from '../../../../component-manuscripts-table/src/ManuscriptsTable'
 import buildColumnDefinitions from '../../../../component-manuscripts-table/src/util/buildColumnDefinitions'
 import { ConfigContext } from '../../../../config/src'
@@ -132,34 +133,6 @@ const SubmissionsTable = props => {
       [URI_SORT_PARAM]: newSortState
         ? `${newSortState.columnKey}_${newSortState.order === 'ascend' ? 'ASC' : 'DESC'}`
         : null,
-      [URI_PAGENUM_PARAM]: 1,
-    })
-
-  // Only date columns are filterable so far, keyed by the same URL param name as their column
-  // key (shared with the legacy table's filter convention).
-  const columnFilters = {}
-
-  uriQueryParams.forEach((value, key) => {
-    if (!isDateColumnKey(key, fieldDefinitions)) return
-    const [start, end] = value.split('-')
-    if (start && end)
-      columnFilters[key] = [compactDateToIso(start), compactDateToIso(end)]
-  })
-
-  const handleFiltersChange = newColumnFilters =>
-    applyQueryParams({
-      ...Object.fromEntries(
-        Object.entries(newColumnFilters).map(([key, values]) => {
-          const [start, end] = values ?? []
-
-          return [
-            key,
-            start && end
-              ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
-              : null,
-          ]
-        }),
-      ),
       [URI_PAGENUM_PARAM]: 1,
     })
 
@@ -311,22 +284,94 @@ const SubmissionsTable = props => {
       }
 
       if (column.key === 'status') {
-        return { ...column, dataType: 'status' }
+        return {
+          ...column,
+          dataType: 'status',
+          filterable: true,
+          options: MANUSCRIPT_STATUSES.map(status => ({
+            value: status,
+            label: t(`msStatus.${status}`),
+          })),
+        }
       }
 
-      if (column.key === 'submission.adaStatus') {
-        return { ...column, dataType: 'badge' }
+      if (column.key === 'submission.adaState') {
+        return {
+          ...column,
+          dataType: 'badge',
+          filterable: true,
+          options: [
+            { value: 'draft', label: t('decisionPage.decisionTab.Draft') },
+            { value: 'process', label: t('decisionPage.decisionTab.Process') },
+            {
+              value: 'findable',
+              label: t('decisionPage.decisionTab.Findable'),
+            },
+            { value: 'publish', label: t('decisionPage.decisionTab.Publish') },
+          ],
+        }
       }
 
       if (fieldDefinitions[column.key]?.options) {
         return {
           ...column,
           dataType: 'options',
+          filterable: true,
           options: fieldDefinitions[column.key].options,
         }
       }
 
       return column
+    })
+
+  // Keyed by the same URL param name as the column key (shared with the legacy table's filter
+  // convention). Date columns store a compact 'yyyyMMdd-yyyyMMdd' range (see manuscriptUtils.js);
+  // every other filterable column stores one or more selected values, comma-joined (the server
+  // matches a row if the field equals ANY of them -- see applyFilters).
+  const columnFilters = {}
+
+  tableColumns
+    .filter(column => column.filterable)
+    .forEach(column => {
+      const value = uriQueryParams.get(column.key)
+      if (!value) return
+
+      if (column.dataType === 'date') {
+        const [start, end] = value.split('-')
+
+        if (start && end)
+          columnFilters[column.key] = [
+            compactDateToIso(start),
+            compactDateToIso(end),
+          ]
+
+        return
+      }
+
+      columnFilters[column.key] = value.split(',')
+    })
+
+  const handleFiltersChange = newColumnFilters =>
+    applyQueryParams({
+      ...Object.fromEntries(
+        Object.entries(newColumnFilters).map(([key, values]) => {
+          const column = tableColumns.find(c => c.key === key)
+
+          if (column?.dataType === 'date') {
+            const [start, end] = values ?? []
+
+            return [
+              key,
+              start && end
+                ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
+                : null,
+            ]
+          }
+
+          return [key, values && values.length > 0 ? values.join(',') : null]
+        }),
+      ),
+      [URI_PAGENUM_PARAM]: 1,
     })
 
   const dataSource = manuscriptsUserHasCurrentRoleIn.manuscripts.map(

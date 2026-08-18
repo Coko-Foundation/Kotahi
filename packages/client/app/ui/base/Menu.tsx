@@ -65,7 +65,7 @@ const GroupSection = styled.div`
 const GroupLetter = styled.div<{ $menuCollapsed: boolean }>`
   height: ${grid(12)};
   width: ${grid(12)};
-  border-radius: ${th('borderRadiusLarge')};
+  border-radius: ${th('borderRadius')};
 
   background-color: ${th('colorBackground')};
   color: ${th('colorPrimary')};
