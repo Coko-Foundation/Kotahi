@@ -19,7 +19,8 @@
     "prosemirror-model": "1.19.0",
     "prosemirror-state": "1.4.3",
     "prosemirror-transform": "1.7.1",
-    "prosemirror-view": "1.30.2"
+    "prosemirror-view": "1.30.2",
+    "tar": "7.5.21"
   },
   "dependencies": {
     "@ant-design/icons": "^6.2.5",
