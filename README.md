@@ -1,7 +1,7 @@
 # Kotahi
 
-[Website](https://kotahi.community/)  
-Join our [chat channel](https://mattermost.coko.foundation/coko/channels/kotahi).
+[Website](https://kotahi.foundation/)  
+Contact us [here](https://elifepathways.org/#get-involved)
 
 Kotahi is a modern submission, review and publishing system especially suited for academic journals, overlay journals, preprint curation groups, data publications, data review, research labs and PRC (publish-review-curate) groups. Kotahi supports:
 
@@ -20,11 +20,7 @@ Kotahi is a modern submission, review and publishing system especially suited fo
 - modern interfaces, architecture, thinking
 
 
-Kotahi is currently under development by the [Kotahi Foundation](https://kotahi.foundation/).
- 
-## Project roadmap
-
-[The Kotahi product roadmap](https://miro.com/app/board/uXjVLmKGfek=/) can be viewed on Miro.
+Kotahi is currently under development by [eLife Pathways](https://elifepathways.org/).
 
 ## Bug reporting
 
