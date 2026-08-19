@@ -109,6 +109,9 @@ jobs:
             --title "Sync version $VERSION to staging" \
             --body "Automated sync of released version \`$VERSION\` back to staging." \
             || echo "PR already exists"
+          gh pr merge $BRANCH \
+            --merge --admin --delete-branch \
+            --subject "Merge: sync version $VERSION to staging [skip ci]"
 
   # ------------------------
   # Publish (DockerHub)
