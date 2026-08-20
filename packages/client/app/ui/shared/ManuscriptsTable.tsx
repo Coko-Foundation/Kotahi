@@ -140,11 +140,8 @@ type ManuscriptsTableProps = {
    * Compact/detailed view mode for 'reviewerStatusSummary' columns.
    * Defaults to 'detailed'.
    */
-  reviewerStatusViewMode?: Record<string, 'compact' | 'detailed'>
-  onReviewerStatusViewModeChange?: (
-    columnKey: string,
-    viewMode: 'compact' | 'detailed',
-  ) => void
+  reviewerStatusViewMode?: 'compact' | 'detailed'
+  onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
   /**
    * Fired when a value is picked or cleared in an `editable` 'options' column. `id` is the
    * changed manuscript's `record.id`; `value` is `null` when cleared.
@@ -769,11 +766,8 @@ const resolveColumn = (
   context: {
     columnFilters?: Record<string, string[]>
     sortState?: ManuscriptsTableSortState | null
-    reviewerStatusViewMode?: Record<string, 'compact' | 'detailed'>
-    onReviewerStatusViewModeChange?: (
-      columnKey: string,
-      viewMode: 'compact' | 'detailed',
-    ) => void
+    reviewerStatusViewMode?: 'compact' | 'detailed'
+    onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
     onOptionChange?: (
       columnKey: string,
       id: string,
@@ -800,8 +794,7 @@ const resolveColumn = (
           render: (value: any): ReactNode => (
             <ReviewerStatusSummary
               isCompact={
-                (context.reviewerStatusViewMode?.[column.key] ?? 'detailed') ===
-                'compact'
+                (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
               }
               value={value}
             />
@@ -871,12 +864,10 @@ const resolveColumn = (
       title: (
         <ReviewerStatusColumnHeader
           isCompact={
-            (context.reviewerStatusViewMode?.[column.key] ?? 'detailed') ===
-            'compact'
+            (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
           }
           onChange={isCompact =>
             context.onReviewerStatusViewModeChange?.(
-              column.key,
               isCompact ? 'compact' : 'detailed',
             )
           }

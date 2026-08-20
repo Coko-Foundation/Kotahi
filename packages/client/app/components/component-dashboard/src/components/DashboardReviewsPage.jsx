@@ -8,7 +8,7 @@ import {
   UPDATE_REVIEWER_STATUS,
   REVIEWER_RESPONSE,
   UPDATE_TAB,
-  DASHBOARD,
+  GET_MANUSCRIPTS_FOR_ROLE,
   UPDATE_MANUSCRIPT,
 } from '../../../../queries'
 import { useCurrentUser } from '../../../../pages/hooks/useCurrentUser'
@@ -50,7 +50,7 @@ const DashboardReviewsPage = () => {
 
   const limit = config?.manuscript?.paginationCount || 10
 
-  const { loading, error, data } = useQuery(DASHBOARD, {
+  const { loading, error, data } = useQuery(GET_MANUSCRIPTS_FOR_ROLE, {
     variables: {
       reviewerStatus: uriQueryParams.get(URI_REVIEWER_STATUS_PARAM),
       wantedRoles,

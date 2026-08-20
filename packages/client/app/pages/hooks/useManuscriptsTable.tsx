@@ -1,31 +1,41 @@
-/* eslint-disable */
-
-import { useMemo, useContext, type ReactNode } from 'react'
-import { useParams, useLocation } from 'react-router-dom'
+import { useMemo, useState, type ReactNode } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@apollo/client/react'
+import { useQuery, useMutation, useLazyQuery } from '@apollo/client/react'
 import styled from 'styled-components'
 import get from 'lodash/get'
+import mapValues from 'lodash/mapValues'
 
-import { ConfigContext } from '../../components/config/src'
+import { useConfig } from './useConfig'
 import { useCurrentUser } from './useCurrentUser'
 import {
-  extractSortData,
-  extractFilters,
-  useQueryParams,
-  URI_PAGENUM_PARAM,
-  URI_SEARCH_PARAM,
-  URI_SORT_PARAM,
-  URI_REVIEWER_STATUS_PARAM,
-} from '../../shared/urlParamUtils'
-import { isValidDOI } from '../../shared/doiFieldDefinition'
-import { MANUSCRIPT_STATUSES } from '../../ui/shared/ManuscriptStatus'
-import { DASHBOARD } from '../../queries'
+  GET_MANUSCRIPTS_FOR_ROLE,
+  GET_ALL_MANUSCRIPTS,
+  GET_MANUSCRIPTS_DATA,
+  ARCHIVE_MANUSCRIPTS,
+  UNARCHIVE_MANUSCRIPTS,
+  UPDATE_MANUSCRIPT,
+} from '../../queries'
+
 import Link from '../../ui/shared/Link'
+import { MANUSCRIPT_STATUSES } from '../../ui/shared/ManuscriptStatus'
+import {
+  reviewerStatusValues,
+  reviewerStatusTranslationKeys,
+} from '../../ui/shared/_constants'
 import type {
   ManuscriptsTableColumn,
   ManuscriptsTableSortState,
 } from '../../ui/shared/ManuscriptsTable'
+
+// #region constants
+const URI_PARAMS = {
+  SEARCH: 'search',
+  PAGENUM: 'pagenum',
+  SORT: 'sort',
+  ARCHIVED: 'archived',
+  REVIEWER_STATUS: 'reviewerStatusBadge', // 'your status' column on reviews dashboard tab
+}
 
 const LinkList = styled.div`
   align-items: flex-start;
@@ -33,31 +43,25 @@ const LinkList = styled.div`
   flex-direction: column;
 `
 
-type Variant = 'submitter' | 'editor' | 'reviewer'
+type Variant = 'submitter' | 'editor' | 'reviewer' | 'admin'
 
 type VariantConfig = {
   roles: string[]
-  configColumnsKey: string
+  configColumnsPath: string
   defaultColumnKeys: string[]
 }
 
 const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
   submitter: {
     roles: ['author'],
-    configColumnsKey: 'mySubmissions',
+    configColumnsPath: 'dashboard.mySubmissions',
     defaultColumnKeys: [
       'shortId',
       'submission.$title',
       'status',
       'created',
       'updated',
-      'actions',
     ],
-  },
-  editor: {
-    roles: ['seniorEditor', 'handlingEditor', 'editor'],
-    configColumnsKey: 'editingQueue',
-    defaultColumnKeys: [],
   },
   reviewer: {
     roles: [
@@ -72,45 +76,97 @@ const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
       'inProgress:collaborativeReviewer',
       'completed:collaborativeReviewer',
     ],
-    configColumnsKey: 'tableColumns',
-    defaultColumnKeys: [],
+    configColumnsPath: 'dashboard.tableColumns',
+    defaultColumnKeys: ['shortId', 'submission.$title', 'reviewerStatusBadge'],
+  },
+  editor: {
+    roles: ['seniorEditor', 'handlingEditor', 'editor'],
+    configColumnsPath: 'dashboard.editingQueue',
+    defaultColumnKeys: [
+      'shortId',
+      'submission.$title',
+      'status',
+      'manuscriptVersions',
+      'statusCounts',
+      'lastUpdated',
+    ],
+  },
+  admin: {
+    roles: [],
+    configColumnsPath: 'manuscript.tableColumns',
+    defaultColumnKeys: [
+      'shortId',
+      'titleAndAbstract',
+      'created',
+      'updated',
+      'status',
+      'submission.$customStatus',
+      'author',
+    ],
   },
 }
 
-// Shared across all variants -- titles for columns that aren't real submission-form fields.
-// findColumnTitle() only falls back to this when a column key doesn't match an actual field name.
-const SPECIAL_COLUMN_TITLES = t => ({
-  'submission.$doi': t('formBuilder.fieldOpts.doi'),
-  'submission.adaState': t('manuscriptsTable.adaState'),
-  actions: 'Actions', // not in translation!
-  author: t('manuscriptsTable.Author'),
-  authorProofingLink: 'Actions', // not in translation!
-  created: t('manuscriptsTable.Created'),
-  editor: t('manuscriptsTable.Editor'),
-  editorLinks: t('manuscriptsTable.Actions'),
-  lastUpdated: t('manuscriptsTable.lastReviewerStatusUpdate'),
-  manuscriptVersions: t('manuscriptsTable.Version'),
-  reviewerLinks: 'Action', // not in translation!
-  reviewerStatusBadge: t('manuscriptsTable.Your Status'),
-  shortId: 'No.', // not in translation!
-  status: t('manuscriptsTable.Status'),
-  statusCounts: t('manuscriptsTable.Reviewer Status'),
-  submitter: t('manuscriptsTable.Author'), // alias of 'author'
-  titleAndAbstract: t('manuscriptsTable.Title'),
-  updated: t('manuscriptsTable.Updated'),
+const columnAlignments: Record<string, 'left' | 'center' | 'right'> = {
+  manuscriptVersions: 'center',
+  reviewerStatusBadge: 'center',
+  shortId: 'center',
+  status: 'center',
+  statusCounts: 'center',
+  'submission.$doi': 'center',
+  'submission.adaState': 'center',
+}
+// #endregion constants
+
+// #region helpers
+const downloadBlob = (blob: Blob, fileName: string): void => {
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = fileName
+  link.click()
+  URL.revokeObjectURL(url)
+}
+
+const REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY =
+  'manuscriptsTable.reviewerStatusViewMode'
+
+const readReviewerStatusViewMode = (): 'compact' | 'detailed' =>
+  localStorage.getItem(REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY) === 'compact'
+    ? 'compact'
+    : 'detailed'
+
+const isValidDOI = (doi: string): boolean => {
+  const doiRegex =
+    /^(https?:\/\/(dx\.)?doi\.org\/|doi:)?10.\d{4,9}\/[-._;():A-Z0-9]+$/i
+  return doiRegex.test(doi)
+}
+
+const extractSortData = (
+  params: URLSearchParams,
+): {
+  name: string | undefined
+  direction: 'ascend' | 'descend' | undefined
+} => ({
+  name: params.get(URI_PARAMS.SORT)?.split('_')[0],
+  direction: params.get(URI_PARAMS.SORT)?.split('_')[1] as
+    | 'ascend'
+    | 'descend'
+    | undefined,
 })
 
-const centeredColumns = [
-  'shortId',
-  'adaState',
-  '$doi',
-  'status',
-  'manuscriptVersions',
-  'reviewerStatusBadge',
-  'statusCounts',
-]
+const extractFilters = (
+  params: URLSearchParams,
+): { field: string; value: string | null }[] =>
+  Array.from(params.keys())
+    .filter(field => field !== URI_PARAMS.PAGENUM && field !== URI_PARAMS.SORT)
+    .map(field => ({ field, value: params.get(field) }))
 
-const importSourceFor = manuscript => {
+const extractArchived = (params: URLSearchParams): boolean =>
+  params.has(URI_PARAMS.ARCHIVED)
+
+const importSourceFor = (
+  manuscript: Record<string, any>,
+): 'coar' | 'semanticScholar' | undefined => {
   if (manuscript.importSourceServer === 'COAR') return 'coar'
   if (manuscript.importSourceServer === 'semantic-scholar')
     return 'semanticScholar'
@@ -118,7 +174,7 @@ const importSourceFor = manuscript => {
   return undefined
 }
 
-const titleLinkFor = manuscript => {
+const titleLinkFor = (manuscript: Record<string, any>): string | undefined => {
   const { $doi, $sourceUri } = manuscript.submission || {}
 
   if ($sourceUri) return $sourceUri
@@ -128,224 +184,314 @@ const titleLinkFor = manuscript => {
   return undefined
 }
 
-// The server's date-range filter value format is 'yyyyMMdd-yyyyMMdd' (see manuscriptUtils.js);
-// ManuscriptsTable's date filter works with plain 'yyyy-MM-dd' boundaries instead, so convert
-// between the two with simple string reformatting -- no timezone handling needed, since both
-// sides already represent the same local calendar date.
-const isoDateToCompact = isoDate => isoDate.replaceAll('-', '')
+const findReviewerTeamMember = (
+  version: Record<string, any>,
+  userId: string,
+): Record<string, any> | undefined =>
+  (version.teams ?? [])
+    .find((team: Record<string, any>) => team.role === 'reviewer')
+    ?.members?.find((member: Record<string, any>) => member.user.id === userId)
+
+const findCollaborativeReviewerTeamMember = (
+  version: Record<string, any>,
+  userId: string,
+): Record<string, any> | undefined =>
+  (version.teams ?? [])
+    .find((team: Record<string, any>) => team.role === 'collaborativeReviewer')
+    ?.members?.find((member: Record<string, any>) => member.user.id === userId)
+
+const findReviewerStatus = (
+  manuscript: Record<string, any>,
+  userId: string,
+): string => {
+  let memberIsCurrent = true
+  let member =
+    findReviewerTeamMember(manuscript, userId) ??
+    findCollaborativeReviewerTeamMember(manuscript, userId)
+
+  if (!member) {
+    memberIsCurrent = false
+
+    for (const version of manuscript.manuscriptVersions ?? []) {
+      member = findReviewerTeamMember(version, userId)
+      if (member) break
+    }
+  }
+
+  let status = member?.status
+
+  if (
+    !status ||
+    (!memberIsCurrent && !['completed', 'rejected'].includes(status))
+  )
+    status = 'closed'
+
+  return status
+}
+
+const INVITATION_STATUS_MAPPING: Record<string, string> = {
+  UNANSWERED: 'invited',
+  REJECTED: 'rejected',
+}
+
+const reviewerStatusEntriesFor = (
+  manuscript: Record<string, any>,
+): { status: string; name: string }[] => {
+  const notAlreadyInvited = (reviewerMember: Record<string, any>): boolean => {
+    if (reviewerMember.status !== 'invited') return true
+
+    const foundInvitation = (manuscript.invitations ?? []).find(
+      (invitation: Record<string, any>) =>
+        invitation.toEmail === reviewerMember.user.email &&
+        invitation.status === 'UNANSWERED' &&
+        ['REVIEWER', 'COLLABORATIVE_REVIEWER'].includes(
+          invitation.invitedPersonType,
+        ),
+    )
+
+    return !foundInvitation
+  }
+
+  const membersOfRole = (role: string): Record<string, any>[] =>
+    (
+      (manuscript.teams ?? []).find(
+        (team: Record<string, any>) => team.role === role,
+      )?.members ?? []
+    ).filter(notAlreadyInvited)
+
+  const reviewerMembers = membersOfRole('reviewer')
+  const collaborativeReviewerMembers = membersOfRole('collaborativeReviewer')
+
+  const reviewerUserIds = [
+    ...reviewerMembers,
+    ...collaborativeReviewerMembers,
+  ].map((member: Record<string, any>) => member.user.id)
+
+  const invitationEntries = (manuscript.invitations ?? [])
+    .filter(
+      (invitation: Record<string, any>) =>
+        invitation.status in INVITATION_STATUS_MAPPING &&
+        ['REVIEWER', 'COLLABORATIVE_REVIEWER'].includes(
+          invitation.invitedPersonType,
+        ) &&
+        !reviewerUserIds.includes(invitation.user?.id),
+    )
+    .map((invitation: Record<string, any>) => ({
+      status: INVITATION_STATUS_MAPPING[invitation.status],
+      name: invitation.toEmail,
+    }))
+
+  return [
+    ...[...reviewerMembers, ...collaborativeReviewerMembers].map(
+      (member: Record<string, any>) => ({
+        status: member.status,
+        name: member.user.username,
+      }),
+    ),
+    ...invitationEntries,
+  ]
+}
+
+/**
+ * Translate the table's 'yyyy-MM-dd' format to the server's date-range filter
+ * format 'yyyyMMdd'. And vice versa.
+ * No timezone handling needed, since both sides already represent the same
+ * local calendar date.
+ */
+const isoDateToCompact = (isoDate: string): string =>
+  isoDate.replaceAll('-', '')
 
 const compactDateToIso = (compactDate: string): string =>
   `${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6, 8)}`
-
-const isDateColumnKey = (
-  key: string,
-  fieldDefinitions: Record<string, any>,
-): boolean =>
-  ['created', 'updated'].includes(key) ||
-  fieldDefinitions[key]?.component === 'DatePicker'
-
-/** Per-variant actions-column content. Only 'submitter' is implemented so far. */
-const renderActionsFor = (
-  variant: Variant,
-  record: Record<string, any>,
-  {
-    t,
-    groupName,
-    actionText,
-  }: { t: any; groupName?: string; actionText: Record<string, string> },
-): ReactNode => {
-  if (variant === 'submitter') {
-    const { id, status, showAuthorProofing } = record
-
-    return (
-      <LinkList>
-        <Link to={`/${groupName}/versions/${id}/submit`}>
-          {actionText[status]}
-        </Link>
-
-        {showAuthorProofing && (
-          <Link to={`/${groupName}/versions/${id}/production`}>
-            {(status === 'assigned' || status === 'inProgress') &&
-              t('dashboardPage.mySubmissions.Provide production feedback')}
-
-            {status === 'completed' &&
-              t('dashboardPage.mySubmissions.View production feedback')}
-          </Link>
-        )}
-      </LinkList>
-    )
-  }
-
-  return null // TODO: editor/reviewer actions, once those tables are migrated
-}
-
-/** Per-variant extra row data that isn't tied to any column. Only 'submitter' is implemented. */
-const enrichRowFor = (
-  variant: Variant,
-  row: Record<string, any>,
-  manuscript: Record<string, any>,
-  {
-    authorProofingEnabled,
-    currentUser,
-  }: { authorProofingEnabled: boolean; currentUser: { id: string } },
-): void => {
-  if (variant === 'submitter') {
-    const authorTeam = manuscript.teams.find(team => team.role === 'author')
-
-    const sortedAuthors = authorTeam?.members
-      .slice()
-      .sort(
-        (a: any, b: any) =>
-          new Date(b.created).getTime() - new Date(a.created).getTime(),
-      )
-
-    row.showAuthorProofing =
-      authorProofingEnabled &&
-      manuscript.authorFeedback.assignedAuthors?.length > 0 &&
-      sortedAuthors[0]?.user?.id === currentUser.id &&
-      ['assigned', 'inProgress', 'completed'].includes(manuscript.status)
-  }
-}
+// #endregion helpers
 
 type UseManuscriptsTableResult = {
-  loading: boolean
-  error: unknown
+  columnFilters: Record<string, string[]>
   columns: ManuscriptsTableColumn[]
   dataSource: Record<string, any>[]
+  error: unknown
+  loading: boolean
+  onArchiveSelected: (ids: string[]) => void
+  onDownloadSelected: (ids: string[]) => void
+  onFiltersChange: (filters: Record<string, string[]>) => void
+  onOptionChange: (columnKey: string, id: string, value: string | null) => void
+  onPageChange: (page: number) => void
+  onReviewerStatusViewModeChange: (viewMode: 'compact' | 'detailed') => void
+  onSearch: (value: string) => void
+  onSortChange: (sortState: ManuscriptsTableSortState | null) => void
+  onUnarchiveSelected: (ids: string[]) => void
+  onViewingArchivedChange: (viewingArchived: boolean) => void
   page: number
   pageSize: number
-  totalCount: number
-  onPageChange: (page: number) => void
-  onSearch: (value: string) => void
-  columnFilters: Record<string, string[]>
-  onFiltersChange: (filters: Record<string, string[]>) => void
+  reviewerStatusViewMode: 'compact' | 'detailed'
+  selectable: boolean
+  showArchiveActions: boolean
+  showDownloadAction: boolean
+  showViewArchivedToggle: boolean
   sortState: ManuscriptsTableSortState | null
-  onSortChange: (sortState: ManuscriptsTableSortState | null) => void
+  totalCount: number
+  viewingArchived: boolean
 }
 
-/** Fetches, and derives every prop <ManuscriptsTable> needs, for one of the role-scoped
- * dashboard tables (My Submissions / editing queue / reviews). */
-const useManuscriptsTable = ({
-  variant,
-}: {
-  variant: Variant
-}): UseManuscriptsTableResult => {
-  const { roles, configColumnsKey, defaultColumnKeys } = VARIANT_CONFIG[variant]
-
-  // Reviewer invitations are tied to a specific version, so a reviewer needs the older-version
-  // lookback to still see a manuscript they reviewed after it's been revised; authors/editors
-  // don't have that problem. Inferred from the role names rather than passed explicitly.
-  const searchInAllVersions = roles.some(role =>
-    role.toLowerCase().includes('reviewer'),
-  )
-
-  const config: any = useContext(ConfigContext)
+/** Derives the props <ManuscriptsTable> needs */
+const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
+  const config: any = useConfig()
   const { t } = useTranslation()
   const { groupName } = useParams()
   const currentUser = useCurrentUser()
-  const applyQueryParams = useQueryParams()
-  const location = useLocation()
-  const uriQueryParams = new URLSearchParams(location.search)
+  const [searchParams, setSearchParams] = useSearchParams()
 
+  const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
+    'compact' | 'detailed'
+  >(readReviewerStatusViewMode)
+
+  // #region definitions
+  const { roles, configColumnsPath, defaultColumnKeys } =
+    VARIANT_CONFIG[variant]
+  const searchInAllVersions = variant === 'reviewer'
   const authorProofingEnabled = config.controlPanel?.authorProofingEnabled
-
-  const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
-  const sortName = extractSortData(uriQueryParams).name
-  const sortDirection = extractSortData(uriQueryParams).direction
-  const filters = extractFilters(uriQueryParams)
-  const page = Number(uriQueryParams.get(URI_PAGENUM_PARAM)) || 1
+  const currentSearchQuery = searchParams.get(URI_PARAMS.SEARCH)
+  const { name: sortName, direction: sortDirection } =
+    extractSortData(searchParams)
+  const filters = extractFilters(searchParams)
+  const page = Number(searchParams.get(URI_PARAMS.PAGENUM)) || 1
   const pageSize = config?.manuscript?.paginationCount || 10
+
+  const specialColumnTitles = {
+    'submission.$doi': t('formBuilder.fieldOpts.doi'),
+    'submission.adaState': t('manuscriptsTable.adaState'),
+    actions: t('manuscriptsTable.Actions'),
+    author: t('manuscriptsTable.Author'),
+    created: t('manuscriptsTable.Created'),
+    editor: t('manuscriptsTable.Editor'),
+    lastUpdated: t('manuscriptsTable.lastReviewerStatusUpdate'),
+    manuscriptVersions: t('manuscriptsTable.Version'),
+    reviewerLinks: 'Action', // not in translation!
+    reviewerStatusBadge: t('manuscriptsTable.Your Status'),
+    shortId: 'No.', // not in translation!
+    status: t('manuscriptsTable.Status'),
+    statusCounts: t('manuscriptsTable.Reviewer Status'),
+    submitter: t('manuscriptsTable.Author'), // alias of 'author'
+    titleAndAbstract: t('manuscriptsTable.Title'),
+    updated: t('manuscriptsTable.Updated'),
+  }
+
+  const actionText = {
+    new: t('manuscriptsTable.actions.continueSubmission'),
+    submitted: t('manuscriptsTable.actions.View'),
+    revise: t('manuscriptsTable.actions.revise'),
+    revising: t('manuscriptsTable.actions.continueRevision'),
+    accepted: t('manuscriptsTable.actions.View'),
+    rejected: t('manuscriptsTable.actions.View'),
+    published: t('manuscriptsTable.actions.View'),
+    assigned: t('manuscriptsTable.actions.View'),
+    inProgress: t('manuscriptsTable.actions.View'),
+    completed: t('manuscriptsTable.actions.View'),
+    underEmbargo: t('manuscriptsTable.actions.View'),
+    embargoReleased: t('manuscriptsTable.actions.View'),
+  }
+  // #endregion definitions
+
+  // #region query-data
+  const isArchived = extractArchived(searchParams)
+
+  const sharedQueryVariables = {
+    sort: sortName
+      ? { field: sortName, isAscending: sortDirection === 'ascend' }
+      : null,
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+    filters,
+    timezoneOffsetMinutes: new Date().getTimezoneOffset(),
+    groupId: config.groupId,
+  }
+
+  const roleQuery = useQuery(GET_MANUSCRIPTS_FOR_ROLE, {
+    variables: {
+      ...sharedQueryVariables,
+      reviewerStatus: searchParams.get(URI_PARAMS.REVIEWER_STATUS),
+      wantedRoles: roles,
+      searchInAllVersions,
+    },
+    fetchPolicy: 'network-only',
+    skip: variant === 'admin',
+  })
+
+  const allQuery = useQuery(GET_ALL_MANUSCRIPTS, {
+    variables: {
+      ...sharedQueryVariables,
+      archived: isArchived,
+    },
+    fetchPolicy: 'network-only',
+    skip: variant !== 'admin',
+  })
 
   const {
     data,
     previousData,
     loading: apolloLoading,
     error,
-  } = useQuery(DASHBOARD, {
-    variables: {
-      reviewerStatus: uriQueryParams.get(URI_REVIEWER_STATUS_PARAM),
-      wantedRoles: roles,
-      sort: sortName
-        ? { field: sortName, isAscending: sortDirection === 'ASC' }
-        : null,
-      offset: (page - 1) * pageSize,
-      limit: pageSize,
-      filters,
-      timezoneOffsetMinutes: new Date().getTimezoneOffset(),
-      groupId: config.groupId,
-      searchInAllVersions,
-    },
-    fetchPolicy: 'network-only',
-  })
+    refetch,
+  } = variant === 'admin' ? allQuery : roleQuery
+
+  const [updateManuscript] = useMutation(UPDATE_MANUSCRIPT)
+  const [archiveManuscripts] = useMutation(ARCHIVE_MANUSCRIPTS)
+  const [unarchiveManuscripts] = useMutation(UNARCHIVE_MANUSCRIPTS)
+  const [getManuscriptsData] = useLazyQuery(GET_MANUSCRIPTS_DATA)
 
   const currentData: any = data ?? previousData
   const loading = apolloLoading && !currentData
 
   const submissionForm = currentData?.formForPurposeAndCategory
+
   const manuscripts =
-    currentData?.manuscriptsUserHasCurrentRoleIn?.manuscripts ?? []
+    variant === 'admin'
+      ? (currentData?.paginatedManuscripts?.manuscripts ?? [])
+      : (currentData?.manuscriptsUserHasCurrentRoleIn?.manuscripts ?? [])
+
   const totalCount =
-    currentData?.manuscriptsUserHasCurrentRoleIn?.totalCount ?? 0
+    variant === 'admin'
+      ? (currentData?.paginatedManuscripts?.totalCount ?? 0)
+      : (currentData?.manuscriptsUserHasCurrentRoleIn?.totalCount ?? 0)
 
   const fieldDefinitions = useMemo(() => {
     const fields = submissionForm?.structure?.children ?? []
-    const defs = {}
-    fields.forEach(field => {
-      // Incomplete fields in the formbuilder may not have a name specified. Ignore these
+    const defs: Record<string, any> = {}
+    fields.forEach((field: Record<string, any>): void => {
+      // Incomplete fields in the formbuilder may not have a name specified. Ignore these.
       if (field.name) defs[field.name] = field
     })
     return defs
   }, [submissionForm])
 
-  // Shared with the legacy table's sort state (same 'sort' URI param), just
-  // translated to/from antd's { columnKey, order: 'ascend' | 'descend' }.
-  // An explicit sort applies regardless of whether a search is active (see
-  // buildQueryForManuscriptSearchFilterAndOrder). The 'created' DESC default below is only a
-  // display fallback for the *unsorted* case, and only applies without an active search --
-  // while searching with no explicit sort, the server orders by search rank instead, so no
-  // column should claim to be sorted.
   let sortState: ManuscriptsTableSortState | null = null
-
   if (sortName) {
-    sortState = {
-      columnKey: sortName,
-      order: sortDirection === 'ASC' ? 'ascend' : 'descend',
-    }
+    sortState = { columnKey: sortName, order: sortDirection ?? 'descend' }
   } else if (!currentSearchQuery) {
     sortState = { columnKey: 'created', order: 'descend' }
   }
+  // #endregion query-data
 
-  const handleSortChange = newSortState =>
-    applyQueryParams({
-      [URI_SORT_PARAM]: newSortState
-        ? `${newSortState.columnKey}_${newSortState.order === 'ascend' ? 'ASC' : 'DESC'}`
-        : null,
-      [URI_PAGENUM_PARAM]: 1,
-    })
+  // #region table-columns
+  const rawConfigColumns = get(config, configColumnsPath)
 
-  const specialColumnTitles = useMemo(() => SPECIAL_COLUMN_TITLES(t), [t])
+  const configColumns = Array.isArray(rawConfigColumns)
+    ? rawConfigColumns.map(
+        (column: { value: string; label: string }): string => column.value,
+      )
+    : (rawConfigColumns || '')
+        .split(',')
+        .map((columnName: string) => columnName.trim())
+        .filter(Boolean)
 
-  const actionText = useMemo(
-    () => ({
-      new: t('manuscriptsTable.actions.continueSubmission'),
-      submitted: t('manuscriptsTable.actions.View'),
-      revise: t('manuscriptsTable.actions.revise'),
-      revising: t('manuscriptsTable.actions.continueRevision'),
-      accepted: t('manuscriptsTable.actions.View'),
-      rejected: t('manuscriptsTable.actions.View'),
-      published: t('manuscriptsTable.actions.View'),
-      assigned: t('manuscriptsTable.actions.View'),
-      inProgress: t('manuscriptsTable.actions.View'),
-      completed: t('manuscriptsTable.actions.View'),
-      underEmbargo: t('manuscriptsTable.actions.View'),
-      embargoReleased: t('manuscriptsTable.actions.View'),
-    }),
-    [t],
-  )
+  const columnKeys = [
+    ...(configColumns.length > 0 ? configColumns : defaultColumnKeys),
+    'actions',
+  ]
 
   const findColumnTitle = (key: string): string => {
     const formTitle = submissionForm?.structure?.children.find(
-      field => field.name === key,
+      (field: Record<string, any>): boolean => field.name === key,
     )?.title
 
     if (formTitle) return formTitle
@@ -353,28 +499,67 @@ const useManuscriptsTable = ({
     return key
   }
 
-  const configColumns = (config.dashboard?.[configColumnsKey] || []).map(
-    tc => tc.value,
-  )
-
-  const columnKeys =
-    configColumns.length > 0 ? [...configColumns, 'actions'] : defaultColumnKeys
-
   const tableColumns: ManuscriptsTableColumn[] = columnKeys
+    // build column definitions as expected by the table ui
     .map(
       (key: string): ManuscriptsTableColumn => ({
         title: findColumnTitle(key),
         dataIndex: key,
         key,
-        align: centeredColumns.includes(key) ? 'center' : 'left',
+        align: columnAlignments[key] ?? 'left',
       }),
     )
+    // handle all extra properties needed for special cases
     .map((column: ManuscriptsTableColumn): ManuscriptsTableColumn => {
       if (column.key === 'actions') {
         return {
           ...column,
-          render: (_: any, record: any) =>
-            renderActionsFor(variant, record, { t, groupName, actionText }),
+          render: (_: any, record: any): ReactNode => {
+            if (variant === 'submitter') {
+              const { id, status, showAuthorProofing } = record
+
+              return (
+                <LinkList>
+                  <Link to={`/${groupName}/versions/${id}/submit`}>
+                    {actionText[status]}
+                  </Link>
+
+                  {showAuthorProofing && (
+                    <Link to={`/${groupName}/versions/${id}/production`}>
+                      {(status === 'assigned' || status === 'inProgress') &&
+                        t(
+                          'dashboardPage.mySubmissions.Provide production feedback',
+                        )}
+
+                      {status === 'completed' &&
+                        t(
+                          'dashboardPage.mySubmissions.View production feedback',
+                        )}
+                    </Link>
+                  )}
+                </LinkList>
+              )
+            }
+
+            if (variant === 'editor') {
+              const { id, parentId } = record
+
+              return (
+                <LinkList>
+                  <Link
+                    to={`/${groupName}/versions/${parentId || id}/decision`}
+                  >
+                    {t('manuscriptsTable.Control')}
+                  </Link>
+                  <Link to={`/${groupName}/versions/${id}/production`}>
+                    {t('manuscriptsTable.Production')}
+                  </Link>
+                </LinkList>
+              )
+            }
+
+            return null // TODO: reviewer actions, once that table is migrated
+          },
         }
       }
 
@@ -382,24 +567,43 @@ const useManuscriptsTable = ({
         return { ...column, sortable: true }
       }
 
-      if (isDateColumnKey(column.key, fieldDefinitions)) {
-        // Server sorts submission.* fields as LOWER(text) (manuscriptUtils.js), which works
-        // correctly for DatePicker values -- they're persisted as ISO 8601 strings (see
-        // app/components/shared/DatePicker.jsx), and ISO 8601 sorts correctly lexicographically.
-        // Server also range-filters both created/updated and DatePicker submission fields the
-        // same way (see applyFilters).
+      if (
+        ['created', 'updated'].includes(column.key) ||
+        fieldDefinitions[column.key]?.component === 'DatePicker'
+      ) {
         return { ...column, dataType: 'date', sortable: true, filterable: true }
       }
 
-      if (column.key === 'submission.$title') {
-        // Server strips HTML before sorting jsonb text fields (see applySortOrder), so this
-        // sorts on the visible title text rather than raw markup.
+      if (
+        column.key === 'submission.$title' ||
+        column.key === 'titleAndAbstract'
+      ) {
         return {
           ...column,
           dataType: 'title',
-          showAbstract: true,
+          showAbstract: column.key === 'titleAndAbstract',
           sortable: true,
         }
+      }
+
+      if (column.key === 'reviewerStatusBadge') {
+        return {
+          ...column,
+          dataType: 'reviewerStatus',
+          filterable: true,
+          options: reviewerStatusValues.map(status => ({
+            value: status,
+            label: t(reviewerStatusTranslationKeys[status]),
+          })),
+        }
+      }
+
+      if (column.key === 'statusCounts') {
+        return { ...column, dataType: 'reviewerStatusSummary' }
+      }
+
+      if (column.key === 'author' || column.key === 'submitter') {
+        return { ...column, dataType: 'person' }
       }
 
       if (column.key === 'status') {
@@ -431,6 +635,16 @@ const useManuscriptsTable = ({
         }
       }
 
+      if (column.key === 'submission.$customStatus') {
+        return {
+          ...column,
+          dataType: 'options',
+          editable: Boolean(config.manuscript?.labelColumn),
+          filterable: true,
+          options: fieldDefinitions[column.key]?.options,
+        }
+      }
+
       if (fieldDefinitions[column.key]?.options) {
         return {
           ...column,
@@ -440,25 +654,28 @@ const useManuscriptsTable = ({
         }
       }
 
-      if (
-        ['TextField', 'AbstractEditor'].includes(
-          fieldDefinitions[column.key]?.component,
-        )
-      ) {
-        // Server strips HTML before sorting jsonb text fields (see applySortOrder), so this
-        // works correctly for AbstractEditor (rich text) fields too, not just plain TextFields.
+      if (fieldDefinitions[column.key]?.component === 'AbstractEditor') {
+        return { ...column, dataType: 'richText', sortable: true }
+      }
+
+      if (fieldDefinitions[column.key]?.component === 'TextField') {
         return { ...column, sortable: true }
       }
 
       if (column.key === 'manuscriptVersions') {
-        // Intentionally not sortable: it's a count (prior versions + current), derived from a
-        // GraphQL relation rather than a real column or jsonb field the server can order by.
+        /**
+         * Intentionally not sortable: it's a count (prior versions + current),
+         * derived from a GraphQL relation rather than a real column or jsonb
+         * field the server can sort on.
+         */
         return { ...column, sortable: false }
       }
 
       return column
     })
+  // #endregion table-columns
 
+  // #region column-filters
   // Keyed by the same URL param name as the column key (shared with the legacy table's filter
   // convention). Date columns store a compact 'yyyyMMdd-yyyyMMdd' range (see manuscriptUtils.js);
   // every other filterable column stores one or more selected values, comma-joined (the server
@@ -468,7 +685,7 @@ const useManuscriptsTable = ({
   tableColumns
     .filter(column => column.filterable)
     .forEach(column => {
-      const value = uriQueryParams.get(column.key)
+      const value = searchParams.get(column.key)
       if (!value) return
 
       if (column.dataType === 'date') {
@@ -485,30 +702,9 @@ const useManuscriptsTable = ({
 
       columnFilters[column.key] = value.split(',')
     })
+  // #endregion column-filters
 
-  const handleFiltersChange = (newColumnFilters: Record<string, string[]>) =>
-    applyQueryParams({
-      ...Object.fromEntries(
-        Object.entries(newColumnFilters).map(([key, values]) => {
-          const column = tableColumns.find(c => c.key === key)
-
-          if (column?.dataType === 'date') {
-            const [start, end] = values ?? []
-
-            return [
-              key,
-              start && end
-                ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
-                : null,
-            ]
-          }
-
-          return [key, values && values.length > 0 ? values.join(',') : null]
-        }),
-      ),
-      [URI_PAGENUM_PARAM]: 1,
-    })
-
+  // #region row-data
   const dataSource = manuscripts.map((manuscriptObj: any) => {
     const manuscript = { ...manuscriptObj }
     manuscript.submission = JSON.parse(manuscript.submission)
@@ -529,6 +725,16 @@ const useManuscriptsTable = ({
           return accumulator
         }
 
+        if (property === 'author' || property === 'submitter') {
+          accumulator[property] = manuscript.submitter && {
+            displayName: manuscript.submitter.username,
+            profilePicture: manuscript.submitter.profilePicture,
+            orcid: manuscript.submitter.defaultIdentity?.identifier,
+          }
+
+          return accumulator
+        }
+
         accumulator[property] = get(manuscript, property)
         return accumulator
       },
@@ -537,29 +743,179 @@ const useManuscriptsTable = ({
 
     row.key = manuscript.shortId
     row.id = manuscript.id
+    row.parentId = manuscript.parentId
     row.published = manuscript.published
-    enrichRowFor(variant, row, manuscript, {
-      authorProofingEnabled,
-      currentUser,
-    })
+
+    if (variant === 'admin') {
+      row.archived = isArchived
+    }
+
+    if (variant === 'submitter') {
+      const authorTeam = manuscript.teams.find(team => team.role === 'author')
+
+      const sortedAuthors = authorTeam?.members
+        .slice()
+        .sort(
+          (a: any, b: any) =>
+            new Date(b.created).getTime() - new Date(a.created).getTime(),
+        )
+
+      row.showAuthorProofing =
+        authorProofingEnabled &&
+        manuscript.authorFeedback.assignedAuthors?.length > 0 &&
+        sortedAuthors[0]?.user?.id === currentUser.id &&
+        ['assigned', 'inProgress', 'completed'].includes(manuscript.status)
+    }
+
+    if (variant === 'reviewer') {
+      row.reviewerStatusBadge = findReviewerStatus(manuscript, currentUser.id)
+    }
+
+    if (variant === 'editor') {
+      row.statusCounts = reviewerStatusEntriesFor(manuscript)
+    }
 
     return row
   })
+  // #endregion row-data
+
+  // #region handlers
+  const applyQueryParams = (
+    queryParams: Record<string, string | number | null>,
+  ): void => {
+    const params = new URLSearchParams(searchParams)
+
+    Object.entries(queryParams).forEach(([fieldName, fieldValue]) => {
+      if (fieldValue) params.set(fieldName, String(fieldValue))
+      else params.delete(fieldName)
+    })
+
+    setSearchParams(params)
+  }
+
+  const handleSortChange = (
+    newSortState: ManuscriptsTableSortState | null,
+  ): void => {
+    applyQueryParams({
+      [URI_PARAMS.SORT]: newSortState
+        ? `${newSortState.columnKey}_${newSortState.order}`
+        : null,
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handleFiltersChange = (
+    newColumnFilters: Record<string, string[]>,
+  ): void => {
+    applyQueryParams({
+      ...mapValues(newColumnFilters, (values, key) => {
+        const column = tableColumns.find(c => c.key === key)
+
+        if (column?.dataType === 'date') {
+          const [start, end] = values ?? []
+
+          return start && end
+            ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
+            : null
+        }
+
+        return values && values.length > 0 ? values.join(',') : null
+      }),
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handlePageChange = (newPage: number): void => {
+    applyQueryParams({ [URI_PARAMS.PAGENUM]: newPage })
+  }
+
+  const handleSearch = (value: string): void => {
+    applyQueryParams({ [URI_PARAMS.SEARCH]: value })
+  }
+
+  const handleOptionChange = (
+    columnKey: string,
+    id: string,
+    value: string | null,
+  ): void => {
+    if (columnKey !== 'submission.$customStatus') return
+
+    updateManuscript({
+      variables: {
+        id,
+        input: JSON.stringify({ submission: { $customStatus: value } }),
+      },
+    })
+  }
+
+  const handleArchiveSelected = async (ids: string[]): Promise<void> => {
+    await archiveManuscripts({ variables: { ids } })
+    refetch()
+  }
+
+  const handleUnarchiveSelected = async (ids: string[]): Promise<void> => {
+    await unarchiveManuscripts({ variables: { ids } })
+    refetch()
+  }
+
+  const handleDownloadSelected = async (ids: string[]): Promise<void> => {
+    const { data: exportData } = await getManuscriptsData({
+      variables: { selectedManuscripts: ids },
+    })
+
+    // @ts-ignore
+    const cleanedData = (exportData?.getManuscriptsData ?? []).map(
+      ({ __typename, ...rest }: Record<string, any>) => rest,
+    )
+
+    const jsonBlob = new Blob([JSON.stringify(cleanedData)], {
+      type: 'application/json',
+    })
+
+    downloadBlob(jsonBlob, 'exportedData.json')
+  }
+
+  const handleViewingArchivedChange = (viewingArchived: boolean): void => {
+    applyQueryParams({
+      [URI_PARAMS.ARCHIVED]: viewingArchived ? 'true' : null,
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handleReviewerStatusViewModeChange = (
+    viewMode: 'compact' | 'detailed',
+  ): void => {
+    setReviewerStatusViewMode(viewMode)
+    localStorage.setItem(REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY, viewMode)
+  }
+  // #endregion handlers
 
   return {
-    loading,
-    error,
+    columnFilters,
     columns: tableColumns,
     dataSource,
+    error,
+    loading,
+    onArchiveSelected: handleArchiveSelected,
+    onDownloadSelected: handleDownloadSelected,
+    onFiltersChange: handleFiltersChange,
+    onOptionChange: handleOptionChange,
+    onPageChange: handlePageChange,
+    onReviewerStatusViewModeChange: handleReviewerStatusViewModeChange,
+    onSearch: handleSearch,
+    onSortChange: handleSortChange,
+    onUnarchiveSelected: handleUnarchiveSelected,
+    onViewingArchivedChange: handleViewingArchivedChange,
     page: Number(page),
     pageSize,
-    totalCount,
-    onPageChange: newPage => applyQueryParams({ [URI_PAGENUM_PARAM]: newPage }),
-    onSearch: value => applyQueryParams({ [URI_SEARCH_PARAM]: value }),
-    columnFilters,
-    onFiltersChange: handleFiltersChange,
+    reviewerStatusViewMode,
+    selectable: variant === 'admin',
+    showArchiveActions: variant === 'admin',
+    showDownloadAction: variant === 'admin',
+    showViewArchivedToggle: variant === 'admin',
     sortState,
-    onSortChange: handleSortChange,
+    totalCount,
+    viewingArchived: isArchived,
   }
 }
 

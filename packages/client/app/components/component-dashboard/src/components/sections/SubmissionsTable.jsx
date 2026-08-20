@@ -18,9 +18,7 @@ const TableWrapper = styled.div`
 
 const SubmissionsTable = () => {
   const { t } = useTranslation()
-  const { loading, error, ...tableProps } = useManuscriptsTable({
-    variant: 'submitter',
-  })
+  const { loading, error, ...tableProps } = useManuscriptsTable('submitter')
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />

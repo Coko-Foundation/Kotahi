@@ -15,7 +15,7 @@ import {
 import {
   UPDATE_TAB,
   REMOVE_TASK_ALERTS_FOR_CURRENT_USER,
-  DASHBOARD,
+  GET_MANUSCRIPTS_FOR_ROLE,
   UPDATE_MANUSCRIPT,
 } from '../../../../queries'
 import EditorTable from './sections/EditorTable'
@@ -38,7 +38,7 @@ const DashboardEditsPage = () => {
 
   const limit = config?.manuscript?.paginationCount || 10
 
-  const { data, loading, error } = useQuery(DASHBOARD, {
+  const { data, loading, error } = useQuery(GET_MANUSCRIPTS_FOR_ROLE, {
     variables: {
       wantedRoles,
       sort: sortName

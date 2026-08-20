@@ -15,10 +15,9 @@ import {
   useLazyQuery,
 } from '@apollo/client/react'
 import fnv from 'fnv-plus'
-import { saveAs } from 'file-saver'
 import { ConfigContext } from '../../config/src'
 import {
-  GET_MANUSCRIPTS_AND_FORM,
+  GET_ALL_MANUSCRIPTS,
   DELETE_MANUSCRIPT,
   IMPORT_MANUSCRIPTS,
   IMPORTED_MANUSCRIPTS,
@@ -70,7 +69,7 @@ const ManuscriptsPage = () => {
   const archived = extractArchived(uriQueryParams)
   const limit = config?.manuscript?.paginationCount || 10
 
-  const queryObject = useQuery(GET_MANUSCRIPTS_AND_FORM, {
+  const queryObject = useQuery(GET_ALL_MANUSCRIPTS, {
     variables: {
       sort: sortName
         ? { field: sortName, isAscending: sortDirection === 'ASC' }
@@ -176,7 +175,12 @@ const ManuscriptsPage = () => {
       type: 'application/json',
     })
 
-    saveAs(jsonBlob, fileName)
+    const url = URL.createObjectURL(jsonBlob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = fileName
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   const [doArchiveManuscripts] = useMutation(ARCHIVE_MANUSCRIPTS, {

@@ -648,18 +648,13 @@ export const BuiltInReviewerStatusSummaryRendering = meta.story({
   },
   render: args => {
     const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
-      Record<string, 'compact' | 'detailed'>
-    >({})
+      'compact' | 'detailed'
+    >('detailed')
 
     return (
       <ManuscriptsTable
         {...args}
-        onReviewerStatusViewModeChange={(columnKey, viewMode) =>
-          setReviewerStatusViewMode(previous => ({
-            ...previous,
-            [columnKey]: viewMode,
-          }))
-        }
+        onReviewerStatusViewModeChange={setReviewerStatusViewMode}
         reviewerStatusViewMode={reviewerStatusViewMode}
       />
     )

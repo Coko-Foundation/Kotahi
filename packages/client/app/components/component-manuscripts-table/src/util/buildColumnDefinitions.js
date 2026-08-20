@@ -8,7 +8,7 @@ const fieldCanBeSorted = field => {
 /**
  * buildColumnDefinition: Takes in a column key and information to build out a standardized object of properties
  * @param {string} columnName The column key
- * @param {object} fieldDefinitions Field definitions returned from the GET_MANUSCRIPTS_AND_FORM query
+ * @param {object} fieldDefinitions Field definitions returned from the GET_ALL_MANUSCRIPTS query
  * @param {object} specialColumnProperties Special component definitions for columns
  * @param {object} customDisplayProps Props for display
  */
@@ -57,7 +57,7 @@ const buildColumnDefinition = (
 /**
  * buildColumnDefinitions: Master function to build the Manuscripts table definition
  * @param {string[]} columnNames The columns we want to display as a part of the table
- * @param {object} fieldDefinitions The graphQL structure of the fields returned from GET_MANUSCRIPTS_AND_FORM
+ * @param {object} fieldDefinitions The graphQL structure of the fields returned from GET_ALL_MANUSCRIPTS
  * @param {object} specialComponentValues values needed for specific components
  * @param {object} displayProps Props for display
  * @returns {object} the list of standardized column information
