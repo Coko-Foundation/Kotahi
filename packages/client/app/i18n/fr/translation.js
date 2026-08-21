@@ -46,8 +46,6 @@ const fr = {
       Delete: 'Supprimer',
       View: 'Voir',
       'Enter search terms...': 'Saisissez des termes de recherche...',
-      surroundMultiword:
-        'Entourez les expressions à plusieurs mots avec des guillemets "". Excluez un terme en le préfixant avec -. Spécifiez des correspondances alternatives en utilisant OU. Utilisez * comme joker pour les fins de mots. Enveloppez les sous-expressions entre parenthèses ().',
       noOption: "Pas d'option",
       danteRangeCalendar: {
         Presets: 'Préconfigurations',
@@ -175,6 +173,15 @@ const fr = {
     manuscriptsTable: {
       'No matching manuscripts were found':
         'Aucun manuscrit correspondant trouvé',
+      searchChip: 'Recherche : {{query}}',
+      searchTipsHeader: 'Conseils pour utiliser la recherche',
+      searchTips: [
+        'Entourez les expressions à plusieurs mots avec des guillemets "".',
+        'Excluez un terme en le préfixant avec -.',
+        'Spécifiez des correspondances alternatives en utilisant OU.',
+        'Utilisez * comme joker pour les fins de mots.',
+        "Appuyez sur / n'importe où sur la page pour accéder à la recherche.",
+      ],
       'Manuscript number': 'Numéro de manuscrit',
       Created: 'Créé',
       Updated: 'Mis à jour',

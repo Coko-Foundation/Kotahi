@@ -1,9 +1,17 @@
-import { type ReactNode, type MouseEvent, Fragment, useState } from 'react'
+import {
+  type ReactNode,
+  type MouseEvent,
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import styled from 'styled-components'
 import {
   th,
   grid,
+  Search,
   Select,
   Button,
   ButtonGroup,
@@ -121,6 +129,7 @@ type ManuscriptsTableProps = {
   totalCount: number
   onPageChange: (page: number) => void
   onSearch: (value: string) => void
+  searchQuery?: string
   bordered?: boolean
   loading?: boolean
   /**
@@ -983,6 +992,33 @@ const buildFilterChips = (
   return chips
 }
 
+const SearchBarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+  margin-bottom: ${grid(3)};
+  padding: 0 ${grid(1)};
+
+  .ant-input-search {
+    flex: 1;
+  }
+`
+
+const SearchInfoButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+`
+
+const SearchTipsList = styled.ul`
+  margin: 0;
+  padding-left: ${grid(4)};
+`
+
 const SelectionActionsWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -1007,6 +1043,7 @@ const ManuscriptsTable = ({
   totalCount,
   onPageChange,
   onSearch,
+  searchQuery = '',
   loading = false,
   columnFilters,
   onFiltersChange,
@@ -1028,6 +1065,40 @@ const ManuscriptsTable = ({
   const { t } = useTranslation()
   const [modal, modalContextHolder] = Modal.useModal()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
+  const searchBarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      const { activeElement } = document
+
+      if (event.key === 'Escape') {
+        if (
+          activeElement instanceof HTMLElement &&
+          searchBarRef.current?.contains(activeElement)
+        ) {
+          activeElement.blur()
+        }
+
+        return
+      }
+
+      if (event.key !== '/') return
+
+      const isEditableElementFocused =
+        activeElement instanceof HTMLElement &&
+        (activeElement.tagName === 'INPUT' ||
+          activeElement.tagName === 'TEXTAREA' ||
+          activeElement.isContentEditable)
+
+      if (isEditableElementFocused) return
+
+      event.preventDefault()
+      searchBarRef.current?.querySelector('input')?.focus()
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return (): void => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
 
   const rowsWithSnippets = dataSource.filter(hasSearchSnippets)
 
@@ -1092,6 +1163,18 @@ const ManuscriptsTable = ({
   )
 
   const filterChips = [
+    ...(searchQuery
+      ? [
+          {
+            key: 'searchQuery',
+            label: t('manuscriptsTable.searchChip', { query: searchQuery }),
+            onRemove: (event: MouseEvent<HTMLElement>): void => {
+              event.preventDefault()
+              onSearch('')
+            },
+          },
+        ]
+      : []),
     ...(columnFilters && onFiltersChange
       ? buildFilterChips(columns, columnFilters, onFiltersChange)
       : []),
@@ -1231,6 +1314,48 @@ const ManuscriptsTable = ({
           ))}
         </FilterChipsWrapper>
       )}
+      <SearchBarWrapper ref={searchBarRef}>
+        <Search
+          allowClear
+          defaultValue={searchQuery}
+          key={searchQuery}
+          loading={loading}
+          onSearch={onSearch}
+          placeholder={t('common.Enter search terms...')}
+        />
+        <ConfigProvider theme={{ components: { Tooltip: { maxWidth: 480 } } }}>
+          <Tooltip
+            title={
+              <TitleAbstractTooltipContent>
+                <TitleAbstractTooltipHeader>
+                  {t('manuscriptsTable.searchTipsHeader')}
+                </TitleAbstractTooltipHeader>
+                <SearchTipsList>
+                  {(
+                    t('manuscriptsTable.searchTips', {
+                      returnObjects: true,
+                    }) as string[]
+                  ).map(tip => (
+                    <li key={tip}>{tip}</li>
+                  ))}
+                </SearchTipsList>
+              </TitleAbstractTooltipContent>
+            }
+            trigger={['click']}
+          >
+            <SearchInfoButton
+              aria-label={(
+                t('manuscriptsTable.searchTips', {
+                  returnObjects: true,
+                }) as string[]
+              ).join(' ')}
+              type="button"
+            >
+              <Info />
+            </SearchInfoButton>
+          </Tooltip>
+        </ConfigProvider>
+      </SearchBarWrapper>
       <Table
         bordered={false}
         columns={resolvedColumns}
@@ -1238,7 +1363,6 @@ const ManuscriptsTable = ({
         expandable={expandable}
         loading={loading}
         onChange={handleTableChange}
-        onSearch={onSearch}
         pagination={{
           current: page,
           pageSize,
@@ -1257,8 +1381,6 @@ const ManuscriptsTable = ({
           onChange: onPageChange,
         }}
         rowSelection={rowSelection}
-        searchPlaceholder={t('common.Enter search terms...')}
-        showSearch
       />
     </>
   )

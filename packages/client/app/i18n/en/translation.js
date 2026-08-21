@@ -46,8 +46,6 @@ const en = {
       Delete: 'Delete',
       View: 'View',
       'Enter search terms...': 'Enter search terms...',
-      surroundMultiword:
-        'Surround multi-word phrases with quotes "". Exclude a term by prefixing with -. Specify alternate matches using OR. Use * as wildcard for word endings. Wrap subexpressions in parentheses ().',
       noOption: 'No option',
       danteRangeCalendar: {
         Presets: 'Presets',
@@ -175,6 +173,15 @@ const en = {
     manuscriptsTable: {
       'No matching manuscripts were found':
         'No matching manuscripts were found',
+      searchChip: 'Search: {{query}}',
+      searchTipsHeader: 'Tips for using search',
+      searchTips: [
+        'Surround multi-word phrases with quotes "".',
+        'Exclude a term by prefixing with -.',
+        'Specify alternate matches using OR.',
+        'Use * as wildcard for word endings.',
+        'Press / anywhere on the page to jump to search.',
+      ],
       'Manuscript number': 'Manuscript number',
       Created: 'Created',
       Updated: 'Updated',

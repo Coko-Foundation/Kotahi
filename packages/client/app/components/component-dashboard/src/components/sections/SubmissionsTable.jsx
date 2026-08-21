@@ -13,7 +13,7 @@ import {
 import ManuscriptsTable from '../../../../../ui/shared/ManuscriptsTable'
 
 const TableWrapper = styled.div`
-  padding: ${grid(2)};
+  padding: ${grid(3)} ${grid(2)};
 `
 
 const SubmissionsTable = () => {

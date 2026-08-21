@@ -1,3 +1,7 @@
+/**
+ * Collapse regions to make this file more managable to read through.
+ */
+
 import { useMemo, useState, type ReactNode } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -324,6 +328,7 @@ type UseManuscriptsTableResult = {
   page: number
   pageSize: number
   reviewerStatusViewMode: 'compact' | 'detailed'
+  searchQuery: string
   selectable: boolean
   showArchiveActions: boolean
   showDownloadAction: boolean
@@ -499,18 +504,16 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     return key
   }
 
-  const tableColumns: ManuscriptsTableColumn[] = columnKeys
-    // build column definitions as expected by the table ui
-    .map(
-      (key: string): ManuscriptsTableColumn => ({
+  const tableColumns: ManuscriptsTableColumn[] = columnKeys.map(
+    (key: string): ManuscriptsTableColumn => {
+      // common for all columns
+      const column: ManuscriptsTableColumn = {
         title: findColumnTitle(key),
         dataIndex: key,
         key,
         align: columnAlignments[key] ?? 'left',
-      }),
-    )
-    // handle all extra properties needed for special cases
-    .map((column: ManuscriptsTableColumn): ManuscriptsTableColumn => {
+      }
+
       if (column.key === 'actions') {
         return {
           ...column,
@@ -672,36 +675,40 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
       }
 
       return column
-    })
+    },
+  )
   // #endregion table-columns
 
   // #region column-filters
-  // Keyed by the same URL param name as the column key (shared with the legacy table's filter
-  // convention). Date columns store a compact 'yyyyMMdd-yyyyMMdd' range (see manuscriptUtils.js);
-  // every other filterable column stores one or more selected values, comma-joined (the server
-  // matches a row if the field equals ANY of them -- see applyFilters).
-  const columnFilters = {}
+  /**
+   * Date filters are 'yyyyMMdd-yyyyMMdd' range.
+   * All other filters are comma-separated values.
+   */
+  const columnFilters = tableColumns.reduce<Record<string, string[]>>(
+    (accumulator, column) => {
+      if (!column.filterable) return accumulator
 
-  tableColumns
-    .filter(column => column.filterable)
-    .forEach(column => {
       const value = searchParams.get(column.key)
-      if (!value) return
+      if (!value) return accumulator
 
       if (column.dataType === 'date') {
         const [start, end] = value.split('-')
 
-        if (start && end)
-          columnFilters[column.key] = [
+        if (start && end) {
+          accumulator[column.key] = [
             compactDateToIso(start),
             compactDateToIso(end),
           ]
+        }
 
-        return
+        return accumulator
       }
 
-      columnFilters[column.key] = value.split(',')
-    })
+      accumulator[column.key] = value.split(',')
+      return accumulator
+    },
+    {},
+  )
   // #endregion column-filters
 
   // #region row-data
@@ -745,6 +752,8 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     row.id = manuscript.id
     row.parentId = manuscript.parentId
     row.published = manuscript.published
+    row.status = manuscript.status
+    row.searchSnippets = manuscript.searchSnippets
 
     if (variant === 'admin') {
       row.archived = isArchived
@@ -783,7 +792,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const applyQueryParams = (
     queryParams: Record<string, string | number | null>,
   ): void => {
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(window.location.search)
 
     Object.entries(queryParams).forEach(([fieldName, fieldValue]) => {
       if (fieldValue) params.set(fieldName, String(fieldValue))
@@ -909,6 +918,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     page: Number(page),
     pageSize,
     reviewerStatusViewMode,
+    searchQuery: currentSearchQuery ?? '',
     selectable: variant === 'admin',
     showArchiveActions: variant === 'admin',
     showDownloadAction: variant === 'admin',

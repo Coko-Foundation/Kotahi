@@ -46,8 +46,6 @@ const esLa = {
       Delete: 'Eliminar',
       View: 'Ver',
       'Enter search terms...': 'Ingrese términos de búsqueda...',
-      surroundMultiword:
-        'Agrupe frases de varias palabras entre comillas "". Excluya un término anteponiendo -. Especifique coincidencias alternativas usando O. Use * como comodín para el final de las palabras. Encierre subexpresiones entre paréntesis ().',
       noOption: 'Sin opción',
       danteRangeCalendar: {
         Presets: 'Preajustes',
@@ -175,6 +173,15 @@ const esLa = {
     manuscriptsTable: {
       'No matching manuscripts were found':
         'No se encontraron manuscritos coincidentes',
+      searchChip: 'Búsqueda: {{query}}',
+      searchTipsHeader: 'Consejos para usar la búsqueda',
+      searchTips: [
+        'Agrupe frases de varias palabras entre comillas "".',
+        'Excluya un término anteponiendo -.',
+        'Especifique coincidencias alternativas usando O.',
+        'Use * como comodín para el final de las palabras.',
+        'Presione / en cualquier parte de la página para ir a la búsqueda.',
+      ],
       'Manuscript number': 'Número de Manuscrito',
       Created: 'Creado',
       Updated: 'Actualizado',
