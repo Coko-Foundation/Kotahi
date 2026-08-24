@@ -208,6 +208,8 @@ const esLa = {
       selectedCount: '{{count}} seleccionados',
       confirmArchive: '¿Archivar {{count}} manuscritos?',
       confirmUnarchive: '¿Desarchivar {{count}} manuscritos?',
+      confirmReviewAccept: '¿Aceptar esta invitación de revisión?',
+      confirmReviewReject: '¿Rechazar esta invitación de revisión?',
       detailedView: 'Vista detallada',
       reviewAccept: 'Aceptar',
       reviewReject: 'Rechazar',

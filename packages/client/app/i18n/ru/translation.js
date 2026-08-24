@@ -208,6 +208,8 @@ const ru = {
       selectedCount: 'Выбрано: {{count}}',
       confirmArchive: 'Архивировать {{count}} рукописей?',
       confirmUnarchive: 'Разархивировать {{count}} рукописей?',
+      confirmReviewAccept: 'Принять приглашение на рецензирование?',
+      confirmReviewReject: 'Отклонить приглашение на рецензирование?',
       detailedView: 'Подробный вид',
       pagination_few: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       pagination_many: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,

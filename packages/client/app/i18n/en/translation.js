@@ -208,6 +208,8 @@ const en = {
       selectedCount: '{{count}} selected',
       confirmArchive: 'Archive {{count}} manuscripts?',
       confirmUnarchive: 'Unarchive {{count}} manuscripts?',
+      confirmReviewAccept: 'Accept this review invitation?',
+      confirmReviewReject: 'Decline this review invitation?',
       detailedView: 'Detailed view',
       reviewAccept: 'Accept',
       reviewReject: 'Decline',

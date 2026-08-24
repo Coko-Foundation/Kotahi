@@ -973,7 +973,8 @@ const manuscriptsUserHasCurrentRoleIn = async (
             t.members.some(
               member =>
                 member.userId === userId &&
-                (!reviewerStatus || member.status === reviewerStatus),
+                (!reviewerStatus ||
+                  reviewerStatus.split(',').includes(member.status)),
             )
           )
             rolesFound.add(t.role)

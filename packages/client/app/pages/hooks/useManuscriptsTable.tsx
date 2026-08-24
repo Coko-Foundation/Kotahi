@@ -3,10 +3,11 @@
  */
 
 import { useMemo, useState, type ReactNode } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useLazyQuery } from '@apollo/client/react'
 import styled from 'styled-components'
+import { grid, th, Modal } from '@coko/client'
 import get from 'lodash/get'
 import mapValues from 'lodash/mapValues'
 
@@ -19,6 +20,8 @@ import {
   ARCHIVE_MANUSCRIPTS,
   UNARCHIVE_MANUSCRIPTS,
   UPDATE_MANUSCRIPT,
+  REVIEWER_RESPONSE,
+  UPDATE_REVIEWER_STATUS,
 } from '../../queries'
 
 import Link from '../../ui/shared/Link'
@@ -45,6 +48,18 @@ const LinkList = styled.div`
   align-items: flex-start;
   display: flex;
   flex-direction: column;
+`
+
+const ActionRow = styled.div`
+  align-items: center;
+  display: flex;
+
+  > div {
+    border-right: 2px solid ${th('colorPrimary')};
+    padding-right: ${grid(2)};
+    margin-right: ${grid(2)};
+    height: ${grid(6)};
+  }
 `
 
 type Variant = 'submitter' | 'editor' | 'reviewer' | 'admin'
@@ -327,6 +342,7 @@ type UseManuscriptsTableResult = {
   onViewingArchivedChange: (viewingArchived: boolean) => void
   page: number
   pageSize: number
+  reviewerModalContextHolder: ReactNode
   reviewerStatusViewMode: 'compact' | 'detailed'
   searchQuery: string
   selectable: boolean
@@ -344,7 +360,9 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const { t } = useTranslation()
   const { groupName } = useParams()
   const currentUser = useCurrentUser()
+  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
+  const [reviewerModal, reviewerModalContextHolder] = Modal.useModal()
 
   const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
     'compact' | 'detailed'
@@ -443,6 +461,8 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const [archiveManuscripts] = useMutation(ARCHIVE_MANUSCRIPTS)
   const [unarchiveManuscripts] = useMutation(UNARCHIVE_MANUSCRIPTS)
   const [getManuscriptsData] = useLazyQuery(GET_MANUSCRIPTS_DATA)
+  const [reviewerRespond] = useMutation(REVIEWER_RESPONSE)
+  const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS)
 
   const currentData: any = data ?? previousData
   const loading = apolloLoading && !currentData
@@ -489,8 +509,15 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
         .map((columnName: string) => columnName.trim())
         .filter(Boolean)
 
+  const baseColumnKeys =
+    configColumns.length > 0 ? configColumns : defaultColumnKeys
+
   const columnKeys = [
-    ...(configColumns.length > 0 ? configColumns : defaultColumnKeys),
+    ...baseColumnKeys,
+    ...(variant === 'reviewer' &&
+    !baseColumnKeys.includes('reviewerStatusBadge')
+      ? ['reviewerStatusBadge']
+      : []),
     'actions',
   ]
 
@@ -561,7 +588,95 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
               )
             }
 
-            return null // TODO: reviewer actions, once that table is migrated
+            if (variant === 'reviewer') {
+              const { id, parentId, reviewerStatusBadge, reviewerTeamId } =
+                record
+
+              const reviewLinkText: Record<string, string> = {
+                completed: t('common.View'),
+                accepted: t('manuscriptsTable.reviewDo'),
+                inProgress: t('manuscriptsTable.reviewContinue'),
+                closed: t('common.View'),
+              }
+
+              if (
+                ['accepted', 'completed', 'inProgress', 'closed'].includes(
+                  reviewerStatusBadge,
+                )
+              ) {
+                const reviewLink = `/${groupName}/versions/${parentId || id}/review`
+
+                return (
+                  <Link
+                    onClick={async (event): Promise<void> => {
+                      event.preventDefault()
+
+                      if (reviewerStatusBadge === 'accepted') {
+                        await updateReviewerStatus({
+                          variables: { manuscriptId: id, status: 'inProgress' },
+                        })
+                      }
+
+                      navigate(reviewLink)
+                    }}
+                    to={reviewLink}
+                  >
+                    {reviewLinkText[reviewerStatusBadge]}
+                  </Link>
+                )
+              }
+
+              if (reviewerStatusBadge === 'invited') {
+                const respond = (action: 'accepted' | 'rejected'): void => {
+                  reviewerModal.confirm({
+                    content: t(
+                      action === 'accepted'
+                        ? 'manuscriptsTable.confirmReviewAccept'
+                        : 'manuscriptsTable.confirmReviewReject',
+                    ),
+                    okText: t('common.OK'),
+                    cancelText: t('common.Cancel'),
+                    onOk: () => {
+                      reviewerRespond({
+                        variables: {
+                          currentUserId: currentUser.id,
+                          action,
+                          teamId: reviewerTeamId,
+                        },
+                      })
+                    },
+                  })
+                }
+
+                return (
+                  <ActionRow>
+                    <Link
+                      onClick={(event): void => {
+                        event.preventDefault()
+                        respond('accepted')
+                      }}
+                      to="#"
+                    >
+                      {t('manuscriptsTable.reviewAccept')}
+                    </Link>
+                    <div></div>
+                    <Link
+                      onClick={(event): void => {
+                        event.preventDefault()
+                        respond('rejected')
+                      }}
+                      to="#"
+                    >
+                      {t('manuscriptsTable.reviewReject')}
+                    </Link>
+                  </ActionRow>
+                )
+              }
+
+              return null
+            }
+
+            return null
           },
         }
       }
@@ -778,6 +893,13 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
     if (variant === 'reviewer') {
       row.reviewerStatusBadge = findReviewerStatus(manuscript, currentUser.id)
+      row.reviewerTeamId = manuscript.teams?.find(
+        (team: Record<string, any>) =>
+          ['reviewer', 'collaborativeReviewer'].includes(team.role) &&
+          team.members?.some(
+            (member: Record<string, any>) => member.user.id === currentUser.id,
+          ),
+      )?.id
     }
 
     if (variant === 'editor') {
@@ -917,6 +1039,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     onViewingArchivedChange: handleViewingArchivedChange,
     page: Number(page),
     pageSize,
+    reviewerModalContextHolder,
     reviewerStatusViewMode,
     searchQuery: currentSearchQuery ?? '',
     selectable: variant === 'admin',

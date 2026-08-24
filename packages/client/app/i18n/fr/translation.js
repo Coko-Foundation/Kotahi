@@ -208,6 +208,8 @@ const fr = {
       selectedCount: '{{count}} sélectionné(s)',
       confirmArchive: 'Archiver {{count}} manuscrits ?',
       confirmUnarchive: 'Désarchiver {{count}} manuscrits ?',
+      confirmReviewAccept: 'Accepter cette invitation à évaluer ?',
+      confirmReviewReject: 'Refuser cette invitation à évaluer ?',
       detailedView: 'Vue détaillée',
       reviewAccept: 'Accepter',
       reviewReject: 'Rejeter',

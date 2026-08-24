@@ -170,6 +170,7 @@ type ManuscriptsTableProps = {
   showViewArchivedToggle?: boolean
   viewingArchived?: boolean
   onViewingArchivedChange?: (viewingArchived: boolean) => void
+  reviewerModalContextHolder?: ReactNode
 }
 
 const renderDate = (value: any): ReactNode => {
@@ -1061,6 +1062,7 @@ const ManuscriptsTable = ({
   showViewArchivedToggle = false,
   viewingArchived = false,
   onViewingArchivedChange,
+  reviewerModalContextHolder,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
   const [modal, modalContextHolder] = Modal.useModal()
@@ -1247,6 +1249,7 @@ const ManuscriptsTable = ({
   return (
     <>
       {modalContextHolder}
+      {reviewerModalContextHolder}
       {showSelectionActions && (
         <SelectionActionsWrapper>
           {selectable && (showArchiveActions || showDownloadAction) && (
