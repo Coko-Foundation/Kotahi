@@ -12,6 +12,7 @@
     "node": ">=24.0.0"
   },
   "scripts": {
+    "analyze": "NODE_ENV=development yarn coko-client-build && rm -rf ./_build",
     "typecheck": "node_modules/.bin/tsc --noEmit -p tsconfig.json"
   },
   "resolutions": {
@@ -27,7 +28,7 @@
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
     "@codemirror/lang-json": "^6.0.1",
-    "@coko/client": "^2.5.0",
+    "@coko/client": "^2.6.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",

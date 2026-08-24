@@ -55,3 +55,4 @@ packages/server/scripts/local
 !**/.yarn/versions
 
 .claude
+stats.html
