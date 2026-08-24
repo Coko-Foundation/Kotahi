@@ -68,6 +68,7 @@ type VariantConfig = {
   roles: string[]
   configColumnsPath: string
   defaultColumnKeys: string[]
+  forcedColumnKeys: string[]
 }
 
 const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
@@ -81,6 +82,7 @@ const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
       'created',
       'updated',
     ],
+    forcedColumnKeys: [],
   },
   reviewer: {
     roles: [
@@ -97,6 +99,7 @@ const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
     ],
     configColumnsPath: 'dashboard.tableColumns',
     defaultColumnKeys: ['shortId', 'submission.$title', 'reviewerStatusBadge'],
+    forcedColumnKeys: ['reviewerStatusBadge'],
   },
   editor: {
     roles: ['seniorEditor', 'handlingEditor', 'editor'],
@@ -109,6 +112,7 @@ const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
       'statusCounts',
       'lastUpdated',
     ],
+    forcedColumnKeys: ['statusCounts', 'lastUpdated'],
   },
   admin: {
     roles: [],
@@ -122,6 +126,7 @@ const VARIANT_CONFIG: Record<Variant, VariantConfig> = {
       'submission.$customStatus',
       'author',
     ],
+    forcedColumnKeys: [],
   },
 }
 
@@ -130,7 +135,6 @@ const columnAlignments: Record<string, 'left' | 'center' | 'right'> = {
   reviewerStatusBadge: 'center',
   shortId: 'center',
   status: 'center',
-  statusCounts: 'center',
   'submission.$doi': 'center',
   'submission.adaState': 'center',
 }
@@ -311,6 +315,22 @@ const reviewerStatusEntriesFor = (
   ]
 }
 
+const lastReviewerUpdateFor = (
+  manuscript: Record<string, any>,
+): string | undefined => {
+  const updatedTimes = (
+    (manuscript.teams ?? []).find(
+      (team: Record<string, any>) => team.role === 'reviewer',
+    )?.members ?? []
+  ).map((member: Record<string, any>) => member.updated)
+
+  if (updatedTimes.length === 0) return undefined
+
+  return updatedTimes.reduce((max: string, current: string) =>
+    new Date(current) > new Date(max) ? current : max,
+  )
+}
+
 /**
  * Translate the table's 'yyyy-MM-dd' format to the server's date-range filter
  * format 'yyyyMMdd'. And vice versa.
@@ -369,7 +389,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   >(readReviewerStatusViewMode)
 
   // #region definitions
-  const { roles, configColumnsPath, defaultColumnKeys } =
+  const { roles, configColumnsPath, defaultColumnKeys, forcedColumnKeys } =
     VARIANT_CONFIG[variant]
   const searchInAllVersions = variant === 'reviewer'
   const authorProofingEnabled = config.controlPanel?.authorProofingEnabled
@@ -514,10 +534,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
   const columnKeys = [
     ...baseColumnKeys,
-    ...(variant === 'reviewer' &&
-    !baseColumnKeys.includes('reviewerStatusBadge')
-      ? ['reviewerStatusBadge']
-      : []),
+    ...forcedColumnKeys.filter(key => !baseColumnKeys.includes(key)),
     'actions',
   ]
 
@@ -692,6 +709,10 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
         return { ...column, dataType: 'date', sortable: true, filterable: true }
       }
 
+      if (column.key === 'lastUpdated') {
+        return { ...column, dataType: 'date' }
+      }
+
       if (
         column.key === 'submission.$title' ||
         column.key === 'titleAndAbstract'
@@ -717,7 +738,11 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
       }
 
       if (column.key === 'statusCounts') {
-        return { ...column, dataType: 'reviewerStatusSummary' }
+        return {
+          ...column,
+          dataType: 'reviewerStatusSummary',
+          helpTooltip: t('manuscriptsTable.reviewerStatusColumnTip'),
+        }
       }
 
       if (column.key === 'author' || column.key === 'submitter') {
@@ -869,6 +894,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     row.published = manuscript.published
     row.status = manuscript.status
     row.searchSnippets = manuscript.searchSnippets
+    row.manuscriptVersions = (manuscript.manuscriptVersions?.length ?? 0) + 1
 
     if (variant === 'admin') {
       row.archived = isArchived
@@ -904,6 +930,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
     if (variant === 'editor') {
       row.statusCounts = reviewerStatusEntriesFor(manuscript)
+      row.lastUpdated = lastReviewerUpdateFor(manuscript)
     }
 
     return row

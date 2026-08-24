@@ -10,6 +10,7 @@ export {
   FormOutlined as Form,
   HomeOutlined as Home,
   InfoCircleOutlined as Info,
+  QuestionCircleOutlined as Help,
   ReadOutlined as Book,
   TableOutlined as Table,
   UnorderedListOutlined as Tasks,

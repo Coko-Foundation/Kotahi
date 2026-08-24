@@ -211,6 +211,8 @@ const ru = {
       confirmReviewAccept: 'Принять приглашение на рецензирование?',
       confirmReviewReject: 'Отклонить приглашение на рецензирование?',
       detailedView: 'Подробный вид',
+      reviewerStatusColumnTip:
+        'Каждый блок представляет рецензента, а цвет — его статус. Наведите курсор на блок, чтобы увидеть подробности.',
       pagination_few: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       pagination_many: `Показано <strong>{{lastResult}}</strong> из <strong>{{totalCount}}</strong> результатов`,
       reviewAccept: 'Принять',

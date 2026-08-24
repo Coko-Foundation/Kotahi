@@ -211,6 +211,8 @@ const esLa = {
       confirmReviewAccept: '¿Aceptar esta invitación de revisión?',
       confirmReviewReject: '¿Rechazar esta invitación de revisión?',
       detailedView: 'Vista detallada',
+      reviewerStatusColumnTip:
+        'Cada bloque representa a un revisor y el color representa su estado. Pasa el cursor sobre los bloques para ver más detalles.',
       reviewAccept: 'Aceptar',
       reviewReject: 'Rechazar',
       reviewDo: 'Hacer Revisión',

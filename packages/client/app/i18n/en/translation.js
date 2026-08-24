@@ -211,6 +211,8 @@ const en = {
       confirmReviewAccept: 'Accept this review invitation?',
       confirmReviewReject: 'Decline this review invitation?',
       detailedView: 'Detailed view',
+      reviewerStatusColumnTip:
+        'Each block represents a reviewer and the color represents their status. Hover over the blocks for details.',
       reviewAccept: 'Accept',
       reviewReject: 'Decline',
       reviewDo: 'Do Review',

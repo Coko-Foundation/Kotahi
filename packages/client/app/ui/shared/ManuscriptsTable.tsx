@@ -36,6 +36,7 @@ import Avatar from './Avatar'
 import {
   Close,
   Coar,
+  Help,
   Info,
   SemanticScholar,
   Table as TableIcon,
@@ -96,6 +97,11 @@ export type ManuscriptsTableColumn = {
    */
   render?: (value: any, record: any) => ReactNode
   sortable?: boolean
+  /**
+   * Shows a question-mark icon next to the column header, with this text in a
+   * click-to-opne tooltip.
+   */
+  helpTooltip?: string
 }
 
 export type ManuscriptsTableSortState = {
@@ -705,6 +711,29 @@ const ReviewerStatusColumnHeaderWrapper = styled.div`
   gap: ${grid(2)};
 `
 
+const ColumnTitleWithTooltipWrapper = styled.span`
+  align-items: center;
+  display: inline-flex;
+  gap: ${grid(2)};
+`
+
+const ColumnTitleWithTooltip = ({
+  title,
+  tooltip,
+}: {
+  title: ReactNode
+  tooltip: string
+}): ReactNode => (
+  <ColumnTitleWithTooltipWrapper>
+    {title}
+    <Tooltip title={tooltip} trigger={['click']}>
+      <SearchInfoButton aria-label={tooltip} type="button">
+        <Help />
+      </SearchInfoButton>
+    </Tooltip>
+  </ColumnTitleWithTooltipWrapper>
+)
+
 const RadioGroup = styled(RadioGroupInput)`
   /* stylelint-disable declaration-no-important */
   .ant-radio-button-wrapper {
@@ -734,7 +763,7 @@ const ReviewerStatusColumnHeader = ({
   isCompact,
   onChange,
 }: {
-  title: string
+  title: ReactNode
   isCompact: boolean
   onChange: (isCompact: boolean) => void
 }): ReactNode => {
@@ -742,7 +771,7 @@ const ReviewerStatusColumnHeader = ({
 
   return (
     <ReviewerStatusColumnHeaderWrapper>
-      <span>{title}</span>
+      {title}
       <RadioGroup
         buttonStyle="solid"
         onChange={(value: string): void => onChange(value === 'compact')}
@@ -868,6 +897,18 @@ const resolveColumn = (
     }
   }
 
+  if (column.helpTooltip) {
+    resolved = {
+      ...resolved,
+      title: (
+        <ColumnTitleWithTooltip
+          title={resolved.title}
+          tooltip={column.helpTooltip}
+        />
+      ),
+    }
+  }
+
   if (column.dataType === 'reviewerStatusSummary') {
     resolved = {
       ...resolved,
@@ -881,7 +922,7 @@ const resolveColumn = (
               isCompact ? 'compact' : 'detailed',
             )
           }
-          title={column.title}
+          title={resolved.title}
         />
       ),
     }
