@@ -1425,6 +1425,7 @@ const ManuscriptsTable = ({
           onChange: onPageChange,
         }}
         rowSelection={rowSelection}
+        scroll={{ x: resolvedColumns.length * 150 }}
       />
     </>
   )
