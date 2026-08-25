@@ -5497,7 +5497,6 @@ __metadata:
     react-dropzone: "npm:10.2.2"
     react-feather: "npm:^2.0.10"
     react-folder-tree: "npm:^5.1.1"
-    react-google-charts: "npm:^4.0.0"
     react-i18next: "npm:^13.0.3"
     react-image: "npm:4.0.3"
     react-mentions: "npm:3.3.2"
@@ -7144,16 +7143,6 @@ __metadata:
     react: ^16.8.0 || ^17
     react-dom: ^16.8.0 || ^17
   checksum: 10c0/b7bb72a238e62c5aa5fa422d8bf8ddb41fe2e70ed2725de9eef97ba39021c3e50d69426593a29fcd95349f4e513e5bfb7e7348101d875c85e39cd9915efc704b
-  languageName: node
-  linkType: hard
-
-"react-google-charts@npm:^4.0.0":
-  version: 4.0.1
-  resolution: "react-google-charts@npm:4.0.1"
-  peerDependencies:
-    react: ">=16.3.0"
-    react-dom: ">=16.3.0"
-  checksum: 10c0/9869ea6006be87ed2bc14a886628f0a611e56d76e62783606b2c0dec0eabbb06954019c05a5e4e507ede9db14d0a52733623bbd4b5f5330c7fb7c63e6f1ca8ee
   languageName: node
   linkType: hard
 
