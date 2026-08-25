@@ -19,7 +19,7 @@ const Header = styled(H1)`
   /* stylelint-disable declaration-no-important */
   margin-top: 0;
   margin-bottom: ${grid(6)};
-  padding-bottom: ${grid(2)};
+  padding-bottom: ${grid(1)};
   border-bottom: 2px solid ${th('colorPrimary')};
 
   color: ${th('colorPrimary')} !important;

@@ -985,6 +985,11 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
           return accumulator
         }
 
+        if (property === 'created') {
+          accumulator[property] = manuscript.firstVersionCreated
+          return accumulator
+        }
+
         accumulator[property] = get(manuscript, property)
         return accumulator
       },
