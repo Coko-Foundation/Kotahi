@@ -183,6 +183,7 @@ const esLa = {
         'Presione / en cualquier parte de la página para ir a la búsqueda.',
       ],
       'Manuscript number': 'Número de Manuscrito',
+      'No.': 'N.º',
       Created: 'Creado',
       Updated: 'Actualizado',
       lastReviewerStatusUpdate: 'Actualización del estado del último revisor',

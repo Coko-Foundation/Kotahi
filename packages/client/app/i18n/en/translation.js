@@ -183,6 +183,7 @@ const en = {
         'Press / anywhere on the page to jump to search.',
       ],
       'Manuscript number': 'Manuscript number',
+      'No.': 'No.',
       Created: 'Created',
       Updated: 'Updated',
       lastReviewerStatusUpdate: 'Last Reviewer Status Update',

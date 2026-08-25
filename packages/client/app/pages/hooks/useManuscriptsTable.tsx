@@ -410,9 +410,8 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     editor: t('manuscriptsTable.Editor'),
     lastUpdated: t('manuscriptsTable.lastReviewerStatusUpdate'),
     manuscriptVersions: t('manuscriptsTable.Version'),
-    reviewerLinks: 'Action', // not in translation!
     reviewerStatusBadge: t('manuscriptsTable.Your Status'),
-    shortId: 'No.', // not in translation!
+    shortId: t('manuscriptsTable.No.'),
     status: t('manuscriptsTable.Status'),
     statusCounts: t('manuscriptsTable.Reviewer Status'),
     submitter: t('manuscriptsTable.Author'), // alias of 'author'

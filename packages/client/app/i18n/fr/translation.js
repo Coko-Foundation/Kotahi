@@ -183,6 +183,7 @@ const fr = {
         "Appuyez sur / n'importe où sur la page pour accéder à la recherche.",
       ],
       'Manuscript number': 'Numéro de manuscrit',
+      'No.': 'N°',
       Created: 'Créé',
       Updated: 'Mis à jour',
       lastReviewerStatusUpdate: 'Dernière mise à jour du statut du réviseur',
