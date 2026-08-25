@@ -332,6 +332,18 @@ const lastReviewerUpdateFor = (
   )
 }
 
+const editorNamesFor = (manuscript: Record<string, any>): string =>
+  [
+    ...new Set(
+      (manuscript.teams ?? [])
+        .filter((team: Record<string, any>) =>
+          VARIANT_CONFIG.editor.roles.includes(team.role),
+        )
+        .map((team: Record<string, any>) => team.members?.[0]?.user?.username)
+        .filter(Boolean),
+    ),
+  ].join(', ')
+
 /**
  * Translate the table's 'yyyy-MM-dd' format to the server's date-range filter
  * format 'yyyyMMdd'. And vice versa.
@@ -954,6 +966,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     row.status = manuscript.status
     row.searchSnippets = manuscript.searchSnippets
     row.manuscriptVersions = (manuscript.manuscriptVersions?.length ?? 0) + 1
+    row.editor = editorNamesFor(manuscript)
 
     if (variant === 'admin') {
       row.archived = isArchived
