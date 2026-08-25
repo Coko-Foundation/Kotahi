@@ -210,6 +210,7 @@ const esLa = {
       confirmUnarchive: '¿Desarchivar {{count}} manuscritos?',
       confirmReviewAccept: '¿Aceptar esta invitación de revisión?',
       confirmReviewReject: '¿Rechazar esta invitación de revisión?',
+      confirmPublish: '¿Publicar este manuscrito?',
       detailedView: 'Vista detallada',
       reviewerStatusColumnTip:
         'Cada bloque representa a un revisor y el color representa su estado. Pasa el cursor sobre los bloques para ver más detalles.',

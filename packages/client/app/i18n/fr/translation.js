@@ -210,6 +210,7 @@ const fr = {
       confirmUnarchive: 'Désarchiver {{count}} manuscrits ?',
       confirmReviewAccept: 'Accepter cette invitation à évaluer ?',
       confirmReviewReject: 'Refuser cette invitation à évaluer ?',
+      confirmPublish: 'Publier ce manuscrit ?',
       detailedView: 'Vue détaillée',
       reviewerStatusColumnTip:
         'Chaque bloc représente un évaluateur et la couleur représente son statut. Survolez les blocs pour plus de détails.',

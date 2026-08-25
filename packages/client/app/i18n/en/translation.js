@@ -210,6 +210,7 @@ const en = {
       confirmUnarchive: 'Unarchive {{count}} manuscripts?',
       confirmReviewAccept: 'Accept this review invitation?',
       confirmReviewReject: 'Decline this review invitation?',
+      confirmPublish: 'Publish this manuscript?',
       detailedView: 'Detailed view',
       reviewerStatusColumnTip:
         'Each block represents a reviewer and the color represents their status. Hover over the blocks for details.',

@@ -5,7 +5,12 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useQuery, useMutation, useLazyQuery } from '@apollo/client/react'
+import {
+  useQuery,
+  useMutation,
+  useLazyQuery,
+  useApolloClient,
+} from '@apollo/client/react'
 import styled from 'styled-components'
 import { grid, th, Modal } from '@coko/client'
 import get from 'lodash/get'
@@ -22,6 +27,7 @@ import {
   UPDATE_MANUSCRIPT,
   REVIEWER_RESPONSE,
   UPDATE_REVIEWER_STATUS,
+  PUBLISH_MANUSCRIPT,
 } from '../../queries'
 
 import Link from '../../ui/shared/Link'
@@ -34,6 +40,10 @@ import type {
   ManuscriptsTableColumn,
   ManuscriptsTableSortState,
 } from '../../ui/shared/ManuscriptsTable'
+import { articleStatuses } from '../../globals'
+import { validateManuscriptSubmission } from '../../shared/manuscriptUtils'
+import { validateDoi, validateSuffix } from '../../shared/commsUtils'
+import PublishingResponse from '../../components/component-review/src/components/publishing/PublishingResponse'
 
 // #region constants
 const URI_PARAMS = {
@@ -345,6 +355,7 @@ const compactDateToIso = (compactDate: string): string =>
 // #endregion helpers
 
 type UseManuscriptsTableResult = {
+  actionModalContextHolder: ReactNode
   columnFilters: Record<string, string[]>
   columns: ManuscriptsTableColumn[]
   dataSource: Record<string, any>[]
@@ -362,7 +373,6 @@ type UseManuscriptsTableResult = {
   onViewingArchivedChange: (viewingArchived: boolean) => void
   page: number
   pageSize: number
-  reviewerModalContextHolder: ReactNode
   reviewerStatusViewMode: 'compact' | 'detailed'
   searchQuery: string
   selectable: boolean
@@ -382,7 +392,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const currentUser = useCurrentUser()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const [reviewerModal, reviewerModalContextHolder] = Modal.useModal()
+  const [actionModal, actionModalContextHolder] = Modal.useModal()
 
   const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
     'compact' | 'detailed'
@@ -483,6 +493,8 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const [getManuscriptsData] = useLazyQuery(GET_MANUSCRIPTS_DATA)
   const [reviewerRespond] = useMutation(REVIEWER_RESPONSE)
   const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS)
+  const [publishManuscript] = useMutation(PUBLISH_MANUSCRIPT)
+  const apolloClient = useApolloClient()
 
   const currentData: any = data ?? previousData
   const loading = apolloLoading && !currentData
@@ -645,7 +657,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
               if (reviewerStatusBadge === 'invited') {
                 const respond = (action: 'accepted' | 'rejected'): void => {
-                  reviewerModal.confirm({
+                  actionModal.confirm({
                     content: t(
                       action === 'accepted'
                         ? 'manuscriptsTable.confirmReviewAccept'
@@ -691,6 +703,63 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
               }
 
               return null
+            }
+
+            if (variant === 'admin') {
+              const { id, status, submission, archived: rowArchived } = record
+              const instanceName = config?.instanceName
+
+              const showEvaluation =
+                !rowArchived &&
+                ['preprint1', 'preprint2'].includes(instanceName) &&
+                Object.values(articleStatuses).includes(status)
+
+              const showControl =
+                !rowArchived && ['journal', 'prc'].includes(instanceName)
+
+              const showPublish =
+                !rowArchived &&
+                ['preprint1', 'preprint2'].includes(instanceName) &&
+                status === articleStatuses.evaluated
+
+              return (
+                <LinkList>
+                  {showEvaluation && (
+                    <Link to={`/${groupName}/versions/${id}/evaluation`}>
+                      {t('manuscriptsTable.actions.Evaluation')}
+                    </Link>
+                  )}
+                  {showControl && (
+                    <Link to={`/${groupName}/versions/${id}/decision`}>
+                      {t('manuscriptsTable.actions.Control')}
+                    </Link>
+                  )}
+                  <Link to={`/${groupName}/versions/${id}/manuscript`}>
+                    {t('manuscriptsTable.actions.View')}
+                  </Link>
+                  {!rowArchived && (
+                    <Link to={`/${groupName}/versions/${id}/production`}>
+                      {t('manuscriptsTable.actions.Production')}
+                    </Link>
+                  )}
+                  {showPublish && (
+                    <Link
+                      onClick={(event): void => {
+                        event.preventDefault()
+                        actionModal.confirm({
+                          content: t('manuscriptsTable.confirmPublish'),
+                          okText: t('common.OK'),
+                          cancelText: t('common.Cancel'),
+                          onOk: () => handlePublish(id, submission),
+                        })
+                      }}
+                      to="#"
+                    >
+                      {t('manuscriptsTable.actions.Publish')}
+                    </Link>
+                  )}
+                </LinkList>
+              )
             }
 
             return null
@@ -898,6 +967,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
     if (variant === 'admin') {
       row.archived = isArchived
+      row.submission = manuscript.submission
     }
 
     if (variant === 'submitter') {
@@ -1016,6 +1086,38 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     refetch()
   }
 
+  const handlePublish = async (
+    manuscriptId: string,
+    submission: Record<string, any>,
+  ): Promise<void> => {
+    const invalidFields = await validateManuscriptSubmission(
+      submission,
+      submissionForm?.structure,
+      validateDoi(apolloClient),
+      validateSuffix(apolloClient, config.groupId),
+    )
+
+    if (invalidFields.filter(Boolean).length > 0) {
+      actionModal.error({ content: t('manuscriptsPage.manuscriptInvalid') })
+      return
+    }
+
+    const { data: publishData } = await publishManuscript({
+      variables: { id: manuscriptId },
+    })
+
+    const response = publishData?.publishManuscript
+
+    if (response?.steps?.some((step: Record<string, any>) => !step.succeeded)) {
+      actionModal.error({
+        content: <PublishingResponse response={response} />,
+        title: t('manuscriptsTable.actions.Publishing error'),
+      })
+    }
+
+    refetch()
+  }
+
   const handleDownloadSelected = async (ids: string[]): Promise<void> => {
     const { data: exportData } = await getManuscriptsData({
       variables: { selectedManuscripts: ids },
@@ -1066,7 +1168,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     onViewingArchivedChange: handleViewingArchivedChange,
     page: Number(page),
     pageSize,
-    reviewerModalContextHolder,
+    actionModalContextHolder,
     reviewerStatusViewMode,
     searchQuery: currentSearchQuery ?? '',
     selectable: variant === 'admin',
