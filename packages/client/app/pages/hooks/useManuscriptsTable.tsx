@@ -2,6 +2,7 @@
  * Collapse regions to make this file more managable to read through.
  */
 
+// #region import
 import { useMemo, useState, type ReactNode } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -43,6 +44,7 @@ import { articleStatuses } from '../../globals'
 import { validateManuscriptSubmission } from '../../shared/manuscriptUtils'
 import { validateDoi, validateSuffix } from '../../shared/commsUtils'
 import PublishingResponse from '../../components/component-review/src/components/publishing/PublishingResponse'
+// #endregion import
 
 // #region constants
 const URI_PARAMS = {

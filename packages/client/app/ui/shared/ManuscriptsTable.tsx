@@ -1,3 +1,11 @@
+/**
+ * Collapse regions to make this file more managable to read through.
+ *
+ * A good starting point to find details for a specific column is to go to the
+ * column-setup region and see what other region that leads you to.
+ */
+
+// #region import
 import {
   type ReactNode,
   type MouseEvent,
@@ -52,145 +60,492 @@ import {
   badgeDefaultColorToken,
 } from './_constants'
 import { convertTimestampToRelativeDateString } from '../../shared/dateUtils'
+// #endregion import
 
+// #region helpers
+const RICH_TEXT_PREFIX_REGEX = /^\s*<p(?: class="paragraph")?>/
+
+const renderPlainOrRichText = (value: any): ReactNode => {
+  if (!value || !RICH_TEXT_PREFIX_REGEX.test(value)) return value || null
+  return (
+    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }} />
+  )
+}
+// #endregion helpers
+
+// #region options
 type ManuscriptsTableColumnOption = {
   value: string
   label?: string
   labelColor?: string
 }
 
-export type ManuscriptsTableColumn = {
-  title: string
-  dataIndex: string
-  key: string
-  align?: 'left' | 'center' | 'right'
-  /**
-   * Opts into one of this component's built-in renderers for a common kind of
-   * value. Ignored if `render` is also supplied.
-   */
-  dataType?:
-    | 'date'
-    | 'status'
-    | 'reviewerStatus'
-    | 'reviewerStatusSummary'
-    | 'badge'
-    | 'options'
-    | 'person'
-    | 'title'
-    | 'richText'
-  options?: ManuscriptsTableColumnOption[]
-  /** Applies to 'options', 'status', 'reviewerStatus' and 'date' datatypes */
-  filterable?: boolean
-  /**
-   * Applies to the 'title' datatype -- shows an info icon that opens a tooltip
-   * with the manuscript's abstract on click.
-   */
-  showAbstract?: boolean
-  /**
-   * Applies to the 'options' datatype, single-value case only.
-   * Renders a select dropdown instead of a static badge.
-   */
-  editable?: boolean
-  /**
-   * Escape hatch for anything else (e.g. an actions column with
-   * business-specific links) -- takes precedence over dataType.
-   */
-  render?: (value: any, record: any) => ReactNode
-  sortable?: boolean
-  /**
-   * Shows a question-mark icon next to the column header, with this text in a
-   * click-to-opne tooltip.
-   */
-  helpTooltip?: string
+const renderSingleOption = (
+  value: string,
+  options: ManuscriptsTableColumnOption[],
+): ReactNode => {
+  const option = options.find(o => o.value === value)
+
+  return (
+    <Badge
+      small
+      style={
+        option?.labelColor ? { backgroundColor: option.labelColor } : undefined
+      }
+    >
+      {option?.label ?? value}
+    </Badge>
+  )
 }
 
-export type ManuscriptsTableSortState = {
-  columnKey: string
-  order: 'ascend' | 'descend'
+const OptionsListWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${grid(1)};
+`
+
+const renderOptions = (
+  value: any,
+  options: ManuscriptsTableColumnOption[] = [],
+): ReactNode => {
+  if (!value) return null
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return null
+
+    return (
+      <OptionsListWrapper>
+        {value.map(v => (
+          <Fragment key={v}>{renderSingleOption(v, options)}</Fragment>
+        ))}
+      </OptionsListWrapper>
+    )
+  }
+
+  return renderSingleOption(value, options)
 }
 
-export type ManuscriptSearchSnippet = {
-  field: string
-  html: string
-}
+const EditableOptionSelect = styled(Select)`
+  .ant-select {
+    padding-block: ${grid(1)};
+  }
+`
 
 /**
- * Other gaps identified against the legacy component-manuscripts-table cell renderers that are
- * NOT candidates for a new dataType (see above), since they aren't a "render this value" concern:
- * - Value derivation: some legacy columns (reviewer's own status, last-reviewer-updated date)
- *   already render fine via existing dataTypes, but need their value computed/aggregated from
- *   nested data (e.g. searching teams for the current user, or taking a max timestamp) before
- *   being handed to a column -- a data problem for the caller to solve, not a rendering gap
- *   here. See ReviewerStatusBadge.jsx, LastReviewerUpdated.jsx.
- * - Role-filtered member list: Editors.jsx lists team members whose role isn't author/reviewer;
- *   generalizable in principle ("names of members matching a role filter") but currently
- *   hardcodes which roles to exclude rather than taking a parameter.
+ * Single-value only - not meant for the array/multi-select case.
  */
+const renderEditableOption = (
+  value: any,
+  record: Record<string, any>,
+  column: ManuscriptsTableColumn,
+  onOptionChange:
+    | ((columnKey: string, id: string, value: string | null) => void)
+    | undefined,
+): ReactNode => {
+  const options = column.options ?? []
+  const id = record.id
 
-type ManuscriptsTableProps = {
-  columns: ManuscriptsTableColumn[]
-  dataSource: Record<string, any>[]
-  page: number
-  pageSize: number
-  totalCount: number
-  onPageChange: (page: number) => void
-  onSearch: (value: string) => void
-  searchQuery?: string
-  bordered?: boolean
-  loading?: boolean
-  /**
-   * Currently selected filter values, keyed by column key (controlled), e.g.
-   * { status: ['accepted', 'rejected'] }. Only relevant for columns with
-   * `filterable: true`.
-   */
-  columnFilters?: Record<string, string[]>
-  onFiltersChange?: (filters: Record<string, string[]>) => void
-  /**
-   * Currently applied sort (controlled), for a single `sortable` column.
-   * `null`/`undefined` means unsorted.
-   */
-  sortState?: ManuscriptsTableSortState | null
-  onSortChange?: (sortState: ManuscriptsTableSortState | null) => void
-  /**
-   * Compact/detailed view mode for 'reviewerStatusSummary' columns.
-   * Defaults to 'detailed'.
-   */
-  reviewerStatusViewMode?: 'compact' | 'detailed'
-  onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
-  /**
-   * Fired when a value is picked or cleared in an `editable` 'options' column. `id` is the
-   * changed manuscript's `record.id`; `value` is `null` when cleared.
-   */
-  onOptionChange?: (columnKey: string, id: string, value: string | null) => void
-  /**
-   * Enables row selection checkboxes.
-   */
-  selectable?: boolean
-  /** Only visible is selectable is true. */
-  showArchiveActions?: boolean
-  /** Only visible is selectable is true. */
-  showDownloadAction?: boolean
-  onArchiveSelected?: (ids: string[]) => void
-  onUnarchiveSelected?: (ids: string[]) => void
-  onDownloadSelected?: (ids: string[]) => void
-  showViewArchivedToggle?: boolean
-  viewingArchived?: boolean
-  onViewingArchivedChange?: (viewingArchived: boolean) => void
-  actionModalContextHolder?: ReactNode
+  return (
+    <EditableOptionSelect
+      allowClear
+      labelRender={({ value: selectedValue }): ReactNode =>
+        renderSingleOption(selectedValue as string, options)
+      }
+      onChange={(newValue: string | undefined): void =>
+        onOptionChange?.(column.key, id, newValue ?? null)
+      }
+      onClick={(event: MouseEvent): void => event.stopPropagation()}
+      optionRender={option =>
+        renderSingleOption(option.value as string, options)
+      }
+      options={options.map(option => ({
+        value: option.value,
+        label: option.label ?? option.value,
+      }))}
+      size="small"
+      value={value || undefined}
+    />
+  )
+}
+// #endregion options
+
+// #region person
+const PersonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(2)};
+`
+
+const PersonInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const PersonIdentifier = styled.span`
+  color: ${th('colorTextPlaceholder')};
+  font-size: ${th('fontSizeBaseSmaller')};
+`
+
+const renderPerson = (value: any): ReactNode => {
+  if (!value) return null
+
+  return (
+    <PersonWrapper>
+      <Avatar size={10} src={value.profilePicture} />
+      <PersonInfo>
+        <span>{value.displayName}</span>
+        {value.orcid && (
+          <PersonIdentifier>{`ORCID: ${value.orcid}`}</PersonIdentifier>
+        )}
+      </PersonInfo>
+    </PersonWrapper>
+  )
+}
+// #endregion person
+
+// #region title
+const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: ${grid(1)};
+`
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${grid(3)};
+`
+
+const CoarIcon = styled(Coar)`
+  margin-top: -2px;
+`
+
+const TitleAbstractButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+`
+
+const TitleAbstractTooltipContent = styled.div`
+  padding: ${grid(4)};
+`
+
+const TitleAbstractTooltipHeader = styled.div`
+  border-bottom: 1px solid ${th('colorTextReverse')};
+  margin-bottom: ${grid(1)};
+`
+
+const ABSTRACT_WORD_LIMIT = 60
+
+const truncateAbstract = (abstract: string): string => {
+  const words = abstract.trim().split(/\s+/)
+  if (words.length <= ABSTRACT_WORD_LIMIT) return abstract
+  return `${words.slice(0, ABSTRACT_WORD_LIMIT).join(' ')}...`
+}
+
+const stripHtml = (html: string): string =>
+  DOMPurify.sanitize(html, { ALLOWED_TAGS: [] })
+
+const TITLE_CHARACTER_LIMIT = 60
+
+const truncateTitle = (title: string): string => {
+  const plainTitle = stripHtml(title)
+  if (plainTitle.length <= TITLE_CHARACTER_LIMIT) return plainTitle
+  return `${plainTitle.slice(0, TITLE_CHARACTER_LIMIT).trimEnd()}...`
+}
+
+type TitleCellValue = {
+  title: string
+  hasOverdueTasks?: boolean
+  importSource?: 'coar' | 'semanticScholar'
+  abstract?: string
+  /** When set, the title text links out to this URL */
+  link?: string
+}
+
+const TitleCell = ({
+  value,
+  showAbstract,
+}: {
+  value: TitleCellValue
+  showAbstract?: boolean
+}): ReactNode => {
+  const { t } = useTranslation()
+
+  if (!value) return null
+
+  return (
+    <TitleWrapper>
+      <TitleRow>
+        {value.importSource === 'coar' && <CoarIcon aria-hidden />}
+        {value.importSource === 'semanticScholar' && (
+          <SemanticScholar aria-hidden />
+        )}
+
+        <span>
+          {value.link ? (
+            <a href={value.link} rel="noreferrer" target="_blank">
+              {renderPlainOrRichText(truncateTitle(value.title))}
+            </a>
+          ) : (
+            renderPlainOrRichText(truncateTitle(value.title))
+          )}
+        </span>
+
+        {showAbstract && (
+          <ConfigProvider
+            theme={{ components: { Tooltip: { maxWidth: 600 } } }}
+          >
+            <Tooltip
+              title={
+                <TitleAbstractTooltipContent>
+                  <TitleAbstractTooltipHeader>
+                    {t('manuscriptsTable.abstractHeader')}
+                  </TitleAbstractTooltipHeader>
+                  {value.abstract
+                    ? truncateAbstract(stripHtml(value.abstract))
+                    : t('manuscriptsTable.noAbstract')}
+                </TitleAbstractTooltipContent>
+              }
+              trigger={['click']}
+            >
+              <TitleAbstractButton
+                aria-label={t('manuscriptsTable.showAbstract')}
+                type="button"
+              >
+                <Info />
+              </TitleAbstractButton>
+            </Tooltip>
+          </ConfigProvider>
+        )}
+      </TitleRow>
+
+      {value.hasOverdueTasks && (
+        <Badge small variant="error">
+          {t('manuscriptsTable.overdueTasks')}
+        </Badge>
+      )}
+    </TitleWrapper>
+  )
+}
+// #endregion title
+
+// #region dates
+const { RangePicker } = DatePicker
+
+const DateRangeFilterWrapper = styled.div`
+  padding: ${grid(2)};
+`
+
+const buildDateRangePresets = (): {
+  label: string
+  value: () => [any, any]
+}[] => [
+  { label: 'Today', value: () => [dayjs(), dayjs()] },
+  {
+    label: 'Yesterday',
+    value: () => [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
+  },
+  { label: 'Past 7 days', value: () => [dayjs().subtract(7, 'day'), dayjs()] },
+  {
+    label: 'Past 30 days',
+    value: () => [dayjs().subtract(30, 'day'), dayjs()],
+  },
+  {
+    label: 'Past 90 days',
+    value: () => [dayjs().subtract(90, 'day'), dayjs()],
+  },
+  { label: 'Past year', value: () => [dayjs().subtract(1, 'year'), dayjs()] },
+]
+
+const DateRangeFilterDropdown = ({
+  selectedKeys,
+  setSelectedKeys,
+  confirm,
+}: FilterDropdownProps): ReactNode => {
+  const [start, end] = selectedKeys as unknown as [string, string] | []
+
+  const handleChange = (
+    _dates: unknown,
+    // antd passes null here (not ['', '']) when the range is cleared via the "x" button
+    dateStrings: [string, string] | null,
+  ): void => {
+    setSelectedKeys(dateStrings?.[0] && dateStrings?.[1] ? dateStrings : [])
+    confirm()
+  }
+
+  return (
+    <DateRangeFilterWrapper>
+      <RangePicker
+        onChange={handleChange}
+        presets={buildDateRangePresets()}
+        value={start && end ? [dayjs(start), dayjs(end)] : null}
+      />
+    </DateRangeFilterWrapper>
+  )
 }
 
 const renderDate = (value: any): ReactNode => {
   if (!value) return null
   return convertTimestampToRelativeDateString(value)
 }
+// #endregion dates
 
-const renderStatus = (value: any, record: Record<string, any>): ReactNode => (
-  <ManuscriptStatus published={record.published} small status={value} />
+// #region search-snippets
+const SnippetsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: ${grid(2)} ${grid(4)};
+  font-size: ${th('fontSizeBaseSmall')};
+`
+
+const renderHighlightedSnippet = (html: string): ReactNode => {
+  // replace postgres <b> tags with <mark>
+  const matchTag = /<b>(.*?)<\/b>/g
+  const parts: ReactNode[] = []
+  let cursor = 0
+  let match = matchTag.exec(html)
+
+  while (match) {
+    if (match.index > cursor) parts.push(html.slice(cursor, match.index))
+    parts.push(<mark>{match[1]}</mark>)
+    cursor = matchTag.lastIndex
+    match = matchTag.exec(html)
+  }
+
+  if (cursor < html.length) parts.push(html.slice(cursor))
+
+  return parts.map((part, index) => <Fragment key={index}>{part}</Fragment>)
+}
+
+type ManuscriptSearchSnippet = {
+  field: string
+  html: string
+}
+
+const SearchSnippets = ({
+  snippets,
+}: {
+  snippets: ManuscriptSearchSnippet[]
+}): ReactNode => (
+  <SnippetsWrapper>
+    {snippets.map(({ field, html }) => (
+      <div key={field}>
+        <strong>{field}:</strong> {renderHighlightedSnippet(html)}
+      </div>
+    ))}
+  </SnippetsWrapper>
 )
 
-const renderReviewerStatus = (value: any): ReactNode => (
-  <ReviewerStatus small status={value} />
+const hasSearchSnippets = (row: Record<string, any>): boolean =>
+  Array.isArray(row.searchSnippets) && row.searchSnippets.length > 0
+// #endregion search-snippets
+
+// #region column-header-help
+const ColumnTitleWithTooltipWrapper = styled.span`
+  align-items: center;
+  display: inline-flex;
+  gap: ${grid(2)};
+`
+
+const ColumnTitleWithTooltip = ({
+  title,
+  tooltip,
+}: {
+  title: ReactNode
+  tooltip: string
+}): ReactNode => (
+  <ColumnTitleWithTooltipWrapper>
+    {title}
+    <Tooltip title={tooltip} trigger={['click']}>
+      <SearchInfoButton aria-label={tooltip} type="button">
+        <Help />
+      </SearchInfoButton>
+    </Tooltip>
+  </ColumnTitleWithTooltipWrapper>
 )
+// #endregion column-header-help
+
+// #region reviewer-grid
+const ReviewerStatusColumnHeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${grid(2)};
+`
+
+const RadioGroup = styled(RadioGroupInput)`
+  display: flex;
+
+  /* stylelint-disable declaration-no-important */
+  .ant-radio-button-wrapper {
+    background-color: ${th('colorPrimary')} !important;
+    color: ${th('colorTextReverse')} !important;
+    border: 1px solid transparent;
+    transition: border 0.2s ease;
+
+    span[role='img'] {
+      margin-top: 3px;
+    }
+
+    &:hover {
+      border: 1px solid ${th('colorTextReverse')};
+    }
+  }
+
+  .ant-radio-button-wrapper-checked {
+    background-color: ${th('colorTextReverse')} !important;
+    color: ${th('colorPrimary')} !important;
+    border-color: ${th('colorTextReverse')} !important;
+  }
+`
+
+const ReviewerStatusColumnHeader = ({
+  title,
+  isCompact,
+  onChange,
+}: {
+  title: ReactNode
+  isCompact: boolean
+  onChange: (isCompact: boolean) => void
+}): ReactNode => {
+  const { t } = useTranslation()
+
+  return (
+    <ReviewerStatusColumnHeaderWrapper>
+      {title}
+      <RadioGroup
+        buttonStyle="solid"
+        onChange={(value: string): void => onChange(value === 'compact')}
+        optionType="button"
+        size="small"
+        value={isCompact ? 'compact' : 'detailed'}
+      >
+        <Tooltip title="Detailed hover view">
+          <Radio.Button
+            aria-label={t('manuscriptsTable.detailedView')}
+            value="detailed"
+          >
+            <TableIcon />
+          </Radio.Button>
+        </Tooltip>
+        <Tooltip title="Compact hover view">
+          <Radio.Button
+            aria-label={t('manuscriptsTable.compactView')}
+            value="compact"
+          >
+            <Tasks />
+          </Radio.Button>
+        </Tooltip>
+      </RadioGroup>
+    </ReviewerStatusColumnHeaderWrapper>
+  )
+}
 
 const ReviewerStatusGridWrapper = styled.div`
   display: inline-flex;
@@ -351,600 +706,9 @@ const ReviewerStatusSummary = ({
     </ConfigProvider>
   )
 }
+// #endregion reviewer-grid
 
-const renderBadge = (value: any): ReactNode => <Badge small>{value}</Badge>
-
-const RICH_TEXT_PREFIX_REGEX = /^\s*<p(?: class="paragraph")?>/
-
-const renderPlainOrRichText = (value: any): ReactNode => {
-  if (!value || !RICH_TEXT_PREFIX_REGEX.test(value)) return value || null
-  return (
-    <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }} />
-  )
-}
-
-const stripHtml = (html: string): string =>
-  DOMPurify.sanitize(html, { ALLOWED_TAGS: [] })
-
-const renderRichText = (value: any): ReactNode => renderPlainOrRichText(value)
-
-const renderSingleOption = (
-  value: string,
-  options: ManuscriptsTableColumnOption[],
-): ReactNode => {
-  const option = options.find(o => o.value === value)
-
-  return (
-    <Badge
-      small
-      style={
-        option?.labelColor ? { backgroundColor: option.labelColor } : undefined
-      }
-    >
-      {option?.label ?? value}
-    </Badge>
-  )
-}
-
-const OptionsListWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: ${grid(1)};
-`
-
-const renderOptions = (
-  value: any,
-  options: ManuscriptsTableColumnOption[] = [],
-): ReactNode => {
-  if (!value) return null
-
-  if (Array.isArray(value)) {
-    if (value.length === 0) return null
-
-    return (
-      <OptionsListWrapper>
-        {value.map(v => (
-          <Fragment key={v}>{renderSingleOption(v, options)}</Fragment>
-        ))}
-      </OptionsListWrapper>
-    )
-  }
-
-  return renderSingleOption(value, options)
-}
-
-const EditableOptionSelect = styled(Select)`
-  .ant-select {
-    padding-block: ${grid(1)};
-  }
-`
-
-/**
- * Single-value only - not meant for the array/multi-select case.
- */
-const renderEditableOption = (
-  value: any,
-  record: Record<string, any>,
-  column: ManuscriptsTableColumn,
-  onOptionChange:
-    | ((columnKey: string, id: string, value: string | null) => void)
-    | undefined,
-): ReactNode => {
-  const options = column.options ?? []
-  const id = record.id
-
-  return (
-    <EditableOptionSelect
-      allowClear
-      labelRender={({ value: selectedValue }): ReactNode =>
-        renderSingleOption(selectedValue as string, options)
-      }
-      onChange={(newValue: string | undefined): void =>
-        onOptionChange?.(column.key, id, newValue ?? null)
-      }
-      onClick={(event: MouseEvent): void => event.stopPropagation()}
-      optionRender={option =>
-        renderSingleOption(option.value as string, options)
-      }
-      options={options.map(option => ({
-        value: option.value,
-        label: option.label ?? option.value,
-      }))}
-      size="small"
-      value={value || undefined}
-    />
-  )
-}
-
-const PersonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${grid(2)};
-`
-
-const PersonInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const PersonIdentifier = styled.span`
-  color: ${th('colorTextPlaceholder')};
-  font-size: ${th('fontSizeBaseSmaller')};
-`
-
-const renderPerson = (value: any): ReactNode => {
-  if (!value) return null
-
-  return (
-    <PersonWrapper>
-      <Avatar size={10} src={value.profilePicture} />
-      <PersonInfo>
-        <span>{value.displayName}</span>
-        {value.orcid && (
-          <PersonIdentifier>{`ORCID: ${value.orcid}`}</PersonIdentifier>
-        )}
-      </PersonInfo>
-    </PersonWrapper>
-  )
-}
-
-const TitleWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: ${grid(1)};
-`
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${grid(3)};
-`
-
-const CoarIcon = styled(Coar)`
-  margin-top: -2px;
-`
-
-const TitleAbstractButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  cursor: pointer;
-`
-
-const TitleAbstractTooltipContent = styled.div`
-  padding: ${grid(4)};
-`
-
-const TitleAbstractTooltipHeader = styled.div`
-  border-bottom: 1px solid ${th('colorTextReverse')};
-  margin-bottom: ${grid(1)};
-`
-
-const ABSTRACT_WORD_LIMIT = 60
-
-const truncateAbstract = (abstract: string): string => {
-  const words = abstract.trim().split(/\s+/)
-  if (words.length <= ABSTRACT_WORD_LIMIT) return abstract
-  return `${words.slice(0, ABSTRACT_WORD_LIMIT).join(' ')}...`
-}
-
-type TitleCellValue = {
-  title: string
-  hasOverdueTasks?: boolean
-  importSource?: 'coar' | 'semanticScholar'
-  abstract?: string
-  /** When set, the title text links out to this URL */
-  link?: string
-}
-
-const TitleCell = ({
-  value,
-  showAbstract,
-}: {
-  value: TitleCellValue
-  showAbstract?: boolean
-}): ReactNode => {
-  const { t } = useTranslation()
-
-  if (!value) return null
-
-  return (
-    <TitleWrapper>
-      <TitleRow>
-        {value.importSource === 'coar' && <CoarIcon aria-hidden />}
-        {value.importSource === 'semanticScholar' && (
-          <SemanticScholar aria-hidden />
-        )}
-
-        <span>
-          {value.link ? (
-            <a href={value.link} rel="noreferrer" target="_blank">
-              {renderPlainOrRichText(value.title)}
-            </a>
-          ) : (
-            renderPlainOrRichText(value.title)
-          )}
-        </span>
-
-        {showAbstract && (
-          <ConfigProvider
-            theme={{ components: { Tooltip: { maxWidth: 600 } } }}
-          >
-            <Tooltip
-              title={
-                <TitleAbstractTooltipContent>
-                  <TitleAbstractTooltipHeader>
-                    {t('manuscriptsTable.abstractHeader')}
-                  </TitleAbstractTooltipHeader>
-                  {value.abstract
-                    ? truncateAbstract(stripHtml(value.abstract))
-                    : t('manuscriptsTable.noAbstract')}
-                </TitleAbstractTooltipContent>
-              }
-              trigger={['click']}
-            >
-              <TitleAbstractButton
-                aria-label={t('manuscriptsTable.showAbstract')}
-                type="button"
-              >
-                <Info />
-              </TitleAbstractButton>
-            </Tooltip>
-          </ConfigProvider>
-        )}
-      </TitleRow>
-
-      {value.hasOverdueTasks && (
-        <Badge small variant="error">
-          {t('manuscriptsTable.overdueTasks')}
-        </Badge>
-      )}
-    </TitleWrapper>
-  )
-}
-
-const { RangePicker } = DatePicker
-
-const DateRangeFilterWrapper = styled.div`
-  padding: ${grid(2)};
-`
-
-const buildDateRangePresets = (): {
-  label: string
-  value: () => [any, any]
-}[] => [
-  { label: 'Today', value: () => [dayjs(), dayjs()] },
-  {
-    label: 'Yesterday',
-    value: () => [dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')],
-  },
-  { label: 'Past 7 days', value: () => [dayjs().subtract(7, 'day'), dayjs()] },
-  {
-    label: 'Past 30 days',
-    value: () => [dayjs().subtract(30, 'day'), dayjs()],
-  },
-  {
-    label: 'Past 90 days',
-    value: () => [dayjs().subtract(90, 'day'), dayjs()],
-  },
-  { label: 'Past year', value: () => [dayjs().subtract(1, 'year'), dayjs()] },
-]
-
-const DateRangeFilterDropdown = ({
-  selectedKeys,
-  setSelectedKeys,
-  confirm,
-}: FilterDropdownProps): ReactNode => {
-  const [start, end] = selectedKeys as unknown as [string, string] | []
-
-  const handleChange = (
-    _dates: unknown,
-    // antd passes null here (not ['', '']) when the range is cleared via the "x" button
-    dateStrings: [string, string] | null,
-  ): void => {
-    setSelectedKeys(dateStrings?.[0] && dateStrings?.[1] ? dateStrings : [])
-    confirm()
-  }
-
-  return (
-    <DateRangeFilterWrapper>
-      <RangePicker
-        onChange={handleChange}
-        presets={buildDateRangePresets()}
-        value={start && end ? [dayjs(start), dayjs(end)] : null}
-      />
-    </DateRangeFilterWrapper>
-  )
-}
-
-const SnippetsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: ${grid(2)} ${grid(4)};
-  font-size: ${th('fontSizeBaseSmall')};
-`
-
-const renderHighlightedSnippet = (html: string): ReactNode => {
-  // replace postgres <b> tags with <mark>
-  const matchTag = /<b>(.*?)<\/b>/g
-  const parts: ReactNode[] = []
-  let cursor = 0
-  let match = matchTag.exec(html)
-
-  while (match) {
-    if (match.index > cursor) parts.push(html.slice(cursor, match.index))
-    parts.push(<mark>{match[1]}</mark>)
-    cursor = matchTag.lastIndex
-    match = matchTag.exec(html)
-  }
-
-  if (cursor < html.length) parts.push(html.slice(cursor))
-
-  return parts.map((part, index) => <Fragment key={index}>{part}</Fragment>)
-}
-
-const SearchSnippets = ({
-  snippets,
-}: {
-  snippets: ManuscriptSearchSnippet[]
-}): ReactNode => (
-  <SnippetsWrapper>
-    {snippets.map(({ field, html }) => (
-      <div key={field}>
-        <strong>{field}:</strong> {renderHighlightedSnippet(html)}
-      </div>
-    ))}
-  </SnippetsWrapper>
-)
-
-const hasSearchSnippets = (row: Record<string, any>): boolean =>
-  Array.isArray(row.searchSnippets) && row.searchSnippets.length > 0
-
-const ReviewerStatusColumnHeaderWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${grid(2)};
-`
-
-const ColumnTitleWithTooltipWrapper = styled.span`
-  align-items: center;
-  display: inline-flex;
-  gap: ${grid(2)};
-`
-
-const ColumnTitleWithTooltip = ({
-  title,
-  tooltip,
-}: {
-  title: ReactNode
-  tooltip: string
-}): ReactNode => (
-  <ColumnTitleWithTooltipWrapper>
-    {title}
-    <Tooltip title={tooltip} trigger={['click']}>
-      <SearchInfoButton aria-label={tooltip} type="button">
-        <Help />
-      </SearchInfoButton>
-    </Tooltip>
-  </ColumnTitleWithTooltipWrapper>
-)
-
-const RadioGroup = styled(RadioGroupInput)`
-  /* stylelint-disable declaration-no-important */
-  .ant-radio-button-wrapper {
-    background-color: ${th('colorPrimary')} !important;
-    color: ${th('colorTextReverse')} !important;
-    border: 1px solid transparent;
-    transition: border 0.2s ease;
-
-    span[role='img'] {
-      margin-top: 3px;
-    }
-
-    &:hover {
-      border: 1px solid ${th('colorTextReverse')};
-    }
-  }
-
-  .ant-radio-button-wrapper-checked {
-    background-color: ${th('colorTextReverse')} !important;
-    color: ${th('colorPrimary')} !important;
-    border-color: ${th('colorTextReverse')} !important;
-  }
-`
-
-const ReviewerStatusColumnHeader = ({
-  title,
-  isCompact,
-  onChange,
-}: {
-  title: ReactNode
-  isCompact: boolean
-  onChange: (isCompact: boolean) => void
-}): ReactNode => {
-  const { t } = useTranslation()
-
-  return (
-    <ReviewerStatusColumnHeaderWrapper>
-      {title}
-      <RadioGroup
-        buttonStyle="solid"
-        onChange={(value: string): void => onChange(value === 'compact')}
-        optionType="button"
-        size="small"
-        value={isCompact ? 'compact' : 'detailed'}
-      >
-        <Tooltip title="Detailed hover view">
-          <Radio.Button
-            aria-label={t('manuscriptsTable.detailedView')}
-            value="detailed"
-          >
-            <TableIcon />
-          </Radio.Button>
-        </Tooltip>
-        <Tooltip title="Compact hover view">
-          <Radio.Button
-            aria-label={t('manuscriptsTable.compactView')}
-            value="compact"
-          >
-            <Tasks />
-          </Radio.Button>
-        </Tooltip>
-      </RadioGroup>
-    </ReviewerStatusColumnHeaderWrapper>
-  )
-}
-
-const resolveColumn = (
-  column: ManuscriptsTableColumn,
-  context: {
-    columnFilters?: Record<string, string[]>
-    sortState?: ManuscriptsTableSortState | null
-    reviewerStatusViewMode?: 'compact' | 'detailed'
-    onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
-    onOptionChange?: (
-      columnKey: string,
-      id: string,
-      value: string | null,
-    ) => void
-  },
-): TableColumnType<Record<string, any>> => {
-  let resolved: TableColumnType<Record<string, any>> = column
-
-  if (!column.render) {
-    switch (column.dataType) {
-      case 'date':
-        resolved = { ...column, render: renderDate }
-        break
-      case 'status':
-        resolved = { ...column, render: renderStatus }
-        break
-      case 'reviewerStatus':
-        resolved = { ...column, render: renderReviewerStatus }
-        break
-      case 'reviewerStatusSummary':
-        resolved = {
-          ...column,
-          render: (value: any): ReactNode => (
-            <ReviewerStatusSummary
-              isCompact={
-                (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
-              }
-              value={value}
-            />
-          ),
-        }
-        break
-      case 'badge':
-        resolved = { ...column, render: renderBadge }
-        break
-      case 'richText':
-        resolved = { ...column, render: renderRichText }
-        break
-      case 'person':
-        resolved = { ...column, render: renderPerson }
-        break
-      case 'title':
-        resolved = {
-          ...column,
-          render: (value: any): ReactNode => (
-            <TitleCell showAbstract={column.showAbstract} value={value} />
-          ),
-        }
-        break
-      case 'options':
-        resolved = {
-          ...column,
-          render: (value: any, record: Record<string, any>): ReactNode =>
-            column.editable
-              ? renderEditableOption(
-                  value,
-                  record,
-                  column,
-                  context.onOptionChange,
-                )
-              : renderOptions(value, column.options),
-        }
-        break
-      default:
-        break
-    }
-  }
-
-  if (column.filterable && column.options) {
-    resolved = {
-      ...resolved,
-      filters: column.options.map(({ value, label }) => ({
-        text: label ?? value,
-        value,
-      })),
-      filteredValue: context.columnFilters?.[column.key] ?? null,
-    }
-  }
-
-  if (column.filterable && column.dataType === 'date') {
-    resolved = {
-      ...resolved,
-      filterDropdown: (props: FilterDropdownProps): ReactNode => (
-        <DateRangeFilterDropdown {...props} />
-      ),
-      filteredValue: context.columnFilters?.[column.key] ?? null,
-    }
-  }
-
-  if (column.helpTooltip) {
-    resolved = {
-      ...resolved,
-      title: (
-        <ColumnTitleWithTooltip
-          title={resolved.title}
-          tooltip={column.helpTooltip}
-        />
-      ),
-    }
-  }
-
-  if (column.dataType === 'reviewerStatusSummary') {
-    resolved = {
-      ...resolved,
-      title: (
-        <ReviewerStatusColumnHeader
-          isCompact={
-            (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
-          }
-          onChange={isCompact =>
-            context.onReviewerStatusViewModeChange?.(
-              isCompact ? 'compact' : 'detailed',
-            )
-          }
-          title={resolved.title}
-        />
-      ),
-    }
-  }
-
-  // Ignored (forced off) for 'render' escape-hatch columns -- they have no
-  // real dataIndex value semantics for the server to sort on.
-  if (column.sortable && !column.render) {
-    resolved = {
-      ...resolved,
-      sorter: true,
-      sortDirections: ['descend', 'ascend'],
-      sortOrder:
-        context.sortState?.columnKey === column.key
-          ? context.sortState.order
-          : null,
-    }
-  }
-
-  return resolved
-}
-
+// #region filter-chips
 const FilterChipsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -1033,7 +797,222 @@ const buildFilterChips = (
 
   return chips
 }
+// #endregion filter-chips
 
+// #region column-setup
+export type ManuscriptsTableColumn = {
+  align?: 'left' | 'center' | 'right'
+  dataIndex: string
+  /**
+   * Opts into one of this component's built-in renderers for a common kind of
+   * value. Ignored if `render` is also supplied.
+   */
+  dataType?:
+    | 'date'
+    | 'status'
+    | 'reviewerStatus'
+    | 'reviewerStatusSummary'
+    | 'badge'
+    | 'options'
+    | 'person'
+    | 'title'
+    | 'richText'
+  /**
+   * Applies to the 'options' datatype, single-value case only.
+   * Renders a select dropdown instead of a static badge.
+   */
+  editable?: boolean
+  /** Applies to 'options', 'status', 'reviewerStatus' and 'date' datatypes */
+  filterable?: boolean
+  /**
+   * Shows a question-mark icon next to the column header, with this text in a
+   * click-to-opne tooltip.
+   */
+  helpTooltip?: string
+  key: string
+  title: string
+  options?: ManuscriptsTableColumnOption[]
+  /**
+   * Escape hatch for anything else (e.g. an actions column with
+   * business-specific links) -- takes precedence over dataType.
+   */
+  render?: (value: any, record: any) => ReactNode
+  /**
+   * Applies to the 'title' datatype -- shows an info icon that opens a tooltip
+   * with the manuscript's abstract on click.
+   */
+  showAbstract?: boolean
+  sortable?: boolean
+}
+
+const resolveColumn = (
+  column: ManuscriptsTableColumn,
+  context: {
+    columnFilters?: Record<string, string[]>
+    sortState?: ManuscriptsTableSortState | null
+    reviewerStatusViewMode?: 'compact' | 'detailed'
+    onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
+    onOptionChange?: (
+      columnKey: string,
+      id: string,
+      value: string | null,
+    ) => void
+  },
+): TableColumnType<Record<string, any>> => {
+  let resolved: TableColumnType<Record<string, any>> = column
+
+  // maps datatypes to their render functions (unless a custom render is provided)
+  if (!column.render) {
+    switch (column.dataType) {
+      case 'badge':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => <Badge small>{value}</Badge>,
+        }
+        break
+      case 'date':
+        resolved = { ...column, render: renderDate }
+        break
+      case 'options':
+        resolved = {
+          ...column,
+          render: (value: any, record: Record<string, any>): ReactNode =>
+            column.editable
+              ? renderEditableOption(
+                  value,
+                  record,
+                  column,
+                  context.onOptionChange,
+                )
+              : renderOptions(value, column.options),
+        }
+        break
+      case 'person':
+        resolved = { ...column, render: renderPerson }
+        break
+      case 'reviewerStatus':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => (
+            <ReviewerStatus small status={value} />
+          ),
+        }
+        break
+      case 'reviewerStatusSummary':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => (
+            <ReviewerStatusSummary
+              isCompact={
+                (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
+              }
+              value={value}
+            />
+          ),
+        }
+        break
+      case 'richText':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => renderPlainOrRichText(value),
+        }
+        break
+      case 'status':
+        resolved = {
+          ...column,
+          render: (value: any, record: Record<string, any>): ReactNode => (
+            <ManuscriptStatus
+              published={record.published}
+              small
+              status={value}
+            />
+          ),
+        }
+        break
+      case 'title':
+        resolved = {
+          ...column,
+          render: (value: any): ReactNode => (
+            <TitleCell showAbstract={column.showAbstract} value={value} />
+          ),
+        }
+        break
+      default:
+        break
+    }
+  }
+
+  if (column.filterable && column.options) {
+    resolved = {
+      ...resolved,
+      filters: column.options.map(({ value, label }) => ({
+        text: label ?? value,
+        value,
+      })),
+      filteredValue: context.columnFilters?.[column.key] ?? null,
+    }
+  }
+
+  if (column.filterable && column.dataType === 'date') {
+    resolved = {
+      ...resolved,
+      filterDropdown: (props: FilterDropdownProps): ReactNode => (
+        <DateRangeFilterDropdown {...props} />
+      ),
+      filteredValue: context.columnFilters?.[column.key] ?? null,
+    }
+  }
+
+  if (column.helpTooltip) {
+    resolved = {
+      ...resolved,
+      title: (
+        <ColumnTitleWithTooltip
+          title={resolved.title}
+          tooltip={column.helpTooltip}
+        />
+      ),
+    }
+  }
+
+  if (column.dataType === 'reviewerStatusSummary') {
+    resolved = {
+      ...resolved,
+      title: (
+        <ReviewerStatusColumnHeader
+          isCompact={
+            (context.reviewerStatusViewMode ?? 'detailed') === 'compact'
+          }
+          onChange={isCompact =>
+            context.onReviewerStatusViewModeChange?.(
+              isCompact ? 'compact' : 'detailed',
+            )
+          }
+          title={resolved.title}
+        />
+      ),
+    }
+  }
+
+  // Ignored (forced off) for 'render' escape-hatch columns -- they have no
+  // real dataIndex value semantics for the server to sort on.
+  if (column.sortable && !column.render) {
+    resolved = {
+      ...resolved,
+      sorter: true,
+      sortDirections: ['descend', 'ascend'],
+      sortOrder:
+        context.sortState?.columnKey === column.key
+          ? context.sortState.order
+          : null,
+    }
+  }
+
+  return resolved
+}
+// #endregion column-setup
+
+// #region table-styles
 const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -1076,40 +1055,99 @@ const SelectionCount = styled.span`
   font-size: ${th('fontSizeBaseSmall')};
   color: ${th('colorTextPlaceholder')};
 `
+// #endregion table-styles
+
+// #region table-render
+export type ManuscriptsTableSortState = {
+  columnKey: string
+  order: 'ascend' | 'descend'
+}
+
+type ManuscriptsTableProps = {
+  actionModalContextHolder?: ReactNode
+  columns: ManuscriptsTableColumn[]
+  /**
+   * Currently selected filter values, keyed by column key (controlled), e.g.
+   * { status: ['accepted', 'rejected'] }. Only relevant for columns with
+   * `filterable: true`.
+   */
+  columnFilters?: Record<string, string[]>
+  dataSource: Record<string, any>[]
+  loading?: boolean
+  onArchiveSelected?: (ids: string[]) => void
+  onDownloadSelected?: (ids: string[]) => void
+  onFiltersChange?: (filters: Record<string, string[]>) => void
+  /**
+   * Fired when a value is picked or cleared in an `editable` 'options' column. `id` is the
+   * changed manuscript's `record.id`; `value` is `null` when cleared.
+   */
+  onOptionChange?: (columnKey: string, id: string, value: string | null) => void
+  onPageChange: (page: number) => void
+  onReviewerStatusViewModeChange?: (viewMode: 'compact' | 'detailed') => void
+  onSearch: (value: string) => void
+  onSortChange?: (sortState: ManuscriptsTableSortState | null) => void
+  onUnarchiveSelected?: (ids: string[]) => void
+  onViewingArchivedChange?: (viewingArchived: boolean) => void
+  page: number
+  pageSize: number
+  /**
+   * Compact/detailed view mode for 'reviewerStatusSummary' columns.
+   * Defaults to 'detailed'.
+   */
+  reviewerStatusViewMode?: 'compact' | 'detailed'
+  searchQuery?: string
+  /**
+   * Enables row selection checkboxes.
+   */
+  selectable?: boolean
+  /** Only visible is selectable is true. */
+  showArchiveActions?: boolean
+  /** Only visible is selectable is true. */
+  showDownloadAction?: boolean
+  showViewArchivedToggle?: boolean
+  /**
+   * Currently applied sort (controlled), for a single `sortable` column.
+   * `null`/`undefined` means unsorted.
+   */
+  sortState?: ManuscriptsTableSortState | null
+  totalCount: number
+  viewingArchived?: boolean
+}
 
 const ManuscriptsTable = ({
+  actionModalContextHolder,
+  columnFilters,
   columns,
   dataSource,
+  loading = false,
+  onArchiveSelected,
+  onDownloadSelected,
+  onFiltersChange,
+  onOptionChange,
+  onPageChange,
+  onReviewerStatusViewModeChange,
+  onSearch,
+  onSortChange,
+  onUnarchiveSelected,
+  onViewingArchivedChange,
   page,
   pageSize,
-  totalCount,
-  onPageChange,
-  onSearch,
-  searchQuery = '',
-  loading = false,
-  columnFilters,
-  onFiltersChange,
-  sortState,
-  onSortChange,
   reviewerStatusViewMode,
-  onReviewerStatusViewModeChange,
-  onOptionChange,
+  searchQuery = '',
   selectable = false,
   showArchiveActions = false,
   showDownloadAction = false,
-  onArchiveSelected,
-  onUnarchiveSelected,
-  onDownloadSelected,
   showViewArchivedToggle = false,
+  sortState,
+  totalCount,
   viewingArchived = false,
-  onViewingArchivedChange,
-  actionModalContextHolder,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
   const [modal, modalContextHolder] = Modal.useModal()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
   const searchBarRef = useRef<HTMLDivElement>(null)
 
+  // effect handles keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
       const { activeElement } = document
@@ -1143,6 +1181,37 @@ const ManuscriptsTable = ({
     return (): void => document.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  const filterChips = [
+    ...(searchQuery
+      ? [
+          {
+            key: 'searchQuery',
+            label: t('manuscriptsTable.searchChip', { query: searchQuery }),
+            onRemove: (event: MouseEvent<HTMLElement>): void => {
+              event.preventDefault()
+              onSearch('')
+            },
+          },
+        ]
+      : []),
+    ...(columnFilters && onFiltersChange
+      ? buildFilterChips(columns, columnFilters, onFiltersChange)
+      : []),
+    ...(viewingArchived
+      ? [
+          {
+            key: 'viewingArchived',
+            label: t('manuscriptsPage.archivedManuscripts'),
+            onRemove: (event: MouseEvent<HTMLElement>): void => {
+              event.preventDefault()
+              onViewingArchivedChange?.(false)
+            },
+          },
+        ]
+      : []),
+  ]
+
+  // #region search-snippets
   const rowsWithSnippets = dataSource.filter(hasSearchSnippets)
 
   const expandable = rowsWithSnippets.length > 0 && {
@@ -1153,16 +1222,42 @@ const ManuscriptsTable = ({
     rowExpandable: hasSearchSnippets,
     showExpandColumn: false,
   }
+  // #endregion search-snippets
 
+  // #region row-selection
+  const selectedRows = dataSource.filter(row => selectedRowIds.includes(row.id))
+
+  const showSelectionActions =
+    (selectable && (showArchiveActions || showDownloadAction)) ||
+    showViewArchivedToggle
+
+  const hasSelection = selectedRows.length > 0
+  const allSelectedAreArchived =
+    hasSelection && selectedRows.every(row => row.archived)
+  const noneSelectedAreArchived =
+    hasSelection && selectedRows.every(row => !row.archived)
+
+  const rowSelection = selectable
+    ? {
+        selectedRowKeys: selectedRows.map(row => row.key),
+        onChange: (_keys: unknown[], rows: Record<string, any>[]): void =>
+          setSelectedRowIds(rows.map(row => row.id)),
+      }
+    : undefined
+  // #endregion row-selection
+
+  // #region handlers
   const filterableColumns = columns.filter(column =>
     Boolean(
       column.filterable && (column.options || column.dataType === 'date'),
     ),
   )
 
-  // Reports which values are selected, for every filterable column, and
-  // (separately) the current sort, for whichever sortable column the user
-  // last clicked. Never sorts `dataSource` itself -- the caller re-fetches.
+  /**
+   * Reports which values are selected, for every filterable column, and
+   * (separately) the current sort, for whichever sortable column the user last
+   * clicked. Never sorts `dataSource` itself -- the caller re-fetches.
+   */
   const handleTableChange = (
     _pagination: unknown,
     filters: Record<string, (string | number | boolean)[] | null>,
@@ -1195,66 +1290,6 @@ const ManuscriptsTable = ({
     }
   }
 
-  const resolvedColumns = columns.map(column =>
-    resolveColumn(column, {
-      columnFilters,
-      sortState,
-      reviewerStatusViewMode,
-      onReviewerStatusViewModeChange,
-      onOptionChange,
-    }),
-  )
-
-  const filterChips = [
-    ...(searchQuery
-      ? [
-          {
-            key: 'searchQuery',
-            label: t('manuscriptsTable.searchChip', { query: searchQuery }),
-            onRemove: (event: MouseEvent<HTMLElement>): void => {
-              event.preventDefault()
-              onSearch('')
-            },
-          },
-        ]
-      : []),
-    ...(columnFilters && onFiltersChange
-      ? buildFilterChips(columns, columnFilters, onFiltersChange)
-      : []),
-    ...(viewingArchived
-      ? [
-          {
-            key: 'viewingArchived',
-            label: t('manuscriptsPage.archivedManuscripts'),
-            onRemove: (event: MouseEvent<HTMLElement>): void => {
-              event.preventDefault()
-              onViewingArchivedChange?.(false)
-            },
-          },
-        ]
-      : []),
-  ]
-
-  const selectedRows = dataSource.filter(row => selectedRowIds.includes(row.id))
-
-  const showSelectionActions =
-    (selectable && (showArchiveActions || showDownloadAction)) ||
-    showViewArchivedToggle
-
-  const hasSelection = selectedRows.length > 0
-  const allSelectedAreArchived =
-    hasSelection && selectedRows.every(row => row.archived)
-  const noneSelectedAreArchived =
-    hasSelection && selectedRows.every(row => !row.archived)
-
-  const rowSelection = selectable
-    ? {
-        selectedRowKeys: selectedRows.map(row => row.key),
-        onChange: (_keys: unknown[], rows: Record<string, any>[]): void =>
-          setSelectedRowIds(rows.map(row => row.id)),
-      }
-    : undefined
-
   const handleArchiveClick = (): void => {
     modal.confirm({
       content: t('manuscriptsTable.confirmArchive', {
@@ -1286,11 +1321,23 @@ const ManuscriptsTable = ({
   const handleDownloadClick = (): void => {
     onDownloadSelected?.(selectedRows.map(row => row.id))
   }
+  // #endregion handlers
+
+  const resolvedColumns = columns.map(column =>
+    resolveColumn(column, {
+      columnFilters,
+      sortState,
+      reviewerStatusViewMode,
+      onReviewerStatusViewModeChange,
+      onOptionChange,
+    }),
+  )
 
   return (
     <>
       {modalContextHolder}
       {actionModalContextHolder}
+
       {showSelectionActions && (
         <SelectionActionsWrapper>
           {selectable && (showArchiveActions || showDownloadAction) && (
@@ -1300,6 +1347,7 @@ const ManuscriptsTable = ({
                   count: selectedRows.length,
                 })}
               </SelectionCount>
+
               <ButtonGroup>
                 {showArchiveActions && (
                   <Button
@@ -1331,6 +1379,7 @@ const ManuscriptsTable = ({
               </ButtonGroup>
             </>
           )}
+
           {showViewArchivedToggle && (
             <ViewArchivedToggleWrapper>
               <Switch
@@ -1342,6 +1391,7 @@ const ManuscriptsTable = ({
           )}
         </SelectionActionsWrapper>
       )}
+
       {filterChips.length > 0 && (
         <FilterChipsWrapper>
           {filterChips.map(chip => (
@@ -1358,6 +1408,7 @@ const ManuscriptsTable = ({
           ))}
         </FilterChipsWrapper>
       )}
+
       <SearchBarWrapper ref={searchBarRef}>
         <Search
           allowClear
@@ -1367,6 +1418,7 @@ const ManuscriptsTable = ({
           onSearch={onSearch}
           placeholder={t('common.Enter search terms...')}
         />
+
         <ConfigProvider theme={{ components: { Tooltip: { maxWidth: 480 } } }}>
           <Tooltip
             title={
@@ -1374,6 +1426,7 @@ const ManuscriptsTable = ({
                 <TitleAbstractTooltipHeader>
                   {t('manuscriptsTable.searchTipsHeader')}
                 </TitleAbstractTooltipHeader>
+
                 <SearchTipsList>
                   {(
                     t('manuscriptsTable.searchTips', {
@@ -1400,6 +1453,7 @@ const ManuscriptsTable = ({
           </Tooltip>
         </ConfigProvider>
       </SearchBarWrapper>
+
       <Table
         bordered={false}
         columns={resolvedColumns}
@@ -1425,10 +1479,10 @@ const ManuscriptsTable = ({
           onChange: onPageChange,
         }}
         rowSelection={rowSelection}
-        scroll={{ x: resolvedColumns.length * 150 }}
       />
     </>
   )
 }
+// #endregion table-render
 
 export default ManuscriptsTable

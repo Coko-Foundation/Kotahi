@@ -7,7 +7,7 @@ const Table = styled(OriginalTable)`
   .ant-table-wrapper {
     border: 1px solid ${th('colorPrimary')};
     border-radius: ${th('borderRadius')};
-    overflow: hidden;
+    overflow: auto hidden;
   }
 
   .ant-table-content {
