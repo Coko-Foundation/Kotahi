@@ -151,15 +151,6 @@ const columnAlignments: Record<string, 'left' | 'center' | 'right'> = {
 // #endregion constants
 
 // #region helpers
-const downloadBlob = (blob: Blob, fileName: string): void => {
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = fileName
-  link.click()
-  URL.revokeObjectURL(url)
-}
-
 const REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY =
   'manuscriptsTable.reviewerStatusViewMode'
 
@@ -1119,20 +1110,45 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   }
 
   const handleDownloadSelected = async (ids: string[]): Promise<void> => {
+    const stringifiedJsonKeys = ['submission', 'jsonData']
+
+    const sanitizeExportValue = (value: any): any => {
+      if (Array.isArray(value)) return value.map(sanitizeExportValue)
+
+      if (value && typeof value === 'object') {
+        return Object.fromEntries(
+          Object.entries(value)
+            .filter(([key]) => key !== '__typename')
+            .map(([key, val]) => [
+              key,
+              stringifiedJsonKeys.includes(key) && typeof val === 'string'
+                ? JSON.parse(val || '{}')
+                : sanitizeExportValue(val),
+            ]),
+        )
+      }
+
+      return value
+    }
+
     const { data: exportData } = await getManuscriptsData({
       variables: { selectedManuscripts: ids },
     })
 
-    // @ts-ignore
-    const cleanedData = (exportData?.getManuscriptsData ?? []).map(
-      ({ __typename, ...rest }: Record<string, any>) => rest,
+    const cleanedData = sanitizeExportValue(
+      exportData?.getManuscriptsData ?? [],
     )
 
-    const jsonBlob = new Blob([JSON.stringify(cleanedData)], {
+    const jsonBlob = new Blob([JSON.stringify(cleanedData, null, 2)], {
       type: 'application/json',
     })
 
-    downloadBlob(jsonBlob, 'exportedData.json')
+    const url = URL.createObjectURL(jsonBlob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'exportedData.json'
+    link.click()
+    URL.revokeObjectURL(url)
   }
 
   const handleViewingArchivedChange = (viewingArchived: boolean): void => {
