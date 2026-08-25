@@ -31,7 +31,6 @@ import {
 } from '../../queries'
 
 import Link from '../../ui/shared/Link'
-import { MANUSCRIPT_STATUSES } from '../../ui/shared/ManuscriptStatus'
 import {
   reviewerStatusValues,
   reviewerStatusTranslationKeys,
@@ -148,6 +147,35 @@ const columnAlignments: Record<string, 'left' | 'center' | 'right'> = {
   'submission.$doi': 'center',
   'submission.adaState': 'center',
 }
+
+const JOURNAL_STATUS_OPTIONS = [
+  'new',
+  'submitted',
+  'accepted',
+  'rejected',
+  'revise',
+  'revising',
+  'published',
+  'unpublished',
+  'assigned',
+  'inProgress',
+  'completed',
+  'underEmbargo',
+  'embargoReleased',
+]
+
+const PREPRINT_STATUS_OPTIONS = [
+  'new',
+  'submitted',
+  'evaluated',
+  'published',
+  'unpublished',
+  'assigned',
+  'inProgress',
+  'completed',
+  'underEmbargo',
+  'embargoReleased',
+]
 // #endregion constants
 
 // #region helpers
@@ -821,11 +849,15 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
       }
 
       if (column.key === 'status') {
+        const statusOptions = ['journal', 'prc'].includes(config?.instanceName)
+          ? JOURNAL_STATUS_OPTIONS
+          : PREPRINT_STATUS_OPTIONS
+
         return {
           ...column,
           dataType: 'status',
           filterable: true,
-          options: MANUSCRIPT_STATUSES.map(status => ({
+          options: statusOptions.map(status => ({
             value: status,
             label: t(`msStatus.${status}`),
           })),
