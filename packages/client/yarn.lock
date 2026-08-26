@@ -5512,7 +5512,6 @@ __metadata:
     react-uid: "npm:^2.3.3"
     reactjs-popup: "npm:^2.0.5"
     recharts: "npm:^3.8.1"
-    regenerator-runtime: "npm:^0.13.7"
     split-pane-react: "npm:^0.1.3"
     storybook: "npm:^10.4.6"
     striptags: "npm:^3.1.1"
@@ -7455,7 +7454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.2, regenerator-runtime@npm:^0.13.7":
+"regenerator-runtime@npm:^0.13.2":
   version: 0.13.11
   resolution: "regenerator-runtime@npm:0.13.11"
   checksum: 10c0/12b069dc774001fbb0014f6a28f11c09ebfe3c0d984d88c9bced77fdb6fedbacbca434d24da9ae9371bfbf23f754869307fb51a4c98a8b8b18e5ef748677ca24
