@@ -22,12 +22,12 @@ const DECISION_FIELDS =
   ':nth-child(1) > [data-testid=section] > [data-testid=section] > div'
 
 // 'To Review section'
-const DO_REVIEW_BUTTON = '[data-testid="reviewerLinks"] button'
+const DO_REVIEW_BUTTON = 'review-action-link'
 const ACCEPT_REVIEW_BUTTON = 'accept-review'
 const REJECT_REVIEW_BUTTON = 'reject-review'
 
 // 'Manuscripts I'm editor of' section
-const CONTROL_BUTTON = 'control-panel-team'
+const CONTROL_BUTTON = 'control-link'
 const MANUSCRIPT_NAV_BUTTON = '[href*="/admin/manuscripts"]'
 const INVITED_REVIEWS_STATUS = 'invited'
 const COMPLETED_REVIEWS_STATUS = 'completed'
@@ -77,7 +77,7 @@ export const DashboardPage = {
     return this.getSubmitButton().click()
   },
   getSectionPlaceholder(nth) {
-    return cy.getByDataTestId('placeholder').eq(nth)
+    return cy.getByDataTestId('empty-manuscripts-table-placeholder').eq(nth)
   },
   getCreateNewVersionButton() {
     return cy.getByDataTestId(CREATE_NEW_VERSION_BUTTON)
@@ -118,10 +118,9 @@ export const DashboardPage = {
   },
   clickRejectReviewButton() {
     this.getRejectReviewButton().click({ force: true })
-    cy.reload()
   },
   getDoReviewButton() {
-    return cy.get(DO_REVIEW_BUTTON)
+    return cy.getByDataTestId(DO_REVIEW_BUTTON)
   },
   clickDoReview() {
     this.getDoReviewButton().click({ force: true })

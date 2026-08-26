@@ -46,6 +46,7 @@ const MANUSCRIPT_FIELDS = gql`
           username
           email
           defaultIdentity {
+            id
             identifier
           }
         }
@@ -516,6 +517,7 @@ const userFragmentFields = `
     submitter {
       username
       defaultIdentity {
+        id
         name
       }
       id
@@ -811,6 +813,7 @@ const manuscriptFields = `
     submitter {
       username
       defaultIdentity {
+        id
         name
       }
       id
@@ -1261,6 +1264,7 @@ const productionFragmentFields = `
     submitter {
       username
       defaultIdentity {
+        id
         name
       }
       id

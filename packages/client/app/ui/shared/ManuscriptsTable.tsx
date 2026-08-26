@@ -23,7 +23,6 @@ import {
   Select,
   Button,
   ButtonGroup,
-  Modal,
   Radio as RadioGroupInput,
   Switch,
 } from '@coko/client'
@@ -1008,6 +1007,11 @@ const resolveColumn = (
     }
   }
 
+  resolved = {
+    ...resolved,
+    onCell: (): Record<string, any> => ({ 'data-testid': column.key }),
+  }
+
   return resolved
 }
 // #endregion column-setup
@@ -1055,6 +1059,16 @@ const SelectionCount = styled.span`
   font-size: ${th('fontSizeBaseSmall')};
   color: ${th('colorTextPlaceholder')};
 `
+
+const EmptyStatePlaceholder = styled.div.attrs({
+  'data-testid': 'empty-manuscripts-table-placeholder',
+})`
+  color: ${th('colorTextPlaceholder')};
+  display: grid;
+  height: 100%;
+  padding: ${grid(8)};
+  place-items: center;
+`
 // #endregion table-styles
 
 // #region table-render
@@ -1064,6 +1078,10 @@ export type ManuscriptsTableSortState = {
 }
 
 type ManuscriptsTableProps = {
+  actionModal?: {
+    confirm: (config: Record<string, any>) => void
+    error: (config: Record<string, any>) => void
+  }
   actionModalContextHolder?: ReactNode
   columns: ManuscriptsTableColumn[]
   /**
@@ -1115,6 +1133,7 @@ type ManuscriptsTableProps = {
 }
 
 const ManuscriptsTable = ({
+  actionModal,
   actionModalContextHolder,
   columnFilters,
   columns,
@@ -1143,7 +1162,6 @@ const ManuscriptsTable = ({
   viewingArchived = false,
 }: ManuscriptsTableProps): ReactNode => {
   const { t } = useTranslation()
-  const [modal, modalContextHolder] = Modal.useModal()
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([])
   const searchBarRef = useRef<HTMLDivElement>(null)
 
@@ -1291,7 +1309,7 @@ const ManuscriptsTable = ({
   }
 
   const handleArchiveClick = (): void => {
-    modal.confirm({
+    actionModal?.confirm({
       content: t('manuscriptsTable.confirmArchive', {
         count: selectedRows.length,
       }),
@@ -1305,7 +1323,7 @@ const ManuscriptsTable = ({
   }
 
   const handleUnarchiveClick = (): void => {
-    modal.confirm({
+    actionModal?.confirm({
       content: t('manuscriptsTable.confirmUnarchive', {
         count: selectedRows.length,
       }),
@@ -1335,7 +1353,6 @@ const ManuscriptsTable = ({
 
   return (
     <>
-      {modalContextHolder}
       {actionModalContextHolder}
 
       {showSelectionActions && (
@@ -1460,6 +1477,13 @@ const ManuscriptsTable = ({
         dataSource={dataSource}
         expandable={expandable}
         loading={loading}
+        locale={{
+          emptyText: (
+            <EmptyStatePlaceholder>
+              {t('manuscriptsTable.No matching manuscripts were found')}
+            </EmptyStatePlaceholder>
+          ),
+        }}
         onChange={handleTableChange}
         pagination={{
           current: page,

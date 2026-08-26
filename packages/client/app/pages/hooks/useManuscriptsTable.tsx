@@ -388,6 +388,10 @@ const compactDateToIso = (compactDate: string): string =>
 // #endregion helpers
 
 type UseManuscriptsTableResult = {
+  actionModal: {
+    confirm: (config: Record<string, any>) => void
+    error: (config: Record<string, any>) => void
+  }
   actionModalContextHolder: ReactNode
   columnFilters: Record<string, string[]>
   columns: ManuscriptsTableColumn[]
@@ -638,11 +642,15 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
               return (
                 <LinkList>
                   <Link
+                    data-testid="control-link"
                     to={`/${groupName}/versions/${parentId || id}/decision`}
                   >
                     {t('manuscriptsTable.Control')}
                   </Link>
-                  <Link to={`/${groupName}/versions/${id}/production`}>
+                  <Link
+                    data-testid="production-link"
+                    to={`/${groupName}/versions/${id}/production`}
+                  >
                     {t('manuscriptsTable.Production')}
                   </Link>
                 </LinkList>
@@ -669,6 +677,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
                 return (
                   <Link
+                    data-testid="review-action-link"
                     onClick={async (event): Promise<void> => {
                       event.preventDefault()
 
@@ -712,6 +721,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
                 return (
                   <ActionRow>
                     <Link
+                      data-testid="accept-review"
                       onClick={(event): void => {
                         event.preventDefault()
                         respond('accepted')
@@ -722,6 +732,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
                     </Link>
                     <div></div>
                     <Link
+                      data-testid="reject-review"
                       onClick={(event): void => {
                         event.preventDefault()
                         respond('rejected')
@@ -1235,6 +1246,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     onViewingArchivedChange: handleViewingArchivedChange,
     page: Number(page),
     pageSize,
+    actionModal,
     actionModalContextHolder,
     reviewerStatusViewMode,
     searchQuery: currentSearchQuery ?? '',
