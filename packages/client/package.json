@@ -12,7 +12,7 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "analyze": "NODE_ENV=development yarn coko-client-build && rm -rf ./_build",
+    "analyze": "yarn vite-bundle-visualizer --config node_modules/@coko/client/vite/vite.config.mts --output stats.html --open false && (xdg-open stats.html || open stats.html)",
     "typecheck": "node_modules/.bin/tsc --noEmit -p tsconfig.json"
   },
   "resolutions": {
@@ -28,7 +28,7 @@
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.6",
     "@codemirror/lang-json": "^6.0.1",
-    "@coko/client": "^2.6.0",
+    "@coko/client": "^2.7.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -100,7 +100,8 @@
     "@storybook/react-vite": "^10.4.6",
     "@types/lodash": "^4.17.25",
     "@types/react": "^19.2.14",
-    "storybook": "^10.4.6"
+    "storybook": "^10.4.6",
+    "vite-bundle-visualizer": "^1.2.1"
   },
   "packageManager": "yarn@4.9.2"
 }
