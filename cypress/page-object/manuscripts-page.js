@@ -16,7 +16,7 @@ const EVALUATION_BUTTON = '[href*=evaluation]'
 const CREATED_CARET = 'Carets__Caret'
 const TABLE_HEADER = '[class*=Table__Header]'
 const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
-const ARTICLE_ID = '[name="submission.articleId"]'
+const ARTICLE_ID = '[data-testid="submission.articleId"]'
 const ARTICLE_LABEL =
   '[data-testid="submission.$customStatus"] [data-testid="editable-option-select"]'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
@@ -37,7 +37,7 @@ const DROPDOWN_OPTION = '[data-testid="select-option"]'
 
 export const ManuscriptsPage = {
   getEvaluationLink() {
-    return cy.getByDataTestId('evaluation-action-link')
+    return cy.getByDataTestId('evaluation-action-link').first()
   },
   clickEvaluationLink() {
     this.getEvaluationLink().click()
@@ -94,7 +94,7 @@ export const ManuscriptsPage = {
     return cy.get('h1')
   },
   getEvaluationButton() {
-    return cy.contains('button', 'Evaluation')
+    return this.getEvaluationLink()
   },
   getNthEvaluationButton(nth) {
     return cy.get(EVALUATION_BUTTON).eq(nth)
@@ -142,7 +142,7 @@ export const ManuscriptsPage = {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
   },
   getAuthorField(nth) {
-    return cy.getByDataTestId('usercombo-primary').eq(nth)
+    return cy.getByDataTestId('person-name').eq(nth)
   },
   getAuthor(nth) {
     return this.getAuthorField(nth).invoke('text')
@@ -163,7 +163,7 @@ export const ManuscriptsPage = {
     return cy.get(ARTICLE_ID).eq(nth)
   },
   clickArticleId() {
-    return this.getArticleIdByRow(0).click()
+    return this.getArticleIdByRow(0).scrollIntoView().click()
   },
   filterColumnByValue(columnKey, valueLabel) {
     cy.get(`.ant-table-thead [data-testid="${columnKey}"]`)

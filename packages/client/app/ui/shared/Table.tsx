@@ -53,6 +53,17 @@ const Table = styled(OriginalTable)`
     background-color: ${th('colorTextReverse')} !important;
   }
 
+  .ant-table-column-sorter-up,
+  .ant-table-column-sorter-down {
+    opacity: 0.1;
+  }
+
+  .ant-table-column-sorter-up.active,
+  .ant-table-column-sorter-down.active {
+    color: ${th('colorTextReverse')} !important;
+    opacity: 0.9;
+  }
+
   tbody tr:last-of-type {
     > td:first-of-type {
       border-bottom-left-radius: ${th('borderRadius')};

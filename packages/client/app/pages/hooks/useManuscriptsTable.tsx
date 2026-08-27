@@ -12,7 +12,7 @@ import {
   useLazyQuery,
   useApolloClient,
 } from '@apollo/client/react'
-import styled from 'styled-components'
+import styled, { ThemeProvider, useTheme } from 'styled-components'
 import { grid, th, Modal } from '@coko/client'
 import get from 'lodash/get'
 import mapValues from 'lodash/mapValues'
@@ -430,6 +430,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const [actionModal, actionModalContextHolder] = Modal.useModal()
+  const theme = useTheme()
 
   const [reviewerStatusViewMode, setReviewerStatusViewMode] = useState<
     'compact' | 'detailed'
@@ -923,7 +924,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
         }
       }
 
-      if (fieldDefinitions[column.key]?.options) {
+      if (fieldDefinitions[column.key]?.options?.length) {
         return {
           ...column,
           dataType: 'options',
@@ -1186,7 +1187,11 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
     if (response?.steps?.some((step: Record<string, any>) => !step.succeeded)) {
       actionModal.error({
-        content: <PublishingResponse response={response} />,
+        content: (
+          <ThemeProvider theme={theme}>
+            <PublishingResponse response={response} />
+          </ThemeProvider>
+        ),
         title: t('manuscriptsTable.actions.Publishing error'),
       })
     }

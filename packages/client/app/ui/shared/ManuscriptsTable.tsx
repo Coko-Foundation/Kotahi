@@ -195,7 +195,7 @@ const renderPerson = (value: any): ReactNode => {
     <PersonWrapper>
       <Avatar size={10} src={value.profilePicture} />
       <PersonInfo>
-        <span>{value.displayName}</span>
+        <span data-testid="person-name">{value.displayName}</span>
         {value.orcid && (
           <PersonIdentifier>{`ORCID: ${value.orcid}`}</PersonIdentifier>
         )}
@@ -1003,7 +1003,6 @@ const resolveColumn = (
     resolved = {
       ...resolved,
       sorter: true,
-      sortDirections: ['descend', 'ascend'],
       sortOrder:
         context.sortState?.columnKey === column.key
           ? context.sortState.order

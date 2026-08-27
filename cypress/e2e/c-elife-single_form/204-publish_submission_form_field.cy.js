@@ -56,6 +56,8 @@ describe('Update the submission form field', () => {
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoadElife()
       cy.intercept('/graphql').as('getResponse')
       ManuscriptsPage.clickPublishLink()
+      cy.contains('Publish this manuscript?').should('be.visible')
+      cy.contains('button', 'OK').click()
       cy.wait('@getResponse').its('response').should('deep.include', {
         statusCode: 200,
         statusMessage: 'OK',
