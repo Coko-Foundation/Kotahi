@@ -615,12 +615,18 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
 
               return (
                 <LinkList>
-                  <Link to={`/${groupName}/versions/${id}/submit`}>
+                  <Link
+                    data-testid="submission-action-link"
+                    to={`/${groupName}/versions/${id}/submit`}
+                  >
                     {actionText[status]}
                   </Link>
 
                   {showAuthorProofing && (
-                    <Link to={`/${groupName}/versions/${id}/production`}>
+                    <Link
+                      data-testid="production-action-link"
+                      to={`/${groupName}/versions/${id}/production`}
+                    >
                       {(status === 'assigned' || status === 'inProgress') &&
                         t(
                           'dashboardPage.mySubmissions.Provide production feedback',
@@ -768,25 +774,38 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
               return (
                 <LinkList>
                   {showEvaluation && (
-                    <Link to={`/${groupName}/versions/${id}/evaluation`}>
+                    <Link
+                      data-testid="evaluation-action-link"
+                      to={`/${groupName}/versions/${id}/evaluation`}
+                    >
                       {t('manuscriptsTable.actions.Evaluation')}
                     </Link>
                   )}
                   {showControl && (
-                    <Link to={`/${groupName}/versions/${id}/decision`}>
+                    <Link
+                      data-testid="control-action-link"
+                      to={`/${groupName}/versions/${id}/decision`}
+                    >
                       {t('manuscriptsTable.actions.Control')}
                     </Link>
                   )}
-                  <Link to={`/${groupName}/versions/${id}/manuscript`}>
+                  <Link
+                    data-testid="view-action-link"
+                    to={`/${groupName}/versions/${id}/manuscript`}
+                  >
                     {t('manuscriptsTable.actions.View')}
                   </Link>
                   {!rowArchived && (
-                    <Link to={`/${groupName}/versions/${id}/production`}>
+                    <Link
+                      data-testid="production-action-link"
+                      to={`/${groupName}/versions/${id}/production`}
+                    >
                       {t('manuscriptsTable.actions.Production')}
                     </Link>
                   )}
                   {showPublish && (
                     <Link
+                      data-testid="publish-action-link"
                       onClick={(event): void => {
                         event.preventDefault()
                         actionModal.confirm({
@@ -976,9 +995,12 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
       (accumulator, current) => {
         const property = current.dataIndex
 
-        if (property === 'submission.$title') {
+        if (
+          property === 'submission.$title' ||
+          property === 'titleAndAbstract'
+        ) {
           accumulator[property] = {
-            title: get(manuscript, property),
+            title: get(manuscript, 'submission.$title'),
             hasOverdueTasks: manuscript.hasOverdueTasksForUser,
             importSource: importSourceFor(manuscript),
             abstract: manuscript.submission?.$abstract,
@@ -1159,6 +1181,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
       variables: { id: manuscriptId },
     })
 
+    // @ts-ignore
     const response = publishData?.publishManuscript
 
     if (response?.steps?.some((step: Record<string, any>) => !step.succeeded)) {
@@ -1198,6 +1221,7 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     })
 
     const cleanedData = sanitizeExportValue(
+      // @ts-ignore
       exportData?.getManuscriptsData ?? [],
     )
 

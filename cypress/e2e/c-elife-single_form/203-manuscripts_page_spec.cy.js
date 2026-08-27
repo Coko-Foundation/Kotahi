@@ -45,7 +45,7 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
-      ManuscriptsPage.getOptionsElifeText('Publish').should('not.exist')
+      ManuscriptsPage.getPublishLink().should('not.exist')
     })
   })
 
@@ -197,8 +197,8 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
-      ManuscriptsPage.getOptionsElife().should('not.contain', 'Control')
-      ManuscriptsPage.getOptionsElife().should('contain', 'Publish')
+      ManuscriptsPage.getControlLink().should('not.exist')
+      ManuscriptsPage.getPublishLink().should('exist')
     })
 
     it('submission details should be visible', () => {

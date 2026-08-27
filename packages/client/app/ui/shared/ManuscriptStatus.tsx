@@ -74,7 +74,11 @@ const ManuscriptStatus = ({
 
   if (!showPublishedHalf) {
     return (
-      <Badge small={small} variant={variantMapper[status]}>
+      <Badge
+        data-testid="badge-status"
+        small={small}
+        variant={variantMapper[status]}
+      >
         {t(`msStatus.${status}`)}
       </Badge>
     )
@@ -82,10 +86,18 @@ const ManuscriptStatus = ({
 
   return (
     <TwoToneWrapper>
-      <Badge small={small} variant={variantMapper.published}>
+      <Badge
+        data-testid="badge-status"
+        small={small}
+        variant={variantMapper.published}
+      >
         {t('msStatus.published')}
       </Badge>
-      <Badge small={small} variant={variantMapper[status]}>
+      <Badge
+        data-testid="badge-status"
+        small={small}
+        variant={variantMapper[status]}
+      >
         {t(`msStatus.${status}`)}
       </Badge>
     </TwoToneWrapper>

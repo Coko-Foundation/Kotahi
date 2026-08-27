@@ -14,7 +14,7 @@ const SUBMISSION_FILE_UPLOAD_INPUT = 'input[type=file]'
 const SUBMISSION_CREATED = 'Submission created'
 
 /* My Submissions */
-const SUBMITTED_MANUSCRIPTS = '[data-testid=clickable-manuscripts-row]'
+const SUBMISSION_ACTION_LINK = 'submission-action-link'
 const CREATE_NEW_VERSION_BUTTON = 'create-new-manuscript-version-button'
 
 /* Submitted Info */
@@ -37,14 +37,11 @@ const VERSION_TITLE = 'VersionTitle__Root-sc'
 const ARTICLE_LINK = '[data-testid="reviewerLinks"] button'
 
 export const DashboardPage = {
-  getSubmittedManuscript() {
-    return cy.get(SUBMITTED_MANUSCRIPTS)
+  getSubmissionActionLink() {
+    return cy.getByDataTestId(SUBMISSION_ACTION_LINK)
   },
-  getSubmittedManuscripts(nth) {
-    return cy.get(SUBMITTED_MANUSCRIPTS).eq(nth)
-  },
-  clickSubmittedManuscript(nth) {
-    this.getSubmittedManuscripts(nth).click()
+  clickSubmissionActionLink() {
+    this.getSubmissionActionLink().click()
   },
   getSubmitButton() {
     return cy.get(BUTTON).contains(SUBMISSION_BUTTON)

@@ -118,6 +118,7 @@ const doReview = (name, reviewData) => {
 
       // Verify the review got completed
       cy.get('nav').contains('Dashboard').click()
+      cy.url().should('contain', '/dashboard/reviews')
       DashboardPage.getDoReviewButton().should('contain', 'View')
       cy.getByDataTestId('menu-user').click()
       cy.contains('Logout').click()

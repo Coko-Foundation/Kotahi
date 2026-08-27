@@ -82,11 +82,13 @@ type ManuscriptsTableColumnOption = {
 const renderSingleOption = (
   value: string,
   options: ManuscriptsTableColumnOption[],
+  testId?: string,
 ): ReactNode => {
   const option = options.find(o => o.value === value)
 
   return (
     <Badge
+      data-testid={testId}
       small
       style={
         option?.labelColor ? { backgroundColor: option.labelColor } : undefined
@@ -147,6 +149,7 @@ const renderEditableOption = (
   return (
     <EditableOptionSelect
       allowClear
+      data-testid="editable-option-select"
       labelRender={({ value: selectedValue }): ReactNode =>
         renderSingleOption(selectedValue as string, options)
       }
@@ -155,7 +158,7 @@ const renderEditableOption = (
       }
       onClick={(event: MouseEvent): void => event.stopPropagation()}
       optionRender={option =>
-        renderSingleOption(option.value as string, options)
+        renderSingleOption(option.value as string, options, 'editable-option')
       }
       options={options.map(option => ({
         value: option.value,
@@ -302,7 +305,7 @@ const TitleCell = ({
           >
             <Tooltip
               title={
-                <TitleAbstractTooltipContent>
+                <TitleAbstractTooltipContent data-testid="abstract-tooltip">
                   <TitleAbstractTooltipHeader>
                     {t('manuscriptsTable.abstractHeader')}
                   </TitleAbstractTooltipHeader>
@@ -315,6 +318,7 @@ const TitleCell = ({
             >
               <TitleAbstractButton
                 aria-label={t('manuscriptsTable.showAbstract')}
+                data-testid="abstract-tooltip-icon"
                 type="button"
               >
                 <Info />
@@ -967,7 +971,7 @@ const resolveColumn = (
       ...resolved,
       title: (
         <ColumnTitleWithTooltip
-          title={resolved.title}
+          title={resolved.title as ReactNode}
           tooltip={column.helpTooltip}
         />
       ),
@@ -987,7 +991,7 @@ const resolveColumn = (
               isCompact ? 'compact' : 'detailed',
             )
           }
-          title={resolved.title}
+          title={resolved.title as ReactNode}
         />
       ),
     }
@@ -1010,6 +1014,7 @@ const resolveColumn = (
   resolved = {
     ...resolved,
     onCell: (): Record<string, any> => ({ 'data-testid': column.key }),
+    onHeaderCell: (): Record<string, any> => ({ 'data-testid': column.key }),
   }
 
   return resolved
@@ -1060,9 +1065,7 @@ const SelectionCount = styled.span`
   color: ${th('colorTextPlaceholder')};
 `
 
-const EmptyStatePlaceholder = styled.div.attrs({
-  'data-testid': 'empty-manuscripts-table-placeholder',
-})`
+const EmptyStatePlaceholder = styled.div`
   color: ${th('colorTextPlaceholder')};
   display: grid;
   height: 100%;
@@ -1359,7 +1362,7 @@ const ManuscriptsTable = ({
         <SelectionActionsWrapper>
           {selectable && (showArchiveActions || showDownloadAction) && (
             <>
-              <SelectionCount>
+              <SelectionCount data-testid="selected-manuscripts-number">
                 {t('manuscriptsTable.selectedCount', {
                   count: selectedRows.length,
                 })}
@@ -1479,7 +1482,7 @@ const ManuscriptsTable = ({
         loading={loading}
         locale={{
           emptyText: (
-            <EmptyStatePlaceholder>
+            <EmptyStatePlaceholder data-testid="empty-manuscripts-table-placeholder">
               {t('manuscriptsTable.No matching manuscripts were found')}
             </EmptyStatePlaceholder>
           ),

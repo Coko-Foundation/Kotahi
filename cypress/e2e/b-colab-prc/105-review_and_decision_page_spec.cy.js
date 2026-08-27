@@ -121,7 +121,7 @@ Cypress.Commands.add(
 
 Cypress.Commands.add('submitDecision', (decisionText, decisionAction) => {
   cy.awaitDisappearSpinner()
-  ManuscriptsPage.selectOptionWithText('Control')
+  ManuscriptsPage.clickControlLink()
   ControlPage.clickDecisionTab(1)
   ControlPage.fillInDecision(decisionText)
 

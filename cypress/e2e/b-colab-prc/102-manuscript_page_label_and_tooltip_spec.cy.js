@@ -27,22 +27,16 @@ describe('Checking manuscripts page: label selection and tooltip', () => {
 
   it('verifies the selected label after choosing from the dropdown', () => {
     cy.contains('div', 'Manuscripts').should('exist')
-    // Click the Select button
-    ManuscriptsPage.getSelectButton().should('be.visible')
-    ManuscriptsPage.clickArticleLabel(-1)
+    ManuscriptsPage.getArticleLabel().should('be.visible')
 
     // Function to select a label and verify it
     const selectLabelAndVerify = label => {
-      cy.getByDataTestId('label-dropdown-element').click()
-      cy.screenshot('before-dropdown')
-      cy.get('body').then($body => {
-        if (!$body.find('[data-testid=label-dropdown-menu]').length) {
-          cy.log('Dropdown not found in body!')
-        }
-      })
-
-      cy.get('[data-testid=label-dropdown-menu]').contains(label).click()
-      ManuscriptsPage.getLabelDropdown().should('contain', label)
+      ManuscriptsPage.clickArticleLabel(-1)
+      cy.getByDataTestId('select-dropdown')
+        .find('[data-testid="editable-option"]')
+        .contains(label)
+        .click({ force: true })
+      ManuscriptsPage.getArticleLabel().eq(-1).should('contain', label)
       Menu.clickManuscriptsAndAssertPageLoad()
     }
 
@@ -51,11 +45,10 @@ describe('Checking manuscripts page: label selection and tooltip', () => {
     labels.forEach(selectLabelAndVerify)
 
     // Unset the custom label
-    cy.get('[data-testid=label-dropdown-styled-button]').eq(0).click()
-    cy.get('[data-testid=manuscripts-table-styled-button]').should(
-      'contain',
-      'Select',
-    )
+    ManuscriptsPage.clickArticleLabelClear(-1)
+    ManuscriptsPage.getArticleLabel()
+      .eq(-1)
+      .should('not.contain', 'Ready to publish')
   })
 
   context('tooltip tests', () => {
@@ -69,7 +62,8 @@ describe('Checking manuscripts page: label selection and tooltip', () => {
     it('check no tooltip for empty abstract', () => {
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltipText().should('not.exist')
-      ManuscriptsPage.getTooltipIcon().should('not.exist')
+      ManuscriptsPage.getTooltipIcon().should('be.visible').click()
+      ManuscriptsPage.getTooltipText().should('contain', 'No abstract provided')
     })
 
     it('check tooltip text', () => {
@@ -78,28 +72,29 @@ describe('Checking manuscripts page: label selection and tooltip', () => {
         SubmissionFormPage.fillInAbstractColab(data.abstract)
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.getTooltipText().should('not.exist')
-        ManuscriptsPage.getTooltipIcon()
-          .should('be.visible')
-          .trigger('mouseover')
+        ManuscriptsPage.getTooltipIcon().should('be.visible').click()
         ManuscriptsPage.getTooltipText()
           .should('contain', data.abstract)
           .and('not.contain', '<p class="paragraph">')
       })
     })
 
-    it('check length for the tooltip text, to be less than 1000', () => {
+    it('truncates a long abstract to 60 words', () => {
+      const longAbstract = Array.from(
+        { length: 65 },
+        (_, i) => `word${i + 1}`,
+      ).join(' ')
+
       cy.contains('Continue Submission').click()
-      cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInAbstractColab(
-          data.abstractWithMoreThan1000Characters,
-        )
-        Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.getTooltipText().should('not.exist')
-        ManuscriptsPage.getTooltipIcon().trigger('mouseover')
-        ManuscriptsPage.getTooltipText()
-          .should('contain', '...')
-          .should('have.lengthOf.lessThan', 1000)
-      })
+      SubmissionFormPage.fillInAbstractColab(longAbstract)
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getTooltipText().should('not.exist')
+      ManuscriptsPage.getTooltipIcon().click()
+      ManuscriptsPage.getTooltipText()
+        .should('contain', '...')
+        .should($el => {
+          expect($el.text().trim().split(/\s+/).length).to.be.at.most(61)
+        })
     })
   })
 })

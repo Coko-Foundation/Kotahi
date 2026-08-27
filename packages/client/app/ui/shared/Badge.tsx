@@ -64,6 +64,7 @@ type BadgeProps = {
   children: ReactNode
 
   className?: string
+  'data-testid'?: string
   outlined?: boolean
   small?: boolean
   style?: CSSProperties
@@ -73,6 +74,7 @@ type BadgeProps = {
 const Badge = ({
   className,
   children,
+  'data-testid': dataTestId,
   small,
   style,
   variant,
@@ -82,6 +84,7 @@ const Badge = ({
       $small={small}
       $variant={variant}
       className={className}
+      data-testid={dataTestId}
       style={style}
     >
       {children}

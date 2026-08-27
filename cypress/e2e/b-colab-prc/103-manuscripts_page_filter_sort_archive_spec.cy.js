@@ -81,7 +81,7 @@ describe('manuscripts page tests - Filter, sort, bulk select, archive', () => {
   context('filter and sort articles', () => {
     it('filter per status', () => {
       ManuscriptsPage.getTableRowsCount().should('eq', 3)
-      ManuscriptsPage.clickStatus(-1)
+      ManuscriptsPage.filterColumnByValue('status', 'Unsubmitted')
       ManuscriptsPage.getTableRowsCount().should('eq', 2)
       ManuscriptsPage.getStatus(0).should('contain', 'Unsubmitted')
       cy.url().should('contain', 'new')
@@ -97,18 +97,15 @@ describe('manuscripts page tests - Filter, sort, bulk select, archive', () => {
       cy.url().should('contain', 'readyToEvaluate')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'Ready to evaluate')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'Ready to evaluate')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.selectCustomStatus('Evaluated')
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
       cy.url().should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(0).should('contain', 'Evaluated')
-      ManuscriptsPage.getLabelRow(1).should('contain', 'Evaluated')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.selectCustomStatus('Ready to publish')
       ManuscriptsPage.assertNoTableRows()
       cy.url().should('contain', 'readyToPublish')
-      ManuscriptsPage.getLabelRow(0).should('contain', 'Ready to publish')
     })
   })
 
@@ -134,7 +131,7 @@ describe('manuscripts page tests - Filter, sort, bulk select, archive', () => {
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.getConfirmationMessageForBulkDelete().should(
         'contain',
-        'Please confirm you wish to archive the selected manuscripts.',
+        'Archive 2 manuscripts?',
       )
       ManuscriptsPage.clickConfirm()
       ManuscriptsPage.getConfirmationMessageForBulkDelete().should('not.exist')
