@@ -1,4 +1,4 @@
-/* eslint-disable promise/always-return, promise/catch-or-return */
+/* eslint-disable promise/always-return */
 /* eslint-disable cypress/no-unnecessary-waiting */
 
 import { manuscripts } from '../../support/routes'
