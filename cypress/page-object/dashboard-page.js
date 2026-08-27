@@ -34,7 +34,6 @@ const COMPLETED_REVIEWS_STATUS = 'completed'
 const REJECTED_REVIEWS_STATUS = 'rejected'
 const ACCEPTED_REVIEWS_STATUS = 'accepted'
 const VERSION_TITLE = 'VersionTitle__Root-sc'
-const ARTICLE_LINK = '[data-testid="reviewerLinks"] button'
 
 export const DashboardPage = {
   getSubmissionActionLink() {
@@ -143,7 +142,7 @@ export const DashboardPage = {
     return cy.getByContainsClass(VERSION_TITLE)
   },
   getCompletedReviewButton() {
-    return cy.get(ARTICLE_LINK)
+    return this.getDoReviewButton()
   },
   clickCompletedReviewButton() {
     this.getCompletedReviewButton().click({ force: true })

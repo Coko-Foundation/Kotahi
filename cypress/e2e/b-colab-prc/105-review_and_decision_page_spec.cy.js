@@ -96,7 +96,9 @@ Cypress.Commands.add(
     cy.wait(1000)
     DashboardPage.clickDashboardTab(1)
     DashboardPage.clickAcceptReviewButton()
-    cy.contains('button', 'Do Review').should('be.visible')
+    cy.contains('Accept this review invitation?').should('be.visible')
+    cy.contains('button', 'OK').click()
+    DashboardPage.getDoReviewButton().should('contain', 'Do Review')
     DashboardPage.clickDoReviewAndVerifyPageLoaded()
     cy.contains('div', 'Metadata').should('be.visible')
 
