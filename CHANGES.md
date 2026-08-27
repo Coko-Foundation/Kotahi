@@ -6,7 +6,30 @@
 
 #### Bug fixes
 
+### Version 2026.08.13-0
+
+#### Features
+
+#### Bug fixes
+
+* Addressed an issue where the Wax toolbar was not clearly visible while editing long content.
+* Expanded HTTPS protocol checks while publishing to Hypothes.is.
+
+### Version 2026.08.11-0
+
+#### Features
+
+* A new Menu and Pages UI has been introduced, as we work towards improving the user experience in Kotahi
+* Storybook support has been reimplemented. 
+
+#### Bug fixes
+
 * We fixed a bug where a user could see another user's profile without the necessary permissions. Only admins can do that now.
+* There was an issue where chat messages sent after logging in would not automatically display, and required a page refresh to display. This has been resolved.
+* When editing the submission form, selecting "Last edit date — read-only" throws an error of an undefined component. This has been fixed.
+* Fixed an error when a reviewer was unable to scroll down to content outside of the view for both "Metadata" and "Review" tabs.
+* We addressed an issue with failing imports if `archivePeriodDays` was missing from the config.
+* Imports have also been staggered to avoid memory overloading.
 
 #### Deployment changes
 

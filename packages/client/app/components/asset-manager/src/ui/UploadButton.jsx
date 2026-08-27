@@ -2,7 +2,6 @@
 
 import styled from 'styled-components'
 
-// import { ActionButton } from '../ui'
 import { Button } from './Modal'
 
 const Input = styled.input`

@@ -19,9 +19,6 @@ const Wrapper = styled.div`
   box-shadow: ${th('boxShadow200')};
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
 `
 
 const EditorSection = ({

@@ -206,7 +206,6 @@ const DecisionVersions = ({
                 channels={channels}
                 chatProps={chatProps}
                 currentUser={currentUser}
-                manuscriptId={manuscript.id}
               />
               <CollapseButton
                 iconName="ChevronRight"

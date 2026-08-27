@@ -13,7 +13,6 @@ const { saveIcon, editIcon, exitIcon } = Icons
 
 const Input = styled.input`
   border: 0;
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   outline: 0;
@@ -32,7 +31,6 @@ const Input = styled.input`
 `
 
 const PlainItem = styled.div`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   text-align: left;

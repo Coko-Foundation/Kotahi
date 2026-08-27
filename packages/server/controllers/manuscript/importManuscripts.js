@@ -18,19 +18,19 @@ const shouldRunDefaultImportsForColab = [true, 'true'].includes(
 )
 
 const importManuscripts = async (groupId, ctx) => {
-  // eslint-disable-next-line no-console
-  console.log(`Importing manuscripts. Triggered by ${ctx.userId ?? 'system'}`)
+  logger.info(`Importing manuscripts. Triggered by ${ctx.userId ?? 'system'}`)
   const key = `${groupId}-imports`
 
   if (importsInProgress.has(key)) {
-    // eslint-disable-next-line no-console
-    console.log('Import already in progress. Aborting new import')
+    logger.info('Import already in progress. Aborting new import')
     return false
   }
 
-  try {
-    importsInProgress.add(key)
+  importsInProgress.add(key)
 
+  let promises
+
+  try {
     const activeConfig = await Config.query().findOne({
       groupId,
       active: true,
@@ -42,7 +42,7 @@ const importManuscripts = async (groupId, ctx) => {
       ? 'evaluated'
       : 'accepted'
 
-    const promises = [runImports(groupId, evaluatedStatusString, ctx.userId)]
+    promises = [runImports(groupId, evaluatedStatusString, ctx.userId)]
 
     if (activeConfig.formData.instanceName === 'preprint2') {
       promises.push(importArticlesFromBiorxiv(groupId, ctx))
@@ -53,57 +53,71 @@ const importManuscripts = async (groupId, ctx) => {
     ) {
       promises.push(importArticlesFromBiorxivWithFullTextSearch(groupId, ctx))
     }
-
-    if (!promises.length) return false
-
-    Promise.all(promises)
-      .catch(error => logger.error(error))
-      .finally(async () => {
-        subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-      })
-
-    return true
-  } finally {
+  } catch (error) {
     importsInProgress.delete(key)
+    throw error
   }
+
+  if (!promises.length) {
+    importsInProgress.delete(key)
+    return false
+  }
+
+  Promise.all(promises)
+    .catch(error => logger.error(error))
+    .finally(() => {
+      importsInProgress.delete(key)
+      subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
+    })
+
+  return true
 }
 
 const importManuscriptsFromSemanticScholar = async (groupId, ctx) => {
   const key = `${groupId}-SemanticScholar`
   if (importsInProgress.has(key)) return false
 
-  try {
-    importsInProgress.add(key)
+  importsInProgress.add(key)
 
+  let promises
+
+  try {
     const activeConfig = await Config.query().findOne({
       groupId,
       active: true,
     })
 
-    const promises = []
+    promises = []
 
     if (
       activeConfig.formData.integrations?.semanticScholar.enableSemanticScholar
     ) {
       promises.push(importArticlesFromSemanticScholar(groupId, ctx))
     }
-
-    if (!promises.length) return false
-
-    Promise.all(promises)
-      .catch(error => logger.error(error))
-      .finally(async () => {
-        subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-      })
-
-    return true
-  } finally {
+  } catch (error) {
     importsInProgress.delete(key)
+    throw error
   }
+
+  if (!promises.length) {
+    importsInProgress.delete(key)
+    return false
+  }
+
+  // The import lock is held until this background work settles, not until
+  // this function returns, since the caller doesn't await it.
+  Promise.all(promises)
+    .catch(error => logger.error(error))
+    .finally(() => {
+      importsInProgress.delete(key)
+      subscriptionManager.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
+    })
+
+  return true
 }
 
 module.exports = {

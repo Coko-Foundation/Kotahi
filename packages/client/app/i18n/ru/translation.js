@@ -1205,7 +1205,6 @@ const ru = {
       edit: 'Редактировать',
       delete: 'Удалить',
       Edited: 'Отредактировано',
-      'Open video chat': 'Открыть видеочат',
       Formatting: 'Форматирование',
       'Hide formatting': 'Скрыть форматирование',
     },

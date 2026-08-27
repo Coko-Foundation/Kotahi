@@ -1187,7 +1187,6 @@ const en = {
       edit: 'Edit',
       delete: 'Delete',
       Edited: 'Edited',
-      'Open video chat': 'Open video chat',
       Formatting: 'Formatting',
       'Hide formatting': 'Hide formatting',
     },

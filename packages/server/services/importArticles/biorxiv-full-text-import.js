@@ -15,6 +15,7 @@ const {
 } = require('./importTools')
 
 const CURSOR_LIMIT = 200 // This permits up to 10,000 matches, but prevents infinite loop
+const PAGES_PER_SAVE_BATCH = 20
 const SAVE_CHUNK_SIZE = 50
 const TIMEOUT_MS = 30000
 const MAX_TRIES = 5
@@ -60,26 +61,6 @@ const formatSearchQueryWithoutCursor = (dateFrom, dateTo) => {
 const restrictToSubjects = (imports, subjects) =>
   imports.filter(preprint => subjects.includes(preprint.category))
 
-const importAll = async (queryWithoutCursor, subjects) => {
-  const imports = []
-  let totalRetrievedCount = 0
-
-  for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
-    const queryString = `${queryWithoutCursor}&cursor=${cursor}`
-    // eslint-disable-next-line no-await-in-loop
-    const data = await doAxiosQueryWithRetry(queryString)
-    if (!data || !data.collection || !data.collection.length) break
-    totalRetrievedCount += data.collection.length
-    imports.push(...restrictToSubjects(data.collection, subjects))
-    console.log(
-      `Retrieved ${totalRetrievedCount} of ${data.total_results} total papers from biorxiv (${imports.length} in desired subjects)`,
-    )
-    if (imports.length >= data.total_results) break
-  }
-
-  return imports
-}
-
 const populateUrlAndAbstract = imports =>
   imports.map(item => ({
     ...item,
@@ -106,39 +87,14 @@ const stripInternalDuplicates = imports => {
   return Object.values(importsByDoi)
 }
 
-/** Strip any preprints that share a DOI with a manuscript already belonging to the group */
-const stripDuplicates = async (imports, groupId) => {
-  // TODO retrieving all manuscripts to check DOIs is inefficient!
-  const manuscripts = await Manuscript.query().where({ groupId })
-
-  const currentDois = new Set(
-    manuscripts.map(m => m.submission.$doi).filter(Boolean),
-  )
-
-  return imports.filter(({ doi }) => !currentDois.has(doi))
-}
-
-const getData = async (groupId, ctx) => {
-  const sourceId = await getServerId('biorxiv')
-  const lastImportDate = await getLastImportDate(sourceId, groupId)
-  const minDate = Math.max(lastImportDate, await getDate2WeeksAgo())
-  const dateFrom = dateToIso8601(minDate)
-  const dateTo = dateToIso8601(Date.now())
-
-  const queryWithoutCursor = formatSearchQueryWithoutCursor(dateFrom, dateTo)
-
-  console.log(`Requesting papers from biorxiv...`)
-  let imports = await importAll(queryWithoutCursor, [
-    'biophysics',
-    'biochemistry',
-  ])
-  imports = stripInternalDuplicates(imports)
-  imports = await stripDuplicates(imports, groupId)
-  imports = populateUrlAndAbstract(imports)
-
-  const emptySubmission = getEmptySubmission(groupId)
-
-  const newManuscripts = imports.map(
+const buildNewManuscripts = (
+  imports,
+  groupId,
+  ctx,
+  sourceId,
+  emptySubmission,
+) =>
+  imports.map(
     ({
       doi,
       title,
@@ -194,21 +150,122 @@ const getData = async (groupId, ctx) => {
     }),
   )
 
-  try {
-    const result = []
+/** Saves one batch of already-subject-filtered raw bioRxiv records: dedupes internal
+ * version duplicates, skips DOIs already known (in the DB, or saved earlier in this
+ * run), and inserts the rest in chunks. Adds the saved DOIs to `knownDois` so later
+ * batches in the same run skip them too.
+ */
+const saveBatch = async (
+  rawImports,
+  groupId,
+  ctx,
+  sourceId,
+  emptySubmission,
+  knownDois,
+) => {
+  const deduped = stripInternalDuplicates(rawImports).filter(
+    ({ doi }) => !knownDois.has(doi),
+  )
 
-    for (let i = 0; i < newManuscripts.length; i += SAVE_CHUNK_SIZE) {
-      const chunk = newManuscripts.slice(i, i + SAVE_CHUNK_SIZE)
+  const imports = populateUrlAndAbstract(deduped)
 
-      // eslint-disable-next-line no-await-in-loop
-      const inserted = await Manuscript.query().upsertGraphAndFetch(chunk, {
-        relate: true,
-      })
+  const newManuscripts = buildNewManuscripts(
+    imports,
+    groupId,
+    ctx,
+    sourceId,
+    emptySubmission,
+  )
 
+  const result = []
+
+  for (let i = 0; i < newManuscripts.length; i += SAVE_CHUNK_SIZE) {
+    const chunk = newManuscripts.slice(i, i + SAVE_CHUNK_SIZE)
+    // eslint-disable-next-line no-await-in-loop
+    const inserted = await Manuscript.query().upsertGraphAndFetch(chunk, {
+      relate: true,
+    })
+    Array.prototype.push.apply(result, inserted)
+  }
+
+  imports.forEach(({ doi }) => knownDois.add(doi))
+
+  return result
+}
+
+const getData = async (groupId, ctx) => {
+  const sourceId = await getServerId('biorxiv')
+  const lastImportDate = await getLastImportDate(sourceId, groupId)
+  const minDate = Math.max(lastImportDate, await getDate2WeeksAgo())
+  const dateFrom = dateToIso8601(minDate)
+  const dateTo = dateToIso8601(Date.now())
+
+  const queryWithoutCursor = formatSearchQueryWithoutCursor(dateFrom, dateTo)
+  const subjects = ['biophysics', 'biochemistry']
+  const emptySubmission = getEmptySubmission(groupId)
+
+  const manuscripts = await Manuscript.query().where({ groupId })
+
+  const knownDois = new Set(
+    manuscripts.map(m => m.submission.$doi).filter(Boolean),
+  )
+
+  console.log(`Requesting papers from biorxiv...`)
+
+  const result = []
+  let pageBuffer = []
+  let totalRetrievedCount = 0
+  let totalMatchedCount = 0
+  let hadSaveError = false
+
+  const flush = async () => {
+    if (!pageBuffer.length) return
+    const batch = pageBuffer
+    pageBuffer = []
+
+    try {
+      const inserted = await saveBatch(
+        batch,
+        groupId,
+        ctx,
+        sourceId,
+        emptySubmission,
+        knownDois,
+      )
       Array.prototype.push.apply(result, inserted)
+    } catch (e) {
+      hadSaveError = true
+      console.error(e.message)
     }
+  }
 
-    if (lastImportDate > 0) {
+  for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
+    const queryString = `${queryWithoutCursor}&cursor=${cursor}`
+    // eslint-disable-next-line no-await-in-loop
+    const data = await doAxiosQueryWithRetry(queryString)
+    if (!data || !data.collection || !data.collection.length) break
+    totalRetrievedCount += data.collection.length
+
+    const matched = restrictToSubjects(data.collection, subjects)
+    totalMatchedCount += matched.length
+    pageBuffer.push(...matched)
+
+    console.log(
+      `Retrieved ${totalRetrievedCount} of ${data.total_results} total papers from biorxiv (${totalMatchedCount} in desired subjects)`,
+    )
+
+    if ((cursor + 1) % PAGES_PER_SAVE_BATCH === 0) {
+      // eslint-disable-next-line no-await-in-loop
+      await flush()
+    }
+  }
+
+  await flush()
+
+  // Only advance the import history if every batch saved cleanly, so a partial
+  // failure doesn't cause this date range to be skipped on the next run.
+  if (!hadSaveError) {
+    if (lastImportDate) {
       await ArticleImportHistory.query()
         .update({
           date: new Date().toISOString(),
@@ -221,15 +278,13 @@ const getData = async (groupId, ctx) => {
         groupId,
       })
     }
-
-    console.log(
-      `Imported ${result.length} preprints from biorxiv (discarding duplicates).`,
-    )
-
-    return result
-  } catch (e) {
-    console.error(e.message)
   }
+
+  console.log(
+    `Imported ${result.length} preprints from biorxiv (discarding duplicates).`,
+  )
+
+  return result
 }
 
 module.exports = getData

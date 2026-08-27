@@ -4,8 +4,6 @@ import { useContext, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useTranslation } from 'react-i18next'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 
 import { grid } from '@coko/client'
 import Page from '../../../ui/shared/Page'
@@ -66,7 +64,6 @@ const Manuscripts = ({
   chatProps,
   groupManagerDiscussionChannel,
   channels,
-  chatRoomId,
   chatExpand,
 }) => {
   const navigate = useNavigate()
@@ -113,17 +110,6 @@ const Manuscripts = ({
       )}
     >
       <OuterContainer>
-        <ToastContainer
-          autoClose={5000}
-          closeOnClick
-          draggable
-          hideProgressBar={false}
-          newestOnTop={false}
-          pauseOnFocusLoss
-          pauseOnHover
-          position="top-center"
-          rtl={false}
-        />
         <ManuscriptsColumns>
           <ManuscriptsPane>
             <FlexRow>
@@ -175,7 +161,6 @@ const Manuscripts = ({
               channelId={groupManagerDiscussionChannel?.id}
               channels={channels}
               chatProps={chatProps}
-              chatRoomId={chatRoomId}
               currentUser={currentUser}
               hideChat={hideChat}
             />

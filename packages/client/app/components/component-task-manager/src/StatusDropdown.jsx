@@ -23,7 +23,6 @@ const StartButton = styled.button`
   box-shadow: 0 2px 2px rgb(0 0 0 / 25%);
   color: white;
   display: flex;
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   font-style: normal;
   font-weight: 500;
@@ -38,7 +37,6 @@ const StartButton = styled.button`
 const BaseDropdown = styled(Dropdown)`
   border-radius: 4px;
   box-shadow: 0 2px 2px rgb(0 0 0 / 25%);
-  font-family: ${th('fontHeading')};
   font-size: 14.5px;
   font-style: normal;
   font-weight: 500;

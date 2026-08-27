@@ -103,7 +103,6 @@ const GroupName = styled.div<{ $labelsWrap: boolean }>`
 
 const GroupType = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
-  text-transform: capitalize;
 `
 
 const Separator = styled.div`
@@ -119,12 +118,14 @@ const LinkSection = styled.div`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  min-height: 0;
   font-family: ${th('fontInterface')};
   line-height: ${th('lineHeightBase')};
 `
 
 const LinkItems = styled.ul`
   flex-grow: 1;
+  overflow: hidden auto;
   list-style: none;
   padding: 0;
 `
@@ -341,6 +342,7 @@ const Menu = (props: MenuProps): ReactNode => {
     showDashboard,
     showReports,
   } = props
+
   const { t } = useTranslation()
   const { pathname } = useLocation()
   const { groupName } = useParams()

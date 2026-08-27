@@ -74,7 +74,7 @@ jobs:
           GH_TOKEN: ${{ secrets.RELEASE_PAT }}
         run: |
           PR_NUMBER=$(gh pr list --head release/${{ steps.bump_version.outputs.version }} --json number -q '.[0].number')
-          gh pr merge $PR_NUMBER --merge --admin
+          gh pr merge $PR_NUMBER --merge --admin --delete-branch
 
       - name: Tag release
         if: success()
@@ -86,6 +86,32 @@ jobs:
           git pull origin main
           git tag -f ${{ steps.bump_version.outputs.version }}
           git push -f origin ${{ steps.bump_version.outputs.version }}
+
+      - name: Sync version to staging
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_PAT }}
+        run: |
+          VERSION=${{ steps.bump_version.outputs.version }}
+          BRANCH=chore/sync-version-$VERSION
+          git fetch origin staging
+          git checkout -B $BRANCH origin/staging
+          for f in package.json packages/client/package.json packages/server/package.json; do
+            sed -i -E "s/(\"version\": \")[^\"]+(\")/\1$VERSION\2/" "$f"
+          done
+          git add -A
+          git commit -m "chore: sync release version $VERSION to staging [skip ci]" \
+            || { echo "Staging already at $VERSION, nothing to sync"; exit 0; }
+          git push -f origin $BRANCH
+          gh pr create \
+            --base staging \
+            --head $BRANCH \
+            --title "Sync version $VERSION to staging" \
+            --body "Automated sync of released version \`$VERSION\` back to staging." \
+            || echo "PR already exists"
+          gh pr merge $BRANCH \
+            --merge --admin --delete-branch \
+            --subject "Merge: sync version $VERSION to staging [skip ci]"
 
   # ------------------------
   # Publish (DockerHub)
@@ -99,6 +125,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release.outputs.release_version }}
 
       - name: Docker login
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
@@ -118,6 +146,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.release.outputs.release_version }}
 
       - name: Docker login
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin

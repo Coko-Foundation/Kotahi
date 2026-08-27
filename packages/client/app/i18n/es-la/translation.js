@@ -1210,7 +1210,6 @@ const esLa = {
       edit: 'Editar',
       delete: 'Eliminar',
       Edited: 'Editado',
-      'Open video chat': 'Abrir videochat',
       Formatting: 'Formato',
       'Hide formatting': 'Ocultar formato',
     },

@@ -179,7 +179,18 @@ const Router = (): ReactNode => {
               <Route element={<ProfilePage />} path="profile/:id" />
             </Route>
 
-            <Route element={<RoleGate roles={[Role.User]} />}>
+            <Route
+              element={
+                <RoleGate
+                  roles={[
+                    Role.Admin,
+                    Role.GroupAdmin,
+                    Role.GroupManager,
+                    Role.User,
+                  ]}
+                />
+              }
+            >
               <Route element={<ProfilePage />} path="profile" />
               <Route element={<NewSubmissionPage />} path="newSubmission" />
               <Route element={<ReviewPage />} path="versions/:version/review" />

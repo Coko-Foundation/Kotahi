@@ -35,7 +35,7 @@ export const Menu = styled.div`
   min-height: 40px;
   padding-top: ${grid(2)};
   position: sticky;
-  top: -20px;
+  top: 0;
   user-select: none;
   z-index: 5;
 
@@ -152,7 +152,6 @@ export const ReadOnlyEditorDiv = styled.div`
   background-color: ${th('color.backgroundA')};
   grid-column-start: editorCol;
   grid-row-start: editorRow;
-  /* overflow: auto; */
   padding: 16px;
   position: relative;
 
@@ -199,7 +198,7 @@ export const SimpleMenu = styled.div`
   /* overflow-x: scroll; this is not great! */
   min-height: 40px;
   position: sticky;
-  top: -20px;
+  top: 0;
   user-select: none;
   z-index: 1;
 
@@ -319,7 +318,6 @@ export const ProductionEditorDiv = styled.div`
 
 export const EditorArea = styled.div`
   flex-grow: 1;
-  height: calc(100vh - 182px);
 `
 
 export const SideMenu = styled.div`

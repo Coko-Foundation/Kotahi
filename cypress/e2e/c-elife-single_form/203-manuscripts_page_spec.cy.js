@@ -33,10 +33,9 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getTableHead().should('be.visible')
     })
 
-    it('check Submit and Video Chat buttons are visible', () => {
+    it('check Submit button is visible', () => {
       ManuscriptsPage.clickExpandChatButton()
       ManuscriptsPage.getSubmitButton().should('be.visible')
-      ManuscriptsPage.getLiveChatButton().should('be.visible')
       cy.get('button[title="Hide Chat"]').click()
       cy.contains('Group Manager discussion').should('not.exist')
     })

@@ -1225,7 +1225,6 @@ const fr = {
       edit: 'Modifier',
       delete: 'Supprimer',
       Edited: 'Modifié',
-      'Open video chat': 'Ouvrir le chat vidéo',
       Formatting: 'Mise en forme',
       'Hide formatting': 'Masquer la mise en forme',
     },

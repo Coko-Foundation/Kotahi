@@ -91,7 +91,6 @@ describe('Login page tests', () => {
       cy.contains('403').should('exist')
       cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('not.exist')
-      ManuscriptsPage.getLiveChatButton().should('not.exist')
     })
   })
 })

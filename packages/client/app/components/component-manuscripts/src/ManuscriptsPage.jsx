@@ -1,9 +1,8 @@
 import { useState, useContext } from 'react'
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useSubscription } from '@apollo/client/react'
-import fnv from 'fnv-plus'
+import { useNotification } from '@coko/client'
+
 import { ConfigContext } from '../../config/src'
 import {
   IMPORT_MANUSCRIPTS,
@@ -18,9 +17,9 @@ import { useCurrentUser } from '../../../pages/hooks/useCurrentUser'
 const ManuscriptsPage = () => {
   const { t } = useTranslation()
   const currentUser = useCurrentUser()
+  const notify = useNotification()
 
   const config = useContext(ConfigContext)
-  const chatRoomId = fnv.hash(config.clientUrl).hex()
 
   const [isImporting, setIsImporting] = useState(false)
 
@@ -33,19 +32,12 @@ const ManuscriptsPage = () => {
   )
 
   useSubscription(IMPORTED_MANUSCRIPTS, {
-    onSubscriptionData: data => {
-      const {
-        subscriptionData: {
-          data: { manuscriptsImportStatus },
-        },
-      } = data
-
+    onData: ({ data }) => {
       setIsImporting(false)
 
-      toast.success(
-        manuscriptsImportStatus && 'Manuscripts successfully imported',
-        { hideProgressBar: true },
-      )
+      if (data.data.manuscriptsImportStatus) {
+        notify.success({ title: 'Manuscripts successfully imported' })
+      }
     },
   })
 
@@ -90,7 +82,6 @@ const ManuscriptsPage = () => {
       channels={channels}
       chatExpand={chatExpand}
       chatProps={chatProps}
-      chatRoomId={chatRoomId}
       currentUser={currentUser}
       groupManagerDiscussionChannel={groupManagerDiscussionChannel}
       hideManuscriptsChat={hideDiscussionFromGroupAdminsManagers}

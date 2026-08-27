@@ -34,7 +34,6 @@ const TableHeadCell = styled.div`
 `
 
 const HeaderLabel = styled.div`
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   line-height: ${th('lineHeightBase')};
   padding-left: 5px;
@@ -50,7 +49,6 @@ const TableBodyEmpty = styled.div`
   align-items: center;
   display: flex;
   flex-direction: column;
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBase')};
   justify-content: center;
   line-height: ${th('lineHeightBase')};
@@ -88,7 +86,6 @@ const RowRest = styled.div`
 
 const TableCell = styled.div`
   flex-basis: ${({ width }) => (width ? `${width}%` : '33.33%')};
-  font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   padding: 8px;
