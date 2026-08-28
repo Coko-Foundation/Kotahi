@@ -700,6 +700,7 @@ const ReviewerStatusSummary = ({
             <ReviewerStatusSquare
               $colorToken={resolveReviewerStatusColorToken(status)}
               aria-label={`${name}: ${t(reviewerStatusTranslationKeys[status])}`}
+              data-testid="reviewer-status-square"
               key={name}
               role="img"
             />

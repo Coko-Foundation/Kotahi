@@ -42,7 +42,7 @@ describe('Editor assigning reviewers', () => {
     // Go to dashboard and verify number of invited reviewer
     Menu.clickDashboard()
     cy.getByDataTestId('statusCounts')
-      .find('[role="img"]')
+      .find('[data-testid="reviewer-status-square"]')
       .should('have.length', 6)
   })
 })
