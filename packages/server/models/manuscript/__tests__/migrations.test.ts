@@ -38,7 +38,7 @@ describe('Manuscript Migrations', () => {
   })
 
   afterAll(async () => {
-    await DbTestUtils.dropAllTables()
+    await DbTestUtils.clearDb()
     await db.destroy()
   })
 
