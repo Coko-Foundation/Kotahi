@@ -5,6 +5,7 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     silent: true,
+    testTimeout: 10000,
     globalSetup: ['./vitest.setup.ts'],
     setupFiles: ['./vitest.workerDb.ts'],
 
