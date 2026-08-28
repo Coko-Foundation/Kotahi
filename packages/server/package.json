@@ -67,7 +67,9 @@
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
+    "@types/pg": "^8.23.0",
     "@vitest/coverage-v8": "^4.1.10",
+    "pg": "^8.23.0",
     "vitest": "^4.1.10"
   },
   "resolutions": {

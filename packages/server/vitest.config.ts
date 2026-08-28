@@ -5,7 +5,8 @@ export default defineConfig({
     environment: 'node',
     globals: true,
     silent: true,
-    fileParallelism: false,
+    globalSetup: ['./vitest.setup.ts'],
+    setupFiles: ['./vitest.workerDb.ts'],
 
     coverage: {
       provider: 'v8',
