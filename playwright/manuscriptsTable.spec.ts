@@ -291,4 +291,35 @@ test.describe('manuscripts table data', () => {
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
   })
+
+  test('admin, group admin and group manager all see manuscripts from every submitter', async ({
+    request,
+    apiUrl,
+    loginAs,
+    page,
+    testGroup,
+  }) => {
+    // No submitterUsername - round-robins across the group's 5 generic
+    // users, so these 3 manuscripts get 3 different submitters.
+    await request.post(`${apiUrl}/testManuscripts/${testGroup.groupName}/3`)
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    const usernames = [
+      testGroup.adminUsername,
+      testGroup.groupAdminUsername,
+      testGroup.groupManagerUsername,
+    ]
+
+    for (const username of usernames) {
+      // eslint-disable-next-line no-await-in-loop
+      await loginAs(username)
+      // eslint-disable-next-line no-await-in-loop
+      await page.goto(`/${testGroup.groupName}/admin/manuscripts`)
+      // eslint-disable-next-line no-await-in-loop
+      await expect(shortIdCells).toHaveCount(3)
+    }
+  })
 })
