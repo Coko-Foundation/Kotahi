@@ -46,15 +46,7 @@ import { validateDoi, validateSuffix } from '../../shared/commsUtils'
 import PublishingResponse from '../../components/component-review/src/components/publishing/PublishingResponse'
 // #endregion import
 
-// #region constants
-const URI_PARAMS = {
-  SEARCH: 'search',
-  PAGENUM: 'pagenum',
-  SORT: 'sort',
-  ARCHIVED: 'archived',
-  REVIEWER_STATUS: 'reviewerStatusBadge', // 'your status' column on reviews dashboard tab
-}
-
+// #region styled
 const LinkList = styled.div`
   align-items: flex-start;
   display: flex;
@@ -72,6 +64,16 @@ const ActionRow = styled.div`
     height: ${grid(6)};
   }
 `
+// #endregion styled
+
+// #region constants
+const URI_PARAMS = {
+  SEARCH: 'search',
+  PAGENUM: 'pagenum',
+  SORT: 'sort',
+  ARCHIVED: 'archived',
+  REVIEWER_STATUS: 'reviewerStatusBadge', // 'your status' column on reviews dashboard tab
+}
 
 type Variant = 'submitter' | 'editor' | 'reviewer' | 'admin'
 

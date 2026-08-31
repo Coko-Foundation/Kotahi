@@ -1,4 +1,3 @@
-// const { execSync } = require('child_process')
 const path = require('path')
 const { readFileSync } = require('fs')
 
@@ -8,6 +7,16 @@ const { resetDbAndApplyDump } = require('../../../scripts/resetDb')
 const { applyDump } = require('../../../scripts/resetDb')
 const createToken = require('../../../scripts/cypress/createToken')
 const seedForms = require('../../../scripts/cypress/seedForms')
+
+const {
+  createGroup,
+  deleteGroup,
+  deleteGroupsByPrefix,
+  createManuscripts,
+  assignRole,
+  updateGroupConfig,
+  deleteSharedUsers,
+} = require('./actions')
 
 const dumpFile = name => path.join(__dirname, 'dumps', `${name}.sql`)
 
@@ -60,6 +69,99 @@ module.exports = app => {
     } catch (err) {
       logger.error(err)
       res.sendStatus(500)
+    }
+  })
+
+  app.post('/api/e2e/testGroup/:groupName', async (req, res) => {
+    const { groupName } = req.params
+
+    try {
+      const result = await createGroup(groupName)
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/deleteTestGroup/:groupName', async (req, res) => {
+    const { groupName } = req.params
+
+    try {
+      await deleteGroup(groupName)
+      res.sendStatus(200)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/deleteTestGroupsByPrefix/:prefix', async (req, res) => {
+    const { prefix } = req.params
+
+    try {
+      const result = await deleteGroupsByPrefix(prefix)
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/deleteSharedUsers', async (req, res) => {
+    try {
+      const result = await deleteSharedUsers()
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/testGroupConfig/:groupName', async (req, res) => {
+    const { groupName } = req.params
+
+    try {
+      const patch = JSON.parse(req.query.patch)
+      await updateGroupConfig({ groupName, patch })
+      res.sendStatus(200)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/assignRole/:username/:role', async (req, res) => {
+    const { username, role } = req.params
+
+    const manuscriptIds = (req.query.manuscriptIds || '')
+      .split(',')
+      .filter(Boolean)
+
+    try {
+      const result = await assignRole({ manuscriptIds, username, role })
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
+
+  app.post('/api/e2e/testManuscripts/:groupName/:count', async (req, res) => {
+    const { groupName, count } = req.params
+    const { submitterUsername } = req.query
+
+    try {
+      const result = await createManuscripts({
+        groupName,
+        count: Number(count),
+        submitterUsername,
+      })
+
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
     }
   })
 }
