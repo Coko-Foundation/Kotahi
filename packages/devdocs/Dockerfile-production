@@ -8,6 +8,7 @@ WORKDIR /home/node/app
 
 COPY package.json .
 COPY yarn.lock .
+COPY .yarnrc.yml .
 
 RUN yarn install --immutable
 
