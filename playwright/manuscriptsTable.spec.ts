@@ -45,36 +45,36 @@ test.describe('manuscripts table default columns', () => {
 
   test('submissions table shows the default submitter columns', async ({
     page,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/dashboard/submissions`)
+    await navigateTo('/dashboard/submissions')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toEqual(DEFAULT_COLUMNS.submitter)
   })
 
   test('reviews table shows the default reviewer columns', async ({
     page,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
+    await navigateTo('/dashboard/reviews')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toEqual(DEFAULT_COLUMNS.reviewer)
   })
 
   test('edits table shows the default editor columns', async ({
     page,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/dashboard/edits`)
+    await navigateTo('/dashboard/edits')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toEqual(DEFAULT_COLUMNS.editor)
   })
 
   test('manuscripts table shows the default admin columns', async ({
     page,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/admin/manuscripts`)
+    await navigateTo('/admin/manuscripts')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toEqual(DEFAULT_COLUMNS.admin)
   })
@@ -89,9 +89,9 @@ test.describe('manuscripts table forced columns', () => {
   test('reviewer status column survives a config that omits it', async ({
     page,
     api,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
+    await navigateTo('/dashboard/reviews')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toContain('reviewerStatusBadge')
 
@@ -112,9 +112,9 @@ test.describe('manuscripts table forced columns', () => {
   test('statusCounts and lastUpdated columns survive a config that omits them', async ({
     page,
     api,
-    testGroup,
+    navigateTo,
   }) => {
-    await page.goto(`/${testGroup.groupName}/dashboard/edits`)
+    await navigateTo('/dashboard/edits')
     await expect(page.locator('.ant-table-thead')).toBeVisible()
 
     const before = await getHeaderTestIds(page)
@@ -143,6 +143,7 @@ test.describe('manuscripts table data', () => {
     api,
     loginAs,
     page,
+    navigateTo,
     testGroup,
   }) => {
     const submitterUsername = testGroup.usernames[0]
@@ -155,11 +156,11 @@ test.describe('manuscripts table data', () => {
       '.ant-table-tbody td[data-testid="shortId"]',
     )
 
-    await page.goto(`/${testGroup.groupName}/dashboard/submissions`)
+    await navigateTo('/dashboard/submissions')
     await expect(shortIdCells).toHaveCount(10)
     const pageOneIds = await shortIdCells.allTextContents()
 
-    await page.goto(`/${testGroup.groupName}/dashboard/submissions?pagenum=2`)
+    await navigateTo('/dashboard/submissions?pagenum=2')
     await expect(shortIdCells).toHaveCount(5)
     const pageTwoIds = await shortIdCells.allTextContents()
 
@@ -168,12 +169,12 @@ test.describe('manuscripts table data', () => {
     const allIds = new Set([...pageOneIds, ...pageTwoIds])
     expect(allIds.size).toBe(15)
 
-    await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
+    await navigateTo('/dashboard/reviews')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
 
-    await page.goto(`/${testGroup.groupName}/dashboard/edits`)
+    await navigateTo('/dashboard/edits')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
@@ -183,6 +184,7 @@ test.describe('manuscripts table data', () => {
     api,
     loginAs,
     page,
+    navigateTo,
     testGroup,
   }) => {
     const [authorUsername, reviewerUsername] = testGroup.usernames
@@ -202,18 +204,18 @@ test.describe('manuscripts table data', () => {
 
     await loginAs(reviewerUsername)
 
-    await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
+    await navigateTo('/dashboard/reviews')
 
     await expect(
       page.locator('.ant-table-tbody td[data-testid="shortId"]'),
     ).toHaveCount(3)
 
-    await page.goto(`/${testGroup.groupName}/dashboard/submissions`)
+    await navigateTo('/dashboard/submissions')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
 
-    await page.goto(`/${testGroup.groupName}/dashboard/edits`)
+    await navigateTo('/dashboard/edits')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
@@ -223,6 +225,7 @@ test.describe('manuscripts table data', () => {
     api,
     loginAs,
     page,
+    navigateTo,
     testGroup,
   }) => {
     const [authorUsername, editorUsername] = testGroup.usernames
@@ -254,17 +257,17 @@ test.describe('manuscripts table data', () => {
 
     await loginAs(editorUsername)
 
-    await page.goto(`/${testGroup.groupName}/dashboard/edits`)
+    await navigateTo('/dashboard/edits')
     await expect(
       page.locator('.ant-table-tbody td[data-testid="shortId"]'),
     ).toHaveCount(3)
 
-    await page.goto(`/${testGroup.groupName}/dashboard/submissions`)
+    await navigateTo('/dashboard/submissions')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
 
-    await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
+    await navigateTo('/dashboard/reviews')
     await expect(
       page.getByTestId('empty-manuscripts-table-placeholder'),
     ).toBeVisible()
@@ -274,6 +277,7 @@ test.describe('manuscripts table data', () => {
     api,
     loginAs,
     page,
+    navigateTo,
     testGroup,
   }) => {
     // No submitter - round-robins across the group's 5 generic users, so
@@ -294,7 +298,7 @@ test.describe('manuscripts table data', () => {
       // eslint-disable-next-line no-await-in-loop
       await loginAs(username)
       // eslint-disable-next-line no-await-in-loop
-      await page.goto(`/${testGroup.groupName}/admin/manuscripts`)
+      await navigateTo('/admin/manuscripts')
       // eslint-disable-next-line no-await-in-loop
       await expect(shortIdCells).toHaveCount(3)
     }

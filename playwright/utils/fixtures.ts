@@ -1,5 +1,5 @@
 import { basename } from 'path'
-import { test as base, type APIResponse } from '@playwright/test'
+import { test as base, type APIResponse, type Page } from '@playwright/test'
 
 export const jsonOrThrow = async (
   response: APIResponse | Promise<APIResponse>,
@@ -16,6 +16,8 @@ export const jsonOrThrow = async (
 }
 
 type LoginAs = (username: string) => Promise<void>
+
+type NavigateTo = (path: string) => ReturnType<Page['goto']>
 
 type TestGroup = {
   groupName: string
@@ -43,6 +45,7 @@ export const test = base.extend<{
   loginAs: LoginAs
   testGroup: TestGroup
   api: Api
+  navigateTo: NavigateTo
 }>({
   // No default - always set via `use: { apiUrl }` in playwright.config.ts.
   apiUrl: ['', { option: true }],
@@ -99,6 +102,10 @@ export const test = base.extend<{
           ),
         ),
     })
+  },
+
+  navigateTo: async ({ page, testGroup }, use) => {
+    await use(path => page.goto(`/${testGroup.groupName}${path}`))
   },
 })
 
