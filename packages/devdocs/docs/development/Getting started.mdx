@@ -1,9 +1,9 @@
 ## Prerequisites
 
 You'll need the following in order to run the app locally without issues:
-* A recent version of `docker` (eg. 27 as of this writing)
-* `node` >= 18
-* `yarn` version 1.22.x
+* A recent version of `docker` (eg. 29 as of this writing)
+* `node` >= 24
+* `yarn` version 4.15.0
 * `git`
 
 It is strongly recommended that you are familiar with docker and docker compose
@@ -25,7 +25,7 @@ cd packages/devdocs && yarn install & cd ../..
 
 ## Set up ORCID for development
 
-The only to currently log in to Kotahi is by using ORCID. This makes it mandatory
+The only way to currently log in to Kotahi is by using ORCID. This makes it mandatory
 that ORCID is set up correctly. ORCID provides a sandbox version of its service,
 which is what we'll be using in development. ORCID's sandbox will only send emails 
 to mailinator accounts, so you have to register on ORCID's sandbox with a 
@@ -35,11 +35,15 @@ mailinator email address.
 
 * Go to [mailinator.com](http://www.mailinator.com).
 * In the search bar at the top of the page enter your desired username 
-(we'll use `myelifetestemail` for this guide) and click "GO". (tip: choose a 
-username that is unlikely to be used already by someone else)
+(we'll use `myelifetestemail` for this guide) and click "GO".
 * You'll be taken to a new page. This is your inbox for myelifetestemail@mailinator.com. 
+:::tip[Tip]
 
-Keep this page open. (also keep in mind that this is a fully public inbox)
+When entering your username, choose a username that is unlikely to be used already by someone else
+
+:::
+
+Keep this page open (also keep in mind that this is a fully public inbox).
 
 ### Orcid (part 1)
 
@@ -62,15 +66,19 @@ Keep this page open. (also keep in mind that this is a fully public inbox)
 click on "Continue".
 * You should now be presented with a form. Fill in your application's name, 
 website and description. What you put in these fields shouldn't matter, as this 
-will only be used for development, so you could enter e.g. kotahi dev, 
+will only be used for development, so you could enter e.g. Kotahi dev, 
 http://www.google.com (any valid URL), description.
-* Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. 
-For development, you'll probably be running the client on localhost, but ORCID 
+* Under "Redirect URIs", add the url of your Kotahi server plus `/auth/orcid/callback`. 
+For development, you'll probably be running the server on localhost, but ORCID 
 requires a valid url, so replace that with 127.0.0.1. So if in your browser you 
-can see your app under http://localhost:4000, the value here should be 
-http://127.0.0.1:4000/auth/orcid/callback. (Note: ORCID supports multiple 
-redirect URIs, so you can add both http and https URIs if needed.)
+can get your server status under http://localhost:3000/healthcheck, the value here should be 
+http://127.0.0.1:3000/auth/orcid/callback.
 * Click on the floating save icon on the right.
+
+:::info Note
+ORCID supports multiple 
+redirect URIs, so you can add both http and https URIs if needed.
+:::
 
 You should now be presented with a gray box that gives you a client id and a client secret.
 
