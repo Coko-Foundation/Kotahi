@@ -429,7 +429,7 @@ const updateGroupConfig = async ({ groupName, patch }) => {
 
   const formData = merge({}, config.formData, patch)
 
-  await Config.patchAndFetchById(config.id, { formData })
+  return Config.patchAndFetchById(config.id, { formData })
 }
 
 // Deletes the shared pw-* users (and, via cascade, their team memberships).

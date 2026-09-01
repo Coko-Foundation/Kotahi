@@ -1,11 +1,4 @@
-import {
-  test,
-  expect,
-  jsonOrThrow,
-  type APIRequestContext,
-  type APIResponse,
-  type Page,
-} from './utils/fixtures'
+import { test, expect, type Page } from './utils/fixtures'
 
 // Mirrors VARIANT_CONFIG in packages/client/app/pages/hooks/useManuscriptsTable.tsx
 // ('actions' is always appended on top of each variant's defaultColumnKeys)
@@ -44,16 +37,6 @@ const getHeaderTestIds = (page: Page): Promise<(string | undefined)[]> =>
   page
     .locator('.ant-table-thead th[data-testid]')
     .evaluateAll(cells => cells.map(cell => cell.dataset.testid))
-
-const updateGroupConfig = (
-  request: APIRequestContext,
-  apiUrl: string,
-  groupName: string,
-  patch: Record<string, unknown>,
-): Promise<APIResponse> =>
-  request.post(
-    `${apiUrl}/testGroupConfig/${groupName}?patch=${encodeURIComponent(JSON.stringify(patch))}`,
-  )
 
 test.describe('manuscripts table default columns', () => {
   test.beforeEach(async ({ loginAs, testGroup }) => {
@@ -105,15 +88,14 @@ test.describe('manuscripts table forced columns', () => {
 
   test('reviewer status column survives a config that omits it', async ({
     page,
-    request,
-    apiUrl,
+    api,
     testGroup,
   }) => {
     await page.goto(`/${testGroup.groupName}/dashboard/reviews`)
     await expect(page.locator('.ant-table-thead')).toBeVisible()
     expect(await getHeaderTestIds(page)).toContain('reviewerStatusBadge')
 
-    await updateGroupConfig(request, apiUrl, testGroup.groupName, {
+    await api.updateGroupConfig({
       dashboard: { tableColumns: 'shortId,submission.$title' },
     })
 
@@ -129,8 +111,7 @@ test.describe('manuscripts table forced columns', () => {
 
   test('statusCounts and lastUpdated columns survive a config that omits them', async ({
     page,
-    request,
-    apiUrl,
+    api,
     testGroup,
   }) => {
     await page.goto(`/${testGroup.groupName}/dashboard/edits`)
@@ -140,7 +121,7 @@ test.describe('manuscripts table forced columns', () => {
     expect(before).toContain('statusCounts')
     expect(before).toContain('lastUpdated')
 
-    await updateGroupConfig(request, apiUrl, testGroup.groupName, {
+    await api.updateGroupConfig({
       dashboard: { editingQueue: 'shortId,submission.$title,status' },
     })
 
@@ -159,17 +140,14 @@ test.describe('manuscripts table forced columns', () => {
 
 test.describe('manuscripts table data', () => {
   test('shows all 15 seeded manuscripts across two pages', async ({
-    request,
-    apiUrl,
+    api,
     loginAs,
     page,
     testGroup,
   }) => {
     const submitterUsername = testGroup.usernames[0]
 
-    await request.post(
-      `${apiUrl}/testManuscripts/${testGroup.groupName}/15?submitterUsername=${encodeURIComponent(submitterUsername)}`,
-    )
+    await api.createManuscripts({ amount: 15, submitter: submitterUsername })
 
     await loginAs(submitterUsername)
 
@@ -202,25 +180,25 @@ test.describe('manuscripts table data', () => {
   })
 
   test('reviewer sees only the manuscripts they were assigned to review', async ({
-    request,
-    apiUrl,
+    api,
     loginAs,
     page,
     testGroup,
   }) => {
     const [authorUsername, reviewerUsername] = testGroup.usernames
 
-    const { manuscriptIds } = await jsonOrThrow(
-      await request.post(
-        `${apiUrl}/testManuscripts/${testGroup.groupName}/5?submitterUsername=${encodeURIComponent(authorUsername)}`,
-      ),
-    )
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 5,
+      submitter: authorUsername,
+    })
 
     const reviewedManuscriptIds = manuscriptIds.slice(0, 3)
 
-    await request.post(
-      `${apiUrl}/assignRole/${encodeURIComponent(reviewerUsername)}/reviewer?manuscriptIds=${reviewedManuscriptIds.join(',')}`,
-    )
+    await api.assignRole({
+      username: reviewerUsername,
+      role: 'reviewer',
+      manuscriptIds: reviewedManuscriptIds,
+    })
 
     await loginAs(reviewerUsername)
 
@@ -242,19 +220,17 @@ test.describe('manuscripts table data', () => {
   })
 
   test('editor sees manuscripts across all three editor roles they hold', async ({
-    request,
-    apiUrl,
+    api,
     loginAs,
     page,
     testGroup,
   }) => {
     const [authorUsername, editorUsername] = testGroup.usernames
 
-    const { manuscriptIds } = await jsonOrThrow(
-      await request.post(
-        `${apiUrl}/testManuscripts/${testGroup.groupName}/5?submitterUsername=${encodeURIComponent(authorUsername)}`,
-      ),
-    )
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 5,
+      submitter: authorUsername,
+    })
 
     const [
       seniorEditorManuscriptId,
@@ -268,9 +244,11 @@ test.describe('manuscripts table data', () => {
         ['handlingEditor', handlingEditorManuscriptId],
         ['editor', editorManuscriptId],
       ].map(([role, manuscriptId]) =>
-        request.post(
-          `${apiUrl}/assignRole/${encodeURIComponent(editorUsername)}/${role}?manuscriptIds=${manuscriptId}`,
-        ),
+        api.assignRole({
+          username: editorUsername,
+          role,
+          manuscriptIds: [manuscriptId],
+        }),
       ),
     )
 
@@ -293,15 +271,14 @@ test.describe('manuscripts table data', () => {
   })
 
   test('admin, group admin and group manager all see manuscripts from every submitter', async ({
-    request,
-    apiUrl,
+    api,
     loginAs,
     page,
     testGroup,
   }) => {
-    // No submitterUsername - round-robins across the group's 5 generic
-    // users, so these 3 manuscripts get 3 different submitters.
-    await request.post(`${apiUrl}/testManuscripts/${testGroup.groupName}/3`)
+    // No submitter - round-robins across the group's 5 generic users, so
+    // these 3 manuscripts get 3 different submitters.
+    await api.createManuscripts({ amount: 3 })
 
     const shortIdCells = page.locator(
       '.ant-table-tbody td[data-testid="shortId"]',

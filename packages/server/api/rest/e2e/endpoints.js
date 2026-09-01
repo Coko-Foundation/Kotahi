@@ -123,8 +123,8 @@ module.exports = app => {
 
     try {
       const patch = JSON.parse(req.query.patch)
-      await updateGroupConfig({ groupName, patch })
-      res.sendStatus(200)
+      const result = await updateGroupConfig({ groupName, patch })
+      res.status(200).json(result)
     } catch (err) {
       logger.error(err)
       res.status(500).json({ error: err.message })
