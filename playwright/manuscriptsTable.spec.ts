@@ -1,6 +1,6 @@
 import { colorSecondary, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
-import { hexToRgb } from './utils/helpers'
+import { formatAbsoluteDate, hexToRgb } from './utils/helpers'
 
 // Mirrors VARIANT_CONFIG in packages/client/app/pages/hooks/useManuscriptsTable.tsx
 // ('actions' is always appended on top of each variant's defaultColumnKeys)
@@ -614,5 +614,105 @@ test.describe('manuscripts table data types', () => {
     )
 
     await expect(authorCell).toContainText(`ORCID: ${testOrcid}`)
+  })
+
+  test('date column shows "today" for a manuscript created just now', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    await api.createManuscripts({ amount: 1 })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    await expect(rows.first().locator('td[data-testid="created"]')).toHaveText(
+      'today',
+    )
+  })
+
+  test('date column shows "yesterday" for a manuscript created a day ago', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.setManuscriptCreated({
+      manuscriptId,
+      created: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    await expect(rows.first().locator('td[data-testid="created"]')).toHaveText(
+      'yesterday',
+    )
+  })
+
+  test('date column shows "N days ago" for a manuscript created a few days ago', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.setManuscriptCreated({
+      manuscriptId,
+      created: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    await expect(rows.first().locator('td[data-testid="created"]')).toHaveText(
+      '3 days ago',
+    )
+  })
+
+  test('date column shows the absolute date for a manuscript older than a week', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    const created = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000)
+
+    await api.setManuscriptCreated({
+      manuscriptId,
+      created: created.toISOString(),
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    await expect(rows.first().locator('td[data-testid="created"]')).toHaveText(
+      formatAbsoluteDate(created),
+    )
   })
 })

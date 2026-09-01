@@ -61,6 +61,10 @@ type Api = {
     manuscriptId: string
     patch: Record<string, unknown>
   }) => Promise<unknown>
+  setManuscriptCreated: (opts: {
+    manuscriptId: string
+    created: string
+  }) => Promise<unknown>
 }
 
 export const test = base.extend<{
@@ -136,6 +140,13 @@ export const test = base.extend<{
         jsonOrThrow(
           request.post(
             `${apiUrl}/updateManuscriptSubmission/${manuscriptId}?patch=${encodeURIComponent(JSON.stringify(patch))}`,
+          ),
+        ),
+
+      setManuscriptCreated: ({ manuscriptId, created }) =>
+        jsonOrThrow(
+          request.post(
+            `${apiUrl}/setManuscriptCreated/${manuscriptId}?created=${encodeURIComponent(created)}`,
           ),
         ),
     })

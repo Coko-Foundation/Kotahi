@@ -1,5 +1,5 @@
 const { randomUUID } = require('crypto')
-const { useTransaction } = require('@coko/server')
+const { useTransaction, db } = require('@coko/server')
 const merge = require('lodash/merge')
 
 const Group = require('../../../models/group/group.model')
@@ -508,6 +508,24 @@ const updateManuscriptSubmission = async ({ manuscriptId, patch }) => {
   return Manuscript.patchAndFetchById(manuscriptId, { submission })
 }
 
+// BaseModel's $beforeInsert/$beforeUpdate hooks unconditionally stamp
+// created/updated with the current time (see @coko/server's base.model.js),
+// so there's no way to backdate a manuscript's `created` through Manuscript's
+// own insert/patch methods - go straight to knex. Used to exercise the
+// 'date' column's relative-time rendering (today/yesterday/N days ago/
+// absolute date) for something other than "just now".
+const setManuscriptCreated = async ({ manuscriptId, created }) => {
+  const manuscript = await Manuscript.findById(manuscriptId)
+
+  if (!manuscript) {
+    throw new Error(`No manuscript found with id "${manuscriptId}"`)
+  }
+
+  await db('manuscripts').where({ id: manuscriptId }).update({ created })
+
+  return Manuscript.findById(manuscriptId)
+}
+
 const updateGroupConfig = async ({ groupName, patch }) => {
   const group = await Group.findOne({ name: groupName })
 
@@ -564,5 +582,6 @@ module.exports = {
   updateGroupConfig,
   updateFormFields,
   updateManuscriptSubmission,
+  setManuscriptCreated,
   deleteSharedUsers,
 }
