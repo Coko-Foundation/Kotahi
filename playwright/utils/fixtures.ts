@@ -24,6 +24,7 @@ type TestGroup = {
   adminUsername: string
   groupAdminUsername: string
   groupManagerUsername: string
+  userWithOrcidUsername: string
   usernames: string[]
 }
 

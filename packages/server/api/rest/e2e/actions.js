@@ -7,6 +7,7 @@ const Config = require('../../../models/config/config.model')
 const Team = require('../../../models/team/team.model')
 const TeamMember = require('../../../models/teamMember/teamMember.model')
 const User = require('../../../models/user/user.model')
+const Identity = require('../../../models/identity/identity.model')
 const Channel = require('../../../models/channel/channel.model')
 const Form = require('../../../models/form/form.model')
 const Manuscript = require('../../../models/manuscript/manuscript.model')
@@ -31,11 +32,16 @@ const SHARED_USERS = {
   admin: 'pw-admin',
   groupAdmin: 'pw-group-admin',
   groupManager: 'pw-group-manager',
+  // Fixed, never-changing ORCID identity - safe to share, unlike mutating an
+  // existing shared user's own fields.
+  userWithOrcid: 'pw-user-with-orcid',
   generic: Array.from(
     { length: GENERIC_USER_COUNT },
     (_, index) => `pw-user-${index + 1}`,
   ),
 }
+
+const TEST_ORCID = '0000-0001-2345-6789'
 
 const findOrCreate = async (Model, findQuery, insertData) => {
   const existing = await Model.findOne(findQuery)
@@ -70,13 +76,19 @@ const ensureSharedUsers = async () => {
       { username, email: `${username}@example.com` },
     )
 
-  const [adminUser, groupAdminUser, groupManagerUser, ...genericUsers] =
-    await Promise.all([
-      ensureUser(SHARED_USERS.admin),
-      ensureUser(SHARED_USERS.groupAdmin),
-      ensureUser(SHARED_USERS.groupManager),
-      ...SHARED_USERS.generic.map(ensureUser),
-    ])
+  const [
+    adminUser,
+    groupAdminUser,
+    groupManagerUser,
+    userWithOrcid,
+    ...genericUsers
+  ] = await Promise.all([
+    ensureUser(SHARED_USERS.admin),
+    ensureUser(SHARED_USERS.groupAdmin),
+    ensureUser(SHARED_USERS.groupManager),
+    ensureUser(SHARED_USERS.userWithOrcid),
+    ...SHARED_USERS.generic.map(ensureUser),
+  ])
 
   // Add admin user to the admin group
   await findOrCreate(
@@ -85,7 +97,24 @@ const ensureSharedUsers = async () => {
     { userId: adminUser.id, teamId: adminTeam.id },
   )
 
-  return { adminUser, groupAdminUser, groupManagerUser, genericUsers }
+  await findOrCreate(
+    Identity,
+    { userId: userWithOrcid.id, isDefault: true },
+    {
+      userId: userWithOrcid.id,
+      isDefault: true,
+      type: 'orcid',
+      identifier: TEST_ORCID,
+    },
+  )
+
+  return {
+    adminUser,
+    groupAdminUser,
+    groupManagerUser,
+    userWithOrcid,
+    genericUsers,
+  }
 }
 
 const deleteGroupData = async (group, trx) => {
@@ -127,8 +156,13 @@ const deleteGroupsByPrefix = async prefix =>
   })
 
 const createGroup = async groupName => {
-  const { adminUser, groupAdminUser, groupManagerUser, genericUsers } =
-    await ensureSharedUsers()
+  const {
+    adminUser,
+    groupAdminUser,
+    groupManagerUser,
+    userWithOrcid,
+    genericUsers,
+  } = await ensureSharedUsers()
 
   return useTransaction(async trx => {
     // Clear out any leftovers from a previous, interrupted run of this exact
@@ -297,6 +331,7 @@ const createGroup = async groupName => {
       adminUsername: adminUser.username,
       groupAdminUsername: groupAdminUser.username,
       groupManagerUsername: groupManagerUser.username,
+      userWithOrcidUsername: userWithOrcid.username,
       usernames: genericUsers.map(genericUser => genericUser.username),
     }
   })
@@ -500,6 +535,7 @@ const deleteSharedUsers = async () => {
     SHARED_USERS.admin,
     SHARED_USERS.groupAdmin,
     SHARED_USERS.groupManager,
+    SHARED_USERS.userWithOrcid,
     ...SHARED_USERS.generic,
   ]
 
@@ -508,6 +544,11 @@ const deleteSharedUsers = async () => {
   ).filter(Boolean)
 
   if (users.length === 0) return { deletedUsers: 0 }
+
+  // identities.user_id has no ON DELETE CASCADE, unlike team_members.user_id.
+  await Promise.all(
+    users.map(user => deleteAllMatching(Identity, { userId: user.id })),
+  )
 
   await User.deleteByIds(users.map(user => user.id))
 
