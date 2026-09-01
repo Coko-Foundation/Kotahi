@@ -6,9 +6,9 @@
 
 All the different parts of Kotahi are delivered as docker containers that you 
 can run. This means that you need to have an environment that can run a recent 
-major version of docker (version 27 as of this writing). This could be a linux 
+major version of docker (version 29 as of this writing). This could be a linux 
 server with docker installed, your own kubernetes cluster, 
-[fly.io](http://fly.io) or any of the services that cloud providers like AWS 
+[fly.io](http://fly.io), or any of the services that cloud providers like AWS 
 and GCP offer for running docker containers.
 
 :::info
@@ -39,7 +39,7 @@ urls. E.g. if your server will be running on `https://server.myjournal.com`,
 then the value of this field should be `https://server.myjournal.com/auth/orcid/callback`. 
 If you don't know the url of your server yet, just add a valid url. You can 
 always come back and edit this field.
-- Click on generate my my ID and secret
+- Click on generate my ID and secret
 - You should now have a client ID and client secret at the top of your page.
 
 That's it. We'll use the client / secret pair on the server later.
@@ -150,7 +150,7 @@ When using the `POSTGRES_CA_CERT` variable, you do not need to use the `POSTGRES
 ### Connection pools
 
 :::tip
-Using connection pools is not necessary for the app to function, it's up to you 
+Using connection pools is not necessary for the app to function; it's up to you 
 to decide whether they are a good option for your setup.
 :::
 
@@ -249,7 +249,7 @@ all the different services you deploy are actually up and running:
 
 - Kotahi client and Flax should be easy enough - they should display in your 
 browser.
-- All backend services (kotahi server and all microservices) have a 
+- All backend services (Kotahi server and all microservices) have a 
 `/healthcheck` endpoint that you can go to. If you get a response, the servers 
 are listening. All servers will try to connect to their database and (if 
 applicable) their object store. If that fails, they will stop and you will not 
@@ -267,7 +267,7 @@ We need to set up 3 microservices:
 - XSweet
 - AnyStyle
 
-Each of these is a standalone server, with its own database, that kotahi server 
+Each of these is a standalone server, with its own database, that Kotahi server 
 will communicate with. The deployment process for each of them is identical to 
 the others.
 
@@ -281,11 +281,11 @@ source to PDF, this will go to the Pagedjs microservice in order to create the P
 
 #### Creating credentials
 
-Each service accepts a client id and a client secret as environment variables. 
-Kotahi server will then use the service client id and secret when making calls 
+Each service accepts a client ID and a client secret as environment variables. 
+Kotahi server will then use the service client ID and secret when making calls 
 to the service as an authentication measure.
 
-The easiest way to create these client id / secret pairs is to clone one of the
+The easiest way to create these client ID / secret pairs is to clone one of the
  services and yarn a specific command that will print them in the terminal for 
  you. We'll use XSweet for this example, but we could replace XSweet with any 
  of the other services.
@@ -297,7 +297,7 @@ To create the credentials, run the following commands:
 ```bash
 # Get the xsweet microservice
 git clone git@github.com:Coko-Foundation/xsweet-microservice.git
-cd xsweet
+cd xsweet-microservice
 
 # Set up
 docker compose build
@@ -313,7 +313,7 @@ docker compose down
 
 We'll need 3 sets of credentials, one for each microservice. Make sure you note 
 them down somewhere before moving forward. We'll need them both for setting the 
-microservices themselves, as well as when setting up kotahi server.
+microservices themselves, as well as when setting up Kotahi server.
 
 **Deploying a microservice**
 
@@ -466,17 +466,18 @@ YJS_WEBSOCKET_SERVER_URL='wss://server.mykotahi.com:5010'
 
 :::info What does Flax do?
 Flax consists of two parts internally: a node server and static website server. 
-The node server will request published article data from kotahi server and build 
+The node server will request published article data from Kotahi server and build 
 a static website out of them. That website will in turn be served by the static 
 website server.
 :::
 
-To deploy flax, simply run the `cokoapps/kotahi-flax` container with the following environment variables.
+To deploy Flax, simply run the [`cokoapps/kotahi-flax`](https://hub.docker.com/r/cokoapps/kotahi-flax/tags)
+container with the following environment variables.
 
 ```bash
 # The port that you want the node server to run on
 FLAX_EXPRESS_PORT='3000'
-# The url of your kotahi server
+# The url of your Kotahi server
 FLAX_CLIENT_API_URL='https://server.mykotahi.com'
 ```
 
@@ -487,17 +488,17 @@ to whatever port you want in your environment.
 
 The separate-pieces approach of the architecture is meant to allow the different 
 servers to scale independently from each other. You could for example, scale 
-kotahi server to run on 5 machines, but only scale the xsweet microservice to 
+Kotahi server to run on 5 machines, but only scale the xsweet microservice to 
 run on 2 machines.
 
 Furthermore, since the microservices run independently with their own databases, 
-they can be reused between different apps. For example, you can run 3 kotahi 
+they can be reused between different apps. For example, you can run 3 Kotahi 
 apps for 3 different clients and let them all use the same anystyle 
-microservice instance. This does not apply to flax however, which is bound to 
-a specific kotahi backend.
+microservice instance. This does not apply to Flax however, which is bound to 
+a specific Kotahi backend.
 
 :::warning
-It is important to note that the pagedjs microservice and flax specifically will 
+It is important to note that the pagedjs microservice and Flax specifically will 
 not work as expected if they scale to more than one machine, due to the nature 
 of their implementation. There have been discussions to potentially address that, 
 but keep their scale to 1 until further notice.
@@ -505,9 +506,8 @@ but keep their scale to 1 until further notice.
 
 ## Support
 
-You can reach out to the kotahi team for questions and help in the following ways:
+You can reach out to the Kotahi team for questions and help in the following ways:
 
-- Send a chat message on the 
-[Kotahi chat channel](https://mattermost.coko.foundation/coko/channels/kotahi)
+- Send a message to [eLife Pathways](https://elifepathways.org/#get-involved)
 - If you think you've found a bug, or that these docs are incorrect in some way, 
-open a GitHub issue in [Kotahi's GitHub repo](https://github.com/eLifePathways/Kotahi/).
+open a GitHub issue in [Kotahi's GitHub repo](https://github.com/eLifePathways/Kotahi/issues/).

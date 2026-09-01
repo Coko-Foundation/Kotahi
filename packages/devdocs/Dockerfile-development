@@ -1,12 +1,12 @@
-FROM node:20-bookworm-slim
+FROM cokoapps/base-dev:24
 
-RUN apt-get update && apt-get install -y curl
 RUN corepack enable
 
 WORKDIR /home/node/app
 
 COPY package.json .
 COPY yarn.lock .
+COPY .yarnrc.yml .
 
 RUN chown -R node:node .
 USER node
