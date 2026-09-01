@@ -15,6 +15,8 @@ const {
   createManuscripts,
   assignRole,
   updateGroupConfig,
+  updateFormFields,
+  updateManuscriptSubmission,
   deleteSharedUsers,
 } = require('./actions')
 
@@ -130,6 +132,49 @@ module.exports = app => {
       res.status(500).json({ error: err.message })
     }
   })
+
+  app.post(
+    '/api/e2e/updateFormFields/:groupName/:purpose/:category',
+    async (req, res) => {
+      const { groupName, purpose, category } = req.params
+
+      try {
+        const fields = JSON.parse(req.query.fields)
+
+        const result = await updateFormFields({
+          groupName,
+          purpose,
+          category,
+          fields,
+        })
+
+        res.status(200).json(result)
+      } catch (err) {
+        logger.error(err)
+        res.status(500).json({ error: err.message })
+      }
+    },
+  )
+
+  app.post(
+    '/api/e2e/updateManuscriptSubmission/:manuscriptId',
+    async (req, res) => {
+      const { manuscriptId } = req.params
+
+      try {
+        const patch = JSON.parse(req.query.patch)
+        const result = await updateManuscriptSubmission({
+          manuscriptId,
+          patch,
+        })
+
+        res.status(200).json(result)
+      } catch (err) {
+        logger.error(err)
+        res.status(500).json({ error: err.message })
+      }
+    },
+  )
 
   app.post('/api/e2e/assignRole/:username/:role', async (req, res) => {
     const { username, role } = req.params

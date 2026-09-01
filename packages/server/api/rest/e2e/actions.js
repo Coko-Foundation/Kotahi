@@ -1,3 +1,4 @@
+const { randomUUID } = require('crypto')
 const { useTransaction } = require('@coko/server')
 const merge = require('lodash/merge')
 
@@ -330,6 +331,11 @@ const createManuscripts = async ({ groupName, count, submitterUsername }) => {
         groupId: group.id,
         submitterId: submitters[index % submitters.length].id,
         status: 'new',
+        // A real submission always has this (see manuscript.controllers.js's
+        // createManuscript) - the updateManuscript resolver re-validates the
+        // whole row on every patch, and Manuscript's schema requires meta to
+        // be an object (not null) whenever it's present.
+        meta: {},
         submission: {
           $title: `Test manuscript ${index + 1}`,
           $abstract: `Abstract for test manuscript ${index + 1}`,
@@ -414,6 +420,59 @@ const assignRole = async ({ manuscriptIds, username, role }) => {
   })
 }
 
+const updateFormFields = async ({ groupName, purpose, category, fields }) => {
+  const group = await Group.findOne({ name: groupName })
+
+  if (!group) {
+    throw new Error(`No group found named "${groupName}"`)
+  }
+
+  const form = await Form.findOne({ groupId: group.id, purpose, category })
+
+  if (!form) {
+    throw new Error(
+      `No "${purpose}"/"${category}" form found for group "${groupName}"`,
+    )
+  }
+
+  const children = [...form.structure.children]
+
+  fields.forEach(field => {
+    const fieldWithIds = {
+      id: randomUUID(),
+      ...field,
+      options: field.options?.map(option => ({
+        id: randomUUID(),
+        ...option,
+      })),
+    }
+
+    const existingIndex = children.findIndex(child => child.name === field.name)
+
+    if (existingIndex === -1) {
+      children.push(fieldWithIds)
+    } else {
+      children[existingIndex] = { ...children[existingIndex], ...fieldWithIds }
+    }
+  })
+
+  return Form.patchAndFetchById(form.id, {
+    structure: { ...form.structure, children },
+  })
+}
+
+const updateManuscriptSubmission = async ({ manuscriptId, patch }) => {
+  const manuscript = await Manuscript.findById(manuscriptId)
+
+  if (!manuscript) {
+    throw new Error(`No manuscript found with id "${manuscriptId}"`)
+  }
+
+  const submission = merge({}, manuscript.submission, patch)
+
+  return Manuscript.patchAndFetchById(manuscriptId, { submission })
+}
+
 const updateGroupConfig = async ({ groupName, patch }) => {
   const group = await Group.findOne({ name: groupName })
 
@@ -462,5 +521,7 @@ module.exports = {
   createManuscripts,
   assignRole,
   updateGroupConfig,
+  updateFormFields,
+  updateManuscriptSubmission,
   deleteSharedUsers,
 }

@@ -1,4 +1,6 @@
+import { colorSecondary } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
+import { hexToRgb } from './utils/helpers'
 
 // Mirrors VARIANT_CONFIG in packages/client/app/pages/hooks/useManuscriptsTable.tsx
 // ('actions' is always appended on top of each variant's defaultColumnKeys)
@@ -302,5 +304,259 @@ test.describe('manuscripts table data', () => {
       // eslint-disable-next-line no-await-in-loop
       await expect(shortIdCells).toHaveCount(3)
     }
+  })
+})
+
+test.describe('manuscripts table data types', () => {
+  test('single-select options column renders the selected option with its color', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const singleOptions = [
+      { label: 'Alpha', value: 'alpha', labelColor: '#1d4ed8' },
+      { label: 'Beta', value: 'beta', labelColor: '#b91c1c' },
+    ]
+
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.testSingleOption',
+          title: 'Test Single Option',
+          component: 'RadioGroup',
+          options: singleOptions,
+        },
+      ],
+    })
+
+    await api.updateGroupConfig({
+      manuscript: { tableColumns: 'shortId,submission.testSingleOption' },
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { testSingleOption: 'beta' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const singleCell = rows
+      .first()
+      .locator('td[data-testid="submission.testSingleOption"]')
+
+    await expect(singleCell).toHaveText('Beta')
+    await expect(singleCell.locator('span')).toHaveCSS(
+      'background-color',
+      hexToRgb('#b91c1c'),
+    )
+  })
+
+  test('options column without a color falls back to the badge default color', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const uncoloredOptions = [
+      { label: 'Alpha', value: 'alpha' },
+      { label: 'Beta', value: 'beta' },
+    ]
+
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.testSingleOption',
+          title: 'Test Single Option',
+          component: 'RadioGroup',
+          options: uncoloredOptions,
+        },
+      ],
+    })
+
+    await api.updateGroupConfig({
+      manuscript: { tableColumns: 'shortId,submission.testSingleOption' },
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { testSingleOption: 'beta' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const singleCell = rows
+      .first()
+      .locator('td[data-testid="submission.testSingleOption"]')
+
+    await expect(singleCell).toHaveText('Beta')
+
+    await expect(singleCell.locator('span')).toHaveCSS(
+      'background-color',
+      hexToRgb(colorSecondary),
+    )
+  })
+
+  test('multi-select options column renders every selected option with its color', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const multiOptions = [
+      { label: 'Red Team', value: 'red', labelColor: '#dc2626' },
+      { label: 'Blue Team', value: 'blue', labelColor: '#2563eb' },
+      { label: 'Green Team', value: 'green', labelColor: '#16a34a' },
+    ]
+
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.testMultiOption',
+          title: 'Test Multi Option',
+          component: 'CheckboxGroup',
+          options: multiOptions,
+        },
+      ],
+    })
+
+    await api.updateGroupConfig({
+      manuscript: { tableColumns: 'shortId,submission.testMultiOption' },
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { testMultiOption: ['red', 'blue'] },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const multiCell = rows
+      .first()
+      .locator('td[data-testid="submission.testMultiOption"]')
+
+    const multiBadges = multiCell.locator('span')
+    await expect(multiBadges).toHaveCount(2)
+    await expect(multiCell).toContainText('Red Team')
+    await expect(multiCell).toContainText('Blue Team')
+    await expect(multiBadges.nth(0)).toHaveCSS(
+      'background-color',
+      hexToRgb('#dc2626'),
+    )
+    await expect(multiBadges.nth(1)).toHaveCSS(
+      'background-color',
+      hexToRgb('#2563eb'),
+    )
+  })
+
+  test('editable options column renders as a select showing the current option and its color', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const statusOptions = [
+      { label: 'Ready', value: 'ready', labelColor: '#059669' },
+      { label: 'Blocked', value: 'blocked', labelColor: '#d97706' },
+    ]
+
+    // 'submission.$customStatus' is the only column the app will ever render
+    // as editable (see useManuscriptsTable.tsx) - reusing it here to
+    // exercise that rendering path.
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.$customStatus',
+          title: 'Test Custom Status',
+          component: 'Select',
+          options: statusOptions,
+        },
+      ],
+    })
+
+    await api.updateGroupConfig({
+      manuscript: {
+        tableColumns: 'shortId,submission.$customStatus',
+        labelColumn: true,
+      },
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $customStatus: 'ready' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const statusSelect = rows
+      .first()
+      .locator(
+        'td[data-testid="submission.$customStatus"] [data-testid="editable-option-select"]',
+      )
+
+    await expect(statusSelect).toContainText('Ready')
+    await expect(statusSelect.locator('span').first()).toHaveCSS(
+      'background-color',
+      hexToRgb('#059669'),
+    )
+
+    // change the value
+    await statusSelect.click()
+    await page
+      .getByTestId('editable-option')
+      .filter({ hasText: 'Blocked' })
+      .click()
+
+    await expect(statusSelect).toContainText('Blocked')
+    await expect(statusSelect.locator('span').first()).toHaveCSS(
+      'background-color',
+      hexToRgb('#d97706'),
+    )
+
+    // unset the value
+    await statusSelect.locator('.ant-select-clear').click()
+
+    await expect(statusSelect).not.toContainText('Blocked')
+    await expect(statusSelect).not.toContainText('Ready')
   })
 })

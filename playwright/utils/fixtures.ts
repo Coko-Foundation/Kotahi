@@ -27,6 +27,19 @@ type TestGroup = {
   usernames: string[]
 }
 
+type FormFieldOption = {
+  label: string
+  value: string
+  labelColor?: string
+}
+
+type FormField = {
+  name: string
+  component: string
+  title?: string
+  options: FormFieldOption[]
+}
+
 type Api = {
   createManuscripts: (opts: {
     amount: number
@@ -38,6 +51,15 @@ type Api = {
     manuscriptIds: string[]
   }) => Promise<{ manuscriptCount: number }>
   updateGroupConfig: (patch: Record<string, unknown>) => Promise<unknown>
+  updateFormFields: (opts: {
+    purpose: string
+    category: string
+    fields: FormField[]
+  }) => Promise<unknown>
+  updateManuscriptSubmission: (opts: {
+    manuscriptId: string
+    patch: Record<string, unknown>
+  }) => Promise<unknown>
 }
 
 export const test = base.extend<{
@@ -99,6 +121,20 @@ export const test = base.extend<{
         jsonOrThrow(
           request.post(
             `${apiUrl}/testGroupConfig/${testGroup.groupName}?patch=${encodeURIComponent(JSON.stringify(patch))}`,
+          ),
+        ),
+
+      updateFormFields: ({ purpose, category, fields }) =>
+        jsonOrThrow(
+          request.post(
+            `${apiUrl}/updateFormFields/${testGroup.groupName}/${purpose}/${category}?fields=${encodeURIComponent(JSON.stringify(fields))}`,
+          ),
+        ),
+
+      updateManuscriptSubmission: ({ manuscriptId, patch }) =>
+        jsonOrThrow(
+          request.post(
+            `${apiUrl}/updateManuscriptSubmission/${manuscriptId}?patch=${encodeURIComponent(JSON.stringify(patch))}`,
           ),
         ),
     })
