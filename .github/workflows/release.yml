@@ -100,7 +100,7 @@ jobs:
             sed -i -E "s/(\"version\": \")[^\"]+(\")/\1$VERSION\2/" "$f"
           done
           git add -A
-          git commit -m "chore: sync release version $VERSION to staging [skip ci]" \
+          git commit -m "chore(*): sync release version $VERSION to staging [skip ci]" \
             || { echo "Staging already at $VERSION, nothing to sync"; exit 0; }
           git push -f origin $BRANCH
           gh pr create \
@@ -164,6 +164,12 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: [release]
     runs-on: ubuntu-latest
+
+    # GITHUB_TOKEN needs packages:write to push to GHCR. Declaring the block
+    # sets every unlisted scope to none, so contents:read is required for checkout.
+    permissions:
+      contents: read
+      packages: write
 
     outputs:
       image: ${{ steps.build.outputs.image }}
