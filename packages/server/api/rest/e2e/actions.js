@@ -508,6 +508,16 @@ const updateManuscriptSubmission = async ({ manuscriptId, patch }) => {
   return Manuscript.patchAndFetchById(manuscriptId, { submission })
 }
 
+const patchManuscript = async ({ manuscriptId, patch }) => {
+  const manuscript = await Manuscript.findById(manuscriptId)
+
+  if (!manuscript) {
+    throw new Error(`No manuscript found with id "${manuscriptId}"`)
+  }
+
+  return Manuscript.patchAndFetchById(manuscriptId, patch)
+}
+
 // BaseModel's $beforeInsert/$beforeUpdate hooks unconditionally stamp
 // created/updated with the current time (see @coko/server's base.model.js),
 // so there's no way to backdate a manuscript's `created` through Manuscript's
@@ -610,6 +620,7 @@ module.exports = {
   updateGroupConfig,
   updateFormFields,
   updateManuscriptSubmission,
+  patchManuscript,
   setManuscriptCreated,
   deleteSharedUsers,
 }

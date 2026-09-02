@@ -18,6 +18,7 @@ const {
   updateGroupConfig,
   updateFormFields,
   updateManuscriptSubmission,
+  patchManuscript,
   setManuscriptCreated,
   deleteSharedUsers,
 } = require('./actions')
@@ -177,6 +178,19 @@ module.exports = app => {
       }
     },
   )
+
+  app.post('/api/e2e/patchManuscript/:manuscriptId', async (req, res) => {
+    const { manuscriptId } = req.params
+
+    try {
+      const patch = JSON.parse(req.query.patch)
+      const result = await patchManuscript({ manuscriptId, patch })
+      res.status(200).json(result)
+    } catch (err) {
+      logger.error(err)
+      res.status(500).json({ error: err.message })
+    }
+  })
 
   app.post('/api/e2e/setManuscriptCreated/:manuscriptId', async (req, res) => {
     const { manuscriptId } = req.params

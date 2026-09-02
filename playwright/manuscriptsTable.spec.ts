@@ -833,4 +833,243 @@ test.describe('manuscripts table data types', () => {
       hexToRgb(colorSuccess),
     )
   })
+
+  test('title column renders as a link when the manuscript has a source URI', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $sourceUri: 'https://example.com/imported-paper' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    const link = titleCell.locator('a')
+    await expect(link).toHaveAttribute(
+      'href',
+      'https://example.com/imported-paper',
+    )
+    await expect(link).toHaveAttribute('target', '_blank')
+    await expect(link).toContainText('Test manuscript 1')
+  })
+
+  test('title column renders as plain text when there is no source URI or DOI', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    await api.createManuscripts({ amount: 1 })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    await expect(titleCell.locator('a')).toHaveCount(0)
+    await expect(titleCell).toContainText('Test manuscript 1')
+  })
+
+  test('title column shows an import source icon for COAR and Semantic Scholar imports', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 2 })
+    const [coarManuscriptId, semanticScholarManuscriptId] = manuscriptIds
+
+    await api.patchManuscript({
+      manuscriptId: coarManuscriptId,
+      patch: { importSourceServer: 'COAR' },
+    })
+
+    await api.patchManuscript({
+      manuscriptId: semanticScholarManuscriptId,
+      patch: { importSourceServer: 'semantic-scholar' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(2)
+
+    const coarRow = rows.filter({ hasText: 'Test manuscript 1' })
+    const semanticScholarRow = rows.filter({ hasText: 'Test manuscript 2' })
+
+    await expect(
+      coarRow.locator(
+        'td[data-testid="titleAndAbstract"] [aria-label="coar notify"]',
+      ),
+    ).toBeVisible()
+
+    await expect(
+      semanticScholarRow.locator(
+        'td[data-testid="titleAndAbstract"] [aria-label="semantic scholar"]',
+      ),
+    ).toBeVisible()
+  })
+
+  test('abstract tooltip shows the manuscript abstract', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $abstract: 'This is the manuscript abstract.' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    await titleCell.getByTestId('abstract-tooltip-icon').click()
+
+    const tooltip = page.getByTestId('abstract-tooltip')
+    await expect(tooltip).toContainText('Abstract')
+    await expect(tooltip).toContainText('This is the manuscript abstract.')
+  })
+
+  test('abstract tooltip shows a fallback message when no abstract is set', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    // createManuscripts seeds a default abstract - clear it to exercise the
+    // no-abstract fallback.
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $abstract: null },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    await titleCell.getByTestId('abstract-tooltip-icon').click()
+
+    await expect(page.getByTestId('abstract-tooltip')).toContainText(
+      'No abstract provided',
+    )
+  })
+
+  test('title column strips HTML formatting and shows plain text', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $title: '<p>Some <strong>Bold</strong> Text</p>' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    await expect(titleCell).toContainText('Some Bold Text')
+    await expect(titleCell.locator('strong')).toHaveCount(0)
+  })
+
+  test('title column truncates a title longer than 60 characters', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+    const longTitle = 'A'.repeat(75)
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $title: longTitle },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+
+    await expect(titleCell).toContainText(`${'A'.repeat(60)}...`)
+  })
+
+  test('submission.$title column renders the title without the abstract tooltip icon', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    // Unlike titleAndAbstract (admin only), submission.$title is the title
+    // column used on the submitter/reviewer/editor dashboards and never sets
+    // showAbstract - see useManuscriptsTable.tsx.
+    const submitterUsername = testGroup.usernames[0]
+
+    await api.createManuscripts({ amount: 1, submitter: submitterUsername })
+
+    await loginAs(submitterUsername)
+    await navigateTo('/dashboard/submissions')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows
+      .first()
+      .locator('td[data-testid="submission.$title"]')
+
+    await expect(titleCell).toContainText('Test manuscript 1')
+    await expect(titleCell.getByTestId('abstract-tooltip-icon')).toHaveCount(0)
+  })
 })
