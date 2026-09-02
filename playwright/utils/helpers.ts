@@ -30,3 +30,13 @@ export const formatAbsoluteDate = (date: Date): string => {
   const year = date.getFullYear()
   return `${month} ${day}, ${year}`
 }
+
+// Mirrors formatChipDate in ManuscriptsTable.tsx (dayjs 'MMM D, YYYY') - used
+// for the date filter's chip label, which doesn't zero-pad the day like
+// formatAbsoluteDate does.
+export const formatChipDate = (date: Date): string => {
+  const day = date.getDate()
+  const month = MONTH_ABBREVS[date.getMonth()]
+  const year = date.getFullYear()
+  return `${month} ${day}, ${year}`
+}

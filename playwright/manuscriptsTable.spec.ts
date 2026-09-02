@@ -1,6 +1,6 @@
 import { colorSecondary, colorSuccess, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
-import { formatAbsoluteDate, hexToRgb } from './utils/helpers'
+import { formatAbsoluteDate, formatChipDate, hexToRgb } from './utils/helpers'
 
 // Mirrors VARIANT_CONFIG in packages/client/app/pages/hooks/useManuscriptsTable.tsx
 // ('actions' is always appended on top of each variant's defaultColumnKeys)
@@ -1071,5 +1071,918 @@ test.describe('manuscripts table data types', () => {
 
     await expect(titleCell).toContainText('Test manuscript 1')
     await expect(titleCell.getByTestId('abstract-tooltip-icon')).toHaveCount(0)
+  })
+})
+
+test.describe('manuscripts table search and filter', () => {
+  test('search matches a subset of rows, shows snippets, a chip and the info tooltip, supports the / and Escape shortcuts, and supports quoted phrases, exclusion, OR and wildcards', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const searchTerm = 'platypus'
+
+    // 14 manuscripts are created below, more than the default page size (10)
+    await api.updateGroupConfig({ manuscript: { paginationCount: 20 } })
+
+    // A custom submission-form field gets its own search snippet group,
+    // keyed by the field's title.
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.testKeywords',
+          title: 'Keywords',
+          component: 'TextField',
+          options: [],
+        },
+      ],
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 13 })
+
+    const [
+      uniqueManuscriptId,
+      ,
+      ,
+      phraseManuscriptId,
+      nonAdjacentManuscriptId,
+      giraffeOnlyManuscriptId,
+      giraffeAndZebraManuscriptId,
+      narwhalManuscriptId,
+      walrusManuscriptId,
+      titleOnlyManuscriptId,
+      customFieldManuscriptId,
+      articleBodyManuscriptId,
+      multiFieldManuscriptId,
+    ] = manuscriptIds
+
+    // no other manuscript's submitter is this shared user, so searching for
+    // their username isolates this one manuscript
+    await api.createManuscripts({
+      amount: 1,
+      submitter: testGroup.userWithOrcidUsername,
+    })
+
+    await api.updateManuscriptSubmission({
+      manuscriptId: uniqueManuscriptId,
+      patch: {
+        $abstract: `This abstract mentions a rare keyword: ${searchTerm}.`,
+      },
+    })
+
+    // adjacent phrase, for quoted vs unquoted search
+    await api.updateManuscriptSubmission({
+      manuscriptId: phraseManuscriptId,
+      patch: { $abstract: 'This one is about a red panda.' },
+    })
+
+    // both words present, but not adjacent
+    await api.updateManuscriptSubmission({
+      manuscriptId: nonAdjacentManuscriptId,
+      patch: { $abstract: 'This one has a red fox and a panda bear.' },
+    })
+
+    // for exclusion (-) and wildcard (*) search
+    await api.updateManuscriptSubmission({
+      manuscriptId: giraffeOnlyManuscriptId,
+      patch: { $abstract: 'This one discusses a giraffe.' },
+    })
+
+    await api.updateManuscriptSubmission({
+      manuscriptId: giraffeAndZebraManuscriptId,
+      patch: { $abstract: 'This one has both a giraffe and a zebra.' },
+    })
+
+    // for OR search
+    await api.updateManuscriptSubmission({
+      manuscriptId: narwhalManuscriptId,
+      patch: { $abstract: 'This one mentions a narwhal.' },
+    })
+
+    await api.updateManuscriptSubmission({
+      manuscriptId: walrusManuscriptId,
+      patch: { $abstract: 'This one mentions a walrus.' },
+    })
+
+    // for a title-field snippet
+    await api.updateManuscriptSubmission({
+      manuscriptId: titleOnlyManuscriptId,
+      patch: { $title: 'A study of the elusive quokka' },
+    })
+
+    // for a custom-field snippet
+    await api.updateManuscriptSubmission({
+      manuscriptId: customFieldManuscriptId,
+      patch: { testKeywords: 'This mentions a wombat.' },
+    })
+
+    // for an "Article body" snippet - meta isn't part of submission, so this
+    // goes through the generic manuscript patch instead
+    await api.patchManuscript({
+      manuscriptId: articleBodyManuscriptId,
+      patch: { meta: { source: 'This article body mentions a hippogriff.' } },
+    })
+
+    // same word in both the title and the abstract, for a manuscript with
+    // two snippet groups at once
+    await api.updateManuscriptSubmission({
+      manuscriptId: multiFieldManuscriptId,
+      patch: {
+        $title: 'Something about the okapi',
+        $abstract: 'This abstract also discusses the okapi in detail.',
+      },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(14)
+
+    const idOnlyRow = page.locator('.ant-table-tbody tr', {
+      hasText: 'Test manuscript 2',
+    })
+
+    const idOnlyShortId = await idOnlyRow
+      .locator('td[data-testid="shortId"]')
+      .textContent()
+
+    const searchInput = page.getByPlaceholder('Enter search terms...')
+
+    // '/' focuses search, Escape un-focuses it
+    await expect(searchInput).not.toBeFocused()
+    await page.keyboard.press('/')
+    await expect(searchInput).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(searchInput).not.toBeFocused()
+
+    const helpButton = page.getByRole('button', {
+      name: 'Surround multi-word phrases',
+    })
+
+    await helpButton.click()
+
+    const tooltip = page.getByRole('tooltip')
+    await expect(tooltip).toContainText('Tips for using search')
+    await expect(tooltip).toContainText(
+      'Surround multi-word phrases with quotes "".',
+    )
+    await expect(tooltip).toContainText('Exclude a term by prefixing with -.')
+    await expect(tooltip).toContainText('Specify alternate matches using OR.')
+    await expect(tooltip).toContainText('Use * as wildcard for word endings.')
+    await expect(tooltip).toContainText(
+      'Press / anywhere on the page to jump to search.',
+    )
+
+    // close the (click-triggered) tooltip before continuing
+    await helpButton.click()
+
+    await searchInput.fill(searchTerm)
+    await searchInput.press('Enter')
+
+    await expect(shortIdCells).toHaveCount(1)
+
+    const searchChip = page.getByText(`Search: ${searchTerm}`, {
+      exact: true,
+    })
+
+    await expect(searchChip).toBeVisible()
+
+    const expandedRow = page.locator('.ant-table-expanded-row')
+    await expect(expandedRow).toContainText('Abstract:')
+    await expect(expandedRow.locator('mark')).toHaveText(searchTerm)
+
+    await searchChip.getByRole('button', { name: 'Remove filter' }).click()
+    await expect(shortIdCells).toHaveCount(14)
+
+    // The remaining checks are pure query-syntax scenarios, not new UI
+    // interactions - driving them through the URL (a fresh navigation per
+    // search) avoids racing overlapping in-flight searches against each
+    // other, since the app's search doesn't cancel a stale request when a
+    // newer one is fired (network-only fetchPolicy, no de-dupe/abort).
+    const searchUrl = (term: string): string =>
+      `/admin/manuscripts?search=${encodeURIComponent(term)}`
+
+    // quoted phrase requires adjacency - matches only the manuscript with
+    // "red panda" together, not the one with both words apart
+    await navigateTo(searchUrl('"red panda"'))
+    await expect(shortIdCells).toHaveCount(1)
+
+    // unquoted is just an AND of the two words, regardless of adjacency
+    await navigateTo(searchUrl('red panda'))
+    await expect(shortIdCells).toHaveCount(2)
+
+    // exclude with - : matches "giraffe" but not the one that also has "zebra"
+    await navigateTo(searchUrl('giraffe -zebra'))
+    await expect(shortIdCells).toHaveCount(1)
+
+    // OR: matches either term
+    await navigateTo(searchUrl('narwhal OR walrus'))
+    await expect(shortIdCells).toHaveCount(2)
+
+    // wildcard: "gira*" matches both manuscripts containing "giraffe"
+    await navigateTo(searchUrl('gira*'))
+    await expect(shortIdCells).toHaveCount(2)
+
+    // title field snippet
+    await navigateTo(searchUrl('quokka'))
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(page.locator('.ant-table-expanded-row')).toContainText(
+      'Title:',
+    )
+    await expect(
+      page.locator('.ant-table-expanded-row').locator('mark'),
+    ).toHaveText('quokka')
+
+    // custom submission-form field snippet, labeled by its title
+    await navigateTo(searchUrl('wombat'))
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(page.locator('.ant-table-expanded-row')).toContainText(
+      'Keywords:',
+    )
+    await expect(
+      page.locator('.ant-table-expanded-row').locator('mark'),
+    ).toHaveText('wombat')
+
+    // "Manuscript ID" snippet - matches on the manuscript's own shortId
+    await navigateTo(searchUrl(idOnlyShortId as string))
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(page.locator('.ant-table-expanded-row')).toContainText(
+      'Manuscript ID:',
+    )
+
+    // "Article body" snippet - meta.source, not a submission field
+    await navigateTo(searchUrl('hippogriff'))
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(page.locator('.ant-table-expanded-row')).toContainText(
+      'Article body:',
+    )
+    await expect(
+      page.locator('.ant-table-expanded-row').locator('mark'),
+    ).toHaveText('hippogriff')
+
+    // one manuscript matching in two fields at once shows both snippet groups
+    await navigateTo(searchUrl('okapi'))
+    await expect(shortIdCells).toHaveCount(1)
+
+    const multiFieldSnippets = page.locator('.ant-table-expanded-row')
+    await expect(multiFieldSnippets).toContainText('Title:')
+    await expect(multiFieldSnippets).toContainText('Abstract:')
+    await expect(multiFieldSnippets.locator('mark')).toHaveCount(2)
+
+    // an author's name matches (it's indexed for search) but gets no
+    // snippet of its own - there's no snippet field group for it
+    await navigateTo(searchUrl(testGroup.userWithOrcidUsername))
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(page.locator('.ant-table-expanded-row')).toHaveCount(0)
+
+    // a term matching nothing shows the empty state, with no stray rows or
+    // expanded snippets, but the search chip still reflects the query
+    await navigateTo(searchUrl('unicorn'))
+
+    await expect(shortIdCells).toHaveCount(0)
+    await expect(page.locator('.ant-table-expanded-row')).toHaveCount(0)
+    await expect(
+      page.getByTestId('empty-manuscripts-table-placeholder'),
+    ).toHaveText('No matching manuscripts were found')
+    await expect(
+      page.getByText('Search: unicorn', { exact: true }),
+    ).toBeVisible()
+  })
+
+  test('status dropdown filter narrows results and shows a filter chip', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 3 })
+    const [submittedManuscriptId] = manuscriptIds
+
+    await api.patchManuscript({
+      manuscriptId: submittedManuscriptId,
+      patch: { status: 'submitted' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(3)
+
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const filterDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await filterDropdown.getByText('Submitted', { exact: true }).click()
+    await filterDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(1)
+
+    const statusChip = page.getByText('Status: Submitted', { exact: true })
+    await expect(statusChip).toBeVisible()
+
+    // filter state is URL-driven, so it should survive a reload
+    await page.reload()
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(statusChip).toBeVisible()
+
+    await statusChip.getByRole('button', { name: 'Remove filter' }).click()
+
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(statusChip).toHaveCount(0)
+
+    // re-apply, then use Reset instead of the chip to clear it - Reset only
+    // clears the dropdown's pending selection, OK is what actually applies it
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const reopenedDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await reopenedDropdown.getByText('Submitted', { exact: true }).click()
+    await reopenedDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(1)
+    await expect(statusChip).toBeVisible()
+
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const resetDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await resetDropdown.getByRole('button', { name: 'Reset' }).click()
+    await resetDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(statusChip).toHaveCount(0)
+  })
+
+  test('status filter with multiple values selected shows a chip per value and matches the union', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 3 })
+    const [submittedManuscriptId, acceptedManuscriptId] = manuscriptIds
+
+    await api.patchManuscript({
+      manuscriptId: submittedManuscriptId,
+      patch: { status: 'submitted' },
+    })
+
+    await api.patchManuscript({
+      manuscriptId: acceptedManuscriptId,
+      patch: { status: 'accepted' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(3)
+
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const filterDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await filterDropdown.getByText('Submitted', { exact: true }).click()
+    await filterDropdown.getByText('Accepted', { exact: true }).click()
+    await filterDropdown.getByRole('button', { name: 'OK' }).click()
+
+    // Union of the two selected values - excludes the third (default 'new')
+    // manuscript.
+    await expect(shortIdCells).toHaveCount(2)
+
+    await expect(
+      page.getByText('Status: Submitted', { exact: true }),
+    ).toBeVisible()
+    await expect(
+      page.getByText('Status: Accepted', { exact: true }),
+    ).toBeVisible()
+  })
+
+  test('date range filter narrows results and shows a filter chip', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 3 })
+    const [oldManuscriptId] = manuscriptIds
+
+    await api.setManuscriptCreated({
+      manuscriptId: oldManuscriptId,
+      created: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(3)
+
+    await page
+      .locator('th[data-testid="created"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    // opens the RangePicker's own calendar/presets popup
+    await page.getByPlaceholder('Start date').click()
+    await page.locator('.ant-picker-dropdown').getByText('Today').click()
+
+    await expect(shortIdCells).toHaveCount(2)
+
+    const today = formatChipDate(new Date())
+    const dateChip = page.getByText(`Created: ${today} – ${today}`, {
+      exact: true,
+    })
+
+    await expect(dateChip).toBeVisible()
+
+    await dateChip.getByRole('button', { name: 'Remove filter' }).click()
+
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(dateChip).toHaveCount(0)
+
+    // manually picking the same range (today - today) from the calendar,
+    // instead of using the preset, should narrow results the same way
+    await page
+      .locator('th[data-testid="created"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    await page.getByPlaceholder('Start date').click()
+
+    const todayCell = page.locator(
+      '.ant-picker-dropdown .ant-picker-cell-today',
+    )
+    await todayCell.click()
+    await todayCell.click()
+
+    await expect(shortIdCells).toHaveCount(2)
+    await expect(dateChip).toBeVisible()
+
+    // clearing via the RangePicker's own "x" (rather than the chip) should
+    // also remove the filter - the picker closes once a range is complete,
+    // so the filter dropdown needs reopening to reach the clear button.
+    await page
+      .locator('th[data-testid="created"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    await page.locator('.ant-picker-clear').click()
+
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(dateChip).toHaveCount(0)
+  })
+
+  test('applying multiple filters and a search narrows results, and removing them one by one restores rows', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const searchTerm = 'walrus'
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 5 })
+    const [
+      _,
+      submittedTodayId,
+      submittedOldId,
+      submittedTodayWithTermId,
+      newTodayWithTermId,
+    ] = manuscriptIds
+
+    await Promise.all(
+      [submittedTodayId, submittedOldId, submittedTodayWithTermId].map(
+        manuscriptId =>
+          api.patchManuscript({ manuscriptId, patch: { status: 'submitted' } }),
+      ),
+    )
+
+    await api.setManuscriptCreated({
+      manuscriptId: submittedOldId,
+      created: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await Promise.all(
+      [submittedTodayWithTermId, newTodayWithTermId].map(manuscriptId =>
+        api.updateManuscriptSubmission({
+          manuscriptId,
+          patch: { $abstract: `This one mentions a ${searchTerm}.` },
+        }),
+      ),
+    )
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(5)
+
+    // filter 1: status = Submitted - excludes the 2 'new' manuscripts
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const statusDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await statusDropdown.getByText('Submitted', { exact: true }).click()
+    await statusDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(3)
+
+    // filter 2: created = Today - additionally excludes the backdated one
+    await page
+      .locator('th[data-testid="created"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    await page.getByPlaceholder('Start date').click()
+    await page.locator('.ant-picker-dropdown').getByText('Today').click()
+
+    await expect(shortIdCells).toHaveCount(2)
+
+    // search - additionally excludes the submitted-but-no-keyword one
+    const searchInput = page.getByPlaceholder('Enter search terms...')
+    await searchInput.fill(searchTerm)
+    await searchInput.press('Enter')
+
+    await expect(shortIdCells).toHaveCount(1)
+
+    const today = formatChipDate(new Date())
+    const searchChip = page.getByText(`Search: ${searchTerm}`, {
+      exact: true,
+    })
+    const statusChip = page.getByText('Status: Submitted', { exact: true })
+    const dateChip = page.getByText(`Created: ${today} – ${today}`, {
+      exact: true,
+    })
+
+    await expect(searchChip).toBeVisible()
+    await expect(statusChip).toBeVisible()
+    await expect(dateChip).toBeVisible()
+
+    // remove one by one, in a different order than they were applied
+    await searchChip.getByRole('button', { name: 'Remove filter' }).click()
+    await expect(shortIdCells).toHaveCount(2)
+    await expect(searchChip).toHaveCount(0)
+    await expect(statusChip).toBeVisible()
+    await expect(dateChip).toBeVisible()
+
+    await dateChip.getByRole('button', { name: 'Remove filter' }).click()
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(dateChip).toHaveCount(0)
+    await expect(statusChip).toBeVisible()
+
+    await statusChip.getByRole('button', { name: 'Remove filter' }).click()
+    await expect(shortIdCells).toHaveCount(5)
+    await expect(statusChip).toHaveCount(0)
+  })
+
+  test('applying a filter while on a page other than the first resets pagination to page 1', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    // paginationCount is 10 - 15 manuscripts makes an unfiltered second page,
+    // and patching 12 of them makes a filtered set that still spans two
+    // pages, so a failure to reset would show page 2 of the filtered set
+    // (2 rows) rather than page 1 of it (10 rows).
+    const { manuscriptIds } = await api.createManuscripts({ amount: 15 })
+
+    await Promise.all(
+      manuscriptIds
+        .slice(0, 12)
+        .map(manuscriptId =>
+          api.patchManuscript({ manuscriptId, patch: { status: 'submitted' } }),
+        ),
+    )
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts?pagenum=2')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(5)
+    expect(page.url()).toContain('pagenum=2')
+
+    await page
+      .locator('th[data-testid="status"]')
+      .getByRole('button', { name: 'filter' })
+      .click()
+
+    const filterDropdown = page.locator('.ant-table-filter-dropdown:visible')
+    await filterDropdown.getByText('Submitted', { exact: true }).click()
+    await filterDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(10)
+    expect(page.url()).toContain('pagenum=1')
+    expect(page.url()).not.toContain('pagenum=2')
+  })
+})
+
+test.describe('manuscripts table column sortable and filterable', () => {
+  test.beforeEach(async ({ loginAs, testGroup }) => {
+    await loginAs(testGroup.adminUsername)
+  })
+
+  test('shortId column is sortable but not filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="shortId"]')
+    await expect(header).toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+
+  test('title column is sortable but not filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="titleAndAbstract"]')
+    await expect(header).toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+
+  test('date columns are both sortable and filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="created"]')
+    await expect(header).toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toBeVisible()
+  })
+
+  test('options-based columns (status) are filterable but not sortable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="status"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toBeVisible()
+  })
+
+  test('person column (author) is neither sortable nor filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="author"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+
+  test('reviewer status badge column is filterable but not sortable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/dashboard/reviews')
+
+    const header = page.locator('th[data-testid="reviewerStatusBadge"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toBeVisible()
+  })
+
+  test('reviewer status summary column (statusCounts) is neither sortable nor filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/dashboard/edits')
+
+    const header = page.locator('th[data-testid="statusCounts"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+
+  test('manuscriptVersions column is explicitly not sortable, and not filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/dashboard/edits')
+
+    const header = page.locator('th[data-testid="manuscriptVersions"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+
+  test('lastUpdated column is neither sortable nor filterable', async ({
+    page,
+    navigateTo,
+  }) => {
+    await navigateTo('/dashboard/edits')
+
+    const header = page.locator('th[data-testid="lastUpdated"]')
+    await expect(header).not.toHaveAttribute('aria-description', 'sortable')
+    await expect(header.getByRole('button', { name: 'filter' })).toHaveCount(0)
+  })
+})
+
+test.describe('manuscripts table sorting', () => {
+  test.beforeEach(async ({ loginAs, testGroup }) => {
+    await loginAs(testGroup.adminUsername)
+  })
+
+  test('clicking the shortId column header sorts ascending, then descending', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    await api.createManuscripts({ amount: 3 })
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(3)
+    const initial = (await shortIdCells.allTextContents()).map(Number)
+
+    const header = page.locator('th[data-testid="shortId"]')
+
+    // Clicking re-fetches over the network, so poll until the order has
+    // actually changed from the previous state before reading it, rather
+    // than assuming a fixed delay.
+    await header.click()
+
+    await expect
+      .poll(async () => (await shortIdCells.allTextContents()).join(','))
+      .not.toBe(initial.join(','))
+
+    const afterFirstClick = (await shortIdCells.allTextContents()).map(Number)
+    await expect(header).toHaveAttribute('aria-sort', 'ascending')
+    expect(afterFirstClick).toEqual([...afterFirstClick].sort((a, b) => a - b))
+
+    await header.click()
+
+    await expect
+      .poll(async () => (await shortIdCells.allTextContents()).join(','))
+      .not.toBe(afterFirstClick.join(','))
+
+    const afterSecondClick = (await shortIdCells.allTextContents()).map(Number)
+
+    await expect(header).toHaveAttribute('aria-sort', 'descending')
+    expect(afterSecondClick).toEqual(
+      [...afterSecondClick].sort((a, b) => b - a),
+    )
+
+    // the two directions should be exact reverses of each other
+    expect(afterSecondClick).toEqual([...afterFirstClick].reverse())
+  })
+
+  test('sorting by shortId via the URL produces exactly reversed order', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    await api.createManuscripts({ amount: 4 })
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await navigateTo('/admin/manuscripts?sort=shortId_ascend')
+    const ascending = (await shortIdCells.allTextContents()).map(Number)
+    expect(ascending).toEqual([...ascending].sort((a, b) => a - b))
+
+    await navigateTo('/admin/manuscripts?sort=shortId_descend')
+    const descending = (await shortIdCells.allTextContents()).map(Number)
+    expect(descending).toEqual([...ascending].reverse())
+  })
+
+  test('sorting by created date reorders rows chronologically', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 3 })
+    const [oldestId, middleId, newestId] = manuscriptIds
+
+    await api.setManuscriptCreated({
+      manuscriptId: oldestId,
+      created: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await api.setManuscriptCreated({
+      manuscriptId: middleId,
+      created: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await api.setManuscriptCreated({
+      manuscriptId: newestId,
+      created: new Date().toISOString(),
+    })
+
+    const rows = page.locator('.ant-table-tbody tr')
+
+    await navigateTo('/admin/manuscripts?sort=created_ascend')
+    await expect(rows).toHaveCount(3)
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    const ascendingByCreated = await shortIdCells.allTextContents()
+
+    await navigateTo('/admin/manuscripts?sort=created_descend')
+    await expect(shortIdCells).toHaveText([...ascendingByCreated].reverse())
+  })
+
+  test('with no sort applied, rows default to created date descending (newest first)', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 3 })
+    const [oldestId, middleId, newestId] = manuscriptIds
+
+    await api.setManuscriptCreated({
+      manuscriptId: oldestId,
+      created: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await api.setManuscriptCreated({
+      manuscriptId: middleId,
+      created: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    })
+
+    await api.setManuscriptCreated({
+      manuscriptId: newestId,
+      created: new Date().toISOString(),
+    })
+
+    // no ?sort= param at all - relying entirely on the table's own default
+    await navigateTo('/admin/manuscripts')
+
+    const header = page.locator('th[data-testid="created"]')
+    await expect(header).toHaveAttribute('aria-sort', 'descending')
+
+    const shortIdOf = async (title: string): Promise<string> => {
+      const text = await page
+        .locator('.ant-table-tbody tr', { hasText: title })
+        .locator('td[data-testid="shortId"]')
+        .textContent()
+
+      return text as string
+    }
+
+    const [oldestShortId, middleShortId, newestShortId] = await Promise.all([
+      shortIdOf('Test manuscript 1'),
+      shortIdOf('Test manuscript 2'),
+      shortIdOf('Test manuscript 3'),
+    ])
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveText([
+      newestShortId,
+      middleShortId,
+      oldestShortId,
+    ])
   })
 })
