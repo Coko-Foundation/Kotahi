@@ -4,6 +4,7 @@ export const apiUrl = `${serverUrl}/api/e2e`
 
 // assuming the theme is not changed
 export const colorSecondary = '#6b7280'
+export const colorSuccess = '#008800'
 
 // must match the identifier given to SHARED_USERS.userWithOrcid in
 // packages/server/api/rest/e2e/actions.js

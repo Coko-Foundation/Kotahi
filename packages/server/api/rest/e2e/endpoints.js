@@ -14,6 +14,7 @@ const {
   deleteGroupsByPrefix,
   createManuscripts,
   assignRole,
+  setReviewerStatus,
   updateGroupConfig,
   updateFormFields,
   updateManuscriptSubmission,
@@ -189,6 +190,26 @@ module.exports = app => {
       res.status(500).json({ error: err.message })
     }
   })
+
+  app.post(
+    '/api/e2e/setReviewerStatus/:manuscriptId/:username',
+    async (req, res) => {
+      const { manuscriptId, username } = req.params
+      const { status } = req.query
+
+      try {
+        const result = await setReviewerStatus({
+          manuscriptId,
+          username,
+          status,
+        })
+        res.status(200).json(result)
+      } catch (err) {
+        logger.error(err)
+        res.status(500).json({ error: err.message })
+      }
+    },
+  )
 
   app.post('/api/e2e/assignRole/:username/:role', async (req, res) => {
     const { username, role } = req.params

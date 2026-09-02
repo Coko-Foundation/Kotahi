@@ -526,6 +526,33 @@ const setManuscriptCreated = async ({ manuscriptId, created }) => {
   return Manuscript.findById(manuscriptId)
 }
 
+const setReviewerStatus = async ({ manuscriptId, username, status }) => {
+  const user = await User.findOne({ username })
+
+  if (!user) {
+    throw new Error(`No user found named "${username}"`)
+  }
+
+  const team = await Team.findOne({ objectId: manuscriptId, role: 'reviewer' })
+
+  if (!team) {
+    throw new Error(`No "reviewer" team found for manuscript "${manuscriptId}"`)
+  }
+
+  const teamMember = await TeamMember.findOne({
+    teamId: team.id,
+    userId: user.id,
+  })
+
+  if (!teamMember) {
+    throw new Error(
+      `No reviewer team member found for user "${username}" on manuscript "${manuscriptId}"`,
+    )
+  }
+
+  return TeamMember.patchAndFetchById(teamMember.id, { status })
+}
+
 const updateGroupConfig = async ({ groupName, patch }) => {
   const group = await Group.findOne({ name: groupName })
 
@@ -579,6 +606,7 @@ module.exports = {
   deleteGroupsByPrefix,
   createManuscripts,
   assignRole,
+  setReviewerStatus,
   updateGroupConfig,
   updateFormFields,
   updateManuscriptSubmission,

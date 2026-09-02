@@ -1,4 +1,4 @@
-import { colorSecondary, testOrcid } from './utils/constants'
+import { colorSecondary, colorSuccess, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
 import { formatAbsoluteDate, hexToRgb } from './utils/helpers'
 
@@ -713,6 +713,124 @@ test.describe('manuscripts table data types', () => {
 
     await expect(rows.first().locator('td[data-testid="created"]')).toHaveText(
       formatAbsoluteDate(created),
+    )
+  })
+
+  test('reviewer status grid shows a box per reviewer and updates when a status changes', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [editorUsername, reviewerA, reviewerB, reviewerC] =
+      testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.assignRole({
+      username: editorUsername,
+      role: 'editor',
+      manuscriptIds: [manuscriptId],
+    })
+
+    const reviewers = [reviewerA, reviewerB, reviewerC]
+
+    await Promise.all(
+      reviewers.map(username =>
+        api.assignRole({
+          username,
+          role: 'reviewer',
+          manuscriptIds: [manuscriptId],
+        }),
+      ),
+    )
+
+    // 'invited' has no color variant of its own (falls back to the badge
+    // default) and, with no invitation record on the manuscript, still
+    // renders as a normal box - see reviewerStatusEntriesFor's
+    // notAlreadyInvited check in useManuscriptsTable.tsx.
+    await Promise.all(
+      reviewers.map(username =>
+        api.setReviewerStatus({ manuscriptId, username, status: 'invited' }),
+      ),
+    )
+
+    await loginAs(editorUsername)
+    await navigateTo('/dashboard/edits')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const statusCell = rows.first().locator('td[data-testid="statusCounts"]')
+    const squares = statusCell.getByTestId('reviewer-status-square')
+    await expect(squares).toHaveCount(3)
+
+    await expect(squares.nth(0)).toHaveCSS(
+      'background-color',
+      hexToRgb(colorSecondary),
+    )
+    await expect(squares.nth(1)).toHaveCSS(
+      'background-color',
+      hexToRgb(colorSecondary),
+    )
+    await expect(squares.nth(2)).toHaveCSS(
+      'background-color',
+      hexToRgb(colorSecondary),
+    )
+
+    const reviewerBSquare = statusCell.locator(
+      `[data-testid="reviewer-status-square"][aria-label="${reviewerB}: Invited"]`,
+    )
+    await expect(reviewerBSquare).toBeVisible()
+
+    const headerCell = page.locator('th[data-testid="statusCounts"]')
+
+    const helpButton = headerCell.getByRole('button', {
+      name: 'Each block represents a reviewer',
+    })
+
+    // open tooltip
+    await helpButton.click()
+
+    await expect(page.getByRole('tooltip')).toContainText(
+      'Each block represents a reviewer and the color represents their status.',
+    )
+
+    // and close tooltip
+    await helpButton.click()
+
+    await squares.first().hover()
+    await expect(page.getByRole('tooltip')).toContainText(reviewerB)
+    // make compact
+    await headerCell.locator('label:has([aria-label="Compact view"])').click()
+    await squares.first().hover()
+    const compactTooltip = page.getByRole('tooltip')
+    await expect(compactTooltip).toContainText('Invited')
+    // compact view shows numbers, but not names
+    await expect(compactTooltip).not.toContainText(reviewerB)
+
+    await api.setReviewerStatus({
+      manuscriptId,
+      username: reviewerB,
+      status: 'completed',
+    })
+
+    await page.reload()
+
+    const reviewerBSquareAfter = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="statusCounts"]')
+      .locator(
+        `[data-testid="reviewer-status-square"][aria-label="${reviewerB}: Completed"]`,
+      )
+
+    await expect(reviewerBSquareAfter).toBeVisible()
+    await expect(reviewerBSquareAfter).toHaveCSS(
+      'background-color',
+      hexToRgb(colorSuccess),
     )
   })
 })

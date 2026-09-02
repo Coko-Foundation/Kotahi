@@ -51,6 +51,11 @@ type Api = {
     role: string
     manuscriptIds: string[]
   }) => Promise<{ manuscriptCount: number }>
+  setReviewerStatus: (opts: {
+    manuscriptId: string
+    username: string
+    status: string
+  }) => Promise<unknown>
   updateGroupConfig: (patch: Record<string, unknown>) => Promise<unknown>
   updateFormFields: (opts: {
     purpose: string
@@ -119,6 +124,13 @@ export const test = base.extend<{
         jsonOrThrow(
           request.post(
             `${apiUrl}/assignRole/${encodeURIComponent(username)}/${role}?manuscriptIds=${manuscriptIds.join(',')}`,
+          ),
+        ),
+
+      setReviewerStatus: ({ manuscriptId, username, status }) =>
+        jsonOrThrow(
+          request.post(
+            `${apiUrl}/setReviewerStatus/${manuscriptId}/${encodeURIComponent(username)}?status=${encodeURIComponent(status)}`,
           ),
         ),
 
