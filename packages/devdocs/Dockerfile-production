@@ -21,4 +21,13 @@ RUN yarn build
 
 FROM cokoapps/base:24
 
-COPY --from=0 /home/node/app/build /usr/share/nginx/html
+WORKDIR /home/node/app
+
+RUN yarn global add serve
+
+COPY --from=0 /home/node/app/build ./build
+
+RUN chown -R node:node .
+USER node
+
+CMD ["npx", "serve", "-p", "3000", "./build"]
