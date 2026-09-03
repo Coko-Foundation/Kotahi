@@ -183,9 +183,14 @@ const PersonInfo = styled.div`
   flex-direction: column;
 `
 
+const PersonName = styled.span`
+  white-space: nowrap;
+`
+
 const PersonIdentifier = styled.span`
   color: ${th('colorTextPlaceholder')};
   font-size: ${th('fontSizeBaseSmaller')};
+  white-space: nowrap;
 `
 
 const renderPerson = (value: any): ReactNode => {
@@ -195,7 +200,7 @@ const renderPerson = (value: any): ReactNode => {
     <PersonWrapper>
       <Avatar size={10} src={value.profilePicture} />
       <PersonInfo>
-        <span data-testid="person-name">{value.displayName}</span>
+        <PersonName data-testid="person-name">{value.displayName}</PersonName>
         {value.orcid && (
           <PersonIdentifier>{`ORCID: ${value.orcid}`}</PersonIdentifier>
         )}
