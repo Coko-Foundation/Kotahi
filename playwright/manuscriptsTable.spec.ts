@@ -1072,6 +1072,55 @@ test.describe('manuscripts table data types', () => {
     await expect(titleCell).toContainText('Test manuscript 1')
     await expect(titleCell.getByTestId('abstract-tooltip-icon')).toHaveCount(0)
   })
+
+  test('a column with no dataType or render function shows the raw value as plain text', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    await api.updateFormFields({
+      purpose: 'submit',
+      category: 'submission',
+      fields: [
+        {
+          name: 'submission.testPlainField',
+          title: 'Plain Field',
+          component: 'TextField',
+          options: [],
+        },
+      ],
+    })
+
+    await api.updateGroupConfig({
+      manuscript: { tableColumns: 'shortId,submission.testPlainField' },
+    })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { testPlainField: 'Just a plain value' },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const cell = rows
+      .first()
+      .locator('td[data-testid="submission.testPlainField"]')
+
+    await expect(cell).toHaveText('Just a plain value')
+
+    // no dataType-specific wrapper markup (badge, span, avatar, etc.) - just
+    // the bare value
+    expect(await cell.innerHTML()).toBe('Just a plain value')
+  })
 })
 
 test.describe('manuscripts table search and filter', () => {
@@ -1984,5 +2033,560 @@ test.describe('manuscripts table sorting', () => {
       middleShortId,
       oldestShortId,
     ])
+  })
+})
+
+test.describe('manuscripts table actions column', () => {
+  test('submitter dashboard shows a status-specific submission link, and a production link only when author proofing applies', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const submitterUsername = testGroup.usernames[0]
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 1,
+      submitter: submitterUsername,
+    })
+
+    const [manuscriptId] = manuscriptIds
+
+    await loginAs(submitterUsername)
+    await navigateTo('/dashboard/submissions')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    const submissionLink = actionsCell.getByTestId('submission-action-link')
+    await expect(submissionLink).toHaveText('Continue Submission')
+    await expect(submissionLink).toHaveAttribute(
+      'href',
+      `/${testGroup.groupName}/versions/${manuscriptId}/submit`,
+    )
+
+    await expect(actionsCell.getByTestId('production-action-link')).toHaveCount(
+      0,
+    )
+
+    // author proofing only applies once enabled, the manuscript has an
+    // assigned author, and its status is one of assigned/inProgress/completed
+    await api.updateGroupConfig({
+      controlPanel: { authorProofingEnabled: true },
+    })
+
+    await api.patchManuscript({
+      manuscriptId,
+      patch: {
+        status: 'completed',
+        authorFeedback: {
+          // AssignedAuthor's fields are all non-null in the GraphQL schema -
+          // an incomplete entry here nulls out the whole manuscripts list.
+          assignedAuthors: [
+            {
+              authorId: 'test-author-id',
+              authorName: submitterUsername,
+              assignedOnDate: new Date().toISOString(),
+            },
+          ],
+        },
+      },
+    })
+
+    await page.reload()
+
+    await expect(submissionLink).toHaveText('View')
+
+    const productionLink = actionsCell.getByTestId('production-action-link')
+    await expect(productionLink).toHaveText('View production feedback')
+    await expect(productionLink).toHaveAttribute(
+      'href',
+      `/${testGroup.groupName}/versions/${manuscriptId}/production`,
+    )
+
+    // assigned/inProgress show a different production link label
+    await api.patchManuscript({ manuscriptId, patch: { status: 'assigned' } })
+    await page.reload()
+    await expect(productionLink).toHaveText('Provide production feedback')
+
+    await api.patchManuscript({ manuscriptId, patch: { status: 'inProgress' } })
+    await page.reload()
+    await expect(productionLink).toHaveText('Provide production feedback')
+
+    // revise/revising have their own submission-link text, and aren't
+    // eligible for author proofing (no production link)
+    await api.patchManuscript({ manuscriptId, patch: { status: 'revise' } })
+    await page.reload()
+    await expect(submissionLink).toHaveText('Revise')
+    await expect(actionsCell.getByTestId('production-action-link')).toHaveCount(
+      0,
+    )
+
+    await api.patchManuscript({ manuscriptId, patch: { status: 'revising' } })
+    await page.reload()
+    await expect(submissionLink).toHaveText('Continue Revision')
+  })
+
+  test('editor dashboard always shows Control and Production links', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [authorUsername, editorUsername] = testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 1,
+      submitter: authorUsername,
+    })
+
+    const [manuscriptId] = manuscriptIds
+
+    await api.assignRole({
+      username: editorUsername,
+      role: 'editor',
+      manuscriptIds: [manuscriptId],
+    })
+
+    await loginAs(editorUsername)
+    await navigateTo('/dashboard/edits')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    const controlLink = actionsCell.getByTestId('control-link')
+    await expect(controlLink).toHaveText('Control')
+    await expect(controlLink).toHaveAttribute(
+      'href',
+      `/${testGroup.groupName}/versions/${manuscriptId}/decision`,
+    )
+
+    const productionLink = actionsCell.getByTestId('production-link')
+    await expect(productionLink).toHaveText('Production')
+    await expect(productionLink).toHaveAttribute(
+      'href',
+      `/${testGroup.groupName}/versions/${manuscriptId}/production`,
+    )
+  })
+
+  test("reviewer dashboard's actions vary by the reviewer's own status", async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [authorUsername, reviewerUsername] = testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 5,
+      submitter: authorUsername,
+    })
+
+    const [invitedId, acceptedId, inProgressId, completedId, rejectedId] =
+      manuscriptIds
+
+    await api.assignRole({
+      username: reviewerUsername,
+      role: 'reviewer',
+      manuscriptIds,
+    })
+
+    await Promise.all([
+      api.setReviewerStatus({
+        manuscriptId: invitedId,
+        username: reviewerUsername,
+        status: 'invited',
+      }),
+      api.setReviewerStatus({
+        manuscriptId: acceptedId,
+        username: reviewerUsername,
+        status: 'accepted',
+      }),
+      api.setReviewerStatus({
+        manuscriptId: inProgressId,
+        username: reviewerUsername,
+        status: 'inProgress',
+      }),
+      api.setReviewerStatus({
+        manuscriptId: completedId,
+        username: reviewerUsername,
+        status: 'completed',
+      }),
+      api.setReviewerStatus({
+        manuscriptId: rejectedId,
+        username: reviewerUsername,
+        status: 'rejected',
+      }),
+    ])
+
+    await loginAs(reviewerUsername)
+    await navigateTo('/dashboard/reviews')
+
+    const actionsCellFor = (title: string): ReturnType<Page['locator']> =>
+      page
+        .locator('.ant-table-tbody tr', { hasText: title })
+        .locator('td[data-testid="actions"]')
+
+    // invited: accept/reject buttons, not links to a page
+    const invitedActions = actionsCellFor('Test manuscript 1')
+    await expect(invitedActions.getByTestId('accept-review')).toHaveText(
+      'Accept',
+    )
+    await expect(invitedActions.getByTestId('reject-review')).toHaveText(
+      'Decline',
+    )
+
+    await expect(
+      actionsCellFor('Test manuscript 2').getByTestId('review-action-link'),
+    ).toHaveText('Do Review')
+
+    await expect(
+      actionsCellFor('Test manuscript 3').getByTestId('review-action-link'),
+    ).toHaveText('Continue Review')
+
+    await expect(
+      actionsCellFor('Test manuscript 4').getByTestId('review-action-link'),
+    ).toHaveText('View')
+
+    // rejected: no actions at all
+    await expect(actionsCellFor('Test manuscript 5').locator('a')).toHaveCount(
+      0,
+    )
+  })
+
+  test('admin dashboard hides Control and Production links for archived manuscripts', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await expect(actionsCell.getByTestId('view-action-link')).toBeVisible()
+    await expect(actionsCell.getByTestId('control-action-link')).toBeVisible()
+    await expect(
+      actionsCell.getByTestId('production-action-link'),
+    ).toBeVisible()
+
+    await api.patchManuscript({ manuscriptId, patch: { isHidden: true } })
+    await navigateTo('/admin/manuscripts?archived=true')
+
+    const archivedActionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await expect(
+      archivedActionsCell.getByTestId('view-action-link'),
+    ).toBeVisible()
+    await expect(
+      archivedActionsCell.getByTestId('control-action-link'),
+    ).toHaveCount(0)
+    await expect(
+      archivedActionsCell.getByTestId('production-action-link'),
+    ).toHaveCount(0)
+  })
+
+  test('admin dashboard shows Evaluation and Publish links only for preprint-instance manuscripts', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    await api.updateGroupConfig({ instanceName: 'preprint1' })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    // default status 'new' is one of the articleStatuses values, so
+    // Evaluation shows; Control never shows outside journal/prc instances
+    await expect(
+      actionsCell.getByTestId('evaluation-action-link'),
+    ).toHaveAttribute(
+      'href',
+      `/${testGroup.groupName}/versions/${manuscriptId}/evaluation`,
+    )
+    await expect(actionsCell.getByTestId('control-action-link')).toHaveCount(0)
+    await expect(actionsCell.getByTestId('publish-action-link')).toHaveCount(0)
+
+    // Publish only appears once the manuscript has been evaluated
+    await api.patchManuscript({ manuscriptId, patch: { status: 'evaluated' } })
+    await page.reload()
+
+    await expect(actionsCell.getByTestId('publish-action-link')).toHaveText(
+      'Publish',
+    )
+  })
+
+  test("admin dashboard's Publish link opens a confirmation dialog without publishing on cancel", async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    await api.updateGroupConfig({ instanceName: 'preprint1' })
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+    await api.patchManuscript({ manuscriptId, patch: { status: 'evaluated' } })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await actionsCell.getByTestId('publish-action-link').click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('Publish this manuscript?')
+
+    await dialog.getByRole('button', { name: 'Cancel' }).click()
+    await expect(dialog).toHaveCount(0)
+
+    // still shows the Publish link, unpublished
+    await expect(actionsCell.getByTestId('publish-action-link')).toHaveText(
+      'Publish',
+    )
+
+    // Actually publishing is dependent on external systems (flax, crossref etc.)
+    // so there's no clean way to test this without bringing up mock servers
+    // alongside the app.
+  })
+
+  test("reviewer's Accept button actually accepts the review invitation", async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [authorUsername, reviewerUsername] = testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 1,
+      submitter: authorUsername,
+    })
+
+    const [manuscriptId] = manuscriptIds
+
+    await api.assignRole({
+      username: reviewerUsername,
+      role: 'reviewer',
+      manuscriptIds: [manuscriptId],
+    })
+
+    await api.setReviewerStatus({
+      manuscriptId,
+      username: reviewerUsername,
+      status: 'invited',
+    })
+
+    await loginAs(reviewerUsername)
+    await navigateTo('/dashboard/reviews')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await actionsCell.getByTestId('accept-review').click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('Accept this review invitation?')
+    await dialog.getByRole('button', { name: 'OK' }).click()
+    await expect(dialog).toHaveCount(0)
+
+    // the row doesn't reactively update from this mutation - reload to see it
+    await navigateTo('/dashboard/reviews')
+
+    await expect(actionsCell.getByTestId('review-action-link')).toHaveText(
+      'Do Review',
+    )
+  })
+
+  test("reviewer's Decline button actually declines the review invitation", async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [authorUsername, reviewerUsername] = testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 1,
+      submitter: authorUsername,
+    })
+
+    const [manuscriptId] = manuscriptIds
+
+    await api.assignRole({
+      username: reviewerUsername,
+      role: 'reviewer',
+      manuscriptIds: [manuscriptId],
+    })
+
+    await api.setReviewerStatus({
+      manuscriptId,
+      username: reviewerUsername,
+      status: 'invited',
+    })
+
+    await loginAs(reviewerUsername)
+    await navigateTo('/dashboard/reviews')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await actionsCell.getByTestId('reject-review').click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('Decline this review invitation?')
+    await dialog.getByRole('button', { name: 'OK' }).click()
+    await expect(dialog).toHaveCount(0)
+
+    // the row doesn't reactively update from this mutation - reload to see it
+    await navigateTo('/dashboard/reviews')
+
+    // rejected: no actions rendered at all
+    await expect(actionsCell.locator('a')).toHaveCount(0)
+    await expect(actionsCell.getByTestId('accept-review')).toHaveCount(0)
+    await expect(actionsCell.getByTestId('reject-review')).toHaveCount(0)
+  })
+
+  test('clicking Do Review as an accepted reviewer moves their status to inProgress and navigates to the review page', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const [authorUsername, reviewerUsername] = testGroup.usernames
+
+    const { manuscriptIds } = await api.createManuscripts({
+      amount: 1,
+      submitter: authorUsername,
+    })
+
+    const [manuscriptId] = manuscriptIds
+
+    await api.assignRole({
+      username: reviewerUsername,
+      role: 'reviewer',
+      manuscriptIds: [manuscriptId],
+    })
+
+    await api.setReviewerStatus({
+      manuscriptId,
+      username: reviewerUsername,
+      status: 'accepted',
+    })
+
+    await loginAs(reviewerUsername)
+    await navigateTo('/dashboard/reviews')
+
+    const actionsCell = page
+      .locator('.ant-table-tbody tr')
+      .first()
+      .locator('td[data-testid="actions"]')
+
+    await actionsCell.getByTestId('review-action-link').click()
+
+    await expect(page).toHaveURL(new RegExp(`/versions/${manuscriptId}/review`))
+
+    await navigateTo('/dashboard/reviews')
+
+    await expect(actionsCell.getByTestId('review-action-link')).toHaveText(
+      'Continue Review',
+    )
+  })
+})
+
+test.describe('manuscripts table scrolling', () => {
+  test.beforeEach(async ({ loginAs, testGroup }) => {
+    await loginAs(testGroup.adminUsername)
+  })
+
+  test('shows a horizontal scrollbar when the table is wider than the viewport', async ({
+    page,
+    navigateTo,
+  }) => {
+    await page.setViewportSize({ width: 400, height: 720 })
+    await navigateTo('/admin/manuscripts')
+
+    const wrapper = page.locator('.ant-table-wrapper')
+    await expect(wrapper).toBeVisible()
+
+    const dimensions = await wrapper.evaluate(el => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+      /* eslint-disable-next-line no-undef */
+      overflowX: window.getComputedStyle(el).overflowX,
+    }))
+
+    expect(dimensions.overflowX).toBe('auto')
+    expect(dimensions.scrollWidth).toBeGreaterThan(dimensions.clientWidth)
+
+    // functional check: scrolling the wrapper actually reveals content that
+    // was off to the right, e.g. the actions column
+    const actionsHeader = page.locator('th[data-testid="actions"]')
+    const before = await actionsHeader.boundingBox()
+
+    await wrapper.evaluate(el => {
+      el.scrollLeft = el.scrollWidth
+    })
+
+    const after = await actionsHeader.boundingBox()
+    expect(after!.x).toBeLessThan(before!.x)
+  })
+
+  test('does not show a horizontal scrollbar when the viewport is wide enough', async ({
+    page,
+    navigateTo,
+  }) => {
+    await page.setViewportSize({ width: 2000, height: 720 })
+    await navigateTo('/admin/manuscripts')
+
+    const wrapper = page.locator('.ant-table-wrapper')
+    await expect(wrapper).toBeVisible()
+
+    const dimensions = await wrapper.evaluate(el => ({
+      scrollWidth: el.scrollWidth,
+      clientWidth: el.clientWidth,
+    }))
+
+    expect(dimensions.scrollWidth).toBe(dimensions.clientWidth)
   })
 })
