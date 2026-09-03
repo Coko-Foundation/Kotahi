@@ -98,6 +98,31 @@ const cacheConfig = {
             return incoming
           },
         },
+        storedObjects: {
+          // storedObjects entries have no `id`, so Apollo can't normalize
+          // them individually. Different queries (e.g. the manuscript
+          // query vs the asset manager's file list query) select different
+          // subsets of storedObjects fields, keyed by `type`. Without this
+          // merge, whichever query writes last wins outright and silently
+          // drops fields the other query needs, forcing it to refetch.
+          merge(existing = [], incoming = []) {
+            const merged = [...existing]
+
+            incoming.forEach(incomingItem => {
+              const index = merged.findIndex(
+                item => item.type === incomingItem.type,
+              )
+
+              if (index > -1) {
+                merged[index] = { ...merged[index], ...incomingItem }
+              } else {
+                merged.push(incomingItem)
+              }
+            })
+
+            return merged
+          },
+        },
       },
     },
   },

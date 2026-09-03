@@ -295,8 +295,8 @@ services:
       - ./packages/devdocs/docs:/home/node/app/docs
       - ./packages/devdocs/src:/home/node/app/src
       - ./packages/devdocs/static:/home/node/app/static
-      - ./packages/devdocs/docusaurus.config.js:/home/node/app/docusaurus.config.js
-      - ./packages/devdocs/sidebars.js:/home/node/app/sidebars.js
+      - ./packages/devdocs/docusaurus.config.ts:/home/node/app/docusaurus.config.ts
+      - ./packages/devdocs/sidebars.ts:/home/node/app/sidebars.ts
     tty: true
 
 volumes:

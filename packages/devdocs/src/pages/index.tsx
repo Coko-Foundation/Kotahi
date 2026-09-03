@@ -1,6 +1,3 @@
-/* eslint-disable react/react-in-jsx-scope */
-
-/* eslint-disable-next-line import/no-unresolved */
 import Layout from '@theme/Layout'
 
 import styles from './index.module.css'

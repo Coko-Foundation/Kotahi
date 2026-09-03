@@ -6,6 +6,14 @@
 
 #### Bug fixes
 
+### Version 2026.09.03-0
+
+#### Features
+
+#### Bug fixes
+
+* Fixes an issue with uploading PNG files to a manuscript.
+
 ### Version 2026.08.13-0
 
 #### Features

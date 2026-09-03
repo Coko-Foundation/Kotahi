@@ -13,6 +13,7 @@ on:
 jobs:
   lint:
     name: Lint
+    if: github.event_name == 'pull_request'
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
@@ -60,6 +61,29 @@ jobs:
       - name: Typecheck
         run: cd packages/server && yarn typecheck
 
+  typecheck-devdocs:
+    name: Typecheck devdocs
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          cd packages/devdocs && yarn install --immutable && cd ../..
+
+      - name: Typecheck
+        run: cd packages/devdocs && yarn typecheck
+
   server-tests:
     name: Server tests
     runs-on: ubuntu-latest
@@ -97,6 +121,7 @@ jobs:
 
   e2e-journal:
     name: End to end tests - journal
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     env:
@@ -145,6 +170,7 @@ jobs:
 
   e2e-colab:
     name: End to end tests - colab
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     env:
@@ -193,6 +219,7 @@ jobs:
 
   e2e-elife:
     name: End to end tests - elife
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     env:
@@ -241,6 +268,7 @@ jobs:
 
   e2e-ncrc:
     name: End to end tests - ncrc
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     env:

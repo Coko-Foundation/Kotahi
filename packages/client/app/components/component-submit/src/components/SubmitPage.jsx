@@ -69,20 +69,17 @@ const SubmitPage = () => {
   const decisionPurpose = 'decision'
   const reviewPurpose = 'review'
 
-  const { data, loading, error } = useQuery(
-    USER_MANUSCRIPT,
-    {
-      variables: {
-        id: params.version,
-        groupId: config.groupId,
-        submitPurpose,
-        decisionPurpose,
-        reviewPurpose,
-      },
-      partialRefetch: true,
+  const { data, loading, error } = useQuery(USER_MANUSCRIPT, {
+    variables: {
+      id: params.version,
+      groupId: config.groupId,
+      submitPurpose,
+      decisionPurpose,
+      reviewPurpose,
     },
-    { refetchOnMount: true },
-  )
+    // stops screen flickering (and losing local UI state, e.g. active tab) when other queries touch overlapping cache entities
+    notifyOnNetworkStatusChange: false,
+  })
 
   let channelId
 

@@ -1,0 +1,9 @@
+node_modules
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.docusaurus
+build
+.git
+Dockerfile-development
+Dockerfile-production
