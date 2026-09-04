@@ -1,3 +1,5 @@
+import { readFileSync } from 'fs'
+
 import { colorSecondary, colorSuccess, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
 import { formatAbsoluteDate, formatChipDate, hexToRgb } from './utils/helpers'
@@ -802,11 +804,17 @@ test.describe('manuscripts table data types', () => {
     await helpButton.click()
 
     await squares.first().hover()
-    await expect(page.getByRole('tooltip')).toContainText(reviewerB)
+    const detailedTooltip = page
+      .getByRole('tooltip')
+      .filter({ hasText: reviewerB })
+
+    await expect(detailedTooltip).toContainText(reviewerB)
     // make compact
     await headerCell.locator('label:has([aria-label="Compact view"])').click()
     await squares.first().hover()
-    const compactTooltip = page.getByRole('tooltip')
+    const compactTooltip = page
+      .getByRole('tooltip')
+      .filter({ hasText: 'Invited' })
     await expect(compactTooltip).toContainText('Invited')
     // compact view shows numbers, but not names
     await expect(compactTooltip).not.toContainText(reviewerB)
@@ -991,6 +999,52 @@ test.describe('manuscripts table data types', () => {
     )
   })
 
+  test('abstract tooltip strips HTML and truncates to 60 words', async ({
+    api,
+    loginAs,
+    page,
+    navigateTo,
+    testGroup,
+  }) => {
+    const words = Array.from({ length: 70 }, (_, i) => `word${i + 1}`)
+
+    // an inline tag partway through, so stripping isn't just trimming the
+    // outer <p> wrapper
+    const htmlAbstract = `<p>${words.slice(0, 30).join(' ')} <b>${words[30]}</b> ${words.slice(31).join(' ')}</p>`
+
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+
+    await api.updateManuscriptSubmission({
+      manuscriptId,
+      patch: { $abstract: htmlAbstract },
+    })
+
+    await loginAs(testGroup.adminUsername)
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await expect(rows).toHaveCount(1)
+
+    const titleCell = rows.first().locator('td[data-testid="titleAndAbstract"]')
+    await titleCell.getByTestId('abstract-tooltip-icon').click()
+
+    const tooltip = page.getByTestId('abstract-tooltip')
+
+    // stripped: no raw tags leak through as visible text
+    await expect(tooltip).not.toContainText('<p>')
+    await expect(tooltip).not.toContainText('<b>')
+
+    // truncated to exactly the first 60 words, with a trailing ellipsis
+    await expect(tooltip).toContainText(`${words.slice(0, 60).join(' ')}...`)
+
+    const abstractText = await tooltip.evaluate(el =>
+      (el.textContent ?? '').replace(/^Abstract/, ''),
+    )
+
+    expect(abstractText.trim().split(/\s+/)).toHaveLength(60)
+  })
+
   test('title column strips HTML formatting and shows plain text', async ({
     api,
     loginAs,
@@ -1131,6 +1185,10 @@ test.describe('manuscripts table search and filter', () => {
     navigateTo,
     testGroup,
   }) => {
+    // this test drives ~12 sequential full page navigations - comfortably
+    // under the default 30s on a fast machine, but not on slower CI runners
+    test.setTimeout(90000)
+
     const searchTerm = 'platypus'
 
     // 14 manuscripts are created below, more than the default page size (10)
@@ -2588,5 +2646,218 @@ test.describe('manuscripts table scrolling', () => {
     }))
 
     expect(dimensions.scrollWidth).toBe(dimensions.clientWidth)
+  })
+})
+
+test.describe('manuscripts table archiving', () => {
+  test.beforeEach(async ({ loginAs, testGroup }) => {
+    await loginAs(testGroup.adminUsername)
+  })
+
+  test('selecting a manuscript and clicking Archive removes it from the default view', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    await api.createManuscripts({ amount: 2 })
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(2)
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await rows.first().getByRole('checkbox').check()
+
+    await expect(page.getByTestId('selected-manuscripts-number')).toHaveText(
+      '1 selected',
+    )
+
+    const archiveButton = page.getByRole('button', {
+      name: 'Archive',
+      exact: true,
+    })
+
+    const unarchiveButton = page.getByRole('button', {
+      name: 'Restore from archive',
+    })
+
+    await expect(archiveButton).toBeEnabled()
+    await expect(unarchiveButton).toBeDisabled()
+
+    await archiveButton.click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('Archive 1 manuscripts?')
+    await dialog.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(1)
+  })
+
+  test('selecting all manuscripts via the header checkbox and clicking Archive archives all of them', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    await api.createManuscripts({ amount: 3 })
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(3)
+
+    await page.locator('thead').getByRole('checkbox').check()
+
+    const selectedCount = page.getByTestId('selected-manuscripts-number')
+    await expect(selectedCount).toHaveText('3 selected')
+
+    const archiveButton = page.getByRole('button', {
+      name: 'Archive',
+      exact: true,
+    })
+
+    const dialog = page.getByRole('dialog')
+
+    // cancelling leaves the selection and the manuscripts untouched
+    await archiveButton.click()
+    await expect(dialog).toContainText('Archive 3 manuscripts?')
+    await dialog.getByRole('button', { name: 'Cancel' }).click()
+    await expect(dialog).toHaveCount(0)
+
+    await expect(shortIdCells).toHaveCount(3)
+    await expect(selectedCount).toHaveText('3 selected')
+
+    // confirming actually archives them
+    await archiveButton.click()
+    await expect(dialog).toContainText('Archive 3 manuscripts?')
+    await dialog.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(0)
+    await expect(
+      page.getByTestId('empty-manuscripts-table-placeholder'),
+    ).toBeVisible()
+  })
+
+  test('selecting an archived manuscript and clicking Restore from archive returns it to the default view', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 1 })
+    const [manuscriptId] = manuscriptIds
+    await api.patchManuscript({ manuscriptId, patch: { isHidden: true } })
+
+    await navigateTo('/admin/manuscripts?archived=true')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(1)
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await rows.first().getByRole('checkbox').check()
+
+    const archiveButton = page.getByRole('button', {
+      name: 'Archive',
+      exact: true,
+    })
+
+    const unarchiveButton = page.getByRole('button', {
+      name: 'Restore from archive',
+    })
+
+    // viewing the archived list, everything selected is already archived
+    await expect(archiveButton).toBeDisabled()
+    await expect(unarchiveButton).toBeEnabled()
+
+    await unarchiveButton.click()
+
+    const dialog = page.getByRole('dialog')
+    await expect(dialog).toContainText('Unarchive 1 manuscripts?')
+    await dialog.getByRole('button', { name: 'OK' }).click()
+
+    await expect(shortIdCells).toHaveCount(0)
+    await expect(
+      page.getByTestId('empty-manuscripts-table-placeholder'),
+    ).toBeVisible()
+
+    await navigateTo('/admin/manuscripts')
+    await expect(shortIdCells).toHaveCount(1)
+  })
+
+  test('the "View archived manuscripts" toggle switches between the two views', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    const { manuscriptIds } = await api.createManuscripts({ amount: 2 })
+    const [archivedId] = manuscriptIds
+    await api.patchManuscript({
+      manuscriptId: archivedId,
+      patch: { isHidden: true },
+    })
+
+    await navigateTo('/admin/manuscripts')
+
+    const shortIdCells = page.locator(
+      '.ant-table-tbody td[data-testid="shortId"]',
+    )
+
+    await expect(shortIdCells).toHaveCount(1)
+
+    const toggle = page.getByRole('switch')
+    await toggle.click()
+
+    // wait for the switch's own state to catch up before clicking again -
+    // otherwise a second click can land while it's still mid-transition
+    await expect(toggle).toHaveAttribute('aria-checked', 'true')
+    await expect(page).toHaveURL(/archived=true/)
+    await expect(shortIdCells).toHaveCount(1)
+
+    await toggle.click()
+
+    await expect(toggle).toHaveAttribute('aria-checked', 'false')
+    await expect(page).not.toHaveURL(/archived=true/)
+    await expect(shortIdCells).toHaveCount(1)
+  })
+
+  test('downloading selected manuscripts produces a JSON file with the expected content', async ({
+    api,
+    page,
+    navigateTo,
+  }) => {
+    await api.createManuscripts({ amount: 1 })
+    await navigateTo('/admin/manuscripts')
+
+    const rows = page.locator('.ant-table-tbody tr')
+    await rows.first().getByRole('checkbox').check()
+
+    const shortId = await rows
+      .first()
+      .locator('td[data-testid="shortId"]')
+      .textContent()
+
+    const downloadButton = page.getByRole('button', { name: 'Download JSON' })
+    await expect(downloadButton).toBeEnabled()
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      downloadButton.click(),
+    ])
+
+    expect(download.suggestedFilename()).toBe('exportedData.json')
+
+    const downloadPath = await download.path()
+    const parsed = JSON.parse(readFileSync(downloadPath as string, 'utf-8'))
+
+    expect(Array.isArray(parsed)).toBe(true)
+    expect(parsed).toHaveLength(1)
+    expect(parsed[0].shortId).toBe(Number(shortId))
+    expect(parsed[0].submission.$title).toBe('Test manuscript 1')
   })
 })
