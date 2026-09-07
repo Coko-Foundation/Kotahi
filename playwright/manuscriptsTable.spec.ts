@@ -2532,7 +2532,10 @@ test.describe('manuscripts table actions column', () => {
     const dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('Accept this review invitation?')
     await dialog.getByRole('button', { name: 'OK' }).click()
-    await expect(dialog).toHaveCount(0)
+    // closing is synchronous (the onOk handler doesn't return a promise for
+    // Modal.useModal to wait on), but a loaded CI runner can still stretch
+    // the closing animation/unmount past the default 5s
+    await expect(dialog).toHaveCount(0, { timeout: 15000 })
 
     // the row doesn't reactively update from this mutation - reload to see it
     await navigateTo('/dashboard/reviews')
@@ -2583,7 +2586,10 @@ test.describe('manuscripts table actions column', () => {
     const dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('Decline this review invitation?')
     await dialog.getByRole('button', { name: 'OK' }).click()
-    await expect(dialog).toHaveCount(0)
+    // closing is synchronous (the onOk handler doesn't return a promise for
+    // Modal.useModal to wait on), but a loaded CI runner can still stretch
+    // the closing animation/unmount past the default 5s
+    await expect(dialog).toHaveCount(0, { timeout: 15000 })
 
     // the row doesn't reactively update from this mutation - reload to see it
     await navigateTo('/dashboard/reviews')
