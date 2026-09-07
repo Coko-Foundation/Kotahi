@@ -21,27 +21,15 @@ We maintain `main` as the production branch and tag it with release names, and `
 
 ## Getting your contributions merged
 
-This is a two part process, first ask for comments, then ask for the changes to be merged.
+From your fork of Kotahi, generate a Pull Request from the GitHub interface targeting eLife Pathways' `staging` branch of Kotahi, and request a review from one of the Kotahi devs.
 
-To ask for comments, generate a Pull Request from the GitHub interface targeting `staging`, and request a review from one of the Kotahi devs.
-Look at the feedback and alter your branch as necessary.
-
-We encourage feedback and discussion from as many people as possible on Pull Requests!
-
-Before merging all PRs must fulfill these three simple rules:
+Before merging all PRs must fulfill the following rules:
 
 1.  Before a PR can be merged, it must pass the tests and CI.
 2.  Before a PR can be merged, it shouldn't reduce the test coverage.
-3.  Bugfixes go in PRs and a bugfix PR shouldn't be merged without a regression test.
+3.  All PRs must have corresponding unit/migration/e2e tests.
 
 ## Conventional commits
 
-We use conventional commits and verify that commit messages match the pattern, you can read more about it here: https://conventionalcommits.org/ and here: https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/master/convention.md. You can use `yarn commit` to use a command-line tool that helps you with formatting your commit. We use conventional commits so that we can automatically follow semantic versioning and generate a CHANGELOG.
+We use conventional commits and verify that commit messages match the pattern, you can read more about it here: https://conventionalcommits.org/ and here: https://github.com/conventional-changelog-archived-repos/conventional-changelog-angular/blob/master/convention.md. You can use `yarn commit` to use a command-line tool that helps you with formatting your commit. 
 
-## Bug reports, feature requests, support questions
-
-This is all done through GitHub using their native issue tracker.
-
-Visit the master issue tracker for Kotahi (https://github.com/eLifePathways/Kotahi/issues).
-
-Tag the issue with 'support', 'bug', or 'feature' to identify the nature of your issue.
