@@ -237,9 +237,9 @@ describe('control page tests', () => {
 
     it('When review and reviewer name are not hidden then reviewer can see their name', () => {
       ControlPage.clickHideReviewToAuthor()
-      ControlPage.getHideReviewToAuthorCheckbox('should', 'not.be.checked')
+      ControlPage.getHideReviewToAuthorCheckbox().should('not.be.checked')
       ControlPage.clickHideReviewerNameToAuthor()
-      ControlPage.getHideReviewerNameCheckbox('should', 'not.be.checked')
+      ControlPage.getHideReviewerNameCheckbox().should('not.be.checked')
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
         DashboardPage.clickDoReview()
