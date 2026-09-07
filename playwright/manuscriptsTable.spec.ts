@@ -1,7 +1,5 @@
 import { readFileSync } from 'fs'
 
-import type { Response } from '@playwright/test'
-
 import { colorSecondary, colorSuccess, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
 import { formatAbsoluteDate, formatChipDate, hexToRgb } from './utils/helpers'
@@ -1729,18 +1727,6 @@ test.describe('manuscripts table search and filter', () => {
       '.ant-table-tbody td[data-testid="shortId"]',
     )
 
-    // the manuscripts query uses a network-only fetch policy with no
-    // request de-dupe/abort, so firing another filter change while a
-    // previous one's request is still in flight can let a stale response
-    // win the render - wait for a fresh response after each action, in
-    // addition to the row-count assertion, before moving to the next one.
-    const waitForManuscriptsResponse = (): Promise<Response> =>
-      page.waitForResponse(
-        response =>
-          response.request().method() === 'POST' &&
-          response.request().postDataJSON()?.operationName === 'AllManuscripts',
-      )
-
     await expect(shortIdCells).toHaveCount(5)
 
     // filter 1: status = Submitted - excludes the 2 'new' manuscripts
@@ -1752,10 +1738,7 @@ test.describe('manuscripts table search and filter', () => {
     const statusDropdown = page.locator('.ant-table-filter-dropdown:visible')
     await statusDropdown.getByText('Submitted', { exact: true }).click()
 
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      statusDropdown.getByRole('button', { name: 'OK' }).click(),
-    ])
+    await statusDropdown.getByRole('button', { name: 'OK' }).click()
 
     await expect(shortIdCells).toHaveCount(3)
 
@@ -1767,10 +1750,7 @@ test.describe('manuscripts table search and filter', () => {
 
     await page.getByPlaceholder('Start date').click()
 
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      page.locator('.ant-picker-dropdown').getByText('Today').click(),
-    ])
+    await page.locator('.ant-picker-dropdown').getByText('Today').click()
 
     await expect(shortIdCells).toHaveCount(2)
 
@@ -1778,10 +1758,7 @@ test.describe('manuscripts table search and filter', () => {
     const searchInput = page.getByPlaceholder('Enter search terms...')
     await searchInput.fill(searchTerm)
 
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      searchInput.press('Enter'),
-    ])
+    await searchInput.press('Enter')
 
     await expect(shortIdCells).toHaveCount(1)
 
@@ -1799,29 +1776,20 @@ test.describe('manuscripts table search and filter', () => {
     await expect(dateChip).toBeVisible()
 
     // remove one by one, in a different order than they were applied
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      searchChip.getByRole('button', { name: 'Remove filter' }).click(),
-    ])
+    await searchChip.getByRole('button', { name: 'Remove filter' }).click()
 
     await expect(shortIdCells).toHaveCount(2)
     await expect(searchChip).toHaveCount(0)
     await expect(statusChip).toBeVisible()
     await expect(dateChip).toBeVisible()
 
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      dateChip.getByRole('button', { name: 'Remove filter' }).click(),
-    ])
+    await dateChip.getByRole('button', { name: 'Remove filter' }).click()
 
     await expect(shortIdCells).toHaveCount(3)
     await expect(dateChip).toHaveCount(0)
     await expect(statusChip).toBeVisible()
 
-    await Promise.all([
-      waitForManuscriptsResponse(),
-      statusChip.getByRole('button', { name: 'Remove filter' }).click(),
-    ])
+    await statusChip.getByRole('button', { name: 'Remove filter' }).click()
 
     await expect(shortIdCells).toHaveCount(5)
     await expect(statusChip).toHaveCount(0)
@@ -1999,27 +1967,30 @@ test.describe('manuscripts table sorting', () => {
 
     const header = page.locator('th[data-testid="shortId"]')
 
-    // Clicking re-fetches over the network
     await header.click()
+
+    let afterFirstClick: number[] = []
 
     await expect
       .poll(async () => {
-        const values = (await shortIdCells.allTextContents()).map(Number)
-        const sorted = [...values].sort((a, b) => a - b)
-        return JSON.stringify(values) === JSON.stringify(sorted)
+        afterFirstClick = (await shortIdCells.allTextContents()).map(Number)
+        const sorted = [...afterFirstClick].sort((a, b) => a - b)
+        return JSON.stringify(afterFirstClick) === JSON.stringify(sorted)
       })
       .toBe(true)
 
-    const afterFirstClick = (await shortIdCells.allTextContents()).map(Number)
     await expect(header).toHaveAttribute('aria-sort', 'ascending')
 
     await header.click()
 
-    await expect
-      .poll(async () => (await shortIdCells.allTextContents()).map(Number))
-      .toEqual([...afterFirstClick].reverse())
+    let afterSecondClick: number[] = []
 
-    const afterSecondClick = (await shortIdCells.allTextContents()).map(Number)
+    await expect
+      .poll(async () => {
+        afterSecondClick = (await shortIdCells.allTextContents()).map(Number)
+        return afterSecondClick
+      })
+      .toEqual([...afterFirstClick].reverse())
 
     await expect(header).toHaveAttribute('aria-sort', 'descending')
     expect(afterSecondClick).toEqual(
@@ -2532,10 +2503,7 @@ test.describe('manuscripts table actions column', () => {
     const dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('Accept this review invitation?')
     await dialog.getByRole('button', { name: 'OK' }).click()
-    // closing is synchronous (the onOk handler doesn't return a promise for
-    // Modal.useModal to wait on), but a loaded CI runner can still stretch
-    // the closing animation/unmount past the default 5s
-    await expect(dialog).toHaveCount(0, { timeout: 15000 })
+    await expect(dialog).toHaveCount(0)
 
     // the row doesn't reactively update from this mutation - reload to see it
     await navigateTo('/dashboard/reviews')
@@ -2586,10 +2554,7 @@ test.describe('manuscripts table actions column', () => {
     const dialog = page.getByRole('dialog')
     await expect(dialog).toContainText('Decline this review invitation?')
     await dialog.getByRole('button', { name: 'OK' }).click()
-    // closing is synchronous (the onOk handler doesn't return a promise for
-    // Modal.useModal to wait on), but a loaded CI runner can still stretch
-    // the closing animation/unmount past the default 5s
-    await expect(dialog).toHaveCount(0, { timeout: 15000 })
+    await expect(dialog).toHaveCount(0)
 
     // the row doesn't reactively update from this mutation - reload to see it
     await navigateTo('/dashboard/reviews')

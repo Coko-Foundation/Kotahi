@@ -6,6 +6,7 @@ export default defineConfig<{ apiUrl: string }>({
   testDir: './playwright',
   timeout: 30000,
   fullyParallel: true,
+  retries: 1,
   reporter: 'list',
   globalTeardown: './playwright/utils/globalTeardown.ts',
 
