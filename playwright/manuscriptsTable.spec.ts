@@ -1213,7 +1213,7 @@ test.describe('manuscripts table search and filter', () => {
 
     const [
       uniqueManuscriptId,
-      ,
+      authorNameManuscriptId,
       ,
       phraseManuscriptId,
       nonAdjacentManuscriptId,
@@ -1227,11 +1227,12 @@ test.describe('manuscripts table search and filter', () => {
       multiFieldManuscriptId,
     ] = manuscriptIds
 
-    // no other manuscript's submitter is this shared user, so searching for
-    // their username isolates this one manuscript
-    await api.createManuscripts({
-      amount: 1,
-      submitter: testGroup.userWithOrcidUsername,
+    // an entry in the submission form's own Authors field - not the same as
+    // the manuscript's submitter (a user account), which search deliberately
+    // excludes
+    await api.updateManuscriptSubmission({
+      manuscriptId: authorNameManuscriptId,
+      patch: { $authors: [{ firstName: 'Fennec', lastName: 'Meerkat' }] },
     })
 
     await api.updateManuscriptSubmission({
@@ -1311,7 +1312,7 @@ test.describe('manuscripts table search and filter', () => {
       '.ant-table-tbody td[data-testid="shortId"]',
     )
 
-    await expect(shortIdCells).toHaveCount(14)
+    await expect(shortIdCells).toHaveCount(13)
 
     const idOnlyRow = page.locator('.ant-table-tbody tr', {
       hasText: 'Test manuscript 2',
@@ -1367,7 +1368,7 @@ test.describe('manuscripts table search and filter', () => {
     await expect(expandedRow.locator('mark')).toHaveText(searchTerm)
 
     await searchChip.getByRole('button', { name: 'Remove filter' }).click()
-    await expect(shortIdCells).toHaveCount(14)
+    await expect(shortIdCells).toHaveCount(13)
 
     // The remaining checks are pure query-syntax scenarios, not new UI
     // interactions - driving them through the URL (a fresh navigation per
@@ -1444,10 +1445,21 @@ test.describe('manuscripts table search and filter', () => {
     await expect(multiFieldSnippets).toContainText('Abstract:')
     await expect(multiFieldSnippets.locator('mark')).toHaveCount(2)
 
-    // an author's name matches (it's indexed for search) but gets no
-    // snippet of its own - there's no snippet field group for it
-    await navigateTo(searchUrl(testGroup.userWithOrcidUsername))
+    // an author's name (from the submission form's own Authors field, an
+    // array rather than plain text) matches, with its own labeled snippet
+    await navigateTo(searchUrl('Meerkat'))
     await expect(shortIdCells).toHaveCount(1)
+
+    const authorSnippet = page.locator('.ant-table-expanded-row')
+    await expect(authorSnippet).toContainText('Author names:')
+    await expect(authorSnippet.locator('mark')).toHaveText('Meerkat')
+
+    // a submitter's username does NOT match - search is deliberately
+    // restricted to the manuscript's own data and form config, not team
+    // members/invitations/users (see the restrict-search-and-resolve-
+    // option-labels migration)
+    await navigateTo(searchUrl(testGroup.userWithOrcidUsername))
+    await expect(shortIdCells).toHaveCount(0)
     await expect(page.locator('.ant-table-expanded-row')).toHaveCount(0)
 
     // a term matching nothing shows the empty state, with no stray rows or
@@ -1946,28 +1958,28 @@ test.describe('manuscripts table sorting', () => {
     )
 
     await expect(shortIdCells).toHaveCount(3)
-    const initial = (await shortIdCells.allTextContents()).map(Number)
 
     const header = page.locator('th[data-testid="shortId"]')
 
-    // Clicking re-fetches over the network, so poll until the order has
-    // actually changed from the previous state before reading it, rather
-    // than assuming a fixed delay.
+    // Clicking re-fetches over the network
     await header.click()
 
     await expect
-      .poll(async () => (await shortIdCells.allTextContents()).join(','))
-      .not.toBe(initial.join(','))
+      .poll(async () => {
+        const values = (await shortIdCells.allTextContents()).map(Number)
+        const sorted = [...values].sort((a, b) => a - b)
+        return JSON.stringify(values) === JSON.stringify(sorted)
+      })
+      .toBe(true)
 
     const afterFirstClick = (await shortIdCells.allTextContents()).map(Number)
     await expect(header).toHaveAttribute('aria-sort', 'ascending')
-    expect(afterFirstClick).toEqual([...afterFirstClick].sort((a, b) => a - b))
 
     await header.click()
 
     await expect
-      .poll(async () => (await shortIdCells.allTextContents()).join(','))
-      .not.toBe(afterFirstClick.join(','))
+      .poll(async () => (await shortIdCells.allTextContents()).map(Number))
+      .toEqual([...afterFirstClick].reverse())
 
     const afterSecondClick = (await shortIdCells.allTextContents()).map(Number)
 
