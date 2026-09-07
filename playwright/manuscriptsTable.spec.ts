@@ -1,5 +1,7 @@
 import { readFileSync } from 'fs'
 
+import type { Response } from '@playwright/test'
+
 import { colorSecondary, colorSuccess, testOrcid } from './utils/constants'
 import { test, expect, type Page } from './utils/fixtures'
 import { formatAbsoluteDate, formatChipDate, hexToRgb } from './utils/helpers'
@@ -1727,6 +1729,18 @@ test.describe('manuscripts table search and filter', () => {
       '.ant-table-tbody td[data-testid="shortId"]',
     )
 
+    // the manuscripts query uses a network-only fetch policy with no
+    // request de-dupe/abort, so firing another filter change while a
+    // previous one's request is still in flight can let a stale response
+    // win the render - wait for a fresh response after each action, in
+    // addition to the row-count assertion, before moving to the next one.
+    const waitForManuscriptsResponse = (): Promise<Response> =>
+      page.waitForResponse(
+        response =>
+          response.request().method() === 'POST' &&
+          response.request().postDataJSON()?.operationName === 'AllManuscripts',
+      )
+
     await expect(shortIdCells).toHaveCount(5)
 
     // filter 1: status = Submitted - excludes the 2 'new' manuscripts
@@ -1737,7 +1751,11 @@ test.describe('manuscripts table search and filter', () => {
 
     const statusDropdown = page.locator('.ant-table-filter-dropdown:visible')
     await statusDropdown.getByText('Submitted', { exact: true }).click()
-    await statusDropdown.getByRole('button', { name: 'OK' }).click()
+
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      statusDropdown.getByRole('button', { name: 'OK' }).click(),
+    ])
 
     await expect(shortIdCells).toHaveCount(3)
 
@@ -1748,14 +1766,22 @@ test.describe('manuscripts table search and filter', () => {
       .click()
 
     await page.getByPlaceholder('Start date').click()
-    await page.locator('.ant-picker-dropdown').getByText('Today').click()
+
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      page.locator('.ant-picker-dropdown').getByText('Today').click(),
+    ])
 
     await expect(shortIdCells).toHaveCount(2)
 
     // search - additionally excludes the submitted-but-no-keyword one
     const searchInput = page.getByPlaceholder('Enter search terms...')
     await searchInput.fill(searchTerm)
-    await searchInput.press('Enter')
+
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      searchInput.press('Enter'),
+    ])
 
     await expect(shortIdCells).toHaveCount(1)
 
@@ -1773,18 +1799,30 @@ test.describe('manuscripts table search and filter', () => {
     await expect(dateChip).toBeVisible()
 
     // remove one by one, in a different order than they were applied
-    await searchChip.getByRole('button', { name: 'Remove filter' }).click()
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      searchChip.getByRole('button', { name: 'Remove filter' }).click(),
+    ])
+
     await expect(shortIdCells).toHaveCount(2)
     await expect(searchChip).toHaveCount(0)
     await expect(statusChip).toBeVisible()
     await expect(dateChip).toBeVisible()
 
-    await dateChip.getByRole('button', { name: 'Remove filter' }).click()
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      dateChip.getByRole('button', { name: 'Remove filter' }).click(),
+    ])
+
     await expect(shortIdCells).toHaveCount(3)
     await expect(dateChip).toHaveCount(0)
     await expect(statusChip).toBeVisible()
 
-    await statusChip.getByRole('button', { name: 'Remove filter' }).click()
+    await Promise.all([
+      waitForManuscriptsResponse(),
+      statusChip.getByRole('button', { name: 'Remove filter' }).click(),
+    ])
+
     await expect(shortIdCells).toHaveCount(5)
     await expect(statusChip).toHaveCount(0)
   })
