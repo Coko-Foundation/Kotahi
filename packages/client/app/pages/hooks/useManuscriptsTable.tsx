@@ -3,7 +3,7 @@
  */
 
 // #region import
-import { useMemo, useState, type ReactNode } from 'react'
+import { useCallback, useMemo, useState, type ReactNode } from 'react'
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -450,38 +450,44 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   const page = Number(searchParams.get(URI_PARAMS.PAGENUM)) || 1
   const pageSize = config?.manuscript?.paginationCount || 10
 
-  const specialColumnTitles = {
-    'submission.$doi': t('formBuilder.fieldOpts.doi'),
-    'submission.adaState': t('manuscriptsTable.adaState'),
-    actions: t('manuscriptsTable.Actions'),
-    author: t('manuscriptsTable.Author'),
-    created: t('manuscriptsTable.Created'),
-    editor: t('manuscriptsTable.Editor'),
-    lastUpdated: t('manuscriptsTable.lastReviewerStatusUpdate'),
-    manuscriptVersions: t('manuscriptsTable.Version'),
-    reviewerStatusBadge: t('manuscriptsTable.Your Status'),
-    shortId: t('manuscriptsTable.No.'),
-    status: t('manuscriptsTable.Status'),
-    statusCounts: t('manuscriptsTable.Reviewer Status'),
-    submitter: t('manuscriptsTable.Author'), // alias of 'author'
-    titleAndAbstract: t('manuscriptsTable.Title'),
-    updated: t('manuscriptsTable.Updated'),
-  }
+  const specialColumnTitles = useMemo(
+    () => ({
+      'submission.$doi': t('formBuilder.fieldOpts.doi'),
+      'submission.adaState': t('manuscriptsTable.adaState'),
+      actions: t('manuscriptsTable.Actions'),
+      author: t('manuscriptsTable.Author'),
+      created: t('manuscriptsTable.Created'),
+      editor: t('manuscriptsTable.Editor'),
+      lastUpdated: t('manuscriptsTable.lastReviewerStatusUpdate'),
+      manuscriptVersions: t('manuscriptsTable.Version'),
+      reviewerStatusBadge: t('manuscriptsTable.Your Status'),
+      shortId: t('manuscriptsTable.No.'),
+      status: t('manuscriptsTable.Status'),
+      statusCounts: t('manuscriptsTable.Reviewer Status'),
+      submitter: t('manuscriptsTable.Author'), // alias of 'author'
+      titleAndAbstract: t('manuscriptsTable.Title'),
+      updated: t('manuscriptsTable.Updated'),
+    }),
+    [t],
+  )
 
-  const actionText = {
-    new: t('manuscriptsTable.actions.continueSubmission'),
-    submitted: t('manuscriptsTable.actions.View'),
-    revise: t('manuscriptsTable.actions.revise'),
-    revising: t('manuscriptsTable.actions.continueRevision'),
-    accepted: t('manuscriptsTable.actions.View'),
-    rejected: t('manuscriptsTable.actions.View'),
-    published: t('manuscriptsTable.actions.View'),
-    assigned: t('manuscriptsTable.actions.View'),
-    inProgress: t('manuscriptsTable.actions.View'),
-    completed: t('manuscriptsTable.actions.View'),
-    underEmbargo: t('manuscriptsTable.actions.View'),
-    embargoReleased: t('manuscriptsTable.actions.View'),
-  }
+  const actionText = useMemo(
+    () => ({
+      new: t('manuscriptsTable.actions.continueSubmission'),
+      submitted: t('manuscriptsTable.actions.View'),
+      revise: t('manuscriptsTable.actions.revise'),
+      revising: t('manuscriptsTable.actions.continueRevision'),
+      accepted: t('manuscriptsTable.actions.View'),
+      rejected: t('manuscriptsTable.actions.View'),
+      published: t('manuscriptsTable.actions.View'),
+      assigned: t('manuscriptsTable.actions.View'),
+      inProgress: t('manuscriptsTable.actions.View'),
+      completed: t('manuscriptsTable.actions.View'),
+      underEmbargo: t('manuscriptsTable.actions.View'),
+      embargoReleased: t('manuscriptsTable.actions.View'),
+    }),
+    [t],
+  )
   // #endregion definitions
 
   // #region query-data
@@ -568,392 +574,620 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
   }
   // #endregion query-data
 
-  // #region table-columns
-  const rawConfigColumns = get(config, configColumnsPath)
+  // #region handlers
+  const applyQueryParams = (
+    queryParams: Record<string, string | number | null>,
+  ): void => {
+    const params = new URLSearchParams(window.location.search)
 
-  const configColumns = Array.isArray(rawConfigColumns)
-    ? rawConfigColumns.map(
-        (column: { value: string; label: string }): string => column.value,
-      )
-    : (rawConfigColumns || '')
-        .split(',')
-        .map((columnName: string) => columnName.trim())
-        .filter(Boolean)
+    Object.entries(queryParams).forEach(([fieldName, fieldValue]) => {
+      if (fieldValue) params.set(fieldName, String(fieldValue))
+      else params.delete(fieldName)
+    })
 
-  const baseColumnKeys =
-    configColumns.length > 0 ? configColumns : defaultColumnKeys
-
-  const columnKeys = [
-    ...baseColumnKeys,
-    ...forcedColumnKeys.filter(key => !baseColumnKeys.includes(key)),
-    'actions',
-  ]
-
-  const findColumnTitle = (key: string): string => {
-    const formTitle = submissionForm?.structure?.children.find(
-      (field: Record<string, any>): boolean => field.name === key,
-    )?.title
-
-    if (formTitle) return formTitle
-    if (specialColumnTitles[key]) return specialColumnTitles[key]
-    return key
+    setSearchParams(params)
   }
 
-  const tableColumns: ManuscriptsTableColumn[] = columnKeys.map(
-    (key: string): ManuscriptsTableColumn => {
-      // common for all columns
-      const column: ManuscriptsTableColumn = {
-        title: findColumnTitle(key),
-        dataIndex: key,
-        key,
-        align: columnAlignments[key] ?? 'left',
+  const handleSortChange = (
+    newSortState: ManuscriptsTableSortState | null,
+  ): void => {
+    applyQueryParams({
+      [URI_PARAMS.SORT]: newSortState
+        ? `${newSortState.columnKey}_${newSortState.order}`
+        : null,
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handleFiltersChange = (
+    newColumnFilters: Record<string, string[]>,
+  ): void => {
+    applyQueryParams({
+      ...mapValues(newColumnFilters, (values, key) => {
+        const column = tableColumns.find(c => c.key === key)
+
+        if (column?.dataType === 'date') {
+          const [start, end] = values ?? []
+
+          return start && end
+            ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
+            : null
+        }
+
+        return values && values.length > 0 ? values.join(',') : null
+      }),
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handlePageChange = (newPage: number): void => {
+    applyQueryParams({ [URI_PARAMS.PAGENUM]: newPage })
+  }
+
+  const handleSearch = (value: string): void => {
+    applyQueryParams({ [URI_PARAMS.SEARCH]: value })
+  }
+
+  const handleOptionChange = (
+    columnKey: string,
+    id: string,
+    value: string | null,
+  ): void => {
+    if (columnKey !== 'submission.$customStatus') return
+
+    updateManuscript({
+      variables: {
+        id,
+        input: JSON.stringify({ submission: { $customStatus: value } }),
+      },
+    })
+  }
+
+  const handleArchiveSelected = async (ids: string[]): Promise<void> => {
+    await archiveManuscripts({ variables: { ids } })
+    refetch()
+  }
+
+  const handleUnarchiveSelected = async (ids: string[]): Promise<void> => {
+    await unarchiveManuscripts({ variables: { ids } })
+    refetch()
+  }
+
+  const handlePublish = useCallback(
+    async (
+      manuscriptId: string,
+      submission: Record<string, any>,
+    ): Promise<void> => {
+      const invalidFields = await validateManuscriptSubmission(
+        submission,
+        submissionForm?.structure,
+        validateDoi(apolloClient),
+        validateSuffix(apolloClient, config.groupId),
+      )
+
+      if (invalidFields.filter(Boolean).length > 0) {
+        actionModal.error({ content: t('manuscriptsPage.manuscriptInvalid') })
+        return
       }
 
-      if (column.key === 'actions') {
-        return {
-          ...column,
-          render: (_: any, record: any): ReactNode => {
-            if (variant === 'submitter') {
-              const { id, status, showAuthorProofing } = record
+      const { data: publishData } = await publishManuscript({
+        variables: { id: manuscriptId },
+      })
 
-              return (
-                <LinkList>
-                  <Link
-                    data-testid="submission-action-link"
-                    to={`/${groupName}/versions/${id}/submit`}
-                  >
-                    {actionText[status]}
-                  </Link>
+      // @ts-ignore
+      const response = publishData?.publishManuscript
 
-                  {showAuthorProofing && (
+      if (
+        response?.steps?.some((step: Record<string, any>) => !step.succeeded)
+      ) {
+        actionModal.error({
+          content: (
+            <ThemeProvider theme={theme}>
+              <PublishingResponse response={response} />
+            </ThemeProvider>
+          ),
+          title: t('manuscriptsTable.actions.Publishing error'),
+        })
+      }
+
+      refetch()
+    },
+    [
+      submissionForm,
+      apolloClient,
+      config.groupId,
+      actionModal,
+      t,
+      publishManuscript,
+      theme,
+      refetch,
+    ],
+  )
+
+  const handleDownloadSelected = async (ids: string[]): Promise<void> => {
+    const stringifiedJsonKeys = ['submission', 'jsonData']
+
+    const sanitizeExportValue = (value: any): any => {
+      if (Array.isArray(value)) return value.map(sanitizeExportValue)
+
+      if (value && typeof value === 'object') {
+        return Object.fromEntries(
+          Object.entries(value)
+            .filter(([key]) => key !== '__typename')
+            .map(([key, val]) => [
+              key,
+              stringifiedJsonKeys.includes(key) && typeof val === 'string'
+                ? JSON.parse(val || '{}')
+                : sanitizeExportValue(val),
+            ]),
+        )
+      }
+
+      return value
+    }
+
+    const { data: exportData } = await getManuscriptsData({
+      variables: { selectedManuscripts: ids },
+    })
+
+    const cleanedData = sanitizeExportValue(
+      // @ts-ignore
+      exportData?.getManuscriptsData ?? [],
+    )
+
+    const jsonBlob = new Blob([JSON.stringify(cleanedData, null, 2)], {
+      type: 'application/json',
+    })
+
+    const url = URL.createObjectURL(jsonBlob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'exportedData.json'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleViewingArchivedChange = (viewingArchived: boolean): void => {
+    applyQueryParams({
+      [URI_PARAMS.ARCHIVED]: viewingArchived ? 'true' : null,
+      [URI_PARAMS.PAGENUM]: 1,
+    })
+  }
+
+  const handleReviewerStatusViewModeChange = (
+    viewMode: 'compact' | 'detailed',
+  ): void => {
+    setReviewerStatusViewMode(viewMode)
+    localStorage.setItem(REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY, viewMode)
+  }
+  // #endregion handlers
+
+  // #region table-columns
+  const columnKeys = useMemo(() => {
+    const rawConfigColumns = get(config, configColumnsPath)
+
+    const configColumns = Array.isArray(rawConfigColumns)
+      ? rawConfigColumns.map(
+          (column: { value: string; label: string }): string => column.value,
+        )
+      : (rawConfigColumns || '')
+          .split(',')
+          .map((columnName: string) => columnName.trim())
+          .filter(Boolean)
+
+    const baseColumnKeys =
+      configColumns.length > 0 ? configColumns : defaultColumnKeys
+
+    return [
+      ...baseColumnKeys,
+      ...forcedColumnKeys.filter(key => !baseColumnKeys.includes(key)),
+      'actions',
+    ]
+  }, [config, configColumnsPath, defaultColumnKeys, forcedColumnKeys])
+
+  const findColumnTitle = useCallback(
+    (key: string): string => {
+      const formTitle = submissionForm?.structure?.children.find(
+        (field: Record<string, any>): boolean => field.name === key,
+      )?.title
+
+      if (formTitle) return formTitle
+      if (specialColumnTitles[key]) return specialColumnTitles[key]
+      return key
+    },
+    [submissionForm, specialColumnTitles],
+  )
+
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
+  const tableColumns: ManuscriptsTableColumn[] = useMemo(
+    () =>
+      columnKeys.map((key: string): ManuscriptsTableColumn => {
+        // common for all columns
+        const column: ManuscriptsTableColumn = {
+          title: findColumnTitle(key),
+          dataIndex: key,
+          key,
+          align: columnAlignments[key] ?? 'left',
+        }
+
+        if (column.key === 'actions') {
+          return {
+            ...column,
+            render: (_: any, record: any): ReactNode => {
+              if (variant === 'submitter') {
+                const { id, status, showAuthorProofing } = record
+
+                return (
+                  <LinkList>
                     <Link
-                      data-testid="production-action-link"
+                      data-testid="submission-action-link"
+                      to={`/${groupName}/versions/${id}/submit`}
+                    >
+                      {actionText[status]}
+                    </Link>
+
+                    {showAuthorProofing && (
+                      <Link
+                        data-testid="production-action-link"
+                        to={`/${groupName}/versions/${id}/production`}
+                      >
+                        {(status === 'assigned' || status === 'inProgress') &&
+                          t(
+                            'dashboardPage.mySubmissions.Provide production feedback',
+                          )}
+
+                        {status === 'completed' &&
+                          t(
+                            'dashboardPage.mySubmissions.View production feedback',
+                          )}
+                      </Link>
+                    )}
+                  </LinkList>
+                )
+              }
+
+              if (variant === 'editor') {
+                const { id, parentId } = record
+
+                return (
+                  <LinkList>
+                    <Link
+                      data-testid="control-link"
+                      to={`/${groupName}/versions/${parentId || id}/decision`}
+                    >
+                      {t('manuscriptsTable.Control')}
+                    </Link>
+                    <Link
+                      data-testid="production-link"
                       to={`/${groupName}/versions/${id}/production`}
                     >
-                      {(status === 'assigned' || status === 'inProgress') &&
-                        t(
-                          'dashboardPage.mySubmissions.Provide production feedback',
-                        )}
-
-                      {status === 'completed' &&
-                        t(
-                          'dashboardPage.mySubmissions.View production feedback',
-                        )}
+                      {t('manuscriptsTable.Production')}
                     </Link>
-                  )}
-                </LinkList>
-              )
-            }
-
-            if (variant === 'editor') {
-              const { id, parentId } = record
-
-              return (
-                <LinkList>
-                  <Link
-                    data-testid="control-link"
-                    to={`/${groupName}/versions/${parentId || id}/decision`}
-                  >
-                    {t('manuscriptsTable.Control')}
-                  </Link>
-                  <Link
-                    data-testid="production-link"
-                    to={`/${groupName}/versions/${id}/production`}
-                  >
-                    {t('manuscriptsTable.Production')}
-                  </Link>
-                </LinkList>
-              )
-            }
-
-            if (variant === 'reviewer') {
-              const { id, parentId, reviewerStatusBadge, reviewerTeamId } =
-                record
-
-              const reviewLinkText: Record<string, string> = {
-                completed: t('common.View'),
-                accepted: t('manuscriptsTable.reviewDo'),
-                inProgress: t('manuscriptsTable.reviewContinue'),
-                closed: t('common.View'),
-              }
-
-              if (
-                ['accepted', 'completed', 'inProgress', 'closed'].includes(
-                  reviewerStatusBadge,
-                )
-              ) {
-                const reviewLink = `/${groupName}/versions/${parentId || id}/review`
-
-                return (
-                  <Link
-                    data-testid="review-action-link"
-                    onClick={async (event): Promise<void> => {
-                      event.preventDefault()
-
-                      if (reviewerStatusBadge === 'accepted') {
-                        await updateReviewerStatus({
-                          variables: { manuscriptId: id, status: 'inProgress' },
-                        })
-                      }
-
-                      navigate(reviewLink)
-                    }}
-                    to={reviewLink}
-                  >
-                    {reviewLinkText[reviewerStatusBadge]}
-                  </Link>
+                  </LinkList>
                 )
               }
 
-              if (reviewerStatusBadge === 'invited') {
-                const respond = (action: 'accepted' | 'rejected'): void => {
-                  actionModal.confirm({
-                    content: t(
-                      action === 'accepted'
-                        ? 'manuscriptsTable.confirmReviewAccept'
-                        : 'manuscriptsTable.confirmReviewReject',
-                    ),
-                    okText: t('common.OK'),
-                    cancelText: t('common.Cancel'),
-                    onOk: () => {
-                      reviewerRespond({
-                        variables: {
-                          currentUserId: currentUser.id,
-                          action,
-                          teamId: reviewerTeamId,
-                        },
-                      })
-                    },
-                  })
+              if (variant === 'reviewer') {
+                const { id, parentId, reviewerStatusBadge, reviewerTeamId } =
+                  record
+
+                const reviewLinkText: Record<string, string> = {
+                  completed: t('common.View'),
+                  accepted: t('manuscriptsTable.reviewDo'),
+                  inProgress: t('manuscriptsTable.reviewContinue'),
+                  closed: t('common.View'),
                 }
 
+                if (
+                  ['accepted', 'completed', 'inProgress', 'closed'].includes(
+                    reviewerStatusBadge,
+                  )
+                ) {
+                  const reviewLink = `/${groupName}/versions/${parentId || id}/review`
+
+                  return (
+                    <Link
+                      data-testid="review-action-link"
+                      onClick={async (event): Promise<void> => {
+                        event.preventDefault()
+
+                        if (reviewerStatusBadge === 'accepted') {
+                          await updateReviewerStatus({
+                            variables: {
+                              manuscriptId: id,
+                              status: 'inProgress',
+                            },
+                          })
+                        }
+
+                        navigate(reviewLink)
+                      }}
+                      to={reviewLink}
+                    >
+                      {reviewLinkText[reviewerStatusBadge]}
+                    </Link>
+                  )
+                }
+
+                if (reviewerStatusBadge === 'invited') {
+                  const respond = (action: 'accepted' | 'rejected'): void => {
+                    actionModal.confirm({
+                      content: t(
+                        action === 'accepted'
+                          ? 'manuscriptsTable.confirmReviewAccept'
+                          : 'manuscriptsTable.confirmReviewReject',
+                      ),
+                      okText: t('common.OK'),
+                      cancelText: t('common.Cancel'),
+                      onOk: () => {
+                        reviewerRespond({
+                          variables: {
+                            currentUserId: currentUser.id,
+                            action,
+                            teamId: reviewerTeamId,
+                          },
+                        })
+                      },
+                    })
+                  }
+
+                  return (
+                    <ActionRow>
+                      <Link
+                        data-testid="accept-review"
+                        onClick={(event): void => {
+                          event.preventDefault()
+                          respond('accepted')
+                        }}
+                        to="#"
+                      >
+                        {t('manuscriptsTable.reviewAccept')}
+                      </Link>
+                      <div></div>
+                      <Link
+                        data-testid="reject-review"
+                        onClick={(event): void => {
+                          event.preventDefault()
+                          respond('rejected')
+                        }}
+                        to="#"
+                      >
+                        {t('manuscriptsTable.reviewReject')}
+                      </Link>
+                    </ActionRow>
+                  )
+                }
+
+                return null
+              }
+
+              if (variant === 'admin') {
+                const { id, status, submission, archived: rowArchived } = record
+                const instanceName = config?.instanceName
+
+                const showEvaluation =
+                  !rowArchived &&
+                  ['preprint1', 'preprint2'].includes(instanceName) &&
+                  Object.values(articleStatuses).includes(status)
+
+                const showControl =
+                  !rowArchived && ['journal', 'prc'].includes(instanceName)
+
+                const showPublish =
+                  !rowArchived &&
+                  ['preprint1', 'preprint2'].includes(instanceName) &&
+                  status === articleStatuses.evaluated
+
                 return (
-                  <ActionRow>
+                  <LinkList>
+                    {showEvaluation && (
+                      <Link
+                        data-testid="evaluation-action-link"
+                        to={`/${groupName}/versions/${id}/evaluation`}
+                      >
+                        {t('manuscriptsTable.actions.Evaluation')}
+                      </Link>
+                    )}
+                    {showControl && (
+                      <Link
+                        data-testid="control-action-link"
+                        to={`/${groupName}/versions/${id}/decision`}
+                      >
+                        {t('manuscriptsTable.actions.Control')}
+                      </Link>
+                    )}
                     <Link
-                      data-testid="accept-review"
-                      onClick={(event): void => {
-                        event.preventDefault()
-                        respond('accepted')
-                      }}
-                      to="#"
+                      data-testid="view-action-link"
+                      to={`/${groupName}/versions/${id}/manuscript`}
                     >
-                      {t('manuscriptsTable.reviewAccept')}
+                      {t('manuscriptsTable.actions.View')}
                     </Link>
-                    <div></div>
-                    <Link
-                      data-testid="reject-review"
-                      onClick={(event): void => {
-                        event.preventDefault()
-                        respond('rejected')
-                      }}
-                      to="#"
-                    >
-                      {t('manuscriptsTable.reviewReject')}
-                    </Link>
-                  </ActionRow>
+                    {!rowArchived && (
+                      <Link
+                        data-testid="production-action-link"
+                        to={`/${groupName}/versions/${id}/production`}
+                      >
+                        {t('manuscriptsTable.actions.Production')}
+                      </Link>
+                    )}
+                    {showPublish && (
+                      <Link
+                        data-testid="publish-action-link"
+                        onClick={(event): void => {
+                          event.preventDefault()
+                          actionModal.confirm({
+                            content: t('manuscriptsTable.confirmPublish'),
+                            okText: t('common.OK'),
+                            cancelText: t('common.Cancel'),
+                            onOk: () => handlePublish(id, submission),
+                          })
+                        }}
+                        to="#"
+                      >
+                        {t('manuscriptsTable.actions.Publish')}
+                      </Link>
+                    )}
+                  </LinkList>
                 )
               }
 
               return null
-            }
-
-            if (variant === 'admin') {
-              const { id, status, submission, archived: rowArchived } = record
-              const instanceName = config?.instanceName
-
-              const showEvaluation =
-                !rowArchived &&
-                ['preprint1', 'preprint2'].includes(instanceName) &&
-                Object.values(articleStatuses).includes(status)
-
-              const showControl =
-                !rowArchived && ['journal', 'prc'].includes(instanceName)
-
-              const showPublish =
-                !rowArchived &&
-                ['preprint1', 'preprint2'].includes(instanceName) &&
-                status === articleStatuses.evaluated
-
-              return (
-                <LinkList>
-                  {showEvaluation && (
-                    <Link
-                      data-testid="evaluation-action-link"
-                      to={`/${groupName}/versions/${id}/evaluation`}
-                    >
-                      {t('manuscriptsTable.actions.Evaluation')}
-                    </Link>
-                  )}
-                  {showControl && (
-                    <Link
-                      data-testid="control-action-link"
-                      to={`/${groupName}/versions/${id}/decision`}
-                    >
-                      {t('manuscriptsTable.actions.Control')}
-                    </Link>
-                  )}
-                  <Link
-                    data-testid="view-action-link"
-                    to={`/${groupName}/versions/${id}/manuscript`}
-                  >
-                    {t('manuscriptsTable.actions.View')}
-                  </Link>
-                  {!rowArchived && (
-                    <Link
-                      data-testid="production-action-link"
-                      to={`/${groupName}/versions/${id}/production`}
-                    >
-                      {t('manuscriptsTable.actions.Production')}
-                    </Link>
-                  )}
-                  {showPublish && (
-                    <Link
-                      data-testid="publish-action-link"
-                      onClick={(event): void => {
-                        event.preventDefault()
-                        actionModal.confirm({
-                          content: t('manuscriptsTable.confirmPublish'),
-                          okText: t('common.OK'),
-                          cancelText: t('common.Cancel'),
-                          onOk: () => handlePublish(id, submission),
-                        })
-                      }}
-                      to="#"
-                    >
-                      {t('manuscriptsTable.actions.Publish')}
-                    </Link>
-                  )}
-                </LinkList>
-              )
-            }
-
-            return null
-          },
-        }
-      }
-
-      if (column.key === 'shortId') {
-        return { ...column, sortable: true }
-      }
-
-      if (
-        ['created', 'updated'].includes(column.key) ||
-        fieldDefinitions[column.key]?.component === 'DatePicker'
-      ) {
-        return { ...column, dataType: 'date', sortable: true, filterable: true }
-      }
-
-      if (column.key === 'lastUpdated') {
-        return { ...column, dataType: 'date' }
-      }
-
-      if (
-        column.key === 'submission.$title' ||
-        column.key === 'titleAndAbstract'
-      ) {
-        return {
-          ...column,
-          dataType: 'title',
-          showAbstract: column.key === 'titleAndAbstract',
-          sortable: true,
-        }
-      }
-
-      if (column.key === 'reviewerStatusBadge') {
-        return {
-          ...column,
-          dataType: 'reviewerStatus',
-          filterable: true,
-          options: reviewerStatusValues.map(status => ({
-            value: status,
-            label: t(reviewerStatusTranslationKeys[status]),
-          })),
-        }
-      }
-
-      if (column.key === 'statusCounts') {
-        return {
-          ...column,
-          dataType: 'reviewerStatusSummary',
-          helpTooltip: t('manuscriptsTable.reviewerStatusColumnTip'),
-        }
-      }
-
-      if (column.key === 'author' || column.key === 'submitter') {
-        return { ...column, dataType: 'person' }
-      }
-
-      if (column.key === 'status') {
-        const statusOptions = ['journal', 'prc'].includes(config?.instanceName)
-          ? JOURNAL_STATUS_OPTIONS
-          : PREPRINT_STATUS_OPTIONS
-
-        return {
-          ...column,
-          dataType: 'status',
-          filterable: true,
-          options: statusOptions.map(status => ({
-            value: status,
-            label: t(`msStatus.${status}`),
-          })),
-        }
-      }
-
-      if (column.key === 'submission.adaState') {
-        return {
-          ...column,
-          dataType: 'badge',
-          filterable: true,
-          options: [
-            { value: 'draft', label: t('decisionPage.decisionTab.Draft') },
-            { value: 'process', label: t('decisionPage.decisionTab.Process') },
-            {
-              value: 'findable',
-              label: t('decisionPage.decisionTab.Findable'),
             },
-            { value: 'publish', label: t('decisionPage.decisionTab.Publish') },
-          ],
+          }
         }
-      }
 
-      if (column.key === 'submission.$customStatus') {
-        return {
-          ...column,
-          dataType: 'options',
-          editable: Boolean(config.manuscript?.labelColumn),
-          filterable: true,
-          options: fieldDefinitions[column.key]?.options,
+        if (column.key === 'shortId') {
+          return { ...column, sortable: true }
         }
-      }
 
-      if (fieldDefinitions[column.key]?.options?.length) {
-        return {
-          ...column,
-          dataType: 'options',
-          filterable: true,
-          options: fieldDefinitions[column.key].options,
+        if (
+          ['created', 'updated'].includes(column.key) ||
+          fieldDefinitions[column.key]?.component === 'DatePicker'
+        ) {
+          return {
+            ...column,
+            dataType: 'date',
+            sortable: true,
+            filterable: true,
+          }
         }
-      }
 
-      if (fieldDefinitions[column.key]?.component === 'AbstractEditor') {
-        return { ...column, dataType: 'richText', sortable: true }
-      }
+        if (column.key === 'lastUpdated') {
+          return { ...column, dataType: 'date' }
+        }
 
-      if (fieldDefinitions[column.key]?.component === 'TextField') {
-        return { ...column, sortable: true }
-      }
+        if (
+          column.key === 'submission.$title' ||
+          column.key === 'titleAndAbstract'
+        ) {
+          return {
+            ...column,
+            dataType: 'title',
+            showAbstract: column.key === 'titleAndAbstract',
+            sortable: true,
+          }
+        }
 
-      if (column.key === 'manuscriptVersions') {
-        /**
-         * Intentionally not sortable: it's a count (prior versions + current),
-         * derived from a GraphQL relation rather than a real column or jsonb
-         * field the server can sort on.
-         */
-        return { ...column, sortable: false }
-      }
+        if (column.key === 'reviewerStatusBadge') {
+          return {
+            ...column,
+            dataType: 'reviewerStatus',
+            filterable: true,
+            options: reviewerStatusValues.map(status => ({
+              value: status,
+              label: t(reviewerStatusTranslationKeys[status]),
+            })),
+          }
+        }
 
-      return column
-    },
+        if (column.key === 'statusCounts') {
+          return {
+            ...column,
+            dataType: 'reviewerStatusSummary',
+            helpTooltip: t('manuscriptsTable.reviewerStatusColumnTip'),
+          }
+        }
+
+        if (column.key === 'author' || column.key === 'submitter') {
+          return { ...column, dataType: 'person' }
+        }
+
+        if (column.key === 'status') {
+          const statusOptions = ['journal', 'prc'].includes(
+            config?.instanceName,
+          )
+            ? JOURNAL_STATUS_OPTIONS
+            : PREPRINT_STATUS_OPTIONS
+
+          return {
+            ...column,
+            dataType: 'status',
+            filterable: true,
+            options: statusOptions.map(status => ({
+              value: status,
+              label: t(`msStatus.${status}`),
+            })),
+          }
+        }
+
+        if (column.key === 'submission.adaState') {
+          return {
+            ...column,
+            dataType: 'badge',
+            filterable: true,
+            options: [
+              { value: 'draft', label: t('decisionPage.decisionTab.Draft') },
+              {
+                value: 'process',
+                label: t('decisionPage.decisionTab.Process'),
+              },
+              {
+                value: 'findable',
+                label: t('decisionPage.decisionTab.Findable'),
+              },
+              {
+                value: 'publish',
+                label: t('decisionPage.decisionTab.Publish'),
+              },
+            ],
+          }
+        }
+
+        if (column.key === 'submission.$customStatus') {
+          return {
+            ...column,
+            dataType: 'options',
+            editable: Boolean(config.manuscript?.labelColumn),
+            filterable: true,
+            options: fieldDefinitions[column.key]?.options,
+          }
+        }
+
+        if (fieldDefinitions[column.key]?.options?.length) {
+          return {
+            ...column,
+            dataType: 'options',
+            filterable: true,
+            options: fieldDefinitions[column.key].options,
+          }
+        }
+
+        if (fieldDefinitions[column.key]?.component === 'AbstractEditor') {
+          return { ...column, dataType: 'richText', sortable: true }
+        }
+
+        if (fieldDefinitions[column.key]?.component === 'TextField') {
+          return { ...column, sortable: true }
+        }
+
+        if (column.key === 'manuscriptVersions') {
+          /**
+           * Intentionally not sortable: it's a count (prior versions + current),
+           * derived from a GraphQL relation rather than a real column or jsonb
+           * field the server can sort on.
+           */
+          return { ...column, sortable: false }
+        }
+
+        return column
+      }),
+    [
+      actionModal,
+      actionText,
+      columnKeys,
+      config.instanceName,
+      config.manuscript?.labelColumn,
+      currentUser.id,
+      fieldDefinitions,
+      findColumnTitle,
+      groupName,
+      handlePublish,
+      navigate,
+      reviewerRespond,
+      t,
+      updateReviewerStatus,
+      variant,
+    ],
   )
   // #endregion table-columns
 
@@ -1084,180 +1318,6 @@ const useManuscriptsTable = (variant: Variant): UseManuscriptsTableResult => {
     return row
   })
   // #endregion row-data
-
-  // #region handlers
-  const applyQueryParams = (
-    queryParams: Record<string, string | number | null>,
-  ): void => {
-    const params = new URLSearchParams(window.location.search)
-
-    Object.entries(queryParams).forEach(([fieldName, fieldValue]) => {
-      if (fieldValue) params.set(fieldName, String(fieldValue))
-      else params.delete(fieldName)
-    })
-
-    setSearchParams(params)
-  }
-
-  const handleSortChange = (
-    newSortState: ManuscriptsTableSortState | null,
-  ): void => {
-    applyQueryParams({
-      [URI_PARAMS.SORT]: newSortState
-        ? `${newSortState.columnKey}_${newSortState.order}`
-        : null,
-      [URI_PARAMS.PAGENUM]: 1,
-    })
-  }
-
-  const handleFiltersChange = (
-    newColumnFilters: Record<string, string[]>,
-  ): void => {
-    applyQueryParams({
-      ...mapValues(newColumnFilters, (values, key) => {
-        const column = tableColumns.find(c => c.key === key)
-
-        if (column?.dataType === 'date') {
-          const [start, end] = values ?? []
-
-          return start && end
-            ? `${isoDateToCompact(start)}-${isoDateToCompact(end)}`
-            : null
-        }
-
-        return values && values.length > 0 ? values.join(',') : null
-      }),
-      [URI_PARAMS.PAGENUM]: 1,
-    })
-  }
-
-  const handlePageChange = (newPage: number): void => {
-    applyQueryParams({ [URI_PARAMS.PAGENUM]: newPage })
-  }
-
-  const handleSearch = (value: string): void => {
-    applyQueryParams({ [URI_PARAMS.SEARCH]: value })
-  }
-
-  const handleOptionChange = (
-    columnKey: string,
-    id: string,
-    value: string | null,
-  ): void => {
-    if (columnKey !== 'submission.$customStatus') return
-
-    updateManuscript({
-      variables: {
-        id,
-        input: JSON.stringify({ submission: { $customStatus: value } }),
-      },
-    })
-  }
-
-  const handleArchiveSelected = async (ids: string[]): Promise<void> => {
-    await archiveManuscripts({ variables: { ids } })
-    refetch()
-  }
-
-  const handleUnarchiveSelected = async (ids: string[]): Promise<void> => {
-    await unarchiveManuscripts({ variables: { ids } })
-    refetch()
-  }
-
-  const handlePublish = async (
-    manuscriptId: string,
-    submission: Record<string, any>,
-  ): Promise<void> => {
-    const invalidFields = await validateManuscriptSubmission(
-      submission,
-      submissionForm?.structure,
-      validateDoi(apolloClient),
-      validateSuffix(apolloClient, config.groupId),
-    )
-
-    if (invalidFields.filter(Boolean).length > 0) {
-      actionModal.error({ content: t('manuscriptsPage.manuscriptInvalid') })
-      return
-    }
-
-    const { data: publishData } = await publishManuscript({
-      variables: { id: manuscriptId },
-    })
-
-    // @ts-ignore
-    const response = publishData?.publishManuscript
-
-    if (response?.steps?.some((step: Record<string, any>) => !step.succeeded)) {
-      actionModal.error({
-        content: (
-          <ThemeProvider theme={theme}>
-            <PublishingResponse response={response} />
-          </ThemeProvider>
-        ),
-        title: t('manuscriptsTable.actions.Publishing error'),
-      })
-    }
-
-    refetch()
-  }
-
-  const handleDownloadSelected = async (ids: string[]): Promise<void> => {
-    const stringifiedJsonKeys = ['submission', 'jsonData']
-
-    const sanitizeExportValue = (value: any): any => {
-      if (Array.isArray(value)) return value.map(sanitizeExportValue)
-
-      if (value && typeof value === 'object') {
-        return Object.fromEntries(
-          Object.entries(value)
-            .filter(([key]) => key !== '__typename')
-            .map(([key, val]) => [
-              key,
-              stringifiedJsonKeys.includes(key) && typeof val === 'string'
-                ? JSON.parse(val || '{}')
-                : sanitizeExportValue(val),
-            ]),
-        )
-      }
-
-      return value
-    }
-
-    const { data: exportData } = await getManuscriptsData({
-      variables: { selectedManuscripts: ids },
-    })
-
-    const cleanedData = sanitizeExportValue(
-      // @ts-ignore
-      exportData?.getManuscriptsData ?? [],
-    )
-
-    const jsonBlob = new Blob([JSON.stringify(cleanedData, null, 2)], {
-      type: 'application/json',
-    })
-
-    const url = URL.createObjectURL(jsonBlob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'exportedData.json'
-    link.click()
-    URL.revokeObjectURL(url)
-  }
-
-  const handleViewingArchivedChange = (viewingArchived: boolean): void => {
-    applyQueryParams({
-      [URI_PARAMS.ARCHIVED]: viewingArchived ? 'true' : null,
-      [URI_PARAMS.PAGENUM]: 1,
-    })
-  }
-
-  const handleReviewerStatusViewModeChange = (
-    viewMode: 'compact' | 'detailed',
-  ): void => {
-    setReviewerStatusViewMode(viewMode)
-    localStorage.setItem(REVIEWER_STATUS_VIEW_MODE_STORAGE_KEY, viewMode)
-  }
-  // #endregion handlers
 
   return {
     columnFilters,
