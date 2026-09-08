@@ -175,9 +175,10 @@ describe('control page tests', () => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.selectOptionWithText('Control')
+        ManuscriptsPage.clickControlLink()
         cy.awaitDisappearSpinner()
         ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
+        cy.awaitDisappearSpinner()
         ControlPage.inviteReviewer(name.role.reviewers[1])
         cy.reload()
         cy.get('input[value = "isCollaborative"]').should('not.exist')
@@ -188,8 +189,10 @@ describe('control page tests', () => {
         cy.wait(1000)
         DashboardPage.clickDashboardTab(1)
         DashboardPage.clickAcceptReviewButton()
+        cy.contains('Accept this review invitation?').should('be.visible')
+        cy.contains('button', 'OK').click()
 
-        cy.contains('button', 'Do Review').should('exist')
+        DashboardPage.getDoReviewButton().should('contain', 'Do Review')
         DashboardPage.clickDoReview()
         cy.fixture('submission_form_data').then(data => {
           cy.contains('div', 'Metadata').should('be.visible')
@@ -202,7 +205,7 @@ describe('control page tests', () => {
           ReviewPage.clickSubmitButton()
           ReviewPage.clickConfirmSubmitButton()
 
-          cy.get('[name="submission.$title"]').contains('test pdf')
+          cy.get('[data-testid="submission.$title"]').contains('test pdf')
         })
       })
     })
@@ -211,7 +214,7 @@ describe('control page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
-        ManuscriptsPage.selectOptionWithText('Control')
+        ManuscriptsPage.clickControlLink()
         cy.awaitDisappearSpinner()
         ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
       })
@@ -223,7 +226,7 @@ describe('control page tests', () => {
       ControlPage.getHideReviewerNameCheckbox().should('be.checked')
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[data-testid="submission.$title"]:last').click()
+        DashboardPage.clickDoReview()
         cy.get('[data-testid=tab-container]').contains('Review').click()
         ControlPage.getReviewerName().should(
           'not.contain',
@@ -234,12 +237,12 @@ describe('control page tests', () => {
 
     it('When review and reviewer name are not hidden then reviewer can see their name', () => {
       ControlPage.clickHideReviewToAuthor()
-      ControlPage.getHideReviewToAuthorCheckbox('should', 'not.be.checked')
+      ControlPage.getHideReviewToAuthorCheckbox().should('not.be.checked')
       ControlPage.clickHideReviewerNameToAuthor()
-      ControlPage.getHideReviewerNameCheckbox('should', 'not.be.checked')
+      ControlPage.getHideReviewerNameCheckbox().should('not.be.checked')
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers[1], dashboard)
-        cy.get('[data-testid="submission.$title"]:last').click()
+        DashboardPage.clickDoReview()
         cy.get('[data-testid=tab-container]').contains('Review').click()
         ControlPage.getReviewerName().should('contain', name.role.reviewers[1])
       })
@@ -304,7 +307,7 @@ describe('control page tests', () => {
       cy.awaitDisappearSpinner()
       DashboardPage.getHeader().should('be.visible')
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.selectOptionWithText('Control')
+      ManuscriptsPage.clickControlLink()
       cy.awaitDisappearSpinner()
       cy.contains('Tasks & Notifications').click()
     })
